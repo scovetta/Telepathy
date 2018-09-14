@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMovement", "DataMovement.csproj", "{F0A3E1B7-6C6F-4357-99EE-49210440FFFD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|amd64 = Debug|amd64
+		Debug|x64 = Debug|x64
+		Release|amd64 = Release|amd64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F0A3E1B7-6C6F-4357-99EE-49210440FFFD}.Debug|amd64.ActiveCfg = Debug|amd64
+		{F0A3E1B7-6C6F-4357-99EE-49210440FFFD}.Debug|amd64.Build.0 = Debug|amd64
+		{F0A3E1B7-6C6F-4357-99EE-49210440FFFD}.Debug|x64.ActiveCfg = Debug|x64
+		{F0A3E1B7-6C6F-4357-99EE-49210440FFFD}.Debug|x64.Build.0 = Debug|x64
+		{F0A3E1B7-6C6F-4357-99EE-49210440FFFD}.Release|amd64.ActiveCfg = Release|amd64
+		{F0A3E1B7-6C6F-4357-99EE-49210440FFFD}.Release|amd64.Build.0 = Release|amd64
+		{F0A3E1B7-6C6F-4357-99EE-49210440FFFD}.Release|x64.ActiveCfg = Release|x64
+		{F0A3E1B7-6C6F-4357-99EE-49210440FFFD}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {401A400D-F0E7-4B6A-8834-35DA2DCD6AAF}
+	EndGlobalSection
+EndGlobal
