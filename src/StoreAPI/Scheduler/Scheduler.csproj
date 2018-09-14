@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+  <PropertyGroup>
+    <AssemblyName>Microsoft.Hpc.Scheduler</AssemblyName>
+    <RootNamespace>Microsoft.Hpc.Scheduler</RootNamespace>
+    <OutputType>Library</OutputType>
+    <DefineTrace>True</DefineTrace>
+    <AssemblyClsCompliant>false</AssemblyClsCompliant>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <ProjectGuid>{78E5E61B-DD12-475A-845B-7DA3F6B0F987}</ProjectGuid>
+    <NoWarn>0067,0649,1591</NoWarn>
+    <Localizable>true</Localizable>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>true</DelaySign>
+    <AssemblyVersionName>CCPv2</AssemblyVersionName>
+    <TargetFrameworkProfile />
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\scheduler\AddInFilters\HpcSchedulerAddInFilterClient\IActivationFilter.cs">
+      <Link>IActivationFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\scheduler\AddInFilters\HpcSchedulerAddInFilterClient\IFilterLifespan.cs">
+      <Link>IFilterLifespan.cs</Link>
+    </Compile>
+    <Compile Include="..\..\scheduler\AddInFilters\HpcSchedulerAddInFilterClient\ISubmissionFilter.cs">
+      <Link>ISubmissionFilter.cs</Link>
+    </Compile>
+    <Compile Include="ComGuids.cs" />
+    <Compile Include="ConnectionEvent.cs" />
+    <Compile Include="ISchedulerJobV4SP1.cs" />
+    <Compile Include="ISchedulerJobV4SP2.cs" />
+    <Compile Include="ISchedulerJobV4SP3.cs" />
+    <Compile Include="ISchedulerJobV5SP2.cs" />
+    <Compile Include="ISchedulerJobV5.cs" />
+    <Compile Include="ISchedulerJobV4SP6.cs" />
+    <Compile Include="ISchedulerJobV4SP5.cs" />
+    <Compile Include="ISchedulerNodeV4SP3.cs" />
+    <Compile Include="ISchedulerTaskV4.cs" />
+    <Compile Include="ISchedulerTaskV4SP1.cs" />
+    <Compile Include="ISchedulerTaskV4SP3.cs" />
+    <Compile Include="ISchedulerTaskV4SP5.cs" />
+    <Compile Include="ISchedulerV3SP2.cs" />
+    <Compile Include="ISchedulerV3SP3.cs" />
+    <Compile Include="FilterCollection.cs" />
+    <Compile Include="ILocalStoreHelper.cs" />
+    <Compile Include="ISchedulerJobV2.cs" />
+    <Compile Include="ISchedulerJobV3.cs" />
+    <Compile Include="ISchedulerJobV3SP1.cs" />
+    <Compile Include="ISchedulerJobV3SP2.cs" />
+    <Compile Include="ISchedulerJobV3SP3.cs" />
+    <Compile Include="ISchedulerJobV4.cs" />
+    <Compile Include="ISchedulerNodeV2.cs" />
+    <Compile Include="ISchedulerNodeV3.cs" />
+    <Compile Include="ISchedulerNodeV3SP1.cs" />
+    <Compile Include="ISchedulerNodeV3SP2.cs" />
+    <Compile Include="ISchedulerPool.cs" />
+    <Compile Include="ISchedulerTaskV3SP1.cs" />
+    <Compile Include="ISchedulerCollection.cs" />
+    <Compile Include="ISchedulerTaskV2.cs" />
+    <Compile Include="ISchedulerTaskV3.cs" />
+    <Compile Include="ISchedulerV2.cs" />
+    <Compile Include="ISchedulerV3.cs" />
+    <Compile Include="ISchedulerV3SP4.cs" />
+    <Compile Include="ISchedulerV4.cs" />
+    <Compile Include="ISchedulerV4SP1.cs" />
+    <Compile Include="ISchedulerV4SP3.cs" />
+    <Compile Include="ISchedulerV5SP2.cs" />
+    <Compile Include="ISchedulerV5.cs" />
+    <Compile Include="RemoteCommand\LineBuffer.cs" />
+    <Compile Include="NameValueCollection.cs" />
+    <Compile Include="PropertyIdCollection.cs" />
+    <Compile Include="PropId.cs" />
+    <Compile Include="RemoteCommand\CommandInfo.cs" />
+    <Compile Include="RemoteCommand\NativeWrapper.cs" />
+    <Compile Include="RemoteCommand\RemoteCommand.cs" />
+    <Compile Include="RemoteCommand\RemoteCommandEvents.cs" />
+    <Compile Include="Scheduler.cs" />
+    <Compile Include="SchedulerCollection.cs" />
+    <Compile Include="IntCollection.cs" />
+    <Compile Include="SchedulerConnectionContext.cs" />
+    <Compile Include="SchedulerCore.cs" />
+    <Compile Include="SchedulerCounters.cs" />
+    <Compile Include="SchedulerJob.cs" />
+    <Compile Include="SchedulerJobCounters.cs" />
+    <Compile Include="SchedulerJobEvents.cs" />
+    <Compile Include="SchedulerJob_Props.cs" />
+    <Compile Include="SchedulerNode.cs" />
+    <Compile Include="SchedulerNodeCounters.cs" />
+    <Compile Include="SchedulerNodeEvent.cs" />
+    <Compile Include="SchedulerNode_Props.cs" />
+    <Compile Include="SchedulerObjectBase.cs" />
+    <Compile Include="SchedulerPool.cs" />
+    <Compile Include="SchedulerRowEnumerator.cs" />
+    <Compile Include="SchedulerRowSet.cs" />
+    <Compile Include="SchedulerTaskCounters.cs" />
+    <Compile Include="SchedulerTask_Props.cs" />
+    <Compile Include="ServerVersion.cs" />
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="StringCollection.cs" />
+    <Compile Include="SchedulerTask.cs" />
+    <Compile Include="SortCollection.cs" />
+    <Compile Include="Util.cs" />
+  </ItemGroup>
+  <PropertyGroup Condition="'Win8'=='$(SdkVersion)'">
+    <StdOle2Arch Condition="'amd64'=='$(BuildArchitecture)'">x64</StdOle2Arch>
+    <StdOle2Arch Condition="'i386'=='$(BuildArchitecture)'">x86</StdOle2Arch>
+    <StdOle2Ref>/tlbreference:$(SDK_VERSION_ROOT)\SDK\lib\win8\um\$(StdOle2Arch)\stdole2.tlb</StdOle2Ref>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Mscorlib Condition="'amd64' == '$(BuildArchitecture)'">$(URTRUN_INSTALLROOT)64\$(DotNetRuntimeVersion)\mscorlib.tlb</Mscorlib>
+    <Mscorlib Condition="'i386' == '$(BuildArchitecture)'">$(URTRUN_INSTALLROOT)\$(DotNetRuntimeVersion)\mscorlib.tlb</Mscorlib>
+  </PropertyGroup>
+  <ItemGroup>
+    <TlbExport Include="$(OutDir)$(TargetName).dll">
+      <ExpFlags>/names:$(MSBuildProjectDirectory)\Capitalization.txt /tlbreference:$(BinariesBuildTypeArchDirectory)\Microsoft.Hpc.Scheduler.Properties\Microsoft.Hpc.Scheduler.Properties.tlb;$(Mscorlib);..\..\packages\WindowsSdk.Corext.m3rWNSVIeXea-JJ9adM_cA\Lib\10.0.10240.0\um\x64\stdole2.tlb /asmpath:..\..\packages\DotNetFxRefAssemblies.Corext.4.6.0;$(BinariesBuildTypeArchDirectory)\Microsoft.Hpc.Scheduler</ExpFlags>
+    </TlbExport>
+  </ItemGroup>
+  <ItemGroup>
+    <Binplace Include="$(TargetName).xml" />
+    <!-- binplace to second location -->
+    <Binplace Include="$(OutDir)$(TargetName).tlb">
+      <DestinationFolder>sdk\lib</DestinationFolder>
+    </Binplace>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\HpcCommon\HpcCommon.csproj">
+      <Project>{2c3936c7-4850-41d7-9497-9040be302328}</Project>
+      <Name>HpcCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Scheduler\FileStagingClient\FileStagingClient.csproj">
+      <Project>{efdbe309-2c73-40f3-ab7d-20ed4fa213c4}</Project>
+      <Name>FileStagingClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Property\Properties.csproj">
+      <Project>{61844849-3d26-4003-8146-5ae86985db3a}</Project>
+      <Name>Properties</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Store\Store.csproj">
+      <Project>{82f72b8b-372e-4a1c-8139-714ae932ebcb}</Project>
+      <Name>Store</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SR.resx">
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="job-v2.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="job-v3.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="job-v4.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="task-v2.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="task-v3.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="task-v4.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

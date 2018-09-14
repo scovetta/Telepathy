@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <EnableCBT_NoTarget>True</EnableCBT_NoTarget>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+  <ItemGroup>
+    <ProjectReference Include="Store\Store.csproj" Condition="'$(BuildArchitecture)' == 'amd64'" />
+    <ProjectReference Include="Property\Properties.csproj" Condition="'$(BuildArchitecture)' == 'amd64'" />
+    <ProjectReference Include="Scheduler\Scheduler.csproj" Condition="'$(BuildArchitecture)' == 'amd64'" />
+    <ProjectReference Include="Store.Net40\Store.Net40.csproj" Condition="'$(BuildArchitecture)' == 'amd64'" />
+    <ProjectReference Include="Property.Net40\Properties.Net40.csproj" Condition="'$(BuildArchitecture)' == 'amd64'" />
+    <ProjectReference Include="Scheduler.Net40\Scheduler.Net40.csproj" Condition="'$(BuildArchitecture)' == 'amd64'" />
+    <ProjectReference Include="NodeMgt\NodeMgtClient.csproj" Condition="'$(BuildArchitecture)' == 'amd64'" />
+    <ProjectReference Include="Internal\Internal.csproj" Condition="'$(BuildArchitecture)' == 'amd64'" />
+  </ItemGroup>
+  <Import Project="$(NoTargets)" Condition="Exists('$(NoTargets)')" />
+</Project>

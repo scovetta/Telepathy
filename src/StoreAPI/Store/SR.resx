@@ -1,0 +1,1119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Task_MaxSockets_Description" xml:space="preserve">
+    <value>The maximum number of sockets on which this task can run.</value>
+  </data>
+  <data name="Job_CanShrink_Description" xml:space="preserve">
+    <value>If True this job can be shrunk by the scheduler when it is running.</value>
+  </data>
+  <data name="Task_StartValue_DisplayName" xml:space="preserve">
+    <value>Sweep Start Index</value>
+  </data>
+  <data name="JobMessageHeader_JobCancelation_Plural" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Job_Owner_Description" xml:space="preserve">
+    <value>The user account that created the job.</value>
+  </data>
+  <data name="GenericJobMessage_JobWarning_NodesExcluded" xml:space="preserve">
+    <value>The following nodes have been excluded from the job: {0}</value>
+  </data>
+  <data name="PortOutOfRange" xml:space="preserve">
+    <value>The port is out of range</value>
+  </data>
+  <data name="Job_Name_Description" xml:space="preserve">
+    <value>The name of this job.</value>
+  </data>
+  <data name="FormatJobEventFinished" xml:space="preserve">
+    <value>{0}  Job Finished</value>
+  </data>
+  <data name="Job_RequestedNodes_Description" xml:space="preserve">
+    <value>The job can only be run on nodes that are in this list.</value>
+  </data>
+  <data name="Task_AllocatedNodes_DisplayName" xml:space="preserve">
+    <value>Allocated Nodes</value>
+  </data>
+  <data name="JobCannotBeFinished" xml:space="preserve">
+    <value>Job {0} can not be finished in State {1}</value>
+  </data>
+  <data name="Job_NodeGroupOp_DisplayName" xml:space="preserve">
+    <value>Node Groups Operator</value>
+  </data>
+  <data name="FormatAllocationReduced" xml:space="preserve">
+    <value>{0}  Allocation reduced to {2} cores on {1}</value>
+  </data>
+  <data name="Job_MinMemory_DisplayName" xml:space="preserve">
+    <value>Minimum Memory</value>
+  </data>
+  <data name="Job_NodeGroupOp_Description" xml:space="preserve">
+    <value>How selected Node Groups will be combined. It's recommended that the Node Group property is also added to this template, which selects the node groups that will be available to combine. Intersection will run only on nodes that are members of all selected Node Groups. Uniform will only run on nodes that are members of any one of the selected  Node Groups. Union will only run on nodes that are members of any of the selected Node Groups.</value>
+  </data>
+  <data name="JobMessageHeader_JobWarning_Singular" xml:space="preserve">
+    <value>Warning: {0}</value>
+  </data>
+  <data name="Task_StartTime_DisplayName" xml:space="preserve">
+    <value>Start Time</value>
+  </data>
+  <data name="Job_EstimatedProcessMemory_Description" xml:space="preserve">
+    <value>The maximum amount of memory that each process in this job is estimated to consume.</value>
+  </data>
+  <data name="JobMessageHeader_TaskCancelation_Plural" xml:space="preserve">
+    <value>{1} tasks canceled with message: "{0}"</value>
+  </data>
+  <data name="Job_MinSockets_Description" xml:space="preserve">
+    <value>The minimum number of sockets on which this job can run.</value>
+  </data>
+  <data name="FormatJobCreated" xml:space="preserve">
+    <value>{0}  Created by {1}</value>
+  </data>
+  <data name="Task_StartTime_Description" xml:space="preserve">
+    <value>The UTC time the task started.</value>
+  </data>
+  <data name="Job_MaxCores_Description" xml:space="preserve">
+    <value>The maximum number of processors on which this job can run.</value>
+  </data>
+  <data name="RunUntilCanceledNotTrue" xml:space="preserve">
+    <value>The RunUntilCanceled property must be set to true</value>
+  </data>
+  <data name="RunUntilCanceledNotBool" xml:space="preserve">
+    <value>The RunUntilCanceled property requires a Boolean value</value>
+  </data>
+  <data name="UnitTypeNotDefined" xml:space="preserve">
+    <value>The UnitType property requires a value defined in enumeration JobUnitType  </value>
+  </data>
+  <data name="Job_Id_DisplayName" xml:space="preserve">
+    <value>Job ID</value>
+  </data>
+  <data name="JobTemplate_Name_DisplayName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="BadTypeProperty" xml:space="preserve">
+    <value>Bad type for {0}, bad type is: {1}</value>
+  </data>
+  <data name="Job_UnitType_DisplayName" xml:space="preserve">
+    <value>Unit Type</value>
+  </data>
+  <data name="Job_ExpandedPriority_DisplayName" xml:space="preserve">
+    <value>Expanded Priority</value>
+  </data>
+  <data name="Job_StartTime_Description" xml:space="preserve">
+    <value>The UTC time the job started.</value>
+  </data>
+  <data name="Task_TotalNodeCount_DisplayName" xml:space="preserve">
+    <value>Current Allocation</value>
+  </data>
+  <data name="TransactionAlreadyStarted" xml:space="preserve">
+    <value>Already have a transaction started</value>
+  </data>
+  <data name="Job_SubmissionFilters_DisplayName" xml:space="preserve">
+    <value>Submission Filters</value>
+  </data>
+  <data name="RemoteCommand_InvalidOutputDirectory" xml:space="preserve">
+    <value>Output directory cannot be null or empty.</value>
+  </data>
+  <data name="Job_CanceledTaskCount_DisplayName" xml:space="preserve">
+    <value>Canceled Tasks</value>
+  </data>
+  <data name="ForcedGracefulConflict" xml:space="preserve">
+    <value>The current operation doesn't support both Forced and Graceful manner.</value>
+  </data>
+  <data name="FormatJobEventCancelRequestReceived" xml:space="preserve">
+    <value>{0}  Cancel requested by {1}</value>
+  </data>
+  <data name="Node_Id_Description" xml:space="preserve">
+    <value>The numeric system ID of this node within the Scheduler.</value>
+  </data>
+  <data name="Job_OrderBy_DisplayName" xml:space="preserve">
+    <value>Node Ordering</value>
+  </data>
+  <data name="FormatJobEventCancelRequestPreemptionReceived" xml:space="preserve">
+    <value>{0}  Job is being Preempted</value>
+  </data>
+  <data name="UsernameCantBeNull" xml:space="preserve">
+    <value>The username cannot be null or empty  </value>
+  </data>
+  <data name="Task_ErrorMessage_DisplayName" xml:space="preserve">
+    <value>Error Message</value>
+  </data>
+  <data name="Job_CanGrow_Description" xml:space="preserve">
+    <value>If True this job can be grown by the scheduler when it is running.</value>
+  </data>
+  <data name="Task_Name_DisplayName" xml:space="preserve">
+    <value>Task Name</value>
+  </data>
+  <data name="Job_MaxMemory_DisplayName" xml:space="preserve">
+    <value>Maximum Memory</value>
+  </data>
+  <data name="Job_JobTemplate_Description" xml:space="preserve">
+    <value>The name of the Job Template against which this job is being submitted.</value>
+  </data>
+  <data name="Job_RequestedNodes_DisplayName" xml:space="preserve">
+    <value>Requested Nodes</value>
+  </data>
+  <data name="FormatJobStartedOnNode" xml:space="preserve">
+    <value>{0}  Started on {1} with {2} cores</value>
+  </data>
+  <data name="JobMessageHeader_TaskNodeError_Singular" xml:space="preserve">
+    <value>1 task failed on node {1} with message: "{0}"</value>
+  </data>
+  <data name="Task_ExitCode_DisplayName" xml:space="preserve">
+    <value>Exit Code</value>
+  </data>
+  <data name="Job_ChangeTime_Description" xml:space="preserve">
+    <value>The UTC time the job was last changed on the server.</value>
+  </data>
+  <data name="Task_ChangeTime_Description" xml:space="preserve">
+    <value>The UTC time the task was last changed on the server.</value>
+  </data>
+  <data name="Task_Output_Description" xml:space="preserve">
+    <value>The output from the task.</value>
+  </data>
+  <data name="Task_EndValue_Description" xml:space="preserve">
+    <value>The ending index for the sweep.</value>
+  </data>
+  <data name="Node_State_Description" xml:space="preserve">
+    <value>The current state of the node.</value>
+  </data>
+  <data name="Task_SubmitTime_Description" xml:space="preserve">
+    <value>The UTC time the task was submitted.</value>
+  </data>
+  <data name="Job_NodeReleaseTask_Description" xml:space="preserve">
+    <value>A node release task will be automatically created in the job, using the command line defined here.</value>
+  </data>
+  <data name="Job_MinSockets_DisplayName" xml:space="preserve">
+    <value>Minimum Sockets</value>
+  </data>
+  <data name="Job_FailedTaskCount_DisplayName" xml:space="preserve">
+    <value>Failed Tasks</value>
+  </data>
+  <data name="Job_CreateTime_Description" xml:space="preserve">
+    <value>The UTC time the job was created.</value>
+  </data>
+  <data name="JobErrorMessage_Execution_TaskFailure" xml:space="preserve">
+    <value>One or more tasks have failed.</value>
+  </data>
+  <data name="Node_Reachable_Description" xml:space="preserve">
+    <value>If True, the Scheduler is connected to the node.</value>
+  </data>
+  <data name="Task_MaxCores_Description" xml:space="preserve">
+    <value>The maximum number of processors on which this task can run.</value>
+  </data>
+  <data name="FormatJobFinishFailed" xml:space="preserve">
+    <value>The job finish operation failed. The Job is in state {0} after the operation.</value>
+  </data>
+  <data name="Task_RequeueCount_Description" xml:space="preserve">
+    <value>The number of times the task has been requeued.</value>
+  </data>
+  <data name="Task_MinNodes_Description" xml:space="preserve">
+    <value>The minimum number of nodes on which this task can run.</value>
+  </data>
+  <data name="Job_MaxCoresPerNode_DisplayName" xml:space="preserve">
+    <value>Maximum Cores Per Node</value>
+  </data>
+  <data name="Pool_Weight_DisplayName" xml:space="preserve">
+    <value>Weight</value>
+  </data>
+  <data name="SchemaNotValid" xml:space="preserve">
+    <value>The required schema is not valid  </value>
+  </data>
+  <data name="JobTemplate_Description_DisplayName" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="JobTemplate_ChangeTime_DisplayName" xml:space="preserve">
+    <value>Change Time</value>
+  </data>
+  <data name="Job_CallDuration_DisplayName" xml:space="preserve">
+    <value>Request Duration</value>
+  </data>
+  <data name="Job_ErrorMessage_Description" xml:space="preserve">
+    <value>Any error message that occured when the job was running.</value>
+  </data>
+  <data name="JobErrorMessage_Execution_NodeError" xml:space="preserve">
+    <value>An error occurred on the node: please see the task for more details.</value>
+  </data>
+  <data name="StoreCantBeNull" xml:space="preserve">
+    <value>The store object can not be null  </value>
+  </data>
+  <data name="Task_EnvironmentVariables_DisplayName" xml:space="preserve">
+    <value>Environment Variables</value>
+  </data>
+  <data name="Job_MinNodes_Description" xml:space="preserve">
+    <value>The minimum number of nodes on which this job can run.</value>
+  </data>
+  <data name="Task_MaxNodes_Description" xml:space="preserve">
+    <value>The maximum number of nodes on which this task can run.</value>
+  </data>
+  <data name="RemoteCommand_NoStreamForOutput" xml:space="preserve">
+    <value>Only RemoteCommand with SpoolDir and UserDir output option has output stream.</value>
+  </data>
+  <data name="Task_IsParametric_Description" xml:space="preserve">
+    <value>If True, this task is parametric. This property is deprecated: please use the Type property instead.</value>
+  </data>
+  <data name="RemoteCommand_NoLocalPath" xml:space="preserve">
+    <value>Cannot open output stream because output is on compute node's local disk {0}.</value>
+  </data>
+  <data name="Task_IsParametric_DisplayName" xml:space="preserve">
+    <value>Parametric</value>
+  </data>
+  <data name="Job_ServiceName_Description" xml:space="preserve">
+    <value>The name of the service.</value>
+  </data>
+  <data name="Task_RuntimeSeconds_DisplayName" xml:space="preserve">
+    <value>Run Time</value>
+  </data>
+  <data name="Task_Id_DisplayName" xml:space="preserve">
+    <value>Task ID</value>
+  </data>
+  <data name="MethodNotImplemented" xml:space="preserve">
+    <value>The {0} method or operation is not implemented.</value>
+  </data>
+  <data name="JobErrorMessage_Execution_TasksJobCanceled" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Task_StdErrFilePath_DisplayName" xml:space="preserve">
+    <value>Standard Error</value>
+  </data>
+  <data name="Job_Project_DisplayName" xml:space="preserve">
+    <value>Project</value>
+  </data>
+  <data name="TaskTypeName_Basic" xml:space="preserve">
+    <value>Basic Task</value>
+  </data>
+  <data name="Wrong_Integer_For_Boolean" xml:space="preserve">
+    <value>Only 0 and 1 can be used for boolean variables.</value>
+  </data>
+  <data name="TaskTypeName_Service" xml:space="preserve">
+    <value>Service Task</value>
+  </data>
+  <data name="PropertyCantBeNull" xml:space="preserve">
+    <value>The property value cannot be null</value>
+  </data>
+  <data name="Job_MinCoresPerNode_Description" xml:space="preserve">
+    <value>The minimum number of processors that must be present on any nodes that this job is run on.</value>
+  </data>
+  <data name="Job_QueuedTaskCount_DisplayName" xml:space="preserve">
+    <value>Queued Tasks</value>
+  </data>
+  <data name="Job_ClientSource_Description" xml:space="preserve">
+    <value>The name of the application that created the job.</value>
+  </data>
+  <data name="Task_StdInFilePath_DisplayName" xml:space="preserve">
+    <value>Standard Input</value>
+  </data>
+  <data name="Job_EmptyCancelReason" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Task_EndTime_DisplayName" xml:space="preserve">
+    <value>End Time</value>
+  </data>
+  <data name="Job_Progress_DisplayName" xml:space="preserve">
+    <value>Progress</value>
+  </data>
+  <data name="RemoteCommand_WrongStateToStart" xml:space="preserve">
+    <value>Remote command cannot be started at {0} state.</value>
+  </data>
+  <data name="Job_PreviousState_Description" xml:space="preserve">
+    <value>The previous state of the job.</value>
+  </data>
+  <data name="TaskTypeName_ParametricSweep" xml:space="preserve">
+    <value>Parametric Sweep Task</value>
+  </data>
+  <data name="Job_TotalSocketCount_DisplayName" xml:space="preserve">
+    <value>Current Allocation</value>
+  </data>
+  <data name="Node_MemorySize_Description" xml:space="preserve">
+    <value>The amount of RAM installed in the node.</value>
+  </data>
+  <data name="Task_CreateTime_Description" xml:space="preserve">
+    <value>The UTC time the task was created.</value>
+  </data>
+  <data name="Job_FailOnTaskFailure_DisplayName" xml:space="preserve">
+    <value>Fail on Task Failure</value>
+  </data>
+  <data name="Job_MaxSockets_DisplayName" xml:space="preserve">
+    <value>Maximum Sockets</value>
+  </data>
+  <data name="InvalidUserName" xml:space="preserve">
+    <value>The user name is not valid.</value>
+  </data>
+  <data name="Job_NumberOfCalls_DisplayName" xml:space="preserve">
+    <value>Number of Requests</value>
+  </data>
+  <data name="Job_UserName_Description" xml:space="preserve">
+    <value>The account that will be used to run the job.</value>
+  </data>
+  <data name="Job_UserName_DisplayName" xml:space="preserve">
+    <value>Run As User</value>
+  </data>
+  <data name="Task_UnitType_DisplayName" xml:space="preserve">
+    <value>Requested Resources</value>
+  </data>
+  <data name="Task_State_Description" xml:space="preserve">
+    <value>The current state of the task.</value>
+  </data>
+  <data name="Job_MinCores_Description" xml:space="preserve">
+    <value>The minimum number of processors on which this job can run.</value>
+  </data>
+  <data name="ReturningActionTemplate" xml:space="preserve">
+    <value>Returning Action={0}.</value>
+  </data>
+  <data name="FailedFreeze" xml:space="preserve">
+    <value>An error occurred while attempting to suspend updates from the server.  Operation aborted.</value>
+  </data>
+  <data name="Job_OrderBy_Description" xml:space="preserve">
+    <value>The ordering to use when selecting nodes for the job. For example, ordering by "More Memory" will allocate the available nodes with the largest amount of memory.</value>
+  </data>
+  <data name="Job_MaxProcsPerNode_DisplayName" xml:space="preserve">
+    <value>Maximum Processor Count</value>
+  </data>
+  <data name="Job_RequeueCount_Description" xml:space="preserve">
+    <value>The number of times the job has been requeued.</value>
+  </data>
+  <data name="JobErrorMessage_Execution_TaskCanceledBeforeAssignment" xml:space="preserve">
+    <value />
+  </data>
+  <data name="JobMessageHeader_JobCancelation_Singular" xml:space="preserve">
+    <value>The job has been canceled: "{0}"</value>
+  </data>
+  <data name="TracePathCantBeNull" xml:space="preserve">
+    <value>The path to contain tracing logs cannot be null or empty  </value>
+  </data>
+  <data name="Job_MaxMemory_Description" xml:space="preserve">
+    <value>The maximum amount of memory (in MB) on any nodes that this job is run on.</value>
+  </data>
+  <data name="SmallJobPropertyValue" xml:space="preserve">
+    <value>The {0} value is less than {1} that is specified in the profile</value>
+  </data>
+  <data name="Job_SubmitTime_Description" xml:space="preserve">
+    <value>The UTC time the job was submitted.</value>
+  </data>
+  <data name="RemoteCommand_JobName" xml:space="preserve">
+    <value>Remote command</value>
+  </data>
+  <data name="Job_RunningTaskCount_DisplayName" xml:space="preserve">
+    <value>Running Tasks</value>
+  </data>
+  <data name="Node_NodeGroups_Description" xml:space="preserve">
+    <value>Node groups that this node belongs to.</value>
+  </data>
+  <data name="Job_CurrentNodeCount_DisplayName" xml:space="preserve">
+    <value>Current Allocation</value>
+  </data>
+  <data name="UnitTypeMustSpecify" xml:space="preserve">
+    <value>A UnitType must be specified  </value>
+  </data>
+  <data name="Job_NodePrepareTask_Description" xml:space="preserve">
+    <value>A node preparation task will be automatically created in the job, using the command line defined here.</value>
+  </data>
+  <data name="Task_EndTime_Description" xml:space="preserve">
+    <value>The UTC time the task stopped.</value>
+  </data>
+  <data name="Job_IsExclusive_DisplayName" xml:space="preserve">
+    <value>Exclusive</value>
+  </data>
+  <data name="CredentialTypeDialog_OkButtonString" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Job_SubmissionFilters_Description" xml:space="preserve">
+    <value>The DLL filters that must be called when any job is submitted with this Job Template.  The DLL files are relative to the %CCP_DATA%\Filters folder. The filters are called in the order listed, and will run before the cluster-wide submission filter (if specified).</value>
+  </data>
+  <data name="Task_StdInFilePath_Description" xml:space="preserve">
+    <value>The path (relative to the working directory) to the file from which the stdin of this task should be read.</value>
+  </data>
+  <data name="Job_EndTime_Description" xml:space="preserve">
+    <value>The UTC time the job stopped.</value>
+  </data>
+  <data name="JobMessageHeader_TaskValidationError_Singular" xml:space="preserve">
+    <value>1 task failed to pass validation.</value>
+  </data>
+  <data name="RemoteCommand_InvalidOutputOption" xml:space="preserve">
+    <value>Invalid remote command output option.</value>
+  </data>
+  <data name="Job_MaxNodes_Description" xml:space="preserve">
+    <value>The maximum number of nodes on which this job can run.</value>
+  </data>
+  <data name="Task_WorkDirectory_DisplayName" xml:space="preserve">
+    <value>Working Directory</value>
+  </data>
+  <data name="Job_NodeGroups_DisplayName" xml:space="preserve">
+    <value>Node Groups</value>
+  </data>
+  <data name="Job_ProgressMessage_DisplayName" xml:space="preserve">
+    <value>Progress Message</value>
+  </data>
+  <data name="Job_NodeGroups_Description" xml:space="preserve">
+    <value>The job can only be run on nodes that are in all of these groups.</value>
+  </data>
+  <data name="Job_Name_DisplayName" xml:space="preserve">
+    <value>Job Name</value>
+  </data>
+  <data name="Job_EndTime_DisplayName" xml:space="preserve">
+    <value>End Time</value>
+  </data>
+  <data name="CredentialTypeDialog_LabelString" xml:space="preserve">
+    <value>Choose an authentication method</value>
+  </data>
+  <data name="Job_MaxCoresPerNode_Description" xml:space="preserve">
+    <value>The maximum number of processors on any nodes that this job is run on.</value>
+  </data>
+  <data name="RemoteCommand_TaskName" xml:space="preserve">
+    <value>Remote command</value>
+  </data>
+  <data name="Job_Project_Description" xml:space="preserve">
+    <value>The name of the project of which this job is a part.</value>
+  </data>
+  <data name="Job_MinNodes_DisplayName" xml:space="preserve">
+    <value>Minimum Nodes</value>
+  </data>
+  <data name="Task_CurrentSocketCount_DisplayName" xml:space="preserve">
+    <value>Current Allocation</value>
+  </data>
+  <data name="JobMessageHeader_TaskFailure_Plural" xml:space="preserve">
+    <value>{1} tasks failed with message: "{0}"</value>
+  </data>
+  <data name="Job_Pool_Description" xml:space="preserve">
+    <value>Jobs that are submitted with this template will use the specified resource pool. All jobs that use this resource pool will collectively be guaranteed the proportion of cluster resources as defined by the pool weight.</value>
+  </data>
+  <data name="Task_IsRerunnable_DisplayName" xml:space="preserve">
+    <value>Rerunnable</value>
+  </data>
+  <data name="TypeNotDefined" xml:space="preserve">
+    <value>The Type property requires a value defined in enumeration JobType  </value>
+  </data>
+  <data name="Job_Preemptable_Description" xml:space="preserve">
+    <value>If True, this job can be preempted by a higher-priority job, and it can automatically grow resources based on the job resources configuration.</value>
+  </data>
+  <data name="Job_NodeReleaseTask_DisplayName" xml:space="preserve">
+    <value>Node Release Task</value>
+  </data>
+  <data name="Job_HasRuntime_Description" xml:space="preserve">
+    <value>If True this job has a runtime.</value>
+  </data>
+  <data name="FormatAllocationIncreased" xml:space="preserve">
+    <value>{0}  Allocation increased to {2} cores on {1}</value>
+  </data>
+  <data name="TaskTypeName_NodePrep" xml:space="preserve">
+    <value>Node Prep Task</value>
+  </data>
+  <data name="Job_State_Description" xml:space="preserve">
+    <value>The current state of the job.</value>
+  </data>
+  <data name="JobMessageHeader_JobFailure_Plural" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Job_CurrentSocketCount_DisplayName" xml:space="preserve">
+    <value>Current Allocation</value>
+  </data>
+  <data name="Job_Priority_DisplayName" xml:space="preserve">
+    <value>Priority</value>
+  </data>
+  <data name="Task_MinCores_Description" xml:space="preserve">
+    <value>The minimum number of processors on which this task can run.</value>
+  </data>
+  <data name="CertificateChooser_Title" xml:space="preserve">
+    <value>Certificate Chooser</value>
+  </data>
+  <data name="Job_FailOnTaskFailure_Description" xml:space="preserve">
+    <value>If True, then failure of any task in the job will cause the entire job to fail immediately.</value>
+  </data>
+  <data name="Job_MaxSockets_Description" xml:space="preserve">
+    <value>The maximum number of sockets on which this job can run.</value>
+  </data>
+  <data name="CredentialTypeDialog_CancelButtonString" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Node_NumCores_Description" xml:space="preserve">
+    <value>The number of cores installed on the node.</value>
+  </data>
+  <data name="JobMessageHeader_JobWarning_Plural" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Job_JobTemplate_DisplayName" xml:space="preserve">
+    <value>Template</value>
+  </data>
+  <data name="FormatJobSubmitted" xml:space="preserve">
+    <value>{0}  Submitted</value>
+  </data>
+  <data name="Task_CurrentNodeCount_DisplayName" xml:space="preserve">
+    <value>Current Allocation</value>
+  </data>
+  <data name="Job_AutoCalculateMax_DisplayName" xml:space="preserve">
+    <value>Auto Calculate Maximum</value>
+  </data>
+  <data name="Job_MinMemory_Description" xml:space="preserve">
+    <value>The minimum amount of memory (in MB) that must be present on any nodes that this job is run on.</value>
+  </data>
+  <data name="Job_TotalNodeCount_DisplayName" xml:space="preserve">
+    <value>Current Allocation</value>
+  </data>
+  <data name="JobErrorMessage_Execution_FailedToOpenStandardError" xml:space="preserve">
+    <value>Unable to open standard error file.</value>
+  </data>
+  <data name="Job_TaskExecutionFailureRetryLimit_DisplayName" xml:space="preserve">
+    <value>Task Execution Failure Retry Limit</value>
+  </data>
+  <data name="JobErrorMessage_Execution_FailedToOpenStandardInput" xml:space="preserve">
+    <value>Unable to open standard input file.</value>
+  </data>
+  <data name="Job_AutoCalculateMax_Description" xml:space="preserve">
+    <value>If enabled, the scheduler will automatically calculate the maximum based on the tasks in the job.</value>
+  </data>
+  <data name="Node_LastPingTime_Description" xml:space="preserve">
+    <value>The last UTC time that the node contacted the Scheduler.</value>
+  </data>
+  <data name="Job_FinishedTaskCount_DisplayName" xml:space="preserve">
+    <value>Finished Tasks</value>
+  </data>
+  <data name="Job_RuntimeSeconds_Description" xml:space="preserve">
+    <value>The hard limit on the amount of time this job will be allowed to run. (dd:hh:mm)</value>
+  </data>
+  <data name="Job_TaskCount_DisplayName" xml:space="preserve">
+    <value>Number of Tasks</value>
+  </data>
+  <data name="JobErrorMessage_Execution_TaskExecutionFailure" xml:space="preserve">
+    <value>Task failed during execution.</value>
+  </data>
+  <data name="TypeNotService" xml:space="preserve">
+    <value>The JobType property must be set to Service  </value>
+  </data>
+  <data name="FormatJobStarted" xml:space="preserve">
+    <value>{0}  Started</value>
+  </data>
+  <data name="FormatJobEndedOnNode" xml:space="preserve">
+    <value>{0}  Ended on {1}</value>
+  </data>
+  <data name="Job_TotalResourceCount_DisplayName" xml:space="preserve">
+    <value>Current Allocation</value>
+  </data>
+  <data name="Node_Guid_Description" xml:space="preserve">
+    <value>The unique identifier used by the the Cluster to identify this node.</value>
+  </data>
+  <data name="Job_PendingReason_DisplayName" xml:space="preserve">
+    <value>Pending Reason</value>
+  </data>
+  <data name="Task_WorkDirectory_Description" xml:space="preserve">
+    <value>The working directory to be used during execution for this task.</value>
+  </data>
+  <data name="Job_Owner_DisplayName" xml:space="preserve">
+    <value>Owner</value>
+  </data>
+  <data name="FormatJobCancelFailed" xml:space="preserve">
+    <value>The job cancel operation failed. The Job is in state {0} after the operation.</value>
+  </data>
+  <data name="JobErrorMessage_Execution_FailedToOpenStandardOutput" xml:space="preserve">
+    <value>Unable to open standard output file.</value>
+  </data>
+  <data name="Job_CallsPerSecond_DisplayName" xml:space="preserve">
+    <value>Requests Calculated Per Second</value>
+  </data>
+  <data name="Job_RequiredNodes_DisplayName" xml:space="preserve">
+    <value>Required Nodes</value>
+  </data>
+  <data name="Pool_Guarantee_DisplayName" xml:space="preserve">
+    <value>Guarantee</value>
+  </data>
+  <data name="MustProvideXmlWriter" xml:space="preserve">
+    <value>Must provide a XmlWriter</value>
+  </data>
+  <data name="Job_AutoCalculateMin_Description" xml:space="preserve">
+    <value>If enabled, the scheduler will automatically calculate the minimum based on the tasks in the job.</value>
+  </data>
+  <data name="Job_ActivationFilters_Description" xml:space="preserve">
+    <value>The DLL filters that must be called when any job submitted with this Job Template is about to run.  The DLL files are relative to the %CCP_DATA%\Filters folder. The filters are called in the order listed, and will run before the cluster-wide activation filter (if specified).</value>
+  </data>
+  <data name="Task_EndValue_DisplayName" xml:space="preserve">
+    <value>Sweep End Index</value>
+  </data>
+  <data name="Task_IsExclusive_DisplayName" xml:space="preserve">
+    <value>Exclusive</value>
+  </data>
+  <data name="Task_MinSockets_Description" xml:space="preserve">
+    <value>The minimum number of sockets on which this task can run.</value>
+  </data>
+  <data name="JobMessageHeader_TaskExecutionError_Plural" xml:space="preserve">
+    <value>{1} tasks failed with exit code {0}</value>
+  </data>
+  <data name="Job_RuntimeSeconds_DisplayName" xml:space="preserve">
+    <value>Run Time</value>
+  </data>
+  <data name="UserNameNotString" xml:space="preserve">
+    <value>The UserName property requires a string value</value>
+  </data>
+  <data name="MissingRequiredJobPropertyValue" xml:space="preserve">
+    <value>The values in {0} do not contain a value in the required value set</value>
+  </data>
+  <data name="Task_StartValue_Description" xml:space="preserve">
+    <value>The starting index for the sweep.</value>
+  </data>
+  <data name="Job_ExpandedPriority_Description" xml:space="preserve">
+    <value>The job's priority.</value>
+  </data>
+  <data name="Job_EstimatedProcessMemory_DisplayName" xml:space="preserve">
+    <value>Estimated Process Memory</value>
+  </data>
+  <data name="JobErrorMessage_Execution_TasksPreempted" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Job_SubmitTime_DisplayName" xml:space="preserve">
+    <value>Submit Time</value>
+  </data>
+  <data name="Task_PreviousState_Description" xml:space="preserve">
+    <value>The previous state of the task.</value>
+  </data>
+  <data name="Job_ActivationFilters_DisplayName" xml:space="preserve">
+    <value>Activation Filters</value>
+  </data>
+  <data name="Pool_Name_DisplayName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Node_JobType_Description" xml:space="preserve">
+    <value>A set of flags that indicates which types (Batch, Service) can run on the node.</value>
+  </data>
+  <data name="JobErrorMessage_Execution_NodeUnreachable" xml:space="preserve">
+    <value>The node became unreachable.</value>
+  </data>
+  <data name="Task_Output_DisplayName" xml:space="preserve">
+    <value>Output</value>
+  </data>
+  <data name="JobMessageHeader_TaskFailure_Singular" xml:space="preserve">
+    <value>1 task failed with message: "{0}"</value>
+  </data>
+  <data name="Task_Type_DisplayName" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Job_RunUntilCanceled_Description" xml:space="preserve">
+    <value>If True, this job will run until it is cancelled or its runtime is expired. It will not stop when there are no tasks left within it.</value>
+  </data>
+  <data name="RemoteCommand_NoImmediateOutputForOpenCommand" xml:space="preserve">
+    <value>An existing command cannot be opened with immediate output mode.</value>
+  </data>
+  <data name="RemoteCommand_NoAskedNodes" xml:space="preserve">
+    <value>Job does not have AskedNodes set.</value>
+  </data>
+  <data name="Task_HasRuntime_Description" xml:space="preserve">
+    <value>If True this task has a runtime.</value>
+  </data>
+  <data name="Job_ServiceName_DisplayName" xml:space="preserve">
+    <value>Service Name</value>
+  </data>
+  <data name="Task_IncrementValue_Description" xml:space="preserve">
+    <value>The amount to increment the sweep index at each step of the sweep.</value>
+  </data>
+  <data name="JobMessageHeader_TaskNodeError_Plural" xml:space="preserve">
+    <value>{2} tasks failed on node {1} with message: "{0}" </value>
+  </data>
+  <data name="Node_NumSockets_Description" xml:space="preserve">
+    <value>The number of processor sockets with processors installed on the node.</value>
+  </data>
+  <data name="Job_MinProcsPerNode_DisplayName" xml:space="preserve">
+    <value>Minimum Processor Count</value>
+  </data>
+  <data name="Node_CpuSpeed_Description" xml:space="preserve">
+    <value>The speed of the CPU's installed in the node.</value>
+  </data>
+  <data name="JobErrorMessage_Execution_WorkingDirectoryNotFound" xml:space="preserve">
+    <value>Unable to access working directory.</value>
+  </data>
+  <data name="Task_StdOutFilePath_DisplayName" xml:space="preserve">
+    <value>Standard Output</value>
+  </data>
+  <data name="Job_ConfiguringTaskCount_DisplayName" xml:space="preserve">
+    <value>Configuring Tasks</value>
+  </data>
+  <data name="Task_IncrementValue_DisplayName" xml:space="preserve">
+    <value>Sweep Increment</value>
+  </data>
+  <data name="Task_StdOutFilePath_Description" xml:space="preserve">
+    <value>The path (relative to the working directory) to the file to which the stdout of this task should be written.</value>
+  </data>
+  <data name="JobMessageHeader_JobPendingReason_Singular" xml:space="preserve">
+    <value>The job is pending: {0}</value>
+  </data>
+  <data name="Job_UnitType_Description" xml:space="preserve">
+    <value>The granularity at which to schedule resources for the job.  The Minimum and Maximum specify the number of these resources which are required for the job.</value>
+  </data>
+  <data name="Job_Pool_DisplayName" xml:space="preserve">
+    <value>Pool</value>
+  </data>
+  <data name="CredentialTypeDialog_CertCheckBoxString" xml:space="preserve">
+    <value>Choose a &amp;softcard certificate</value>
+  </data>
+  <data name="Task_RequiredNodes_DisplayName" xml:space="preserve">
+    <value>Required Nodes</value>
+  </data>
+  <data name="Job_SoftwareLicense_Description" xml:space="preserve">
+    <value>A list of licenses that are required for the job.</value>
+  </data>
+  <data name="ServiceJobTerminated" xml:space="preserve">
+    <value>The service job can never go to Running state  </value>
+  </data>
+  <data name="Job_NodePrepareTask_DisplayName" xml:space="preserve">
+    <value>Node Preparation Task</value>
+  </data>
+  <data name="Job_AllocatedNodes_DisplayName" xml:space="preserve">
+    <value>Allocated Nodes</value>
+  </data>
+  <data name="Job_TaskExecutionFailureRetryLimit_Description" xml:space="preserve">
+    <value>The maximum retry count of task execution failure.</value>
+  </data>
+  <data name="Task_RuntimeSeconds_Description" xml:space="preserve">
+    <value>The hard limit on the amount of time this task will be allowed to run.</value>
+  </data>
+  <data name="Job_CreateTime_DisplayName" xml:space="preserve">
+    <value>Create Time</value>
+  </data>
+  <data name="Job_NumberOfOutstandingCalls_DisplayName" xml:space="preserve">
+    <value>Outstanding Requests</value>
+  </data>
+  <data name="Node_Name_Description" xml:space="preserve">
+    <value>The NETBIOS name of the node.</value>
+  </data>
+  <data name="Job_Id_Description" xml:space="preserve">
+    <value>The numeric ID of this job.</value>
+  </data>
+  <data name="JobErrorMessage_Execution_TaskRuntimeExpired" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Job_Preemptable_DisplayName" xml:space="preserve">
+    <value>Preemptable and Can Grow</value>
+  </data>
+  <data name="Job_Priority_Description" xml:space="preserve">
+    <value>The priority of the job.</value>
+  </data>
+  <data name="RemoteCommand_Canceled" xml:space="preserve">
+    <value>Remote command canceled by user.</value>
+  </data>
+  <data name="UnknownProperty" xml:space="preserve">
+    <value>Property {0} is not known</value>
+  </data>
+  <data name="RemoteCommand_InvalidJobType" xml:space="preserve">
+    <value>Only Admin job cannot be opened as a remote command.</value>
+  </data>
+  <data name="Job_MinCores_DisplayName" xml:space="preserve">
+    <value>Minimum Cores</value>
+  </data>
+  <data name="CertificateChooser_Text" xml:space="preserve">
+    <value>Choose a certificate to upload to the scheduler</value>
+  </data>
+  <data name="Job_WaitTime_DisplayName" xml:space="preserve">
+    <value>Wait Time</value>
+  </data>
+  <data name="FormatJobEventFailed" xml:space="preserve">
+    <value>{0}  Job Failed</value>
+  </data>
+  <data name="Job_State_DisplayName" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="InvalidJobPropertyValue" xml:space="preserve">
+    <value>The {0} value is not in the valid value set</value>
+  </data>
+  <data name="Task_CommandLine_Description" xml:space="preserve">
+    <value>The command line that will be executed by this task.</value>
+  </data>
+  <data name="Node_OfflineTime_Description" xml:space="preserve">
+    <value>The last UTC time that the node was taken offline.</value>
+  </data>
+  <data name="JobErrorMessage_Execution_TaskNodeNotUsable" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Job_MaxNodes_DisplayName" xml:space="preserve">
+    <value>Maximum Nodes</value>
+  </data>
+  <data name="Task_RequiredNodes_Description" xml:space="preserve">
+    <value>Lists the nodes that must be assigned to this task and its job in order to run.</value>
+  </data>
+  <data name="Task_TotalResourceCount_DisplayName" xml:space="preserve">
+    <value>Current Allocation</value>
+  </data>
+  <data name="JobMessageHeader_TaskCancelation_Singular" xml:space="preserve">
+    <value>1 task canceled with message: "{0}"</value>
+  </data>
+  <data name="Task_ExitCode_Description" xml:space="preserve">
+    <value>The exit code for the process that this task ran.</value>
+  </data>
+  <data name="Node_OnlineTime_Description" xml:space="preserve">
+    <value>The last UTC time that the node was taken online.</value>
+  </data>
+  <data name="JobMessageHeader_TaskExecutionError_Singular" xml:space="preserve">
+    <value>1 task failed with exit code {0}</value>
+  </data>
+  <data name="Task_ParentJobId_Description" xml:space="preserve">
+    <value>The numeric ID of the job that this task belongs to.</value>
+  </data>
+  <data name="Task_Id_Description" xml:space="preserve">
+    <value>The numeric ID of this task.</value>
+  </data>
+  <data name="TaskTypeName_NodeRelease" xml:space="preserve">
+    <value>Node Release Task</value>
+  </data>
+  <data name="GenericJobMessage_Unknown" xml:space="preserve">
+    <value>Unknown message</value>
+  </data>
+  <data name="Task_Name_Description" xml:space="preserve">
+    <value>The name of this task.</value>
+  </data>
+  <data name="Task_State_DisplayName" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="Pool_CurrentAllocation_DisplayName" xml:space="preserve">
+    <value>Current Allocation</value>
+  </data>
+  <data name="JobErrorMessage_Execution_UnknownError" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Task_TotalSocketCount_DisplayName" xml:space="preserve">
+    <value>Current Allocation</value>
+  </data>
+  <data name="JobErrorMessage_Execution_TaskCanceledDuringExecution" xml:space="preserve">
+    <value>Task canceled during execution.</value>
+  </data>
+  <data name="InvalidJobPropertyValueList" xml:space="preserve">
+    <value>A value in {0} is not in the valid value set</value>
+  </data>
+  <data name="RemoteCommand_UnknownNode" xml:space="preserve">
+    <value>Node is not in know node list for the remote command.</value>
+  </data>
+  <data name="JobMessageHeader_JobPendingReason_Plural" xml:space="preserve">
+    <value />
+  </data>
+  <data name="PropNameNull" xml:space="preserve">
+    <value>The given property name is null</value>
+  </data>
+  <data name="Task_CurrentCoreCount_DisplayName" xml:space="preserve">
+    <value>Current Allocation</value>
+  </data>
+  <data name="Job_IsExclusive_Description" xml:space="preserve">
+    <value>If True, no other jobs can be run on a compute node at the same time as this job.</value>
+  </data>
+  <data name="Job_CurrentCoreCount_DisplayName" xml:space="preserve">
+    <value>Current Allocation</value>
+  </data>
+  <data name="StringCantContainComma" xml:space="preserve">
+    <value>A string argument can not contain ","</value>
+  </data>
+  <data name="CredentialTypeDialog_PwdCheckBoxString" xml:space="preserve">
+    <value>Enter a &amp;username/password</value>
+  </data>
+  <data name="ServiceNameCantBeNull" xml:space="preserve">
+    <value>The service name can not be null or empty, and can only contain "0-9", "a-z", "A-Z", "." and "_".</value>
+  </data>
+  <data name="Job_ChangeTime_DisplayName" xml:space="preserve">
+    <value>Change Time</value>
+  </data>
+  <data name="Job_AutoCalculateMin_DisplayName" xml:space="preserve">
+    <value>Auto Calculate Minimum</value>
+  </data>
+  <data name="JobErrorMessage_Execution_ResourceFailure" xml:space="preserve">
+    <value />
+  </data>
+  <data name="LargeJobPropertyValue" xml:space="preserve">
+    <value>The {0} value is greater than {1} that is specified in the profile</value>
+  </data>
+  <data name="Task_IsExclusive_Description" xml:space="preserve">
+    <value>If True, no other tasks can be run on a compute node at the same time as this task.</value>
+  </data>
+  <data name="Task_DependsOn_Description" xml:space="preserve">
+    <value>The name of a task within the owning job that this task must wait to complete before it can start.</value>
+  </data>
+  <data name="Task_StdErrFilePath_Description" xml:space="preserve">
+    <value>The path (relative to the working directory) to the file to which the stderr of this task should be written.</value>
+  </data>
+  <data name="Job_StartTime_DisplayName" xml:space="preserve">
+    <value>Start Time</value>
+  </data>
+  <data name="Node_MoveToOffline_Description" xml:space="preserve">
+    <value>If True, indicates that the node will be taken offline.</value>
+  </data>
+  <data name="Task_PendingReason_DisplayName" xml:space="preserve">
+    <value>Pending Reason</value>
+  </data>
+  <data name="FormatJobEventCanceled" xml:space="preserve">
+    <value>{0}  Job Canceled</value>
+  </data>
+  <data name="JobErrorMessage_Execution_NodePrepTaskFailure" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Job_SingleNode_Description" xml:space="preserve">
+    <value>If True, this job can only run on one node.</value>
+  </data>
+  <data name="JobMessageHeader_JobFailure_Singular" xml:space="preserve">
+    <value>The job has encountered an error: "{0}"</value>
+  </data>
+  <data name="Job_MinCoresPerNode_DisplayName" xml:space="preserve">
+    <value>Minimum Cores Per Node</value>
+  </data>
+  <data name="SendingARequest" xml:space="preserve">
+    <value>Sending a request  </value>
+  </data>
+  <data name="SchemaCantBeNull" xml:space="preserve">
+    <value>The schema can not be null or empty</value>
+  </data>
+  <data name="Task_ErrorMessage_Description" xml:space="preserve">
+    <value>Any error message that occured when the task was running.</value>
+  </data>
+  <data name="Wrong_String_For_Boolean" xml:space="preserve">
+    <value>String was not recognized as a valid Boolean.</value>
+  </data>
+  <data name="Job_SoftwareLicense_DisplayName" xml:space="preserve">
+    <value>Licenses</value>
+  </data>
+  <data name="Task_TaskId_Description" xml:space="preserve">
+    <value>The ID for this task.</value>
+  </data>
+  <data name="JobMessageHeader_TaskValidationError_Plural" xml:space="preserve">
+    <value>{0} tasks failed to pass validation.</value>
+  </data>
+  <data name="Job_MaxCores_DisplayName" xml:space="preserve">
+    <value>Maximum Cores</value>
+  </data>
+  <data name="Job_RunUntilCanceled_DisplayName" xml:space="preserve">
+    <value>Run Until Canceled</value>
+  </data>
+  <data name="Task_IsRerunnable_Description" xml:space="preserve">
+    <value>If the task runs and fails, setting Rerunnable to True means the scheduler will attempt to rerun the task. If Rerunnable is False, the task will fail after the first run attempt fails.</value>
+  </data>
+  <data name="JobErrorMessage_Execution_TaskCanceledOnJobRequeue" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Job_ErrorMessage_DisplayName" xml:space="preserve">
+    <value>Error Message</value>
+  </data>
+  <data name="Task_Type_Description" xml:space="preserve">
+    <value>The task type. The type determine whether a task has any sub-tasks, and when it will run during the course of a job. See the TaskType enumeration for more details.</value>
+  </data>
+  <data name="JobErrorMessage_Execution_ProcessDead" xml:space="preserve">
+    <value />
+  </data>
+  <data name="FormatJobEventFinishRequestReceived" xml:space="preserve">
+    <value>{0}  Finish requested by {1}</value>
+  </data>
+  <data name="Job_SingleNode_DisplayName" xml:space="preserve">
+    <value>Single Node</value>
+  </data>
+  <data name="Task_CommandLine_DisplayName" xml:space="preserve">
+    <value>Command Line</value>
+  </data>
+  <data name="FormatJobEventCancelRequestForceReceived" xml:space="preserve">
+    <value>{0}  Cancel requested with force by {1}</value>
+  </data>
+  <data name="FormatJobEventPropChange" xml:space="preserve">
+    <value>{0}  Modified by {1}: {2}</value>
+  </data>
+</root>

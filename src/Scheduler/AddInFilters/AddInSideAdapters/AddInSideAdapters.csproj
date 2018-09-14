@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+  <PropertyGroup>
+    <AssemblyName>HpcSchedulerFilterASA</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Hpc.Scheduler.AddInFilter.HpcServer</RootNamespace>
+    <ProjectGuid>{DC1FFCFD-D590-44CA-8564-0C5EB28CE19E}</ProjectGuid>
+    <AssemblyDescription>AddInSideAdapters</AssemblyDescription>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.AddIn" />
+    <Reference Include="System.AddIn.Contract" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AddInSideAdapters.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\StoreAPI\Scheduler\Scheduler.csproj">
+      <Project>{78e5e61b-dd12-475a-845b-7da3f6b0f987}</Project>
+      <Name>Scheduler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\src\Scheduler\AddInFilters\AddInViews\AddInViews.csproj">
+      <Project>{3d4efbd4-d60a-4115-850f-09dbb1057c15}</Project>
+      <Name>AddInViews</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\src\Scheduler\AddInFilters\Contracts\Contracts.csproj">
+      <Project>{5edb501f-f273-4ab0-83f0-4a81a9a2c087}</Project>
+      <Name>Contracts</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

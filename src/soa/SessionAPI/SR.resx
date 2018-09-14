@@ -1,0 +1,765 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DataTransferToAzureFailed" xml:space="preserve">
+    <value>Failed to transfer data to Azure storage. Inner exception: {0}.</value>
+  </data>
+  <data name="InprocessBroker_NotSupportDurableSession" xml:space="preserve">
+    <value>Durable sessions are not supported in inprocess broker scenario.</value>
+  </data>
+  <data name="InvalidSessionType" xml:space="preserve">
+    <value>Invalid session type. The session must be of type Session or DurableSession.</value>
+  </data>
+  <data name="AllocationAdjustIntervalPositive" xml:space="preserve">
+    <value>AllocationAdjustInterval must be a positive number.</value>
+  </data>
+  <data name="MessageThrottleStartGreaterStop" xml:space="preserve">
+    <value>MessageThrottleStartThreshold must be greater than MessageThrottleStopThreshold.</value>
+  </data>
+  <data name="DataClientIdInvalid" xml:space="preserve">
+    <value>Invalid DataClient ID. A DataClient ID can only have the following characters: 0-9, a-z, A-Z, _, -, {, } and a space. And it cannot be ended with a space.</value>
+  </data>
+  <data name="AuthenticationFailed" xml:space="preserve">
+    <value>Authentication failed due to the incorrect username and/or password.</value>
+  </data>
+  <data name="InvalidServiceVersionReturned" xml:space="preserve">
+    <value>Invalid service version string was returned from HpcSession service.</value>
+  </data>
+  <data name="Broker_NotInitialized" xml:space="preserve">
+    <value>Broker has not been initialized.</value>
+  </data>
+  <data name="ExceptionInCreatingSession" xml:space="preserve">
+    <value>An exception occurred when submitting the job, see the inner exception for details.</value>
+  </data>
+  <data name="InvalidMaxConnectionCountPerAzureProxy" xml:space="preserve">
+    <value>MaxConnectionCountPerAzureProxy must be a positive number.</value>
+  </data>
+  <data name="Broker_SessionFailure" xml:space="preserve">
+    <value>Session is failed or canceled. Please refer to the reason of the session's job for more information.</value>
+  </data>
+  <data name="Broker_EOMRejected" xml:space="preserve">
+    <value>EndRequests is not allowed. The client is in the {0} state.</value>
+  </data>
+  <data name="InprocessBroker_NotSupportShareSession" xml:space="preserve">
+    <value>Shared sessions are not supported in inprocess broker scenario.</value>
+  </data>
+  <data name="OpenJobFailure" xml:space="preserve">
+    <value>Failed to open job: {0}.</value>
+  </data>
+  <data name="AuthenticationFailure" xml:space="preserve">
+    <value>User is not authorized to use this session.</value>
+  </data>
+  <data name="MustIndicateTransportScheme" xml:space="preserve">
+    <value>TransportScheme must be indicated to a value (NetTcp, Http or Custom).</value>
+  </data>
+  <data name="LocalBrokerOnlySupportNonShared" xml:space="preserve">
+    <value>Local Broker Mode only supports non-shared session.</value>
+  </data>
+  <data name="Session_ValidateJobFailed_NotDurableSession" xml:space="preserve">
+    <value>Attach session failed: session {0} is an interactive session. It can only be attached to when its service job is queued or running.</value>
+  </data>
+  <data name="InprocessBroker_InvalidSessionId" xml:space="preserve">
+    <value>Session {0} does not exist in the current process. It might be because you are trying to attach to an inprocess broker which exists in another process, or the given session id is invalid.</value>
+  </data>
+  <data name="Broker_CannotFindCustomBindingConfiguration" xml:space="preserve">
+    <value>Cannot find custom binding in the service configuration file.</value>
+  </data>
+  <data name="Broker_BrokerIsOffline" xml:space="preserve">
+    <value>Broker node is offline and cannot accept requests to create or attach to a session.</value>
+  </data>
+  <data name="DuplicateClientId" xml:space="preserve">
+    <value>The specified clientId is already being used with this Session.</value>
+  </data>
+  <data name="InprocessBroker_NotSupportSessionPool" xml:space="preserve">
+    <value>Session pool is not supported in inprocess broker scenario.</value>
+  </data>
+  <data name="DebugModeNotSupportConcurrentSession" xml:space="preserve">
+    <value>Concurrent sessions are not supported in DEBUG mode.</value>
+  </data>
+  <data name="UnitTypeNotDefined" xml:space="preserve">
+    <value>The UnitType property requires that the value be defined as a JobUnitType enumeration.</value>
+  </data>
+  <data name="ClientTimeout" xml:space="preserve">
+    <value>The BrokerClient has timed out. Retry later.</value>
+  </data>
+  <data name="ServiceVersion_NotFound" xml:space="preserve">
+    <value>Service version not found. Please make sure service {0}_{1} is deployed to the %CCP_SERVICEREGISTRATION_PATH%.</value>
+  </data>
+  <data name="Broker_CannotGetUserSID" xml:space="preserve">
+    <value>Failed to get job owner from the scheduler.</value>
+  </data>
+  <data name="InvalidFileShareFormat" xml:space="preserve">
+    <value>Invalid format of FileShare data server: {0}. This value should be a single UNC path. Please contact your HPC system administrator.</value>
+  </data>
+  <data name="InvalidEndpointNotFoundRetryPeriod" xml:space="preserve">
+    <value>EndpointNotFoundRetryPeriod must be a positive number.</value>
+  </data>
+  <data name="Broker_ClientIdNotMatch" xml:space="preserve">
+    <value>Invalid clientId. ClientId does not match the corresponding messages on this connection.</value>
+  </data>
+  <data name="ConnectToV2Cluster" xml:space="preserve">
+    <value>Cannot create a session or attach to a session on Windows HPC Server 2008.</value>
+  </data>
+  <data name="CannotGetSessionInfo" xml:space="preserve">
+    <value>Cannot get the session information of session {0}.</value>
+  </data>
+  <data name="Broker_SessionIdAlreadyExists" xml:space="preserve">
+    <value>The session {0} has already been created.</value>
+  </data>
+  <data name="DataClientNotWritable" xml:space="preserve">
+    <value>Failed to add data to DataClient '{0}' because WriteAll&lt;T&gt; or WriteRawBytesAll has been called on it.</value>
+  </data>
+  <data name="DataClientReadOnly" xml:space="preserve">
+    <value>Failed to perform the operation. DataClient instance obtained via open operation is read only and can not be modified.</value>
+  </data>
+  <data name="OneResponseEnumerationPerBrokerClient" xml:space="preserve">
+    <value>A BrokerClient object can only have one response handler or active GetResponses enumerator at a time.</value>
+  </data>
+  <data name="BrokerIsUnavailable" xml:space="preserve">
+    <value>Broker is unavailable due to loss of heartbeat. Make sure you can connect to the broker node, the HpcBroker service is running on the broker node and the session is still running.</value>
+  </data>
+  <data name="TimeoutToGetBrokerWorkerProcess" xml:space="preserve">
+    <value>Cannot get broker worker process within 1 minute. Broker node is busy. Retry later.</value>
+  </data>
+  <data name="AttachConfiguringSession" xml:space="preserve">
+    <value>Cannot find the related broker node for session {0}. One possible cause is that the session is still in the configuring stage. Retry later.</value>
+  </data>
+  <data name="Broker_CustomBrokerExitBeforeReady" xml:space="preserve">
+    <value>Custom broker exited unexpectedly. ExitCode = {0}.</value>
+  </data>
+  <data name="InvalidMessageId" xml:space="preserve">
+    <value>MessageID of the incoming message is invalid. It must be an instance of UniqueId which contains a GUID.</value>
+  </data>
+  <data name="DataServerNoSpace" xml:space="preserve">
+    <value>Data server is out of space.</value>
+  </data>
+  <data name="GetClusterPropertyFailure" xml:space="preserve">
+    <value>Failed to get cluster property. The scheduler raised exception: {0}.</value>
+  </data>
+  <data name="Broker_BindingSecurityModeMismatched" xml:space="preserve">
+    <value>The security mode of the binding must match the Session.Secure property.</value>
+  </data>
+  <data name="SessionLauncherEndpointNotFound" xml:space="preserve">
+    <value>Cannot find the endpoint for the HPC session service on node {0}. The headnode name may be incorrect, the HPC session service may not be started on the specified headnode or the client may be using an unsupported feature with a previous version of HPC Server.</value>
+  </data>
+  <data name="Broker_RegisterJobFailed" xml:space="preserve">
+    <value>Failed to register job in session service: {0}.</value>
+  </data>
+  <data name="CreateJobFailure" xml:space="preserve">
+    <value>Failed to create job: {0}.</value>
+  </data>
+  <data name="InvalidTimeout" xml:space="preserve">
+    <value>Timeout can be only positive, 0 or -1. -1 is infinite.</value>
+  </data>
+  <data name="Azure_NotSupportDurableSession" xml:space="preserve">
+    <value>DurableSession is not supported when the scheduler is in Azure.</value>
+  </data>
+  <data name="InvalidDownloadBlobTimeout" xml:space="preserve">
+    <value>Invalid data provider configuration setting: downloadBlobTimeoutInSeconds value must be greater than 0.</value>
+  </data>
+  <data name="Broker_EOMReject_GetResponse" xml:space="preserve">
+    <value>EndRequests was already called for this BrokerClient or the session's service job ended.</value>
+  </data>
+  <data name="Broker_InvalidSessionId" xml:space="preserve">
+    <value>The session id, {0}, is invalid.</value>
+  </data>
+  <data name="SessionIdInvalid" xml:space="preserve">
+    <value>Invalid session ID '{0}'.</value>
+  </data>
+  <data name="SchemaNotValid" xml:space="preserve">
+    <value>Invalid TransportScheme.</value>
+  </data>
+  <data name="LoadBalancingConfigurationMissing" xml:space="preserve">
+    <value>Cannot find broker load balancing configuration section in service's configuration file.</value>
+  </data>
+  <data name="OperationTimeout" xml:space="preserve">
+    <value>Timeout occured. Retry later or increase specified timeout.</value>
+  </data>
+  <data name="BrokerClientTransportSchemeNotSupport" xml:space="preserve">
+    <value>The requested transport scheme is not supported by broker client.</value>
+  </data>
+  <data name="Broker_InvalidClientIdOrTooLong" xml:space="preserve">
+    <value>Invalid clientId. ClientId can only have these characters: 0-9, a-z, A-Z, _, -, {, } and space and cannot contain more than 128 characters.</value>
+  </data>
+  <data name="BackendNotSupported" xml:space="preserve">
+    <value>The backend session provider is not supported. The provider is derived from the specified argument.</value>
+  </data>
+  <data name="IncorrectBackendPropertyType" xml:space="preserve">
+    <value>The specified backend property type is it incorrect. It is expected to be of type {0}.</value>
+  </data>
+  <data name="InvalidDownloadBlobRetryCount" xml:space="preserve">
+    <value>Invalid data provider configuration setting: downloadBlobRetryCount value must be equal or greater than 0.</value>
+  </data>
+  <data name="Broker_LoadNetworkPrefixFailed" xml:space="preserve">
+    <value>Failed to get network prefix from the service task environment variable WCF_NETWORKPREFIX.</value>
+  </data>
+  <data name="ServiceRegistrationPathEnvironmentMissing" xml:space="preserve">
+    <value>CCP_SERVICEREGISTRATION_PATH could not be found in the cluster configuration environments.</value>
+  </data>
+  <data name="InvalidAllowedUser" xml:space="preserve">
+    <value>User {0} cannot be mapped to a known identity.</value>
+  </data>
+  <data name="Broker_RetryLimitExceeded" xml:space="preserve">
+    <value>Request failed {0} time(s) and is marked as failed by the broker. The exception is {1}.</value>
+  </data>
+  <data name="Broker_SendBackResponseFailed" xml:space="preserve">
+    <value>Failed to send back the responses. Connection to the client is likely faulted.</value>
+  </data>
+  <data name="ServiceContextIsNotAvailable" xml:space="preserve">
+    <value>ServiceContext is not available. ServiceContext is only available within the HpcServiceHost.exe.</value>
+  </data>
+  <data name="AccessDenied_BrokerLauncher" xml:space="preserve">
+    <value>Failed to connect to the HpcBroker service: Permission denied.</value>
+  </data>
+  <data name="Broker_NoDefaultUriForScheme" xml:space="preserve">
+    <value>No default uri for scheme {0} could be found.</value>
+  </data>
+  <data name="CreateSessionCanceled" xml:space="preserve">
+    <value>Create session procedure has been canceled by user.</value>
+  </data>
+  <data name="SessionCannotBeCanceled" xml:space="preserve">
+    <value>The job cannot be canceled because it is in Configuring or Validating state. Try again later.</value>
+  </data>
+  <data name="SubmitJobFailure" xml:space="preserve">
+    <value>Failed to submit job: {0}</value>
+  </data>
+  <data name="NotCorrectAsyncResultObj" xml:space="preserve">
+    <value>Invalid AsyncResult object.</value>
+  </data>
+  <data name="DataClientDisposed" xml:space="preserve">
+    <value>Can not access a disposed DataClient instance.</value>
+  </data>
+  <data name="Broker_UserNameNotMatch" xml:space="preserve">
+    <value>User {0} is not authorized to access the BrokerClient with an clientId of {1}.</value>
+  </data>
+  <data name="AccessDenied_BrokerQueue" xml:space="preserve">
+    <value>Failed to connect to the broker's storage: Permission denied.</value>
+  </data>
+  <data name="DataMaxSizeExceeded" xml:space="preserve">
+    <value>Maximum data size {0} is exceeded.</value>
+  </data>
+  <data name="ConnectSessionLauncherFailure" xml:space="preserve">
+    <value>Failed to connect to HPC session service. See inner exception for details.</value>
+  </data>
+  <data name="SessionLauncher_FailedToGetBrokerNodeSSDL" xml:space="preserve">
+    <value>Failed to get SSDL for broker node {0}. Inner exception: {1}</value>
+  </data>
+  <data name="DiagService_InvalidTaskId" xml:space="preserve">
+    <value>The specified task id {0} is not valid. Check your task id and try again.</value>
+  </data>
+  <data name="DataServerUnreachable" xml:space="preserve">
+    <value>Cannot reach data server at {0}. Please contact your HPC system administrator.</value>
+  </data>
+  <data name="Broker_BrokerUnavailable" xml:space="preserve">
+    <value>Broker is unavailable due to loss of heartbeat. Make sure you can connect to the broker node, the HpcBroker service is running on the broker node and the session is still running.</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>Unknown error occured: {0}.</value>
+  </data>
+  <data name="AttachNoBrokerSession" xml:space="preserve">
+    <value>Cannot find the broker node for the session {0}. The job {0} is not a session job.</value>
+  </data>
+  <data name="StartInfo_HttpBindingWithSecure" xml:space="preserve">
+    <value>TransportScheme.Http with false Secure is not supported. Please check the session start info settings. </value>
+  </data>
+  <data name="EndpointTimeout" xml:space="preserve">
+    <value>The session's jobs have been started but the corresponding broker has not. Retry later.</value>
+  </data>
+  <data name="SendTimeoutMustBeGreaterThanZero" xml:space="preserve">
+    <value>Send timeout must be positive.</value>
+  </data>
+  <data name="StorageSpaceNotSufficient" xml:space="preserve">
+    <value>The broker's storage has hit its quota limit or is full. Ask your administrator to increase MSMQ storage quota on the broker node or clean up durable sessions manually via DurableSession.Close(true). Refer http://support.microsoft.com/kb/899612 to change the MSMQ quota.</value>
+  </data>
+  <data name="TimeoutGetResponse" xml:space="preserve">
+    <value>Timeout occurred while waiting for responses. Timeout = {0} ms.</value>
+  </data>
+  <data name="BrokerNodeIsUnavailable" xml:space="preserve">
+    <value>Broker node is unavailable due to loss of heartbeat. Make sure you can connect to the broker node and the HpcBroker service is running on the broker node.</value>
+  </data>
+  <data name="InvalidDownloadBlobMinBackoff" xml:space="preserve">
+    <value>Invalid data provider configuration setting: downloadBlobMinBackoffInSeconds value must be a positive number.</value>
+  </data>
+  <data name="ServiceVersionNoZeroMajorAndMinor" xml:space="preserve">
+    <value>Service version should not be 0 for both major and minor versions.</value>
+  </data>
+  <data name="Session_ValidateJobFailed_NotServiceJob" xml:space="preserve">
+    <value>Attach session failed: job {0} is not a service job.</value>
+  </data>
+  <data name="CredentialTypeDialog_OkButtonString" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="DataClientDeleted" xml:space="preserve">
+    <value>Failed to perform the operation because DataClient '{0}' is deleted.</value>
+  </data>
+  <data name="GetDataServerInfoFailure" xml:space="preserve">
+    <value>Failed to retrieve data server information from session launcher.</value>
+  </data>
+  <data name="StatusUpdateIntervalPositive" xml:space="preserve">
+    <value>StatusUpdateInterval must be a positive number.</value>
+  </data>
+  <data name="AllTasksFinished" xml:space="preserve">
+    <value>A client has closed the session.</value>
+  </data>
+  <data name="NoDataServerConfigured" xml:space="preserve">
+    <value>No data server is configured.</value>
+  </data>
+  <data name="DataRetry" xml:space="preserve">
+    <value>Failed to perform the operation. Please retry later.</value>
+  </data>
+  <data name="InvalidFileShareBufferSize" xml:space="preserve">
+    <value>Invalid data provider configuration setting: fileShareBufferSizeInKiloBytes value must be a positive number.</value>
+  </data>
+  <data name="CredentialTypeDialog_LabelString" xml:space="preserve">
+    <value>Choose an authentication method</value>
+  </data>
+  <data name="UserDataTooLong" xml:space="preserve">
+    <value>UserData can only be {0} characters. Specified userData length is {1} characters.</value>
+  </data>
+  <data name="ConnectDataServiceFailure" xml:space="preserve">
+    <value>Failed to connect to data service.</value>
+  </data>
+  <data name="Broker_OpenFrontEndFailed" xml:space="preserve">
+    <value>Failed to open frontend: {0}.</value>
+  </data>
+  <data name="LoadSamplingIntervalPositive" xml:space="preserve">
+    <value>LoadSamplingInterval must be a positive number.</value>
+  </data>
+  <data name="ConnectDataServiceTimeout" xml:space="preserve">
+    <value>Timeout occurred when connecting to data service.</value>
+  </data>
+  <data name="Broker_EOMReject_EndRequests" xml:space="preserve">
+    <value>EndRequests was already called for this BrokerClient.</value>
+  </data>
+  <data name="HeadnodeCantBeNull" xml:space="preserve">
+    <value>The headnode cannot be null or empty. Please check the headnode parameter and environment variables.</value>
+  </data>
+  <data name="Broker_ServiceFailed" xml:space="preserve">
+    <value>Service job is failed or canceled.</value>
+  </data>
+  <data name="CertificateChooser_Title" xml:space="preserve">
+    <value>Certificate Chooser</value>
+  </data>
+  <data name="ConnectSessionLauncherTimeout" xml:space="preserve">
+    <value>Timeout occurred when creating the session. Scheduler did not respond in {0} milliseconds. Retry later.</value>
+  </data>
+  <data name="CredentialTypeDialog_CancelButtonString" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="InvalidAttachInteractiveSession" xml:space="preserve">
+    <value>Cannot attach to an interactive session using the DurableSession.Attach method. Use the Session.Attach method instead.</value>
+  </data>
+  <data name="DataServerMisconfigured" xml:space="preserve">
+    <value>Data server {0} is not configured properly. Please contact your HPC system administrator.</value>
+  </data>
+  <data name="ClientBrokerHeartbeatRetryCountPositive" xml:space="preserve">
+    <value>ClientBrokerHeartbeatRetryCount must be a positive number.</value>
+  </data>
+  <data name="ClientBrokerHeartbeatIntervalPositive" xml:space="preserve">
+    <value>ClientBrokerHeartbeatInterval must be a positive number.</value>
+  </data>
+  <data name="DataClientBeingCreated" xml:space="preserve">
+    <value>Failed to open DataClient '{0}' because it is being created. Please retry later.</value>
+  </data>
+  <data name="Broker_UnknownError" xml:space="preserve">
+    <value>Unknown error occured: {0}.</value>
+  </data>
+  <data name="DataServerForAzureBurstMisconfigured" xml:space="preserve">
+    <value>Data server for Azure burst is not configured properly. Please contact your HPC system administrator.</value>
+  </data>
+  <data name="MonitorConfigurationMissing" xml:space="preserve">
+    <value>Cannot find broker monitor configuration section in service's configuration file.</value>
+  </data>
+  <data name="NoBrokerNodeFound" xml:space="preserve">
+    <value>Cannot find a broker node in the cluster that meets the session's requirements. Please check the documentation on how to configure a broker node. If you are using failover broker nodes and creating a DurableSession, please be sure one or more failover broker nodes are online.</value>
+  </data>
+  <data name="Broker_ConnectionToSchedulerIsNotReady" xml:space="preserve">
+    <value>Connection to the scheduler is not ready. It might be that the scheduler service or HpcSession service on the headnode is not started.</value>
+  </data>
+  <data name="Broker_BindingNotSupported" xml:space="preserve">
+    <value>Binding {0} is not supported.</value>
+  </data>
+  <data name="DataNoPermission" xml:space="preserve">
+    <value>Access denied. No permission to perform the operation.</value>
+  </data>
+  <data name="TransportSchemeWebAPIExclusive" xml:space="preserve">
+    <value>TransportScheme.WebAPI is exclusive and is not designed to be used with other options at the same time.</value>
+  </data>
+  <data name="ConfigFile_Invalid" xml:space="preserve">
+    <value>The configuration file is invalid: {0}.</value>
+  </data>
+  <data name="Broker_FailedToGetJobState" xml:space="preserve">
+    <value>Failed to get job state from the scheduler.</value>
+  </data>
+  <data name="InvalidAttachDurableSession" xml:space="preserve">
+    <value>Cannot attach to a durable session using the Session.Attach method. Use the DurableSession.Attach method instead.</value>
+  </data>
+  <data name="StorageFailure" xml:space="preserve">
+    <value>Broker storage failed: {0}.</value>
+  </data>
+  <data name="StorageClosed" xml:space="preserve">
+    <value>Broker storage is closed.</value>
+  </data>
+  <data name="Broker_BrokerQueueFailure" xml:space="preserve">
+    <value>Failed to read response messages from the broker's storage.</value>
+  </data>
+  <data name="Broker_FailedToGetJobPropertyId" xml:space="preserve">
+    <value>Failed to get job property Ids from the scheduler.</value>
+  </data>
+  <data name="DataUnknownError" xml:space="preserve">
+    <value>Unknown error.</value>
+  </data>
+  <data name="InprocessNotSupportConcurrentSession" xml:space="preserve">
+    <value>Concurrent sessions are not supported in inprocess broker scenario.</value>
+  </data>
+  <data name="Broker_UnsupportedVersion" xml:space="preserve">
+    <value>The session was originally created by a broker whose version is not supported by current broker. Please consider upgrading your broker node.</value>
+  </data>
+  <data name="AmbiguousOperation" xml:space="preserve">
+    <value>The same message type has been returned from different operations. Action parameter must be specified by the caller.</value>
+  </data>
+  <data name="SoaClientCertNotSpecified" xml:space="preserve">
+    <value>SOA client certificate for Azure cluster is not specified. Either choose one in the certificate selection dialog, or set the certificate thumbprint to env var CCP_SOACLIENTCERT_THUMBPRINT.</value>
+  </data>
+  <data name="ClientPurged" xml:space="preserve">
+    <value>The BrokerClient has been purged. No more responses may be received.</value>
+  </data>
+  <data name="BackendPropertyNotFound" xml:space="preserve">
+    <value>The specified property is not implemented by backend session provider.</value>
+  </data>
+  <data name="Broker_CustomBrokerReadyTimeout" xml:space="preserve">
+    <value>Timeout occurred when starting the custom broker. Current timeout is {0}.</value>
+  </data>
+  <data name="ConnectToSchedulerFailure" xml:space="preserve">
+    <value>HpcSession service does not have a connection to the scheduler yet. Scheduler service may not be started or is busy. Retry later.</value>
+  </data>
+  <data name="SessionIdleTimeoutNotNegative" xml:space="preserve">
+    <value>SessionIdleTimeout must be a positive number.</value>
+  </data>
+  <data name="DataClientAlreadyExists" xml:space="preserve">
+    <value>DataClient '{0}' already exists.</value>
+  </data>
+  <data name="Broker_AuthenticationFailure" xml:space="preserve">
+    <value>User {0} is not authorized to use this session.</value>
+  </data>
+  <data name="Service_RegistrationDirsMissing" xml:space="preserve">
+    <value>No service registration directories are specified in CCP_SERVICEREGISTRATION_PATH.</value>
+  </data>
+  <data name="DataServerBadAddress" xml:space="preserve">
+    <value>Bad data server address {0}. Please contact your HPC system administrator.</value>
+  </data>
+  <data name="NoDataAvailable" xml:space="preserve">
+    <value>DataClient '{0}' contains no data.</value>
+  </data>
+  <data name="InvalidClientId" xml:space="preserve">
+    <value>Invalid clientId. A BrokerClient clientId can only have the following characters: 0-9, a-z, A-Z, _, -, {, } and a space.</value>
+  </data>
+  <data name="StorageServiceNotAvailble" xml:space="preserve">
+    <value>Broker storage service is not available.</value>
+  </data>
+  <data name="InvalidEndRequestsCount" xml:space="preserve">
+    <value>SendRequest must be called at least once before EndRequests.</value>
+  </data>
+  <data name="CredentialTypeDialog_CertCheckBoxString" xml:space="preserve">
+    <value>Choose a &amp;softcard certificate</value>
+  </data>
+  <data name="Broker_BrokerFinishing" xml:space="preserve">
+    <value>Cannot attach to the session. The session {0} is in the Finishing state.</value>
+  </data>
+  <data name="DataFeatureNotSupported" xml:space="preserve">
+    <value>SOA data feature is not supported by SOA session service. Please contact your HPC system administrator.</value>
+  </data>
+  <data name="Broker_AlreadyClosed" xml:space="preserve">
+    <value>Broker has already been closed. This might be because that a previous call to close broker has timed out.</value>
+  </data>
+  <data name="MustIndicateBindingForCustomTransportScheme" xml:space="preserve">
+    <value>No default binding for Custom transport scheme can be loaded. Use alternative constructor BrokerClient(SessionBase, Binding) to indicate binding information instead.</value>
+  </data>
+  <data name="ClientIdleTimeoutNotNegative" xml:space="preserve">
+    <value>ClientIdleTimeout must be a positive number.</value>
+  </data>
+  <data name="InvalidServiceRequestPrefetchCount" xml:space="preserve">
+    <value>ServiceRequestPrefetchCount must be a non-negative number.</value>
+  </data>
+  <data name="DataVersionNotSupported" xml:space="preserve">
+    <value>Cannot read data of version {0}. Current version is {1}.</value>
+  </data>
+  <data name="Session_ValidateJobFailed_JobCanceled" xml:space="preserve">
+    <value>Attach session failed: session {0} cannot be attached to when the service job is canceled.</value>
+  </data>
+  <data name="GetJobPropertyFailure" xml:space="preserve">
+    <value>Failed to get job property. The scheduler raised exception: {0}.</value>
+  </data>
+  <data name="DataClientIdTooLong" xml:space="preserve">
+    <value>DataClient ID is too long. The maximum length is {0} characters.</value>
+  </data>
+  <data name="CreateJobPropertiesFailure" xml:space="preserve">
+    <value>Failed to set job properties. The scheduler raised exception: {0}.</value>
+  </data>
+  <data name="BindingTransportSchemeMismatch" xml:space="preserve">
+    <value>Specified binding does not match the specified TransportScheme.</value>
+  </data>
+  <data name="WebAPI_AccessDenied" xml:space="preserve">
+    <value>Access is denied.</value>
+  </data>
+  <data name="ClientIdTooLong" xml:space="preserve">
+    <value>ClientId is too long. The maximum length is 128 characters.</value>
+  </data>
+  <data name="DataTypeMismatch" xml:space="preserve">
+    <value>Cannot convert data to from type '{0}' to type '{1}'.</value>
+  </data>
+  <data name="WebAPI_NotSupportInprocessBroker" xml:space="preserve">
+    <value>Inprocess broker is not supported through Web API. Please use Session API directly for this feature.</value>
+  </data>
+  <data name="CertificateChooser_Text" xml:space="preserve">
+    <value>Choose a certificate to upload to the scheduler</value>
+  </data>
+  <data name="CreateJobTasksFailure" xml:space="preserve">
+    <value>Failed to create task. The scheduler raised exception: {0}.</value>
+  </data>
+  <data name="ConectBrokerLauncherTimeout" xml:space="preserve">
+    <value>A timeout occurred when creating session. The broker {0} did not respond in {1} milliseconds. Make sure HPC Broker Service is running on broker node.</value>
+  </data>
+  <data name="Broker_TooManyBrokerRunning" xml:space="preserve">
+    <value>Active sessions running on this broker node has exceeded the limit - {0}. Increase maxConcurrentSession setting in HpcBroker.exe.config.</value>
+  </data>
+  <data name="TransportSchemeNotSupport" xml:space="preserve">
+    <value>The requested transport scheme is not supported by a durable session.</value>
+  </data>
+  <data name="InvalidArgument" xml:space="preserve">
+    <value>EndpointPrefix: {0} is not supported, please pass in "net.tcp://" or "https://".</value>
+  </data>
+  <data name="WebAPI_NotSupportCancelCreateSession" xml:space="preserve">
+    <value>Session API does not support to cancel session creation when creating a session over a Web service.</value>
+  </data>
+  <data name="EndpointAddressNotValid" xml:space="preserve">
+    <value>Failed to get a valid endpoint reference from the HpcBroker service.</value>
+  </data>
+  <data name="NotAllowHttpTransport" xml:space="preserve">
+    <value>Durable Session does not support Http binding.</value>
+  </data>
+  <data name="Broker_UnsupportedOperation" xml:space="preserve">
+    <value>Operation "{0}" is not supported by current broker. Please consider upgrading your broker node.</value>
+  </data>
+  <data name="ConnectBrokerLauncherFailure" xml:space="preserve">
+    <value>Failed to connect to HPC broker service. See inner exception for details.</value>
+  </data>
+  <data name="InvalidTransportScheme" xml:space="preserve">
+    <value>Invalid transport scheme.</value>
+  </data>
+  <data name="Broker_FailedToGetSecurityDescriptor" xml:space="preserve">
+    <value>Failed to get job template security descriptor from the scheduler.</value>
+  </data>
+  <data name="Broker_FailedToStartBrokerServiceProcess" xml:space="preserve">
+    <value>Failed to start broker service process. Win32 error code: {0}.</value>
+  </data>
+  <data name="ServicesConfigurationMissing" xml:space="preserve">
+    <value>Cannot find broker services configuration section in service's configuration file.</value>
+  </data>
+  <data name="DataClientBusy" xml:space="preserve">
+    <value>Failed to perform the operation because DataClient '{0}' is used by someone else. Please retry later.</value>
+  </data>
+  <data name="DataServerNotSupported" xml:space="preserve">
+    <value>Unknown data server type {0}. Please consider upgrading your HPC client library.</value>
+  </data>
+  <data name="EndpointNotFoundRetryCountLimitNotNegative" xml:space="preserve">
+    <value>EndpointNotFoundRetryCountLimit must be a non-negative number.</value>
+  </data>
+  <data name="LocalBrokerOnlySupportNetTcp" xml:space="preserve">
+    <value>Local Broker Mode only supports NetTcp binding.</value>
+  </data>
+  <data name="DataClientNotFound" xml:space="preserve">
+    <value>DataClient '{0}' is not found.</value>
+  </data>
+  <data name="DataClientLifeCycleSet" xml:space="preserve">
+    <value>DataClient '{0}' is already associated with a life cycle object.</value>
+  </data>
+  <data name="DataInconsistent" xml:space="preserve">
+    <value>Cannot perform the operation on DataClient '{0}' because it is in inconsistent state. This is usually caused by unexpected application or system crash. Please delete the DataClient if this error occurs repeatedly.</value>
+  </data>
+  <data name="WebAPI_BrokerNotActive" xml:space="preserve">
+    <value>Broker of session {0} is not active. This maybe because the session has suspended or finished (because of timeout). Try to attach to the session first.</value>
+  </data>
+  <data name="MessageRetryLimitNotNegative" xml:space="preserve">
+    <value>MessageRetryLimit must be a non-negative number.</value>
+  </data>
+  <data name="CredentialTypeDialog_PwdCheckBoxString" xml:space="preserve">
+    <value>Enter a &amp;username/password</value>
+  </data>
+  <data name="Broker_NotSupportedTransportScheme" xml:space="preserve">
+    <value>Transport scheme {0} is not supported.</value>
+  </data>
+  <data name="ServiceNameCantBeNull" xml:space="preserve">
+    <value>The service name cannot be null or empty. It can only contain "0-9", "a-z", "A-Z", ".", "-" and "_", and less than 255 characters.</value>
+  </data>
+  <data name="ArgumentEmpty" xml:space="preserve">
+    <value>'{0}' cannot be empty.</value>
+  </data>
+  <data name="Broker_AlreadyInitialized" xml:space="preserve">
+    <value>Broker has already been initialized.</value>
+  </data>
+  <data name="Session_ValidateJobFailed_AlreadyFninshed" xml:space="preserve">
+    <value>Attach session failed: session {0} cannot be attached to because the session has already finished.</value>
+  </data>
+  <data name="AccessDenied_Broker" xml:space="preserve">
+    <value>Failed to connect to the session's broker: Permission denied.</value>
+  </data>
+  <data name="RetryOperationExceptionMessage" xml:space="preserve">
+    <value>The retry failure count exceeded. The request was marked as failed by the broker. Check the exception's Reason property for details.</value>
+  </data>
+  <data name="InvalidDownloadBlobThreadCount" xml:space="preserve">
+    <value>Invalid data provider configuration setting: downloadBlobThreadCount value must be a positive number.</value>
+  </data>
+  <data name="CertificateChooser_Text_Azure" xml:space="preserve">
+    <value>Choose a SOA client certificate for Azure cluster</value>
+  </data>
+  <data name="MessageThrottleStopThresholdPositive" xml:space="preserve">
+    <value>MessageThrottleStopThreshold cannot be less than 0.</value>
+  </data>
+  <data name="InvalidDownloadBlobMaxBackoff" xml:space="preserve">
+    <value>Invalid data provider configuration setting: downloadBlobMaxBackoffInSeconds value must be equal or greater than downloadBlobMinBackoffInSeconds.</value>
+  </data>
+  <data name="Broker_BrokerServiceFailedStartup" xml:space="preserve">
+    <value>Broker service failed to start.</value>
+  </data>
+  <data name="Broker_PullDataFromCustomJobPropertyFailed" xml:space="preserve">
+    <value>Failed to get data from job properties from the job scheduler needed to restart the session.</value>
+  </data>
+  <data name="ArgumentEmptyString" xml:space="preserve">
+    <value>Argument '{0}' cannot be an empty string.</value>
+  </data>
+  <data name="HeadNodeCannotBeNullOfEmpty" xml:space="preserve">
+    <value>The parameter headnode cannot be null or an empty string.</value>
+  </data>
+  <data name="InvalidServiceOperationTimeout" xml:space="preserve">
+    <value>ServiceOperationTimeout must be a positive number.</value>
+  </data>
+  <data name="UnsharedSession_NotSupportSessionPool" xml:space="preserve">
+    <value>Session pool is not supported by unshared session.</value>
+  </data>
+  <data name="Service_NotFound" xml:space="preserve">
+    <value>The service configuration file is not found. Make sure configuration file for service {0} is deployed to the %CCP_SERVICEREGISTRATION_PATH%.</value>
+  </data>
+  <data name="NoCCPHOMEENV" xml:space="preserve">
+    <value>CCP_HOME environment variable is not set.</value>
+  </data>
+  <data name="DispatcherCapacityInGrowShrinkNonNegative" xml:space="preserve">
+    <value>DispatcherCapacityInGrowShrink must be a non-negative value.</value>
+  </data>
+</root>

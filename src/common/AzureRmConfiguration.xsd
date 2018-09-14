@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="AzureRmConfiguration"
+    targetNamespace="http://schemas.microsoft.com/HpcAzureRmConfiguration/2017/07"
+    elementFormDefault="qualified"
+    xmlns:tns="http://schemas.microsoft.com/HpcAzureRmConfiguration/2017/07"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+
+  <xs:simpleType name="OSType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Windows" />    
+      <xs:enumeration value="Linux" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="AzureVMImageType">
+    <xs:attribute name="Label" type="xs:string" use="required"/>
+    <xs:attribute name="OSType" type="tns:OSType" use="required"/>
+    <xs:attribute name="Publisher" type="xs:string" use="required"/>
+    <xs:attribute name="Offer" type="xs:string" use="required"/>
+    <xs:attribute name="Sku" type="xs:string" use="required"/>
+    <xs:attribute name="Version" type="xs:string" use="optional"/>
+	<xs:attribute name="Description" type="xs:string" use="optional"/>
+    <xs:anyAttribute processContents="skip"/>
+  </xs:complexType>
+
+  <xs:complexType name="ImageListType">
+    <xs:sequence>
+      <xs:element name="VMImage" type="tns:AzureVMImageType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="AzureRmConfigType">
+    <xs:sequence>
+      <xs:element name="ImageList" type="tns:ImageListType" minOccurs="1" maxOccurs="1"/>
+      <xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+
+    <xs:attribute name="Version" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:element name="AzureRmConfig" type="tns:AzureRmConfigType"/>
+</xs:schema>

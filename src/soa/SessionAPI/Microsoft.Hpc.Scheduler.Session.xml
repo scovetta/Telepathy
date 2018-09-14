@@ -1,0 +1,812 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+	<assembly>
+		<name>Microsoft.Hpc.Scheduler.Session</name>
+	</assembly>
+	<members>
+		<member name="N:Microsoft.Hpc.Scheduler.Session">
+			<summary>This namespaces contains the classes that supports the service-oriented architecture (SOA) programming model based on Windows Communications Foundation (WCF). Client applications use the classes to create an HPC session, bind the session to the client, and process the results from the service.</summary>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.AuthenticationFailure">
+			<summary>Indicates that the credentials that were specified for the session did not have sufficient privileges for an operation.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.AuthenticationFailure.#ctor(System.String)">
+			<summary>Initializes a new instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.AuthenticationFailure"></see> class with the specified user name of the account that did not have sufficient privileges for the operation.</summary>
+		</member>
+		<member name="F:Microsoft.Hpc.Scheduler.Session.AuthenticationFailure.Action">
+			<summary>Specifies the value of the SOAP action for the error message.</summary>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.AuthenticationFailure.UserName">
+			<summary>Gets the user name of the account that did not have sufficient privileges for the operation.</summary>
+			<returns>A <see cref="T:System.String"></see> that contains the user name of the account that did not have sufficient privileges for the operation.</returns>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1">
+			<summary>Provides methods that enable clients to connect to a session and send requests, then disconnect from the session and reconnect later to retrieve the responses.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.#ctor(Microsoft.Hpc.Scheduler.Session.SessionBase)">
+			<summary>Initializes a new instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1"></see> class that connects to the specified session.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.#ctor(Microsoft.Hpc.Scheduler.Session.SessionBase,System.ServiceModel.Channels.Binding)">
+			<summary>Initializes a new instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1"></see> class that connects to the specified session by using the specified type of binding.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.#ctor(Microsoft.Hpc.Scheduler.Session.SessionBase,System.String)">
+			<summary>Initializes a new instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1"></see> class that connects to the specified session by using the specified configuration of <see cref="T:System.ServiceModel.NetTcpBinding"></see>.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.#ctor(System.String,Microsoft.Hpc.Scheduler.Session.SessionBase)">
+			<summary>Initializes a new instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1"></see> class that connects to the specified session, and assigns the specified client identifier to that instance.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.#ctor(System.String,Microsoft.Hpc.Scheduler.Session.SessionBase,System.ServiceModel.Channels.Binding)">
+			<summary>Initializes a new instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1"></see> class that connects to the specified session by using the specified type of binding, and assigns the specified client identifier to that instance.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.#ctor(System.String,Microsoft.Hpc.Scheduler.Session.SessionBase,System.String)">
+			<summary>Initializes a new instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1"></see> class that connects to the specified session by using a specified type of binding from the configuration file for the application, and assigns the specified client identifier to that instance.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.Close">
+			<summary>Closes the connection to the broker without emptying or deleting the message queues that correspond to the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1"></see> object.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.Close(System.Boolean)">
+			<summary>Closes the connection to the broker, and optionally empties and deletes the message queues that correspond to the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1"></see> object.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.Close(System.Boolean,System.Int32)">
+			<summary>Closes the connection to the broker, and optionally empties and deletes the message queues that correspond to the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1"></see> object that is subject to the specified timeout period.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.Dispose(System.Boolean)">
+			<summary>Releases all of the resources that the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1"></see> object used.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.EndRequests">
+			<summary>Informs the broker that this instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1"></see> class is finished sending request messages and that the broker should commit all request messages, subject to the default timeout period.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.EndRequests(System.Int32)">
+			<summary>Informs the broker that this instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1"></see> class is finished sending request messages and that the broker should commit all request messages, subject to the specified timeout period.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.Finalize">
+			<summary>Frees resources before the object is reclaimed by garbage collection.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.GetResponses">
+			<summary>Retrieves an enumerator of objects that represent the response messages that the service-oriented architecture (SOA) service returned, subject to the default timeout period.</summary>
+			<returns>A <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator`1"></see> object that is an enumerator of <see cref="T:System.Object"></see> objects that represent the responses from the SOA service.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.GetResponses(System.Int32)">
+			<summary>Retrieves an enumerator of objects that represent the response messages that the service-oriented architecture (SOA) service returned, subject to the specified timeout period.</summary>
+			<returns>A <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator`1"></see> object that is an enumerator of <see cref="T:System.Object"></see> objects that represent the responses from the SOA service.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.GetResponses``1">
+			<summary>Retrieves an enumerator of objects of the specified type that represent the response messages that the service-oriented architecture (SOA) service returned, subject to the default timeout period.</summary>
+			<returns>A <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator`1"></see> object that is an enumerator of <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerResponse`1"></see> objects that represent the responses from the SOA service.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.GetResponses``1(System.Int32)">
+			<summary>Retrieves an enumerator of objects of the specified type that represent the response messages that the service-oriented architecture (SOA) service returned, subject to the specified timeout period.</summary>
+			<returns>A <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator`1"></see> object that is an enumerator of <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerResponse`1"></see> objects that represent the responses from the SOA service.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.GetResponses``1(System.String,System.String,System.Int32)">
+			<summary>Retrieves an enumerator of objects of the specified type that represent the response messages that the service-oriented architecture (SOA) service returned, subject to the specified timeout period, and specifies the SOAP actions for the request and response messages.</summary>
+			<returns>A <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator`1"></see> object that is an enumerator of <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerResponse`1"></see> objects that represent the responses from the SOA service.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.GetStatus">
+			<summary>Gets the status of the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1"></see> object.</summary>
+			<returns>A <see cref="T:Microsoft.Hpc.Scheduler.Session.Interface.BrokerClientStatus"></see> that indicates the status of the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1"></see> object.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.SendRequest``1(``0)">
+			<summary>Sends the specified request message to the broker.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.SendRequest``1(``0,System.Object)">
+			<summary>Sends the specified request message to the broker, along with data that the service should return with the response to the request so that the client can correlate requests with responses.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.SendRequest``1(``0,System.Object,System.Int32)">
+			<summary>Sends the specified request message to the broker with the specified timeout period, along with data that the service should return with the response to the request so that the client can correlate requests with responses.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.SendRequest``1(``0,System.Object,System.String)">
+			<summary>Sends the specified request message and SOAP action to the broker, along with data that the service should return with the response to the request so that the client can correlate requests with responses.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.SendRequest``1(``0,System.Object,System.String,System.Int32)">
+			<summary>Sends the specified request message and SOAP action to the broker with the specified timeout period, along with data that the service should return with the response to the request so that the client can correlate requests with responses.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object})">
+			<summary>Designates the callback function that should receive responses in the form of <see cref="T:System.Object"></see> objects from the service-oriented architecture (SOA) service.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object},System.Int32)">
+			<summary>Designates the callback function that should receive responses in the form of <see cref="T:System.Object"></see> objects from the service-oriented architecture (SOA) service, subject to the specified timeout period.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{System.Object},System.Object)">
+			<summary>Designates the callback function that should receive responses in the form <see cref="T:System.Object"></see> objects from the service-oriented architecture (SOA) service, along with a state object that you want to pass to the callback function each time it is called.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{System.Object},System.Object,System.Int32)">
+			<summary>Designates the callback function that should receive responses in the form <see cref="T:System.Object"></see> objects from the service-oriented architecture (SOA) service, along with a state object that you want to pass to the callback function each time it is called, subject to the specified timeout period.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.SetResponseHandler``1(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{``0})">
+			<summary>Designates the callback function that should receive responses in the form of objects of the specified type from the service-oriented architecture (SOA) service.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.SetResponseHandler``1(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{``0},System.Int32)">
+			<summary>Designates the callback function that should receive responses in the form of objects of the specified type from the service-oriented architecture (SOA) service, subject to the specified timeout period.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.SetResponseHandler``1(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{``0},System.Object)">
+			<summary>Designates the callback function that should receive responses in the form of objects of the specified type from the service-oriented architecture (SOA) service, along with a state object that you want to pass to the callback function each time it is called.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.SetResponseHandler``1(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{``0},System.Object,System.Int32)">
+			<summary>Designates the callback function that should receive responses in the form of objects of the specified type from the service-oriented architecture (SOA) service, along with a state object that you want to pass to the callback function each time it is called, subject to the specified timeout period.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.SetResponseHandler``1(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{``0},System.String,System.String,System.Int32)">
+			<summary>Designates the callback function that should receive responses in the form of objects of the specified type from the service-oriented architecture (SOA) service, along with the SOAP actions for the request and responses, subject to the specified timeout period.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerClient`1.SetResponseHandler``1(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{``0},System.String,System.String,System.Object,System.Int32)">
+			<summary>Designates the callback function that should receive responses in the form of objects of the specified type from the service-oriented architecture (SOA) service, along with a state object that you want to pass to the callback function each time it is called and the SOAP actions for the request and responses, subject to the specified timeout period.</summary>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.BrokerResponse`1">
+			<summary>Represents a single response that a service-oriented architecture (SOA) service sent to the client to fulfill a request.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerResponse`1.Dispose">
+			<summary>Releases all of the resources that the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerResponse`1"></see> object used.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerResponse`1.Finalize">
+			<summary>Frees resources before the object is reclaimed by garbage collection.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerResponse`1.GetUserData``1">
+			<summary>Retrieves the data in the response that originates from the data that you passed to the <see cref="M:Microsoft.Hpc.Scheduler.Session.HpcBrokerClient`1.SendRequest``1(``0,System.Object)"></see> or <see cref="M:Microsoft.Hpc.Scheduler.Session.HpcBrokerClient`1.SendRequest``1(``0,System.Object,System.String)"></see> method so that you could correlate requests and responses.</summary>
+			<returns>The object that includes the data that you originally passed to the <see cref="M:Microsoft.Hpc.Scheduler.Session.HpcBrokerClient`1.SendRequest``1(``0,System.Object)"></see> or <see cref="M:Microsoft.Hpc.Scheduler.Session.HpcBrokerClient`1.SendRequest``1(``0,System.Object,System.String)"></see> method.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.BrokerResponse`1.IsLastResponse">
+			<summary>Gets whether the response is the last response for a set of requests.</summary>
+			<returns>A <see cref="T:System.Boolean"></see> that indicates whether the response is the last response for a set of requests. True indicates that the response is the last response for the set of requests. False indicates that the response is not the last response.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.BrokerResponse`1.Result">
+			<summary>Gets the response message that is associated with the response.</summary>
+			<returns>The response message, which has a type that you created by adding a service reference to the Visual Studio project for the client application or by running the svcutil tool.</returns>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator`1">
+			<summary>Represents a set of responses from a service-oriented architecture (SOA) service to a set of requests sent by an SOA client.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator`1.Dispose">
+			<summary>Frees resources before the object is reclaimed by garbage collection.<see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator`1"></see> object used.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator`1.Finalize">
+			<summary>Frees resources before the object is reclaimed by garbage collection.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator`1.GetEnumerator">
+			<summary>Gets an enumerator that you can use to enumerate the items in the collection.</summary>
+			<returns>An <see cref="T:System.Collections.Generic.IEnumerator`1"></see> that you can use to iterate through the collection.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator`1.MoveNext">
+			<summary>Advances the enumerator to the next element of the collection.</summary>
+			<returns><see cref="T:System.Boolean"></see> object that specifies whether the enumerator successfully advanced to the next element. True indicates that the enumerator successfully advanced to the next element. False indicates that the enumerator passed the end of the collection.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator`1.Reset">
+			<summary>Sets the enumerator to its initial position, which is before the first element in the collection.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator`1.System.Collections.IEnumerable.GetEnumerator">
+			<summary>Gets an enumerator that you can use to enumerate the items in the collection.</summary>
+			<returns>An <see cref="T:System.Collections.IEnumerator"></see> that you can use to iterate through the collection.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator`1.Current">
+			<summary>Gets the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerResponse`1"></see> object at the current position in the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator`1"></see> enumerator.</summary>
+			<returns>The <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerResponse`1"></see> object at the current position in the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator`1"></see> enumerator.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator`1.System.Collections.IEnumerator.Current">
+			<summary>Gets the <see cref="T:System.Object"></see> object at the current position in the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator`1"></see> enumerator.</summary>
+			<returns>The <see cref="T:System.Object"></see> object at the current position in the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator`1"></see> enumerator.</returns>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler`1">
+			<summary>Defines the delegate that you need to implement when you subscribe to the responses in a service-oriented architecture (SOA) client by calling the <see cref="Overload:Microsoft.Hpc.Scheduler.Session.HpcBrokerClient`1.SetResponseHandler"></see> method.</summary>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler`1">
+			<summary>Defines the delegate that you need to implement when you subscribe to the responses in a service-oriented architecture (SOA) client by calling the versions of the <see cref="Overload:Microsoft.Hpc.Scheduler.Session.HpcBrokerClient`1.SetResponseHandler"></see> method that include a state parameter.</summary>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.DurableSession">
+			<summary>Represents a durable session that binds a client application to a service that supports the service-oriented architecture (SOA) programming model that is based on the Windows Communication Foundation (WCF). A durable session is a session that can recover from hardware or software failure.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.DurableSession.AttachSession(Microsoft.Hpc.Scheduler.Session.SessionAttachInfo)">
+			<summary>Attaches a service-oriented architecture (SOA) client to an existing durable session by using the specified information about the session.</summary>
+			<returns>A <see cref="T:Microsoft.Hpc.Scheduler.Session.DurableSession"></see> that represents the durable session to which the client attached.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.DurableSession.AttachSession(Microsoft.Hpc.Scheduler.Session.SessionAttachInfoBase,System.Int32)">
+			<summary>Attaches a service-oriented architecture (SOA) client to an existing durable session by using the specified information about the session and the specified timeout period.</summary>
+			<returns>A <see cref="T:Microsoft.Hpc.Scheduler.Session.DurableSession"></see> that represents the durable session to which the client attached.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.DurableSession.BeginCreateSession(Microsoft.Hpc.Scheduler.Session.SessionStartInfo,System.AsyncCallback,System.Object)">
+			<summary>Creates a new durable session asynchronously.</summary>
+			<returns>An <see cref="T:System.IAsyncResult"></see> interface that represents the status of the asynchronous operation. Use this interface when you call the <see cref="M:Microsoft.Hpc.Scheduler.Session.DurableSession.EndCreateSession(System.IAsyncResult)"></see> method.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.DurableSession.CreateSession(Microsoft.Hpc.Scheduler.Session.SessionStartInfoBase)">
+			<summary>Creates a new durable session by using the specified information.</summary>
+			<returns>A <see cref="T:Microsoft.Hpc.Scheduler.Session.DurableSession"></see> that defines the new durable session.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.DurableSession.EndCreateSession(System.IAsyncResult)">
+			<summary>Completes the asynchronous creation of a durable session.</summary>
+			<returns>A <see cref="T:Microsoft.Hpc.Scheduler.Session.DurableSession"></see> object that represents the durable session.</returns>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.RetryOperationError">
+			<summary>Indicates that an error connected to the retrying requests by the broker occurred, when the <see cref="T:Microsoft.Hpc.Scheduler.Session.RetryOperationError"></see> class  is specified as the type parameter for a <see cref="T:System.ServiceModel.FaultException`1"></see> object.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.RetryOperationError.#ctor(System.String)">
+			<summary>Initializes a new instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.RetryOperationError"></see> class with the specified reason.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.RetryOperationError.#ctor(System.String,System.Int32)">
+			<summary>Initializes a new instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.RetryOperationError"></see> class with the specified reason and specified number of times to retry the request.</summary>
+		</member>
+		<member name="F:Microsoft.Hpc.Scheduler.Session.RetryOperationError.Action">
+			<summary>Specifies the value of the SOAP action for the error message.</summary>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.RetryOperationError.Reason">
+			<summary>Gets the specific reason that the error in retrying a request occurred.</summary>
+			<returns>A <see cref="T:System.String"></see> that indicates the specific reason that the error in retrying a request occurred.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.RetryOperationError.RetryCount">
+			<summary>Gets or set the number of times the broker should retry a request.</summary>
+			<returns>A <see cref="T:System.Int32"></see> that indicates the number of times the broker should retry a request.</returns>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.RetryOperationException">
+			<summary>Indicates that the broker exceeded the limit for the number of times the broker should retry a request.</summary>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.RetryOperationException.Reason">
+			<summary>Gets the specific reason that the error in retrying a request occurred.</summary>
+			<returns>A <see cref="T:System.String"></see> that indicates the specific reason that the error in retrying a request occurred.</returns>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.ServiceContext">
+			<summary>Provides a property and an event that a service host uses to write traces for SOA code and handle requests to exit.</summary>
+		</member>
+		<member name="E:Microsoft.Hpc.Scheduler.Session.ServiceContext.OnExiting">
+			<summary>An event that is raised when the service host is asked to exit.</summary>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.ServiceContext.Logger">
+			<summary>Gets a <see cref="T:System.Diagnostics.TraceSource"></see> object that SOA applications can use to trace the running of SOA code and associate SOA trace messages with their source.</summary>
+			<returns>A <see cref="T:System.Diagnostics.TraceSource"></see> object that SOA applications can use to trace the running of SOA code and associate SOA trace messages with their source.</returns>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.Session">
+			<summary>Use to create an HPC session that binds the client application to a service that supports the service-oriented architecture (SOA) programming model based on Windows Communication Foundation (WCF).</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Session.AttachSession(Microsoft.Hpc.Scheduler.Session.SessionAttachInfo)">
+			<summary>Attaches an SOA client to an existing session by using the specified information about the session.</summary>
+			<returns>A <see cref="T:Microsoft.Hpc.Scheduler.Session.Session"></see> that represents the session to which the client attached.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Session.AttachSession(Microsoft.Hpc.Scheduler.Session.SessionAttachInfo,System.Int32)">
+			<summary>Attaches an SOA client to an existing session by using the specified information about the session and the specified timeout period.</summary>
+			<returns>A <see cref="T:Microsoft.Hpc.Scheduler.Session.Session"></see> that represents the session to which the client is attached.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Session.BeginCreateSession(Microsoft.Hpc.Scheduler.Session.SessionStartInfo,System.AsyncCallback,System.Object)">
+			<summary>Creates a session asynchronously.</summary>
+			<returns>An <see cref="T:System.IAsyncResult"></see> interface that represents the status of an asynchronous operation. Use the interface when calling the <see cref="M:Microsoft.Hpc.Scheduler.Session.Session.EndCreateSession(System.IAsyncResult)"></see> method.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Session.CancelCreateSession(System.IAsyncResult)">
+			<summary>Cancels the attempt to create a session asynchronously.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Session.Close">
+			<summary>Closes the session without finishing the job for the session or deleting response messages.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean)">
+			<summary>Closes the session and optionally finishes the job for the session and deletes the response messages.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean,System.Int32)">
+			<summary>Closes the session, and optionally finishes the job for the session and deletes the response messages subject to the specified timeout period.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Session.CloseSession(System.String,System.Int32)">
+			<summary>Close the specified session.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Session.CreateSession(Microsoft.Hpc.Scheduler.Session.SessionStartInfo)">
+			<summary>Creates a session.</summary>
+			<returns>A <see cref="T:Microsoft.Hpc.Scheduler.Session.Session"></see> object that defines the session.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Session.CreateSession(Microsoft.Hpc.Scheduler.Session.SessionStartInfo,System.Int32)">
+			<summary>Creates a session by using the specified timeout value (the session must be created within the specified period or the call fails).</summary>
+			<returns>A <see cref="T:Microsoft.Hpc.Scheduler.Session.Session"></see> object that defines the session.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Session.Dispose">
+			<summary>Releases all unmanaged resources that are used by the session.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Session.EndCreateSession(System.IAsyncResult)">
+			<summary>Blocks until the asynchronous process for creating the session completes.</summary>
+			<returns>An <see cref="T:Microsoft.Hpc.Scheduler.Session.Session"></see> object that defines the session.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Session.GetProperty``1(System.String)">
+			<summary>Gets the value of a backend-specific property for a session.</summary>
+			<returns>An item with the data type that the T type parameter specifies and which contains the value of the property that the name parameter specifies. The following table describes the return values and their types for the properties for which you can get values.Property nameTypeDescriptionHPC_ServiceJobIdintIndicates the identifier of the service job for the session.HPC_HeadnodestringIndicates the head node of the HPC cluster on which the session runs.HPC_ServiceJobStatusstringIndicates the current state of the service job for the session. The possible values for this state are the same as the names of the constants in the <see cref="T:Microsoft.Hpc.Scheduler.Properties.JobState"></see> enumeration.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Session.SetInterfaceMode(System.Boolean,System.IntPtr)">
+			<summary>Specifies whether the client is a console or Windows application.</summary>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Session.AutoClose">
+			<summary>Indicates whether the session closes automatically when Dispose is called.</summary>
+			<returns>Is true if the session closes automatically; otherwise, it is false.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Session.BrokerJob">
+			<summary>Retrieves the broker job for the session.</summary>
+			<returns>An <see cref="T:Microsoft.Hpc.Scheduler.ISchedulerJob"></see> interface to the broker job.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Session.ClientVersion">
+			<summary>Gets information about the version of the HPC Pack that is installed on the node of the cluster that runs the SOA client application.</summary>
+			<returns>A <see cref="T:System.Version"></see> that contains the version information.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Session.EndpointReference">
+			<summary>Retrieves the unique network address that a client uses to communicate with a service endpoint.</summary>
+			<returns>The network address.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Session.Id">
+			<summary>An identifier that uniquely identifies the session.</summary>
+			<returns>An identifier that uniquely identifies the session.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Session.ServerVersion">
+			<summary>Gets information about the version of the HPC Pack that is installed on the head node of the cluster that hosts the session.</summary>
+			<returns>A <see cref="T:System.Version"></see> that contains the version information.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Session.ServiceJob">
+			<summary>Retrieves the service job for the session.</summary>
+			<returns>An <see cref="T:Microsoft.Hpc.Scheduler.ISchedulerJob"></see> interface to the service job.</returns>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.SessionAttachInfo">
+			<summary>Defines a set of values that an SOA client should use to attach to an existing session.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.SessionAttachInfo.#ctor(System.String,System.Int32)">
+			<summary>Initializes a new instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.SessionAttachInfo"></see> class.</summary>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionAttachInfo.BrokerHeartbeatInterval">
+			<summary>Gets or sets the length of time in milliseconds that must elapse between the client and broker heartbeats before the broker is considered unreachable by the session.</summary>
+			<returns>An <see cref="T:System.Int32"></see> that indicates the length of time in milliseconds that must elapse between the client and broker heartbeats before the broker is considered unreachable by the session.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionAttachInfo.BrokerHeartbeatRetryCount">
+			<summary>Gets or sets the number of times that the amount of time that the <see cref="P:Microsoft.Hpc.Scheduler.Session.SessionAttachInfo.BrokerHeartbeatInterval"></see> property specifies must elapse between the client and broker heartbeats before the broker is considered unreachable by the session.</summary>
+			<returns>An <see cref="T:System.Int32"></see> that indicates the number of times that the amount of time that the <see cref="P:Microsoft.Hpc.Scheduler.Session.SessionAttachInfo.BrokerHeartbeatInterval"></see> property specifies must elapse between the client and broker heartbeats before the broker is considered unreachable by the session..</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionAttachInfo.Headnode">
+			<summary>Gets the name of the head node for the cluster that hosts the session to which you want to attach an SOA client.</summary>
+			<returns>A <see cref="T:System.String"></see> that indicates the name of the head node for the cluster that hosts the session to which you want to attach an SOA client.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionAttachInfo.Id">
+			<summary>Gets the identifier of the session to which you want to attach an SOA client.</summary>
+			<returns>A <see cref="T:System.Int32"></see> that indicates the identifier of the session to which you want to attach an SOA client.</returns>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.SessionBase">
+			<summary>Serves as a base class to provide methods and properties that are common to classes that represent different kinds of sessions, such as <see cref="T:Microsoft.Hpc.Scheduler.Session.DurableSession"></see> and <see cref="T:Microsoft.Hpc.Scheduler.Session.Session"></see>.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.SessionBase.Close">
+			<summary>Closes the session without finishing the job for the session or deleting response messages.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.SessionBase.Close(System.Boolean)">
+			<summary>Closes the session and optionally finishes the job for the session and deletes the response messages.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.SessionBase.Close(System.Boolean,System.Int32)">
+			<summary>Closes the session, and optionally finishes the job for the session and deletes the response messages subject to the specified timeout period.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.SessionBase.Dispose">
+			<summary>Releases all unmanaged resources that were used by the session.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.SessionBase.Dispose(System.Boolean)">
+			<summary>Releases all managed or unmanaged resources that were used by the session, depending on where the method is being called.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.SessionBase.Finalize">
+			<summary>Frees resources before the object is reclaimed by garbage collection.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.SessionBase.GetProperty``1(System.String)">
+			<summary>Gets the value of a backend-specific property for a session.</summary>
+			<returns>An item with the data type that the T type parameter specifies and which contains the value of the property that the name parameter specifies. The following table describes the return values and their types for the properties for which you can get values.Property nameTypeDescriptionHPC_ServiceJobIdintIndicates the identifier of the service job for the session.HPC_HeadnodestringIndicates the head node of the HPC cluster on which the session runs.HPC_ServiceJobStatusstringIndicates the current state of the service job for the session. The possible values for this state are the same as the names of the constants in the <see cref="T:Microsoft.Hpc.Scheduler.Properties.JobState"></see> enumeration.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.SessionBase.GetServiceVersions(System.String,System.String)">
+			<summary>Gets the versions of the specified service that are installed on the HPC cluster with the specified head node.</summary>
+			<returns>An array of <see cref="T:System.Version"></see> object that indicate the versions of the specified service that are installed on the HPC cluster.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.SessionBase.SetInterfaceMode(System.Boolean,System.IntPtr)">
+			<summary>Specifies whether the client is a console or Windows application.</summary>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionBase.ClientVersion">
+			<summary>Gets information about the version of the HPC Pack that is installed on the nodes of the cluster that runs the SOA client application.</summary>
+			<returns>A <see cref="T:System.Version"></see> that contains the version information.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionBase.EndpointReference">
+			<summary>Retrieves the unique network address that a client uses to communicate with a service endpoint.</summary>
+			<returns>A <see cref="T:System.ServiceModel.EndpointAddress"></see> object that contains the network address..</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionBase.Id">
+			<summary>Retrieves an identifier that uniquely identifies the session.</summary>
+			<returns>An <see cref="T:System.Int32"></see> that serves as the identifier that uniquely identifies the session.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionBase.NoServiceVersion">
+			<summary>Gets a <see cref="T:System.Version"></see> object that represents a service with no version information.</summary>
+			<returns>A <see cref="T:System.Version"></see> object that represent a service with no version information.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionBase.ServerVersion">
+			<summary>Gets information about the version of the HPC Pack that is installed on the head node of the cluster that hosts the session.</summary>
+			<returns>A <see cref="T:System.Version"></see> that contains the version information.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionBase.ServiceVersion">
+			<summary>Gets the version of the service to which the session connected.</summary>
+			<returns>A <see cref="T:System.Version"></see> that contains the version information. The value of this property can be null if the session uses a service with configuration file that does not specify a version.</returns>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.SessionException">
+			<summary>Represents an exception that occurs when a session error occurs.</summary>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionException.ErrorCode">
+			<summary>Gets the error code for the session-specific error.</summary>
+			<returns>A <see cref="T:System.Int32"></see> that contains the error code for the session-specific error.</returns>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.SessionStartInfo">
+			<summary>Defines a set of values used to create a session.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+			<summary>Initializes a new instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.SessionStartInfo"></see> class with the specified serialization information.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.#ctor(System.String,System.String)">
+			<summary>Initializes a new instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.SessionStartInfo"></see> class for the specified service on the cluster with the specified head node.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.#ctor(System.String,System.String,System.Version)">
+			<summary>Initializes a new instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.SessionStartInfo"></see> class for the specified service and service version on the cluster with the specified head node.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.System.Runtime.Serialization.ISerializable.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+			<summary>Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo"></see> object with the data that is needed to serialize the <see cref="T:Microsoft.Hpc.Scheduler.Session.SessionStartInfo"></see> object.</summary>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettings">
+			<summary>The broker settings that define the timeout periods that are used by the broker.</summary>
+			<returns>A <see cref="T:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo"></see> object that defines the timeout periods that are used by the broker.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Environments">
+			<summary>Gets the environment variables of the service host.</summary>
+			<returns>A <see cref="T:System.Collections.Generic.Dictionary`2"></see> object that contains pairs of environment variable names and values.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Headnode">
+			<summary>Retrieves the name of the head node of the cluster in which the service job runs.</summary>
+			<returns>The computer name of the head node.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.JobTemplate">
+			<summary>Retrieves or sets the template to use for the service job.</summary>
+			<returns>The template to use to set the default values and constraints for the service job.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.MaximumUnits">
+			<summary>Retrieves or sets the maximum number of resource units that the scheduler can allocate for the service job.</summary>
+			<returns>The maximum number of resource units.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.MinimumUnits">
+			<summary>Retrieves or sets the minimum number of resource units that the service job requires to run.</summary>
+			<returns>The minimum number of resource units.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.NodeGroupList">
+			<summary>Gets or sets a list of the node groups that define the nodes on which the service job for the session can run.</summary>
+			<returns>A <see cref="T:System.Collections.Generic.List`1"></see> of strings that contain the names of the node groups that define the nodes on which the service job for the session can run.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.NodeGroups">
+			<summary>Retrieves or sets the names of the node groups that define the nodes on which the service job can run.</summary>
+			<returns>An <see cref="T:Microsoft.Hpc.Scheduler.IStringCollection"></see> interface that contains the collection of node group names.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Password">
+			<summary>Retrieves or sets the password for the RunAs user.</summary>
+			<returns>The password for the RunAs user.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Priority">
+			<summary>Retrieves or sets the priority that is given to the service job.</summary>
+			<returns>The priority of the job. For possible values, see the <see cref="T:Microsoft.Hpc.Scheduler.Properties.JobPriority"></see> enumeration. The default is Normal.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Project">
+			<summary>Retrieves or sets the name of the project that is associated with the job.</summary>
+			<returns>The project name. The name is limited to 80 characters.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.RequestedNodes">
+			<summary>Gets or sets the nodes that you request to run the service job for the session.</summary>
+			<returns>An <see cref="T:Microsoft.Hpc.Scheduler.IStringCollection"></see> interface that contains the collection of node names. The nodes must exist in the cluster.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.RequestedNodesList">
+			<summary>Gets or sets a list of nodes that you request to run the service job for the session.</summary>
+			<returns>A <see cref="T:System.Collections.Generic.List`1"></see> of strings that contain the names of the node on which you request to run the service job for the session. The nodes must exist in the HPC cluster with the head node that the <see cref="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Headnode"></see> property specifies.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.ResourceUnitType">
+			<summary>Determines whether cores, nodes, or sockets are used to allocate resources for the service instance job.</summary>
+			<returns>The unit type. The default is Core. For possible values, see the <see cref="T:Microsoft.Hpc.Scheduler.Properties.JobUnitType"></see> enumeration.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Runtime">
+			<summary>Retrieves or sets the run-time limit for the job.</summary>
+			<returns>The run-time limit for the job, in seconds.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Secure">
+			<summary>Determines if a secure connection is used between the client and the HPC broker.</summary>
+			<returns>It is true if a secure connection is used; otherwise, it is false. The default is true.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.ServiceJobName">
+			<summary>The display name of the service job.</summary>
+			<returns>The display name of the service job.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.ServiceName">
+			<summary>Retrieves the name of the service to run on the nodes of the cluster.</summary>
+			<returns>The name of the service that runs on the nodes of the cluster. Specify the name of the registration file for the service. For example, if the name of the registration file is EchoService.config, specify EchoService as the service name.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.ServiceVersion">
+			<summary>Gets the version of the service to which the session connected.</summary>
+			<returns>A <see cref="T:System.Version"></see> that contains the version information. If this value is null, the session uses the configuration file for the service that does not specify version information. </returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.SessionPriority">
+			<summary>Gets or sets the priority for the service job.</summary>
+			<returns>A <see cref="T:System.Int32"></see> between 0 and 4000 that specifies the priority for the service job, where 0 is the lowest priority and 4000 is the highest.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.SessionResourceUnitType">
+			<summary>Gets or sets whether cores, nodes, or sockets are used to allocate resources for the service job.</summary>
+			<returns>A <see cref="T:System.Nullable`1"></see> object with a type parameter of <see cref="T:Microsoft.Hpc.Scheduler.Session.SessionUnitType"></see> that indicates whether the HPC Job Scheduler Service should allocate resources for the service job in the form of cores, nodes, or sockets.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.ShareSession">
+			<summary>Determines if more than one user can connect to the session.</summary>
+			<returns>Is true if more than one user can connect to the session; otherwise, it is false. The default is false.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.TransportScheme">
+			<summary>Retrieves or sets the transport binding schemes used for the session.</summary>
+			<returns>The transport binding schemes. You can specify one or more schemes. For possible values, see <see cref="T:Microsoft.Hpc.Scheduler.Session.TransportScheme"></see>. </returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Username">
+			<summary>Retrieves or sets the RunAs user for the job.</summary>
+			<returns>The RunAs user for the job, in the form domain\username.</returns>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo">
+			<summary>Defines settings that control the behavior of the broker for this session.</summary>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.AllocationGrowLoadRatioThreshold">
+			<summary>The upper threshold of available service capacity.</summary>
+			<returns>The upper threshold. The default is 125 percent.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.AllocationShrinkLoadRatioThreshold">
+			<summary>The lower threshold of available service capacity.</summary>
+			<returns>The lower threshold. The default is 75 percent.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.ClientBrokerHeartbeatInterval">
+			<summary>Gets or sets the length of time in milliseconds that must elapse between the client and broker heartbeats before the broker is considered unreachable by the session.</summary>
+			<returns>A <see cref="T:System.Nullable`1"></see> object with a type parameter of int that indicates the length of time in milliseconds that must elapse between the client and broker heartbeats before the broker is considered unreachable by the session.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.ClientBrokerHeartbeatRetryCount">
+			<summary>Gets or sets the number of times that the amount of time that the <see cref="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.ClientBrokerHeartbeatInterval"></see> property specifies must elapse between the client and broker heartbeats before the broker is considered unreachable by the session.</summary>
+			<returns>A <see cref="T:System.Nullable`1"></see> object with a type parameter of int that indicates the number of times that the amount of time that the <see cref="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.ClientBrokerHeartbeatInterval"></see> property specifies must elapse between the client and broker heartbeats before the broker is considered unreachable by the session.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.ClientConnectionTimeout">
+			<summary>The time in which the client must bind to the service after creating the session.</summary>
+			<returns>The time, in milliseconds, in which the client must bind to the service. The default is 300,000 milliseconds.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.ClientIdleTimeout">
+			<summary>The amount of time that the client can go without sending requests to the service.</summary>
+			<returns>The amount of time, in milliseconds, that the client can go without sending requests to the service. The default is 300,000 milliseconds.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.MaxMessageSize">
+			<summary>Gets or sets the maximum size of a request or response message for the session.</summary>
+			<returns>A <see cref="T:System.Nullable`1"></see> object with a type parameter of int that indicates the maximum size of a request or response message for the session in kilobytes (kb).</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.MessagesThrottleStartThreshold">
+			<summary>The upper threshold at which point the broker stops receiving messages from the clients.</summary>
+			<returns>The upper threshold of queued messages. The default is 5,120 messages.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.MessagesThrottleStopThreshold">
+			<summary>The lower threshold at which point the broker begins receiving messages from the clients.</summary>
+			<returns>The lower threshold of queued messages. The default is 3,840 messages.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.ServiceOperationTimeout">
+			<summary>Gets or sets the amount of time that the service should try to perform operations before timing out.</summary>
+			<returns>A <see cref="T:System.Nullable`1"></see> object with a type parameter of int that indicates the amount of time in milliseconds that the service should try to perform operations before timing out..</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.SessionIdleTimeout">
+			<summary>The amount of time that the broker waits for a client to bind to the service after all previous client sessions ended.</summary>
+			<returns>The amount of time, in milliseconds, that the broker waits for a client to connect. The default is zero.</returns>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.SessionUnitType">
+			<summary>Defines values to indicate the type of hardware resources used to determine to nodes on which the service job for the session can run.</summary>
+		</member>
+		<member name="F:Microsoft.Hpc.Scheduler.Session.SessionUnitType.Core">
+			<summary>Uses cores to schedule the service job. This enumeration member represents a value of 0.</summary>
+		</member>
+		<member name="F:Microsoft.Hpc.Scheduler.Session.SessionUnitType.Node">
+			<summary>Uses nodes to schedule the service job. This enumeration member represents a value of 2.</summary>
+		</member>
+		<member name="F:Microsoft.Hpc.Scheduler.Session.SessionUnitType.Socket">
+			<summary>Uses sockets to scheduler the service job. This enumeration member represents a value of 1.</summary>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.SOAFaultCode">
+			<summary>Provides methods for getting information about error codes for SOA errors.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.SOAFaultCode.Category(System.Int32)">
+			<summary>Gets the category of the SOA error with the specified error code.</summary>
+			<returns>A value from the <see cref="T:Microsoft.Hpc.Scheduler.Session.SOAFaultCodeCategory"></see> enumeration that represents the category of the error with the specified error code.</returns>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.SOAFaultCode.GetFaultCodeName(System.Int32)">
+			<summary>Gets the name of the SOA error with the specified error code.</summary>
+			<returns>A <see cref="T:System.String"></see> that contains the name of the SOA error with the specified error code.</returns>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.SOAFaultCodeCategory">
+			<summary>Defines categories for the errors that a <see cref="T:Microsoft.Hpc.Scheduler.Session.SOAFaultCode"></see> object represents.</summary>
+		</member>
+		<member name="F:Microsoft.Hpc.Scheduler.Session.SOAFaultCodeCategory.ApplicationError">
+			<summary>Indicates that the error occurred application level and did not cause an error for the SOA session. You can still use the session with the current connection. This enumeration member represents a value of 0x04000000.</summary>
+		</member>
+		<member name="F:Microsoft.Hpc.Scheduler.Session.SOAFaultCodeCategory.SessionConnectionError">
+			<summary>Indicates that an error occurred with the connection of the client to the session. If the client has a valid session identifier, the client can try to resolve this error by reattaching to the session a limited number of times. If the client does not have a valid session identifier, the client can try to resolve this error by creating a new session a limited number of times. This enumeration member represents a value of 0x01000000.</summary>
+		</member>
+		<member name="F:Microsoft.Hpc.Scheduler.Session.SOAFaultCodeCategory.SessionError">
+			<summary>Indicates than an error occurred with the SOA session itself. After receiving this error, the client can try to resolve this error by creating a new session a limited number of times. The client cannot resolve this error by trying to reattach to the session. This enumeration member represents a value of 0x02000000.</summary>
+		</member>
+		<member name="F:Microsoft.Hpc.Scheduler.Session.SOAFaultCodeCategory.SessionFatalError">
+			<summary>Indicates that a fatal session error occurred. When a client receives this error, the client should not try to resolve the error by creating a new session or reattaching to the session until the root cause of the error is resolved. This type of error usually occure because of a problem with the installation of the application or of Windows HPC Server 2008 R2, with the capacity allocated to the session, or with the application implementation. This enumeration member represents a value of 0x03000000.</summary>
+		</member>
+		<member name="F:Microsoft.Hpc.Scheduler.Session.SOAFaultCodeCategory.Unknown">
+			<summary>Indicates that an unknown error occurred. Treat this error in the same way as you treat an error with a <see cref="T:Microsoft.Hpc.Scheduler.Session.SOAFaultCodeCategory"></see> value of <see cref="F:Microsoft.Hpc.Scheduler.Session.SOAFaultCodeCategory.SessionFatalError"></see>. This enumeration member represents a value of 0x0F000000.</summary>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.TransportScheme">
+			<summary>Defines the transport binding schemes.</summary>
+		</member>
+		<member name="F:Microsoft.Hpc.Scheduler.Session.TransportScheme.Http">
+			<summary>Specifies a string constant for the HTTP or HTTPS binding scheme, depending on the value of the <see cref="P:Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Secure"></see> property. For details, see <see cref="T:System.ServiceModel.BasicHttpBinding"></see>. This enumeration member represents a value of 2.</summary>
+		</member>
+		<member name="F:Microsoft.Hpc.Scheduler.Session.TransportScheme.NetTcp">
+			<summary>Specifies a string constant for the NetTcp binding scheme. For details, see <see cref="T:System.ServiceModel.NetTcpBinding"></see>. This enumeration member represents a value of 1.</summary>
+		</member>
+		<member name="F:Microsoft.Hpc.Scheduler.Session.TransportScheme.None">
+			<summary>Not used.</summary>
+		</member>
+		<member name="N:Microsoft.Hpc.Scheduler.Session.Configuration">
+			<summary>Contains the objects used to access and update a session’s configuration file.</summary>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerConfigurations">
+			<summary>Contains the properties used to access the different sections of a session’s configuration file.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerConfigurations.#ctor">
+			<summary>Initializes a new instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerConfigurations"></see> class.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerConfigurations.GetSectionGroup(System.Configuration.Configuration)">
+			<summary>Gets the configuration section group from the specified configuration file.</summary>
+			<returns>An <see cref="T:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerConfigurations"></see> object that contains the sections of the session’s configuration file.
+</returns>
+			<param name="config">A configuration object that represents a configuration file.</param>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerConfigurations.Validate(System.String@)">
+			<summary>Validates the contents of the configuration file.</summary>
+			<returns>Is true if the file validates; otherwise, false.</returns>
+			<param name="errorMessage">If <see cref="M:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerConfigurations.Validate(System.String@)"></see> returns false, this parameter contains the validation error.</param>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerConfigurations.LoadBalancing">
+			<summary>Retrieves the loadBalancing section of the configuration file.</summary>
+			<returns>A <see cref="T:Microsoft.Hpc.Scheduler.Session.Configuration.LoadBalancingConfiguration"></see> object that contains the properties of the loadBalancing section of the configuration file.
+</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerConfigurations.Monitor">
+			<summary>Retrieves the monitor section of the configuration file.</summary>
+			<returns>A <see cref="T:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerMonitorConfiguration"></see> object that contains the properties of the monitor section of the configuration file.
+</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerConfigurations.Services">
+			<summary>Retrieves the services section of the configuration file.</summary>
+			<returns>A <see cref="T:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerServicesConfiguration"></see> object that contains the properties of the services section of the configuration file.
+</returns>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerMonitorConfiguration">
+			<summary>Contains the configuration properties for the monitor section of the configuration file.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerMonitorConfiguration.#ctor">
+			<summary>Initializes a new instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerMonitorConfiguration"></see> class.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerMonitorConfiguration.Validate(System.String@)">
+			<summary>Validates the contents of the configuration file.</summary>
+			<returns>Is true if the file validates; otherwise, false.</returns>
+			<param name="errorMessage">If <see cref="M:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerMonitorConfiguration.Validate(System.String@)"></see> returns false, this parameter contains the validation error.</param>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerMonitorConfiguration.AllocationAdjustInterval">
+			<summary>The interval at which you want to grow or shrink the capacity of the services.</summary>
+			<returns>The length of the interval in milliseconds that elapses between successive checks that the broker makes of the load ratios for the session to determine whether to grow or shrink capacity. The default is 60,000 milliseconds.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerMonitorConfiguration.ClientConnectionTimeout">
+			<summary>The time in which the client must connect to the web-service after creating the session.</summary>
+			<returns>The time, in milliseconds, in which the client must connect to the web-service. The default is five minutes.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerMonitorConfiguration.ClientIdleTimeout">
+			<summary>The amount of time that the client can go without sending requests to the web-service.</summary>
+			<returns>The amount of time, in milliseconds, that the client can go without sending requests to the web-service. The default is five minutes.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerMonitorConfiguration.LoadSamplingInterval">
+			<summary>The interval at which the broker checks the load capacity of the service.</summary>
+			<returns>The load sampling interval, in milliseconds. The default is 1,000 milliseconds (one second).</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerMonitorConfiguration.MessageThrottleStartThreshold">
+			<summary>The upper threshold at which the broker stops receiving messages from the clients.</summary>
+			<returns>The upper threshold of queued messages. The default is 5,120 messages.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerMonitorConfiguration.MessageThrottleStopThreshold">
+			<summary>The lower threshold at which the broker begins receiving messages from the clients.</summary>
+			<returns>The lower threshold of queued messages. The default is 3,840 messages.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerMonitorConfiguration.SessionIdleTimeout">
+			<summary>The amount of time that the broker waits for a client to connect after all previous client sessions ended.</summary>
+			<returns>The amount of time, in milliseconds, that the broker waits for a client to connect. The default is zero.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerMonitorConfiguration.StatusUpdateInterval">
+			<summary>The interval at which the broker updates service-specific job properties in the scheduler. </summary>
+			<returns>The update interval, in milliseconds. The default is 15,000 milliseconds (five seconds). </returns>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerServicesConfiguration">
+			<summary>Contains the configuration properties for the services section of the configuration file.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerServicesConfiguration.#ctor">
+			<summary>Initializes a new instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerServicesConfiguration"></see> class.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Configuration.BrokerServicesConfiguration.GetBrokerBaseAddress(System.String)">
+			<summary>Gets the base address for the specified transport scheme.</summary>
+			<returns>An <see cref="T:System.Uri"></see> object that contains the base address.</returns>
+			<param name="scheme">The transport scheme. The possible values are http, https, and net.tcp.</param>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.Configuration.LoadBalancingConfiguration">
+			<summary>Contains the configuration properties for the load balancing section of the configuration file.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Configuration.LoadBalancingConfiguration.#ctor">
+			<summary>Initializes a new instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.Configuration.LoadBalancingConfiguration"></see> class.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Configuration.LoadBalancingConfiguration.Validate(System.String@)">
+			<summary>Validates the contents of the configuration file.</summary>
+			<returns>Is true if the file validates; otherwise, false.</returns>
+			<param name="errorMessage">If <see cref="M:Microsoft.Hpc.Scheduler.Session.Configuration.LoadBalancingConfiguration.Validate(System.String@)"></see> returns false, this parameter contains the validation error.</param>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.LoadBalancingConfiguration.MessageResendLimit">
+			<summary>The number of times that the broker will resend a message.</summary>
+			<returns>The number of times that the broker will resend a message. The default is 3.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.LoadBalancingConfiguration.Properties">
+			<summary>Represents a collection of configuration-element properties.</summary>
+			<returns>A <see cref="T:System.Configuration.ConfigurationPropertyCollection"></see> object that contains a collection of ConfigurationProperty objects.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.LoadBalancingConfiguration.ServiceOperationTimeout">
+			<summary>The length of time that the broker waits for the service to finish processing the message.</summary>
+			<returns>The length of time, in milliseconds, that the broker waits for the service to finish processing the message. The default is 86,400,000 milliseconds (24 hours).</returns>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.Configuration.ServiceArch">
+			<summary>Defines values that represent the possible service architectures for a service.</summary>
+		</member>
+		<member name="F:Microsoft.Hpc.Scheduler.Session.Configuration.ServiceArch.X64">
+			<summary>The service is a 64-bit binary. This enumeration member represents a value of 2.</summary>
+		</member>
+		<member name="F:Microsoft.Hpc.Scheduler.Session.Configuration.ServiceArch.X86">
+			<summary>The service is a 32-bit binary. This enumeration member represents a value of 1.</summary>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.Configuration.ServiceConfiguration">
+			<summary>Represents the components of the service configuration file.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Configuration.ServiceConfiguration.#ctor">
+			<summary>Initializes a new instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.Configuration.ServiceConfiguration"></see> class.</summary>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.ServiceConfiguration.Architecture">
+			<summary>The architecture on which your service can run.</summary>
+			<returns>For possible values, see the   <see cref="T:Microsoft.Hpc.Scheduler.Session.Configuration.ServiceArch"></see> enumeration.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.ServiceConfiguration.AssemblyPath">
+			<summary>The full path to the service DLL.</summary>
+			<returns>The full path to the service DLL.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.ServiceConfiguration.ContractType">
+			<summary>The interface of the service (WCF contract).</summary>
+			<returns>The interface of the service (WCF contract).</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.ServiceConfiguration.EnvironmentVariables">
+			<summary>The environment variables that the service uses.</summary>
+			<returns>An <see cref="T:System.Configuration.NameValueConfigurationCollection"></see> object that contains a collection of name/value pairs that define the environment variables that the service uses.</returns>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.ServiceConfiguration.ServiceType">
+			<summary>The class that implements the WCF contract.</summary>
+			<returns>The class that implements the WCF contract.</returns>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.Configuration.ServiceRegistration">
+			<summary>Represents the service registration information.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Configuration.ServiceRegistration.#ctor">
+			<summary>Initializes a new instance of the <see cref="T:Microsoft.Hpc.Scheduler.Session.Configuration.ServiceRegistration"></see> class.</summary>
+		</member>
+		<member name="M:Microsoft.Hpc.Scheduler.Session.Configuration.ServiceRegistration.GetSectionGroup(System.Configuration.Configuration)">
+			<summary>Gets the service registration section group from the specified configuration file.</summary>
+			<returns>An <see cref="T:Microsoft.Hpc.Scheduler.Session.Configuration.ServiceRegistration"></see> object that contains the service registration section of the configuration file.
+</returns>
+			<param name="config">A configuration object that represents a configuration file.</param>
+		</member>
+		<member name="P:Microsoft.Hpc.Scheduler.Session.Configuration.ServiceRegistration.Service">
+			<summary>Gets the service section of the service registration configuration file.</summary>
+			<returns>A <see cref="T:Microsoft.Hpc.Scheduler.Session.Configuration.ServiceConfiguration"></see> object that represents the service section.
+</returns>
+		</member>
+		<member name="N:Microsoft.Hpc.Scheduler.Session.Interface">
+			<summary>Provides support for determining the status of a broker client, using SOA from the Java programming language, and creating custom service hosts and brokers.</summary>
+		</member>
+		<member name="T:Microsoft.Hpc.Scheduler.Session.Interface.BrokerClientStatus">
+			<summary>Defines values that indicate the state of a <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1"></see> object.</summary>
+		</member>
+		<member name="F:Microsoft.Hpc.Scheduler.Session.Interface.BrokerClientStatus.Finished">
+			<summary>Indicates that the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1"></see> object is finished processing requests.</summary>
+		</member>
+		<member name="F:Microsoft.Hpc.Scheduler.Session.Interface.BrokerClientStatus.Processing">
+			<summary>Indicates that the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1"></see> object is processing requests.</summary>
+		</member>
+		<member name="F:Microsoft.Hpc.Scheduler.Session.Interface.BrokerClientStatus.Ready">
+			<summary>Indicates that the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1"></see> object is newly created and ready to process requests.</summary>
+		</member>
+		<member name="F:Microsoft.Hpc.Scheduler.Session.Interface.BrokerClientStatus.Unknown">
+			<summary>Indicates that the <see cref="T:Microsoft.Hpc.Scheduler.Session.BrokerClient`1"></see> object is in an unknown state.</summary>
+		</member>
+	</members>
+</doc>

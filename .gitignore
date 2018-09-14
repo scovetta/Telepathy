@@ -339,3 +339,5 @@ ASALocalRun/
 *.slnhash
 *.slnhash.userData
 *.slnhash.userData.assemblies
+
+**/MigrationBackup/

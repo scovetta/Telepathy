@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Font Name="Segoe UI" Size="9" />
+  <Class Name="SchedulerStore.JobPropId">
+    <Position X="1.75" Y="2.5" Width="3.25" />
+    <TypeIdentifier>
+      <FileName>JobProperties.cs</FileName>
+      <HashCode>VlaGRr7CgsJCI8AlUQoi6NZAAQRTJIoGGdgDHW4+Dlc=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="SchedulerStore.JobProperty">
+    <Position X="6.5" Y="4.75" Width="3.5" />
+    <TypeIdentifier>
+      <FileName>JobProperty.cs</FileName>
+      <HashCode>AAAAAIAAAAAAAAoEAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="SchedulerStore.TaskProperty">
+    <Position X="6.5" Y="8.5" Width="3.75" />
+    <TypeIdentifier>
+      <FileName>TaskProperty.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAgEgAgAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="SchedulerStore.JobPropertyRow" Collapsed="true">
+    <Position X="3.75" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>IJobEnum.cs</FileName>
+      <HashCode>AAAAAAAAAAAAQAAACAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SchedulerStore.JobFilterProperty" Collapsed="true">
+    <Position X="2" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>IJobEnum.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEIAQAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SchedulerStore.JobSortProperty" Collapsed="true">
+    <Position X="2" Y="18.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>IJobEnum.cs</FileName>
+      <HashCode>AAEBAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SchedulerStore.TaskFilterProperty" Collapsed="true">
+    <Position X="6" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ITaskEnum.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEIAQAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SchedulerStore.TaskSortProperty" Collapsed="true">
+    <Position X="7.75" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ITaskEnum.cs</FileName>
+      <HashCode>AAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAIAAAACAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SchedulerStore.ResourcePropId" Collapsed="true">
+    <Position X="7.5" Y="23.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ResourceProperties.cs</FileName>
+      <HashCode>BgESIA5AxgACoQgAQMAAAEEAoCkhACIICCBhDSBkAA0=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SchedulerStore.JobProfileItem">
+    <Position X="5.75" Y="14.5" Width="3.5" />
+    <TypeIdentifier>
+      <FileName>JobProfileItem.cs</FileName>
+      <HashCode>AAAAAAAEgAEAAAKBAADAAAEAAAAAAQACAAAAACAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Interface Name="SchedulerStore.IJobProfile">
+    <Position X="6.5" Y="11.5" Width="4.25" />
+    <TypeIdentifier>
+      <FileName>IJobProfile.cs</FileName>
+      <HashCode>AAACAGAAAAAAAgAAAAACAAAAAACEAAAIAAAAAAAAABA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SchedulerStore.IJobRowSet">
+    <Position X="2" Y="20" Width="3.75" />
+    <TypeIdentifier>
+      <FileName>IJobEnum.cs</FileName>
+      <HashCode>AEQAAAAAACAIAAAACQAAAABAAAAAAAAAAAAAAEAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SchedulerStore.ITaskRowSet">
+    <Position X="6" Y="20.25" Width="3.5" />
+    <TypeIdentifier>
+      <FileName>ITaskEnum.cs</FileName>
+      <HashCode>AEQAAAAAAAAIAAAACQAAAABAAAAAAAAAAAAAAEAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SchedulerStore.IStoreManager">
+    <Position X="1.75" Y="23" Width="4.75" />
+    <TypeIdentifier>
+      <FileName>IStoreManager.cs</FileName>
+      <HashCode>BAAAAAABAABAAAEAAAAAAQAAAAAAAAAAAAAQAAAIAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="SchedulerStore.SeekMethod" Collapsed="true">
+    <Position X="2" Y="21" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>IJobEnum.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAgAAAAAAQAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SchedulerStore.ResourceState">
+    <Position X="7.5" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ResourceProperties.cs</FileName>
+      <HashCode>AAgAAAZEAAAAAAAAAAgAAAEABEAAAAAgAAgCAIBAAAA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+</ClassDiagram>

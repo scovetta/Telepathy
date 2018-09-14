@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+  <PropertyGroup>
+    <AssemblyName>Microsoft.Hpc.Scheduler.Store</AssemblyName>
+    <RootNamespace>Microsoft.Hpc.Scheduler.Store</RootNamespace>
+    <OutputType>Library</OutputType>
+    <DefineTrace>True</DefineTrace>
+    <ProjectGuid>{82F72B8B-372E-4A1C-8139-714AE932EBCB}</ProjectGuid>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoWarn>0067,0649,1591,0108</NoWarn>
+    <Localizable>true</Localizable>
+    <AssemblyClsCompliant>false</AssemblyClsCompliant>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>true</DelaySign>
+    <AssemblyVersionName>CCPv2</AssemblyVersionName>
+    <TargetFrameworkProfile />
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="CustomMarshalers" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\common\CertificateHelper.cs">
+      <Link>CertificateHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\CredentialNativeMethods.cs">
+      <Link>CredentialNativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\Credentials.cs">
+      <Link>Credentials.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\CredentialHelper.cs">
+      <Link>CredentialHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\LockUtil.cs">
+      <Link>LockUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\SchedulerCredentialCache.cs">
+      <Link>SchedulerCredentialCache.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\SchedulerPropertyIdConstants.cs">
+      <Link>SchedulerPropertyIdConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Scheduler\AddInFilters\HpcSchedulerAddInFilterServer\AddInFilterDemandLoad.cs">
+      <Link>AddInFilterDemandLoad.cs</Link>
+    </Compile>
+    <Compile Include="..\..\scheduler\AddInFilters\HpcSchedulerAddInFilterServer\HostAdapterView.cs">
+      <Link>HostAdapterView.cs</Link>
+    </Compile>
+    <Compile Include="AllocationObject.cs" />
+    <Compile Include="AsyncResult.cs" />
+    <Compile Include="callresult.cs" />
+    <Compile Include="CertEnrolInterop.cs" />
+    <Compile Include="ConnectionToken.cs" />
+    <Compile Include="CredentialType.cs" />
+    <Compile Include="CredentialTypeDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CredentialTypeDialog.Designer.cs">
+      <DependentUpon>CredentialTypeDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Enroll.cs" />
+    <Compile Include="EventFormatter.cs" />
+    <Compile Include="EventListener.cs" />
+    <Compile Include="EventPackets.cs" />
+    <Compile Include="HpcContextExtension.cs" />
+    <Compile Include="IAllocation.cs" />
+    <Compile Include="IAllocationRowSet.cs" />
+    <Compile Include="IJobEnum.cs" />
+    <Compile Include="IJobEx.cs" />
+    <Compile Include="IJobProfile.cs" />
+    <Compile Include="IJobProfileRowSet.cs" />
+    <Compile Include="INodeEx.cs" />
+    <Compile Include="INodeRowSet.cs" />
+    <Compile Include="IPoolEx.cs" />
+    <Compile Include="IPoolRowSet.cs" />
+    <Compile Include="IResourceEnum.cs" />
+    <Compile Include="IResourceEx.cs" />
+    <Compile Include="IRowEnumerator.cs" />
+    <Compile Include="IRowSet.cs" />
+    <Compile Include="ISchedulerStore.cs" />
+    <Compile Include="ISchedulerStoreInternal.cs" />
+    <Compile Include="IStoreManager.cs" />
+    <Compile Include="IStoreObject.cs" />
+    <Compile Include="IStoreTransaction.cs" />
+    <Compile Include="ITaskEnum.cs" />
+    <Compile Include="ITaskEx.cs" />
+    <Compile Include="itaskgroup.cs" />
+    <Compile Include="ITaskGroupRowSet.cs" />
+    <Compile Include="JobEx.cs" />
+    <Compile Include="JobHistoryRenderer.cs" />
+    <Compile Include="JobMessageObject.cs" />
+    <Compile Include="JobProfile.cs" />
+    <Compile Include="JobProfileItem.cs" />
+    <Compile Include="JobPropertyBag.cs" />
+    <Compile Include="LocalEnumerator.cs" />
+    <Compile Include="LocalRowEnumerator.cs" />
+    <Compile Include="LocalRowSet.cs" />
+    <Compile Include="NodeEx.cs" />
+    <Compile Include="JobProfilePropertyBag.cs" />
+    <Compile Include="PipePacket.cs" />
+    <Compile Include="PoolEx.cs" />
+    <Compile Include="PropertyConverter.cs" />
+    <Compile Include="PropertyDescriptor.cs" />
+    <Compile Include="PropertyLookup.cs" />
+    <Compile Include="PropertyUtil.cs" />
+    <Compile Include="ProtectedPropertyIds.cs" />
+    <Compile Include="ResourceEx.cs" />
+    <Compile Include="RowSetWrapper.cs" />
+    <Compile Include="ScheduerStoreSvc.cs" />
+    <Compile Include="SchedulerClientEndpointBehavior.cs" />
+    <Compile Include="SchedulerStoreHelpers.cs" />
+    <Compile Include="ServerPropertyDescriptor.cs" />
+    <Compile Include="ServerWrapper.cs" />
+    <Compile Include="ServiceAsClientSinkProvider.cs" />
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="StoreConnectionContext.cs" />
+    <Compile Include="StoreCounterHelper.cs" />
+    <Compile Include="StoreManager.cs" />
+    <Compile Include="StoreObjectBase.cs" />
+    <Compile Include="StoreTransaction.cs" />
+    <Compile Include="TaskEx.cs" />
+    <Compile Include="TaskGroup.cs" />
+    <Compile Include="TaskPropertyBag.cs" />
+    <Compile Include="TaskTypeHelper.cs" />
+    <Compile Include="TraceHelper.cs" />
+    <Compile Include="Tree.cs" />
+    <Compile Include="VersionControl.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AADAuthUtil\AADAuthUtil.csproj">
+      <Project>{895fcbfb-73b4-46f3-8a89-76c236f01bf4}</Project>
+      <Name>AADAuthUtil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\HpcCommon\HpcCommon.csproj">
+      <Project>{2c3936c7-4850-41d7-9497-9040be302328}</Project>
+      <Name>HpcCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Property\Properties.csproj">
+      <Project>{61844849-3d26-4003-8146-5ae86985db3a}</Project>
+      <Name>Properties</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SR.resx">
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

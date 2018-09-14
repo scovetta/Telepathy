@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.microsoft.com/HPCS2008/scheduler/" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/HPCS2008/scheduler/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Task" nillable="true" type="tns:Task" />
+  <xs:complexType name="Task">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="EnvironmentVariables" nillable="true" type="tns:NameValueCollection" />
+      <xs:element minOccurs="0" maxOccurs="1" name="CustomProperties" nillable="true" type="tns:NameValueCollection1" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ExtendedTerms" nillable="true" type="tns:NameValueCollection1" />
+    </xs:sequence>
+    <xs:attribute name="Version" type="xs:decimal"   />
+    <xs:attribute default="" name="Name" type="xs:string" />
+    <xs:attribute default="Configuring" name="State" type="tns:TaskState"   />
+    <xs:attribute default="Configuring" name="PreviousState" type="tns:TaskState"   />
+    <xs:attribute default="0" name="ParentJobId" type="xs:int"   />
+    <xs:attribute name="RuntimeSeconds" type="xs:int" />
+    <xs:attribute name="InstanceId" type="xs:int"   />
+    <xs:attribute name="InstanceValue" type="xs:int"   />
+    <xs:attribute default="Core" name="UnitType" type="tns:UnitType"   />
+    <xs:attribute default="1" name="MinCores" type="xs:int"   />
+    <xs:attribute default="1" name="MaxCores" type="xs:int"   />
+    <xs:attribute default="1" name="MinNodes" type="xs:int"   />
+    <xs:attribute default="1" name="MaxNodes" type="xs:int"   />
+    <xs:attribute default="1" name="MinSockets" type="xs:int"   />
+    <xs:attribute default="1" name="MaxSockets" type="xs:int"   />
+    <xs:attribute default="0" name="NiceId" type="xs:int"   />
+    <xs:attribute default="0" name="Id" type="xs:int" />
+    <xs:attribute name="CommandLine" type="xs:string"   />
+    <xs:attribute default=""  name="RequiredNodes" type="xs:string" />
+    <xs:attribute default="" name="DependsOn" type="xs:string" />
+    <xs:attribute default="false" name="IsParametric" type="xs:boolean"   />
+    <xs:attribute default="false" name="IsExclusive" type="xs:boolean" />
+    <xs:attribute default="true" name="IsRerunnable" type="xs:boolean" />
+    <xs:attribute default="" name="ErrorMessage" type="xs:string" />
+    <xs:attribute default="0" name="ExitCode" type="xs:int" />
+    <xs:attribute name="GroupId" type="xs:int"   />
+    <xs:attribute name="StdOutFilePath" type="xs:string" />
+    <xs:attribute name="StdInFilePath" type="xs:string" />
+    <xs:attribute name="StdErrFilePath" type="xs:string" />
+    <xs:attribute default="" name="WorkDirectory" type="xs:string" />
+    <xs:attribute name="StartValue" type="xs:int" />
+    <xs:attribute name="EndValue" type="xs:int" />
+    <xs:attribute name="IncrementValue" type="xs:int" />
+    <xs:attribute name="Output" type="xs:string" />
+    <xs:attribute name="RequestCancel" type="xs:string"   />
+    <xs:attribute name="Closed" type="xs:boolean" />
+    <xs:attribute name="RequeueCount" type="xs:int"   />
+    <xs:attribute name="FailureReason" type="xs:string"   />
+    <xs:attribute name="PendingReason" type="xs:string"   />
+    <xs:attribute name="SubmitTime" type="xs:string"   />
+    <xs:attribute name="CreateTime" type="xs:string"   />
+    <xs:attribute name="StartTime" type="xs:string"   />
+    <xs:attribute name="EndTime" type="xs:string"   />
+    <xs:attribute name="ChangeTime" type="xs:string"   />
+    <xs:attribute name="ErrorCode" type="xs:int"   />
+    <xs:attribute name="ErrorParams" type="xs:string"   />
+    <xs:attribute name="ParentJobState" type="tns:JobState" />
+    <xs:attribute name="AutoRequeueCount" type="xs:int"   />
+    <xs:attribute name="TaskOwner" type="xs:string" />
+    <xs:attribute name="ProcessIds" type="xs:string" />
+    <xs:attribute name="RecordId" type="xs:int" />
+    <xs:attribute name="ParametricRunningCount" type="xs:int" />
+    <xs:attribute name="ParametricCanceledCount" type="xs:int" />
+    <xs:attribute name="ParametricFailedCount" type="xs:int" />
+    <xs:attribute name="ParametricQueuedCount" type="xs:int" />
+    <xs:attribute name="HasCustomProps" type="xs:boolean" />
+  </xs:complexType>
+
+
+  <xs:complexType name="NameValueCollection">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Variable" nillable="true" type="tns:NameValue" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="NameValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Value" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="NameValueCollection1">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Term" nillable="true" type="tns:NameValue" />
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:simpleType name="TaskState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Configuring" />
+      <xs:enumeration value="Submitted" />
+      <xs:enumeration value="Validating" />
+      <xs:enumeration value="Queued" />
+      <xs:enumeration value="Dispatching" />
+      <xs:enumeration value="Running" />
+      <xs:enumeration value="Finishing" />
+      <xs:enumeration value="Finished" />
+      <xs:enumeration value="Failed" />
+      <xs:enumeration value="Canceled" />
+      <xs:enumeration value="Canceling" />
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:simpleType name="UnitType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Core" />
+      <xs:enumeration value="Socket" />
+      <xs:enumeration value="Node" />
+    </xs:restriction>
+  </xs:simpleType>
+  
+  
+  <xs:simpleType name="JobState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Configuring" />
+      <xs:enumeration value="Submitted" />
+      <xs:enumeration value="Validating" />
+      <xs:enumeration value="ExternalValidation" />
+      <xs:enumeration value="Queued" />
+      <xs:enumeration value="Running" />
+      <xs:enumeration value="Finishing" />
+      <xs:enumeration value="Finished" />
+      <xs:enumeration value="Failed" />
+      <xs:enumeration value="Canceled" />
+      <xs:enumeration value="Canceling" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

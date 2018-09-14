@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RoleConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://schemas.microsoft.com/HpcAzureRoleConfigurations/2013/01"
+            Version="5.1.0"
+>
+  <Roles>
+    <Role VMSize="Small" Description="Small (1 core, 1.75 GB Memory)" NumberOfCores="1" MemorySize="1750"  BandWidth="100" DiskSize="225" Abbreviation="S" SupportedByWorkerRoles="true" SupportedByVirtualMachines="false"/>
+    <Role VMSize="Medium" Description="Medium (2 cores, 3.5 GB Memory)" NumberOfCores="2" MemorySize="3500"  BandWidth="200"  DiskSize="490" Abbreviation="M" SupportedByWorkerRoles="true" SupportedByVirtualMachines="false"/>
+    <Role VMSize="Large" Description="Large (4 cores, 7 GB Memory)" NumberOfCores="4" MemorySize="7000"  BandWidth="400"  DiskSize="1000" Abbreviation="L" SupportedByWorkerRoles="true" SupportedByVirtualMachines="false"/>
+    <Role VMSize="ExtraLarge" Description="Extra Large (8 cores, 14 GB Memory)" NumberOfCores="8" MemorySize="14000"  BandWidth="800"  DiskSize="2040" Abbreviation="XL" SupportedByWorkerRoles="true" SupportedByVirtualMachines="false"/>
+    <Role VMSize="A5" Description="A5 (2 cores, 14 GB Memory)" NumberOfCores="2" MemorySize="14000"  DiskSize="490"  BandWidth="500" Abbreviation="A5" SupportedByWorkerRoles="true" SupportedByVirtualMachines="false"/>
+    <Role VMSize="A6" Description="A6 (4 cores, 28 GB Memory)" NumberOfCores="4" MemorySize="28000"  DiskSize="1000"  BandWidth="1000" Abbreviation="A6" SupportedByWorkerRoles="true" SupportedByVirtualMachines="false"/>
+    <Role VMSize="A7" Description="A7 (8 cores, 56 GB Memory)" NumberOfCores="8" MemorySize="56000"  DiskSize="2040"  BandWidth="2000" Abbreviation="A7" SupportedByWorkerRoles="true" SupportedByVirtualMachines="false"/>
+    <Role VMSize="A8" Description="A8 (8 cores, 56 GB Memory)" NumberOfCores="8" MemorySize="56000"  DiskSize="382"  BandWidth="4000" Abbreviation="A8" SupportedByWorkerRoles="true" SupportedByVirtualMachines="false"/>
+    <Role VMSize="A9" Description="A9 (16 cores, 112 GB Memory)" NumberOfCores="16" MemorySize="112000"  DiskSize="382"  BandWidth="8000" Abbreviation="A9" SupportedByWorkerRoles="true" SupportedByVirtualMachines="false"/>
+    <Role VMSize="A10" Description="A10 (8 cores, 56 GB Memory)" NumberOfCores="8" MemorySize="56000"  DiskSize="382"  BandWidth="4000" Abbreviation="A10" SupportedByWorkerRoles="true" SupportedByVirtualMachines="false"/>
+    <Role VMSize="A11" Description="A11 (16 cores, 112 GB Memory)" NumberOfCores="16" MemorySize="112000"  DiskSize="382"  BandWidth="8000" Abbreviation="A11" SupportedByWorkerRoles="true" SupportedByVirtualMachines="false"/>
+    <Role VMSize="Standard_A1" Description="A1 (1 core, 1.75 GB Memory)" NumberOfCores="1" MemorySize="1750"  BandWidth="100" DiskSize="225" Abbreviation="A1" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_A2" Description="A2 (2 cores, 3.5 GB Memory)" NumberOfCores="2" MemorySize="3500"  BandWidth="200"  DiskSize="490" Abbreviation="A2" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_A3" Description="A3 (4 cores, 7 GB Memory)" NumberOfCores="4" MemorySize="7000"  BandWidth="400"  DiskSize="1000" Abbreviation="A3" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_A4" Description="A4 (8 cores, 14 GB Memory)" NumberOfCores="8" MemorySize="14000"  BandWidth="800"  DiskSize="2040" Abbreviation="A4" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_A5" Description="A5 (2 cores, 14 GB Memory)" NumberOfCores="2" MemorySize="14000"  DiskSize="490"  BandWidth="500" Abbreviation="A5" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_A6" Description="A6 (4 cores, 28 GB Memory)" NumberOfCores="4" MemorySize="28000"  DiskSize="1000"  BandWidth="1000" Abbreviation="A6" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_A7" Description="A7 (8 cores, 56 GB Memory)" NumberOfCores="8" MemorySize="56000"  DiskSize="2040"  BandWidth="2000" Abbreviation="A7" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_A8" Description="A8 (8 cores, 56 GB Memory)" NumberOfCores="8" MemorySize="56000"  DiskSize="382"  BandWidth="4000" Abbreviation="A8" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_A9" Description="A9 (16 cores, 112 GB Memory)" NumberOfCores="16" MemorySize="112000"  DiskSize="382"  BandWidth="8000" Abbreviation="A9" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_A10" Description="A10 (8 cores, 56 GB Memory)" NumberOfCores="8" MemorySize="56000"  DiskSize="382"  BandWidth="4000" Abbreviation="A10" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_A11" Description="A11 (16 cores, 112 GB Memory)" NumberOfCores="16" MemorySize="112000"  DiskSize="382"  BandWidth="8000" Abbreviation="A11" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_A1_v2" Description="A1v2 (1 cores, 2 GB Memory)" NumberOfCores="1" MemorySize="2000" DiskSize="10" BandWidth="100" Abbreviation="A1v2" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_A2_v2" Description="A2v2 (2 cores, 4 GB Memory)" NumberOfCores="2" MemorySize="4000" DiskSize="20" BandWidth="200" Abbreviation="A2v2" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_A4_v2" Description="A4v2 (4 cores, 8 GB Memory)" NumberOfCores="4" MemorySize="8000" DiskSize="40" BandWidth="400" Abbreviation="A4v2" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_A8_v2" Description="A8v2 (8 cores, 16 GB Memory)" NumberOfCores="8" MemorySize="16000" DiskSize="80" BandWidth="800" Abbreviation="A8v2" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_A2m_v2" Description="A2mv2 (2 cores, 16 GB Memory)" NumberOfCores="2" MemorySize="16000" DiskSize="20" BandWidth="200" Abbreviation="A2mv2" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_A4m_v2" Description="A4mv2 (4 cores, 32 GB Memory)" NumberOfCores="4" MemorySize="32000" DiskSize="40" BandWidth="400" Abbreviation="A4mv2" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_A8m_v2" Description="A8mv2 (8 cores, 64 GB Memory)" NumberOfCores="8" MemorySize="64000" DiskSize="80" BandWidth="800" Abbreviation="A8mv2" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_D1" Description="D1 (1 cores, 3.5 GB Memory)" NumberOfCores="1" MemorySize="3500" DiskSize="50" BandWidth="100" Abbreviation="D1" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_D2" Description="D2 (2 cores, 7 GB Memory)" NumberOfCores="2" MemorySize="7000" DiskSize="100" BandWidth="200" Abbreviation="D2" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_D3" Description="D3 (4 cores, 14 GB Memory)" NumberOfCores="4" MemorySize="14000" DiskSize="200" BandWidth="400" Abbreviation="D3" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_D4" Description="D4 (8 cores, 28 GB Memory)" NumberOfCores="8" MemorySize="28000" DiskSize="400" BandWidth="800" Abbreviation="D4" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_D11" Description="D11 (2 cores, 14 GB Memory)" NumberOfCores="2" MemorySize="14000" DiskSize="100" BandWidth="200" Abbreviation="D11" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_D12" Description="D12 (4 cores, 28 GB Memory)" NumberOfCores="4" MemorySize="28000" DiskSize="200" BandWidth="500" Abbreviation="D12" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_D13" Description="D13 (8 cores, 56 GB Memory)" NumberOfCores="8" MemorySize="56000" DiskSize="400" BandWidth="1000" Abbreviation="D13" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_D14" Description="D14 (16 cores, 112 GB Memory)" NumberOfCores="16" MemorySize="112000" DiskSize="800" BandWidth="2000" Abbreviation="D14" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_D1_v2" Description="D1v2 (1 cores, 3.5 GB Memory)" NumberOfCores="1" MemorySize="3500" DiskSize="50" BandWidth="100" Abbreviation="D1v2" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_D2_v2" Description="D2v2 (2 cores, 7 GB Memory)" NumberOfCores="2" MemorySize="7000" DiskSize="100" BandWidth="200" Abbreviation="D2v2" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_D3_v2" Description="D3v2 (4 cores, 14 GB Memory)" NumberOfCores="4" MemorySize="14000" DiskSize="200" BandWidth="400" Abbreviation="D3v2" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_D4_v2" Description="D4v2 (8 cores, 28 GB Memory)" NumberOfCores="8" MemorySize="28000" DiskSize="400" BandWidth="800" Abbreviation="D4v2" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_D5_v2" Description="D5v2 (16 cores, 56 GB Memory)" NumberOfCores="16" MemorySize="56000" DiskSize="800" BandWidth="1600" Abbreviation="D5v2" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_D11_v2" Description="D11v2 (2 cores, 14 GB Memory)" NumberOfCores="2" MemorySize="14000" DiskSize="100" BandWidth="200" Abbreviation="D11v2" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_D12_v2" Description="D12v2 (4 cores, 28 GB Memory)" NumberOfCores="4" MemorySize="28000" DiskSize="200" BandWidth="500" Abbreviation="D12v2" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_D13_v2" Description="D13v2 (8 cores, 56 GB Memory)" NumberOfCores="8" MemorySize="56000" DiskSize="400" BandWidth="1000" Abbreviation="D13v2" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_D14_v2" Description="D14v2 (16 cores, 112 GB Memory)" NumberOfCores="16" MemorySize="112000" DiskSize="800" BandWidth="2000" Abbreviation="D14v2" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_D15_v2" Description="D15v2 (20 cores, 140 GB Memory)" NumberOfCores="20" MemorySize="140000" DiskSize="1000" BandWidth="2000" Abbreviation="D15v2" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_H8" Description="H8 (8 cores, 448 GB Memory)" NumberOfCores="8" MemorySize="56000"  DiskSize="1000"  BandWidth="4000" Abbreviation="H8" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_H16" Description="H16 (16 cores, 112 GB Memory)" NumberOfCores="16" MemorySize="112000"  DiskSize="2000"  BandWidth="8000" Abbreviation="H16" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_H8m" Description="H8m (8 cores, 112 GB Memory)" NumberOfCores="8" MemorySize="112000"  DiskSize="1000"  BandWidth="4000" Abbreviation="H8m" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_H16m" Description="H16m (16 cores, 224 GB Memory)" NumberOfCores="16" MemorySize="224000"  DiskSize="2000"  BandWidth="8000" Abbreviation="H16m" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_H16r" Description="H16r (16 cores, 112 GB Memory)" NumberOfCores="16" MemorySize="112000"  DiskSize="2000"  BandWidth="8000" Abbreviation="H16r" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_H16mr" Description="H16mr (16 cores, 224 GB Memory)" NumberOfCores="16" MemorySize="224000"  DiskSize="2000"  BandWidth="8000" Abbreviation="H16mr" SupportedByWorkerRoles="true" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_DS1" Description="DS1 (1 cores, 3.5 GB Memory)" NumberOfCores="1" MemorySize="3500" DiskSize="7" BandWidth="100" Abbreviation="DS1" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_DS2" Description="DS2 (2 cores, 7 GB Memory)" NumberOfCores="2" MemorySize="7000" DiskSize="14" BandWidth="200" Abbreviation="DS2" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_DS3" Description="DS3 (4 cores, 14 GB Memory)" NumberOfCores="4" MemorySize="14000" DiskSize="28" BandWidth="400" Abbreviation="DS3" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_DS4" Description="DS4 (8 cores, 28 GB Memory)" NumberOfCores="8" MemorySize="28000" DiskSize="56" BandWidth="800" Abbreviation="DS4" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_DS11" Description="DS11 (2 cores, 14 GB Memory)" NumberOfCores="2" MemorySize="14000" DiskSize="28" BandWidth="200" Abbreviation="DS11" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_DS12" Description="DS12 (4 cores, 28 GB Memory)" NumberOfCores="4" MemorySize="28000" DiskSize="56" BandWidth="400" Abbreviation="DS12" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_DS13" Description="DS13 (8 cores, 56 GB Memory)" NumberOfCores="8" MemorySize="56000" DiskSize="112" BandWidth="800" Abbreviation="DS13" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_DS14" Description="DS14 (16 cores, 112 GB Memory)" NumberOfCores="16" MemorySize="112000" DiskSize="224" BandWidth="1000" Abbreviation="DS14" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_DS1_v2" Description="DS1v2 (1 cores, 3.5 GB Memory)" NumberOfCores="1" MemorySize="3500" DiskSize="7" BandWidth="100" Abbreviation="DS1v2" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_DS2_v2" Description="DS2v2 (2 cores, 7 GB Memory)" NumberOfCores="2" MemorySize="7000" DiskSize="14" BandWidth="200" Abbreviation="DS2v2" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_DS3_v2" Description="DS3v2 (4 cores, 14 GB Memory)" NumberOfCores="4" MemorySize="14000" DiskSize="28" BandWidth="400" Abbreviation="DS3v2" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_DS4_v2" Description="DS4v2 (8 cores, 28 GB Memory)" NumberOfCores="8" MemorySize="28000" DiskSize="56" BandWidth="800" Abbreviation="DS4v2" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_DS5_v2" Description="DS5v2 (16 cores, 56 GB Memory)" NumberOfCores="16" MemorySize="56000" DiskSize="112" BandWidth="1600" Abbreviation="DS5v2" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_DS11_v2" Description="DS11v2 (2 cores, 14 GB Memory)" NumberOfCores="2" MemorySize="14000" DiskSize="28" BandWidth="200" Abbreviation="DS11v2" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_DS12_v2" Description="DS12v2 (4 cores, 28 GB Memory)" NumberOfCores="4" MemorySize="28000" DiskSize="56" BandWidth="400" Abbreviation="DS12v2" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_DS13_v2" Description="DS13v2 (8 cores, 56 GB Memory)" NumberOfCores="8" MemorySize="56000" DiskSize="112" BandWidth="800" Abbreviation="DS13v2" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_DS14_v2" Description="DS14v2 (16 cores, 112 GB Memory)" NumberOfCores="16" MemorySize="112000" DiskSize="224" BandWidth="1600" Abbreviation="DS14v2" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_DS15_v2" Description="DS15v2 (20 cores, 140 GB Memory)" NumberOfCores="20" MemorySize="140000" DiskSize="280" BandWidth="1600" Abbreviation="DS15v2" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_F1" Description="F1 (1 cores, 2 GB Memory)" NumberOfCores="1" MemorySize="2000" DiskSize="16" BandWidth="100" Abbreviation="F1" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_F2" Description="F2 (2 cores, 4 GB Memory)" NumberOfCores="2" MemorySize="4000" DiskSize="32" BandWidth="200" Abbreviation="F2" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_F4" Description="F4 (4 cores, 8 GB Memory)" NumberOfCores="4" MemorySize="8000" DiskSize="64" BandWidth="400" Abbreviation="F4" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_F8" Description="F8 (8 cores, 16 GB Memory)" NumberOfCores="8" MemorySize="16000" DiskSize="128" BandWidth="800" Abbreviation="F8" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_F16" Description="F16 (16 cores, 32 GB Memory)" NumberOfCores="16" MemorySize="32000" DiskSize="256" BandWidth="1600" Abbreviation="F16" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_F1s" Description="F1s (1 cores, 2 GB Memory)" NumberOfCores="1" MemorySize="2000" DiskSize="4" BandWidth="100" Abbreviation="F1s" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_F2s" Description="F2s (2 cores, 4 GB Memory)" NumberOfCores="2" MemorySize="4000" DiskSize="8" BandWidth="200" Abbreviation="F2s" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_F4s" Description="F4s (4 cores, 8 GB Memory)" NumberOfCores="4" MemorySize="8000" DiskSize="16" BandWidth="400" Abbreviation="F4s" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_F8s" Description="F8s (8 cores, 16 GB Memory)" NumberOfCores="8" MemorySize="16000" DiskSize="32" BandWidth="800" Abbreviation="F8s" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_F16s" Description="F16s (16 cores, 32 GB Memory)" NumberOfCores="16" MemorySize="32000" DiskSize="64" BandWidth="1600" Abbreviation="F16s" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_G1" Description="G1 (2 cores, 28 GB Memory)" NumberOfCores="2" MemorySize="28000" DiskSize="384" BandWidth="100" Abbreviation="G1" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_G2" Description="G2 (4 cores, 56 GB Memory)" NumberOfCores="4" MemorySize="56000" DiskSize="768" BandWidth="200" Abbreviation="G2" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_G3" Description="G3 (8 cores, 112 GB Memory)" NumberOfCores="8" MemorySize="112000" DiskSize="1536" BandWidth="400" Abbreviation="G3" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_G4" Description="G4 (16 cores, 224 GB Memory)" NumberOfCores="16" MemorySize="224000" DiskSize="3072" BandWidth="1600" Abbreviation="G4" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_G5" Description="G5 (32 cores, 448 GB Memory)" NumberOfCores="32" MemorySize="448000" DiskSize="6144" BandWidth="1600" Abbreviation="G5" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_GS1" Description="GS1 (2 cores, 28 GB Memory)" NumberOfCores="2" MemorySize="28000" DiskSize="56" BandWidth="100" Abbreviation="GS1" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_GS2" Description="GS2 (4 cores, 56 GB Memory)" NumberOfCores="4" MemorySize="56000" DiskSize="112" BandWidth="200" Abbreviation="GS2" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_GS3" Description="GS3 (8 cores, 112 GB Memory)" NumberOfCores="8" MemorySize="112000" DiskSize="224" BandWidth="400" Abbreviation="GS3" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_GS4" Description="GS4 (16 cores, 224 GB Memory)" NumberOfCores="16" MemorySize="224000" DiskSize="448" BandWidth="1600" Abbreviation="GS4" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>
+    <Role VMSize="Standard_GS5" Description="GS5 (32 cores, 448 GB Memory)" NumberOfCores="32" MemorySize="448000" DiskSize="896" BandWidth="1600" Abbreviation="GS5" SupportedByWorkerRoles="false" SupportedByVirtualMachines="true"/>    
+  </Roles>
+  <CoLocationGroups>
+    <Group ProxyRole="Medium">
+      <AssociatedRole>Small</AssociatedRole>
+      <AssociatedRole>Medium</AssociatedRole>
+      <AssociatedRole>Large</AssociatedRole>
+      <AssociatedRole>ExtraLarge</AssociatedRole>
+      <AssociatedRole>A5</AssociatedRole>
+      <AssociatedRole>A6</AssociatedRole>
+      <AssociatedRole>A7</AssociatedRole>
+      <AssociatedRole>Standard_A4_v2</AssociatedRole>
+      <AssociatedRole>Standard_A8_v2</AssociatedRole>
+      <AssociatedRole>Standard_A4m_v2</AssociatedRole>
+      <AssociatedRole>Standard_A8m_v2</AssociatedRole>
+      <AssociatedRole>Standard_D1</AssociatedRole>
+      <AssociatedRole>Standard_D2</AssociatedRole>
+      <AssociatedRole>Standard_D3</AssociatedRole>
+      <AssociatedRole>Standard_D4</AssociatedRole>
+      <AssociatedRole>Standard_D11</AssociatedRole>
+      <AssociatedRole>Standard_D12</AssociatedRole>
+      <AssociatedRole>Standard_D13</AssociatedRole>
+      <AssociatedRole>Standard_D14</AssociatedRole>
+      <AssociatedRole>Standard_D1_v2</AssociatedRole>
+      <AssociatedRole>Standard_D2_v2</AssociatedRole>
+      <AssociatedRole>Standard_D3_v2</AssociatedRole>
+      <AssociatedRole>Standard_D4_v2</AssociatedRole>
+      <AssociatedRole>Standard_D5_v2</AssociatedRole>
+      <AssociatedRole>Standard_D11_v2</AssociatedRole>
+      <AssociatedRole>Standard_D12_v2</AssociatedRole>
+      <AssociatedRole>Standard_D13_v2</AssociatedRole>
+      <AssociatedRole>Standard_D14_v2</AssociatedRole>
+      <AssociatedRole>Standard_D15_v2</AssociatedRole>
+    </Group>
+    <Group ProxyRole="A10">
+      <AssociatedRole>A8</AssociatedRole>
+      <AssociatedRole>A9</AssociatedRole>
+      <AssociatedRole>A10</AssociatedRole>
+      <AssociatedRole>A11</AssociatedRole>
+    </Group>
+    <Group ProxyRole="Standard_H8">
+      <AssociatedRole>Standard_H8</AssociatedRole>
+      <AssociatedRole>Standard_H16</AssociatedRole>
+      <AssociatedRole>Standard_H8m</AssociatedRole>
+      <AssociatedRole>Standard_H16m</AssociatedRole>
+      <AssociatedRole>Standard_H16r</AssociatedRole>
+      <AssociatedRole>Standard_H16mr</AssociatedRole>
+    </Group>
+  </CoLocationGroups>
+</RoleConfig>

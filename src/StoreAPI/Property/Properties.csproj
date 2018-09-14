@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+  <PropertyGroup>
+    <AssemblyName>Microsoft.Hpc.Scheduler.Properties</AssemblyName>
+    <RootNamespace>Microsoft.Hpc.Scheduler.Properties</RootNamespace>
+    <OutputType>Library</OutputType>
+    <DefineTrace>True</DefineTrace>
+    <ProjectGuid>{61844849-3D26-4003-8146-5AE86985DB3A}</ProjectGuid>
+    <NoWarn>0067,0649,1591</NoWarn>
+    <Localizable>true</Localizable>
+    <AssemblyClsCompliant>false</AssemblyClsCompliant>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>true</DelaySign>
+    <AssemblyVersionName>CCPv2</AssemblyVersionName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\common\SchedulerPropertyIdConstants.cs">
+      <Link>SchedulerPropertyIdConstants.cs</Link>
+    </Compile>
+    <Compile Include="AggregateColumn.cs" />
+    <Compile Include="AllocationProperties.cs" />
+    <Compile Include="AzureDeploymentProperties.cs" />
+    <Compile Include="BalanceRequest.cs" />
+    <Compile Include="ComGuids.cs" />
+    <Compile Include="ConnectMethod.cs" />
+    <Compile Include="EnumBase.cs" />
+    <Compile Include="ErrorCode.cs" />
+    <Compile Include="EventType.cs" />
+    <Compile Include="ExpandedPriority.cs" />
+    <Compile Include="FilterProperty.cs" />
+    <Compile Include="GpuInfo.cs" />
+    <Compile Include="JobHistoryPropertyId.cs" />
+    <Compile Include="JobMessageProperties.cs" />
+    <Compile Include="JobOrderby.cs" />
+    <Compile Include="JobProfileProperties.cs" />
+    <Compile Include="JobProperties.cs" />
+    <Compile Include="NetworkInfo.cs" />
+    <Compile Include="NodeGroup.cs" />
+    <Compile Include="NodeHistoryPropertyId.cs" />
+    <Compile Include="NodeProperties.cs" />
+    <Compile Include="ObjectType.cs" />
+    <Compile Include="PendingReason.cs" />
+    <Compile Include="PoolProperties.cs" />
+    <Compile Include="PropertyRow.cs" />
+    <Compile Include="propertyrowset.cs" />
+    <Compile Include="PropertyTypes.cs" />
+    <Compile Include="PropIdBase.cs" />
+    <Compile Include="ResourceProperties.cs" />
+    <Compile Include="SchedulerConfigurations.cs" />
+    <Compile Include="SchedulerException.cs" />
+    <Compile Include="ServiceAsClientIdentityProvider.cs" />
+    <Compile Include="SortProperty.cs" />
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="StoreProperties.cs" />
+    <Compile Include="storeproperty.cs" />
+    <Compile Include="StorePropertyExtensions.cs" />
+    <Compile Include="TaskGroupProperties.cs" />
+    <Compile Include="TaskId.cs" />
+    <Compile Include="TaskProperties.cs" />
+    <Compile Include="UserPrivilege.cs" />
+    <Compile Include="UserRoles.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <TlbExport Include="$(OutDir)$(TargetName).dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Binplace Include="$(TargetName).xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
