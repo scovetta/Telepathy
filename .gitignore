@@ -331,3 +331,11 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
+
+*.projhash
+*.projhash.userData
+*.projhash.userData.assemblies
+
+*.slnhash
+*.slnhash.userData
+*.slnhash.userData.assemblies
