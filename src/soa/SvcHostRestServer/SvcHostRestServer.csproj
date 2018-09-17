@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+  <PropertyGroup>
+    <ProjectGuid>{602B999E-6203-432C-AF7C-2C31DDDDE60A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Hpc.SvcHostRestServer</RootNamespace>
+    <AssemblyName>Microsoft.Hpc.SvcHostRestServer</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <AssemblyClsCompliant>false</AssemblyClsCompliant>
+    <DefineTrace>true</DefineTrace>
+    <Localizable>true</Localizable>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="RequestValidationHandler.cs" />
+    <Compile Include="ServiceInfo.cs" />
+    <Compile Include="Startup.cs" />
+    <Compile Include="SvcHostMgmtRestServer.cs" />
+    <Compile Include="SvcHostServerController.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\HpcRestServerCommon\HpcRestServerCommon.csproj">
+      <Project>{8720315f-7ba8-4923-bd1e-dc2af7690a72}</Project>
+      <Name>HpcRestServerCommon</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client">
+      <Version>5.2.3</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
