@@ -139,6 +139,29 @@
     <Mscorlib Condition="'amd64' == '$(BuildArchitecture)'">$(URTRUN_INSTALLROOT)64\$(DotNetRuntimeVersion)\mscorlib.tlb</Mscorlib>
     <Mscorlib Condition="'i386' == '$(BuildArchitecture)'">$(URTRUN_INSTALLROOT)\$(DotNetRuntimeVersion)\mscorlib.tlb</Mscorlib>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <NoWarn>0067,0649,1591</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>0067,0649,1591</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <TlbExport Include="$(OutDir)$(TargetName).dll">
       <ExpFlags>/names:$(MSBuildProjectDirectory)\Capitalization.txt /tlbreference:$(BinariesBuildTypeArchDirectory)\Microsoft.Hpc.Scheduler.Properties\Microsoft.Hpc.Scheduler.Properties.tlb;$(Mscorlib);..\..\packages\WindowsSdk.Corext.m3rWNSVIeXea-JJ9adM_cA\Lib\10.0.10240.0\um\x64\stdole2.tlb /asmpath:..\..\packages\DotNetFxRefAssemblies.Corext.4.6.0;$(BinariesBuildTypeArchDirectory)\Microsoft.Hpc.Scheduler</ExpFlags>
