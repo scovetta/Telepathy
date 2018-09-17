@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+  <PropertyGroup>
+    <ProjectGuid>{3F01D480-4CDE-4F46-99EA-95CEDA05063E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Hpc.RuntimeTrace</RootNamespace>
+    <AssemblyName>BrokerBase</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <AssemblyDescription>Broker Base Assembly</AssemblyDescription>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Hpc.Trace">
+      <HintPath>..\..\..\ref\Microsoft.Hpc.Trace.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+  </ItemGroup>
+  <Import Project="..\..\..\targets\MessageCompiler.targets" />
+  <ItemGroup>
+    <Compile Include="..\Common\TemplateFormatter.cs">
+      <Link>TemplateFormatter.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\TemplateFormatterProvider.cs">
+      <Link>TemplateFormatterProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\TraceEventRawReaders.cs">
+      <Link>TraceEventRawReaders.cs</Link>
+    </Compile>
+    <Compile Include="_generated_manifest_RuntimeEvents.cs" />
+    <MessageCompile Include="RuntimeEvents.man">
+      <Namespace>Microsoft.Hpc.RuntimeTrace</Namespace>
+      <MacroPrefix>Log</MacroPrefix>
+      <SubType>Designer</SubType>
+    </MessageCompile>
+    <None Include="RuntimeEvents.man">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="TraceHelper.cs" />
+  </ItemGroup>
+  <Target Name="Prin" BeforeTargets="GetFrameworkPaths">
+    <Message Text="$(SDK_VERSION)" />
+  </Target>
+  <ItemGroup>
+    <ProjectReference Include="..\..\HpcCommon\HpcCommon.csproj">
+      <Project>{2c3936c7-4850-41d7-9497-9040be302328}</Project>
+      <Name>HpcCommon</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="RuntimeEvents.rc" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
