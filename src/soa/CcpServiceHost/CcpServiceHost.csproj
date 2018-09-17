@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" DefaultTargets="Build">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+  <PropertyGroup>
+    <ProjectGuid>{BE6C6D6F-E240-4676-AFB9-46DBF008EFAB}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Microsoft.Hpc.CcpServiceHosting</RootNamespace>
+    <AssemblyName Condition="$(BuildArchitecture)=='amd64'">HpcServiceHost</AssemblyName>
+    <AssemblyName Condition="$(BuildArchitecture)=='i386'">HpcServiceHost32</AssemblyName>
+    <PlatformTarget Condition="$(BuildArchitecture)=='i386'">x86</PlatformTarget>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <AssemblyClsCompliant>false</AssemblyClsCompliant>
+    <AssemblyDescription>HPC Service Host</AssemblyDescription>
+    <Localizable>true</Localizable>
+    <!--
+      NoWarn 0618 because the project contains v2 legacy code which used
+      "System.AppDomain.AppendPrivatePath(string)" which has already been
+      obsoleted.
+    -->
+    <NoWarn>0618</NoWarn>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http">
+      <HintPath>$(PkgSystem_Net_Http)\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+      <HintPath>$(PkgSystem_Net_Http)\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\common\AzureNaming.cs">
+      <Link>AzureNaming.cs</Link>
+    </Compile>
+    <None Include="..\..\common\AzureTracing.cs">
+      <Link>AzureTracing.cs</Link>
+    </None>
+    <Compile Include="..\..\common\ProductConstants.cs">
+      <Link>ProductConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\AuthManager.cs">
+      <Link>AuthManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\BindingHelper.cs">
+      <Link>BindingHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Constant.cs">
+      <Link>Constant.cs</Link>
+    </Compile>
+    <None Include="..\Common\DiagAzureTraceHelper.cs">
+      <Link>DiagAzureTraceHelper.cs</Link>
+    </None>
+    <Compile Include="..\Common\DiagTraceHelper.cs">
+      <Link>DiagTraceHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\NativeMethods.cs">
+      <Link>NativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\PortHelper.cs">
+      <Link>PortHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\SafeThreadHandle.cs">
+      <Link>SafeThreadHandle.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ServiceRegisteration.cs">
+      <Link>ServiceRegisteration.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\SessionBrokerNodes.cs">
+      <Link>SessionBrokerNodes.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\SoaHelper.cs">
+      <Link>SoaHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ThrowHelper.cs">
+      <Link>ThrowHelper.cs</Link>
+    </Compile>
+    <Compile Include="BrokerNodeAuthManager.cs" />
+    <Compile Include="CcpServiceHostWrapper.cs" />
+    <Compile Include="DummyService.cs" />
+    <Compile Include="HpcServiceHost.cs" />
+    <Compile Include="IntParameter.cs" />
+    <Compile Include="OperationBehavior.cs" />
+    <Compile Include="OperationInvokerWrapper.cs" />
+    <Compile Include="Parameter.cs" />
+    <Compile Include="ParameterContainer.cs" />
+    <Compile Include="ParameterException.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="SoaDiagTraceListener.cs" />
+    <Compile Include="StringParameter.cs" />
+    <Compile Include="StringTable.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StringTable.resx</DependentUpon>
+    </Compile>
+    <Compile Include="TraceServiceBehavior.cs" />
+    <Compile Include="Utility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="StringTable.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>StringTable.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\HpcCommon\HpcCommon.csproj">
+      <Project>{2c3936c7-4850-41d7-9497-9040be302328}</Project>
+      <Name>HpcCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\HpcRestServerCommon\HpcRestServerCommon.csproj">
+      <Project>{8720315f-7ba8-4923-bd1e-dc2af7690a72}</Project>
+      <Name>HpcRestServerCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\StandaloneDataClient\StandaloneDataClient.csproj">
+      <Project>{8F4412AA-A6E0-49E5-A331-1B1047E2159D}</Project>
+      <Name>StandaloneDataClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\StoreAPI\Property\Properties.csproj">
+      <Project>{61844849-3d26-4003-8146-5ae86985db3a}</Project>
+      <Name>Properties</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\StoreAPI\Scheduler\Scheduler.csproj">
+      <Project>{78e5e61b-dd12-475a-845b-7da3f6b0f987}</Project>
+      <Name>Scheduler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\base\BrokerBase.csproj">
+      <Project>{3f01d480-4cde-4f46-99ea-95ceda05063e}</Project>
+      <Name>BrokerBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SvcHostRestServer\SvcHostRestServer.csproj">
+      <Project>{602b999e-6203-432c-af7c-2c31dddde60a}</Project>
+      <Name>RESTServiceModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SessionAPI\Session.csproj">
+      <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>
+      <Name>Session</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SoaAmbientConfig\SoaAmbientConfig.csproj">
+      <Project>{9ad369c0-f404-4591-ae7a-6dff3d2d99a2}</Project>
+      <Name>SoaAmbientConfig</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="HpcServiceHost.exe.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="HpcServiceHost32.exe.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -143,7 +143,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Diagnostics
                         break;
                 }
 
-#if !BrokerLauncher
+#if !BrokerLauncher && PAAS
                 if (SoaHelper.IsOnAzure())
                 {
                     switch (traceLevel)
