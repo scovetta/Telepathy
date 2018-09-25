@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="TimeoutToGetBrokerWorkerProcess" xml:space="preserve">
+    <value>Cannot get broker worker process within 1 minute.</value>
+  </data>
+  <data name="ServiceRegistrationPathEnvironmentMissing" xml:space="preserve">
+    <value>CCP_SERVICEREGISTRATION_PATH could not be found in the cluster configuration environments.</value>
+  </data>
+  <data name="AccessDenied_BrokerLauncher" xml:space="preserve">
+    <value>Authentication failed. Make sure you have the permission to the broker launcher service.</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>Unknown error occured: {0}.</value>
+  </data>
+  <data name="StorageSpaceNotSufficient" xml:space="preserve">
+    <value>Broker storage hits quota limit or is full. If you are using MSMQ, contact your administrator to increase MSMQ storage quota on broker node or clean up session storages manually. Please refer http://support.microsoft.com/kb/899612 to change the quota.</value>
+  </data>
+  <data name="TimeoutToOpenBrokerServiceProcess" xml:space="preserve">
+    <value>Timeout to open broker service process.</value>
+  </data>
+  <data name="StorageFailure" xml:space="preserve">
+    <value>Broker storage failed: {0}.</value>
+  </data>
+  <data name="StorageClosed" xml:space="preserve">
+    <value>Broker storage is closed.</value>
+  </data>
+  <data name="ConnectionToSchedulerIsNotReady" xml:space="preserve">
+    <value>Connection to the scheduler is not ready, it might because the scheduler service is not started or is starting, or HPC broker service is still starting.</value>
+  </data>
+  <data name="BrokerIsOffline" xml:space="preserve">
+    <value>The broker node is already offline.</value>
+  </data>
+  <data name="SessionIdAlreadyExists" xml:space="preserve">
+    <value>The session  with Id = {0} has already been created.</value>
+  </data>
+  <data name="BrokerServiceFailedStartup" xml:space="preserve">
+    <value>Broker service failed to start.</value>
+  </data>
+  <data name="UnsupportedVersion" xml:space="preserve">
+    <value>The session was originally created with a broker whose persistence version was {0} which is not supported by current broker whose persistence version is {1}.</value>
+  </data>
+  <data name="StorageServiceNotAvailble" xml:space="preserve">
+    <value>Broker storage service is not available.</value>
+  </data>
+  <data name="BrokerFinishing" xml:space="preserve">
+    <value>The broker {0} is in the Finishing state thus cannot attach to the broker.</value>
+  </data>
+  <data name="FailedToStartBrokerServiceProcess" xml:space="preserve">
+    <value>Failed to start broker service process. Win32 error code: {0}.</value>
+  </data>
+  <data name="InvalidSessionId" xml:space="preserve">
+    <value>The session id {0} is invalid. Could not find related service job with this id.</value>
+  </data>
+  <data name="PullDataFromCustomJobPropertyFailed" xml:space="preserve">
+    <value>Failed to pull data from job properties to build session start info.</value>
+  </data>
+  <data name="FailedToGetSecurityDescriptor" xml:space="preserve">
+    <value>Failed to get security descriptor from the job template.</value>
+  </data>
+  <data name="CustomBrokerReadyTimeout" xml:space="preserve">
+    <value>Custom broker timeout to get ready. Current timeout is {0}.</value>
+  </data>
+  <data name="CannotGetUserSID" xml:space="preserve">
+    <value>Failed to get user SID.</value>
+  </data>
+  <data name="TooManyBrokerRunning" xml:space="preserve">
+    <value>Active sessions runnning on this broker node has reached the up limit {0}.</value>
+  </data>
+  <data name="AccessDenied_Broker" xml:space="preserve">
+    <value>Authentication failed. Make sure you are the owner of the session.</value>
+  </data>
+  <data name="CustomBrokerExitBeforeReady" xml:space="preserve">
+    <value>Custom broker exited before ready. ExitCode = {0}.</value>
+  </data>
+</root>

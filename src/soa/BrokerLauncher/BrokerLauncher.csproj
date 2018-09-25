@@ -1,0 +1,267 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+  <PropertyGroup>
+    <ProjectGuid>{7594BB62-494B-4D72-9F5D-EE4C993FE6C3}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher</RootNamespace>
+    <AssemblyName>HpcBroker</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <DefineTrace>true</DefineTrace>
+    <DefineConstants>$(DefineConstants);BrokerLauncher</DefineConstants>
+    <Localizable>true</Localizable>
+    <TrackFileAccess>false</TrackFileAccess>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime">
+      <HintPath>..\..\packages\Azure.Corext.3.0.0\ref\Microsoft.WindowsAzure.ServiceRuntime.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage">
+      <HintPath>..\..\packages\WindowsAzure.Storage.8.4.0\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Fabric, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.ServiceFabric.5.6.204\lib\net45\System.Fabric.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Messaging" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\common\AzureNaming.cs">
+      <Link>AzureNaming.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\AzureNodeMapping.cs">
+      <Link>AzureNodeMapping.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\AzureNodeMappingUtil.cs">
+      <Link>AzureNodeMappingUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\CcpWSLB\Common\Utility.cs">
+      <Link>Utility.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\AzureRoleHelper.cs">
+      <Link>AzureRoleHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\BindingHelper.cs">
+      <Link>BindingHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\BrokerIdentity.cs">
+      <Link>BrokerIdentity.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\BrokerPerformanceCounterHelper.cs">
+      <Link>BrokerPerformanceCounterHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\BrokerPerformanceCounterKey.cs">
+      <Link>BrokerPerformanceCounterKey.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\BrokerSettingsConstants.cs">
+      <Link>BrokerSettingsConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\BrokerVersion.cs">
+      <Link>BrokerVersion.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\CommonClusterManagerHelper.cs">
+      <Link>CommonClusterManagerHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\CommonSchedulerHelper.cs">
+      <Link>CommonSchedulerHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Constant.cs">
+      <Link>Constant.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\DiagTraceHelper.cs">
+      <Link>DiagTraceHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\DisposableObject.cs">
+      <Link>DisposableObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\DisposableObjectSlim.cs">
+      <Link>DisposableObjectSlim.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ExceptionHelper.cs">
+      <Link>ExceptionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ISchedulerAdapterInternalAsync.cs">
+      <Link>ISchedulerAdapterInternalAsync.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\NativeMethods.cs">
+      <Link>Interop\NativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ParamCheckUtility.cs">
+      <Link>ParamCheckUtility.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\RetryHelper.cs">
+      <Link>RetryHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\RetryPolicy.cs">
+      <Link>RetryPolicy.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\SafeThreadHandle.cs">
+      <Link>Interop\SafeThreadHandle.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ServiceRegisteration.cs">
+      <Link>ServiceRegisteration.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\SimulateFailure.cs">
+      <Link>SimulateFailure.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\SoaHelper.cs">
+      <Link>SoaHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\ServiceHelpers.cs">
+      <Link>ServiceHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ThreadSafeSchedulerAPI.cs">
+      <Link>ThreadSafeSchedulerAPI.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ThrowHelper.cs">
+      <Link>ThrowHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Win32API.cs">
+      <Link>Win32API.cs</Link>
+    </Compile>
+    <Compile Include="..\SessionAPI\Interface\ISessionLauncher.cs">
+      <Link>ISessionLauncher.cs</Link>
+    </Compile>
+    <Compile Include="..\SessionAPI\Internal\SessionLauncherClientBase.cs">
+      <Link>SessionLauncherClientBase.cs</Link>
+    </Compile>
+    <Compile Include="NetTcpPortSharingService.cs" />
+    <Compile Include="SessionLauncherClient.cs" />
+    <Compile Include="AzureStorageCleaner.cs" />
+    <Compile Include="BrokerInfo.cs" />
+    <Compile Include="BrokerLauncher.cs" />
+    <Compile Include="BrokerLauncherSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>BrokerLauncherSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="BrokerManagementClient.cs" />
+    <Compile Include="BrokerManagementServiceClient.cs" />
+    <Compile Include="BrokerManager.cs" />
+    <Compile Include="BrokerManagement.cs" />
+    <Compile Include="BrokerProcess.cs" />
+    <Compile Include="BrokerProcessPool.cs" />
+    <Compile Include="BrokerProcessReadyEventArgs.cs" />
+    <Compile Include="ExceptionUtility.cs" />
+    <Compile Include="IBrokerLauncher.cs" />
+    <Compile Include="IBrokerManagement.cs" />
+    <Compile Include="IBrokerManagementAsync.cs" />
+    <Compile Include="IBrokerManagementService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="INodeMappingCache.cs" />
+    <Compile Include="JobObject.cs" />
+    <Compile Include="LauncherHostService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="LauncherHostService.Designer.cs">
+      <DependentUpon>LauncherHostService.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NodeMappingCache.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="SchedulerAdapterInternalClient.cs" />
+    <Compile Include="SchedulerHelper.cs" />
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ThreadHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BrokerLauncherSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>BrokerLauncherSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AADAuthUtil\AADAuthUtil.csproj">
+      <Project>{895FCBFB-73B4-46F3-8A89-76C236F01BF4}</Project>
+      <Name>AADAuthUtil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\HpcCommon\HpcCommon.csproj">
+      <Project>{2c3936c7-4850-41d7-9497-9040be302328}</Project>
+      <Name>HpcCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Management\ClusterModel\ClusterModel.corext.csproj">
+      <Project>{4af1bd71-310f-434b-918a-ea10234bf2e1}</Project>
+      <Name>ClusterModel.corext</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Management\HostsFileDistribution\HostsFileDistribution.MSBuild.csproj">
+      <Project>{d887d5ed-5128-4376-947c-e8ffdc5c0bae}</Project>
+      <Name>HostsFileDistribution.MSBuild</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Management\ManagementAPI\ManagementAPI.MSBuild.csproj">
+      <Project>{52a16bd4-2466-4d43-a5cf-f845d0617589}</Project>
+      <Name>ManagementAPI.MSBuild</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\StoreAPI\Property\Properties.csproj">
+      <Project>{61844849-3d26-4003-8146-5ae86985db3a}</Project>
+      <Name>Properties</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\StoreAPI\Scheduler\Scheduler.csproj">
+      <Project>{78e5e61b-dd12-475a-845b-7da3f6b0f987}</Project>
+      <Name>Scheduler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\base\BrokerBase.csproj">
+      <Project>{3f01d480-4cde-4f46-99ea-95ceda05063e}</Project>
+      <Name>BrokerBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CcpWSLB\CcpWSLB.csproj">
+      <Project>{2629dc89-f12c-489d-8cf6-e0a6046b6863}</Project>
+      <Name>CcpWSLB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SessionAPI\Session.csproj">
+      <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>
+      <Name>Session</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SoaCommonUtility\SoaCommonUtility.csproj">
+      <Project>{bf0b4020-9934-466c-af35-9f97b4cf18ac}</Project>
+      <Name>SoaCommonUtility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SOADiagLib\SOADiagLib.csproj">
+      <Project>{b78e95e1-6fd0-497a-a793-bc14d681a805}</Project>
+      <Name>SOADiagLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SOADiagSvc\SOADiagSvc.csproj">
+      <Project>{4e060b7c-887d-4aa6-9a50-37e1cc1d5a1a}</Project>
+      <Name>SOADiagSvc</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
