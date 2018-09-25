@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="EOMReject_GetResponse" xml:space="preserve">
+    <value>EndRequests was already called for this BrokerClient or the session's service job ended.</value>
+  </data>
+  <data name="SendBackResponseFailed" xml:space="preserve">
+    <value>Failed to send back the response.</value>
+  </data>
+  <data name="AuthenticationFailure" xml:space="preserve">
+    <value>User authentication failure. User {0} is not authorized to use this session.</value>
+  </data>
+  <data name="ClientIdNotMatch" xml:space="preserve">
+    <value>Invalid client id: Client Id does not match the former messages on this channel</value>
+  </data>
+  <data name="ClientTimeout" xml:space="preserve">
+    <value>Client is timed out. Please try again later.</value>
+  </data>
+  <data name="Broker_EOMReject_NoRequest" xml:space="preserve">
+    <value>EndRequest must be called after sending some requests.</value>
+  </data>
+  <data name="FlushRejected" xml:space="preserve">
+    <value>Flush() is not allowed for this client. The client is now in the '{0}' state.</value>
+  </data>
+  <data name="BrokerSuspending" xml:space="preserve">
+    <value>Broker is suspending and could not accept any incoming request.</value>
+  </data>
+  <data name="BrokerQueueFailure" xml:space="preserve">
+    <value>Failed to read response message from broker queue</value>
+  </data>
+  <data name="BrokerIsUnavailable" xml:space="preserve">
+    <value>Broker is unavailable due to loss of heartbeat. Make sure you can connect to the broker node, the HpcBroker service is running on the broker node and the session is still running.</value>
+  </data>
+  <data name="ThrottlingTimeoutExceeded" xml:space="preserve">
+    <value>Throttling timeout exceeded.</value>
+  </data>
+  <data name="MissAzureStorageConnectionString" xml:space="preserve">
+    <value>Azure storage connection string is not set.</value>
+  </data>
+  <data name="EOMRejected" xml:space="preserve">
+    <value>EndRequests is not allowed for this client, the client is now in the {0} state.</value>
+  </data>
+  <data name="ServiceFailed" xml:space="preserve">
+    <value>Service job is failed or canceled.</value>
+  </data>
+  <data name="GetResponsesHandlerDisposed" xml:space="preserve">
+    <value>GetResponses handler disposed</value>
+  </data>
+  <data name="CannotFindCustomBindingConfiguration" xml:space="preserve">
+    <value>Cannot find custom binding in the configuration file.</value>
+  </data>
+  <data name="FailedToGetJobPropertyId" xml:space="preserve">
+    <value>Failed to get job property ids.</value>
+  </data>
+  <data name="AccessDenied_BrokerQueue" xml:space="preserve">
+    <value>User {0} is not authorized to access the client {1}. Please make sure you are the owner of the client.</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>Unknown error occured: {0}.</value>
+  </data>
+  <data name="StorageSpaceNotSufficient" xml:space="preserve">
+    <value>Broker storage hits quota limit or is full. If you are using MSMQ, contact your administrator to increase MSMQ storage quota on broker node or clean up session storages manually. Please refer http://support.microsoft.com/kb/899612 to change the quota.</value>
+  </data>
+  <data name="RegisterJobFailed" xml:space="preserve">
+    <value>Failed to register job in session launcher: {0}.</value>
+  </data>
+  <data name="NotSupportedTransportScheme" xml:space="preserve">
+    <value>Transport scheme {0} is not supported.</value>
+  </data>
+  <data name="LoadNetworkPrefixFailed" xml:space="preserve">
+    <value>Failed to load network prefix.</value>
+  </data>
+  <data name="StorageFailure" xml:space="preserve">
+    <value>Broker storage failed: {0}.</value>
+  </data>
+  <data name="FailedToGetJobState" xml:space="preserve">
+    <value>Failed to get job state.</value>
+  </data>
+  <data name="StorageClosed" xml:space="preserve">
+    <value>Broker storage is closed.</value>
+  </data>
+  <data name="ConnectionToSchedulerIsNotReady" xml:space="preserve">
+    <value>Failed to connect to the scheduler.</value>
+  </data>
+  <data name="ClientPurged" xml:space="preserve">
+    <value>Client is purged.</value>
+  </data>
+  <data name="BindingNotSupported" xml:space="preserve">
+    <value>Binding {0} is not supported.</value>
+  </data>
+  <data name="InvalidClientId" xml:space="preserve">
+    <value>Invalid client id: Client id could only have these characters: 0-9, a-z, A-Z, _, -, {, } and space.</value>
+  </data>
+  <data name="StorageServiceNotAvailble" xml:space="preserve">
+    <value>Broker storage service is not available.</value>
+  </data>
+  <data name="UserNameNotMatch" xml:space="preserve">
+    <value>User {0} is not authorized to access the client {1}. Please make sure you are the owner of the client.</value>
+  </data>
+  <data name="ClientIdTooLong" xml:space="preserve">
+    <value>Invalid client id: Client ID is too long. The maximum length is 128 characters.</value>
+  </data>
+  <data name="NoDefaultUriForScheme" xml:space="preserve">
+    <value>No default uri for scheme {0} could be found.</value>
+  </data>
+  <data name="Broker_AzureConnectionStringNotAvailable" xml:space="preserve">
+    <value>Broker failed to obtain Azure storage connection string of the cluster. Please check if it has been set for the cluster.</value>
+  </data>
+  <data name="BindingSecurityModeMismatched" xml:space="preserve">
+    <value>Binding security mode is not matched.</value>
+  </data>
+  <data name="TaskFailed" xml:space="preserve">
+    <value>Request failed because the corresponding task is in failed or canceled state.</value>
+  </data>
+  <data name="EOMReject_EndRequests" xml:space="preserve">
+    <value>EndRequests was already called for this BrokerClient.</value>
+  </data>
+  <data name="InvalidAzureStorageConnectionString" xml:space="preserve">
+    <value>Azure storage connection string is invalid.</value>
+  </data>
+  <data name="InvalidClientIdOrTooLong" xml:space="preserve">
+    <value>Invalid client id: Client id could only have these characters: 0-9, a-z, A-Z, _, -, {, } and space and should not contains more than 128 characters.</value>
+  </data>
+  <data name="SessionFailure" xml:space="preserve">
+    <value>Session failed or Cancelled</value>
+  </data>
+  <data name="Session_ValidateJobFailed_AlreadyFninshed" xml:space="preserve">
+    <value>Attach session failed: session {0} can not be attached due to its state.</value>
+  </data>
+  <data name="DuplicateEndOfMessage" xml:space="preserve">
+    <value>Duplicate EndRequests is called</value>
+  </data>
+  <data name="OpenFrontEndFailed" xml:space="preserve">
+    <value>Failed to open frontend: {0}.</value>
+  </data>
+  <data name="RetryLimitExceeded" xml:space="preserve">
+    <value>Request failed {0} time(s) and is marked as failure by the broker. The exception is {1}.</value>
+  </data>
+</root>

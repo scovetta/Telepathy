@@ -1,0 +1,370 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+  <PropertyGroup>
+    <ProjectGuid>{2629DC89-F12C-489D-8CF6-E0A6046B6863}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Hpc.ServiceBroker</RootNamespace>
+    <AssemblyName>Microsoft.Hpc.SvcBroker</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <AssemblyClsCompliant>false</AssemblyClsCompliant>
+    <DefineConstants>$(DefineConstants);Broker</DefineConstants>
+    <DefineTrace>true</DefineTrace>
+    <Localizable>true</Localizable>
+    <!--
+      NoWarn 0436 because broker is referencing both session API's assembly and its
+      source file "AuthenticationFailure.cs" and "RetryOperationError.cs".
+      This design is made because broker needs to have internal access to the files.
+    -->
+    <NoWarn>0436</NoWarn>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Messaging" />
+    <Reference Include="System.Runtime" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\common\AzureNaming.cs">
+      <Link>Azure\AzureNaming.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\BrokerProxyEndpointNames.cs">
+      <Link>Azure\BrokerProxyEndpointNames.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\SecurityDescriptor.cs">
+      <Link>SecurityDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="..\BrokerLauncher\SchedulerAdapterInternalClient.cs">
+      <Link>Common\SchedulerAdapterInternalClient.cs</Link>
+    </Compile>
+    <None Include="..\Common\AzureRoleHelper.cs">
+      <Link>Common\AzureRoleHelper.cs</Link>
+    </None>
+    <Compile Include="..\Common\BindingData.cs">
+      <Link>BackEnd\BindingData.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\BindingHelper.cs">
+      <Link>Common\BindingHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\BrokerIdentity.cs">
+      <Link>BrokerIdentity.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\BrokerPerformanceCounterHelper.cs">
+      <Link>BrokerPerformanceCounterHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\BrokerPerformanceCounterKey.cs">
+      <Link>BrokerPerformanceCounterKey.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\BrokerSettingsConstants.cs">
+      <Link>BrokerSettingsConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\BrokerVersion.cs">
+      <Link>BrokerVersion.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\BurstUtility.cs">
+      <Link>BackEnd\AzureQueue\BurstUtility.cs</Link>
+    </Compile>
+    <None Include="..\Common\CommonClusterManagerHelper.cs">
+      <Link>CommonClusterManagerHelper.cs</Link>
+    </None>
+    <Compile Include="..\Common\Constant.cs">
+      <Link>Constant.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\DisposableObject.cs">
+      <Link>Common\DisposableObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\DisposableObjectSlim.cs">
+      <Link>Common\DisposableObjectSlim.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ExceptionHelper.cs">
+      <Link>ExceptionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\HeartbeatHelper.cs">
+      <Link>Azure\HeartbeatHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\IProxyServiceManagement.cs">
+      <Link>BackEnd\IProxyServiceManagement.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ISchedulerAdapterInternalAsync.cs">
+      <Link>Common\ISchedulerAdapterInternalAsync.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ParamCheckUtility.cs">
+      <Link>ParamCheckUtility.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\PortHelper.cs">
+      <Link>PortHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ProxyBinding.cs">
+      <Link>BackEnd\ProxyBinding.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ProxyFault.cs">
+      <Link>ProxyFault.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\RetryHelper.cs">
+      <Link>Common\RetryHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\RetryPolicy.cs">
+      <Link>Common\RetryPolicy.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\SimulateFailure.cs">
+      <Link>SimulateFailure.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\SoaHelper.cs">
+      <Link>SoaHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ThrowHelper.cs">
+      <Link>ThrowHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Win32API.cs">
+      <Link>Win32API.cs</Link>
+    </Compile>
+    <Compile Include="..\SessionAPI\AuthenticationFailure.cs">
+      <Link>BackEnd\AuthenticationFailure.cs</Link>
+    </Compile>
+    <Compile Include="..\SessionAPI\RetryOperationError.cs">
+      <Link>BackEnd\RetryOperationError.cs</Link>
+    </Compile>
+    <Compile Include="BackEnd\AzureDispatcherInfo.cs" />
+    <Compile Include="BackEnd\AzureQueue\IAzureQueueManager.cs" />
+    <Compile Include="BackEnd\AzureQueue\AzureHttpsDispatcher.cs" />
+    <Compile Include="BackEnd\AzureQueue\AzureHttpsServiceClient.cs" />
+    <Compile Include="BackEnd\AzureQueue\AzureQueueManager.cs" />
+    <Compile Include="BackEnd\AzureQueue\AzureStorageClient.cs" />
+    <Compile Include="BackEnd\AzureQueue\MessageRetriever.cs" />
+    <Compile Include="BackEnd\AzureQueue\QueueAsyncResult.cs" />
+    <Compile Include="BackEnd\AzureQueue\ReliableQueueClient.cs" />
+    <Compile Include="BackEnd\AzureQueue\RequestStorageException.cs" />
+    <Compile Include="BackEnd\AzureQueue\ResponseQueueManager.cs" />
+    <Compile Include="BackEnd\AzureQueue\ResponseStorageException.cs" />
+    <Compile Include="BackEnd\AzureServiceHostController.cs" />
+    <Compile Include="BackEnd\ws-security\WssRequestSender.cs" />
+    <Compile Include="BackEnd\ws-security\WssResponseReceiver.cs" />
+    <Compile Include="BackEnd\ws-security\WssDispatcherInfo.cs" />
+    <Compile Include="BackEnd\ws-security\WssDispatcher.cs" />
+    <Compile Include="BackEnd\IDispatcher.cs" />
+    <Compile Include="BackEnd\Dispatcher.cs" />
+    <Compile Include="BackEnd\DispatcherComponents\ResponseQueueAdapter.cs" />
+    <Compile Include="BackEnd\DispatcherComponents\AzureResponseReceiver.cs" />
+    <Compile Include="BackEnd\DispatcherComponents\DispatchData.cs" />
+    <Compile Include="BackEnd\DispatcherComponents\OnPremiseResponseReceiver.cs" />
+    <Compile Include="BackEnd\DispatcherComponents\RequestQueueAdapter.cs" />
+    <Compile Include="BackEnd\DispatcherComponents\AzureHttpsRequestSender.cs" />
+    <Compile Include="BackEnd\DispatcherComponents\AzureNettcpRequestSender.cs" />
+    <Compile Include="BackEnd\DispatcherComponents\OnPremiseRequestSender.cs" />
+    <Compile Include="BackEnd\DispatcherComponents\RequestSender.cs" />
+    <Compile Include="BackEnd\DispatcherComponents\ResponseReceiver.cs" />
+    <Compile Include="BackEnd\DispatcherComponents\RetryLimitExceededHandler.cs" />
+    <Compile Include="BackEnd\DispatcherInfo.cs" />
+    <Compile Include="BackEnd\DispatcherManager.cs" />
+    <Compile Include="BackEnd\EprDispatcherInfo.cs" />
+    <Compile Include="BackEnd\GetNextRequestState.cs" />
+    <Compile Include="BackEnd\HpcServiceHostClient.cs" />
+    <Compile Include="BackEnd\IDispatcherManager.cs" />
+    <Compile Include="BackEnd\IService.cs" />
+    <Compile Include="BackEnd\MachineResourceInfo.cs" />
+    <Compile Include="BackEnd\nettcp\AzureDispatcher.cs" />
+    <Compile Include="BackEnd\nettcp\AzureServiceClient.cs" />
+    <Compile Include="BackEnd\nettcp\ProxyClientPool.cs" />
+    <Compile Include="BackEnd\ProxyServiceControlClient.cs" />
+    <Compile Include="BackEnd\ServiceClient.cs" />
+    <Compile Include="BackEnd\ServiceHostController.cs" />
+    <Compile Include="BackEnd\ServiceInstanceFailedEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BackEnd\ServiceTaskDispatcherInfo.cs" />
+    <Compile Include="BalanceResultInfo.cs" />
+    <Compile Include="BrokerQueue\BrokerQueueAsyncToken.cs" />
+    <Compile Include="BrokerQueue\BrokerQueueCallbackItem.cs" />
+    <Compile Include="BrokerQueue\BrokerQueueConstants.cs" />
+    <Compile Include="BrokerQueue\BrokerQueueDispatcher.cs" />
+    <Compile Include="BrokerQueue\BrokerQueueEventArgs.cs" />
+    <Compile Include="BrokerQueue\ClientInfo.cs" />
+    <Compile Include="BrokerQueue\ExceptionEventArgs.cs" />
+    <Compile Include="BrokerQueue\IBrokerQueueFactory.cs" />
+    <Compile Include="BrokerQueue\PutResponseSuccessEventArgs.cs" />
+    <Compile Include="BrokerQueue\ReemitToken.cs" />
+    <Compile Include="BrokerQueue\ResponseActionFilter.cs" />
+    <Compile Include="BrokerQueue\ResponseCallbackItem.cs" />
+    <Compile Include="BrokerQueue\ResponseEventArgs.cs" />
+    <Compile Include="Common\BrokerClient.cs" />
+    <Compile Include="Common\BrokerClientManager.cs" />
+    <Compile Include="Common\BrokerClientState.cs" />
+    <Compile Include="Common\BrokerEntry.cs" />
+    <Compile Include="BrokerQueue\BrokerPersistQueue.cs" />
+    <Compile Include="BrokerQueue\BrokerQueue.cs" />
+    <Compile Include="BrokerQueue\BrokerQueueException.cs" />
+    <Compile Include="BrokerQueue\BrokerQueueFactory.cs" />
+    <Compile Include="BrokerQueue\BrokerQueueItem.cs" />
+    <Compile Include="BrokerQueue\GlobalSuppressions.cs" />
+    <Compile Include="BrokerQueue\SessionPersist.cs" />
+    <Compile Include="Common\BrokerObserver.cs" />
+    <Compile Include="Common\BrokerPerformanceCounter.cs" />
+    <Compile Include="Common\BrokerState.cs" />
+    <Compile Include="Common\BrokerStateManager.cs" />
+    <Compile Include="Common\ConfigurationHelper.cs" />
+    <Compile Include="Common\DummyServiceJobMonitor.cs" />
+    <Compile Include="Common\GetResponsesHandler.cs" />
+    <Compile Include="Common\GracefulPreemptionHandler.cs" />
+    <Compile Include="Common\IBrokerObserver.cs" />
+    <Compile Include="Common\INodeMappingCache.cs" />
+    <Compile Include="Common\InternalServiceJobMonitor.cs" />
+    <Compile Include="Common\ISchedulerAdapterAsync.cs" />
+    <Compile Include="Common\NodeMappingData.cs" />
+    <Compile Include="Common\ObserverItem.cs" />
+    <Compile Include="Common\PullResponsesHandler.cs" />
+    <Compile Include="Common\ThreadHelper\AsyncCallbackReferencedThreadHelper.cs" />
+    <Compile Include="Common\ThreadHelper\BasicCallbackReferencedThreadHelper.cs" />
+    <Compile Include="Common\ThreadHelper\BrokerQueueCallbackReferencedThreadHelper.cs" />
+    <Compile Include="Common\ThreadHelper\ReferencedThreadHelper.cs" />
+    <Compile Include="Common\ReferenceObject.cs" />
+    <Compile Include="Common\RepeatableCallbackTrigger.cs" />
+    <Compile Include="Common\BaseResponsesHandler.cs" />
+    <Compile Include="Common\SchedulerAdapterClient.cs" />
+    <Compile Include="Common\SchedulerAdapterClientFactory.cs" />
+    <Compile Include="Common\ServiceJobState.cs" />
+    <Compile Include="Common\SharedData.cs" />
+    <Compile Include="Common\ThreadHelper.cs" />
+    <Compile Include="Common\ThreadHelper\WaitOrTimerCallbackReferencedThreadHelper.cs" />
+    <Compile Include="Common\TimeoutManager.cs" />
+    <Compile Include="Common\TraceUtils.cs" />
+    <Compile Include="Common\Utility.cs" />
+    <Compile Include="FrontEnd\AzureQueueFrontEnd.cs" />
+    <Compile Include="FrontEnd\AzureQueue\AzureQueueProxy.cs" />
+    <Compile Include="FrontEnd\AzureQueue\AzureStorageClient.cs" />
+    <Compile Include="FrontEnd\AzureQueue\MessageRetriever.cs" />
+    <Compile Include="FrontEnd\AzureQueue\MessageSender.cs" />
+    <Compile Include="FrontEnd\AzureQueue\ReliableQueueClient.cs" />
+    <Compile Include="FrontEnd\BrokerController.cs" />
+    <Compile Include="FrontEnd\ControllerFrontendProvider.cs" />
+    <Compile Include="FrontEnd\DummyRequestContext.cs" />
+    <Compile Include="FrontEnd\DuplexFrontEnd.cs" />
+    <Compile Include="FrontEnd\DuplexRequestContext.cs" />
+    <Compile Include="FrontEnd\FrontEndBase.cs" />
+    <Compile Include="FrontEnd\FrontEndBuilder.cs" />
+    <Compile Include="FrontEnd\FrontEndFaultMessage.cs" />
+    <Compile Include="FrontEnd\FrontendInfo.cs" />
+    <Compile Include="FrontEnd\FrontendResult.cs" />
+    <Compile Include="FrontEnd\RequestContextBase.cs" />
+    <Compile Include="FrontEnd\RequestReplyFrontEnd.cs" />
+    <Compile Include="FrontEnd\RequestReplyRequestContext.cs" />
+    <Compile Include="Common\ServiceJobMonitor.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="GracefulPreemptionResult.cs" />
+    <Compile Include="Persistences\MemoryPersist.cs" />
+    <Compile Include="Persistences\MSMQPersist\MSMQMessageFetcher.cs" />
+    <Compile Include="Persistences\MSMQPersist\MessageQueueHelper.cs" />
+    <Compile Include="Persistences\MSMQPersist\MSMQConcurrencyController.cs" />
+    <Compile Include="Persistences\MSMQPersist\MSMQPersist.cs" />
+    <Compile Include="Persistences\MSMQPersist\MSMQPersistTransaction.cs" />
+    <Compile Include="BrokerTrace.cs" />
+    <Compile Include="SoaDiagTraceHelper.cs" />
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AADAuthUtil\AADAuthUtil.csproj">
+      <Project>{895FCBFB-73B4-46F3-8A89-76C236F01BF4}</Project>
+      <Name>AADAuthUtil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\HpcCommon\HpcCommon.csproj">
+      <Project>{2c3936c7-4850-41d7-9497-9040be302328}</Project>
+      <Name>HpcCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\StoreAPI\Property\Properties.csproj">
+      <Project>{61844849-3d26-4003-8146-5ae86985db3a}</Project>
+      <Name>Properties</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\StoreAPI\Scheduler\Scheduler.csproj">
+      <Project>{78e5e61b-dd12-475a-845b-7da3f6b0f987}</Project>
+      <Name>Scheduler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\base\BrokerBase.csproj">
+      <Project>{3f01d480-4cde-4f46-99ea-95ceda05063e}</Project>
+      <Name>BrokerBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SessionAPI\Session.csproj">
+      <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>
+      <Name>Session</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SoaAmbientConfig\SoaAmbientConfig.csproj">
+      <Project>{9ad369c0-f404-4591-ae7a-6dff3d2d99a2}</Project>
+      <Name>SoaAmbientConfig</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SOABurst\SOABurst.csproj">
+      <Project>{3ab56212-e9d3-44e3-aa80-ebd1b29a228f}</Project>
+      <Name>SOABurst</Name>
+    </ProjectReference>
+    <!--
+    <ProjectReference Include="..\SOABurst\SOABurst.csproj">
+      <Project>{3ab56212-e9d3-44e3-aa80-ebd1b29a228f}</Project>
+      <Name>SOABurst</Name>
+    </ProjectReference>
+	-->
+    <ProjectReference Include="..\SoaCommonUtility\SoaCommonUtility.csproj">
+      <Project>{bf0b4020-9934-466c-af35-9f97b4cf18ac}</Project>
+      <Name>SoaCommonUtility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SvcHostRestServer\SvcHostRestServer.csproj">
+      <Project>{602b999e-6203-432c-af7c-2c31dddde60a}</Project>
+      <Name>SvcHostRestServer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="WindowsAzure.Storage">
+      <Version>8.4.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
