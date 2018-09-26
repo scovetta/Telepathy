@@ -232,7 +232,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             string processName = System.Diagnostics.Process.GetCurrentProcess().ProcessName;
 
-            if (processName == "HpcServiceHost" || processName == "HpcServiceHost32")
+            if (processName == "CcpServiceHost" || processName == "CcpServiceHost32")
             {
                 inService = true;
                 Microsoft.Hpc.Scheduler.Session.Data.Internal.TraceHelper.TraceSource = Logger;
