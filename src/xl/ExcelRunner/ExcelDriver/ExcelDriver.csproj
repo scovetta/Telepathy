@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+  <PropertyGroup>
+    <AssemblyName>Microsoft.Hpc.Excel</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Hpc.Excel</RootNamespace>
+    <ProjectGuid>{6939E1E5-0E52-4BDA-8AF9-CF6AD8E67F2D}</ProjectGuid>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <AssemblyVersionName>CCPv2</AssemblyVersionName>
+    <AssemblyClsCompliant>false</AssemblyClsCompliant>
+    <AssemblyComVisible>false</AssemblyComVisible>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>true</DelaySign>
+    <Localizable>true</Localizable>
+    <BUILD_ALLOW_TLB_WARNINGS>1</BUILD_ALLOW_TLB_WARNINGS>
+    <TargetFrameworkProfile />
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Accessibility" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="Microsoft.Office.Interop.Excel">
+    </Reference>
+    <Reference Include="OFFICE">
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccessibleHelper.cs" />
+    <Compile Include="IExcelClientV1_1.cs" />
+    <Compile Include="InvocationHelper.cs" />
+    <Compile Include="ExcelClient.cs" />
+    <Compile Include="ExcelClientCOM.cs" />
+    <Compile Include="ExcelClientException.cs" />
+    <Compile Include="HPCExcelWorkItem.cs" />
+    <Compile Include="IExcelClientV1.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ResponseErrorArgs.cs" />
+    <Compile Include="Service References\ExcelService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="PopupBasherConfiguration.cs" />
+    <Compile Include="PopupBasherSectionHandler.cs" />
+    <Compile Include="PopupBasher.cs" />
+    <Compile Include="PopupMessage.cs" />
+    <Compile Include="Win32\Common.cs" />
+    <Compile Include="xlDriver.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mykey.snk" />
+    <None Include="Service References\ExcelService\service.wsdl" />
+    <None Include="Service References\ExcelService\service.xsd" />
+    <None Include="Service References\ExcelService\service1.xsd" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\ExcelService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ExcelService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ExcelService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ExcelService\Microsoft.Hpc.Excel.ExcelService.CalculateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ExcelService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Binplace Include="$(TargetName).xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <TlbExport Include="$(OutDir)$(TargetFileName)" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <ProjectReference Include="..\..\..\soa\SessionAPI\Session.csproj">
+      <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>
+      <Name>Session</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\StandaloneDataClient\StandaloneDataClient.csproj">
+      <Project>{8F4412AA-A6E0-49E5-A331-1B1047E2159D}</Project>
+      <Name>StandaloneDataClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\StoreAPI\Property\Properties.csproj">
+      <Project>{61844849-3d26-4003-8146-5ae86985db3a}</Project>
+      <Name>Properties</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\StoreAPI\Scheduler\Scheduler.csproj">
+      <Project>{78e5e61b-dd12-475a-845b-7da3f6b0f987}</Project>
+      <Name>Scheduler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\StoreAPI\Store\Store.csproj">
+      <Project>{82f72b8b-372e-4a1c-8139-714ae932ebcb}</Project>
+      <Name>Store</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Internal\Internal.csproj">
+      <Project>{7916d3c4-35af-42f7-b435-6e24842211b2}</Project>
+      <Name>Internal</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

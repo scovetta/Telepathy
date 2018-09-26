@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="201da2cc-353b-4f22-8d42-2ae25383be26" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>true</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>true</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8732/Design_Time_Addresses/Microsoft.Hpc.Excel/ExcelService/mex" Protocol="mex" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="e7ed2aa4-b940-4530-8812-b5288337507b" SourceId="1" SourceUrl="http://localhost:8732/Design_Time_Addresses/Microsoft.Hpc.Excel/ExcelService/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="8292caf2-af6e-4c47-8127-b542b8930f66" SourceId="1" SourceUrl="http://localhost:8732/Design_Time_Addresses/Microsoft.Hpc.Excel/ExcelService/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="0b570fc4-ae8c-4c47-aaf0-a730c07cd6a6" SourceId="1" SourceUrl="http://localhost:8732/Design_Time_Addresses/Microsoft.Hpc.Excel/ExcelService/mex" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

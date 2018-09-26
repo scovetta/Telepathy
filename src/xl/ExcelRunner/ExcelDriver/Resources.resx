@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ExcelDriverCLSIDMissing" xml:space="preserve">
+    <value>Cannot find Excel application CLSID. Check installation.</value>
+  </data>
+  <data name="ExcelDriverExecutableMissing" xml:space="preserve">
+    <value>Cannot find path to {0}. Make sure that Excel is installed.</value>
+    <comment>{0} is Excel.exe,  Excel refers to product name.</comment>
+  </data>
+  <data name="ExcelDriverNotResponsive" xml:space="preserve">
+    <value>Excel is not responsive.</value>
+    <comment>Excel refers to product name.</comment>
+  </data>
+  <data name="ExcelDriverWorkbookDNE" xml:space="preserve">
+    <value>Fatal Error: workbook does not exist at specified location.</value>
+  </data>
+  <data name="ExcelDriverWorkbookNotFound" xml:space="preserve">
+    <value>Fatal Error when opening workbook. File Not Found.</value>
+  </data>
+  <data name="ExcelDriverWorkbookVersionMismatch" xml:space="preserve">
+    <value>Local document is out of date. Saved {0} instead of {1}.</value>
+    <comment>{0} and {1} are DateTimes</comment>
+  </data>
+  <data name="ExcelDriver_OpeningExcel" xml:space="preserve">
+    <value>ExcelDriver is launching Excel.</value>
+  </data>
+  <data name="ExcelDriver_OpeningWorkbook" xml:space="preserve">
+    <value>ExcelDriver is opening workbook at {0}.</value>
+    <comment>{0} is a filepath</comment>
+  </data>
+  <data name="HPCExcelServiceDeserializeFailed" xml:space="preserve">
+    <value>Byte array input to {0} cannot be deserialized.</value>
+    <comment>{0} is name of service receiving the input</comment>
+  </data>
+  <data name="HPCExcelServiceExceptionOnNode" xml:space="preserve">
+    <value>Exception on node {0}</value>
+    <comment>{0} is node name</comment>
+  </data>
+  <data name="HPCExcelServiceSerializeFailed" xml:space="preserve">
+    <value>Result from macro {0} output cannot be serialized.</value>
+    <comment>{0} is macro name</comment>
+  </data>
+  <data name="ExcelClientCloseBeforeOpen" xml:space="preserve">
+    <value>The session must not be null. Ensure that OpenSession is called before CloseSession.</value>
+    <comment>OpenSession and CloseSession are method names</comment>
+  </data>
+  <data name="ExcelClientDeployToSamePath" xml:space="preserve">
+    <value>Local and remote workbook paths are the same. Cannot perform deployment.</value>
+  </data>
+  <data name="ExcelClientExceptionOn" xml:space="preserve">
+    <value>Exception on {0}: </value>
+    <comment>{0} is a named command where the exception occurred</comment>
+  </data>
+  <data name="ExcelClientInitializeOnce" xml:space="preserve">
+    <value>Each ExcelClient instance must be initialized only once.</value>
+  </data>
+  <data name="ExcelClientJobCancelled" xml:space="preserve">
+    <value>The SOA Session has been cancelled or has experienced a failure. Alternatively, the session may have timed out.</value>
+  </data>
+  <data name="ExcelClientMultipleRuns" xml:space="preserve">
+    <value>Multiple invocations of the Run method must not occur concurrently.</value>
+    <comment>Run is the name of method</comment>
+  </data>
+  <data name="ExcelClientSessionNotOpen" xml:space="preserve">
+    <value>No session is currently open. Cannot run on cluster without an open session.</value>
+  </data>
+  <data name="ExcelClientWBPathNull" xml:space="preserve">
+    <value>Remote workbook path is null or empty. Path must be supplied prior to cluster execution.</value>
+  </data>
+  <data name="HPCExcelServiceExiting" xml:space="preserve">
+    <value>Closing {0} service host.</value>
+    <comment>{0} is HPCExcelService - name of service</comment>
+  </data>
+  <data name="HPCExcelServiceResourcesFreed" xml:space="preserve">
+    <value>Excel resources freed during {0} event.</value>
+    <comment>{0} is name of event</comment>
+  </data>
+  <data name="HPCExcelWorkItem_MaxSize" xml:space="preserve">
+    <value>The work item must contain thirty items or fewer to comply with the macro invocation API.</value>
+    <comment>{0} is HPCExcelWorkItem - name of object</comment>
+  </data>
+  <data name="ExcelClient_ResourceType" xml:space="preserve">
+    <value>Resource type must be one of: {0}, {1}, or {2}.</value>
+    <comment>{0-2} are names of resources</comment>
+  </data>
+  <data name="ExcelDriverFaultInMacro" xml:space="preserve">
+    <value>Error occurred during execution of macro {0}.</value>
+    <comment>{0} is macro name</comment>
+  </data>
+  <data name="ExcelDriverGetCellInvalid" xml:space="preserve">
+    <value>GetCellValue failed to retrieve the value at cell reference {0}.</value>
+    <comment>GetCellValue is the name of the method, {0} is the cell reference (ie "A1")</comment>
+  </data>
+  <data name="ExcelDriverSetCellInvalid" xml:space="preserve">
+    <value>SetCellValue failed to assign the specified value to cell reference {0}.</value>
+    <comment>SetCellValue is the name of the method, {0} is the cell reference (ie "A1")</comment>
+  </data>
+  <data name="ExcelClient_PartitionNullImmediately" xml:space="preserve">
+    <value>{0} macro returned null or empty array on first invocation. This behavior is not permitted.</value>
+    <comment>{0} is Partition, the name of the macro</comment>
+  </data>
+  <data name="ExcelClient_RemoteAccessDenied" xml:space="preserve">
+    <value>Access to the path '{0}' is denied.</value>
+  </data>
+  <data name="ExcelClient_RemoteDirectoryDNE" xml:space="preserve">
+    <value>Cannot find directory in {0}. Shared directories must be created prior to workbook deployment.</value>
+    <comment>{0} is a directory path</comment>
+  </data>
+  <data name="ExcelClientOpenSessionBeforeInit" xml:space="preserve">
+    <value>Session cannot be opened before ExcelClient is initialized.</value>
+  </data>
+  <data name="HPCExcelServiceWorkbookNotSet" xml:space="preserve">
+    <value>Environment variable {0} has not been set.</value>
+    <comment>{0} is Microsoft.Hpc.Excel.WorkbookPath, the name of the environment variable</comment>
+  </data>
+  <data name="ExcelClientCantOverwriteWB" xml:space="preserve">
+    <value>The remote workbook at {0} cannot be overwritten because it is in use by another process.</value>
+    <comment>{0} is full path to workbook in question</comment>
+  </data>
+  <data name="ExcelClient_ErrorOnResponse" xml:space="preserve">
+    <value>Experienced an exception while processing cluster responses.</value>
+  </data>
+  <data name="HPCExcelCLI_Cancelling" xml:space="preserve">
+    <value>Cancelling current operations cleanly...</value>
+  </data>
+  <data name="HPCExcelCLI_DeployFlagSet" xml:space="preserve">
+    <value>ERROR: DeployWorkbook flag already set.</value>
+  </data>
+  <data name="HPCExcelCLI_DeployWBError" xml:space="preserve">
+    <value>Error while deploying workbook to {0} in session {2}: {1}</value>
+    <comment>{0} is file path, {1} is exception message {2} is session ID</comment>
+  </data>
+  <data name="HPCExcelCLI_InvalidBool" xml:space="preserve">
+    <value>ERROR: Boolean value is invalid in parameter: {0}</value>
+    <comment>{0} is a user-provided string</comment>
+  </data>
+  <data name="HPCExcelCLI_InvalidCores" xml:space="preserve">
+    <value>ERROR: Number of cores is not a valid integer: {0}</value>
+    <comment>{0} is a user-provided string</comment>
+  </data>
+  <data name="HPCExcelCLI_InvalidNodes" xml:space="preserve">
+    <value>ERROR: Number of nodes is not a valid integer: {0}</value>
+    <comment>{0} is a user-provided string</comment>
+  </data>
+  <data name="HPCExcelCLI_InvalidResources" xml:space="preserve">
+    <value>ERROR: Invalid number of resources. Min = {0}, Max = {1}.</value>
+    <comment>{0} and {1} are integers</comment>
+  </data>
+  <data name="HPCExcelCLI_InvalidSockets" xml:space="preserve">
+    <value>ERROR: Number of sockets is not a valid integer: {0}</value>
+    <comment>{0} is a user-provided string</comment>
+  </data>
+  <data name="HPCExcelCLI_InvalidWBPath" xml:space="preserve">
+    <value>ERROR: Workbook path invalid: '{0}'</value>
+    <comment>{0} is a file path</comment>
+  </data>
+  <data name="HPCExcelCLI_JobTemplateSet" xml:space="preserve">
+    <value>ERROR: Job template already set.</value>
+  </data>
+  <data name="HPCExcelCLI_LocalFlagSet" xml:space="preserve">
+    <value>ERROR: Local computation flag already set.</value>
+  </data>
+  <data name="HPCExcelCLI_MultipleLocal" xml:space="preserve">
+    <value>ERROR: Multiple local workbooks specified: '{0}' and '{1}'</value>
+    <comment>{0} and {1} are file paths</comment>
+  </data>
+  <data name="HPCExcelCLI_MultipleRemote" xml:space="preserve">
+    <value>ERROR: Multiple remote workbook paths specified: '{0}' and '{1}'</value>
+    <comment>{0} and {1} are file paths</comment>
+  </data>
+  <data name="HPCExcelCLI_NoLocal" xml:space="preserve">
+    <value>ERROR: No local workbook specified.</value>
+  </data>
+  <data name="HPCExcelCLI_NoRemote" xml:space="preserve">
+    <value>ERROR: Cannot deploy when no remote workbook specified.</value>
+  </data>
+  <data name="HPCExcelCLI_NoScheduler" xml:space="preserve">
+    <value>ERROR: No scheduler specified.</value>
+  </data>
+  <data name="HPCExcelCLI_OpenSessionError" xml:space="preserve">
+    <value>Error while opening HPC session: {0}</value>
+    <comment>{0} is exception message</comment>
+  </data>
+  <data name="HPCExcelCLI_OpenWBError" xml:space="preserve">
+    <value>Error while opening workbook at {0} with Excel: {1}</value>
+    <comment>{0} is file path, {1} is exception message</comment>
+  </data>
+  <data name="HPCExcelCLI_ResourcesSet" xml:space="preserve">
+    <value>ERROR: Requested resources already set.</value>
+  </data>
+  <data name="HPCExcelCLI_ResponseError" xml:space="preserve">
+    <value>Exception on response: {0}</value>
+    <comment>{0} is exception message</comment>
+  </data>
+  <data name="HPCExcelCLI_LocalRunError" xml:space="preserve">
+    <value>Error while running workbook: {0}</value>
+    <comment>{0} is exception message</comment>
+  </data>
+  <data name="HPCExcelCLI_SchedulerSet" xml:space="preserve">
+    <value>ERROR: Scheduler name already set.</value>
+  </data>
+  <data name="HPCExcelCLI_UnknownArg" xml:space="preserve">
+    <value>ERROR: Unknown argument '{0}'</value>
+    <comment>{0} is argument name</comment>
+  </data>
+  <data name="HPCExcelCLI_Usage" xml:space="preserve">
+    <value>Generic command-line interface for executing partition/execute/merge
+calculations within Microsoft Excel.
+
+HPCExcelCLI /localworkbook:path [/local:{true|false}] [/scheduler:name] 
+    [/jobtemplate:jobtemplate] [/numcores:min[-max]] 
+    [/deployworkbook:{true|false}] [/remoteworkbook:path]
+  
+  /localworkbook:path   Specifies the .xlsm file to open.
+
+  /local:{true|false}   Specifies local vs cluster computation. 
+                        Defaults to false (Cluster).
+
+  /scheduler:name       Specifies name of cluster head node. 
+                        Required if /local:false.
+
+  /jobtemplate:jobtemplate  Specifies the job template to use. 
+
+  /numcores:min[-max]   Specifies number of cores for the job to run on.
+  /numnodes:min[-max]   Specifies number of nodes for the job to run on.
+  /numsockets:min[-max] Specifies number of sockets for the job to run on.
+
+  /deployworkbook:{true|false}	Specifies that the workbook should be copied 
+                        from /localworkbook to /remoteworkbook when true.
+
+  /remoteworkbook:path	Specifies the location of the workbook relative to the 
+                        cluster compute nodes. Path specified by 
+                        /localworkbook is used by default. 
+  
+  /closeexcel:{true|false} Specifies whether Excel should be closed upon 
+                        calculation completion. 
+                        Defaults to false (leave Excel open).
+
+  /saveworkbook:path   Specifies where to save local workbook after calculation. 
+                        Workbook is not saved unless /saveworkbook is specified.
+
+  If /local:false, one of the parameters /jobtemplate, /numnodes, /numcores, 
+  and /numsockets must be specified. 
+  If /deployworkook:true, /remoteworkbook must also be specified. 
+  Only one of each parameter may be supplied.</value>
+    <comment>The parameters (/localworkbook, etc) and true/false should not be translated.</comment>
+  </data>
+  <data name="ExcelDriver_InvokeMacro" xml:space="preserve">
+    <value>Invoking {0} macro in workbook {1}.</value>
+    <comment>{0} is macro name and {1} is file path</comment>
+  </data>
+  <data name="ExcelDriver_MacroExecutionFail" xml:space="preserve">
+    <value>Execution of {0} macro failed in workbook {1}: {2}</value>
+    <comment>{0} is macro name, {1} is file path, and {2} is exception dump</comment>
+  </data>
+  <data name="ExcelDriver_MacroInvocationFail" xml:space="preserve">
+    <value>Invocation of {0} macro failed in workbook {1}: {2}</value>
+    <comment>{0} is macro name, {1} is file path, and {2} is exception dump</comment>
+  </data>
+  <data name="ExcelService_ApplicationError" xml:space="preserve">
+    <value>Session {0}, Task{1} -  ExcelService failed to handle a request on {2} due to an application error: {3}</value>
+    <comment>{0} and {1} are ID numbers, {2} is a computer name and {3} is an exception dump.</comment>
+  </data>
+  <data name="ExcelService_FirstRequest" xml:space="preserve">
+    <value>Beginning request processing without open workbook.</value>
+  </data>
+  <data name="ExcelService_OpeningWorkbook" xml:space="preserve">
+    <value>Session {0}, Task {1} - ExcelService is opening workbook at {2} on {3}.</value>
+    <comment>{0} and {1} are ID numbers, {2} is a file path and {3} is a computer name</comment>
+  </data>
+  <data name="ExcelService_OtherRequest" xml:space="preserve">
+    <value>Beginning request processing with open workbook.</value>
+  </data>
+  <data name="ExcelClient_ErrorHandlerMissing" xml:space="preserve">
+    <value>No error handlers have been provided.</value>
+  </data>
+  <data name="ExcelClient_MacroFailed" xml:space="preserve">
+    <value>{0} macro failed or is not implemented.</value>
+    <comment>{0} is macro name</comment>
+  </data>
+  <data name="ExcelClient_Initialization" xml:space="preserve">
+    <value>Initialized ExcelClient instance with {0}.</value>
+    <comment>{0} is file path</comment>
+  </data>
+  <data name="ExcelClient_OpenClient" xml:space="preserve">
+    <value>Opening a new BrokerClient attached to session {0} on {1}.</value>
+    <comment>{0} is session Id and {1} is head node name</comment>
+  </data>
+  <data name="ExcelClient_OpenSession" xml:space="preserve">
+    <value>Opened session {0} on {1}.</value>
+    <comment>{0} is session Id and {1} is cluster head node name</comment>
+  </data>
+  <data name="ExcelClient_RunLocal" xml:space="preserve">
+    <value>Beginning local run with workbook at {0}.</value>
+    <comment>{0} is file path</comment>
+  </data>
+  <data name="ExcelClient_RunOnCluster" xml:space="preserve">
+    <value>Beginning cluster run on {0} with workbook at {1}.</value>
+    <comment>{0} is cluster head node, {1} is file path</comment>
+  </data>
+  <data name="ExcelDriver_RetryWorkbookOpen" xml:space="preserve">
+    <value>Failed to open workbook at {0}. Retrying.</value>
+    <comment>{0} is file path</comment>
+  </data>
+  <data name="ExcelDriver_WorkbookClosed" xml:space="preserve">
+    <value>Previous workbook already closed or otherwise inaccessible: {0}</value>
+    <comment>{0} is exception</comment>
+  </data>
+  <data name="ExcelClient_OpenSessionDuringRun" xml:space="preserve">
+    <value>OpenSession cannot be called before ExcelClient has finished calling {0}.</value>
+    <comment>{0} is the name of a macro</comment>
+  </data>
+  <data name="ExcelService_RetryAfterRPC" xml:space="preserve">
+    <value>Session {0}, Task{1} -  Experienced COM automation error. Closing Excel and retrying service operation. Recovering after: {2}</value>
+    <comment>{0} and {1} are ID numbers, {2} is an exception dump</comment>
+  </data>
+  <data name="ExcelClient_OpenSessionTwice" xml:space="preserve">
+    <value>Another session cannot be opened before the current session is closed.</value>
+  </data>
+  <data name="HPCExcelCLI_CloseFlagSet" xml:space="preserve">
+    <value>ERROR: Excel close flag already set.</value>
+  </data>
+  <data name="HPCExcelCLI_ClusterRunError" xml:space="preserve">
+    <value>Error while running workbook in session {1}: {0}</value>
+  </data>
+  <data name="HPCExcelCLI_SessionInfo" xml:space="preserve">
+    <value>Running {0} with session {1} on {2}.</value>
+    <comment>{0} is workbook path, {1} is session id, {2} is head node</comment>
+  </data>
+  <data name="ExcelClient_InvalidMaxCores" xml:space="preserve">
+    <value>Maximum resource parameter, {0}, is not a valid integer.</value>
+  </data>
+  <data name="ExcelClient_InvalidMinCores" xml:space="preserve">
+    <value>Minimum resource parameter, {0}, is not a valid integer.</value>
+  </data>
+  <data name="ExcelClient_InvalidResType" xml:space="preserve">
+    <value>Resource type parameter, {0}, does not map to a valid resource type.</value>
+  </data>
+  <data name="ExcelClient_InvalidVersionString" xml:space="preserve">
+    <value>The string returned by {0} is not a valid .NET version string:</value>
+    <comment>{0} is HPC_GetVersion, name of macro</comment>
+  </data>
+  <data name="ExcelClient_VersionMismatch" xml:space="preserve">
+    <value>The workbook version(s) returned by {0}, {1}, are not supported by the current version of ExcelClient. Workbook versions supported: {2}</value>
+    <comment>{0} and {1} are version strings (x.x.x.x)</comment>
+  </data>
+  <data name="ExcelDriver_CloseWBFailed" xml:space="preserve">
+    <value>Closing workbook unsuccessful: {0}</value>
+    <comment>{0} is exception dump</comment>
+  </data>
+  <data name="ExcelDriver_KillExcelFailed" xml:space="preserve">
+    <value>Closing Excel process unsuccessful: {0}</value>
+    <comment>{0} is exception dump</comment>
+  </data>
+  <data name="ExcelDriver_MutexCloseFailed" xml:space="preserve">
+    <value>Closing Excel Launch Mutex unsuccessful: {0}</value>
+    <comment>{0} is exception dump</comment>
+  </data>
+  <data name="ExcelDriver_QuitExcelFailed" xml:space="preserve">
+    <value>Quitting Excel application unsuccessful: {0}</value>
+    <comment>{0} is exception dump</comment>
+  </data>
+  <data name="PopupBasher_DefaultAction" xml:space="preserve">
+    <value>ExcelDriver found a target child window and performed the default action. Parent Window Name='{0}', Parent Window Class='{1}', Child Window Name='{2}', Child Window Class='{3}', Role='{4}'</value>
+  </data>
+  <data name="PopupBasher_Error" xml:space="preserve">
+    <value>Unexpected exception while checking popups. {0}</value>
+  </data>
+  <data name="PopupBasher_FoundChild" xml:space="preserve">
+    <value>Found child window Name='{0}', Class='{1}', Role='{2}', Text='{3}'</value>
+  </data>
+  <data name="PopupBasher_FoundParent" xml:space="preserve">
+    <value>Found Parent Window '{0}', Class='{1}'</value>
+  </data>
+  <data name="PopupBasher_SearchingForChild" xml:space="preserve">
+    <value>Searching for child window Name='{0}', Class='{1}', Role='{2}'</value>
+  </data>
+  <data name="ExcelClient_GetVersionMissing" xml:space="preserve">
+    <value>The {0} macro must be implemented and return a valid version string.</value>
+    <comment>{0} is name of macro</comment>
+  </data>
+  <data name="ExcelClient_RunBeforeInitialize" xml:space="preserve">
+    <value>ExcelClient cannot run the workbook before it is initialized.</value>
+  </data>
+  <data name="ExcelDriver_LaunchExcelOnce" xml:space="preserve">
+    <value>Each ExcelDriver instance must launch and Excel process only once.</value>
+  </data>
+  <data name="ExcelDriver_MacroFailed" xml:space="preserve">
+    <value>Invocation of {0} macro failed in workbook {1}: {2} Please refer to product documentation for potential causes.</value>
+  </data>
+  <data name="ExcelDriver_CorruptWorkbook" xml:space="preserve">
+    <value>Found unreadable content in workbook. Verify that {0} can be opened manually.</value>
+    <comment>{0} is file path</comment>
+  </data>
+  <data name="HPCExcelCLI_MultipleSave" xml:space="preserve">
+    <value>ERROR: Multiple save workbook paths specified: '{0}' and '{1}'</value>
+    <comment>{0} and {1} are file paths</comment>
+  </data>
+  <data name="HPCExcelCLI_SaveFailed" xml:space="preserve">
+    <value>Error while trying to save workbook as {0}: {1}</value>
+    <comment>{0} is workbook name, {1} is exception message</comment>
+  </data>
+  <data name="PopupBasher_BlockingWindow" xml:space="preserve">
+    <value>Popup window '{0}' may be blocking job progress. Consider changing your workbook to remove this popup or configuring popup bashing to automatically dismiss it. Window Message: '{1}' Window Class: '{2}</value>
+    <comment>{0} is window title and {1} is message in popup and {2} is window class name</comment>
+  </data>
+  <data name="PopupBasher_EnumWindowsFailed" xml:space="preserve">
+    <value>Failed to enumerate open windows. Unable to monitor and/or bash popups.</value>
+  </data>
+  <data name="PopupBasher_TracePopupFailed" xml:space="preserve">
+    <value>Failed to analyze open windows. Unable to monitor and/or bash popups.</value>
+  </data>
+  <data name="PopupBasher_ExamineWindowFailed" xml:space="preserve">
+    <value>Failed to get properties of open window.</value>
+  </data>
+  <data name="ExcelClient_MacroResourcePostInit" xml:space="preserve">
+    <value>The MacroResource property specifying the resource that implements the HPC macros may only be set prior to initialization.</value>
+  </data>
+  <data name="ExcelService_CantFindPackage" xml:space="preserve">
+    <value>Unable to find package: {0}. Falling back to: {1}</value>
+    <comment>{0} is package name and {1} is workbook path</comment>
+  </data>
+  <data name="ExcelService_CantFindPackageWB" xml:space="preserve">
+    <value>Unable to find workbook in package path: {0}. Falling back to: {1}</value>
+    <comment>{0} and {1} are both workbook paths</comment>
+  </data>
+  <data name="ExcelService_CantFindWbAzure" xml:space="preserve">
+    <value>Unable to find workbook in package {0}, or in workbook path {1}. Make sure the workbook is correctly deployed to Microsoft Azure nodes.</value>
+    <comment>{0} is package name and {1} is workbook path</comment>
+  </data>
+  <data name="ExcelService_NoCcpPackageRoot" xml:space="preserve">
+    <value>Failed to get value of {0} environment variable.</value>
+    <comment>{0} is package root variable</comment>
+  </data>
+  <data name="HPCExcelCLI_CancellingFailed" xml:space="preserve">
+    <value>Unable to shut down cleanly. Ensure that any submitted jobs have been cancelled.</value>
+  </data>
+  <data name="ExcelClient_InvalidBoolParamValue" xml:space="preserve">
+    <value>Invalid value of parameter {0}: {1}. It must be True or False.</value>
+    <comment>{0} is parameter name and {1} is parameter value</comment>
+  </data>
+  <data name="ExcelClient_InvalidDependFiles" xml:space="preserve">
+    <value>Invalid value of parameter dependFiles:
+{0}
+
+The correct format is "localFilePath1=remoteFilePath1;localFilePath2=remoteFilePath2;...", where the remote file paths must be relative paths.</value>
+    <comment>{0} is the invalid value</comment>
+  </data>
+  <data name="ExcelClient_InvalidTransportScheme" xml:space="preserve">
+    <value>Invalid transport scheme: {0}. It must be Http or NetTcp.</value>
+  </data>
+  <data name="ExcelClient_InvalidPriority" xml:space="preserve">
+    <value>Job priority parameter, {0}, is not a valid integer.</value>
+    <comment>{0} is the invalid value</comment>
+  </data>
+  <data name="ExcelClient_FailedLoadAssembly" xml:space="preserve">
+    <value>Failed to load assembly '{0}': {1}.</value>
+    <comment>{0} is he assembly path, {1} is the exception.</comment>
+  </data>
+</root>
