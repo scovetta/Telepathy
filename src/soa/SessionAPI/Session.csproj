@@ -14,7 +14,7 @@
     <WarningsNotAsErrors>0168</WarningsNotAsErrors>
     <DefineConstants>$(DefineConstants);API;TRACE</DefineConstants>
     <NoWarn>0618</NoWarn>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <TargetFrameworkProfile />
     <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
