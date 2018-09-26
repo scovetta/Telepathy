@@ -30,12 +30,7 @@ namespace Microsoft.Hpc.Scheduler.Session
     /// <seealso cref="System.ServiceModel.FaultException{T}" />
     [DataContract(Namespace = "http://hpc.microsoft.com/session/")]
     [Serializable]
-#if API
-    public
-#elif BROKER
-    internal 
-#endif
-    sealed class RetryOperationError
+    public sealed class RetryOperationError
     {
         /// <summary>
         /// Stores the reason

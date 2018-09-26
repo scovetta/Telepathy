@@ -121,7 +121,6 @@
     <TlbExport Include="$(OutDir)$(TargetFileName)" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <ProjectReference Include="..\..\..\soa\SessionAPI\Session.csproj">
       <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>
       <Name>Session</Name>

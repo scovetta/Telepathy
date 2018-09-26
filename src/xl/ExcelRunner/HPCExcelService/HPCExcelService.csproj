@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+  <PropertyGroup>
+    <AssemblyName>Microsoft.Hpc.Excel.ExcelService</AssemblyName>
+    <ProjectGuid>{50D12D63-1546-4D8A-B70C-7AD167114B56}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Hpc.Excel</RootNamespace>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <AssemblyClsCompliant>true</AssemblyClsCompliant>
+    <AssemblyComVisible>false</AssemblyComVisible>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.Office.Interop.Excel">
+    </Reference>
+    <Reference Include="OFFICE">
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ExcelServiceError.cs" />
+    <Compile Include="IHPCExcelService.cs" />
+    <Compile Include="HPCExcelService.cs" />
+    <Compile Include="AzureUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="Microsoft.Hpc.Excel.ExcelService_1.0.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\soa\SessionAPI\Session.csproj">
+      <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>
+      <Name>Session</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Internal\Internal.csproj">
+      <Project>{7916d3c4-35af-42f7-b435-6e24842211b2}</Project>
+      <Name>Internal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExcelDriver\ExcelDriver.csproj">
+      <Project>{6939e1e5-0e52-4bda-8af9-cf6ad8e67f2d}</Project>
+      <Name>ExcelDriver</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ProjectExtensions />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
