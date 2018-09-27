@@ -64,12 +64,8 @@
     <Compile Include="..\Common\TraceEventRawReaders.cs">
       <Link>TraceEventRawReaders.cs</Link>
     </Compile>
+    <Compile Include="RuntimeEvents.cs" />
     <Compile Include="_generated_manifest_RuntimeEvents.cs" />
-    <MessageCompile Include="RuntimeEvents.man">
-      <Namespace>Microsoft.Hpc.RuntimeTrace</Namespace>
-      <MacroPrefix>Log</MacroPrefix>
-      <SubType>Designer</SubType>
-    </MessageCompile>
     <None Include="RuntimeEvents.man">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
