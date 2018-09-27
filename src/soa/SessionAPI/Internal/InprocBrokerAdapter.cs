@@ -33,7 +33,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Stores the ClusterModel assembly full name
         /// </summary>
-        private const string ClusterModelFullName = "Microsoft.Ccp.ClusterModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null";
+        // private const string ClusterModelFullName = "Microsoft.Ccp.ClusterModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null";
 
         /// <summary>
         /// Stores BrokerBase assembly full name
@@ -43,7 +43,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Stores MSMQInterop assembly full name
         /// </summary>
-        private const string MSMQInteropFullName = "MSMQInterop, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null";
+        // private const string MSMQInteropFullName = "MSMQInterop, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null";
 
         /// <summary>
         /// Stores broker core service lib full name
@@ -68,7 +68,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Stores RESTServiceModel assembly full name
         /// </summary>
-        private const string RESTServiceModelLibFullName = "Microsoft.Hpc.RESTServiceModel, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null";
+        private const string RESTServiceModelLibFullName = "Microsoft.Hpc.SvcHostRestServer, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null";
 
         /// <summary>
         /// Stores StrategyConfig assembly full name
@@ -184,11 +184,11 @@ namespace Microsoft.Hpc.Scheduler.Session
                 binPath = Path.Combine(homePath, "Bin");
             }
 
-            this.clusterModelFullPath = BuildPath(binPath, currentPath, "Microsoft.Ccp.ClusterModel.dll");
+            // this.clusterModelFullPath = BuildPath(binPath, currentPath, "Microsoft.Ccp.ClusterModel.dll");
             this.brokerBaseFullPath = BuildPath(binPath, currentPath, "BrokerBase.dll");
-            this.MSMQInteropFullPath = BuildPath(binPath, currentPath, "MSMQInterop.dll");
+            // this.MSMQInteropFullPath = BuildPath(binPath, currentPath, "MSMQInterop.dll");
             this.brokerCoreServiceLibPath = BuildPath(binPath, currentPath, "Microsoft.Hpc.SvcBroker.dll");
-            this.RESTServiceModelLibPath = BuildPath(binPath, currentPath, "Microsoft.Hpc.RESTServiceModel.dll");
+            this.RESTServiceModelLibPath = BuildPath(binPath, currentPath, "Microsoft.Hpc.SvcHostRestServer.dll");
             this.soaCommonUtilityLibPath = BuildPath(binPath, currentPath, "Microsoft.Hpc.Scheduler.Session.Utility.dll");
             this.SoaAmbientConfigLibPath = BuildPath(binPath, currentPath, "SoaAmbientConfig.dll");
         }
@@ -722,6 +722,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             {
                 return Assembly.LoadFile(this.brokerBaseFullPath);
             }
+            /*
             else if (args.Name == ClusterModelFullName)
             {
                 return Assembly.LoadFile(this.clusterModelFullPath);
@@ -730,6 +731,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             {
                 return Assembly.LoadFile(this.MSMQInteropFullPath);
             }
+            */
             else if (args.Name == BrokerCoreServiceLibFullName)
             {
                 return Assembly.LoadFile(this.brokerCoreServiceLibPath);
