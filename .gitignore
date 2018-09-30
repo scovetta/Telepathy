@@ -344,3 +344,5 @@ ASALocalRun/
 
 *.err
 *.wrn
+
+tools/
