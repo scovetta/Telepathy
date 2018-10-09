@@ -6,15 +6,27 @@ var configuration = Argument("Configuration", "Debug");
 Task("Restore")
 .Does(() =>
 {
-	NuGetRestore(Paths.SolutionFile);
+	NuGetRestore(Paths.SolutionFiles);
 });
 
 Task("Build")
 .IsDependentOn("Restore")
 .Does(() =>
 {
-	DotNetBuild(Paths.SolutionFile,
-	settings => settings.SetConfiguration(configuration).WithTarget("Build").WithProperty("AllowUnsafeBlocks", "true"));
+	foreach (var path in Paths.SolutionFiles)
+	{
+		DotNetBuild(path, settings => settings.SetConfiguration(configuration).WithTarget("Build").WithProperty("AllowUnsafeBlocks", "true"));
+	}	
+});
+
+Task("ReBuild")
+.IsDependentOn("Restore")
+.Does(() =>
+{
+	foreach (var path in Paths.SolutionFiles)
+	{
+		DotNetBuild(path, settings => settings.SetConfiguration(configuration).WithTarget("ReBuild").WithProperty("AllowUnsafeBlocks", "true"));
+	}	
 });
 
 RunTarget(target);
