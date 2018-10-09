@@ -6,7 +6,7 @@ var configuration = Argument("Configuration", "Debug");
 Task("Restore")
 .Does(() =>
 {
-	NuGetRestore(Paths.SolutionFiles);
+	NuGetRestore(Paths.SolutionFiles, new NuGetRestoreSettings { ArgumentCustomization = args => args.Append("-recursive") });
 });
 
 Task("Build")
