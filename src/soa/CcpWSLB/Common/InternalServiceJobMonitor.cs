@@ -1220,7 +1220,13 @@ namespace Microsoft.Hpc.ServiceBroker
                 if (this.NeedAdjustAllocation != null)
                 {
                     this.NeedAdjustAllocation.Set();
-                    this.allocationAdjustThread.Join();
+                    try
+                    {
+                        this.allocationAdjustThread.Join();
+                    }
+                    catch (ThreadStateException)
+                    {
+                    }
 
                     this.NeedAdjustAllocation.Dispose();
                     this.NeedAdjustAllocation = null;
