@@ -15,7 +15,7 @@ Task("Build")
 {
 	foreach (var path in Paths.SolutionFiles)
 	{
-		DotNetBuild(path, settings => settings.SetConfiguration(configuration).WithTarget("Build").WithProperty("AllowUnsafeBlocks", "true"));
+		MSBuild(path, settings => settings.SetConfiguration(configuration).WithTarget("Build"));
 	}	
 });
 
@@ -25,7 +25,7 @@ Task("ReBuild")
 {
 	foreach (var path in Paths.SolutionFiles)
 	{
-		DotNetBuild(path, settings => settings.SetConfiguration(configuration).WithTarget("ReBuild").WithProperty("AllowUnsafeBlocks", "true"));
+		MSBuild(path, settings => settings.SetConfiguration(configuration).WithTarget("ReBuild"));
 	}	
 });
 
