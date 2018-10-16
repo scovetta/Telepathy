@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+  <PropertyGroup>
+    <ProjectGuid>{6D59B36E-FB92-40B0-9CB8-9230A6ADFFC1}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim</RootNamespace>
+    <AssemblyName>HpcBrokerWorker</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <AssemblyClsCompliant>false</AssemblyClsCompliant>
+    <DefineTrace>true</DefineTrace>
+    <Localizable>true</Localizable>
+    <AssemblyDescription>HPC Broker Worker Service</AssemblyDescription>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Hpc.Trace">
+      <HintPath>..\..\..\ref\Microsoft.Hpc.Trace.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Common\BindingHelper.cs">
+      <Link>BindingHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Constant.cs">
+      <Link>Constant.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ParamCheckUtility.cs">
+      <Link>ParamCheckUtility.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\SoaHelper.cs">
+      <Link>SoaHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\AzureNaming.cs">
+      <Link>AzureNaming.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ThrowHelper.cs">
+      <Link>ThrowHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\SessionAPI\Interface\IBrokerManagementService.cs">
+      <Link>IBrokerManagementService.cs</Link>
+    </Compile>
+    <Compile Include="BrokerManagementService.cs" />
+    <Compile Include="HpcBrokerWorkerAuthorizationManager.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\HpcCommon\HpcCommon.csproj">
+      <Project>{2c3936c7-4850-41d7-9497-9040be302328}</Project>
+      <Name>HpcCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\StoreAPI\Property\Properties.csproj">
+      <Project>{61844849-3d26-4003-8146-5ae86985db3a}</Project>
+      <Name>Properties</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\StoreAPI\Scheduler\Scheduler.csproj">
+      <Project>{78e5e61b-dd12-475a-845b-7da3f6b0f987}</Project>
+      <Name>Scheduler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\base\BrokerBase.csproj">
+      <Project>{3f01d480-4cde-4f46-99ea-95ceda05063e}</Project>
+      <Name>BrokerBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CcpWSLB\CcpWSLB.csproj">
+      <Project>{2629dc89-f12c-489d-8cf6-e0a6046b6863}</Project>
+      <Name>CcpWSLB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SessionAPI\Session.csproj">
+      <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>
+      <Name>Session</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
