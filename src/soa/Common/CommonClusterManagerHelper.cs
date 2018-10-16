@@ -6,6 +6,8 @@
 //      Helper class for operation to cluster manager
 // </summary>
 //------------------------------------------------------------------------------
+
+#if HPCPACK
 namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
 {
     using System;
@@ -212,3 +214,4 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
         }
     }
 }
+#endif

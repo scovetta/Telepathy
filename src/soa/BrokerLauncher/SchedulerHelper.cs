@@ -15,7 +15,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Fabric;
     using System.Threading;
     using System.Threading.Tasks;
 

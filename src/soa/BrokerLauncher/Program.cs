@@ -16,7 +16,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
     using Microsoft.Hpc.Scheduler.Session.Internal.Diagnostics;
     using Microsoft.Hpc.ServiceBroker;
-    using System.Fabric;
+
     /// <summary>
     /// Main entry point
     /// </summary>

@@ -20,7 +20,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using Microsoft.WindowsAzure.Storage.RetryPolicies;
     using System;
     using System.Collections.Generic;
-    using System.Fabric;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Threading;

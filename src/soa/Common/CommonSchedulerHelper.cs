@@ -11,7 +11,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
 {
     using System;
     using System.Diagnostics;
-    using System.Fabric;
     using System.Security.Principal;
     using System.ServiceModel;
     using System.Threading;

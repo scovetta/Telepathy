@@ -12,7 +12,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler.Properties;
     using Microsoft.Hpc.Scheduler.Session.Common;
-    using Microsoft.Hpc.Scheduler.Session.Diagnostics;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
     using Microsoft.Hpc.Scheduler.Session.Internal.Diagnostics;
@@ -20,7 +19,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using Microsoft.Hpc.ServiceBroker.Common;
     using System;
     using System.Diagnostics;
-    using System.Fabric;
     using System.Net;
     using System.Security.Principal;
     using System.ServiceModel;
@@ -121,10 +119,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
         /// </summary>
         private ServiceHost diagServiceHost;
 
+#if HPCPACK
         /// <summary>
         /// Stores the soa diag cleanup service.
         /// </summary>
         private DiagCleanupService cleanupService;
+#endif
 
         /// <summary>
         /// Store the NodeMappingCache host
@@ -406,6 +406,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                     }
 
                     SchedulerHelper helper = new SchedulerHelper(this.context);
+#if HPCPACK
                     ThreadPool.QueueUserWorkItem(
                         (object state) =>
                             {
@@ -450,6 +451,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                                     TraceHelper.TraceEvent(TraceEventType.Error, "Failed to open soa diag service after all retry: {0}", e);
                                 }
                             });
+#endif
 
                     ThreadPool.QueueUserWorkItem((object state) =>
                     {
@@ -514,12 +516,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 this.soaDiagAuthenticator.Close();
                 this.soaDiagAuthenticator = null;
             }
-
+#if HPCPACK
             if (this.cleanupService != null)
             {
                 this.cleanupService.Close();
                 this.cleanupService = null;
             }
+#endif
         }
 
         /// <summary>

@@ -19,7 +19,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using System.Fabric;
 
     using Microsoft.Hpc.AADAuthUtil;
 

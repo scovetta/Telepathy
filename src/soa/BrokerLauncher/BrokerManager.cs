@@ -8,21 +8,10 @@
 //------------------------------------------------------------------------------
 namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 {
-    using Microsoft.ComputeCluster.Management.ClusterModel;
-    using Microsoft.Hpc.RuntimeTrace;
-    using Microsoft.Hpc.Scheduler.Properties;
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Configuration;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using Microsoft.Hpc.ServiceBroker;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ;
-    using Microsoft.Hpc.ServiceBroker.Common;
     using System;
     using System.Collections.Generic;
     using System.Configuration;
     using System.Diagnostics;
-    using System.Fabric;
     using System.IO;
     using System.Security.Principal;
     using System.ServiceModel;
@@ -30,6 +19,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Rest;
+    using Microsoft.Hpc.RuntimeTrace;
+    using Microsoft.Hpc.Scheduler.Properties;
+    using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Hpc.Scheduler.Session.Configuration;
+    using Microsoft.Hpc.Scheduler.Session.Interface;
+    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
+    using Microsoft.Hpc.ServiceBroker;
+    using Microsoft.Hpc.ServiceBroker.Common;
 
     /// <summary>
     /// Manager for all broker app domains
@@ -160,12 +157,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             this.brokerDic = new Dictionary<int, BrokerInfo>();
 
             this.staleSessionCleanupTimer = new Timer(this.CleanStaleSessionData, null, Timeout.Infinite, Timeout.Infinite);
-
+#if HPCPACK
             if (!SoaHelper.IsOnAzure())
             {
                 // TODO: on azure, about the MSMQ. Don't use the MSMQ in the Azure cluster.
                 this.updateQueueLengthTimer = new Timer(this.CallbackToUpdateMSMQLength, null, Timeout.Infinite, Timeout.Infinite);
             }
+#endif
 
             this.pool = new BrokerProcessPool();
 
@@ -647,8 +645,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 
             //TODO: SF: make sure the clusterInfo.NetworkTopology string can be converted to ClusterTopology enum
             //ClusterTopology topo = ClusterTopology.Public;
-            ClusterTopology topo;
-            Enum.TryParse<ClusterTopology>(clusterInfo.NetworkTopology, out topo);
+            // ClusterTopology topo;
+            // Enum.TryParse<ClusterTopology>(clusterInfo.NetworkTopology, out topo);
 
             //get soa configurations
             Dictionary<string, string> soaConfig = new Dictionary<string, string>();
@@ -676,7 +674,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             brokerInfo.PurgedProcessed = recoverInfo.PurgedProcessed;
             brokerInfo.PurgedTotal = recoverInfo.PurgedTotal;
             brokerInfo.ConfigurationFile = serviceRegistrationPath;
-            brokerInfo.NetworkTopology = (int)topo;
+            brokerInfo.NetworkTopology = 0; // ClusterTopology.Public
             brokerInfo.ClusterName = clusterInfo.ClusterName;
             brokerInfo.ClusterId = clusterInfo.ClusterId;
             brokerInfo.AzureStorageConnectionString = clusterInfo.AzureStorageConnectionString;
@@ -1155,6 +1153,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             }
         }
 
+#if HPCPACK
         /// <summary>
         /// Callback to update MSMQ length counter
         /// </summary>
@@ -1173,6 +1172,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 TraceHelper.TraceEvent(TraceEventType.Error, "[BrokerManager] Failed update MSMQ length: {0}", e);
             }
         }
+#endif
 
         /// <summary>
         /// Returns a value indicating whether the caller is headnode's machine account
