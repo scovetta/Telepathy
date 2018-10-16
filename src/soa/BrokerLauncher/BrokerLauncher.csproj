@@ -56,9 +56,6 @@
     <Reference Include="Microsoft.WindowsAzure.ServiceRuntime">
       <HintPath>..\..\packages\Azure.Corext.3.0.0\ref\Microsoft.WindowsAzure.ServiceRuntime.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Storage">
-      <HintPath>..\..\packages\WindowsAzure.Storage.8.4.0\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Configuration.Install" />
@@ -230,14 +227,6 @@
       <Project>{2c3936c7-4850-41d7-9497-9040be302328}</Project>
       <Name>HpcCommon</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Management\HostsFileDistribution\HostsFileDistribution.MSBuild.csproj">
-      <Project>{d887d5ed-5128-4376-947c-e8ffdc5c0bae}</Project>
-      <Name>HostsFileDistribution.MSBuild</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Management\ManagementAPI\ManagementAPI.MSBuild.csproj">
-      <Project>{52a16bd4-2466-4d43-a5cf-f845d0617589}</Project>
-      <Name>ManagementAPI.MSBuild</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\StoreAPI\Property\Properties.csproj">
       <Project>{61844849-3d26-4003-8146-5ae86985db3a}</Project>
       <Name>Properties</Name>
@@ -268,7 +257,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SR.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
