@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="SessionLauncher_FailToCreateBrokerManager" xml:space="preserve">
+    <value>Failed to create broker nodes manager.</value>
+  </data>
+  <data name="DataService_UnauthorizedUser" xml:space="preserve">
+    <value>Unauthorized user: {0}</value>
+  </data>
+  <data name="SessionLauncher_NeedUserNameAndPassword" xml:space="preserve">
+    <value>Username and password is necessary.</value>
+  </data>
+  <data name="SessionLauncher_SchedulerException" xml:space="preserve">
+    <value>The scheduler raises exception: {0}.</value>
+  </data>
+  <data name="ResourceGroupInfo_CannotGetNetworkName" xml:space="preserve">
+    <value>Cannot get network name for resource group - {0}.</value>
+  </data>
+  <data name="SessionLauncher_FailToGetClusterProperty" xml:space="preserve">
+    <value>Failed to get cluster property: {0}.</value>
+  </data>
+  <data name="Azure_NotSupportDurableSession" xml:space="preserve">
+    <value>DurableSession is not supported when the scheduler is in Azure.</value>
+  </data>
+  <data name="ResourceGroupInfo_CannotOpenResource" xml:space="preserve">
+    <value>Cannot open resource - {0}.</value>
+  </data>
+  <data name="SessionLauncher_ValidateJobFailed_NotServiceJob" xml:space="preserve">
+    <value>Attach session failed: job {0} is not a service job.</value>
+  </data>
+  <data name="ResourceGroupInfo_CannotEnumerateResourceGroup" xml:space="preserve">
+    <value>Cannot enumerate resource group.</value>
+  </data>
+  <data name="SessionLauncher_ValidateJobFailed_NotDurableSession" xml:space="preserve">
+    <value>Attach session failed: session {0} is an interactive session. It can only be attached to when its service job is queued or running.</value>
+  </data>
+  <data name="SessionLauncher_EndpointNotSupported" xml:space="preserve">
+    <value>EndpointPrefix: {0}, endpoint prefix is not supported, please pass in "net.tcp://" or "https://".</value>
+  </data>
+  <data name="SessionLauncher_FailedToGetBrokerNodeSSDL" xml:space="preserve">
+    <value>Failed to get SSDL for broker node {0}. Inner exception: {1}</value>
+  </data>
+  <data name="SessionLauncher_ValidateJobFailed_AlreadyFinished" xml:space="preserve">
+    <value>Attach session failed: session {0} cannot be attached to because the session has already finished.</value>
+  </data>
+  <data name="DiagService_InvalidTaskId" xml:space="preserve">
+    <value>The specified task id {0} is not valid. Check your task id and try again.</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>Unknown error occured: {0}.</value>
+  </data>
+  <data name="SessionLauncher_FailToConnectToScheduler" xml:space="preserve">
+    <value>Failed to connect to the scheduler for job monitor.</value>
+  </data>
+  <data name="SessionLauncher_FailToOpenJob" xml:space="preserve">
+    <value>Failed to open job: {0}.</value>
+  </data>
+  <data name="SessionLauncher_FailToEnumerateServicVersions" xml:space="preserve">
+    <value>Failed to enumerate service versions</value>
+  </data>
+  <data name="SessionLauncher_NoConnectionToScheduler" xml:space="preserve">
+    <value>Session launcher does not connect to the scheduler.</value>
+  </data>
+  <data name="Azure_NotSupportInprocessBroker" xml:space="preserve">
+    <value>Inprocess broker is not supported when the scheduler is in Azure.</value>
+  </data>
+  <data name="SessionLauncher_NoServiceRegistrationDirs" xml:space="preserve">
+    <value>No service registration directories are specified in CCP_SERVICEREGISTRATION_PATH</value>
+  </data>
+  <data name="SessionLauncher_ValidateJobFailed_JobCanceled" xml:space="preserve">
+    <value>Attach session failed: session {0} cannot be attached to when the service job is canceled.</value>
+  </data>
+  <data name="SessionLauncher_ClientServerVersionMismatch" xml:space="preserve">
+    <value>The client version {0} does not match the server version {1}. Please consider to update the client.</value>
+  </data>
+  <data name="BrokerNodesManager_CannotEnumerateInformation" xml:space="preserve">
+    <value>Cannot enumerate cluster information.</value>
+  </data>
+  <data name="SessionLauncher_ArgumentMustBeAlphaNumeric" xml:space="preserve">
+    <value>Argument must be alpha, numeric or punctuation</value>
+  </data>
+  <data name="SessionLauncher_FailToGetJobProperty" xml:space="preserve">
+    <value>Failed to get job property: {0}.</value>
+  </data>
+  <data name="SessionLauncher_CannotLogon" xml:space="preserve">
+    <value>Can not logon user. Please check username/password.</value>
+  </data>
+  <data name="SessionLauncher_ServiceNotFound" xml:space="preserve">
+    <value>Service not found. Please make sure service {0} is deployed on the cluster.</value>
+  </data>
+  <data name="UnexpectedReturnValue" xml:space="preserve">
+    <value>Unexpected return value from ClusterEnum - {0}.</value>
+  </data>
+  <data name="SessionLauncher_CreateJobTasksFailure" xml:space="preserve">
+    <value>Creating task failed, Exception: {0}.</value>
+  </data>
+  <data name="SessionLauncher_FailToSubmitJob" xml:space="preserve">
+    <value>Failed to submit job: {0}.</value>
+  </data>
+  <data name="SessionLauncher_ConfigFileInvalid" xml:space="preserve">
+    <value>The config file is invalid: {0}.</value>
+  </data>
+  <data name="ResourceGroupInfo_CannotOpenResourceGroup" xml:space="preserve">
+    <value>Cannot open resource group - {0}.</value>
+  </data>
+  <data name="SchedulerDelegation_UnknowPropertyName" xml:space="preserve">
+    <value>Unknow property name.</value>
+  </data>
+  <data name="SessionLauncher_ServiceVersionNotFound" xml:space="preserve">
+    <value>Service version not found. Please make sure service {0}_{1} is deployed on the cluster.</value>
+  </data>
+  <data name="CannotConnectToScheduler" xml:space="preserve">
+    <value>Can't connect to the scheduler.</value>
+  </data>
+  <data name="SessionLauncher_FailToCreateJob" xml:space="preserve">
+    <value>Failed to create job: {0}.</value>
+  </data>
+</root>

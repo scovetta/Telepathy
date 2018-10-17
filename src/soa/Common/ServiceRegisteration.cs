@@ -41,6 +41,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             this.serviceRegistrationStore = store;
         }
 
+        public ServiceRegistrationRepo(string centrialPathList) : this(centrialPathList, null)
+        {
+        }
+
         /// <summary>
         /// Returns the service registration directories
         /// </summary>
@@ -101,14 +105,16 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                             Trace.TraceInformation($"[{nameof(ServiceRegistrationRepo)}] {nameof(GetServiceRegistrationPath)}: Get from reliable registry");
                             string path;
                             if (this.serviceRegistrationStore != null)
-                            { 
+                            {
                                 path = this.serviceRegistrationStore.ExportToTempFileAsync(filename, null).GetAwaiter()
                                     .GetResult();
                             }
                             else
                             {
+                                Trace.TraceWarning($"[{nameof(ServiceRegistrationRepo)}] {nameof(GetServiceRegistrationPath)}: Trying to get service registration from reliable registry while no ServiceRegistrationStore instance available");
                                 continue;
                             }
+
                             if (!string.IsNullOrEmpty(path))
                             {
                                 Trace.TraceInformation($"[{nameof(ServiceRegistrationRepo)}] {nameof(GetServiceRegistrationPath)}: Found file {path}");
