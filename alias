@@ -1,1 +1,2 @@
+ls=dir
 b=msbuild $* /p:Configuration=Debug
