@@ -15,7 +15,7 @@ Task("Build")
 {
 	foreach (var path in Paths.SolutionFiles)
 	{
-		MSBuild(path, settings => settings.SetConfiguration(configuration).WithTarget("Build"));
+		MSBuild(path, settings => settings.SetConfiguration(configuration).WithTarget("Build").SetPlatformTarget(PlatformTarget.MSIL));
 	}	
 });
 
@@ -25,7 +25,7 @@ Task("ReBuild")
 {
 	foreach (var path in Paths.SolutionFiles)
 	{
-		MSBuild(path, settings => settings.SetConfiguration(configuration).WithTarget("ReBuild"));
+		MSBuild(path, settings => settings.SetConfiguration(configuration).WithTarget("ReBuild").SetPlatformTarget(PlatformTarget.MSIL));
 	}	
 });
 
