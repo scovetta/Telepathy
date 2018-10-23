@@ -42,7 +42,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim
         private static int Main(string[] args)
         {
             //SingletonRegistry.Initialize(SingletonRegistry.RegistryMode.WindowsNonHA);
+#if HPCPACK
             WinServiceHpcContextModule.GetOrAddWinServiceHpcContextFromEnv().GetAADClientAppIdAsync().FireAndForget(); // cache AAD AppId now.
+#endif
             // improve http performance for Azure storage queue traffic
             ServicePointManager.DefaultConnectionLimit = 1000;
             ServicePointManager.Expect100Continue = false;

@@ -92,11 +92,13 @@ namespace Microsoft.Hpc.ServiceBroker
             {
                 TaskInfo ti = tl[i].Result;
                 if (ti != null)
+                {
                     taskInfoList.Add(ti);
+                }
             }
 
             Debug.Assert(taskInfoList.Count != 0, "No available endpoint.");
-            await ((ISchedulerNotify)this).TaskStateChanged(taskInfoList);
+            await((ISchedulerNotify)this).TaskStateChanged(taskInfoList);
         }
 
         /// <summary>

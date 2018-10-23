@@ -10,6 +10,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 {
     using System;
     using System.Diagnostics;
+    using System.Linq;
     using System.ServiceModel;
     using Microsoft.Hpc.Scheduler.Session.Configuration;
     using Microsoft.Hpc.Scheduler.Session.Interface;
@@ -112,6 +113,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             this.auth = auth;
             this.customBroker = customBroker;
             this.pool = pool;
+
+            if (BrokerLauncherEnvironment.Standalone)
+            {
+                this.sessionStartInfo.IpAddress = BrokerLauncherSettings.Default.SvcHostList.Cast<string>().ToArray();
+                this.sessionStartInfo.RegPath = BrokerLauncherSettings.Default.CCP_SERVICEREGISTRATION_PATH;
+            }
         }
 
         /// <summary>
