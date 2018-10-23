@@ -405,7 +405,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                         return;
                     }
 
-                    SchedulerHelper helper = new SchedulerHelper(this.context);
+                    ISchedulerHelper helper = SchedulerHelperFactory.GetSchedulerHelper(this.context);
 #if HPCPACK
                     ThreadPool.QueueUserWorkItem(
                         (object state) =>

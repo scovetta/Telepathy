@@ -113,9 +113,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             // Handle invalid input parameters
             try
             {
-                ParamCheckUtility.ThrowIfOutofRange(sessionId <= 0, "sessionId");
+                ParamCheckUtility.ThrowIfOutofRange(sessionId < -1, "sessionId");
                 ParamCheckUtility.ThrowIfNull(info, "info");
-                this.CheckAccess(sessionId);
+                if (!BrokerLauncherEnvironment.Standalone)
+                {
+                    this.CheckAccess(sessionId);
+                }
 
                 TraceHelper.TraceEvent(sessionId, System.Diagnostics.TraceEventType.Information, "[BrokerLauncher] Create: SessionId = {0}", sessionId);
                 //TODO: make it async
@@ -241,7 +244,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         {
             try
             {
-                ParamCheckUtility.ThrowIfOutofRange(sessionId <= 0, "sessionId");
+                ParamCheckUtility.ThrowIfOutofRange(sessionId < -1, "sessionId");
 
                 bool? isAadOrLocalUser = this.BrokerManager.IfSeesionCreatedByAadOrLocalUser(sessionId);
                 if (!isAadOrLocalUser.HasValue)
@@ -376,6 +379,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// </summary>
         private void CheckAccess(int sessionId)
         {
+            if (BrokerLauncherEnvironment.Standalone)
+            {
+                return;
+            }
+
             if (Thread.CurrentPrincipal.IsHpcAadPrincipal(this.context))
             {
                 return;

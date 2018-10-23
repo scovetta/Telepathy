@@ -613,18 +613,19 @@ namespace Microsoft.Hpc.Scheduler.Session
         }
 
 
-        //TODO
+        // TODO: rename
         public static Session CreateBrkSession(SessionStartInfo startInfo)
         {
             return CreateBrkSessionAsync(startInfo).GetAwaiter().GetResult();
         }
 
+        // TODO: rename
         public static async Task<Session> CreateBrkSessionAsync(SessionStartInfo startInfo)
         {
             IBrokerFactory brokerFactory = new V3BrokerFactory(false);
             DateTime targetTimeout = DateTime.Now.AddMilliseconds(Constant.DefaultCreateSessionTimeout);
             //in HPC sessionId cannot be negative (out of range)   
-            return new Session((V3Session)await brokerFactory.CreateBroker(startInfo, startInfo.DummySessionId, targetTimeout, startInfo.IpAddress, null).ConfigureAwait(false));
+            return new Session((V3Session)await brokerFactory.CreateBroker(startInfo, startInfo.DummySessionId, targetTimeout, startInfo.BrokerLauncherEprs, null).ConfigureAwait(false));
         }
 
 
@@ -633,11 +634,13 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="startInfo"></param>
         /// <returns></returns>
+        // TODO: rename
         public static Session CreateIPSession(SessionStartInfo startInfo)
         {
             return CreateIPSessionAsync(startInfo).GetAwaiter().GetResult();
         }
 
+        // TODO: rename
         public static async Task<Session> CreateIPSessionAsync(SessionStartInfo startInfo)
         {
             InprocessBrokerFactory brokerFactory = new InprocessBrokerFactory(startInfo.Headnode, false);

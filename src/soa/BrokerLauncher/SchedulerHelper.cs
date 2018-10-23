@@ -21,7 +21,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     /// <summary>
     /// Helper class for operation to scheduler
     /// </summary>
-    internal class SchedulerHelper : IDisposable
+    internal class SchedulerHelper : IDisposable, ISchedulerHelper
     {
         /// <summary>
         /// The client for the scheduler proxy in HN
@@ -81,6 +81,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         {
             this.Dispose(false);
         }
+
+        public bool Enable => true;
 
         /// <summary>
         /// Gets the head node
@@ -229,7 +231,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// </summary>
         /// <param name="jobid">job id</param>
         /// <returns>requeue count</returns>
-        public async Task<int> GetJobRequeueCount(int jobid)
+        private async Task<int> GetJobRequeueCount(int jobid)
         {
             RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
             return await RetryHelper<int>.InvokeOperationAsync(

@@ -74,12 +74,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <summary>
         /// The scheduler helper
         /// </summary>
-        private SchedulerHelper helper;
+        private ISchedulerHelper helper;
 
         /// <summary>
         /// Initializes a new instance of the AzureStorageCleaner class.
         /// </summary>
-        public AzureStorageCleaner(SchedulerHelper helper)
+        public AzureStorageCleaner(ISchedulerHelper helper)
         {
             this.helper = helper;
         }
@@ -89,7 +89,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// </summary>
         public void Start()
         {
-            this.timer = new Timer(this.TimerCallback, null, TimeSpan.Zero, TimerPeriod);
+            if (this.helper.Enable)
+            {
+                this.timer = new Timer(this.TimerCallback, null, TimeSpan.Zero, TimerPeriod);
+            }
         }
 
         /// <summary>

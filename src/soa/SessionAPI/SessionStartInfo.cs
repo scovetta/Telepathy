@@ -580,7 +580,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// store a dummy session Id by default
         /// </summary>
-        private int dummySessionId = -1;
+        private readonly int dummySessionId = -1;
 
         public int DummySessionId
         {
@@ -1253,7 +1253,10 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// Stores registartion path in session info and ip address list
         /// </summary>
         public string RegPath { get; set; }
+
         public string[] IpAddress { get; set; }
+
+        public string[] BrokerLauncherEprs { get; set; }
 
         /// <summary>
         /// Initialize a new session start info for No Hpc work
@@ -1286,8 +1289,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="serviceName"></param>
         /// <param name="regPath"></param>
         /// <param name="svcVersion"></param>
-        /// <param name="eprs"></param>
-        public SessionStartInfo(string headNode, string serviceName, string regPath, Version svcVersion, params string[] eprs) : base(headNode)
+        /// <param name="brokerLauncherEprs"></param>
+        public SessionStartInfo(string headNode, string serviceName, string regPath, Version svcVersion, params string[] brokerLauncherEprs) : base(headNode)
         {
             if (string.IsNullOrEmpty(serviceName))
             {
@@ -1299,16 +1302,17 @@ namespace Microsoft.Hpc.Scheduler.Session
                 throw new ArgumentException(SR.ServiceNameCantBeNull, "serviceName");
             }
 
-            //TODO prefix code and affix code
+            // TODO prefix code and affix code
             string prefix = "net.tcp://";
             int port = 9087;
-            string affix = ":"+ port + "/BrokerLauncher";
+            string affix = ":" + port + "/BrokerLauncher";
             List<string> strlist = new List<string>();
-            foreach (string epr in eprs)
-            { 
+            foreach (string epr in brokerLauncherEprs)
+            {
                 strlist.Add(prefix + epr + affix);
             }
-            this.IpAddress = strlist.ToArray();
+
+            this.BrokerLauncherEprs = strlist.ToArray();
             this.RegPath = regPath;
             this.Init(headnode, serviceName, svcVersion);
         }

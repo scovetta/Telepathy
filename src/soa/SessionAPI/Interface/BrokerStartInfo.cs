@@ -352,5 +352,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         [DataMember]
         public string AadUserName { get; set; }
+
+        [DataMember]
+        public bool Standalone { get; set; }
     }
 }

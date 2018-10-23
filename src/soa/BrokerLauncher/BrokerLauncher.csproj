@@ -11,7 +11,7 @@
     <DefineConstants>BrokerLauncher</DefineConstants>
     <Localizable>true</Localizable>
     <TrackFileAccess>false</TrackFileAccess>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <OutputPath>..\BrokerOutput\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,8 +32,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
+    <DefineConstants>$(DefineConstants);TRACE;DEBUG</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -43,7 +42,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -168,7 +166,11 @@
     <Compile Include="..\SessionAPI\Internal\SessionLauncherClientBase.cs">
       <Link>SessionLauncherClientBase.cs</Link>
     </Compile>
+    <Compile Include="BrokerLauncherEnvironment.cs" />
+    <Compile Include="DummySchedulerHelper.cs" />
+    <Compile Include="ISchedulerHelper.cs" />
     <Compile Include="NetTcpPortSharingService.cs" />
+    <Compile Include="SchedulerHelperFactory.cs" />
     <Compile Include="SessionLauncherClient.cs" />
     <Compile Include="AzureStorageCleaner.cs" />
     <Compile Include="BrokerInfo.cs" />

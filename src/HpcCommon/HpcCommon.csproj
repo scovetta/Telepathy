@@ -96,6 +96,8 @@
     <Compile Include="HpcContext\HpcServerContextType.cs" />
     <Compile Include="HpcContext\IFabricContext.cs" />
     <Compile Include="HpcContext\IHpcContext.cs" />
+    <Compile Include="HpcContext\SoaContext\SoaContext.cs" />
+    <Compile Include="HpcContext\SoaContext\SoaFabricContext.cs" />
     <Compile Include="HpcNodeRoleAbbreviation.cs" />
     <Compile Include="InAppDomainSerializationBinder.cs" />
     <Compile Include="IServiceRegistrationStore.cs" />

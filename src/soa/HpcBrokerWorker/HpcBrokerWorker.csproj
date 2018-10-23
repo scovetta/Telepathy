@@ -3,7 +3,7 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
   <PropertyGroup>
     <ProjectGuid>{6D59B36E-FB92-40B0-9CB8-9230A6ADFFC1}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim</RootNamespace>
     <AssemblyName>HpcBrokerWorker</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
@@ -11,7 +11,7 @@
     <DefineTrace>true</DefineTrace>
     <Localizable>true</Localizable>
     <AssemblyDescription>HPC Broker Worker Service</AssemblyDescription>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <OutputPath>..\BrokerOutput\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,7 +32,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -43,7 +42,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -51,6 +49,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Hpc.Trace">
@@ -86,6 +87,11 @@
       <Link>IBrokerManagementService.cs</Link>
     </Compile>
     <Compile Include="BrokerManagementService.cs" />
+    <Compile Include="BrokerWorkerSetting.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>BrokerWorkerSetting.settings</DependentUpon>
+    </Compile>
     <Compile Include="HpcBrokerWorkerAuthorizationManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="SR.Designer.cs">
@@ -128,6 +134,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="BrokerWorkerSetting.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>BrokerWorkerSetting.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
