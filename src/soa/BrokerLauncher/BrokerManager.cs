@@ -102,7 +102,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <summary>
         /// Stores the scheduler helper
         /// </summary>
-        private volatile SchedulerHelper schedulerHelper;
+        private volatile ISchedulerHelper schedulerHelper;
 
         /// <summary>
         /// the time to cleanup the stale session data.
@@ -167,7 +167,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 
             this.pool = new BrokerProcessPool();
 
-            if (needRecover)
+            if (needRecover && !BrokerLauncherEnvironment.Standalone)
             {
                 this.ts = new CancellationTokenSource();
                 CancellationToken ct = ts.Token;
@@ -225,6 +225,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             recoverInfo.StartInfo = info;
             recoverInfo.SessionId = sessionid;
             recoverInfo.Durable = durable;
+            if (this.schedulerHelper == null)
+            {
+                this.schedulerHelper = SchedulerHelperFactory.GetSchedulerHelper(this.context);
+            }
+
             ClusterInfoContract clusterInfo = await this.schedulerHelper.GetClusterInfoAsync();
             return await this.CreateBrokerAndRun(recoverInfo, false, clusterInfo);
         }
@@ -554,7 +559,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             {
                 if (this.brokerDic.TryGetValue(sessionId, out info))
                 {
-                    TraceHelper.TraceEvent(sessionId, System.Diagnostics.TraceEventType.Information, "[BrokerManager] Cleanup: Start clean up operation. Current Stack = {0}", Environment.StackTrace);
+                    //TraceHelper.TraceEvent(sessionId, System.Diagnostics.TraceEventType.Information, "[BrokerManager] Cleanup: Start clean up operation. Current Stack = {0}", Environment.StackTrace);
+                    TraceHelper.TraceEvent(sessionId, System.Diagnostics.TraceEventType.Information, "[BrokerManager] Cleanup: Start clean up operation");
 
                     // Hold the broker info lock within the broker dic lock
                     Monitor.Enter(info);
@@ -675,14 +681,29 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             brokerInfo.PurgedTotal = recoverInfo.PurgedTotal;
             brokerInfo.ConfigurationFile = serviceRegistrationPath;
             brokerInfo.NetworkTopology = 0; // ClusterTopology.Public
-            brokerInfo.ClusterName = clusterInfo.ClusterName;
-            brokerInfo.ClusterId = clusterInfo.ClusterId;
-            brokerInfo.AzureStorageConnectionString = clusterInfo.AzureStorageConnectionString;
+            if (!BrokerLauncherEnvironment.Standalone)
+            {
+                brokerInfo.ClusterName = clusterInfo.ClusterName;
+                brokerInfo.ClusterId = clusterInfo.ClusterId;
+                brokerInfo.AzureStorageConnectionString = clusterInfo.AzureStorageConnectionString;
+            }
+            else
+            {
+                brokerInfo.Standalone = true;
+            }
+
             brokerInfo.UseAad = recoverInfo.StartInfo.UseAad;
             brokerInfo.AadUserSid = recoverInfo.AadUserSid;
             brokerInfo.AadUserName = recoverInfo.AadUserName;
 
-            brokerInfo.AutomaticShrinkEnabled = Convert.ToBoolean(soaConfig[Constant.AutomaticShrinkEnabled]);
+            if (soaConfig.TryGetValue(Constant.AutomaticShrinkEnabled, out var v))
+            {
+                brokerInfo.AutomaticShrinkEnabled = Convert.ToBoolean(v);
+            }
+            else
+            {
+                brokerInfo.AutomaticShrinkEnabled = false;
+            }
 
             if (SoaHelper.IsOnAzure())
             {
@@ -943,7 +964,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                     // Bug 8507 : Fix leak
                     if (this.schedulerHelper == null)
                     {
-                        this.schedulerHelper = new SchedulerHelper(this.context);
+                        this.schedulerHelper = SchedulerHelperFactory.GetSchedulerHelper(this.context);
                     }
 
                     recoverInfoList = await this.schedulerHelper.LoadBrokerRecoverInfo();

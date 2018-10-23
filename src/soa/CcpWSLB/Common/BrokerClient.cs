@@ -658,7 +658,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// <param name="userName">indicating the user name</param>
         public void CheckAccess(string userName)
         {
-            if (!String.Equals(userName, this.queue.UserName, StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(userName, this.queue.UserName, StringComparison.OrdinalIgnoreCase) && this.queue.UserName != Constant.AnonymousUserName)
             {
                 ThrowHelper.ThrowSessionFault(SOAFaultCode.AccessDenied_BrokerQueue, SR.AccessDenied_BrokerQueue, userName, clientId);
             }

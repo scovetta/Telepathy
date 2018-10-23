@@ -36,7 +36,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
             {
                 try
                 {
-                    using (SchedulerHelper helper = new SchedulerHelper(context))
+                    using (ISchedulerHelper helper = SchedulerHelperFactory.GetSchedulerHelper(context))
                     {
                         return helper.IsDiagTraceEnabled(sessionId).GetAwaiter().GetResult();
                     }

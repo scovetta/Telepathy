@@ -75,8 +75,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim
                     host.AddServiceEndpoint(typeof(IBrokerManagementService), BindingHelper.HardCodedBrokerManagementServiceBinding, String.Empty);
                     host.Open();
 
-                    trace.LogBrokerWorkerMessage(pid,
-                        "[Main] Open broker management service succeeded.");
+                    trace.LogBrokerWorkerMessage(pid, "[Main] Open broker management service succeeded.");
                 }
                 catch (Exception e)
                 {
@@ -88,7 +87,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim
 
                 bool createdNew;
                 EventWaitHandle initializeWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset, String.Format(Constant.InitializationWaitHandleNameFormat, pid), out createdNew);
-                if (createdNew)
+                if (createdNew && !BrokerWorkerSetting.Default.Debug)
                 {
                     trace.LogBrokerWorkerUnexpectedlyExit(pid,
                         "[Main] Initialize wait handle has not been created by the broker launcher.");

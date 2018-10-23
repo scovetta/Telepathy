@@ -160,6 +160,7 @@
         /// <returns></returns>
         public static IHpcContext Get(EndpointsConnectionString connectionString)
         {
+#if HPCPACK
             HpcContext context;
             if (!contexts.TryGetValue(connectionString.ConnectionString, out context))
             {
@@ -170,6 +171,8 @@
             }
 
             return context;
+#endif
+            return SoaContext.SoaContext.Instance;
         }
 
         /// <summary>
@@ -199,6 +202,7 @@
         /// <returns></returns>
         public static IHpcContext GetOrAdd(EndpointsConnectionString connectionString, CancellationToken token, bool isHpcService = false)
         {
+#if HPCPACK
             HpcContextOwner hpcContextOwner = isHpcService ? HpcContextOwner.HpcServiceOutOfSFCluster : HpcContextOwner.Client;
             HpcContext context = contexts.GetOrAdd(connectionString.ConnectionString, s => new HpcContext(connectionString, token, hpcContextOwner));
 
@@ -209,6 +213,8 @@
 
             context.IgnoreCertNameMismatchValidation();
             return context;
+#endif
+            return SoaContext.SoaContext.Instance;
         }
 
         public static void ClearAll()

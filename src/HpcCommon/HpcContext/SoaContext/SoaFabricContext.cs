@@ -33,8 +33,8 @@
 
         public IRegistry Registry => throw new NotImplementedException();
 
-        public EndpointsConnectionString ConnectionString => throw new NotImplementedException();
+        public EndpointsConnectionString ConnectionString => EndpointsConnectionString.ParseConnectionString(LocalHost);
 
-        public HpcContextOwner Owner => throw new NotImplementedException();
+        public HpcContextOwner Owner => HpcContextOwner.HpcServiceOutOfSFCluster;
     }
 }

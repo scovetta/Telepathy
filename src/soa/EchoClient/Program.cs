@@ -46,16 +46,15 @@ namespace Microsoft.Hpc.EchoClient
             SessionStartInfo info = null;
             if (config.IsNoSession)
             {
+                // Start session without session manager
                 if (config.InprocessBroker)
                 {
-                    //no hpc
                     info = new SessionStartInfo(config.ServiceName, config.RegPath, null, config.TargetList.ToArray());
                     info.UseInprocessBroker = true;
                     info.IsNoSession = true;
                 }
                 else
                 {
-                    //no session but broker
                     //TODO because registrying a broker in scheduler must have a appropriate session id in HPC pack
                     info = new SessionStartInfo(config.HeadNode, config.ServiceName, config.RegPath, null, config.TargetList.ToArray());
                     info.UseInprocessBroker = false;
@@ -128,7 +127,7 @@ namespace Microsoft.Hpc.EchoClient
             info.SessionPriority = config.Priority;
             info.NodeGroupList = new List<string>(config.NodeGroups.Split(new char[] { ',' }));
             info.RequestedNodesList = new List<string>(config.Nodes.Split(new char[] { ',' }));
-            info.Secure = !config.Insecure;
+            info.Secure = !config.Insecure && !config.IsNoSession;
             info.UseAzureQueue = config.AzureQueue;
             info.ShareSession = config.ShareSession;
             info.UseSessionPool = config.SessionPool;

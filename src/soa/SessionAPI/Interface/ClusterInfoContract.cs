@@ -48,6 +48,5 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         [DataMember]
         public string AzureStorageConnectionString { get; set; }
-
     }
 }
