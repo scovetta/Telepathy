@@ -281,9 +281,21 @@ namespace Microsoft.Hpc.ServiceBroker
                 string requestBlobUri = string.Empty;
                 if (startInfo.UseAzureQueue == true && (startInfo.TransportScheme & TransportScheme.Http) == TransportScheme.Http)
                 {
-
-                    string clusterIdString = brokerInfo.ClusterId.ToLowerInvariant();
-                    int clusterHash = clusterIdString.GetHashCode();
+                    int clusterHash = 0;
+                    if (!string.IsNullOrEmpty(brokerInfo.ClusterId))
+                    {
+                        string clusterIdString = brokerInfo.ClusterId.ToLowerInvariant();
+                        clusterHash = clusterIdString.GetHashCode();
+                    }
+                    else if (!string.IsNullOrEmpty(brokerInfo.ClusterName))
+                    {
+                        string clusterNameString = brokerInfo.ClusterName.ToLowerInvariant();
+                        clusterHash = clusterNameString.GetHashCode();
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException($"Both {nameof(brokerInfo.ClusterId)} and {nameof(brokerInfo.ClusterName)} are null or empty. No {nameof(clusterHash)} can be determined.");
+                    }
 
                     if (!string.IsNullOrEmpty(brokerInfo.AzureStorageConnectionString))
                     {

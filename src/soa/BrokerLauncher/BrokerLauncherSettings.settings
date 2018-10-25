@@ -20,5 +20,14 @@
   &lt;string&gt;127.0.0.1&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
+    <Setting Name="ClusterName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Telepathy</Value>
+    </Setting>
+    <Setting Name="ClusterId" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AzureStorageConnectionString" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

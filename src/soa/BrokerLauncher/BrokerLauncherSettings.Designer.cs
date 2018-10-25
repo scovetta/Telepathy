@@ -84,5 +84,41 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher {
                 this["SvcHostList"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Telepathy")]
+        public string ClusterName {
+            get {
+                return ((string)(this["ClusterName"]));
+            }
+            set {
+                this["ClusterName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ClusterId {
+            get {
+                return ((string)(this["ClusterId"]));
+            }
+            set {
+                this["ClusterId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AzureStorageConnectionString {
+            get {
+                return ((string)(this["AzureStorageConnectionString"]));
+            }
+            set {
+                this["AzureStorageConnectionString"] = value;
+            }
+        }
     }
 }
