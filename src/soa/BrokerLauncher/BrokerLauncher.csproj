@@ -166,6 +166,7 @@
     <Compile Include="..\SessionAPI\Internal\SessionLauncherClientBase.cs">
       <Link>SessionLauncherClientBase.cs</Link>
     </Compile>
+    <Compile Include="QueueAdapter\BrokerLauncherCloudQueueSerializer.cs" />
     <Compile Include="QueueAdapter\BrokerLauncherCloudQueueWatcher.cs" />
     <Compile Include="BrokerLauncherEnvironment.cs" />
     <Compile Include="QueueAdapter\BrokerLauncherCloudQueueListener.cs" />
@@ -176,6 +177,7 @@
     <Compile Include="ISchedulerHelper.cs" />
     <Compile Include="NetTcpPortSharingService.cs" />
     <Compile Include="QueueAdapter\DTO\BrokerLauncherCloudQueueResponseDto.cs" />
+    <Compile Include="QueueAdapter\JsonInt32Converter.cs" />
     <Compile Include="SchedulerHelperFactory.cs" />
     <Compile Include="SessionLauncherClient.cs" />
     <Compile Include="AzureStorageCleaner.cs" />

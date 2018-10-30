@@ -18,6 +18,6 @@
             typeName = serializedType.Name;
         }
 
-        public IList<Type> ParameterTypes { get; }
+        public IList<Type> ParameterTypes { get; set; }
     }
 }

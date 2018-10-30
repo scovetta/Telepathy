@@ -4,9 +4,17 @@
 
     public class BrokerLauncherCloudQueueCmdDto
     {
-        public BrokerLauncherCloudQueueCmdDto(string cmdName, object[] parameters)
+        public BrokerLauncherCloudQueueCmdDto()
         {
-            this.RequestId = Guid.NewGuid().ToString();
+        }
+
+        public BrokerLauncherCloudQueueCmdDto(string cmdName, params object[] parameters) : this(Guid.NewGuid().ToString(), cmdName, parameters)
+        {
+        }
+
+        public BrokerLauncherCloudQueueCmdDto(string requestId, string cmdName, params object[] parameters)
+        {
+            this.RequestId = requestId;
             this.CmdName = cmdName;
             this.Parameters = parameters;
             this.Version = 1;

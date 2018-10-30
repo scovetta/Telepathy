@@ -1,14 +1,15 @@
 ﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter.DTO;
 
-    internal class BrokerLauncherCloudQueueWatcher
+    public class BrokerLauncherCloudQueueWatcher
     {
-        public BrokerLauncherCloudQueueWatcher(IBrokerLauncher instance, string connectionString)
+        internal BrokerLauncherCloudQueueWatcher(IBrokerLauncher instance, string connectionString)
         {
             this.Instance = instance;
             this.queueListener = new BrokerLauncherCloudQueueListener<BrokerLauncherCloudQueueCmdDto>(
@@ -30,8 +31,20 @@
 
         private readonly BrokerLauncherCloudQueueWriter<BrokerLauncherCloudQueueResponseDto> queueWriter;
 
-        private static readonly BrokerLauncherCloudQueueCmdTypeBinder TypeBinder =
-            new BrokerLauncherCloudQueueCmdTypeBinder() { ParameterTypes = { typeof(SessionStartInfoContract), typeof(BrokerInitializationResult), typeof(object[]), typeof(int[]) } };
+        public static BrokerLauncherCloudQueueCmdTypeBinder TypeBinder =>
+            new BrokerLauncherCloudQueueCmdTypeBinder()
+                {
+                    ParameterTypes = new List<Type>()
+                                         {
+                                             typeof(SessionStartInfoContract),
+                                             typeof(BrokerInitializationResult),
+                                             typeof(object[]),
+                                             typeof(int[]),
+                                             typeof(BrokerLauncherCloudQueueCmdDto),
+                                             typeof(BrokerLauncherCloudQueueResponseDto),
+                                             typeof(Dictionary<string, string>)
+                                         }
+                };
 
         private static (T1, T2) UnpackParameter<T1, T2>(object[] objectArr)
         {
