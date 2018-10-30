@@ -11,11 +11,11 @@
 
     public class BrokerLauncherCloudQueueWriter<T>
     {
-        private JsonSerializerSettings serializerSettings;
+        private BrokerLauncherCloudQueueSerializer serializer;
 
         private CloudQueue queue;
 
-        public BrokerLauncherCloudQueueWriter(string connectionString, string queueName, SerializationBinder serializationBinder)
+        public BrokerLauncherCloudQueueWriter(string connectionString, string queueName, BrokerLauncherCloudQueueSerializer serializer)
         {
             if (string.IsNullOrEmpty(connectionString))
             {
@@ -27,21 +27,21 @@
                 throw new ArgumentNullException(nameof(queueName));
             }
 
-            if (serializationBinder == null)
-            {
-                throw new ArgumentNullException(nameof(serializationBinder));
-            }
-
             var account = CloudStorageAccount.Parse(connectionString);
 
             this.queue = account.CreateCloudQueueClient().GetQueueReference(queueName);
-            this.serializerSettings = new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All, Binder = serializationBinder };
+            this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
+        }
+
+        private string Serialize(T item)
+        {
+            return this.serializer.Serialize(item);
         }
 
         public async Task WriteAsync(T item)
         {
             await this.queue.CreateIfNotExistsAsync();
-            string payload = JsonConvert.SerializeObject(item, this.serializerSettings);
+            string payload = this.Serialize(item);
             CloudQueueMessage msg = new CloudQueueMessage(payload);
             await this.queue.AddMessageAsync(msg);
         }

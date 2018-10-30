@@ -12,12 +12,15 @@
         internal BrokerLauncherCloudQueueWatcher(IBrokerLauncher instance, string connectionString)
         {
             this.Instance = instance;
+
+            BrokerLauncherCloudQueueSerializer serializer = new BrokerLauncherCloudQueueSerializer(TypeBinder);
+
             this.queueListener = new BrokerLauncherCloudQueueListener<BrokerLauncherCloudQueueCmdDto>(
                 connectionString,
                 BrokerLauncherRequestQueueName,
-                TypeBinder,
+                serializer,
                 this.InvokeInstanceMethodFromCmdObj);
-            this.queueWriter = new BrokerLauncherCloudQueueWriter<BrokerLauncherCloudQueueResponseDto>(connectionString, BrokerLauncherResponseQueueName, TypeBinder);
+            this.queueWriter = new BrokerLauncherCloudQueueWriter<BrokerLauncherCloudQueueResponseDto>(connectionString, BrokerLauncherResponseQueueName, serializer);
             this.queueListener.StartListen();
         }
 

@@ -13,15 +13,15 @@
     internal class BrokerLauncherCloudQueueListener<T>
         where T : class
     {
-        private readonly JsonSerializerSettings serializerSettings;
-
         private CloudQueue queue;
 
         private Func<T, Task> messageReceivedCallback;
 
+        private BrokerLauncherCloudQueueSerializer serializer;
+
         private static readonly TimeSpan QueryDelay = TimeSpan.FromMilliseconds(500);
 
-        internal BrokerLauncherCloudQueueListener(string connectionString, string queueName, SerializationBinder serializationBinder, Func<T, Task> callback)
+        internal BrokerLauncherCloudQueueListener(string connectionString, string queueName, BrokerLauncherCloudQueueSerializer serializer, Func<T, Task> callback)
         {
             if (string.IsNullOrEmpty(connectionString))
             {
@@ -33,25 +33,15 @@
                 throw new ArgumentNullException(nameof(queueName));
             }
 
-            if (serializationBinder == null)
-            {
-                throw new ArgumentNullException(nameof(serializationBinder));
-            }
-
-            if (callback == null)
-            {
-                throw new ArgumentNullException(nameof(callback));
-            }
-
             var account = CloudStorageAccount.Parse(connectionString);
-            this.messageReceivedCallback = callback;
+            this.messageReceivedCallback = callback ?? throw new ArgumentNullException(nameof(callback));
             this.queue = account.CreateCloudQueueClient().GetQueueReference(queueName);
-            this.serializerSettings = new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All, Binder = serializationBinder };
+            this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
         }
 
         private T Deserialize(string json)
         {
-            return JsonConvert.DeserializeObject<T>(json, this.serializerSettings);
+            return this.serializer.Deserialize<T>(json);
         }
 
         internal void StartListen() => Task.Run(this.StartListenAsync);

@@ -8,7 +8,7 @@
 
     public class BrokerLauncherCloudQueueSerializer
     {
-        private JsonSerializerSettings setting = null;
+        private readonly JsonSerializerSettings setting = null;
 
         public BrokerLauncherCloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder binder, List<JsonConverter> converters = null)
         {
