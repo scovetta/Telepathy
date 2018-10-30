@@ -1,15 +1,10 @@
-﻿namespace BrokerLauncher.UnitTest
+﻿namespace SessionAPI.UnitTest
 {
-    using System;
-    using System.Collections.Generic;
-
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter;
-    using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter.DTO;
+    using Microsoft.Hpc.Scheduler.Session.QueueAdapter;
+    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-    using Newtonsoft.Json;
 
     [TestClass]
     public class QueueAdapterTest
@@ -17,7 +12,7 @@
         [TestMethod]
         public void BasicRequestSerializeE2E()
         {
-            var serializer = new BrokerLauncherCloudQueueSerializer(BrokerLauncherCloudQueueWatcher.TypeBinder);
+            var serializer = new CloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder.Default);
             var cmd = new BrokerLauncherCloudQueueCmdDto("TestId", "TestCmd", new SessionStartInfoContract(), 10);
             var str = serializer.Serialize(cmd);
             var dcmd = serializer.Deserialize<BrokerLauncherCloudQueueCmdDto>(str);
@@ -33,7 +28,7 @@
         [TestMethod]
         public void BasicResultSerializeE2E()
         {
-            var serializer = new BrokerLauncherCloudQueueSerializer(BrokerLauncherCloudQueueWatcher.TypeBinder);
+            var serializer = new CloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder.Default);
             var res = new BrokerLauncherCloudQueueResponseDto("TestId", "TestCmd", new BrokerInitializationResult());
             var str = serializer.Serialize(res);
             var dres = serializer.Deserialize<BrokerLauncherCloudQueueResponseDto>(str);

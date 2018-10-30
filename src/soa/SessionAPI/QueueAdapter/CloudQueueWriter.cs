@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter
+﻿namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter
 {
     using System;
     using System.Threading.Tasks;
@@ -6,13 +6,13 @@
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Queue;
 
-    public class BrokerLauncherCloudQueueWriter<T>
+    public class CloudQueueWriter<T>
     {
-        private BrokerLauncherCloudQueueSerializer serializer;
+        private CloudQueueSerializer serializer;
 
         private CloudQueue queue;
 
-        public BrokerLauncherCloudQueueWriter(string connectionString, string queueName, BrokerLauncherCloudQueueSerializer serializer)
+        public CloudQueueWriter(string connectionString, string queueName, CloudQueueSerializer serializer)
         {
             if (string.IsNullOrEmpty(connectionString))
             {

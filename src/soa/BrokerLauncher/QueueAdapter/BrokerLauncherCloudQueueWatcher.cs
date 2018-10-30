@@ -5,7 +5,8 @@
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter.DTO;
+    using Microsoft.Hpc.Scheduler.Session.QueueAdapter;
+    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
 
     public class BrokerLauncherCloudQueueWatcher
     {
@@ -13,14 +14,14 @@
         {
             this.Instance = instance;
 
-            BrokerLauncherCloudQueueSerializer serializer = new BrokerLauncherCloudQueueSerializer(TypeBinder);
+            CloudQueueSerializer serializer = new CloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder.Default);
 
-            this.queueListener = new BrokerLauncherCloudQueueListener<BrokerLauncherCloudQueueCmdDto>(
+            this.queueListener = new CloudQueueListener<BrokerLauncherCloudQueueCmdDto>(
                 connectionString,
                 BrokerLauncherRequestQueueName,
                 serializer,
                 this.InvokeInstanceMethodFromCmdObj);
-            this.queueWriter = new BrokerLauncherCloudQueueWriter<BrokerLauncherCloudQueueResponseDto>(connectionString, BrokerLauncherResponseQueueName, serializer);
+            this.queueWriter = new CloudQueueWriter<BrokerLauncherCloudQueueResponseDto>(connectionString, BrokerLauncherResponseQueueName, serializer);
             this.queueListener.StartListen();
         }
 
@@ -30,24 +31,9 @@
 
         private readonly IBrokerLauncher Instance;
 
-        private readonly BrokerLauncherCloudQueueListener<BrokerLauncherCloudQueueCmdDto> queueListener;
+        private readonly CloudQueueListener<BrokerLauncherCloudQueueCmdDto> queueListener;
 
-        private readonly BrokerLauncherCloudQueueWriter<BrokerLauncherCloudQueueResponseDto> queueWriter;
-
-        public static BrokerLauncherCloudQueueCmdTypeBinder TypeBinder =>
-            new BrokerLauncherCloudQueueCmdTypeBinder()
-                {
-                    ParameterTypes = new List<Type>()
-                                         {
-                                             typeof(SessionStartInfoContract),
-                                             typeof(BrokerInitializationResult),
-                                             typeof(object[]),
-                                             typeof(int[]),
-                                             typeof(BrokerLauncherCloudQueueCmdDto),
-                                             typeof(BrokerLauncherCloudQueueResponseDto),
-                                             typeof(Dictionary<string, string>)
-                                         }
-                };
+        private readonly CloudQueueWriter<BrokerLauncherCloudQueueResponseDto> queueWriter;
 
         private static (T1, T2) UnpackParameter<T1, T2>(object[] objectArr)
         {

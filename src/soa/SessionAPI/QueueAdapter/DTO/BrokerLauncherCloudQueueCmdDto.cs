@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter.DTO
+﻿namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO
 {
     using System;
 

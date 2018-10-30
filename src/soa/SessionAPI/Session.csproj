@@ -315,12 +315,12 @@
     <Compile Include="Internal\InprocessSessions.cs" />
     <Compile Include="Internal\IResourceProvider.cs" />
     <Compile Include="Internal\OnPremiseSessionFactory.cs" />
-    <Compile Include="QueueAdapter\BrokerLauncherCloudQueueListener.cs" />
-    <Compile Include="QueueAdapter\BrokerLauncherCloudQueueSerializer.cs" />
+    <Compile Include="QueueAdapter\CloudQueueListener.cs" />
+    <Compile Include="QueueAdapter\CloudQueueSerializer.cs" />
     <Compile Include="QueueAdapter\DTO\BrokerLauncherCloudQueueCmdDto.cs" />
     <Compile Include="QueueAdapter\DTO\BrokerLauncherCloudQueueCmdTypeBinder.cs" />
     <Compile Include="QueueAdapter\DTO\BrokerLauncherCloudQueueResponseDto.cs" />
-    <Compile Include="QueueAdapter\DTO\BrokerLauncherCloudQueueWriter.cs" />
+    <Compile Include="QueueAdapter\CloudQueueWriter.cs" />
     <Compile Include="TaskInInterestUtil.cs" />
     <Compile Include="WinServiceHpcContextModule.cs" />
     <None Include="Internal\AzureRestSessionFactory.cs" />

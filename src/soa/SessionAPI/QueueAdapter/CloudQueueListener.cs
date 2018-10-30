@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter
+﻿namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter
 {
     using System;
     using System.Linq;
@@ -7,17 +7,17 @@
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Queue;
 
-    public class BrokerLauncherCloudQueueListener<T>
+    public class CloudQueueListener<T>
     {
         private CloudQueue queue;
 
         private Func<T, Task> messageReceivedCallback;
 
-        private BrokerLauncherCloudQueueSerializer serializer;
+        private CloudQueueSerializer serializer;
 
         private static readonly TimeSpan QueryDelay = TimeSpan.FromMilliseconds(500);
 
-        public BrokerLauncherCloudQueueListener(string connectionString, string queueName, BrokerLauncherCloudQueueSerializer serializer, Func<T, Task> callback)
+        public CloudQueueListener(string connectionString, string queueName, CloudQueueSerializer serializer, Func<T, Task> callback)
         {
             if (string.IsNullOrEmpty(connectionString))
             {
