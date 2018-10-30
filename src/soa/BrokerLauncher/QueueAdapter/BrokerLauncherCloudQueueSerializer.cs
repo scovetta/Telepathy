@@ -10,7 +10,7 @@
     {
         private JsonSerializerSettings setting = null;
 
-        public BrokerLauncherCloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder binder, List<JsonConverter> converters)
+        public BrokerLauncherCloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder binder, List<JsonConverter> converters = null)
         {
             this.setting = new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All, Binder = binder, Converters = converters};
         }

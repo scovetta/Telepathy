@@ -120,11 +120,6 @@
             }
         }
 
-        internal BrokerLauncherCloudQueueWatcher(IBrokerLauncher instance)
-        {
-            this.Instance = instance;
-        }
-
         private Task CreateAndSendResponse(string requestId, string cmdName, object response)
         {
             var ans = new BrokerLauncherCloudQueueResponseDto(requestId, cmdName, response);
@@ -133,42 +128,42 @@
 
         public Task Create(BrokerLauncherCloudQueueCmdDto cmdObj)
         {
-            var (info, id) = UnpackParameter<SessionStartInfoContract, int>(cmdObj.Parameters);
-            var res = this.Instance.Create(info, id);
+            var (info, id) = UnpackParameter<SessionStartInfoContract, long>(cmdObj.Parameters);
+            var res = this.Instance.Create(info, (int)id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
         public Task CreateDurable(BrokerLauncherCloudQueueCmdDto cmdObj)
         {
-            var (info, id) = UnpackParameter<SessionStartInfoContract, int>(cmdObj.Parameters);
-            var res = this.Instance.CreateDurable(info, id);
+            var (info, id) = UnpackParameter<SessionStartInfoContract, long>(cmdObj.Parameters);
+            var res = this.Instance.CreateDurable(info, (int)id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
         public Task Attach(BrokerLauncherCloudQueueCmdDto cmdObj)
         {
-            var id = UnpackParameter<int>(cmdObj.Parameters);
-            var res = this.Instance.Attach(id);
+            var id = UnpackParameter<long>(cmdObj.Parameters);
+            var res = this.Instance.Attach((int)id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
         public void Close(BrokerLauncherCloudQueueCmdDto cmdObj)
         {
-            var id = UnpackParameter<int>(cmdObj.Parameters);
-            this.Instance.Close(id);
+            var id = UnpackParameter<long>(cmdObj.Parameters);
+            this.Instance.Close((int)id);
         }
 
         public Task PingBroker(BrokerLauncherCloudQueueCmdDto cmdObj)
         {
-            var id = UnpackParameter<int>(cmdObj.Parameters);
-            var res = this.Instance.PingBroker(id);
+            var id = UnpackParameter<long>(cmdObj.Parameters);
+            var res = this.Instance.PingBroker((int)id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
         public Task PingBroker2(BrokerLauncherCloudQueueCmdDto cmdObj)
         {
-            var id = UnpackParameter<int>(cmdObj.Parameters);
-            var res = this.Instance.PingBroker2(id);
+            var id = UnpackParameter<long>(cmdObj.Parameters);
+            var res = this.Instance.PingBroker2((int)id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
