@@ -72,9 +72,6 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.ValueTuple">
-      <HintPath>..\..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\common\AzureNaming.cs">
@@ -318,6 +315,12 @@
     <Compile Include="Internal\InprocessSessions.cs" />
     <Compile Include="Internal\IResourceProvider.cs" />
     <Compile Include="Internal\OnPremiseSessionFactory.cs" />
+    <Compile Include="QueueAdapter\BrokerLauncherCloudQueueListener.cs" />
+    <Compile Include="QueueAdapter\BrokerLauncherCloudQueueSerializer.cs" />
+    <Compile Include="QueueAdapter\DTO\BrokerLauncherCloudQueueCmdDto.cs" />
+    <Compile Include="QueueAdapter\DTO\BrokerLauncherCloudQueueCmdTypeBinder.cs" />
+    <Compile Include="QueueAdapter\DTO\BrokerLauncherCloudQueueResponseDto.cs" />
+    <Compile Include="QueueAdapter\DTO\BrokerLauncherCloudQueueWriter.cs" />
     <Compile Include="TaskInInterestUtil.cs" />
     <Compile Include="WinServiceHpcContextModule.cs" />
     <None Include="Internal\AzureRestSessionFactory.cs" />
@@ -446,5 +449,6 @@
       <Version>8.4.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

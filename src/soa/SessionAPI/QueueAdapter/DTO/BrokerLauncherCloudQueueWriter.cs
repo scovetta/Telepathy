@@ -1,13 +1,10 @@
 ﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter
 {
     using System;
-    using System.Runtime.Serialization;
     using System.Threading.Tasks;
 
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Queue;
-
-    using Newtonsoft.Json;
 
     public class BrokerLauncherCloudQueueWriter<T>
     {

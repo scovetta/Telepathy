@@ -2,16 +2,12 @@
 {
     using System;
     using System.Linq;
-    using System.Runtime.Serialization;
     using System.Threading.Tasks;
 
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Queue;
 
-    using Newtonsoft.Json;
-
-    internal class BrokerLauncherCloudQueueListener<T>
-        where T : class
+    public class BrokerLauncherCloudQueueListener<T>
     {
         private CloudQueue queue;
 
@@ -21,7 +17,7 @@
 
         private static readonly TimeSpan QueryDelay = TimeSpan.FromMilliseconds(500);
 
-        internal BrokerLauncherCloudQueueListener(string connectionString, string queueName, BrokerLauncherCloudQueueSerializer serializer, Func<T, Task> callback)
+        public BrokerLauncherCloudQueueListener(string connectionString, string queueName, BrokerLauncherCloudQueueSerializer serializer, Func<T, Task> callback)
         {
             if (string.IsNullOrEmpty(connectionString))
             {
@@ -44,9 +40,9 @@
             return this.serializer.Deserialize<T>(json);
         }
 
-        internal void StartListen() => Task.Run(this.StartListenAsync);
+        public void StartListen() => Task.Run(this.StartListenAsync);
 
-        internal async Task StartListenAsync()
+        public async Task StartListenAsync()
         {
             while (true)
             {
