@@ -49,7 +49,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="epr">output selected epr</param>
         /// <param name="binding">indicting the binding</param>
         /// <returns>returns the session information</returns>
-        [Refactor("Make this a real async method")]
         public async Task<SessionBase> CreateBroker(SessionStartInfo startInfo, int sessionId, DateTime targetTimeout, string[] eprs, Binding binding)
         {
             Exception innerException = null;
@@ -62,13 +61,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     SessionBase.TraceSource.TraceInformation("[Session:{0}] Try to create broker... BrokerLauncherEpr = {1}", sessionId, epr);
 
                     brokerLauncher = new BrokerLauncherClient(new Uri(epr), startInfo, binding);
-                    // if (startInfo.UseAad)
-                    // {
-                    //     var context = HpcContext.GetOrAdd(startInfo.Headnode, CancellationToken.None);
-                    //     string token = await context.GetAADJwtTokenAsync(startInfo.Username, startInfo.InternalPassword);
-                    //     brokerLauncher.Endpoint.Behaviors.Add(new AADClientEndpointBehavior(token));
-                    // }
-
                     brokerLauncher.InnerChannel.OperationTimeout = timeout;
 
                     BrokerInitializationResult result;
@@ -156,7 +148,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="timeout">indicating the timeout</param>
         /// <param name="binding">indicting the binding</param>
         /// <returns>returns the session instance</returns>
-        [Refactor("Make this a real async method")]
         public Task<SessionBase> AttachBroker(SessionAttachInfo attachInfo, SessionInfo info, TimeSpan timeout, Binding binding)
         {
             SessionBase.TraceSource.TraceInformation("[Session:{0}] Try to attach broker...", attachInfo.SessionId);

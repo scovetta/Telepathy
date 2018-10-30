@@ -681,16 +681,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             brokerInfo.PurgedTotal = recoverInfo.PurgedTotal;
             brokerInfo.ConfigurationFile = serviceRegistrationPath;
             brokerInfo.NetworkTopology = 0; // ClusterTopology.Public
-            if (!BrokerLauncherEnvironment.Standalone)
-            {
-                brokerInfo.ClusterName = clusterInfo.ClusterName;
-                brokerInfo.ClusterId = clusterInfo.ClusterId;
-                brokerInfo.AzureStorageConnectionString = clusterInfo.AzureStorageConnectionString;
-            }
-            else
-            {
-                brokerInfo.Standalone = true;
-            }
+
+            brokerInfo.ClusterName = clusterInfo.ClusterName;
+            brokerInfo.ClusterId = clusterInfo.ClusterId;
+            brokerInfo.AzureStorageConnectionString = clusterInfo.AzureStorageConnectionString;
+
+            brokerInfo.Standalone = BrokerLauncherEnvironment.Standalone;
+            
 
             brokerInfo.UseAad = recoverInfo.StartInfo.UseAad;
             brokerInfo.AadUserSid = recoverInfo.AadUserSid;
