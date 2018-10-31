@@ -315,6 +315,8 @@
     <Compile Include="Internal\InprocessSessions.cs" />
     <Compile Include="Internal\IResourceProvider.cs" />
     <Compile Include="Internal\OnPremiseSessionFactory.cs" />
+    <Compile Include="QueueAdapter\Client\BrokerLauncherCloudQueueClient.cs" />
+    <Compile Include="QueueAdapter\CloudQueueConstants.cs" />
     <Compile Include="QueueAdapter\CloudQueueListener.cs" />
     <Compile Include="QueueAdapter\CloudQueueSerializer.cs" />
     <Compile Include="QueueAdapter\DTO\BrokerLauncherCloudQueueCmdDto.cs" />

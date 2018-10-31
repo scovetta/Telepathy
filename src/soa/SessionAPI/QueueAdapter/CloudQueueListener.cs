@@ -13,11 +13,17 @@
 
         private Func<T, Task> messageReceivedCallback;
 
+        private Func<bool> shouldListenPredicate = () => true;
+
         private CloudQueueSerializer serializer;
 
         private static readonly TimeSpan QueryDelay = TimeSpan.FromMilliseconds(500);
 
-        public CloudQueueListener(string connectionString, string queueName, CloudQueueSerializer serializer, Func<T, Task> callback)
+        public CloudQueueListener(string connectionString, string queueName, CloudQueueSerializer serializer, Func<T, Task> callback) : this(connectionString, queueName, serializer, callback, null)
+        {
+        }
+
+        public CloudQueueListener(string connectionString, string queueName, CloudQueueSerializer serializer, Func<T, Task> callback, Func<bool> predicate)
         {
             if (string.IsNullOrEmpty(connectionString))
             {
@@ -33,6 +39,10 @@
             this.messageReceivedCallback = callback ?? throw new ArgumentNullException(nameof(callback));
             this.queue = account.CreateCloudQueueClient().GetQueueReference(queueName);
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
+            if (predicate != null)
+            {
+                this.shouldListenPredicate = predicate;
+            }
         }
 
         private T Deserialize(string json)
@@ -47,6 +57,13 @@
             while (true)
             {
                 await this.queue.CreateIfNotExistsAsync();
+
+                if (!this.shouldListenPredicate())
+                {
+                    await Task.Delay(QueryDelay);
+                    continue;
+                }
+
                 var messages = await this.queue.GetMessagesAsync(10);
                 if (!messages.Any())
                 {

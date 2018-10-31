@@ -14,5 +14,10 @@
         public string CmdName { get; set; }
 
         public object Response { get; set; }
+
+        public override string ToString()
+        {
+            return $"{nameof(this.RequestId)}:{this.RequestId}, {nameof(this.CmdName)}: {this.CmdName}";
+        }
     }
 }

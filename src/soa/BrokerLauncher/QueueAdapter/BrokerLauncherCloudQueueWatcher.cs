@@ -18,16 +18,13 @@
 
             this.queueListener = new CloudQueueListener<BrokerLauncherCloudQueueCmdDto>(
                 connectionString,
-                BrokerLauncherRequestQueueName,
+                CloudQueueConstants.BrokerLauncherRequestQueueName,
                 serializer,
                 this.InvokeInstanceMethodFromCmdObj);
-            this.queueWriter = new CloudQueueWriter<BrokerLauncherCloudQueueResponseDto>(connectionString, BrokerLauncherResponseQueueName, serializer);
+            this.queueWriter = new CloudQueueWriter<BrokerLauncherCloudQueueResponseDto>(connectionString, CloudQueueConstants.BrokerLauncherResponseQueueName, serializer);
             this.queueListener.StartListen();
         }
 
-        public static string BrokerLauncherRequestQueueName => "brokerlaunchreq";
-
-        public static string BrokerLauncherResponseQueueName => "brokerlaunchres";
 
         private readonly IBrokerLauncher Instance;
 
