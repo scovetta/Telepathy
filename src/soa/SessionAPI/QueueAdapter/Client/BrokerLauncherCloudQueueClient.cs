@@ -139,84 +139,114 @@
             return ((Task<bool>)result).Result;
         }
 
-        private Task<bool> PingBrokerAsync(int sessionID)
+        public Task<bool> PingBrokerAsync(int sessionID)
         {
             return this.StartRequestAsync<bool>(nameof(this.PingBroker), sessionID);
         }
 
         public string PingBroker2(int sessionID)
         {
-            throw new NotImplementedException();
+            return this.PingBroker2Async(sessionID).GetAwaiter().GetResult();
         }
 
         public IAsyncResult BeginPingBroker2(int sessionID, AsyncCallback callback, object state)
         {
-            throw new NotImplementedException();
+            return AsApm(this.PingBroker2Async(sessionID), callback, state);
         }
 
         public string EndPingBroker2(IAsyncResult result)
         {
-            throw new NotImplementedException();
+            return ((Task<string>)result).Result;
+        }
+
+        public Task<string> PingBroker2Async(int sessionID)
+        {
+            return this.StartRequestAsync<string>(nameof(this.PingBroker2), sessionID);
         }
 
         public BrokerInitializationResult CreateDurable(SessionStartInfoContract info, int sessionId)
         {
-            throw new NotImplementedException();
+            return this.CreateDurableAsync(info, sessionId).GetAwaiter().GetResult();
         }
 
         public IAsyncResult BeginCreateDurable(SessionStartInfoContract info, int sessionId, AsyncCallback callback, object state)
         {
-            throw new NotImplementedException();
+            return AsApm(this.CreateDurableAsync(info, sessionId), callback, state);
         }
 
         public BrokerInitializationResult EndCreateDurable(IAsyncResult ar)
         {
-            throw new NotImplementedException();
+            return ((Task<BrokerInitializationResult>)ar).Result;
+        }
+
+        public Task<BrokerInitializationResult> CreateDurableAsync(SessionStartInfoContract info, int sessionId)
+        {
+            return this.StartRequestAsync<BrokerInitializationResult>(nameof(this.CreateDurable), info, sessionId);
         }
 
         public BrokerInitializationResult Attach(int sessionId)
         {
-            throw new NotImplementedException();
+            return this.AttachAsync(sessionId).GetAwaiter().GetResult();
         }
 
         public IAsyncResult BeginAttach(int sessionId, AsyncCallback callback, object state)
         {
-            throw new NotImplementedException();
+            return AsApm(this.AttachAsync(sessionId), callback, state);
         }
 
         public BrokerInitializationResult EndAttach(IAsyncResult result)
         {
-            throw new NotImplementedException();
+            return ((Task<BrokerInitializationResult>)result).Result;
+        }
+
+        public Task<BrokerInitializationResult> AttachAsync(int sessionId)
+        {
+            return this.StartRequestAsync<BrokerInitializationResult>(nameof(this.Attach), sessionId);
         }
 
         public void Close(int sessionId)
         {
-            throw new NotImplementedException();
+            this.CloseAsync(sessionId).GetAwaiter().GetResult();
+        }
+
+        public Task CloseAsync(int sessionId)
+        {
+            return this.CloseAsyncAux(sessionId);
+        }
+
+        private Task<object> CloseAsyncAux(int sessionId)
+        {
+            return this.StartRequestAsync<object>(nameof(this.Close), sessionId);
         }
 
         public IAsyncResult BeginClose(int sessionId, AsyncCallback callback, object state)
         {
-            throw new NotImplementedException();
+            return AsApm(this.CloseAsyncAux(sessionId), callback, state);
         }
 
         public void EndClose(IAsyncResult result)
         {
-            throw new NotImplementedException();
+            ((Task<object>)result).GetAwaiter().GetResult();
         }
 
         public int[] GetActiveBrokerIdList()
         {
-            throw new NotImplementedException();
+            return this.GetActiveBrokerIdListAsync().GetAwaiter().GetResult();
         }
 
         public IAsyncResult BeginGetActiveBrokerIdList(AsyncCallback callback, object state)
         {
-            throw new NotImplementedException();
+            return AsApm(this.GetActiveBrokerIdListAsync(), callback, state);
         }
 
         public int[] EndGetActiveBrokerIdList(IAsyncResult result)
         {
-            throw new NotImplementedException();
+            return ((Task<int[]>)result).Result;
+        }
+
+        public Task<int[]> GetActiveBrokerIdListAsync()
+        {
+            return this.StartRequestAsync<int[]>(nameof(this.GetActiveBrokerIdList));
         }
 
         public static IAsyncResult AsApm<T>(Task<T> task, AsyncCallback callback, object state)
