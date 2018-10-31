@@ -120,5 +120,17 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher {
                 this["AzureStorageConnectionString"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableAzureStorageQueueEndpoint {
+            get {
+                return ((bool)(this["EnableAzureStorageQueueEndpoint"]));
+            }
+            set {
+                this["EnableAzureStorageQueueEndpoint"] = value;
+            }
+        }
     }
 }

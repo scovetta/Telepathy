@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter
 {
     using System;
+    using System.Diagnostics;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter;
@@ -22,6 +23,8 @@
                 this.InvokeInstanceMethodFromCmdObj);
             this.queueWriter = new CloudQueueWriter<BrokerLauncherCloudQueueResponseDto>(connectionString, CloudQueueConstants.BrokerLauncherResponseQueueName, serializer);
             this.queueListener.StartListen();
+
+            Trace.TraceInformation("BrokerLauncherCloudQueueWatcher started.");
         }
 
         internal BrokerLauncherCloudQueueWatcher(IBrokerLauncher instance, IQueueListener<BrokerLauncherCloudQueueCmdDto> listener, IQueueWriter<BrokerLauncherCloudQueueResponseDto> writer)
