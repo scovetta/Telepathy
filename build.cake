@@ -1,6 +1,6 @@
 #load build/paths.cake
 
-var target = Argument("Target", "UnitTest");
+var target = Argument("Target", "Build");
 var configuration = Argument("Configuration", "Debug");
 
 Task("Restore")
