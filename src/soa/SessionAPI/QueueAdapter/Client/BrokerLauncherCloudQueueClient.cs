@@ -46,64 +46,36 @@
         {
             if (this.requestTrackDictionary.TryRemove(item.RequestId, out var tcs))
             {
+                void SetResult<T>()
+                {
+                    if (item.Response is T r && tcs is TaskCompletionSource<T> t)
+                    {
+                        t.SetResult(r);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException($"Response type mismatch for request {item.RequestId}");
+                    }
+                }
+
                 switch (item.CmdName)
                 {
                     case nameof(this.Create):
                     case nameof(this.Attach):
                     case nameof(this.CreateDurable):
-                        if (item.Response is BrokerInitializationResult rbr && tcs is TaskCompletionSource<BrokerInitializationResult> tbr)
-                        {
-                            tbr.SetResult(rbr);
-                        }
-                        else
-                        {
-                            throw new InvalidOperationException($"Response type mismatch for request {item.RequestId}");
-                        }
-
+                        SetResult<BrokerInitializationResult>();
                         break;
                     case nameof(this.PingBroker):
-                        if (item.Response is bool rb && tcs is TaskCompletionSource<bool> tb)
-                        {
-                            tb.SetResult(rb);
-                        }
-                        else
-                        {
-                            throw new InvalidOperationException($"Response type mismatch for request {item.RequestId}");
-                        }
-
+                        SetResult<bool>();
                         break;
                     case nameof(this.PingBroker2):
-                        if (item.Response is string rs && tcs is TaskCompletionSource<string> ts)
-                        {
-                            ts.SetResult(rs);
-                        }
-                        else
-                        {
-                            throw new InvalidOperationException($"Response type mismatch for request {item.RequestId}");
-                        }
-
+                        SetResult<string>();
                         break;
                     case nameof(this.GetActiveBrokerIdList):
-                        if (item.Response is int[] ria && tcs is TaskCompletionSource<int[]> tia)
-                        {
-                            tia.SetResult(ria);
-                        }
-                        else
-                        {
-                            throw new InvalidOperationException($"Response type mismatch for request {item.RequestId}");
-                        }
-
+                        SetResult<int[]>();
                         break;
                     case nameof(this.Close):
-                        if (item.Response is object r && tcs is TaskCompletionSource<object> t)
-                        {
-                            t.SetResult(r);
-                        }
-                        else
-                        {
-                            throw new InvalidOperationException($"Response type mismatch for request {item.RequestId}");
-                        }
-
+                        SetResult<object>();
                         break;
                     default:
                         throw new InvalidOperationException($"Unknown cmd for request {item.RequestId}: {item.CmdName}");
