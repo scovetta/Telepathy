@@ -4,14 +4,15 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Queue;
 
-    public class CloudQueueListener<T>
+    public class CloudQueueListener<T> : IQueueListener<T>
     {
         private CloudQueue queue;
 
-        private Func<T, Task> messageReceivedCallback;
+        public Func<T, Task> MessageReceivedCallback { get; set; }
 
         private Func<bool> shouldListenPredicate = () => true;
 
@@ -36,7 +37,7 @@
             }
 
             var account = CloudStorageAccount.Parse(connectionString);
-            this.messageReceivedCallback = callback ?? throw new ArgumentNullException(nameof(callback));
+            this.MessageReceivedCallback = callback ?? throw new ArgumentNullException(nameof(callback));
             this.queue = account.CreateCloudQueueClient().GetQueueReference(queueName);
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
             if (predicate != null)
@@ -64,21 +65,31 @@
                     continue;
                 }
 
-                var messages = await this.queue.GetMessagesAsync(10);
-                if (!messages.Any())
+                if (!await this.CheckAsync())
                 {
                     await Task.Delay(QueryDelay);
                 }
-                else
-                {
-                    var dtos = messages.Select(m => this.Deserialize(m.AsString));
+            }
+        }
 
-                    // Proceed message in sequence 
-                    foreach (var dto in dtos)
-                    {
-                        await this.messageReceivedCallback(dto);
-                    }
+        public async Task<bool> CheckAsync()
+        {
+            var messages = await this.queue.GetMessagesAsync(10);
+            if (!messages.Any())
+            {
+                return false;
+            }
+            else
+            {
+                var dtos = messages.Select(m => this.Deserialize(m.AsString));
+
+                // Proceed message in sequence 
+                foreach (var dto in dtos)
+                {
+                    await this.MessageReceivedCallback(dto);
                 }
+
+                return true;
             }
         }
     }

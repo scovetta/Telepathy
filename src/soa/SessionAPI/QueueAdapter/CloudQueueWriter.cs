@@ -3,10 +3,11 @@
     using System;
     using System.Threading.Tasks;
 
+    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Queue;
 
-    public class CloudQueueWriter<T>
+    public class CloudQueueWriter<T> : IQueueWriter<T>
     {
         private CloudQueueSerializer serializer;
 

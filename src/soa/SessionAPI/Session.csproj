@@ -323,6 +323,9 @@
     <Compile Include="QueueAdapter\DTO\BrokerLauncherCloudQueueCmdTypeBinder.cs" />
     <Compile Include="QueueAdapter\DTO\BrokerLauncherCloudQueueResponseDto.cs" />
     <Compile Include="QueueAdapter\CloudQueueWriter.cs" />
+    <Compile Include="QueueAdapter\Interface\IQueueListener.cs" />
+    <Compile Include="QueueAdapter\Interface\IQueueSerializer.cs" />
+    <Compile Include="QueueAdapter\Interface\IQueueWriter.cs" />
     <Compile Include="TaskInInterestUtil.cs" />
     <Compile Include="WinServiceHpcContextModule.cs" />
     <None Include="Internal\AzureRestSessionFactory.cs" />

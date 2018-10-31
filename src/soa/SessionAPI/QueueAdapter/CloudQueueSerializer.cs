@@ -3,16 +3,17 @@
     using System.Collections.Generic;
 
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
+    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
 
     using Newtonsoft.Json;
 
-    public class CloudQueueSerializer
+    public class CloudQueueSerializer : IQueueSerializer
     {
         private readonly JsonSerializerSettings setting = null;
 
         public CloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder binder, List<JsonConverter> converters)
         {
-            this.setting = new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All, Binder = binder, Converters = converters};
+            this.setting = new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All, Binder = binder, Converters = converters };
         }
 
         public CloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder binder) : this(binder, null)

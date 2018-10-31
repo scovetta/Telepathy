@@ -2,21 +2,18 @@
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
+    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
 
     public class BrokerLauncherCloudQueueClient : IBrokerLauncher
     {
-        private readonly CloudQueueListener<BrokerLauncherCloudQueueResponseDto> listener;
+        private readonly IQueueListener<BrokerLauncherCloudQueueResponseDto> listener;
 
-        private readonly CloudQueueWriter<BrokerLauncherCloudQueueCmdDto> writer;
+        private readonly IQueueWriter<BrokerLauncherCloudQueueCmdDto> writer;
 
         private readonly ConcurrentDictionary<string, object> requestTrackDictionary = new ConcurrentDictionary<string, object>();
 
@@ -27,6 +24,13 @@
             this.listener = new CloudQueueListener<BrokerLauncherCloudQueueResponseDto>(connectionString, CloudQueueConstants.BrokerLauncherResponseQueueName, serializer, this.ReceiveResponse);
             this.writer = new CloudQueueWriter<BrokerLauncherCloudQueueCmdDto>(connectionString, CloudQueueConstants.BrokerLauncherRequestQueueName, serializer);
             this.listener.StartListen();
+        }
+
+        public BrokerLauncherCloudQueueClient(IQueueListener<BrokerLauncherCloudQueueResponseDto> listener, IQueueWriter<BrokerLauncherCloudQueueCmdDto> writer)
+        {
+            this.listener = listener;
+            this.writer = writer;
+            this.listener.MessageReceivedCallback = this.ReceiveResponse;
         }
 
         private async Task<T> StartRequestAsync<T>(string cmdName, params object[] parameter)
@@ -47,7 +51,18 @@
                     case nameof(this.Create):
                     case nameof(this.Attach):
                     case nameof(this.CreateDurable):
-                        if (item.Response is BrokerInitializationResult rb && tcs is TaskCompletionSource<BrokerInitializationResult> tb)
+                        if (item.Response is BrokerInitializationResult rbr && tcs is TaskCompletionSource<BrokerInitializationResult> tbr)
+                        {
+                            tbr.SetResult(rbr);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException($"Response type mismatch for request {item.RequestId}");
+                        }
+
+                        break;
+                    case nameof(this.PingBroker):
+                        if (item.Response is bool rb && tcs is TaskCompletionSource<bool> tb)
                         {
                             tb.SetResult(rb);
                         }
@@ -57,7 +72,6 @@
                         }
 
                         break;
-                    case nameof(this.PingBroker):
                     case nameof(this.PingBroker2):
                         if (item.Response is string rs && tcs is TaskCompletionSource<string> ts)
                         {
@@ -105,7 +119,7 @@
             return ((Task<BrokerInitializationResult>)ar).Result;
         }
 
-        private Task<BrokerInitializationResult> CreateAsync(SessionStartInfoContract info, int sessionId)
+        public Task<BrokerInitializationResult> CreateAsync(SessionStartInfoContract info, int sessionId)
         {
             return this.StartRequestAsync<BrokerInitializationResult>(nameof(this.Create), info, sessionId);
         }

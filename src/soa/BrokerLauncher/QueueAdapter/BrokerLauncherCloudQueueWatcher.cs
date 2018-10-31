@@ -1,18 +1,17 @@
 ﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter;
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
+    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
 
     public class BrokerLauncherCloudQueueWatcher
     {
         internal BrokerLauncherCloudQueueWatcher(IBrokerLauncher instance, string connectionString)
         {
-            this.Instance = instance;
+            this.instance = instance;
 
             CloudQueueSerializer serializer = new CloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder.Default);
 
@@ -25,12 +24,19 @@
             this.queueListener.StartListen();
         }
 
+        internal BrokerLauncherCloudQueueWatcher(IBrokerLauncher instance, IQueueListener<BrokerLauncherCloudQueueCmdDto> listener, IQueueWriter<BrokerLauncherCloudQueueResponseDto> writer)
+        {
+            this.instance = instance;
+            this.queueListener = listener;
+            this.queueWriter = writer;
+            this.queueListener.MessageReceivedCallback = this.InvokeInstanceMethodFromCmdObj;
+        }
 
-        private readonly IBrokerLauncher Instance;
+        private readonly IBrokerLauncher instance;
 
-        private readonly CloudQueueListener<BrokerLauncherCloudQueueCmdDto> queueListener;
+        private readonly IQueueListener<BrokerLauncherCloudQueueCmdDto> queueListener;
 
-        private readonly CloudQueueWriter<BrokerLauncherCloudQueueResponseDto> queueWriter;
+        private readonly IQueueWriter<BrokerLauncherCloudQueueResponseDto> queueWriter;
 
         private static (T1, T2) UnpackParameter<T1, T2>(object[] objectArr)
         {
@@ -115,47 +121,47 @@
         public Task Create(BrokerLauncherCloudQueueCmdDto cmdObj)
         {
             var (info, id) = UnpackParameter<SessionStartInfoContract, long>(cmdObj.Parameters);
-            var res = this.Instance.Create(info, (int)id);
+            var res = this.instance.Create(info, (int)id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
         public Task CreateDurable(BrokerLauncherCloudQueueCmdDto cmdObj)
         {
             var (info, id) = UnpackParameter<SessionStartInfoContract, long>(cmdObj.Parameters);
-            var res = this.Instance.CreateDurable(info, (int)id);
+            var res = this.instance.CreateDurable(info, (int)id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
         public Task Attach(BrokerLauncherCloudQueueCmdDto cmdObj)
         {
             var id = UnpackParameter<long>(cmdObj.Parameters);
-            var res = this.Instance.Attach((int)id);
+            var res = this.instance.Attach((int)id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
         public void Close(BrokerLauncherCloudQueueCmdDto cmdObj)
         {
             var id = UnpackParameter<long>(cmdObj.Parameters);
-            this.Instance.Close((int)id);
+            this.instance.Close((int)id);
         }
 
         public Task PingBroker(BrokerLauncherCloudQueueCmdDto cmdObj)
         {
             var id = UnpackParameter<long>(cmdObj.Parameters);
-            var res = this.Instance.PingBroker((int)id);
+            var res = this.instance.PingBroker((int)id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
         public Task PingBroker2(BrokerLauncherCloudQueueCmdDto cmdObj)
         {
             var id = UnpackParameter<long>(cmdObj.Parameters);
-            var res = this.Instance.PingBroker2((int)id);
+            var res = this.instance.PingBroker2((int)id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
         public Task GetActiveBrokerIdList(BrokerLauncherCloudQueueCmdDto cmdObj)
         {
-            var res = this.Instance.GetActiveBrokerIdList();
+            var res = this.instance.GetActiveBrokerIdList();
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
     }
