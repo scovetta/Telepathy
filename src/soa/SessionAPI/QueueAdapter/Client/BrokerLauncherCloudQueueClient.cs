@@ -94,6 +94,17 @@
                         }
 
                         break;
+                    case nameof(this.Close):
+                        if (item.Response is object r && tcs is TaskCompletionSource<object> t)
+                        {
+                            t.SetResult(r);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException($"Response type mismatch for request {item.RequestId}");
+                        }
+
+                        break;
                     default:
                         throw new InvalidOperationException($"Unknown cmd for request {item.RequestId}: {item.CmdName}");
                 }

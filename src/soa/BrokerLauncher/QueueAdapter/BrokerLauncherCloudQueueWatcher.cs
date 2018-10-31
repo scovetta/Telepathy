@@ -96,7 +96,7 @@
                     await this.Attach(cmdObj);
                     break;
                 case nameof(this.Close):
-                    this.Close(cmdObj);
+                    await this.Close(cmdObj);
                     break;
                 case nameof(this.PingBroker):
                     await this.PingBroker(cmdObj);
@@ -139,10 +139,11 @@
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
-        public void Close(BrokerLauncherCloudQueueCmdDto cmdObj)
+        public Task Close(BrokerLauncherCloudQueueCmdDto cmdObj)
         {
             var id = UnpackParameter<long>(cmdObj.Parameters);
             this.instance.Close((int)id);
+            return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, string.Empty);
         }
 
         public Task PingBroker(BrokerLauncherCloudQueueCmdDto cmdObj)
