@@ -1,8 +1,6 @@
 ﻿namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter.Client
 {
     using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session.Interface;
@@ -10,14 +8,8 @@
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
 
-    public class BrokerLauncherCloudQueueClient : IBrokerLauncher
+    public class BrokerLauncherCloudQueueClient : CloudQueueClientBase, IBrokerLauncher
     {
-        private readonly IQueueListener<BrokerLauncherCloudQueueResponseDto> listener;
-
-        private readonly IQueueWriter<BrokerLauncherCloudQueueCmdDto> writer;
-
-        private readonly ConcurrentDictionary<string, object> requestTrackDictionary = new ConcurrentDictionary<string, object>();
-
         // TODO: multi-client single broker launcher
         public BrokerLauncherCloudQueueClient(string connectionString)
         {
@@ -36,34 +28,6 @@
             this.RegisterResponseTypes();
         }
 
-        private async Task<T> StartRequestAsync<T>(string cmdName, params object[] parameter)
-        {
-            BrokerLauncherCloudQueueCmdDto cmd = new BrokerLauncherCloudQueueCmdDto(cmdName, parameter);
-            await this.writer.WriteAsync(cmd);
-            TaskCompletionSource<T> tsc = new TaskCompletionSource<T>();
-            this.requestTrackDictionary.TryAdd(cmd.RequestId, tsc);
-            return await tsc.Task;
-        }
-
-        private async Task ReceiveResponse(BrokerLauncherCloudQueueResponseDto item)
-        {
-            if (this.requestTrackDictionary.TryRemove(item.RequestId, out var tcs))
-            {
-                if (this.responseTypeMapping.TryGetValue(item.CmdName, out var setRes))
-                {
-                    setRes(item.Response, tcs);
-                }
-                else
-                {
-                    throw new InvalidOperationException($"Unknown cmd for request {item.RequestId}: {item.CmdName}");
-                }
-            }
-            else
-            {
-                throw new InvalidOperationException($"Unknown request ID: {item.RequestId}");
-            }
-        }
-
         private void RegisterResponseTypes()
         {
             this.RegisterResponseType<BrokerInitializationResult>(nameof(this.Create));
@@ -73,25 +37,6 @@
             this.RegisterResponseType<string>(nameof(this.PingBroker2));
             this.RegisterResponseType<int[]>(nameof(this.GetActiveBrokerIdList));
             this.RegisterResponseType<object>(nameof(this.Close));
-        }
-
-        private void RegisterResponseType<T>(string cmdName)
-        {
-            this.responseTypeMapping[cmdName] = this.SetResult<T>;
-        }
-
-        private Dictionary<string, Action<object, object>> responseTypeMapping = new Dictionary<string, Action<object, object>>();
-
-        private void SetResult<T>(object item, object tcs)
-        {
-            if (item is T r && tcs is TaskCompletionSource<T> t)
-            {
-                t.SetResult(r);
-            }
-            else
-            {
-                throw new InvalidOperationException($"Response type mismatch.");
-            }
         }
 
         public BrokerInitializationResult Create(SessionStartInfoContract info, int sessionId)
