@@ -215,7 +215,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         public async Task<BrokerInitializationResult> CreateNewBrokerDomain(SessionStartInfoContract info, int sessionid, bool durable)
         {
             string userName =
-                (OperationContext.Current.ServiceSecurityContext != null && OperationContext.Current.ServiceSecurityContext.WindowsIdentity != null) ?
+                (OperationContext.Current != null && OperationContext.Current.ServiceSecurityContext != null && OperationContext.Current.ServiceSecurityContext.WindowsIdentity != null) ?
                 OperationContext.Current.ServiceSecurityContext.WindowsIdentity.Name :
                 String.Empty;
             TraceHelper.RuntimeTrace.LogSessionCreating(sessionid, userName);

@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -10,13 +11,13 @@
 
     public class CloudQueueListener<T> : IQueueListener<T>
     {
-        private CloudQueue queue;
+        private readonly CloudQueue queue;
 
         public Func<T, Task> MessageReceivedCallback { get; set; }
 
-        private Func<bool> shouldListenPredicate = () => true;
+        private readonly Func<bool> shouldListenPredicate = () => true;
 
-        private CloudQueueSerializer serializer;
+        private readonly CloudQueueSerializer serializer;
 
         private static readonly TimeSpan QueryDelay = TimeSpan.FromMilliseconds(500);
 
@@ -74,23 +75,20 @@
 
         public async Task<bool> CheckAsync()
         {
-            var messages = await this.queue.GetMessagesAsync(10);
-            if (!messages.Any())
+            var message = await this.queue.GetMessageAsync();
+
+            if (message == null)
             {
                 return false;
             }
-            else
-            {
-                var dtos = messages.Select(m => this.Deserialize(m.AsString));
 
-                // Proceed message in sequence 
-                foreach (var dto in dtos)
-                {
-                    await this.MessageReceivedCallback(dto);
-                }
+            var dto = this.Deserialize(message.AsString);
 
-                return true;
-            }
+            // Proceed message in sequence 
+            await this.MessageReceivedCallback(dto);
+            await this.queue.DeleteMessageAsync(message);
+
+            return true;
         }
     }
 }

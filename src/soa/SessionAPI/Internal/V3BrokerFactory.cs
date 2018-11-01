@@ -16,6 +16,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Client;
 #if !net40
     using Microsoft.Hpc.AADAuthUtil;
 #endif
@@ -55,13 +56,21 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             foreach (string epr in eprs)
             {
                 TimeSpan timeout = SessionBase.GetTimeout(targetTimeout);
-                BrokerLauncherClient brokerLauncher = null;
+                IBrokerLauncher brokerLauncher = null;
                 try
                 {
                     SessionBase.TraceSource.TraceInformation("[Session:{0}] Try to create broker... BrokerLauncherEpr = {1}", sessionId, epr);
 
-                    brokerLauncher = new BrokerLauncherClient(new Uri(epr), startInfo, binding);
-                    brokerLauncher.InnerChannel.OperationTimeout = timeout;
+                    if (startInfo.UseAzureQueue.GetValueOrDefault())
+                    {
+                        brokerLauncher = new BrokerLauncherCloudQueueClient(startInfo.BrokerLauncherStorageConnectionString);
+                    }
+                    else
+                    {
+                        var client = new BrokerLauncherClient(new Uri(epr), startInfo, binding);
+                        client.InnerChannel.OperationTimeout = timeout;
+                        brokerLauncher = client;
+                    }
 
                     BrokerInitializationResult result;
                     if (this.durable)
@@ -129,9 +138,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 }
                 finally
                 {
-                    if (brokerLauncher != null)
+                    var client = brokerLauncher as BrokerLauncherClient;
+                    if (client != null)
                     {
-                        Utility.SafeCloseCommunicateObject(brokerLauncher);
+                        Utility.SafeCloseCommunicateObject(client);
                     }
                 }
             }

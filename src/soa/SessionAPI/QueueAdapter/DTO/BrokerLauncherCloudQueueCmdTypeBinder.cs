@@ -17,9 +17,11 @@
                                                                                                        typeof(BrokerInitializationResult),
                                                                                                        typeof(object[]),
                                                                                                        typeof(int[]),
+                                                                                                       typeof(string[]),
                                                                                                        typeof(BrokerLauncherCloudQueueCmdDto),
                                                                                                        typeof(BrokerLauncherCloudQueueResponseDto),
-                                                                                                       typeof(Dictionary<string, string>)
+                                                                                                       typeof(Dictionary<string, string>),
+                                                                                                       typeof(Version)
                                                                                                    }
                                                                           };
 
