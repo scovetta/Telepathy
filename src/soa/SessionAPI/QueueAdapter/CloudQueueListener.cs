@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -75,20 +76,28 @@
 
         public async Task<bool> CheckAsync()
         {
-            var message = await this.queue.GetMessageAsync();
-
-            if (message == null)
+            try
             {
-                return false;
+                var message = await this.queue.GetMessageAsync();
+
+                if (message == null)
+                {
+                    return false;
+                }
+
+                var dto = this.Deserialize(message.AsString);
+
+                // Proceed message in sequence 
+                await this.MessageReceivedCallback(dto);
+                await this.queue.DeleteMessageAsync(message);
+
+                return true;
             }
-
-            var dto = this.Deserialize(message.AsString);
-
-            // Proceed message in sequence 
-            await this.MessageReceivedCallback(dto);
-            await this.queue.DeleteMessageAsync(message);
-
-            return true;
+            catch (Exception ex)
+            {
+                Trace.TraceError($"Exception when Checking Cloud Queue Message: {ex.ToString()}");
+                throw;
+            }
         }
     }
 }
