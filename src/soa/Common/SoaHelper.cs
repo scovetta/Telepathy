@@ -942,6 +942,15 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>response storage name</returns>
         public static string GetResponseStorageName(string clusterId, int sessionId, int requeueCount)
         {
+            if (sessionId < -1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sessionId));
+            }
+            else if (sessionId == -1)
+            {
+                sessionId = 0;
+            }
+
             return string.Format("{0}-{1}-{2}", GetResponseStoragePrefix(clusterId), sessionId, requeueCount).ToLowerInvariant();
         }
 
@@ -953,6 +962,15 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns></returns>
         public static string GetRequestStorageName(int clusterHash, int sessionId)
         {
+            if (sessionId < -1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sessionId));
+            }
+            else if (sessionId == -1)
+            {
+                sessionId = 0;
+            }
+
             uint uClusterHash = Convert.ToUInt32((long)clusterHash - int.MinValue);
             return string.Format("hpcsoa-{0}-{1}-request", uClusterHash, sessionId);
         }

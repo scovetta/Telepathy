@@ -279,7 +279,7 @@ namespace Microsoft.Hpc.ServiceBroker
                 // if using AzureQueue, retrieve the connection string and build the request and response message queues if not exist
                 string requestQueueUri = string.Empty;
                 string requestBlobUri = string.Empty;
-                if (startInfo.UseAzureQueue == true && (startInfo.TransportScheme & TransportScheme.Http) == TransportScheme.Http)
+                if (startInfo.UseAzureQueue == true)
                 {
                     int clusterHash = 0;
                     if (!string.IsNullOrEmpty(brokerInfo.ClusterId))

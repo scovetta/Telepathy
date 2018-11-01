@@ -241,7 +241,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                 }
 
                 // build the proxy if using azure storage queue
-                if ((this.Info.TransportScheme & TransportScheme.Http) == TransportScheme.Http && this.SessionInfo.UseAzureQueue == true)
+                if (this.SessionInfo.UseAzureQueue == true)
                 {
                     this.AzureQueueProxy = new AzureQueueProxy(this.SessionInfo.Headnode, this.SessionInfo.Id, this.sessionHash, this.SessionInfo.AzureRequestQueueUri, this.SessionInfo.AzureRequestBlobUri);
                 }

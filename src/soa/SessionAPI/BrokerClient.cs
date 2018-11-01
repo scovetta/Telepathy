@@ -483,7 +483,14 @@ namespace Microsoft.Hpc.Scheduler.Session
             //save the transport scheme for the client
             this.transportScheme = scheme;
 
-            if (scheme == TransportScheme.Http)
+            if (((SessionInfo)this.session.Info).UseAzureQueue.GetValueOrDefault())
+            {
+                // TODO: Refactor:
+                //  1. Eliminate the down cast here
+                //  2. Separate Queue client from Http client
+                this.frontendFactory = new HttpBrokerFrontendFactory(this.clientId, binding, this.session, scheme, this.callbackManager);
+            }
+            else if (scheme == TransportScheme.Http)
             {
                 this.frontendFactory = new HttpBrokerFrontendFactory(this.clientId, binding, this.session, scheme, this.callbackManager);
             }
@@ -939,7 +946,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                     this.CheckDisposed();
                     this.CheckBrokerAvailability();
 
-                    if (this.session.Info.TransportScheme == TransportScheme.Http && (this.session.Info as SessionInfo).UseAzureQueue == true)
+                    if ((this.session.Info as SessionInfo).UseAzureQueue == true)
                     {
                         // add username in the message header if secure
                         if ((this.session.Info as SessionInfo).Secure)
