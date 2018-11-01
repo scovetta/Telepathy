@@ -18,8 +18,8 @@
                                                                                                        typeof(object[]),
                                                                                                        typeof(int[]),
                                                                                                        typeof(string[]),
-                                                                                                       typeof(BrokerLauncherCloudQueueCmdDto),
-                                                                                                       typeof(BrokerLauncherCloudQueueResponseDto),
+                                                                                                       typeof(CloudQueueCmdDto),
+                                                                                                       typeof(CloudQueueResponseDto),
                                                                                                        typeof(Dictionary<string, string>),
                                                                                                        typeof(Version)
                                                                                                    }

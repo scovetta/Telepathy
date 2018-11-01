@@ -1,8 +1,8 @@
 ﻿namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO
 {
-    public class BrokerLauncherCloudQueueResponseDto
+    public class CloudQueueResponseDto
     {
-        public BrokerLauncherCloudQueueResponseDto(string requestId, string cmdName, object response)
+        public CloudQueueResponseDto(string requestId, string cmdName, object response)
         {
             this.RequestId = requestId;
             this.CmdName = cmdName;

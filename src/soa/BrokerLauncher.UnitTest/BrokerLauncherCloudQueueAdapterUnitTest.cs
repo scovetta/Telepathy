@@ -23,19 +23,19 @@
 
         private BrokerLauncherCloudQueueWatcher server;
 
-        private LocalQueueListener<BrokerLauncherCloudQueueResponseDto> clientListener;
+        private LocalQueueListener<CloudQueueResponseDto> clientListener;
 
-        private LocalQueueListener<BrokerLauncherCloudQueueCmdDto> serverListener;
+        private LocalQueueListener<CloudQueueCmdDto> serverListener;
 
         [TestInitialize]
         public void TestInit()
         {
             var serializer = new CloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder.Default);
-            this.clientListener = new LocalQueueListener<BrokerLauncherCloudQueueResponseDto>(queue, serializer);
-            this.client = new BrokerLauncherCloudQueueClient(this.clientListener, new LocalQueueWriter<BrokerLauncherCloudQueueCmdDto>(queue, serializer));
+            this.clientListener = new LocalQueueListener<CloudQueueResponseDto>(queue, serializer);
+            this.client = new BrokerLauncherCloudQueueClient(this.clientListener, new LocalQueueWriter<CloudQueueCmdDto>(queue, serializer));
 
-            this.serverListener = new LocalQueueListener<BrokerLauncherCloudQueueCmdDto>(queue, serializer);
-            this.server = new BrokerLauncherCloudQueueWatcher(new MockBrokerLauncher(), this.serverListener, new LocalQueueWriter<BrokerLauncherCloudQueueResponseDto>(queue, serializer));
+            this.serverListener = new LocalQueueListener<CloudQueueCmdDto>(queue, serializer);
+            this.server = new BrokerLauncherCloudQueueWatcher(new MockBrokerLauncher(), this.serverListener, new LocalQueueWriter<CloudQueueResponseDto>(queue, serializer));
         }
 
         [TestMethod]

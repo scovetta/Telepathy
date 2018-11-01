@@ -14,13 +14,13 @@
         public BrokerLauncherCloudQueueClient(string connectionString)
         {
             CloudQueueSerializer serializer = new CloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder.Default);
-            this.listener = new CloudQueueListener<BrokerLauncherCloudQueueResponseDto>(connectionString, CloudQueueConstants.BrokerLauncherResponseQueueName, serializer, this.ReceiveResponse);
-            this.writer = new CloudQueueWriter<BrokerLauncherCloudQueueCmdDto>(connectionString, CloudQueueConstants.BrokerLauncherRequestQueueName, serializer);
+            this.listener = new CloudQueueListener<CloudQueueResponseDto>(connectionString, CloudQueueConstants.BrokerLauncherResponseQueueName, serializer, this.ReceiveResponse);
+            this.writer = new CloudQueueWriter<CloudQueueCmdDto>(connectionString, CloudQueueConstants.BrokerLauncherRequestQueueName, serializer);
             this.listener.StartListen();
             this.RegisterResponseTypes();
         }
 
-        public BrokerLauncherCloudQueueClient(IQueueListener<BrokerLauncherCloudQueueResponseDto> listener, IQueueWriter<BrokerLauncherCloudQueueCmdDto> writer)
+        public BrokerLauncherCloudQueueClient(IQueueListener<CloudQueueResponseDto> listener, IQueueWriter<CloudQueueCmdDto> writer)
         {
             this.listener = listener;
             this.writer = writer;

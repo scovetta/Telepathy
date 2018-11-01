@@ -2,17 +2,17 @@
 {
     using System;
 
-    public class BrokerLauncherCloudQueueCmdDto
+    public class CloudQueueCmdDto
     {
-        public BrokerLauncherCloudQueueCmdDto()
+        public CloudQueueCmdDto()
         {
         }
 
-        public BrokerLauncherCloudQueueCmdDto(string cmdName, params object[] parameters) : this(Guid.NewGuid().ToString(), cmdName, parameters)
+        public CloudQueueCmdDto(string cmdName, params object[] parameters) : this(Guid.NewGuid().ToString(), cmdName, parameters)
         {
         }
 
-        public BrokerLauncherCloudQueueCmdDto(string requestId, string cmdName, params object[] parameters)
+        public CloudQueueCmdDto(string requestId, string cmdName, params object[] parameters)
         {
             this.RequestId = requestId;
             this.CmdName = cmdName;

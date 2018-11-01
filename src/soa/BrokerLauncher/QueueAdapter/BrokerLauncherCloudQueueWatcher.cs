@@ -16,18 +16,18 @@
 
             CloudQueueSerializer serializer = new CloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder.Default);
 
-            this.queueListener = new CloudQueueListener<BrokerLauncherCloudQueueCmdDto>(
+            this.queueListener = new CloudQueueListener<CloudQueueCmdDto>(
                 connectionString,
                 CloudQueueConstants.BrokerLauncherRequestQueueName,
                 serializer,
                 this.InvokeInstanceMethodFromCmdObj);
-            this.queueWriter = new CloudQueueWriter<BrokerLauncherCloudQueueResponseDto>(connectionString, CloudQueueConstants.BrokerLauncherResponseQueueName, serializer);
+            this.queueWriter = new CloudQueueWriter<CloudQueueResponseDto>(connectionString, CloudQueueConstants.BrokerLauncherResponseQueueName, serializer);
             this.queueListener.StartListen();
 
             Trace.TraceInformation("BrokerLauncherCloudQueueWatcher started.");
         }
 
-        internal BrokerLauncherCloudQueueWatcher(IBrokerLauncher instance, IQueueListener<BrokerLauncherCloudQueueCmdDto> listener, IQueueWriter<BrokerLauncherCloudQueueResponseDto> writer)
+        internal BrokerLauncherCloudQueueWatcher(IBrokerLauncher instance, IQueueListener<CloudQueueCmdDto> listener, IQueueWriter<CloudQueueResponseDto> writer)
         {
             this.instance = instance;
             this.queueListener = listener;
@@ -37,9 +37,9 @@
 
         private readonly IBrokerLauncher instance;
 
-        private readonly IQueueListener<BrokerLauncherCloudQueueCmdDto> queueListener;
+        private readonly IQueueListener<CloudQueueCmdDto> queueListener;
 
-        private readonly IQueueWriter<BrokerLauncherCloudQueueResponseDto> queueWriter;
+        private readonly IQueueWriter<CloudQueueResponseDto> queueWriter;
 
         private static (T1, T2) UnpackParameter<T1, T2>(object[] objectArr)
         {
@@ -75,7 +75,7 @@
             }
         }
 
-        private async Task InvokeInstanceMethodFromCmdObj(BrokerLauncherCloudQueueCmdDto cmdObj)
+        private async Task InvokeInstanceMethodFromCmdObj(CloudQueueCmdDto cmdObj)
         {
             if (cmdObj == null)
             {
@@ -117,53 +117,53 @@
 
         private Task CreateAndSendResponse(string requestId, string cmdName, object response)
         {
-            var ans = new BrokerLauncherCloudQueueResponseDto(requestId, cmdName, response);
+            var ans = new CloudQueueResponseDto(requestId, cmdName, response);
             return this.queueWriter.WriteAsync(ans);
         }
 
-        public Task Create(BrokerLauncherCloudQueueCmdDto cmdObj)
+        public Task Create(CloudQueueCmdDto cmdObj)
         {
             var (info, id) = UnpackParameter<SessionStartInfoContract, long>(cmdObj.Parameters);
             var res = this.instance.Create(info, (int)id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
-        public Task CreateDurable(BrokerLauncherCloudQueueCmdDto cmdObj)
+        public Task CreateDurable(CloudQueueCmdDto cmdObj)
         {
             var (info, id) = UnpackParameter<SessionStartInfoContract, long>(cmdObj.Parameters);
             var res = this.instance.CreateDurable(info, (int)id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
-        public Task Attach(BrokerLauncherCloudQueueCmdDto cmdObj)
+        public Task Attach(CloudQueueCmdDto cmdObj)
         {
             var id = UnpackParameter<long>(cmdObj.Parameters);
             var res = this.instance.Attach((int)id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
-        public Task Close(BrokerLauncherCloudQueueCmdDto cmdObj)
+        public Task Close(CloudQueueCmdDto cmdObj)
         {
             var id = UnpackParameter<long>(cmdObj.Parameters);
             this.instance.Close((int)id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, string.Empty);
         }
 
-        public Task PingBroker(BrokerLauncherCloudQueueCmdDto cmdObj)
+        public Task PingBroker(CloudQueueCmdDto cmdObj)
         {
             var id = UnpackParameter<long>(cmdObj.Parameters);
             var res = this.instance.PingBroker((int)id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
-        public Task PingBroker2(BrokerLauncherCloudQueueCmdDto cmdObj)
+        public Task PingBroker2(CloudQueueCmdDto cmdObj)
         {
             var id = UnpackParameter<long>(cmdObj.Parameters);
             var res = this.instance.PingBroker2((int)id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
-        public Task GetActiveBrokerIdList(BrokerLauncherCloudQueueCmdDto cmdObj)
+        public Task GetActiveBrokerIdList(CloudQueueCmdDto cmdObj)
         {
             var res = this.instance.GetActiveBrokerIdList();
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);

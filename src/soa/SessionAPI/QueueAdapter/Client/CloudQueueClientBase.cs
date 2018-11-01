@@ -10,9 +10,9 @@
 
     public class CloudQueueClientBase
     {
-        protected IQueueListener<BrokerLauncherCloudQueueResponseDto> listener;
+        protected IQueueListener<CloudQueueResponseDto> listener;
 
-        protected IQueueWriter<BrokerLauncherCloudQueueCmdDto> writer;
+        protected IQueueWriter<CloudQueueCmdDto> writer;
 
         private readonly ConcurrentDictionary<string, object> requestTrackDictionary = new ConcurrentDictionary<string, object>();
 
@@ -20,14 +20,14 @@
 
         protected async Task<T> StartRequestAsync<T>(string cmdName, params object[] parameter)
         {
-            BrokerLauncherCloudQueueCmdDto cmd = new BrokerLauncherCloudQueueCmdDto(cmdName, parameter);
+            CloudQueueCmdDto cmd = new CloudQueueCmdDto(cmdName, parameter);
             await this.writer.WriteAsync(cmd);
             TaskCompletionSource<T> tsc = new TaskCompletionSource<T>();
             this.requestTrackDictionary.TryAdd(cmd.RequestId, tsc);
             return await tsc.Task;
         }
 
-        protected async Task ReceiveResponse(BrokerLauncherCloudQueueResponseDto item)
+        protected async Task ReceiveResponse(CloudQueueResponseDto item)
         {
             if (this.requestTrackDictionary.TryRemove(item.RequestId, out var tcs))
             {
