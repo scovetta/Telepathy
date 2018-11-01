@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session.Interface;
@@ -24,6 +25,7 @@
             this.listener = new CloudQueueListener<BrokerLauncherCloudQueueResponseDto>(connectionString, CloudQueueConstants.BrokerLauncherResponseQueueName, serializer, this.ReceiveResponse);
             this.writer = new CloudQueueWriter<BrokerLauncherCloudQueueCmdDto>(connectionString, CloudQueueConstants.BrokerLauncherRequestQueueName, serializer);
             this.listener.StartListen();
+            this.RegisterResponseTypes();
         }
 
         public BrokerLauncherCloudQueueClient(IQueueListener<BrokerLauncherCloudQueueResponseDto> listener, IQueueWriter<BrokerLauncherCloudQueueCmdDto> writer)
@@ -31,6 +33,7 @@
             this.listener = listener;
             this.writer = writer;
             this.listener.MessageReceivedCallback = this.ReceiveResponse;
+            this.RegisterResponseTypes();
         }
 
         private async Task<T> StartRequestAsync<T>(string cmdName, params object[] parameter)
@@ -46,27 +49,13 @@
         {
             if (this.requestTrackDictionary.TryRemove(item.RequestId, out var tcs))
             {
-                switch (item.CmdName)
+                if (this.responseTypeMapping.TryGetValue(item.CmdName, out var setRes))
                 {
-                    case nameof(this.Create):
-                    case nameof(this.Attach):
-                    case nameof(this.CreateDurable):
-                        SetResult<BrokerInitializationResult>(item, tcs);
-                        break;
-                    case nameof(this.PingBroker):
-                        SetResult<bool>(item, tcs);
-                        break;
-                    case nameof(this.PingBroker2):
-                        SetResult<string>(item, tcs);
-                        break;
-                    case nameof(this.GetActiveBrokerIdList):
-                        SetResult<int[]>(item, tcs);
-                        break;
-                    case nameof(this.Close):
-                        SetResult<object>(item, tcs);
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Unknown cmd for request {item.RequestId}: {item.CmdName}");
+                    setRes(item.Response, tcs);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Unknown cmd for request {item.RequestId}: {item.CmdName}");
                 }
             }
             else
@@ -75,15 +64,33 @@
             }
         }
 
-        private static void SetResult<T>(BrokerLauncherCloudQueueResponseDto item, object tcs)
+        private void RegisterResponseTypes()
         {
-            if (item.Response is T r && tcs is TaskCompletionSource<T> t)
+            this.RegisterResponseType<BrokerInitializationResult>(nameof(this.Create));
+            this.RegisterResponseType<BrokerInitializationResult>(nameof(this.Attach));
+            this.RegisterResponseType<BrokerInitializationResult>(nameof(this.CreateDurable));
+            this.RegisterResponseType<bool>(nameof(this.PingBroker));
+            this.RegisterResponseType<string>(nameof(this.PingBroker2));
+            this.RegisterResponseType<int[]>(nameof(this.GetActiveBrokerIdList));
+            this.RegisterResponseType<object>(nameof(this.Close));
+        }
+
+        private void RegisterResponseType<T>(string cmdName)
+        {
+            this.responseTypeMapping[cmdName] = this.SetResult<T>;
+        }
+
+        private Dictionary<string, Action<object, object>> responseTypeMapping = new Dictionary<string, Action<object, object>>();
+
+        private void SetResult<T>(object item, object tcs)
+        {
+            if (item is T r && tcs is TaskCompletionSource<T> t)
             {
                 t.SetResult(r);
             }
             else
             {
-                throw new InvalidOperationException($"Response type mismatch for request {item.RequestId}");
+                throw new InvalidOperationException($"Response type mismatch.");
             }
         }
 
