@@ -10,19 +10,28 @@
 
     public class CloudQueueClientBase
     {
-        protected IQueueListener<CloudQueueResponseDto> listener;
+        protected IQueueListener<CloudQueueResponseDto> Listener { get; set; }
 
-        protected IQueueWriter<CloudQueueCmdDto> writer;
+        protected IQueueWriter<CloudQueueCmdDto> Writer { get; set; }
 
         private readonly ConcurrentDictionary<string, object> requestTrackDictionary = new ConcurrentDictionary<string, object>();
 
-        private Dictionary<string, Action<object, object>> responseTypeMapping = new Dictionary<string, Action<object, object>>();
+        private readonly Dictionary<string, Action<object, object>> responseTypeMapping = new Dictionary<string, Action<object, object>>();
 
         protected async Task<T> StartRequestAsync<T>(string cmdName, params object[] parameter)
         {
             CloudQueueCmdDto cmd = new CloudQueueCmdDto(cmdName, parameter);
-            await this.writer.WriteAsync(cmd);
+            await this.Writer.WriteAsync(cmd);
             TaskCompletionSource<T> tsc = new TaskCompletionSource<T>();
+            this.requestTrackDictionary.TryAdd(cmd.RequestId, tsc);
+            return await tsc.Task;
+        }
+
+        protected async Task<object> StartRequestAsync(string cmdName, params object[] parameter)
+        {
+            CloudQueueCmdDto cmd = new CloudQueueCmdDto(cmdName, parameter);
+            await this.Writer.WriteAsync(cmd);
+            TaskCompletionSource<object> tsc = new TaskCompletionSource<object>();
             this.requestTrackDictionary.TryAdd(cmd.RequestId, tsc);
             return await tsc.Task;
         }
@@ -49,6 +58,11 @@
         protected void RegisterResponseType<T>(string cmdName)
         {
             this.responseTypeMapping[cmdName] = this.SetResult<T>;
+        }
+
+        protected void RegisterResponseType(string cmdName)
+        {
+            this.responseTypeMapping[cmdName] = this.SetResult<object>;
         }
 
         private void SetResult<T>(object item, object tcs)
