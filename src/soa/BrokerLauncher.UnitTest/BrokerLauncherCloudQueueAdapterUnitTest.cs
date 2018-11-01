@@ -30,7 +30,7 @@
         [TestInitialize]
         public void TestInit()
         {
-            var serializer = new CloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder.Default);
+            var serializer = new CloudQueueSerializer(CloudQueueCmdTypeBinder.BrokerLauncherBinder);
             this.clientListener = new LocalQueueListener<CloudQueueResponseDto>(queue, serializer);
             this.client = new BrokerLauncherCloudQueueClient(this.clientListener, new LocalQueueWriter<CloudQueueCmdDto>(queue, serializer));
 

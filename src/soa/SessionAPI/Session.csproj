@@ -320,9 +320,9 @@
     <Compile Include="QueueAdapter\CloudQueueConstants.cs" />
     <Compile Include="QueueAdapter\CloudQueueListener.cs" />
     <Compile Include="QueueAdapter\CloudQueueSerializer.cs" />
-    <Compile Include="QueueAdapter\DTO\BrokerLauncherCloudQueueCmdDto.cs" />
-    <Compile Include="QueueAdapter\DTO\BrokerLauncherCloudQueueCmdTypeBinder.cs" />
-    <Compile Include="QueueAdapter\DTO\BrokerLauncherCloudQueueResponseDto.cs" />
+    <Compile Include="QueueAdapter\DTO\CloudQueueCmdDto.cs" />
+    <Compile Include="QueueAdapter\DTO\CloudQueueCmdTypeBinder.cs" />
+    <Compile Include="QueueAdapter\DTO\CloudQueueResponseDto.cs" />
     <Compile Include="QueueAdapter\CloudQueueWriter.cs" />
     <Compile Include="QueueAdapter\Interface\IQueueListener.cs" />
     <Compile Include="QueueAdapter\Interface\IQueueSerializer.cs" />

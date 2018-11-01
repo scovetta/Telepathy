@@ -7,9 +7,9 @@
 
     using Microsoft.Hpc.Scheduler.Session.Interface;
 
-    public class BrokerLauncherCloudQueueCmdTypeBinder : SerializationBinder
+    public class CloudQueueCmdTypeBinder : SerializationBinder
     {
-        public static BrokerLauncherCloudQueueCmdTypeBinder Default => new BrokerLauncherCloudQueueCmdTypeBinder()
+        public static CloudQueueCmdTypeBinder BrokerLauncherBinder => new CloudQueueCmdTypeBinder()
                                                                           {
                                                                               ParameterTypes = new List<Type>()
                                                                                                    {

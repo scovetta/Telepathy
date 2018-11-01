@@ -11,12 +11,12 @@
     {
         private readonly JsonSerializerSettings setting = null;
 
-        public CloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder binder, List<JsonConverter> converters)
+        public CloudQueueSerializer(CloudQueueCmdTypeBinder binder, List<JsonConverter> converters)
         {
             this.setting = new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All, Binder = binder, Converters = converters };
         }
 
-        public CloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder binder) : this(binder, null)
+        public CloudQueueSerializer(CloudQueueCmdTypeBinder binder) : this(binder, null)
         {
         }
 

@@ -14,7 +14,7 @@
         {
             this.instance = instance;
 
-            CloudQueueSerializer serializer = new CloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder.Default);
+            CloudQueueSerializer serializer = new CloudQueueSerializer(CloudQueueCmdTypeBinder.BrokerLauncherBinder);
 
             this.queueListener = new CloudQueueListener<CloudQueueCmdDto>(
                 connectionString,

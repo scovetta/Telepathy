@@ -17,7 +17,7 @@
         [TestMethod]
         public void BasicRequestSerializeE2E()
         {
-            var serializer = new CloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder.Default);
+            var serializer = new CloudQueueSerializer(CloudQueueCmdTypeBinder.BrokerLauncherBinder);
             var cmd = new CloudQueueCmdDto("TestId", "TestCmd", new SessionStartInfoContract(), 10);
             var str = serializer.Serialize(cmd);
             var dcmd = serializer.Deserialize<CloudQueueCmdDto>(str);
@@ -33,7 +33,7 @@
         [TestMethod]
         public void BasicResultSerializeE2E()
         {
-            var serializer = new CloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder.Default);
+            var serializer = new CloudQueueSerializer(CloudQueueCmdTypeBinder.BrokerLauncherBinder);
             var res = new CloudQueueResponseDto("TestId", "TestCmd", new BrokerInitializationResult());
             var str = serializer.Serialize(res);
             var dres = serializer.Deserialize<CloudQueueResponseDto>(str);
@@ -45,7 +45,7 @@
         [TestMethod]
         public void CreateBrokerCmdDeserializeTest()
         {
-            var serializer = new CloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder.Default);
+            var serializer = new CloudQueueSerializer(CloudQueueCmdTypeBinder.BrokerLauncherBinder);
             var dcmd = serializer.Deserialize<CloudQueueCmdDto>(createBrokerCmdStr);
             Assert.AreEqual("89fba2c1-3529-4b38-a332-22920e82616d", dcmd.RequestId);
         }
@@ -53,7 +53,7 @@
         [TestMethod]
         public void CreateBrokerResDeserializeTest()
         {
-            var serializer = new CloudQueueSerializer(BrokerLauncherCloudQueueCmdTypeBinder.Default);
+            var serializer = new CloudQueueSerializer(CloudQueueCmdTypeBinder.BrokerLauncherBinder);
             var dcmd = serializer.Deserialize<CloudQueueResponseDto>(createBrokerResStr);
             Assert.AreEqual("f2d66098-cd56-45ef-9118-30f798f34620", dcmd.RequestId);
         }
