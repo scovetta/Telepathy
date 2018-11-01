@@ -305,7 +305,7 @@ namespace Microsoft.Hpc.ServiceBroker
                     }
                     else
                     {
-                        BrokerTracing.TraceError("[BrokerEntry] Initialization: Use Azure Queueu is specified, however the Azure connection string is not set.");
+                        BrokerTracing.TraceError("[BrokerEntry] Initialization: Use Azure Queue is specified, however the Azure connection string is not set.");
                         ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_AzureConnectionStringNotAvailable, Microsoft.Hpc.SvcBroker.SR.Broker_AzureConnectionStringNotAvailable);
                     }
                 }

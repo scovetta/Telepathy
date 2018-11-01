@@ -46,36 +46,24 @@
         {
             if (this.requestTrackDictionary.TryRemove(item.RequestId, out var tcs))
             {
-                void SetResult<T>()
-                {
-                    if (item.Response is T r && tcs is TaskCompletionSource<T> t)
-                    {
-                        t.SetResult(r);
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException($"Response type mismatch for request {item.RequestId}");
-                    }
-                }
-
                 switch (item.CmdName)
                 {
                     case nameof(this.Create):
                     case nameof(this.Attach):
                     case nameof(this.CreateDurable):
-                        SetResult<BrokerInitializationResult>();
+                        SetResult<BrokerInitializationResult>(item, tcs);
                         break;
                     case nameof(this.PingBroker):
-                        SetResult<bool>();
+                        SetResult<bool>(item, tcs);
                         break;
                     case nameof(this.PingBroker2):
-                        SetResult<string>();
+                        SetResult<string>(item, tcs);
                         break;
                     case nameof(this.GetActiveBrokerIdList):
-                        SetResult<int[]>();
+                        SetResult<int[]>(item, tcs);
                         break;
                     case nameof(this.Close):
-                        SetResult<object>();
+                        SetResult<object>(item, tcs);
                         break;
                     default:
                         throw new InvalidOperationException($"Unknown cmd for request {item.RequestId}: {item.CmdName}");
@@ -84,6 +72,18 @@
             else
             {
                 throw new InvalidOperationException($"Unknown request ID: {item.RequestId}");
+            }
+        }
+
+        private static void SetResult<T>(BrokerLauncherCloudQueueResponseDto item, object tcs)
+        {
+            if (item.Response is T r && tcs is TaskCompletionSource<T> t)
+            {
+                t.SetResult(r);
+            }
+            else
+            {
+                throw new InvalidOperationException($"Response type mismatch for request {item.RequestId}");
             }
         }
 
