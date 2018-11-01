@@ -1,15 +1,14 @@
 ﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter
 {
-    using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter;
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
+    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Server;
 
-    public class BrokerLauncherCloudQueueWatcher
+    public class BrokerLauncherCloudQueueWatcher : CloudQueueWatcherBase
     {
         internal BrokerLauncherCloudQueueWatcher(IBrokerLauncher instance, string connectionString)
         {
@@ -17,9 +16,9 @@
 
             CloudQueueSerializer serializer = new CloudQueueSerializer(CloudQueueCmdTypeBinder.BrokerLauncherBinder);
 
-            this.queueListener = new CloudQueueListener<CloudQueueCmdDto>(connectionString, CloudQueueConstants.BrokerLauncherRequestQueueName, serializer, this.InvokeInstanceMethodFromCmdObj);
-            this.queueWriter = new CloudQueueWriter<CloudQueueResponseDto>(connectionString, CloudQueueConstants.BrokerLauncherResponseQueueName, serializer);
-            this.queueListener.StartListen();
+            this.QueueListener = new CloudQueueListener<CloudQueueCmdDto>(connectionString, CloudQueueConstants.BrokerLauncherRequestQueueName, serializer, this.InvokeInstanceMethodFromCmdObj);
+            this.QueueWriter = new CloudQueueWriter<CloudQueueResponseDto>(connectionString, CloudQueueConstants.BrokerLauncherResponseQueueName, serializer);
+            this.QueueListener.StartListen();
 
             this.RegisterCmdDelegates();
             Trace.TraceInformation("BrokerLauncherCloudQueueWatcher started.");
@@ -28,39 +27,13 @@
         internal BrokerLauncherCloudQueueWatcher(IBrokerLauncher instance, IQueueListener<CloudQueueCmdDto> listener, IQueueWriter<CloudQueueResponseDto> writer)
         {
             this.instance = instance;
-            this.queueListener = listener;
-            this.queueWriter = writer;
-            this.queueListener.MessageReceivedCallback = this.InvokeInstanceMethodFromCmdObj;
+            this.QueueListener = listener;
+            this.QueueWriter = writer;
+            this.QueueListener.MessageReceivedCallback = this.InvokeInstanceMethodFromCmdObj;
             this.RegisterCmdDelegates();
         }
 
         private readonly IBrokerLauncher instance;
-
-        private readonly IQueueListener<CloudQueueCmdDto> queueListener;
-
-        private readonly IQueueWriter<CloudQueueResponseDto> queueWriter;
-
-        private async Task InvokeInstanceMethodFromCmdObj(CloudQueueCmdDto cmdObj)
-        {
-            if (cmdObj == null)
-            {
-                throw new ArgumentNullException(nameof(cmdObj));
-            }
-
-            if (string.IsNullOrEmpty(cmdObj.CmdName))
-            {
-                throw new InvalidOperationException($"{nameof(cmdObj.CmdName)} is null or empty string.");
-            }
-
-            if (this.cmdNameToDelegate.TryGetValue(cmdObj.CmdName, out var del))
-            {
-                await del(cmdObj);
-            }
-            else
-            {
-                throw new InvalidOperationException($"Unknown CmdName {cmdObj.CmdName}");
-            }
-        }
 
         private void RegisterCmdDelegates()
         {
@@ -71,19 +44,6 @@
             this.RegisterCmdDelegate(nameof(this.PingBroker), this.PingBroker);
             this.RegisterCmdDelegate(nameof(this.PingBroker2), this.PingBroker2);
             this.RegisterCmdDelegate(nameof(this.GetActiveBrokerIdList), this.GetActiveBrokerIdList);
-        }
-
-        private void RegisterCmdDelegate(string cmdName, Func<CloudQueueCmdDto, Task> del)
-        {
-            this.cmdNameToDelegate[cmdName] = del;
-        }
-
-        private Dictionary<string, Func<CloudQueueCmdDto, Task>> cmdNameToDelegate = new Dictionary<string, Func<CloudQueueCmdDto, Task>>();
-
-        private Task CreateAndSendResponse(string requestId, string cmdName, object response)
-        {
-            var ans = new CloudQueueResponseDto(requestId, cmdName, response);
-            return this.queueWriter.WriteAsync(ans);
         }
 
         public Task Create(CloudQueueCmdDto cmdObj)

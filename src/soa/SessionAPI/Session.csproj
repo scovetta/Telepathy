@@ -330,6 +330,7 @@
     <Compile Include="QueueAdapter\Interface\IQueueSerializer.cs" />
     <Compile Include="QueueAdapter\Interface\IQueueWriter.cs" />
     <Compile Include="QueueAdapter\DTO\ParameterUnpacker.cs" />
+    <Compile Include="QueueAdapter\Server\CloudQueueWatcherBase.cs" />
     <Compile Include="TaskInInterestUtil.cs" />
     <Compile Include="WinServiceHpcContextModule.cs" />
     <None Include="Internal\AzureRestSessionFactory.cs" />
