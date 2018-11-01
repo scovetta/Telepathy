@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Threading.Tasks;
 
@@ -16,14 +17,11 @@
 
             CloudQueueSerializer serializer = new CloudQueueSerializer(CloudQueueCmdTypeBinder.BrokerLauncherBinder);
 
-            this.queueListener = new CloudQueueListener<CloudQueueCmdDto>(
-                connectionString,
-                CloudQueueConstants.BrokerLauncherRequestQueueName,
-                serializer,
-                this.InvokeInstanceMethodFromCmdObj);
+            this.queueListener = new CloudQueueListener<CloudQueueCmdDto>(connectionString, CloudQueueConstants.BrokerLauncherRequestQueueName, serializer, this.InvokeInstanceMethodFromCmdObj);
             this.queueWriter = new CloudQueueWriter<CloudQueueResponseDto>(connectionString, CloudQueueConstants.BrokerLauncherResponseQueueName, serializer);
             this.queueListener.StartListen();
 
+            this.RegisterCmdDelegates();
             Trace.TraceInformation("BrokerLauncherCloudQueueWatcher started.");
         }
 
@@ -33,6 +31,7 @@
             this.queueListener = listener;
             this.queueWriter = writer;
             this.queueListener.MessageReceivedCallback = this.InvokeInstanceMethodFromCmdObj;
+            this.RegisterCmdDelegates();
         }
 
         private readonly IBrokerLauncher instance;
@@ -40,40 +39,6 @@
         private readonly IQueueListener<CloudQueueCmdDto> queueListener;
 
         private readonly IQueueWriter<CloudQueueResponseDto> queueWriter;
-
-        private static (T1, T2) UnpackParameter<T1, T2>(object[] objectArr)
-        {
-            if (objectArr.Length != 2)
-            {
-                throw new ArgumentException("Argument length mismatch", nameof(objectArr));
-            }
-
-            if (objectArr[0] is T1 arg1 && objectArr[1] is T2 arg2)
-            {
-                return (arg1, arg2);
-            }
-            else
-            {
-                throw new ArgumentException("Argument type mismatch", nameof(objectArr));
-            }
-        }
-
-        private static T UnpackParameter<T>(object[] objectArr)
-        {
-            if (objectArr.Length != 1)
-            {
-                throw new ArgumentException("Argument length mismatch", nameof(objectArr));
-            }
-
-            if (objectArr[0] is T arg)
-            {
-                return arg;
-            }
-            else
-            {
-                throw new ArgumentException("Argument type mismatch", nameof(objectArr));
-            }
-        }
 
         private async Task InvokeInstanceMethodFromCmdObj(CloudQueueCmdDto cmdObj)
         {
@@ -87,33 +52,33 @@
                 throw new InvalidOperationException($"{nameof(cmdObj.CmdName)} is null or empty string.");
             }
 
-            switch (cmdObj.CmdName)
+            if (this.cmdNameToDelegate.TryGetValue(cmdObj.CmdName, out var del))
             {
-                case nameof(this.Create):
-                    await this.Create(cmdObj);
-                    break;
-                case nameof(this.CreateDurable):
-                    await this.CreateDurable(cmdObj);
-                    break;
-                case nameof(this.Attach):
-                    await this.Attach(cmdObj);
-                    break;
-                case nameof(this.Close):
-                    await this.Close(cmdObj);
-                    break;
-                case nameof(this.PingBroker):
-                    await this.PingBroker(cmdObj);
-                    break;
-                case nameof(this.PingBroker2):
-                    await this.PingBroker2(cmdObj);
-                    break;
-                case nameof(this.GetActiveBrokerIdList):
-                    await this.GetActiveBrokerIdList(cmdObj);
-                    break;
-                default:
-                    throw new InvalidOperationException($"Unknown CmdName {cmdObj.CmdName}");
+                await del(cmdObj);
+            }
+            else
+            {
+                throw new InvalidOperationException($"Unknown CmdName {cmdObj.CmdName}");
             }
         }
+
+        private void RegisterCmdDelegates()
+        {
+            this.RegisterCmdDelegate(nameof(this.Create), this.Create);
+            this.RegisterCmdDelegate(nameof(this.CreateDurable), this.CreateDurable);
+            this.RegisterCmdDelegate(nameof(this.Attach), this.Attach);
+            this.RegisterCmdDelegate(nameof(this.Close), this.Close);
+            this.RegisterCmdDelegate(nameof(this.PingBroker), this.PingBroker);
+            this.RegisterCmdDelegate(nameof(this.PingBroker2), this.PingBroker2);
+            this.RegisterCmdDelegate(nameof(this.GetActiveBrokerIdList), this.GetActiveBrokerIdList);
+        }
+
+        private void RegisterCmdDelegate(string cmdName, Func<CloudQueueCmdDto, Task> del)
+        {
+            this.cmdNameToDelegate[cmdName] = del;
+        }
+
+        private Dictionary<string, Func<CloudQueueCmdDto, Task>> cmdNameToDelegate = new Dictionary<string, Func<CloudQueueCmdDto, Task>>();
 
         private Task CreateAndSendResponse(string requestId, string cmdName, object response)
         {
