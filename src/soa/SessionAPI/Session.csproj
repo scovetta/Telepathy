@@ -322,12 +322,14 @@
     <Compile Include="QueueAdapter\CloudQueueListener.cs" />
     <Compile Include="QueueAdapter\CloudQueueSerializer.cs" />
     <Compile Include="QueueAdapter\DTO\CloudQueueCmdDto.cs" />
+    <Compile Include="QueueAdapter\DTO\CloudQueueCmdExtension.cs" />
     <Compile Include="QueueAdapter\DTO\CloudQueueCmdTypeBinder.cs" />
     <Compile Include="QueueAdapter\DTO\CloudQueueResponseDto.cs" />
     <Compile Include="QueueAdapter\CloudQueueWriter.cs" />
     <Compile Include="QueueAdapter\Interface\IQueueListener.cs" />
     <Compile Include="QueueAdapter\Interface\IQueueSerializer.cs" />
     <Compile Include="QueueAdapter\Interface\IQueueWriter.cs" />
+    <Compile Include="QueueAdapter\DTO\ParameterUnpacker.cs" />
     <Compile Include="TaskInInterestUtil.cs" />
     <Compile Include="WinServiceHpcContextModule.cs" />
     <None Include="Internal\AzureRestSessionFactory.cs" />

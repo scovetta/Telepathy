@@ -123,43 +123,43 @@
 
         public Task Create(CloudQueueCmdDto cmdObj)
         {
-            var (info, id) = UnpackParameter<SessionStartInfoContract, long>(cmdObj.Parameters);
-            var res = this.instance.Create(info, (int)id);
+            cmdObj.GetUnpacker().Unpack<SessionStartInfoContract>(out var info).UnpackInt(out var id);
+            var res = this.instance.Create(info, id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
         public Task CreateDurable(CloudQueueCmdDto cmdObj)
         {
-            var (info, id) = UnpackParameter<SessionStartInfoContract, long>(cmdObj.Parameters);
-            var res = this.instance.CreateDurable(info, (int)id);
+            cmdObj.GetUnpacker().Unpack<SessionStartInfoContract>(out var info).UnpackInt(out var id);
+            var res = this.instance.CreateDurable(info, id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
         public Task Attach(CloudQueueCmdDto cmdObj)
         {
-            var id = UnpackParameter<long>(cmdObj.Parameters);
-            var res = this.instance.Attach((int)id);
+            cmdObj.GetUnpacker().UnpackInt(out var id);
+            var res = this.instance.Attach(id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
         public Task Close(CloudQueueCmdDto cmdObj)
         {
-            var id = UnpackParameter<long>(cmdObj.Parameters);
-            this.instance.Close((int)id);
+            cmdObj.GetUnpacker().UnpackInt(out var id);
+            this.instance.Close(id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, string.Empty);
         }
 
         public Task PingBroker(CloudQueueCmdDto cmdObj)
         {
-            var id = UnpackParameter<long>(cmdObj.Parameters);
-            var res = this.instance.PingBroker((int)id);
+            cmdObj.GetUnpacker().UnpackInt(out var id);
+            var res = this.instance.PingBroker(id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
         public Task PingBroker2(CloudQueueCmdDto cmdObj)
         {
-            var id = UnpackParameter<long>(cmdObj.Parameters);
-            var res = this.instance.PingBroker2((int)id);
+            cmdObj.GetUnpacker().UnpackInt(out var id);
+            var res = this.instance.PingBroker2(id);
             return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, res);
         }
 
