@@ -31,12 +31,9 @@
             Trace.TraceInformation("BrokerWorkerControllerQueueWatcher started.");
         }
 
-        internal BrokerWorkerControllerQueueWatcher(IController instance, IQueueListener<CloudQueueCmdDto> listener, IQueueWriter<CloudQueueResponseDto> writer)
+        public BrokerWorkerControllerQueueWatcher(IController instance, IQueueListener<CloudQueueCmdDto> listener, IQueueWriter<CloudQueueResponseDto> writer) : base(listener, writer)
         {
             this.instance = instance;
-            this.QueueListener = listener;
-            this.QueueWriter = writer;
-            this.QueueListener.MessageReceivedCallback = this.InvokeInstanceMethodFromCmdObj;
             this.RegisterCmdDelegates();
         }
 
@@ -89,8 +86,8 @@
 
         public Task PullResponses(CloudQueueCmdDto cmdObj)
         {
-            cmdObj.GetUnpacker().UnpackString(out var action).Unpack<GetResponsePosition>(out var position).UnpackInt(out int count).UnpackString(out string clientId);
-            var res = this.instance.PullResponses(action, position, count, clientId);
+            cmdObj.GetUnpacker().UnpackString(out var action).Unpack<long>(out var position).UnpackInt(out int count).UnpackString(out string clientId);
+            var res = this.instance.PullResponses(action, (GetResponsePosition)position, count, clientId);
             return this.CreateAndSendResponse(cmdObj, res);
         }
 
@@ -99,11 +96,11 @@
             cmdObj.GetUnpacker()
                 .UnpackString(out string action)
                 .UnpackString(out string clientData)
-                .Unpack<GetResponsePosition>(out var resetToBegin)
+                .Unpack<long>(out var resetToBegin)
                 .UnpackInt(out int count)
                 .UnpackString(out string clientId)
                 .UnpackInt(out var sessionHash);
-            this.instance.GetResponsesAQ(action, clientData, resetToBegin, count, clientId, sessionHash, out var azureResponseQueueUri, out var azureResponseBlobUri);
+            this.instance.GetResponsesAQ(action, clientData, (GetResponsePosition)resetToBegin, count, clientId, sessionHash, out var azureResponseQueueUri, out var azureResponseBlobUri);
             var res = (azureResponseQueueUri, azureResponseBlobUri);
             return this.CreateAndSendResponse(cmdObj, res);
         }

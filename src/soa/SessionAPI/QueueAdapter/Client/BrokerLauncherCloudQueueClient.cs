@@ -20,11 +20,8 @@
             this.RegisterResponseTypes();
         }
 
-        public BrokerLauncherCloudQueueClient(IQueueListener<CloudQueueResponseDto> listener, IQueueWriter<CloudQueueCmdDto> writer)
+        public BrokerLauncherCloudQueueClient(IQueueListener<CloudQueueResponseDto> listener, IQueueWriter<CloudQueueCmdDto> writer) :base(listener, writer)
         {
-            this.Listener = listener;
-            this.Writer = writer;
-            this.Listener.MessageReceivedCallback = this.ReceiveResponse;
             this.RegisterResponseTypes();
         }
 

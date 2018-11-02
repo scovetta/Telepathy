@@ -8,8 +8,19 @@
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
 
-    public class CloudQueueClientBase
+    public abstract class CloudQueueClientBase
     {
+        protected CloudQueueClientBase()
+        {
+        }
+
+        protected CloudQueueClientBase(IQueueListener<CloudQueueResponseDto> listener, IQueueWriter<CloudQueueCmdDto> writer)
+        {
+            this.Listener = listener;
+            this.Writer = writer;
+            this.Listener.MessageReceivedCallback = this.ReceiveResponse;
+        }
+
         protected IQueueListener<CloudQueueResponseDto> Listener { get; set; }
 
         protected IQueueWriter<CloudQueueCmdDto> Writer { get; set; }
@@ -67,13 +78,20 @@
 
         private void SetResult<T>(object item, object tcs)
         {
-            if (item is T r && tcs is TaskCompletionSource<T> t)
+            if (tcs is TaskCompletionSource<T> t)
             {
-                t.SetResult(r);
+                if (item is T r)
+                {
+                    t.SetResult(r);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Response type mismatch.");
+                }
             }
             else
             {
-                throw new InvalidOperationException($"Response type mismatch.");
+                throw new InvalidOperationException($"TaskCompletionSource type mismatch.");
             }
         }
     }

@@ -5,6 +5,7 @@
 
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
+    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
 
     public class BrokerControllerCloudQueueClient : CloudQueueClientBase, IController
     {
@@ -17,15 +18,20 @@
             this.RegisterResponseTypes();
         }
 
+        public BrokerControllerCloudQueueClient(IQueueListener<CloudQueueResponseDto> listener, IQueueWriter<CloudQueueCmdDto> writer) : base(listener, writer)
+        {
+            this.RegisterResponseTypes();
+        }
+
         private void RegisterResponseTypes()
         {
             this.RegisterResponseType(nameof(this.Flush));
             this.RegisterResponseType(nameof(this.EndRequests));
             this.RegisterResponseType(nameof(this.Purge));
-            this.RegisterResponseType<BrokerClientStatus>(nameof(this.GetBrokerClientStatus));
-            this.RegisterResponseType<string>(nameof(this.GetRequestsCount));
+            this.RegisterResponseType<long>(nameof(this.GetBrokerClientStatus));
+            this.RegisterResponseType<long>(nameof(this.GetRequestsCount));
             this.RegisterResponseType<BrokerResponseMessages>(nameof(this.PullResponses));
-            this.RegisterResponseType(nameof(this.GetResponsesAQ));
+            this.RegisterResponseType<(string, string)>(nameof(this.GetResponsesAQ));
             this.RegisterResponseType(nameof(this.Ping));
         }
 
@@ -64,9 +70,10 @@
             return this.GetBrokerClientStatusAsync(clientId).GetAwaiter().GetResult();
         }
 
-        public Task<BrokerClientStatus> GetBrokerClientStatusAsync(string clientId)
+        public async Task<BrokerClientStatus> GetBrokerClientStatusAsync(string clientId)
         {
-            return this.StartRequestAsync<BrokerClientStatus>(nameof(this.GetBrokerClientStatus), clientId);
+            var res = await this.StartRequestAsync<long>(nameof(this.GetBrokerClientStatus), clientId);
+            return (BrokerClientStatus)res;
         }
 
         public int GetRequestsCount(string clientId)
@@ -74,9 +81,9 @@
             return this.GetRequestsCountAsync(clientId).GetAwaiter().GetResult();
         }
 
-        public Task<int> GetRequestsCountAsync(string clientId)
+        public async Task<int> GetRequestsCountAsync(string clientId)
         {
-            return this.StartRequestAsync<int>(nameof(this.GetRequestsCount), clientId);
+            return (int)await this.StartRequestAsync<long>(nameof(this.GetRequestsCount), clientId);
         }
 
         public BrokerResponseMessages PullResponses(string action, GetResponsePosition position, int count, string clientId)
@@ -86,7 +93,7 @@
 
         public Task<BrokerResponseMessages> PullResponsesAsync(string action, GetResponsePosition position, int count, string clientId)
         {
-            return this.StartRequestAsync<BrokerResponseMessages>(action, position, count, clientId);
+            return this.StartRequestAsync<BrokerResponseMessages>(nameof(this.PullResponses), action, position, count, clientId);
         }
 
         public void GetResponsesAQ(
@@ -112,7 +119,7 @@
             string clientId,
             int sessionHash)
         {
-            return this.StartRequestAsync<(string, string)>(action, clientData, resetToBegin, count, clientId, sessionHash);
+            return this.StartRequestAsync<(string, string)>(nameof(this.GetResponsesAQ), action, clientData, resetToBegin, count, clientId, sessionHash);
         }
 
         public void Ping()

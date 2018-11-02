@@ -15,6 +15,17 @@
 
         private readonly Dictionary<string, Func<CloudQueueCmdDto, Task>> cmdNameToDelegate = new Dictionary<string, Func<CloudQueueCmdDto, Task>>();
 
+        protected CloudQueueWatcherBase()
+        {
+        }
+
+        protected CloudQueueWatcherBase(IQueueListener<CloudQueueCmdDto> listener, IQueueWriter<CloudQueueResponseDto> writer)
+        {
+            this.QueueListener = listener;
+            this.QueueWriter = writer;
+            this.QueueListener.MessageReceivedCallback = this.InvokeInstanceMethodFromCmdObj;
+        }
+
         protected async Task InvokeInstanceMethodFromCmdObj(CloudQueueCmdDto cmdObj)
         {
             if (cmdObj == null)

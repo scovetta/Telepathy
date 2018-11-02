@@ -1,4 +1,4 @@
-﻿namespace BrokerLauncher.UnitTest.Mock
+﻿namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter
 {
     using System;
     using System.Collections.Generic;
@@ -7,7 +7,7 @@
 
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
 
-    internal class LocalQueueListener<T> : IQueueListener<T>
+    public class LocalQueueListener<T> : IQueueListener<T>
     {
         private Queue<string> queue;
 

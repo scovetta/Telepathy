@@ -1,11 +1,11 @@
-﻿namespace BrokerLauncher.UnitTest.Mock
+﻿namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
 
-    internal class LocalQueueWriter<T> : IQueueWriter<T>
+    public class LocalQueueWriter<T> : IQueueWriter<T>
     {
         private Queue<string> queue;
 
