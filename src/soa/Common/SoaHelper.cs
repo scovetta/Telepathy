@@ -996,6 +996,15 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns></returns>
         public static string GetResponseStorageName(int clusterHash, int sessionId, int sessionHash)
         {
+            if (sessionId < -1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sessionId));
+            }
+            else if (sessionId == -1)
+            {
+                sessionId = 0;
+            }
+
             uint uClusterHash = Convert.ToUInt32((long)clusterHash - int.MinValue);
             uint uSessionHash = Convert.ToUInt32((long)sessionHash - int.MinValue);
             return string.Format("hpcsoa-{0}-{1}-response-{2}", uClusterHash, sessionId, uSessionHash);

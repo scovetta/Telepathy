@@ -9,21 +9,24 @@
 
     public class CloudQueueCmdTypeBinder : SerializationBinder
     {
-        public static CloudQueueCmdTypeBinder BrokerLauncherBinder => new CloudQueueCmdTypeBinder()
-                                                                          {
-                                                                              ParameterTypes = new List<Type>()
-                                                                                                   {
-                                                                                                       typeof(SessionStartInfoContract),
-                                                                                                       typeof(BrokerInitializationResult),
-                                                                                                       typeof(object[]),
-                                                                                                       typeof(int[]),
-                                                                                                       typeof(string[]),
-                                                                                                       typeof(CloudQueueCmdDto),
-                                                                                                       typeof(CloudQueueResponseDto),
-                                                                                                       typeof(Dictionary<string, string>),
-                                                                                                       typeof(Version)
-                                                                                                   }
-                                                                          };
+        public static CloudQueueCmdTypeBinder BrokerLauncherBinder =>
+            new CloudQueueCmdTypeBinder()
+                {
+                    ParameterTypes = new List<Type>()
+                                         {
+                                             typeof(SessionStartInfoContract),
+                                             typeof(BrokerInitializationResult),
+                                             typeof(object[]),
+                                             typeof(int[]),
+                                             typeof(string[]),
+                                             typeof(CloudQueueCmdDto),
+                                             typeof(CloudQueueResponseDto),
+                                             typeof(Dictionary<string, string>),
+                                             typeof(Version),
+                                             typeof(ValueTuple<string, string>),
+                                             typeof(ValueTuple)
+                                         }
+                };
 
         public override Type BindToType(string assemblyName, string typeName)
         {
