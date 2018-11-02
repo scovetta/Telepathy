@@ -95,11 +95,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     }
                     else
                     {
-#if net40
-                        return new V3Session(info, startInfo.Headnode, startInfo.ShareSession, binding);
-#else
-                        return new V3Session(info, startInfo.Headnode, startInfo.ShareSession, binding);
-#endif
+
+                        var session = new V3Session(info, startInfo.Headnode, startInfo.ShareSession, binding);
+                        if (startInfo.UseAzureQueue.GetValueOrDefault())
+                        {
+                            session.BrokerLauncherClient = brokerLauncher;
+                        }
+
+                        return session;
                     }
 
                 }

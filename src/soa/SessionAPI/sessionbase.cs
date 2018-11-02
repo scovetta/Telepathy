@@ -256,6 +256,8 @@ namespace Microsoft.Hpc.Scheduler.Session
             get { return this.factory; }
         }
 
+        internal IBrokerLauncher BrokerLauncherClient { get; set; }
+
         /// <summary>
         /// Gets the instance of SessionInfo
         /// </summary>
@@ -943,7 +945,12 @@ namespace Microsoft.Hpc.Scheduler.Session
             {
                 if (purge)
                 {
-                    IBrokerLauncher broker = this.factory?.GetBrokerLauncherClient(timeoutMilliseconds);
+                    IBrokerLauncher broker = this.BrokerLauncherClient;
+                    if (broker == null)
+                    {
+                        broker = this.factory?.GetBrokerLauncherClient(timeoutMilliseconds);
+                    }
+
                     broker?.Close(this.Id);
                 }
             }
