@@ -20,6 +20,10 @@
         {
         }
 
+        public CloudQueueSerializer() : this(null)
+        {
+        }
+
         public string Serialize<T>(T item) => JsonConvert.SerializeObject(item, this.setting);
 
         public T Deserialize<T>(string item) => JsonConvert.DeserializeObject<T>(item, this.setting);

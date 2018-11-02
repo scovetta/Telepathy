@@ -47,5 +47,15 @@
             var ans = new CloudQueueResponseDto(requestId, cmdName, response);
             return this.QueueWriter.WriteAsync(ans);
         }
+
+        protected Task CreateAndSendResponse(CloudQueueCmdDto cmdObj, object response)
+        {
+            return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, response);
+        }
+
+        protected Task CreateAndSendEmptyResponse(CloudQueueCmdDto cmdObj)
+        {
+            return this.CreateAndSendResponse(cmdObj.RequestId, cmdObj.CmdName, string.Empty);
+        }
     }
 }

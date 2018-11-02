@@ -12,6 +12,8 @@
 
     public class CloudQueueListener<T> : IQueueListener<T>
     {
+        private volatile bool enabled;
+
         private readonly CloudQueue queue;
 
         public Func<T, Task> MessageReceivedCallback { get; set; }
@@ -57,7 +59,9 @@
 
         public async Task StartListenAsync()
         {
-            while (true)
+            this.enabled = true;
+
+            while (this.enabled)
             {
                 await this.queue.CreateIfNotExistsAsync();
 
@@ -98,6 +102,11 @@
                 Trace.TraceError($"Exception when Checking Cloud Queue Message: {ex.ToString()}");
                 throw;
             }
+        }
+
+        public void StopListen()
+        {
+            this.enabled = false;
         }
     }
 }

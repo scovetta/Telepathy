@@ -12,5 +12,7 @@
         Task StartListenAsync();
 
         Task<bool> CheckAsync();
+
+        void StopListen();
     }
 }

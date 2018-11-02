@@ -50,5 +50,10 @@
                 return false;
             }
         }
+
+        public void StopListen()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

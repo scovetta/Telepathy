@@ -41,27 +41,52 @@
 
         public void EndRequests(int count, string clientid, int batchId, int timeoutThrottlingMs, int timeoutEOMMs)
         {
-            throw new NotImplementedException();
+            this.EndRequestsAsync(count, clientid, batchId, timeoutThrottlingMs, timeoutEOMMs).GetAwaiter().GetResult();
+        }
+
+        public Task EndRequestsAsync(int count, string clientid, int batchId, int timeoutThrottlingMs, int timeoutEOMMs)
+        {
+            return this.StartRequestAsync(nameof(this.EndRequests), count, clientid, batchId, timeoutThrottlingMs, timeoutEOMMs);
         }
 
         public void Purge(string clientid)
         {
-            throw new NotImplementedException();
+            this.PurgeAsync(clientid).GetAwaiter().GetResult();
+        }
+
+        public Task PurgeAsync(string clientid)
+        {
+            return this.StartRequestAsync(nameof(this.Purge), clientid);
         }
 
         public BrokerClientStatus GetBrokerClientStatus(string clientId)
         {
-            throw new NotImplementedException();
+            return this.GetBrokerClientStatusAsync(clientId).GetAwaiter().GetResult();
+        }
+
+        public Task<BrokerClientStatus> GetBrokerClientStatusAsync(string clientId)
+        {
+            return this.StartRequestAsync<BrokerClientStatus>(nameof(this.GetBrokerClientStatus), clientId);
         }
 
         public int GetRequestsCount(string clientId)
         {
-            throw new NotImplementedException();
+            return this.GetRequestsCountAsync(clientId).GetAwaiter().GetResult();
+        }
+
+        public Task<int> GetRequestsCountAsync(string clientId)
+        {
+            return this.StartRequestAsync<int>(nameof(this.GetRequestsCount), clientId);
         }
 
         public BrokerResponseMessages PullResponses(string action, GetResponsePosition position, int count, string clientId)
         {
-            throw new NotImplementedException();
+            return this.PullResponsesAsync(action, position, count, clientId).GetAwaiter().GetResult();
+        }
+
+        public Task<BrokerResponseMessages> PullResponsesAsync(string action, GetResponsePosition position, int count, string clientId)
+        {
+            return this.StartRequestAsync<BrokerResponseMessages>(action, position, count, clientId);
         }
 
         public void GetResponsesAQ(
@@ -74,12 +99,30 @@
             out string azureResponseQueueUri,
             out string azureResponseBlobUri)
         {
-            throw new NotImplementedException();
+            var res = this.GetResponsesAQAsync(action, clientData, resetToBegin, count, clientId, sessionHash).GetAwaiter().GetResult();
+            azureResponseQueueUri = res.azureResponseQueueUri;
+            azureResponseBlobUri = res.azureResponseBlobUr;
+        }
+
+        public Task<(string azureResponseQueueUri, string azureResponseBlobUr)> GetResponsesAQAsync(
+            string action,
+            string clientData,
+            GetResponsePosition resetToBegin,
+            int count,
+            string clientId,
+            int sessionHash)
+        {
+            return this.StartRequestAsync<(string, string)>(action, clientData, resetToBegin, count, clientId, sessionHash);
         }
 
         public void Ping()
         {
-            throw new NotImplementedException();
+            this.PingAsync().GetAwaiter().GetResult();
+        }
+
+        public Task PingAsync()
+        {
+            return this.StartRequestAsync(nameof(this.Ping));
         }
     }
 }

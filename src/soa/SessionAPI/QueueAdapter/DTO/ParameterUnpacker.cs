@@ -43,5 +43,11 @@
             strongTypedParameter = (int)l;
             return this;
         }
+
+        public ParameterUnpacker UnpackString(out string strongTypedParameter)
+        {
+            this.Unpack<string>(out strongTypedParameter);
+            return this;
+        }
     }
 }

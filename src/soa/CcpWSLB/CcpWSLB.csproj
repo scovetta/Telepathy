@@ -272,6 +272,7 @@
     <Compile Include="FrontEnd\AzureQueueFrontEnd.cs" />
     <Compile Include="FrontEnd\AzureQueue\AzureQueueProxy.cs" />
     <Compile Include="FrontEnd\AzureQueue\AzureStorageClient.cs" />
+    <Compile Include="FrontEnd\AzureQueue\BrokerWorkerControllerQueueWatcher.cs" />
     <Compile Include="FrontEnd\AzureQueue\MessageRetriever.cs" />
     <Compile Include="FrontEnd\AzureQueue\MessageSender.cs" />
     <Compile Include="FrontEnd\AzureQueue\ReliableQueueClient.cs" />
