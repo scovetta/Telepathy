@@ -24,6 +24,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using Microsoft.Hpc.AADAuthUtil;
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Hpc.ServiceBroker.FrontEnd.AzureQueue;
     using Microsoft.Hpc.SvcBroker;
 
     /// <summary>

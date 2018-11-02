@@ -20,8 +20,9 @@
         {
         }
 
-        public CloudQueueSerializer() : this(null)
+        public CloudQueueSerializer() 
         {
+            this.setting = new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All };
         }
 
         public string Serialize<T>(T item) => JsonConvert.SerializeObject(item, this.setting);

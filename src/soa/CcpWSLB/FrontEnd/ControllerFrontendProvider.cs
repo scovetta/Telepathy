@@ -17,6 +17,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Hpc.ServiceBroker.FrontEnd.AzureQueue;
 
     /// <summary>
     /// Broker controller instance provider
@@ -45,6 +46,8 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 
         private AzureQueueProxy azureQueueProxy;
 
+        private BrokerWorkerControllerQueueWatcher cloudQueueWatcher;
+
         /// <summary>
         /// Initializes a new instance of the ControllerFrontendProvider class
         /// </summary>
@@ -58,6 +61,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             if (isSingleton)
             {
                 this.singletonInstance = new BrokerController(true, clientManager, brokerAuth, observer, azureQueueProxy);
+                this.cloudQueueWatcher = new BrokerWorkerControllerQueueWatcher(this.singletonInstance, azureQueueProxy.AzureStorageConnectionString);
             }
 
             this.clientManager = clientManager;
@@ -161,6 +165,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             {
                 try
                 {
+                    this.cloudQueueWatcher.StopWatch();
                     ((IDisposable)this.singletonInstance).Dispose();
                 }
                 catch (Exception ex)

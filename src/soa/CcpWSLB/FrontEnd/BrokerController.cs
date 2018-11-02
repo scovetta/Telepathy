@@ -14,9 +14,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading;
-    using System.Threading.Tasks;
 
-    using Microsoft.Hpc.AADAuthUtil;
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;

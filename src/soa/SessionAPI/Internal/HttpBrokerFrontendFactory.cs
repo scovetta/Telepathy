@@ -7,10 +7,9 @@
 //      frontend using WS contract
 // </summary>
 //------------------------------------------------------------------------------
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
-    using Microsoft.Hpc.Scheduler.Session.Common;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -19,6 +18,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.ServiceModel.Description;
     using System.Threading;
     using System.Xml;
+
+    using Microsoft.Hpc.Scheduler.Session.Common;
+    using Microsoft.Hpc.Scheduler.Session.Interface;
+    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Client;
 
     /// <summary>
     /// Broker frontend factory to build proxy to communicate to broker
@@ -49,6 +52,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <summary>
         /// Stores the client proxy for send request
         /// </summary>
+
         // private IOutputChannel sendRequestClient;
         private IRequestChannel sendRequestClient;
 
@@ -75,6 +79,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <summary>
         /// ChannelFactory for broker client
         /// </summary>
+
         // private IChannelFactory<IOutputChannel> brokerClientFactory = null;
         private IChannelFactory<IRequestChannel> brokerClientFactory = null;
 
@@ -88,6 +93,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         private AzureQueueProxy azureQueueProxy = null;
 
+        private string connectionString = null; // TODO: remove me
+
         /// <summary>
         /// Initializes a new instance of the BrokerFrontendFactory class
         /// </summary>
@@ -96,8 +103,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="info">indicating the session info</param>
         /// <param name="scheme">indicating the scheme</param>
         /// <param name="responseCallback">indicating the response callback</param>
-        public HttpBrokerFrontendFactory(string clientId, Binding binding, SessionBase session, TransportScheme scheme, IResponseServiceCallback responseCallback)
-            : base(clientId, responseCallback)
+        public HttpBrokerFrontendFactory(string clientId, Binding binding, SessionBase session, TransportScheme scheme, IResponseServiceCallback responseCallback, string connectionString = null/*remove this*/) : base(clientId, responseCallback)
         {
             this.info = session.Info as SessionInfo;
             this.binding = binding;
@@ -106,15 +112,16 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             {
                 this.useAzureQueue = true;
                 this.azureQueueProxy = session.AzureQueueProxy;
+                this.connectionString = connectionString; // TODO: remove me
             }
-            if (info.UseInprocessBroker)
+
+            if (this.info.UseInprocessBroker)
             {
                 this.brokerFrontend = this.info.InprocessBrokerAdapter.GetBrokerFrontend(responseCallback);
                 this.sendRequestClient = new SendRequestAdapter(this.brokerFrontend);
                 this.brokerControllerClient = this.brokerFrontend;
                 this.responseServiceClient = this.brokerFrontend;
             }
-
         }
 
         /// <summary>
@@ -137,7 +144,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
                     if (this.sendRequestClient == null)
                     {
-                        //this.sendRequestClient = this.CreateClientWithRetry(ClientType.SendRequest) as IOutputChannel;
+                        // this.sendRequestClient = this.CreateClientWithRetry(ClientType.SendRequest) as IOutputChannel;
                         this.sendRequestClient = this.CreateClientWithRetry(ClientType.SendRequest) as IRequestChannel;
                     }
                 }
@@ -161,21 +168,32 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>returns the controller client</returns>
         public override IController GetControllerClient()
         {
-            ICommunicationObject brokerControllerChannel = this.brokerControllerClient as ICommunicationObject;
-            if (this.brokerControllerClient == null || (brokerControllerChannel != null && brokerControllerChannel.State == CommunicationState.Faulted))
+            if (this.useAzureQueue && !string.IsNullOrEmpty(this.connectionString))
             {
-                lock (this.lockCreateChannel)
+                var controller = this.brokerControllerClient as BrokerControllerCloudQueueClient;
+                if (controller == null)
                 {
-                    // if brokerControllerClient is in Faulted state, recreate it
-                    if (brokerControllerChannel != null && brokerControllerChannel.State == CommunicationState.Faulted)
+                    this.brokerControllerClient = new BrokerControllerCloudQueueClient(this.connectionString);
+                }
+            }
+            else
+            {
+                ICommunicationObject brokerControllerChannel = this.brokerControllerClient as ICommunicationObject;
+                if (this.brokerControllerClient == null || (brokerControllerChannel != null && brokerControllerChannel.State == CommunicationState.Faulted))
+                {
+                    lock (this.lockCreateChannel)
                     {
-                        Utility.SafeCloseCommunicateObject(brokerControllerChannel);
-                        this.brokerControllerClient = null;
-                    }
+                        // if brokerControllerClient is in Faulted state, recreate it
+                        if (brokerControllerChannel != null && brokerControllerChannel.State == CommunicationState.Faulted)
+                        {
+                            Utility.SafeCloseCommunicateObject(brokerControllerChannel);
+                            this.brokerControllerClient = null;
+                        }
 
-                    if (this.brokerControllerClient == null)
-                    {
-                        this.brokerControllerClient = this.CreateClientWithRetry(ClientType.Controller) as BrokerControllerClient;
+                        if (this.brokerControllerClient == null)
+                        {
+                            this.brokerControllerClient = this.CreateClientWithRetry(ClientType.Controller) as BrokerControllerClient;
+                        }
                     }
                 }
             }
@@ -280,7 +298,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     }
                 }
             }
-
         }
 
         /// <summary>
@@ -291,7 +308,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         {
             if (disposing)
             {
-                #region Close WCF proxies
+                
+
                 List<IAsyncResult> asyncResults = new List<IAsyncResult>();
                 IAsyncResult asyncResult = null;
 
@@ -312,7 +330,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 {
                     (this.responseServiceClient as BrokerResponseServiceClient).Close();
                 }
-
 
                 if (this.brokerControllerClient != null && this.brokerControllerClient is ICommunicationObject)
                 {
@@ -341,7 +358,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     {
                         currentChannel.EndClose(ar);
                     }
-
                     catch (Exception e)
                     {
                         // If close fails, trace, abort and move on to next
@@ -363,12 +379,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     }
                 }
 
-                #endregion
+                
 
                 #region Close inprocess broker adapters
+
                 DisposeObject(this.sendRequestClient);
                 DisposeObject(this.responseServiceClient);
                 DisposeObject(this.brokerControllerClient);
+
                 #endregion
             }
 
@@ -401,7 +419,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             return SoaHelper.CreateEndpointAddress(new Uri(epr), secure, internalChannel);
         }
 
-
         /// <summary>
         /// Provides a broker frontend proxy communicating with SOA Web service
         /// This broker frontend proxy is in charge of getting response
@@ -409,13 +426,17 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         private class BrokerResponseServiceClient : DisposableObject, IResponseService
         {
             private IController controller;
+
             private IResponseServiceCallback callback;
 
             private bool useAzureQueue = false;
+
             private AzureQueueProxy azureQueueProxy = null;
 
             private List<IResponseHandler> handlers = new List<IResponseHandler>();
+
             private int totalResponseCount = 0;
+
             private int sessionHash = 0;
 
             public BrokerResponseServiceClient(IController controller, IResponseServiceCallback callback, bool useAzureQueue, AzureQueueProxy azureQueueProxy)
@@ -446,11 +467,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     string azureResponseBlobUri;
 
                     this.controller.GetResponsesAQ(action, clientData, resetToBegin, count, clientId, this.sessionHash, out azureResponseQueueUri, out azureResponseBlobUri);
+
                     // then retrieve the responses async from the azure queue proxy
                     if (!this.azureQueueProxy.IsResponseClientInitialized && !string.IsNullOrEmpty(azureResponseQueueUri) && !string.IsNullOrEmpty(azureResponseBlobUri))
                     {
                         this.azureQueueProxy.InitResponseClient(azureResponseQueueUri, azureResponseBlobUri);
                     }
+
                     // check if there is already a handler with the same action and clientData
                     foreach (IResponseHandler h in handlers)
                     {
@@ -470,7 +493,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     this.handlers.Add(handler);
                     handler.Completed += new EventHandler(HandlerCompleted);
                 }
-
             }
 
             private void HandlerCompleted(object sender, EventArgs e)
@@ -490,39 +512,53 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                         handler.Close();
                     }
                 }
+
                 base.Dispose(disposing);
             }
 
             private class HttpResponseHandler : DisposableObject, IResponseHandler
             {
-
                 private Thread HttpResponseThread;
+
                 private volatile bool disposeFlag;
 
                 private IController controller;
+
                 private string action;
 
                 public string Action()
                 {
                     return action;
                 }
+
                 private string clientData;
 
                 public string ClientData()
                 {
                     return clientData;
-
                 }
+
                 private GetResponsePosition resetToBegin;
+
                 private int count;
+
                 private string clientId;
+
                 private IResponseServiceCallback callback;
 
                 public event EventHandler Completed;
 
                 private BrokerResponseServiceClient responseClient;
 
-                public HttpResponseHandler(IController controller, string action, string clientData, GetResponsePosition resetToBegin, int count, string clientId, IResponseServiceCallback callback, BrokerResponseServiceClient responseClient)
+                public HttpResponseHandler(
+                    IController controller,
+                    string action,
+                    string clientData,
+                    GetResponsePosition resetToBegin,
+                    int count,
+                    string clientId,
+                    IResponseServiceCallback callback,
+                    BrokerResponseServiceClient responseClient)
                 {
                     this.controller = controller;
                     this.action = action;
@@ -547,25 +583,29 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 {
                     try
                     {
-                        //List<IAsyncResult> results = new List<IAsyncResult>();
+                        // List<IAsyncResult> results = new List<IAsyncResult>();
                         bool isEOM = false;
-                        //ProcessResponseDelegate p = ProcessResponses;
+
+                        // ProcessResponseDelegate p = ProcessResponses;
                         int responseCount = 0;
-                        //while (!isEOM)
-                        //{
+
+                        // while (!isEOM)
+                        // {
                         SessionBase.TraceSource.TraceInformation("Begin PullResponse : count {0} : clientId {1}", count, clientId);
                         BrokerResponseMessages responseMessages = this.controller.PullResponses(action, resetToBegin, count, clientId);
                         SessionBase.TraceSource.TraceInformation("End PullResponse : count {0} : isEOM {1}", responseMessages.SOAPMessage.Length, responseMessages.EOM);
-                        //responseCount += responseMessages.SOAPMessage.Length;
+
+                        // responseCount += responseMessages.SOAPMessage.Length;
                         responseCount = responseMessages.SOAPMessage.Length;
-                        //results.Add(p.BeginInvoke(responseMessages, clientData, null, null));
+
+                        // results.Add(p.BeginInvoke(responseMessages, clientData, null, null));
                         ProcessResponses(responseMessages, clientData);
                         Interlocked.Add(ref this.responseClient.totalResponseCount, responseCount);
                         isEOM = responseMessages.EOM;
 
                         if (isEOM)
                         {
-                            //construct endofreponses message
+                            // construct endofreponses message
                             TypedMessageConverter converter = TypedMessageConverter.Create(typeof(EndOfResponses), Constant.EndOfMessageAction);
                             EndOfResponses endOfResponses = new EndOfResponses();
                             endOfResponses.Count = this.responseClient.totalResponseCount;
@@ -610,7 +650,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                         using (MemoryStream ms = new MemoryStream())
                         {
                             XmlWriter xw = XmlWriter.Create(ms);
-                            xe.WriteTo(xw); xw.Flush(); ms.Position = 0;
+                            xe.WriteTo(xw);
+                            xw.Flush();
+                            ms.Position = 0;
                             XmlDictionaryReader reader = XmlDictionaryReader.CreateDictionaryReader(XmlReader.Create(ms, new XmlReaderSettings() { XmlResolver = null }));
                             m = Message.CreateMessage(reader, int.MaxValue, MessageVersion.Soap11);
                             m.Headers.Add(MessageHeader.CreateHeader(Constant.ResponseCallbackIdHeaderName, Constant.ResponseCallbackIdHeaderNS, clientData));
@@ -623,30 +665,46 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             private class AzureQueueResponseHandler : DisposableObject, IResponseHandler
             {
                 private Thread AzureQueueResponseThread;
+
                 private volatile bool disposeFlag;
 
                 private string action;
+
                 public string Action()
                 {
                     return action;
                 }
 
                 private string clientData;
+
                 public string ClientData()
                 {
                     return clientData;
                 }
 
                 private GetResponsePosition resetToBegin;
+
                 private int count;
+
                 private string clientId;
+
                 private IResponseServiceCallback callback;
 
                 public event EventHandler Completed;
+
                 private BrokerResponseServiceClient responseClient;
+
                 private AzureQueueProxy azureQueueProxy = null;
 
-                public AzureQueueResponseHandler(AzureQueueProxy azureQueueProxy, string action, string clientData, GetResponsePosition resetToBegin, int count, string clientId, IResponseServiceCallback callback, BrokerResponseServiceClient responseClient)
+                public AzureQueueResponseHandler(
+                    AzureQueueProxy azureQueueProxy,
+                    string action,
+                    string clientData,
+                    GetResponsePosition resetToBegin,
+                    int count,
+                    string clientId,
+                    IResponseServiceCallback callback,
+                    BrokerResponseServiceClient responseClient)
                 {
                     this.action = action;
                     this.clientData = clientData;
@@ -672,6 +730,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                             this.AzureQueueResponseThread.Abort();
                         }
                     }
+
                     this.disposeFlag = true;
                     base.Dispose(disposing);
                 }
@@ -702,7 +761,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                         exceptionMessage.Properties.Add(@"AQClientException", e);
 
                         this.callback.SendResponse(exceptionMessage);
-
                     }
                     finally
                     {
@@ -711,20 +769,20 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                             this.Completed(this, EventArgs.Empty);
                         }
                     }
-
-
                 }
             }
 
             private interface IResponseHandler
             {
                 string Action();
+
                 string ClientData();
+
                 event EventHandler Completed;
+
                 void Close();
             }
         }
-
 
         /// <summary>
         /// Adapt IRequestChannel to IBrokerFrontend
@@ -746,6 +804,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             }
 
             #region IRequestChannel Members
+
             IAsyncResult IRequestChannel.BeginRequest(Message message, TimeSpan timeout, AsyncCallback callback, object state)
             {
                 throw new NotImplementedException();
@@ -763,7 +822,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
             EndpointAddress IRequestChannel.RemoteAddress
             {
-                get { throw new NotImplementedException(); }
+                get
+                {
+                    throw new NotImplementedException();
+                }
             }
 
             Message IRequestChannel.Request(Message message, TimeSpan timeout)
@@ -780,7 +842,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
             Uri IRequestChannel.Via
             {
-                get { throw new NotImplementedException(); }
+                get
+                {
+                    throw new NotImplementedException();
+                }
             }
 
             T IChannel.GetProperty<T>()
@@ -825,14 +890,28 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
             event EventHandler System.ServiceModel.ICommunicationObject.Closed
             {
-                add { throw new NotImplementedException(); }
-                remove { throw new NotImplementedException(); }
+                add
+                {
+                    throw new NotImplementedException();
+                }
+
+                remove
+                {
+                    throw new NotImplementedException();
+                }
             }
 
             event EventHandler System.ServiceModel.ICommunicationObject.Closing
             {
-                add { throw new NotImplementedException(); }
-                remove { throw new NotImplementedException(); }
+                add
+                {
+                    throw new NotImplementedException();
+                }
+
+                remove
+                {
+                    throw new NotImplementedException();
+                }
             }
 
             void System.ServiceModel.ICommunicationObject.EndClose(IAsyncResult result)
@@ -847,8 +926,15 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
             event EventHandler System.ServiceModel.ICommunicationObject.Faulted
             {
-                add { throw new NotImplementedException(); }
-                remove { throw new NotImplementedException(); }
+                add
+                {
+                    throw new NotImplementedException();
+                }
+
+                remove
+                {
+                    throw new NotImplementedException();
+                }
             }
 
             void System.ServiceModel.ICommunicationObject.Open(TimeSpan timeout)
@@ -863,22 +949,39 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
             event EventHandler System.ServiceModel.ICommunicationObject.Opened
             {
-                add { throw new NotImplementedException(); }
-                remove { throw new NotImplementedException(); }
+                add
+                {
+                    throw new NotImplementedException();
+                }
+
+                remove
+                {
+                    throw new NotImplementedException();
+                }
             }
 
             event EventHandler System.ServiceModel.ICommunicationObject.Opening
             {
-                add { throw new NotImplementedException(); }
-                remove { throw new NotImplementedException(); }
+                add
+                {
+                    throw new NotImplementedException();
+                }
+
+                remove
+                {
+                    throw new NotImplementedException();
+                }
             }
 
-            System.ServiceModel.CommunicationState System.ServiceModel.ICommunicationObject.State
+            CommunicationState System.ServiceModel.ICommunicationObject.State
             {
-                get { return CommunicationState.Opened; }
+                get
+                {
+                    return CommunicationState.Opened;
+                }
             }
-            #endregion
 
+            #endregion
 
             public void Dispose()
             {
@@ -891,8 +994,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         private class BrokerControllerClient : ClientBase<IControllerAsync>, IControllerAsync, IController
         {
-            public BrokerControllerClient(Binding binding, EndpointAddress epr)
-                : base(binding, epr)
+            public BrokerControllerClient(Binding binding, EndpointAddress epr) : base(binding, epr)
             {
             }
 
@@ -1005,13 +1107,29 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 return this.Channel.EndPullResponses(result);
             }
 
-            public void GetResponsesAQ(string action, string clientData, GetResponsePosition resetToBegin, int count, string clientId, int sessionHash, out string azureResponseQueueUri, out string azureResponseBlobUri)
+            public void GetResponsesAQ(
+                string action,
+                string clientData,
+                GetResponsePosition resetToBegin,
+                int count,
+                string clientId,
+                int sessionHash,
+                out string azureResponseQueueUri,
+                out string azureResponseBlobUri)
             {
                 IAsyncResult result = this.Channel.BeginGetResponsesAQ(action, clientData, resetToBegin, count, clientId, sessionHash, null, null);
                 this.Channel.EndGetResponsesAQ(out azureResponseQueueUri, out azureResponseBlobUri, result);
             }
 
-            public IAsyncResult BeginGetResponsesAQ(string action, string clientData, GetResponsePosition resetToBegin, int count, string clientId, int sessionHash, System.AsyncCallback callback, object asyncState)
+            public IAsyncResult BeginGetResponsesAQ(
+                string action,
+                string clientData,
+                GetResponsePosition resetToBegin,
+                int count,
+                string clientId,
+                int sessionHash,
+                AsyncCallback callback,
+                object asyncState)
             {
                 return this.Channel.BeginGetResponsesAQ(action, clientData, resetToBegin, count, clientId, sessionHash, callback, asyncState);
             }
@@ -1064,8 +1182,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             }
 
             #endregion
-
-
         }
 
         /// <summary>
@@ -1095,6 +1211,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                             this.brokerClientFactory = binding.BuildChannelFactory<IRequestChannel>(bindingParams);
                             this.brokerClientFactory.Open();
                         }
+
                         client = this.brokerClientFactory.CreateChannel(GenerateEndpointAddress(info.BrokerEpr, this.scheme, this.info.Secure, this.info.IsAadOrLocalUser));
                         break;
 
@@ -1110,6 +1227,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     default:
                         throw new NotSupportedException();
                 }
+
                 client.Open();
             }
             catch (Exception e)
@@ -1143,7 +1261,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 exception = e;
             }
 
-
             if (exception != null)
             {
                 throw exception;
@@ -1172,7 +1289,5 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             /// </summary>
             Controller
         }
-
-
     }
 }

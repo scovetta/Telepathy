@@ -17,7 +17,7 @@
         internal BrokerWorkerControllerQueueWatcher(IController instance, string connectionString)
         {
             this.instance = instance;
-            CloudQueueSerializer serializer = new CloudQueueSerializer();
+            CloudQueueSerializer serializer = new CloudQueueSerializer(CloudQueueCmdTypeBinder.BrokerLauncherBinder);
 
             this.QueueListener = new CloudQueueListener<CloudQueueCmdDto>(
                 connectionString,
@@ -109,6 +109,11 @@
         {
             this.instance.Ping();
             return this.CreateAndSendEmptyResponse(cmdObj);
+        }
+
+        public void StopWatch()
+        {
+            this.QueueListener.StopListen();
         }
     }
 }

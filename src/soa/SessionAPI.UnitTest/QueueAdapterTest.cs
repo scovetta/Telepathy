@@ -14,6 +14,9 @@
         private const string createBrokerResStr =
             @"{""$type"":""CloudQueueResponseDto"",""RequestId"":""f2d66098-cd56-45ef-9118-30f798f34620"",""CmdName"":""Create"",""Response"":{""$type"":""BrokerInitializationResult"",""BrokerEpr"":{""$type"":""String[]"",""$values"":[""net.tcp://zihao:9091/-1/NetTcp"",null,null,null,null,null]},""ControllerEpr"":{""$type"":""String[]"",""$values"":[""net.tcp://zihao:9091/-1/NetTcp/Controller"",null,null,null,null,null]},""ResponseEpr"":{""$type"":""String[]"",""$values"":[""net.tcp://zihao:9091/-1/NetTcp/GetResponse"",null,null,null,null,null]},""ServiceOperationTimeout"":86400000,""MaxMessageSize"":655360,""ClientBrokerHeartbeatInterval"":20000,""ClientBrokerHeartbeatRetryCount"":3,""AzureRequestQueueUri"":"""",""AzureRequestBlobUri"":"""",""UseAzureQueue"":true,""BrokerUniqueId"":""82ac6e0a-4062-4e63-a5e9-64fa7378ee54"",""SupportsMessageDetails"":true}}";
 
+        private const string endrequestsStr =
+            @"{""$type"":""CloudQueueCmdDto"",""RequestId"":""b0d08e3e-dbc3-41f6-8c28-bec49145a396"",""CmdName"":""EndRequests"",""Parameters"":{""$type"":""Object[]"",""$values"":[10,""4882731e-d40b-4938-840f-28a0e1a3e9d3"",0,3600000,3600000]},""Version"":1}";
+
         [TestMethod]
         public void BasicRequestSerializeE2E()
         {
@@ -56,6 +59,14 @@
             var serializer = new CloudQueueSerializer(CloudQueueCmdTypeBinder.BrokerLauncherBinder);
             var dcmd = serializer.Deserialize<CloudQueueResponseDto>(createBrokerResStr);
             Assert.AreEqual("f2d66098-cd56-45ef-9118-30f798f34620", dcmd.RequestId);
+        }
+
+        [TestMethod]
+        public void EndRequestReqDeserializeTest()
+        {
+            var serializer = new CloudQueueSerializer(CloudQueueCmdTypeBinder.BrokerLauncherBinder);
+            var dcmd = serializer.Deserialize<CloudQueueCmdDto>(endrequestsStr);
+            Assert.AreEqual("b0d08e3e-dbc3-41f6-8c28-bec49145a396", dcmd.RequestId);
         }
     }
 }

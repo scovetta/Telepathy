@@ -146,6 +146,9 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         private string jwtTokenCache;
 
+
+        private string connectionString; // TODO: change this to sas token and get this from brokerworker
+
         /// <summary>
         ///   <para>Gets or sets the behavior of the <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> object.</para>
         /// </summary>
@@ -282,6 +285,18 @@ namespace Microsoft.Hpc.Scheduler.Session
         public BrokerClient(string clientid, SessionBase session)
             : base(clientid, session)
         {
+            Utility.ThrowIfNull(session, "session");
+            Utility.ThrowIfNullOrEmpty(clientid, "clientid");
+            Utility.ThrowIfTooLong(clientid.Length, "clientid", 128, SR.ClientIdTooLong);
+
+            Init(null, null);
+        }
+
+        // TODO: remove me
+        public BrokerClient(string clientid, SessionBase session, object dummy, string connectionString) : base(clientid, session)
+        {
+            this.connectionString = connectionString;
+
             Utility.ThrowIfNull(session, "session");
             Utility.ThrowIfNullOrEmpty(clientid, "clientid");
             Utility.ThrowIfTooLong(clientid.Length, "clientid", 128, SR.ClientIdTooLong);
@@ -483,21 +498,15 @@ namespace Microsoft.Hpc.Scheduler.Session
             //save the transport scheme for the client
             this.transportScheme = scheme;
 
-            if (((SessionInfo)this.session.Info).UseAzureQueue.GetValueOrDefault())
+            if (((SessionInfo)this.session.Info).UseAzureQueue.GetValueOrDefault() || scheme == TransportScheme.Http)
             {
-                // TODO: Refactor:
-                //  1. Eliminate the down cast here
-                //  2. Separate Queue client from Http client
-                this.frontendFactory = new HttpBrokerFrontendFactory(this.clientId, binding, this.session, scheme, this.callbackManager);
-            }
-            else if (scheme == TransportScheme.Http)
-            {
-                this.frontendFactory = new HttpBrokerFrontendFactory(this.clientId, binding, this.session, scheme, this.callbackManager);
+                this.frontendFactory = new HttpBrokerFrontendFactory(this.clientId, binding, this.session, scheme, this.callbackManager, this.connectionString);
             }
             else
             {
                 this.frontendFactory = new WSBrokerFrontendFactory(this.clientId, binding, (SessionInfo)this.session.Info, scheme, this.callbackManager);
             }
+
             SessionBase.TraceSource.TraceInformation(
                 "[Session:{0}] BrokerClient instance created. ClientId = {1}, Scheme = {2}, DefaultSendTimeout = {3}, DefaultResponsesTimeout = {4}",
                 this.session.Id,
