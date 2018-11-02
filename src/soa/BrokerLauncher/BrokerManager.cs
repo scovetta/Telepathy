@@ -150,7 +150,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         public BrokerManager(bool needRecover, IHpcContext context)
         {
             TraceHelper.TraceEvent(TraceEventType.Verbose, "[BrokerManager] Constructor: needRecover={0}", needRecover);
+#if HPCPACK
             this.headnode = SoaHelper.GetSchedulerName(false);
+#endif
 
             this.context = context;
 
@@ -858,7 +860,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 }
             }
 
-            return Task.FromResult(new ServiceRegistrationRepo(centrialPath, this.context.GetServiceRegistrationRestClient()));
+            ServiceRegistrationRestClient client = null;
+            if (!BrokerLauncherEnvironment.Standalone)
+            {
+                client = this.context.GetServiceRegistrationRestClient();
+            }
+
+            return Task.FromResult(new ServiceRegistrationRepo(centrialPath, client));
         }
 
         /// <summary>

@@ -392,10 +392,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                     this.launcherInstance = new BrokerLauncher(false, this.context);
                     this.launcherHost = new ServiceHost(this.launcherInstance, new Uri(SoaHelper.GetBrokerLauncherAddress(HostName)));
                     BindingHelper.ApplyDefaultThrottlingBehavior(this.launcherHost);
-                    this.launcherHost.AddServiceEndpoint(typeof(IBrokerLauncher), BindingHelper.HardCodedBrokerLauncherNetTcpBinding, string.Empty);
-                    this.launcherHost.AddServiceEndpoint(typeof(IBrokerLauncher), BindingHelper.HardCodedInternalBrokerLauncherNetTcpBinding, "Internal");
-                    this.launcherHost.AddServiceEndpoint(typeof(IBrokerLauncher), BindingHelper.HardCodedNoAuthBrokerLauncherNetTcpBinding, "AAD");
-                    this.launcherHost.Credentials.UseInternalAuthenticationAsync(true).GetAwaiter().GetResult();
+                    this.launcherHost.AddServiceEndpoint(typeof(IBrokerLauncher), BindingHelper.HardCodedUnSecureNetTcpBinding, string.Empty);
+                    this.launcherHost.AddServiceEndpoint(typeof(IBrokerLauncher), BindingHelper.HardCodedUnSecureNetTcpBinding, "Internal");
+                    this.launcherHost.AddServiceEndpoint(typeof(IBrokerLauncher), BindingHelper.HardCodedUnSecureNetTcpBinding, "AAD");
+                    // this.launcherHost.Credentials.UseInternalAuthenticationAsync(true).GetAwaiter().GetResult();
                     string addFormat = SoaHelper.BrokerLauncherAadAddressFormat;
                     this.launcherHost.Authorization.ServiceAuthorizationManager = new AADServiceAuthorizationManager(addFormat.Substring(addFormat.IndexOf('/')), this.context);
                     ServiceAuthorizationBehavior myServiceBehavior = this.launcherHost.Description.Behaviors.Find<ServiceAuthorizationBehavior>();

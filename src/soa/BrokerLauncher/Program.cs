@@ -16,6 +16,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
     using Microsoft.Hpc.Scheduler.Session.Internal.Diagnostics;
     using Microsoft.Hpc.ServiceBroker;
+    using Microsoft.Hpc.SoaContext;
 
     /// <summary>
     /// Main entry point
@@ -29,8 +30,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
         private static void Main(string[] args)
         {
             // clusterconnectionstring could be a machine name (for single headnode) or a connection string
+#if HPCPACK
             string clusterConnectionString = SoaHelper.GetSchedulerName(false);
             var context = HpcContext.GetOrAdd(clusterConnectionString, CancellationToken.None, true);
+#else
+            var context = new SoaContext();
+#endif
             Trace.TraceInformation("Get diag trace enabled internal.");
             SoaDiagTraceHelper.IsDiagTraceEnabledInternal = (sessionId) =>
             {

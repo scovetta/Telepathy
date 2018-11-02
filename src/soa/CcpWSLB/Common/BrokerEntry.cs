@@ -30,6 +30,9 @@ namespace Microsoft.Hpc.ServiceBroker
     using System.Threading;
     using System.Threading.Tasks;
     using System.Xml;
+
+    using Microsoft.Hpc.SoaContext;
+
     using SoaAmbientConfig;
     /// <summary>
     /// Remoting entry for broker
@@ -249,7 +252,11 @@ namespace Microsoft.Hpc.ServiceBroker
                 BrokerTracing.TraceVerbose("[BrokerEntry] Initialization: Step 4: Initialize broker state manager succeeded.");
 
                 // Step 5: Initialize service job monitor
+#if HPCPACK
                 var context = HpcContext.GetOrAdd(this.sharedData.BrokerInfo.Headnode, CancellationToken.None);
+#else
+                var context = new SoaContext();
+#endif
                 if (SoaAmbientConfig.StandAlone)
                 { 
                     this.monitor = new DummyServiceJobMonitor(this.sharedData, this.stateManager, this.nodeMappingData, context);

@@ -654,6 +654,11 @@ namespace Microsoft.Hpc.ServiceBroker
             get { return hardCodedDiagMonitorServiceBinding; }
         }
 
+        public static NetTcpBinding HardCodedUnSecureNetTcpBinding
+        {
+            get { return defaultUnsecureNetTcpBinding; }
+        }
+
 #if WebAPI
         /// <summary>
         /// Gets the hard coded Web API service binding
