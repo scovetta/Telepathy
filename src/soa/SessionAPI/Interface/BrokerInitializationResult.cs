@@ -11,6 +11,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Interface
     using System;
     using System.Runtime.Serialization;
     using System.Text;
+    using System.Windows.Forms;
 
     /// <summary>
     /// Represents broker initialization result
@@ -219,6 +220,18 @@ namespace Microsoft.Hpc.Scheduler.Session.Interface
         /// </value>
         [DataMember(IsRequired = false)]
         public bool SupportsMessageDetails { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Azure controller request queue URI
+        /// </summary>
+        [DataMember(IsRequired = false)]
+        public string AzureControllerRequestQueueUri { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Azure controller response queue URI
+        /// </summary>
+        [DataMember(IsRequired = false)]
+        public string AzureControllerResponseQueueUri { get; set; }
 
         /// <inheritdoc />
         public override string ToString()

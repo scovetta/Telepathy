@@ -1,13 +1,11 @@
 ﻿namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
-    using Microsoft.WindowsAzure.Storage;
+    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Module;
     using Microsoft.WindowsAzure.Storage.Queue;
 
     public class CloudQueueListener<T> : IQueueListener<T>
@@ -22,32 +20,47 @@
 
         private readonly CloudQueueSerializer serializer;
 
-        private static readonly TimeSpan QueryDelay = TimeSpan.FromMilliseconds(500);
+        private readonly bool haveCreateQueuePermission;
+
+        private TimeSpan QueryDelay => TimeSpan.FromMilliseconds(500);
 
         public CloudQueueListener(string connectionString, string queueName, CloudQueueSerializer serializer, Func<T, Task> callback) : this(connectionString, queueName, serializer, callback, null)
         {
         }
 
-        public CloudQueueListener(string connectionString, string queueName, CloudQueueSerializer serializer, Func<T, Task> callback, Func<bool> predicate)
+        public CloudQueueListener(string connectionString, string queueName, CloudQueueSerializer serializer, Func<T, Task> callback, Func<bool> predicate) : this(
+            CloudQueueCreationModule.GetCloudQueueReference(connectionString, queueName),
+            serializer,
+            callback,
+            predicate,
+            true)
         {
-            if (string.IsNullOrEmpty(connectionString))
-            {
-                throw new ArgumentNullException(nameof(connectionString));
-            }
+        }
 
-            if (string.IsNullOrEmpty(queueName))
-            {
-                throw new ArgumentNullException(nameof(queueName));
-            }
+        public CloudQueueListener(string sasUri, CloudQueueSerializer serializer, Func<T, Task> callback) : this(sasUri, serializer, callback, null)
+        {
+        }
 
-            var account = CloudStorageAccount.Parse(connectionString);
+        public CloudQueueListener(string sasUri, CloudQueueSerializer serializer, Func<T, Task> callback, Func<bool> predicate) : this(
+            CloudQueueCreationModule.GetCloudQueueReference(sasUri),
+            serializer,
+            callback,
+            predicate,
+            false)
+        {
+        }
+
+        private CloudQueueListener(CloudQueue queue, CloudQueueSerializer serializer, Func<T, Task> callback, Func<bool> predicate, bool haveCreateQueuePermission)
+        {
+            this.queue = queue;
             this.MessageReceivedCallback = callback ?? throw new ArgumentNullException(nameof(callback));
-            this.queue = account.CreateCloudQueueClient().GetQueueReference(queueName);
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
             if (predicate != null)
             {
                 this.shouldListenPredicate = predicate;
             }
+
+            this.haveCreateQueuePermission = haveCreateQueuePermission;
         }
 
         private T Deserialize(string json)
@@ -63,17 +76,20 @@
 
             while (this.enabled)
             {
-                await this.queue.CreateIfNotExistsAsync();
+                if (this.haveCreateQueuePermission)
+                {
+                    await this.queue.CreateIfNotExistsAsync();
+                }
 
                 if (!this.shouldListenPredicate())
                 {
-                    await Task.Delay(QueryDelay);
+                    await Task.Delay(this.QueryDelay);
                     continue;
                 }
 
                 if (!await this.CheckAsync())
                 {
-                    await Task.Delay(QueryDelay);
+                    await Task.Delay(this.QueryDelay);
                 }
             }
         }

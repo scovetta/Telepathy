@@ -6,8 +6,9 @@
 
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
+    using Microsoft.WindowsAzure.Storage.Queue;
 
-    public class CloudQueueWatcherBase
+    public abstract class CloudQueueWatcherBase
     {
         protected IQueueListener<CloudQueueCmdDto> QueueListener { get; set; }
 

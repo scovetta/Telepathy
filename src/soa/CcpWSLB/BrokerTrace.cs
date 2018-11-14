@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 namespace Microsoft.Hpc.ServiceBroker
 {
+    using Microsoft.Hpc.RuntimeTrace;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;

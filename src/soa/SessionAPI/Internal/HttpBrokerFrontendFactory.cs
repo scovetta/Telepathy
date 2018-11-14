@@ -93,8 +93,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         private AzureQueueProxy azureQueueProxy = null;
 
-        private string connectionString = null; // TODO: remove me
-
         /// <summary>
         /// Initializes a new instance of the BrokerFrontendFactory class
         /// </summary>
@@ -103,7 +101,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="info">indicating the session info</param>
         /// <param name="scheme">indicating the scheme</param>
         /// <param name="responseCallback">indicating the response callback</param>
-        public HttpBrokerFrontendFactory(string clientId, Binding binding, SessionBase session, TransportScheme scheme, IResponseServiceCallback responseCallback, string connectionString = null/*remove this*/) : base(clientId, responseCallback)
+        public HttpBrokerFrontendFactory(string clientId, Binding binding, SessionBase session, TransportScheme scheme, IResponseServiceCallback responseCallback) : base(clientId, responseCallback)
         {
             this.info = session.Info as SessionInfo;
             this.binding = binding;
@@ -112,7 +110,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             {
                 this.useAzureQueue = true;
                 this.azureQueueProxy = session.AzureQueueProxy;
-                this.connectionString = connectionString; // TODO: remove me
             }
 
             if (this.info.UseInprocessBroker)
@@ -168,7 +165,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>returns the controller client</returns>
         public override IController GetControllerClient()
         {
-            if (this.useAzureQueue && !string.IsNullOrEmpty(this.connectionString))
+            if (this.useAzureQueue)
             {
                 var controller = this.brokerControllerClient as BrokerControllerCloudQueueClient;
                 if (controller == null)

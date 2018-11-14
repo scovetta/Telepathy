@@ -332,6 +332,7 @@
     <Compile Include="QueueAdapter\DTO\ParameterUnpacker.cs" />
     <Compile Include="QueueAdapter\LocalQueueListener.cs" />
     <Compile Include="QueueAdapter\LocalQueueWriter.cs" />
+    <Compile Include="QueueAdapter\Module\CloudQueueCreationModule.cs" />
     <Compile Include="QueueAdapter\Server\CloudQueueWatcherBase.cs" />
     <Compile Include="TaskInInterestUtil.cs" />
     <Compile Include="WinServiceHpcContextModule.cs" />

@@ -11,15 +11,30 @@
     {
         public BrokerControllerCloudQueueClient(string connectionString)
         {
-            CloudQueueSerializer serializer = new CloudQueueSerializer(CloudQueueCmdTypeBinder.BrokerLauncherBinder);
+            CloudQueueSerializer serializer = this.DefaultSerializer;
             this.Listener = new CloudQueueListener<CloudQueueResponseDto>(connectionString, CloudQueueConstants.BrokerWorkerControllerResponseQueueName, serializer, this.ReceiveResponse);
             this.Writer = new CloudQueueWriter<CloudQueueCmdDto>(connectionString, CloudQueueConstants.BrokerWorkerControllerRequestQueueName, serializer);
-            this.Listener.StartListen();
-            this.RegisterResponseTypes();
+            this.Init();
+        }
+
+        public BrokerControllerCloudQueueClient(string requestQueueUri, string responseQueueUri)
+        {
+            CloudQueueSerializer serializer = this.DefaultSerializer;
+            this.Listener = new CloudQueueListener<CloudQueueResponseDto>(requestQueueUri, serializer, this.ReceiveResponse);
+            this.Writer = new CloudQueueWriter<CloudQueueCmdDto>(responseQueueUri, serializer);
+            this.Init();
         }
 
         public BrokerControllerCloudQueueClient(IQueueListener<CloudQueueResponseDto> listener, IQueueWriter<CloudQueueCmdDto> writer) : base(listener, writer)
         {
+            this.RegisterResponseTypes();
+        }
+
+        private CloudQueueSerializer DefaultSerializer => new CloudQueueSerializer(CloudQueueCmdTypeBinder.BrokerLauncherBinder);
+
+        private void Init()
+        {
+            this.Listener.StartListen();
             this.RegisterResponseTypes();
         }
 

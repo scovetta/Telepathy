@@ -31,6 +31,8 @@ namespace Microsoft.Hpc.ServiceBroker
     using System.Threading.Tasks;
     using System.Xml;
 
+    using Microsoft.Hpc.Scheduler.Session.QueueAdapter;
+    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Module;
     using Microsoft.Hpc.SoaContext;
 
     using SoaAmbientConfig;
@@ -286,6 +288,8 @@ namespace Microsoft.Hpc.ServiceBroker
                 // if using AzureQueue, retrieve the connection string and build the request and response message queues if not exist
                 string requestQueueUri = string.Empty;
                 string requestBlobUri = string.Empty;
+                string controllerRequstQueueUri = string.Empty;
+                string controllerResponseQueueUri = string.Empty;
                 if (startInfo.UseAzureQueue == true)
                 {
                     int clusterHash = 0;
@@ -309,6 +313,14 @@ namespace Microsoft.Hpc.ServiceBroker
                         this.azureQueueProxy = new AzureQueueProxy(brokerInfo.ClusterName, clusterHash, this.SessionId, brokerInfo.AzureStorageConnectionString);
                         requestQueueUri = this.azureQueueProxy.RequestQueueUri;
                         requestBlobUri = this.azureQueueProxy.RequestBlobUri;
+                        controllerRequstQueueUri = CloudQueueCreationModule.CreateCloudQueueAndGetSas(
+                            brokerInfo.AzureStorageConnectionString,
+                            CloudQueueConstants.BrokerWorkerControllerRequestQueueName,
+                            CloudQueueCreationModule.AddMessageSasPolicy).GetAwaiter().GetResult();
+                        controllerResponseQueueUri = CloudQueueCreationModule.CreateCloudQueueAndGetSas(
+                            brokerInfo.AzureStorageConnectionString,
+                            CloudQueueConstants.BrokerWorkerControllerResponseQueueName,
+                            CloudQueueCreationModule.ProcessMessageSasPolicy).GetAwaiter().GetResult();
                     }
                     else
                     {
@@ -336,6 +348,8 @@ namespace Microsoft.Hpc.ServiceBroker
                     this.sharedData.Config.Monitor.ClientBrokerHeartbeatRetryCount,
                     requestQueueUri,
                     requestBlobUri,
+                    controllerRequstQueueUri,
+                    controllerResponseQueueUri,
                     startInfo.UseAzureQueue);
                 BrokerTracing.TraceVerbose("[BrokerEntry] Initialization: Step 12: Build initialization result suceeded.");
                 BrokerTracing.TraceInfo("[BrokerEntry] Initialization succeeded.");
@@ -664,6 +678,33 @@ namespace Microsoft.Hpc.ServiceBroker
             info.AzureRequestQueueUri = azureRequestQueueUri;
             info.AzureRequestBlobUri = azureRequestBlobUri;
             info.UseAzureQueue = (useAzureQueue == true);
+            return info;
+        }
+
+        private static BrokerInitializationResult BuildInitializationResult(
+            FrontendResult frontendResult,
+            DispatcherManager dispatcherManager,
+            int serviceOperationTimeout,
+            int clientBrokerHeartbeatInterval,
+            int clientBrokerHeartbeatRetryCount,
+            string azureRequestQueueUri,
+            string azureRequestBlobUri,
+            string controllerRequestQueueUri,
+            string controllerResponseQueueUri,
+            bool? useAzureQueue
+            )
+        {
+            var info = BuildInitializationResult(
+                frontendResult,
+                dispatcherManager,
+                serviceOperationTimeout,
+                clientBrokerHeartbeatInterval,
+                clientBrokerHeartbeatRetryCount,
+                azureRequestQueueUri,
+                azureRequestBlobUri,
+                useAzureQueue);
+            info.AzureControllerRequestQueueUri = controllerRequestQueueUri;
+            info.AzureControllerResponseQueueUri = controllerResponseQueueUri;
             return info;
         }
 

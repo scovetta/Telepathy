@@ -146,9 +146,6 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         private string jwtTokenCache;
 
-
-        private string connectionString; // TODO: change this to sas token and get this from brokerworker
-
         /// <summary>
         ///   <para>Gets or sets the behavior of the <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> object.</para>
         /// </summary>
@@ -291,18 +288,7 @@ namespace Microsoft.Hpc.Scheduler.Session
 
             Init(null, null);
         }
-
-        // TODO: remove me
-        public BrokerClient(string clientid, SessionBase session, object dummy, string connectionString) : base(clientid, session)
-        {
-            this.connectionString = connectionString;
-
-            Utility.ThrowIfNull(session, "session");
-            Utility.ThrowIfNullOrEmpty(clientid, "clientid");
-            Utility.ThrowIfTooLong(clientid.Length, "clientid", 128, SR.ClientIdTooLong);
-
-            Init(null, null);
-        }
+        
 
         /// <summary>
         /// Creates instances of BrokerClient
@@ -500,7 +486,7 @@ namespace Microsoft.Hpc.Scheduler.Session
 
             if (((SessionInfo)this.session.Info).UseAzureQueue.GetValueOrDefault() || scheme == TransportScheme.Http)
             {
-                this.frontendFactory = new HttpBrokerFrontendFactory(this.clientId, binding, this.session, scheme, this.callbackManager, this.connectionString);
+                this.frontendFactory = new HttpBrokerFrontendFactory(this.clientId, binding, this.session, scheme, this.callbackManager);
             }
             else
             {

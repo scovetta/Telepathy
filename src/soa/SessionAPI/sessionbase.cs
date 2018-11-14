@@ -206,7 +206,14 @@ namespace Microsoft.Hpc.Scheduler.Session
             this._headnode = headnode;
             this.IsBrokerAvailable = true;
 
-            this.sessionHash = Guid.NewGuid().ToString().GetHashCode();
+            if (this.serviceJobId == SessionStartInfo.DummySessionId)
+            {
+                this.sessionHash = 0;
+            }
+            else
+            {
+                this.sessionHash = Guid.NewGuid().ToString().GetHashCode();
+            }
 
             if (info is SessionInfo)
             {

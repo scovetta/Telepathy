@@ -269,7 +269,7 @@ namespace Microsoft.Hpc.EchoClient
                             try
                             {
                                 // Create a BrokerClient proxy
-                                using (BrokerClient<IEchoSvc> client = new BrokerClient<IEchoSvc>(brokerClientGuid.ToString(), session, new object(), info.BrokerLauncherStorageConnectionString))
+                                using (BrokerClient<IEchoSvc> client = new BrokerClient<IEchoSvc>(brokerClientGuid.ToString(), session))
                                 {
                                     if (config.AsyncResponseHandler)
                                     {
