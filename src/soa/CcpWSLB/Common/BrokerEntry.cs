@@ -30,6 +30,11 @@ namespace Microsoft.Hpc.ServiceBroker
     using System.Threading;
     using System.Threading.Tasks;
     using System.Xml;
+
+    using Microsoft.Hpc.Scheduler.Session.QueueAdapter;
+    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Module;
+    using Microsoft.Hpc.SoaContext;
+
     using SoaAmbientConfig;
     /// <summary>
     /// Remoting entry for broker
@@ -249,7 +254,11 @@ namespace Microsoft.Hpc.ServiceBroker
                 BrokerTracing.TraceVerbose("[BrokerEntry] Initialization: Step 4: Initialize broker state manager succeeded.");
 
                 // Step 5: Initialize service job monitor
+#if HPCPACK
                 var context = HpcContext.GetOrAdd(this.sharedData.BrokerInfo.Headnode, CancellationToken.None);
+#else
+                var context = new SoaContext();
+#endif
                 if (SoaAmbientConfig.StandAlone)
                 { 
                     this.monitor = new DummyServiceJobMonitor(this.sharedData, this.stateManager, this.nodeMappingData, context);
@@ -279,21 +288,43 @@ namespace Microsoft.Hpc.ServiceBroker
                 // if using AzureQueue, retrieve the connection string and build the request and response message queues if not exist
                 string requestQueueUri = string.Empty;
                 string requestBlobUri = string.Empty;
-                if (startInfo.UseAzureQueue == true && (startInfo.TransportScheme & TransportScheme.Http) == TransportScheme.Http)
+                string controllerRequstQueueUri = string.Empty;
+                string controllerResponseQueueUri = string.Empty;
+                if (startInfo.UseAzureQueue == true)
                 {
-
-                    string clusterIdString = brokerInfo.ClusterId.ToLowerInvariant();
-                    int clusterHash = clusterIdString.GetHashCode();
+                    int clusterHash = 0;
+                    if (!string.IsNullOrEmpty(brokerInfo.ClusterId))
+                    {
+                        string clusterIdString = brokerInfo.ClusterId.ToLowerInvariant();
+                        clusterHash = clusterIdString.GetHashCode();
+                    }
+                    else if (!string.IsNullOrEmpty(brokerInfo.ClusterName))
+                    {
+                        string clusterNameString = brokerInfo.ClusterName.ToLowerInvariant();
+                        clusterHash = clusterNameString.GetHashCode();
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException($"Both {nameof(brokerInfo.ClusterId)} and {nameof(brokerInfo.ClusterName)} are null or empty. No {nameof(clusterHash)} can be determined.");
+                    }
 
                     if (!string.IsNullOrEmpty(brokerInfo.AzureStorageConnectionString))
                     {
                         this.azureQueueProxy = new AzureQueueProxy(brokerInfo.ClusterName, clusterHash, this.SessionId, brokerInfo.AzureStorageConnectionString);
                         requestQueueUri = this.azureQueueProxy.RequestQueueUri;
                         requestBlobUri = this.azureQueueProxy.RequestBlobUri;
+                        controllerRequstQueueUri = CloudQueueCreationModule.CreateCloudQueueAndGetSas(
+                            brokerInfo.AzureStorageConnectionString,
+                            CloudQueueConstants.BrokerWorkerControllerRequestQueueName,
+                            CloudQueueCreationModule.AddMessageSasPolicy).GetAwaiter().GetResult();
+                        controllerResponseQueueUri = CloudQueueCreationModule.CreateCloudQueueAndGetSas(
+                            brokerInfo.AzureStorageConnectionString,
+                            CloudQueueConstants.BrokerWorkerControllerResponseQueueName,
+                            CloudQueueCreationModule.ProcessMessageSasPolicy).GetAwaiter().GetResult();
                     }
                     else
                     {
-                        BrokerTracing.TraceError("[BrokerEntry] Initialization: Use Azure Queueu is specified, however the Azure connection string is not set.");
+                        BrokerTracing.TraceError("[BrokerEntry] Initialization: Use Azure Queue is specified, however the Azure connection string is not set.");
                         ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_AzureConnectionStringNotAvailable, Microsoft.Hpc.SvcBroker.SR.Broker_AzureConnectionStringNotAvailable);
                     }
                 }
@@ -317,6 +348,8 @@ namespace Microsoft.Hpc.ServiceBroker
                     this.sharedData.Config.Monitor.ClientBrokerHeartbeatRetryCount,
                     requestQueueUri,
                     requestBlobUri,
+                    controllerRequstQueueUri,
+                    controllerResponseQueueUri,
                     startInfo.UseAzureQueue);
                 BrokerTracing.TraceVerbose("[BrokerEntry] Initialization: Step 12: Build initialization result suceeded.");
                 BrokerTracing.TraceInfo("[BrokerEntry] Initialization succeeded.");
@@ -645,6 +678,33 @@ namespace Microsoft.Hpc.ServiceBroker
             info.AzureRequestQueueUri = azureRequestQueueUri;
             info.AzureRequestBlobUri = azureRequestBlobUri;
             info.UseAzureQueue = (useAzureQueue == true);
+            return info;
+        }
+
+        private static BrokerInitializationResult BuildInitializationResult(
+            FrontendResult frontendResult,
+            DispatcherManager dispatcherManager,
+            int serviceOperationTimeout,
+            int clientBrokerHeartbeatInterval,
+            int clientBrokerHeartbeatRetryCount,
+            string azureRequestQueueUri,
+            string azureRequestBlobUri,
+            string controllerRequestQueueUri,
+            string controllerResponseQueueUri,
+            bool? useAzureQueue
+            )
+        {
+            var info = BuildInitializationResult(
+                frontendResult,
+                dispatcherManager,
+                serviceOperationTimeout,
+                clientBrokerHeartbeatInterval,
+                clientBrokerHeartbeatRetryCount,
+                azureRequestQueueUri,
+                azureRequestBlobUri,
+                useAzureQueue);
+            info.AzureControllerRequestQueueUri = controllerRequestQueueUri;
+            info.AzureControllerResponseQueueUri = controllerResponseQueueUri;
             return info;
         }
 

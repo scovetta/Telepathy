@@ -71,6 +71,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <returns></returns>
         public static Binding GetBrokerBinding(this IConnectionInfo connectionInfo)
         {
+#if HPCPACK
             var scheme = connectionInfo.TransportScheme;
 #if API
             if (LocalSession.LocalBroker)
@@ -127,6 +128,9 @@ namespace Microsoft.Hpc.Scheduler.Session
             {
                 return BindingHelper.HardCodedBrokerLauncherNetTcpBinding;
             }
+#else
+            return BindingHelper.HardCodedUnSecureNetTcpBinding;
+#endif
         }
 
         /// <summary>

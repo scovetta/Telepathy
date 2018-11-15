@@ -401,5 +401,9 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// Get or set whether the username and password windows client credential is used for the authentication
         /// </summary>
         public bool UseWindowsClientCredential { get; set; }
+
+        internal string AzureControllerRequestQueueUri { get; set; }
+
+        internal string AzureControllerResponseQueueUri { get; set; }
     }
 }

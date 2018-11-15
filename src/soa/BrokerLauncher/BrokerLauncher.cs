@@ -310,7 +310,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         {
             try
             {
-                ParamCheckUtility.ThrowIfOutofRange(sessionId <= 0, "sessionId");
+                ParamCheckUtility.ThrowIfOutofRange(sessionId < -1, "sessionId");
                 this.CheckAccess(sessionId);
 
                 string uniqueId;

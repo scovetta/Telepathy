@@ -6,16 +6,19 @@
 //      The main entry point for the application.
 // </summary>
 //------------------------------------------------------------------------------
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
 {
     using System;
     using System.Diagnostics;
     using System.ServiceProcess;
     using System.Threading;
+
     using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
     using Microsoft.Hpc.Scheduler.Session.Internal.Diagnostics;
     using Microsoft.Hpc.ServiceBroker;
+    using Microsoft.Hpc.SoaContext;
 
     /// <summary>
     /// Main entry point
@@ -29,25 +32,30 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
         private static void Main(string[] args)
         {
             // clusterconnectionstring could be a machine name (for single headnode) or a connection string
+#if HPCPACK
             string clusterConnectionString = SoaHelper.GetSchedulerName(false);
             var context = HpcContext.GetOrAdd(clusterConnectionString, CancellationToken.None, true);
+#else
+            var context = new SoaContext();
+#endif
             Trace.TraceInformation("Get diag trace enabled internal.");
             SoaDiagTraceHelper.IsDiagTraceEnabledInternal = (sessionId) =>
-            {
-                try
                 {
-                    using (ISchedulerHelper helper = SchedulerHelperFactory.GetSchedulerHelper(context))
+                    try
                     {
-                        return helper.IsDiagTraceEnabled(sessionId).GetAwaiter().GetResult();
+                        using (ISchedulerHelper helper = SchedulerHelperFactory.GetSchedulerHelper(context))
+                        {
+                            return helper.IsDiagTraceEnabled(sessionId).GetAwaiter().GetResult();
+                        }
                     }
-                }
-                catch (Exception e)
-                {
-                    Trace.TraceError("[SoaDiagTraceHelper] Failed to get IsDiagTraceEnabled property: {0}", e);
-                    return false;
-                }
-            };
+                    catch (Exception e)
+                    {
+                        Trace.TraceError("[SoaDiagTraceHelper] Failed to get IsDiagTraceEnabled property: {0}", e);
+                        return false;
+                    }
+                };
 
+            SetBrokerLauncherSettings(args, BrokerLauncherSettings.Default);
 
             TraceHelper.IsDiagTraceEnabled = SoaDiagTraceHelper.IsDiagTraceEnabled;
 
@@ -55,8 +63,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
             BrokerManagement brokerManagement = null;
 
             // richci : Run as a console application if user wants to debug (-D) or run in MSCS (-FAILOVER)
-            if (args.Length > 0 && (String.Compare(args[0], "-D", StringComparison.InvariantCultureIgnoreCase) == 0 ||
-                                    String.Compare(args[0], "-FAILOVER", StringComparison.InvariantCultureIgnoreCase) == 0))
+            if (args.Length > 0
+                && (string.Compare(args[0], "-D", StringComparison.InvariantCultureIgnoreCase) == 0 || string.Compare(args[0], "-FAILOVER", StringComparison.InvariantCultureIgnoreCase) == 0))
             {
                 try
                 {
@@ -70,7 +78,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                     Console.WriteLine("Press any key to exit...");
                     Thread.Sleep(-1);
                 }
-
                 finally
                 {
                     if (host != null)
@@ -79,7 +86,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                         {
                             host.Stop();
                         }
-
                         catch (Exception e)
                         {
                             Trace.TraceError("Exception stopping HpcBroker service - " + e);
@@ -92,7 +98,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                         {
                             brokerManagement.Close();
                         }
-
                         catch (Exception e)
                         {
                             Trace.TraceError("Exception closing broker managment WCF service - " + e);
@@ -105,6 +110,43 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 ServiceBase[] servicesToRun;
                 servicesToRun = new ServiceBase[] { new LauncherHostService(context) };
                 ServiceBase.Run(servicesToRun);
+            }
+        }
+
+        private static void SetBrokerLauncherSettings(string[] args, BrokerLauncherSettings settings)
+        {
+            if (args == null || args.Length == 0)
+            {
+                return;
+            }
+
+            for (int i = 0; i != args.Length; ++i)
+            {
+                void ThrowIfLastItem()
+                {
+                    if (i + 1 >= args.Length)
+                    {
+                        throw new InvalidOperationException();
+                    }
+                }
+
+                switch (args[i])
+                {
+                    case "-CCP_SERVICEREGISTRATION_PATH":
+                        ThrowIfLastItem();
+                        settings.CCP_SERVICEREGISTRATION_PATH = args[i + 1];
+                        break;
+                    case "-AzureStorageConnectionString":
+                        ThrowIfLastItem();
+                        settings.AzureStorageConnectionString = args[i + 1];
+                        break;
+                    case "-EnableAzureStorageQueueEndpoint":
+                        ThrowIfLastItem();
+                        settings.EnableAzureStorageQueueEndpoint = bool.Parse(args[i + 1]);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

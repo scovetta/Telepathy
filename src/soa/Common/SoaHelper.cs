@@ -942,6 +942,15 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>response storage name</returns>
         public static string GetResponseStorageName(string clusterId, int sessionId, int requeueCount)
         {
+            if (sessionId < SessionStartInfo.DummySessionId)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sessionId));
+            }
+            else if (sessionId == SessionStartInfo.DummySessionId)
+            {
+                sessionId = 0;
+            }
+
             return string.Format("{0}-{1}-{2}", GetResponseStoragePrefix(clusterId), sessionId, requeueCount).ToLowerInvariant();
         }
 
@@ -953,6 +962,15 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns></returns>
         public static string GetRequestStorageName(int clusterHash, int sessionId)
         {
+            if (sessionId < SessionStartInfo.DummySessionId)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sessionId));
+            }
+            else if (sessionId == SessionStartInfo.DummySessionId)
+            {
+                sessionId = 0;
+            }
+
             uint uClusterHash = Convert.ToUInt32((long)clusterHash - int.MinValue);
             return string.Format("hpcsoa-{0}-{1}-request", uClusterHash, sessionId);
         }
@@ -969,6 +987,36 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             return string.Format("hpcsoa-{0}-{1}-response", uClusterHash, sessionId);
         }
 
+        public static string GetControllerRequestStorageName(int clusterHash, int sessionId)
+        {
+            if (sessionId < SessionStartInfo.DummySessionId)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sessionId));
+            }
+            else if (sessionId == SessionStartInfo.DummySessionId)
+            {
+                sessionId = 0;
+            }
+
+            uint uClusterHash = Convert.ToUInt32((long)clusterHash - int.MinValue);
+            return $"hpcsoa-{uClusterHash}-{sessionId}-controller-request";
+        }
+
+        public static string GetControllerResponseStorageName(int clusterHash, int sessionId)
+        {
+            if (sessionId < SessionStartInfo.DummySessionId)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sessionId));
+            }
+            else if (sessionId == SessionStartInfo.DummySessionId)
+            {
+                sessionId = 0;
+            }
+
+            uint uClusterHash = Convert.ToUInt32((long)clusterHash - int.MinValue);
+            return $"hpcsoa-{uClusterHash}-{sessionId}-controller-response";
+        }
+
         /// <summary>
         /// Get Azure response queue/blob container name
         /// </summary>
@@ -978,6 +1026,15 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns></returns>
         public static string GetResponseStorageName(int clusterHash, int sessionId, int sessionHash)
         {
+            if (sessionId < SessionStartInfo.DummySessionId)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sessionId));
+            }
+            else if (sessionId == SessionStartInfo.DummySessionId)
+            {
+                sessionId = 0;
+            }
+
             uint uClusterHash = Convert.ToUInt32((long)clusterHash - int.MinValue);
             uint uSessionHash = Convert.ToUInt32((long)sessionHash - int.MinValue);
             return string.Format("hpcsoa-{0}-{1}-response-{2}", uClusterHash, sessionId, uSessionHash);

@@ -30,6 +30,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using System.ServiceModel.Description;
 
     using Microsoft.Hpc.AADAuthUtil;
+    using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter;
 
     /// <summary>
     /// Launcher Host Service
@@ -113,6 +114,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
         /// Store the broker launcher host
         /// </summary>
         private ServiceHost launcherHost;
+
+        /// <summary>
+        /// Server side cloud queue adapter
+        /// </summary>
+        private BrokerLauncherCloudQueueWatcher watcher;
 
         /// <summary>
         /// Stores the soa diag service host
@@ -367,7 +373,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                     throw new InvalidOperationException("Only one instance of the process can be run a time");
                 }
 
-                if (!isOnAzure && !IsConsoleApplication && Win32API.IsFailoverBrokerNode())
+                if (false) //!isOnAzure && !IsConsoleApplication && Win32API.IsFailoverBrokerNode())
                 {
                     //
                     // If this is a brokerlauncher service running as service on a failover BN, dont
@@ -386,15 +392,28 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                     this.launcherInstance = new BrokerLauncher(false, this.context);
                     this.launcherHost = new ServiceHost(this.launcherInstance, new Uri(SoaHelper.GetBrokerLauncherAddress(HostName)));
                     BindingHelper.ApplyDefaultThrottlingBehavior(this.launcherHost);
-                    this.launcherHost.AddServiceEndpoint(typeof(IBrokerLauncher), BindingHelper.HardCodedBrokerLauncherNetTcpBinding, string.Empty);
-                    this.launcherHost.AddServiceEndpoint(typeof(IBrokerLauncher), BindingHelper.HardCodedInternalBrokerLauncherNetTcpBinding, "Internal");
-                    this.launcherHost.AddServiceEndpoint(typeof(IBrokerLauncher), BindingHelper.HardCodedNoAuthBrokerLauncherNetTcpBinding, "AAD");
-                    this.launcherHost.Credentials.UseInternalAuthenticationAsync(true).GetAwaiter().GetResult();
+                    this.launcherHost.AddServiceEndpoint(typeof(IBrokerLauncher), BindingHelper.HardCodedUnSecureNetTcpBinding, string.Empty);
+                    this.launcherHost.AddServiceEndpoint(typeof(IBrokerLauncher), BindingHelper.HardCodedUnSecureNetTcpBinding, "Internal");
+                    this.launcherHost.AddServiceEndpoint(typeof(IBrokerLauncher), BindingHelper.HardCodedUnSecureNetTcpBinding, "AAD");
+                    // this.launcherHost.Credentials.UseInternalAuthenticationAsync(true).GetAwaiter().GetResult();
                     string addFormat = SoaHelper.BrokerLauncherAadAddressFormat;
                     this.launcherHost.Authorization.ServiceAuthorizationManager = new AADServiceAuthorizationManager(addFormat.Substring(addFormat.IndexOf('/')), this.context);
                     ServiceAuthorizationBehavior myServiceBehavior = this.launcherHost.Description.Behaviors.Find<ServiceAuthorizationBehavior>();
                     myServiceBehavior.PrincipalPermissionMode = PrincipalPermissionMode.None;
                     this.launcherHost.Open();
+
+                    if (BrokerLauncherSettings.Default.EnableAzureStorageQueueEndpoint)
+                    {
+                        if (string.IsNullOrEmpty(BrokerLauncherSettings.Default.AzureStorageConnectionString))
+                        {
+                            Trace.TraceError("AzureStorageConnectionString is null or empty while EnableAzureStorageQueueEndpoint is set to true");
+                        }
+                        else
+                        {
+                            this.watcher = new BrokerLauncherCloudQueueWatcher(this.launcherInstance, BrokerLauncherSettings.Default.AzureStorageConnectionString);
+                        }
+                    }
+
                     Trace.TraceInformation("Open broker launcher service succeeded.");
                     TraceHelper.TraceEvent(TraceEventType.Information, "Open broker launcher service succeeded.");
 

@@ -12,6 +12,7 @@ namespace Microsoft.Hpc.Scheduler.Session
     using System.ServiceModel;
     using System.Xml;
     using System.Xml.Serialization;
+
     using Microsoft.Hpc.Scheduler.Session.Interface;
 
     /// <summary>
@@ -23,6 +24,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
         [XmlElement]
         public bool EOM;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
         [XmlElement]
         public XmlElement[] SOAPMessage;
@@ -102,8 +104,15 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="azureResponseBlobUri"></param>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        void GetResponsesAQ(string action, string clientData, GetResponsePosition resetToBegin, int count, string clientId, int sessionHash, out string azureResponseQueueUri, out string azureResponseBlobUri);
-
+        void GetResponsesAQ(
+            string action,
+            string clientData,
+            GetResponsePosition resetToBegin,
+            int count,
+            string clientId,
+            int sessionHash,
+            out string azureResponseQueueUri,
+            out string azureResponseBlobUri);
 
         /// <summary>
         /// Perform Ping action

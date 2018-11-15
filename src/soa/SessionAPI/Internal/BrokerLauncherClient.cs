@@ -45,6 +45,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
         private void InitAzureOrAadOrCertAuth(IConnectionInfo info, string username, string password)
         {
+#if HPCPACK
             if (!SoaHelper.IsOnAzure() && !info.UseAad)
             {
                 this.ClientCredentials.Windows.AllowedImpersonationLevel = TokenImpersonationLevel.Impersonation;
@@ -62,6 +63,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 // use certificate for cluster internal authentication
                 this.UseInternalAuthenticationAsync().GetAwaiter().GetResult();
             }
+#endif
         }
 
         /// <summary>

@@ -578,11 +578,16 @@ namespace Microsoft.Hpc.Scheduler.Session
         public bool IsNoSession { get; set; }
 
         /// <summary>
+        /// Storage connection string used to connect to broker launcher storage queue endpoint
+        /// </summary>
+        public string BrokerLauncherStorageConnectionString { get; set; }
+
+        /// <summary>
         /// store a dummy session Id by default
         /// </summary>
-        private readonly int dummySessionId = -1;
+        private static readonly int dummySessionId = -1;
 
-        public int DummySessionId
+        public static int DummySessionId
         {
             get { return dummySessionId; }
         }

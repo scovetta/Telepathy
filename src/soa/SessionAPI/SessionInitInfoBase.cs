@@ -8,6 +8,7 @@
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker;
+    using Microsoft.Hpc.SoaContext;
 
     /// <summary>
     /// Base class implements <see cref="IConnectionInfo"/>
@@ -91,7 +92,11 @@
 
             this.headnode = headnode;
 
+#if HPCPACK
             this.Context = HpcContext.GetOrAdd(this.headnode, CancellationToken.None);
+#else
+            this.Context = new SoaContext();
+#endif
         }
 
         protected SessionInitInfoBase()

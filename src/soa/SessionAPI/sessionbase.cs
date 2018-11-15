@@ -206,7 +206,14 @@ namespace Microsoft.Hpc.Scheduler.Session
             this._headnode = headnode;
             this.IsBrokerAvailable = true;
 
-            this.sessionHash = Guid.NewGuid().ToString().GetHashCode();
+            if (this.serviceJobId == SessionStartInfo.DummySessionId)
+            {
+                this.sessionHash = 0;
+            }
+            else
+            {
+                this.sessionHash = Guid.NewGuid().ToString().GetHashCode();
+            }
 
             if (info is SessionInfo)
             {
@@ -241,7 +248,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                 }
 
                 // build the proxy if using azure storage queue
-                if ((this.Info.TransportScheme & TransportScheme.Http) == TransportScheme.Http && this.SessionInfo.UseAzureQueue == true)
+                if (this.SessionInfo.UseAzureQueue == true)
                 {
                     this.AzureQueueProxy = new AzureQueueProxy(this.SessionInfo.Headnode, this.SessionInfo.Id, this.sessionHash, this.SessionInfo.AzureRequestQueueUri, this.SessionInfo.AzureRequestBlobUri);
                 }
@@ -255,6 +262,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             get { return this.factory; }
         }
+
+        internal IBrokerLauncher BrokerLauncherClient { get; set; }
 
         /// <summary>
         /// Gets the instance of SessionInfo
@@ -714,6 +723,8 @@ namespace Microsoft.Hpc.Scheduler.Session
             info.AzureRequestQueueUri = result.AzureRequestQueueUri;
             info.AzureRequestBlobUri = result.AzureRequestBlobUri;
             info.UseAad = startInfo.UseAad;
+            info.AzureControllerRequestQueueUri = result.AzureControllerRequestQueueUri;
+            info.AzureControllerResponseQueueUri = result.AzureControllerResponseQueueUri;
 
             // If client supplies value use it else use service config values
             if (startInfo.BrokerSettings.ClientBrokerHeartbeatInterval.HasValue)
@@ -943,7 +954,12 @@ namespace Microsoft.Hpc.Scheduler.Session
             {
                 if (purge)
                 {
-                    IBrokerLauncher broker = this.factory?.GetBrokerLauncherClient(timeoutMilliseconds);
+                    IBrokerLauncher broker = this.BrokerLauncherClient;
+                    if (broker == null)
+                    {
+                        broker = this.factory?.GetBrokerLauncherClient(timeoutMilliseconds);
+                    }
+
                     broker?.Close(this.Id);
                 }
             }

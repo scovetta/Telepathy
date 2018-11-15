@@ -101,7 +101,13 @@
 
         public async Task<ClusterInfoContract> GetClusterInfoAsync()
         {
-            return null;
+            return new ClusterInfoContract()
+                       {
+                           ClusterName = BrokerLauncherSettings.Default.ClusterName,
+                           ClusterId = BrokerLauncherSettings.Default.ClusterId,
+                           NetworkTopology = "Public",
+                           AzureStorageConnectionString = BrokerLauncherSettings.Default.AzureStorageConnectionString
+                       };
         }
     }
 }

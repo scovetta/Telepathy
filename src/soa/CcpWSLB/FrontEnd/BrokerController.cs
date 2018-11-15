@@ -14,9 +14,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading;
-    using System.Threading.Tasks;
 
-    using Microsoft.Hpc.AADAuthUtil;
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;
@@ -470,6 +468,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// <returns>return the user name</returns>
         private static string GetUserName()
         {
+#if HPCPACK
             // case 1. This handles aad integration.
             if (Thread.CurrentPrincipal.IsHpcAadPrincipal(WinServiceHpcContextModule.GetOrAddWinServiceHpcContextFromEnv()))
             {
@@ -481,6 +480,13 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             {
                 // Returns the log on user of the current thread if OperationContext.Current is null (apply to inprocess broker)
                 return WindowsIdentity.GetCurrent().Name;
+            }
+#endif
+
+            // Stand alone mode goes here
+            if (OperationContext.Current == null)
+            {
+                return Constant.AnonymousUserName;
             }
 
             // case 3. OperationContext.Current.ServiceSecurityContext == null.  This handles insecure binding

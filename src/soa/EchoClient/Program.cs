@@ -42,7 +42,7 @@ namespace Microsoft.Hpc.EchoClient
                 return;
             }
 
-            //strategys for the Echoclient
+            // strategies for the EchoClient
             SessionStartInfo info = null;
             if (config.IsNoSession)
             {
@@ -81,6 +81,12 @@ namespace Microsoft.Hpc.EchoClient
             {
                 info.ServiceJobName = config.JobName;
             }
+
+            if (!string.IsNullOrEmpty(config.AzureStorageConnectionString))
+            {
+                info.BrokerLauncherStorageConnectionString = config.AzureStorageConnectionString;
+            }
+
             switch (config.ResourceType.ToLowerInvariant())
             {
                 case "core":
@@ -136,7 +142,7 @@ namespace Microsoft.Hpc.EchoClient
             info.ServiceHangTimeout = config.ServiceHangSec == -1 ? config.ServiceHangSec : config.ServiceHangSec * 1000;
             info.UseWindowsClientCredential = config.UseWCC;
             info.UseAad = config.UseAad;
-
+            
             if (config.Runtime > 0)
             {
                 info.Runtime = config.Runtime;

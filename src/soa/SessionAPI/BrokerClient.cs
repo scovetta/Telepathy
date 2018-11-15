@@ -288,6 +288,7 @@ namespace Microsoft.Hpc.Scheduler.Session
 
             Init(null, null);
         }
+        
 
         /// <summary>
         /// Creates instances of BrokerClient
@@ -483,7 +484,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             //save the transport scheme for the client
             this.transportScheme = scheme;
 
-            if (scheme == TransportScheme.Http)
+            if (((SessionInfo)this.session.Info).UseAzureQueue.GetValueOrDefault() || scheme == TransportScheme.Http)
             {
                 this.frontendFactory = new HttpBrokerFrontendFactory(this.clientId, binding, this.session, scheme, this.callbackManager);
             }
@@ -491,6 +492,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             {
                 this.frontendFactory = new WSBrokerFrontendFactory(this.clientId, binding, (SessionInfo)this.session.Info, scheme, this.callbackManager);
             }
+
             SessionBase.TraceSource.TraceInformation(
                 "[Session:{0}] BrokerClient instance created. ClientId = {1}, Scheme = {2}, DefaultSendTimeout = {3}, DefaultResponsesTimeout = {4}",
                 this.session.Id,
@@ -939,7 +941,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                     this.CheckDisposed();
                     this.CheckBrokerAvailability();
 
-                    if (this.session.Info.TransportScheme == TransportScheme.Http && (this.session.Info as SessionInfo).UseAzureQueue == true)
+                    if ((this.session.Info as SessionInfo).UseAzureQueue == true)
                     {
                         // add username in the message header if secure
                         if ((this.session.Info as SessionInfo).Secure)

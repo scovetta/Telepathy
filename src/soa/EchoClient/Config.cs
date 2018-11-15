@@ -40,6 +40,7 @@ namespace Microsoft.Hpc.EchoClient
         private const string PasswordArg = "password";
         private const string InsecureArg = "insecure";
         private const string AzureQueueArg = "azureQueue";
+        private const string AzureStorageConnectionStringArg = "azureStor";
         private const string ServiceNameArg = "serviceName";
         private const string ShareSessionArg = "shareSession";
         private const string SessionPoolArg = "sessionPool";
@@ -177,6 +178,17 @@ namespace Microsoft.Hpc.EchoClient
         {
             get { return azureQueue; }
         }
+
+        private string azureStorageConnectionString = null;
+
+        public string AzureStorageConnectionString
+        {
+            get
+            {
+                return this.azureStorageConnectionString;
+            }
+        } 
+
         private bool shareSession = false;
 
         public bool ShareSession
@@ -299,6 +311,7 @@ namespace Microsoft.Hpc.EchoClient
             parser.TryGetArg<int?>(ServiceHangSecArg, ref serviceHangSec);
             parser.TryGetArg<string>(RegPathArg, ref regPath);
             parser.TryGetArgList<string>(TargetListArg, ref targetList);
+            parser.TryGetArg(AzureStorageConnectionStringArg, ref azureStorageConnectionString);
 
             inprocessBroker = parser.GetSwitch(InprocessBrokerArg);
             isNoSession = parser.GetSwitch(IsNoSessionArg);
@@ -315,9 +328,9 @@ namespace Microsoft.Hpc.EchoClient
         public void PrintHelp()
         {
             Console.WriteLine();
-            Console.WriteLine("Usage: EchoClient.exe -headnode <HeadNode> -jobName <JobName> -serviceName <ServiceName> -numberOfRequests <10> -timeMS <0> -sizeByte <0> -resourceType:<core|node|socket|gpu> -min <N> -max <N> -scheme <http|nettcp|custom> -groups <nodeGroupA,nodeGroupB> -requestedNodes <NodeA,NodeB> -priority <N> -jobTemplate <templateA> -environment <Environment> -username <Username> -password <Password> -azureQueue <True|False> -runtime <N Sec> -brokerClient <N> -flush <N> -timeMSRandom <N>_<N> -sizeKBRandom <N>_<N> -msgTimeoutSec <N> -parentIds <id,id,...> -serviceIdleSec <N> -serviceHangSec <N> -durable -insecure -async -inprocessBroker -useWCC -useAad -shareSession -sessionPool -verbose");
+            Console.WriteLine("Usage: EchoClient.exe -headnode <HeadNode> -jobName <JobName> -serviceName <ServiceName> -numberOfRequests <10> -timeMS <0> -sizeByte <0> -resourceType:<core|node|socket|gpu> -min <N> -max <N> -scheme <http|nettcp|custom> -groups <nodeGroupA,nodeGroupB> -requestedNodes <NodeA,NodeB> -priority <N> -jobTemplate <templateA> -environment <Environment> -username <Username> -password <Password> -azureQueue <True|False> -runtime <N Sec> -brokerClient <N> -flush <N> -timeMSRandom <N>_<N> -sizeKBRandom <N>_<N> -msgTimeoutSec <N> -parentIds <id,id,...> -serviceIdleSec <N> -serviceHangSec <N> -regPath <RegistrationFolderPath> -targetList <machine,machine,...> -azureStor <StorageConnectionString> -durable -insecure -async -inprocessBroker -isNoSession -useWCC -useAad -shareSession -sessionPool -verbose");
             Console.WriteLine();
-            Console.WriteLine("Usage: EchoClient.exe /headnode:<HeadNode> /jobName:<JobName> /serviceName:<ServiceName> /numberOfRequests:<10> /timeMS:<0> /sizeByte:<0> /resourceType:<core|node|socket|gpu> /min:<N> /max:<N> /scheme:<http|nettcp|custom> /groups:<nodeGroupA,nodeGroupB> /requestedNodes:<NodeA,NodeB> /priority:<N> /jobTemplate:<templateA> /environment:<Environment> /username:<Username> /password:<Password> /azureQueue:<True|False> /runtime:<N Sec> /brokerClient:<N> /flush:<N> /timeMSRandom:<N>_<N> /sizeKBRandom:<N>_<N> /msgTimeoutSec:<N> /parentIds:<id,id,...> /serviceIdleSec:<N> /serviceHangSec:<N> /durable /insecure /async /inprocessBroker /useWCC /useAad /shareSession /sessionPool /verbose");
+            Console.WriteLine("Usage: EchoClient.exe /headnode:<HeadNode> /jobName:<JobName> /serviceName:<ServiceName> /numberOfRequests:<10> /timeMS:<0> /sizeByte:<0> /resourceType:<core|node|socket|gpu> /min:<N> /max:<N> /scheme:<http|nettcp|custom> /groups:<nodeGroupA,nodeGroupB> /requestedNodes:<NodeA,NodeB> /priority:<N> /jobTemplate:<templateA> /environment:<Environment> /username:<Username> /password:<Password> /azureQueue:<True|False> /runtime:<N Sec> /brokerClient:<N> /flush:<N> /timeMSRandom:<N>_<N> /sizeKBRandom:<N>_<N> /msgTimeoutSec:<N> /parentIds:<id,id,...> /serviceIdleSec:<N> /serviceHangSec:<N> /regPath:<RegistrationFolderPath> /targetList:<machine,machine,...> /azureStor:<StorageConnectionString> /durable /insecure /async /inprocessBroker /isNoSession /useWCC /useAad /shareSession /sessionPool /verbose");
             Console.WriteLine();
             Console.WriteLine("Sample: EchoClient.exe");
             Console.WriteLine("Sample: EchoClient.exe -h HeadNode -n 20");

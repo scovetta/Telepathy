@@ -150,7 +150,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         public BrokerManager(bool needRecover, IHpcContext context)
         {
             TraceHelper.TraceEvent(TraceEventType.Verbose, "[BrokerManager] Constructor: needRecover={0}", needRecover);
+#if HPCPACK
             this.headnode = SoaHelper.GetSchedulerName(false);
+#endif
 
             this.context = context;
 
@@ -215,7 +217,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         public async Task<BrokerInitializationResult> CreateNewBrokerDomain(SessionStartInfoContract info, int sessionid, bool durable)
         {
             string userName =
-                (OperationContext.Current.ServiceSecurityContext != null && OperationContext.Current.ServiceSecurityContext.WindowsIdentity != null) ?
+                (OperationContext.Current != null && OperationContext.Current.ServiceSecurityContext != null && OperationContext.Current.ServiceSecurityContext.WindowsIdentity != null) ?
                 OperationContext.Current.ServiceSecurityContext.WindowsIdentity.Name :
                 String.Empty;
             TraceHelper.RuntimeTrace.LogSessionCreating(sessionid, userName);
@@ -681,16 +683,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             brokerInfo.PurgedTotal = recoverInfo.PurgedTotal;
             brokerInfo.ConfigurationFile = serviceRegistrationPath;
             brokerInfo.NetworkTopology = 0; // ClusterTopology.Public
-            if (!BrokerLauncherEnvironment.Standalone)
-            {
-                brokerInfo.ClusterName = clusterInfo.ClusterName;
-                brokerInfo.ClusterId = clusterInfo.ClusterId;
-                brokerInfo.AzureStorageConnectionString = clusterInfo.AzureStorageConnectionString;
-            }
-            else
-            {
-                brokerInfo.Standalone = true;
-            }
+
+            brokerInfo.ClusterName = clusterInfo.ClusterName;
+            brokerInfo.ClusterId = clusterInfo.ClusterId;
+            brokerInfo.AzureStorageConnectionString = clusterInfo.AzureStorageConnectionString;
+
+            brokerInfo.Standalone = BrokerLauncherEnvironment.Standalone;
+            
 
             brokerInfo.UseAad = recoverInfo.StartInfo.UseAad;
             brokerInfo.AadUserSid = recoverInfo.AadUserSid;
@@ -861,7 +860,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 }
             }
 
-            return Task.FromResult(new ServiceRegistrationRepo(centrialPath, this.context.GetServiceRegistrationRestClient()));
+            ServiceRegistrationRestClient client = null;
+            if (!BrokerLauncherEnvironment.Standalone)
+            {
+                client = this.context.GetServiceRegistrationRestClient();
+            }
+
+            return Task.FromResult(new ServiceRegistrationRepo(centrialPath, client));
         }
 
         /// <summary>

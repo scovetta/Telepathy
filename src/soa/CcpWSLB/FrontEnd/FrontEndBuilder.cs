@@ -24,6 +24,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using Microsoft.Hpc.AADAuthUtil;
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Hpc.ServiceBroker.FrontEnd.AzureQueue;
     using Microsoft.Hpc.SvcBroker;
 
     /// <summary>
@@ -104,28 +105,38 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             bool flag = false;
 
             // Open frontend for different scheme
-            if ((sharedData.StartInfo.TransportScheme & TransportScheme.Custom) == TransportScheme.Custom)
-            {
-                flag = true;
-                result.SetFrontendInfo(BuildCustomFrontend(sharedData, observer, clientManager, brokerAuth, bindings), TransportScheme.Custom);
-            }
 
-            if ((sharedData.StartInfo.TransportScheme & TransportScheme.Http) == TransportScheme.Http)
+            // TODO: Separate HTTP frontend and Queue frontend
+            if (azureQueueProxy != null)
             {
                 flag = true;
                 result.SetFrontendInfo(BuildHttpFrontend(sharedData, observer, clientManager, brokerAuth, bindings, azureQueueProxy), TransportScheme.Http);
             }
-
-            if ((sharedData.StartInfo.TransportScheme & TransportScheme.NetTcp) == TransportScheme.NetTcp)
+            else
             {
-                flag = true;
-                result.SetFrontendInfo(BuildNetTcpFrontend(sharedData, observer, clientManager, brokerAuth, bindings), TransportScheme.NetTcp);
-            }
+                if ((sharedData.StartInfo.TransportScheme & TransportScheme.Custom) == TransportScheme.Custom)
+                {
+                    flag = true;
+                    result.SetFrontendInfo(BuildCustomFrontend(sharedData, observer, clientManager, brokerAuth, bindings), TransportScheme.Custom);
+                }
 
-            if ((sharedData.StartInfo.TransportScheme & TransportScheme.NetHttp) == TransportScheme.NetHttp)
-            {
-                flag = true;
-                result.SetFrontendInfo(BuildNetHttpFrontend(sharedData, observer, clientManager, brokerAuth, bindings), TransportScheme.NetHttp);
+                if ((sharedData.StartInfo.TransportScheme & TransportScheme.Http) == TransportScheme.Http)
+                {
+                    flag = true;
+                    result.SetFrontendInfo(BuildHttpFrontend(sharedData, observer, clientManager, brokerAuth, bindings, azureQueueProxy), TransportScheme.Http);
+                }
+
+                if ((sharedData.StartInfo.TransportScheme & TransportScheme.NetTcp) == TransportScheme.NetTcp)
+                {
+                    flag = true;
+                    result.SetFrontendInfo(BuildNetTcpFrontend(sharedData, observer, clientManager, brokerAuth, bindings), TransportScheme.NetTcp);
+                }
+
+                if ((sharedData.StartInfo.TransportScheme & TransportScheme.NetHttp) == TransportScheme.NetHttp)
+                {
+                    flag = true;
+                    result.SetFrontendInfo(BuildNetHttpFrontend(sharedData, observer, clientManager, brokerAuth, bindings), TransportScheme.NetHttp);
+                }
             }
 
             if (!flag)

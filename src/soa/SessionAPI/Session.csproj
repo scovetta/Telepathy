@@ -72,9 +72,6 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.ValueTuple">
-      <HintPath>..\..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\common\AzureNaming.cs">
@@ -318,6 +315,25 @@
     <Compile Include="Internal\InprocessSessions.cs" />
     <Compile Include="Internal\IResourceProvider.cs" />
     <Compile Include="Internal\OnPremiseSessionFactory.cs" />
+    <Compile Include="QueueAdapter\Client\BrokerControllerCloudQueueClient.cs" />
+    <Compile Include="QueueAdapter\Client\BrokerLauncherCloudQueueClient.cs" />
+    <Compile Include="QueueAdapter\Client\CloudQueueClientBase.cs" />
+    <Compile Include="QueueAdapter\CloudQueueConstants.cs" />
+    <Compile Include="QueueAdapter\CloudQueueListener.cs" />
+    <Compile Include="QueueAdapter\CloudQueueSerializer.cs" />
+    <Compile Include="QueueAdapter\DTO\CloudQueueCmdDto.cs" />
+    <Compile Include="QueueAdapter\DTO\CloudQueueCmdExtension.cs" />
+    <Compile Include="QueueAdapter\DTO\CloudQueueCmdTypeBinder.cs" />
+    <Compile Include="QueueAdapter\DTO\CloudQueueResponseDto.cs" />
+    <Compile Include="QueueAdapter\CloudQueueWriter.cs" />
+    <Compile Include="QueueAdapter\Interface\IQueueListener.cs" />
+    <Compile Include="QueueAdapter\Interface\IQueueSerializer.cs" />
+    <Compile Include="QueueAdapter\Interface\IQueueWriter.cs" />
+    <Compile Include="QueueAdapter\DTO\ParameterUnpacker.cs" />
+    <Compile Include="QueueAdapter\LocalQueueListener.cs" />
+    <Compile Include="QueueAdapter\LocalQueueWriter.cs" />
+    <Compile Include="QueueAdapter\Module\CloudQueueCreationModule.cs" />
+    <Compile Include="QueueAdapter\Server\CloudQueueWatcherBase.cs" />
     <Compile Include="TaskInInterestUtil.cs" />
     <Compile Include="WinServiceHpcContextModule.cs" />
     <None Include="Internal\AzureRestSessionFactory.cs" />
@@ -446,5 +462,6 @@
       <Version>8.4.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

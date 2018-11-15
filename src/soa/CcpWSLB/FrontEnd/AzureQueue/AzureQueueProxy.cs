@@ -93,6 +93,8 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// </summary>
         private string azureStorageConnectionString;
 
+        internal string AzureStorageConnectionString => this.azureStorageConnectionString;
+
         /// <summary>
         /// the request queue/blob container name
         /// </summary>

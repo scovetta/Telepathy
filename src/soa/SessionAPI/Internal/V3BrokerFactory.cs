@@ -16,6 +16,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Client;
 #if !net40
     using Microsoft.Hpc.AADAuthUtil;
 #endif
@@ -49,27 +50,27 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="epr">output selected epr</param>
         /// <param name="binding">indicting the binding</param>
         /// <returns>returns the session information</returns>
-        [Refactor("Make this a real async method")]
         public async Task<SessionBase> CreateBroker(SessionStartInfo startInfo, int sessionId, DateTime targetTimeout, string[] eprs, Binding binding)
         {
             Exception innerException = null;
             foreach (string epr in eprs)
             {
                 TimeSpan timeout = SessionBase.GetTimeout(targetTimeout);
-                BrokerLauncherClient brokerLauncher = null;
+                IBrokerLauncher brokerLauncher = null;
                 try
                 {
                     SessionBase.TraceSource.TraceInformation("[Session:{0}] Try to create broker... BrokerLauncherEpr = {1}", sessionId, epr);
 
-                    brokerLauncher = new BrokerLauncherClient(new Uri(epr), startInfo, binding);
-                    // if (startInfo.UseAad)
-                    // {
-                    //     var context = HpcContext.GetOrAdd(startInfo.Headnode, CancellationToken.None);
-                    //     string token = await context.GetAADJwtTokenAsync(startInfo.Username, startInfo.InternalPassword);
-                    //     brokerLauncher.Endpoint.Behaviors.Add(new AADClientEndpointBehavior(token));
-                    // }
-
-                    brokerLauncher.InnerChannel.OperationTimeout = timeout;
+                    if (startInfo.UseAzureQueue.GetValueOrDefault())
+                    {
+                        brokerLauncher = new BrokerLauncherCloudQueueClient(startInfo.BrokerLauncherStorageConnectionString);
+                    }
+                    else
+                    {
+                        var client = new BrokerLauncherClient(new Uri(epr), startInfo, binding);
+                        client.InnerChannel.OperationTimeout = timeout;
+                        brokerLauncher = client;
+                    }
 
                     BrokerInitializationResult result;
                     if (this.durable)
@@ -94,11 +95,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     }
                     else
                     {
-#if net40
-                        return new V3Session(info, startInfo.Headnode, startInfo.ShareSession, binding);
-#else
-                        return new V3Session(info, startInfo.Headnode, startInfo.ShareSession, binding);
-#endif
+
+                        var session = new V3Session(info, startInfo.Headnode, startInfo.ShareSession, binding);
+                        if (startInfo.UseAzureQueue.GetValueOrDefault())
+                        {
+                            session.BrokerLauncherClient = brokerLauncher;
+                        }
+
+                        return session;
                     }
 
                 }
@@ -137,9 +141,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 }
                 finally
                 {
-                    if (brokerLauncher != null)
+                    var client = brokerLauncher as BrokerLauncherClient;
+                    if (client != null)
                     {
-                        Utility.SafeCloseCommunicateObject(brokerLauncher);
+                        Utility.SafeCloseCommunicateObject(client);
                     }
                 }
             }
@@ -156,7 +161,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="timeout">indicating the timeout</param>
         /// <param name="binding">indicting the binding</param>
         /// <returns>returns the session instance</returns>
-        [Refactor("Make this a real async method")]
         public Task<SessionBase> AttachBroker(SessionAttachInfo attachInfo, SessionInfo info, TimeSpan timeout, Binding binding)
         {
             SessionBase.TraceSource.TraceInformation("[Session:{0}] Try to attach broker...", attachInfo.SessionId);
