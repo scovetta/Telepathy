@@ -723,6 +723,8 @@ namespace Microsoft.Hpc.Scheduler.Session
             info.AzureRequestQueueUri = result.AzureRequestQueueUri;
             info.AzureRequestBlobUri = result.AzureRequestBlobUri;
             info.UseAad = startInfo.UseAad;
+            info.AzureControllerRequestQueueUri = result.AzureControllerRequestQueueUri;
+            info.AzureControllerResponseQueueUri = result.AzureControllerResponseQueueUri;
 
             // If client supplies value use it else use service config values
             if (startInfo.BrokerSettings.ClientBrokerHeartbeatInterval.HasValue)

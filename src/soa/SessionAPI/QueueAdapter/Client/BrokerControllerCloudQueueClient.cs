@@ -20,8 +20,8 @@
         public BrokerControllerCloudQueueClient(string requestQueueUri, string responseQueueUri)
         {
             CloudQueueSerializer serializer = this.DefaultSerializer;
-            this.Listener = new CloudQueueListener<CloudQueueResponseDto>(requestQueueUri, serializer, this.ReceiveResponse);
-            this.Writer = new CloudQueueWriter<CloudQueueCmdDto>(responseQueueUri, serializer);
+            this.Listener = new CloudQueueListener<CloudQueueResponseDto>(responseQueueUri, serializer, this.ReceiveResponse);
+            this.Writer = new CloudQueueWriter<CloudQueueCmdDto>(requestQueueUri, serializer);
             this.Init();
         }
 

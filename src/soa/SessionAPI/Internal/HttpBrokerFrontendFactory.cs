@@ -165,12 +165,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>returns the controller client</returns>
         public override IController GetControllerClient()
         {
-            if (this.useAzureQueue)
+            if (this.useAzureQueue && 
+                !(string.IsNullOrEmpty(this.info.AzureControllerRequestQueueUri) || string.IsNullOrEmpty(this.info.AzureControllerResponseQueueUri)))
             {
                 var controller = this.brokerControllerClient as BrokerControllerCloudQueueClient;
                 if (controller == null)
                 {
-                    this.brokerControllerClient = new BrokerControllerCloudQueueClient(this.connectionString);
+                    this.brokerControllerClient = new BrokerControllerCloudQueueClient(this.info.AzureControllerRequestQueueUri, this.info.AzureControllerResponseQueueUri);
                 }
             }
             else

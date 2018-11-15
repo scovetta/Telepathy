@@ -625,7 +625,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             IBrokerFactory brokerFactory = new V3BrokerFactory(false);
             DateTime targetTimeout = DateTime.Now.AddMilliseconds(Constant.DefaultCreateSessionTimeout);
             //in HPC sessionId cannot be negative (out of range)   
-            return new Session((V3Session)await brokerFactory.CreateBroker(startInfo, startInfo.DummySessionId, targetTimeout, startInfo.BrokerLauncherEprs, null).ConfigureAwait(false));
+            return new Session((V3Session)await brokerFactory.CreateBroker(startInfo, SessionStartInfo.DummySessionId, targetTimeout, startInfo.BrokerLauncherEprs, null).ConfigureAwait(false));
         }
 
 
@@ -645,7 +645,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             InprocessBrokerFactory brokerFactory = new InprocessBrokerFactory(startInfo.Headnode, false);
             DateTime targetTimeout = DateTime.Now.AddMilliseconds(Constant.DefaultCreateSessionTimeout);
-            return new Session((V3Session) await brokerFactory.CreateBroker(startInfo, startInfo.DummySessionId, targetTimeout, null, null).ConfigureAwait(false));
+            return new Session((V3Session) await brokerFactory.CreateBroker(startInfo, SessionStartInfo.DummySessionId, targetTimeout, null, null).ConfigureAwait(false));
         }
     }
 }
