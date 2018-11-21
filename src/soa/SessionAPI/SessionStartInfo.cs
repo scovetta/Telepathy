@@ -585,7 +585,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// store a dummy session Id by default
         /// </summary>
-        private static readonly int dummySessionId = -1;
+        private static readonly int dummySessionId = 0;
 
         public static int DummySessionId
         {
