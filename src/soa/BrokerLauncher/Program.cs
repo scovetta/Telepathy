@@ -113,6 +113,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
             }
         }
 
+        // TODO: replace this with a industry strength level parsing package
         private static void SetBrokerLauncherSettings(string[] args, BrokerLauncherSettings settings)
         {
             if (args == null || args.Length == 0)
@@ -143,6 +144,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                     case "-EnableAzureStorageQueueEndpoint":
                         ThrowIfLastItem();
                         settings.EnableAzureStorageQueueEndpoint = bool.Parse(args[i + 1]);
+                        break;
+                    case "-SvcHostList":
+                        ThrowIfLastItem();
+                        var list = args[i + 1].Split(',');
+                        var strc = new System.Collections.Specialized.StringCollection();
+                        strc.AddRange(list);
+                        settings.SvcHostList = strc;
                         break;
                     default:
                         break;
