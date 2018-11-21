@@ -54,7 +54,6 @@
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
-  <Import Project="..\..\..\targets\MessageCompiler.targets" />
   <ItemGroup>
     <Compile Include="..\Common\TemplateFormatter.cs">
       <Link>TemplateFormatter.cs</Link>
