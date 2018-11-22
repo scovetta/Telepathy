@@ -302,6 +302,13 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 
             this.requestQueue = this.queueClient.GetQueueReference(requestStorageName);
             CreateQueueWithRetry(this.requestQueue);
+
+            if (sessionId == SessionStartInfo.StandaloneSessionId)
+            {
+                // Clear the queue in standalone session
+                this.requestQueue.Clear();
+            }
+
             this.requestBlobContainer = this.blobClient.GetContainerReference(requestStorageName);
             CreateContainerWithRetry(this.requestBlobContainer);
 
@@ -698,6 +705,12 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                     string responseStorageName = SoaHelper.GetResponseStorageName(this.clusterHash, this.sessionId, sessionHash);
                     CloudQueue responseQueue = this.queueClient.GetQueueReference(responseStorageName);
                     CreateQueueWithRetry(responseQueue);
+
+                    if (this.sessionId == SessionStartInfo.StandaloneSessionId)
+                    {
+                        responseQueue.Clear();
+                    }
+
                     // use default retry option for the cloud queue
                     CloudBlobContainer responseBlobContainer = this.blobClient.GetContainerReference(responseStorageName);
                     CreateContainerWithRetry(responseBlobContainer);

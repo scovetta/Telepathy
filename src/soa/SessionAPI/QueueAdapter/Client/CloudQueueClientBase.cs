@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
@@ -62,7 +63,10 @@
             }
             else
             {
-                throw new InvalidOperationException($"Unknown request ID: {item.RequestId}");
+                Trace.TraceError($"Unknown request ID: {item.RequestId}");
+
+                // TODO: add to message hospital
+                // throw new InvalidOperationException($"Unknown request ID: {item.RequestId}");
             }
         }
 
