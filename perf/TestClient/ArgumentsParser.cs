@@ -32,7 +32,7 @@ namespace TestClient
             foreach (string Txt in Args)
             {
                 // Skip the URI protocal prefix
-                if (Txt.StartsWith("net.tcp://") == false)
+                if (!Txt.StartsWith("net.tcp://") && !Txt.Contains(@":\"))
                 {
                     // Look for new parameters (-,/ or --) and a
                     // possible enclosed value (=,:)

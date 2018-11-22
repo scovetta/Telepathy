@@ -63,13 +63,20 @@ namespace TestClient
             return binding;
         }
 
+        private static int TryParseTaskInstanceId(string taskInstanceId)
+        {
+            int res = 0;
+            int.TryParse(taskInstanceId, out res);
+            return res;
+        }
+
         internal static ResultData CreateResultData(ComputeWithInputDataResponse response)
         {
             return new ResultData(response.ComputeWithInputDataResult.requestStartTime,
                                   response.ComputeWithInputDataResult.requestEndTime,
                                   response.ComputeWithInputDataResult.commonDataAccessStartTime,
                                   response.ComputeWithInputDataResult.commonDataAccessStopTime,
-                                  int.Parse(response.ComputeWithInputDataResult.CCP_TASKINSTANCEID),
+                                  TryParseTaskInstanceId(response.ComputeWithInputDataResult.CCP_TASKINSTANCEID),
                                   response.ComputeWithInputDataResult.sendStart,
                                   DateTime.Now);
         }
@@ -78,7 +85,7 @@ namespace TestClient
         {
             return new ResultData(response.ComputeWithInputDataPathResult.requestStartTime,
                                   response.ComputeWithInputDataPathResult.requestEndTime,
-                                  int.Parse(response.ComputeWithInputDataPathResult.CCP_TASKINSTANCEID),
+                                  TryParseTaskInstanceId(response.ComputeWithInputDataPathResult.CCP_TASKINSTANCEID),
                                   response.ComputeWithInputDataPathResult.sendStart,
                                   DateTime.Now);
         }

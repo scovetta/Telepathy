@@ -66,7 +66,12 @@ namespace TestClient
         private static bool createSessionOnly = false;
         private static int sessionId = -1;
 
-        private static bool inproc = false;
+        private static bool inproc = true;
+        private static bool standalone = true;
+
+        private static string commaSeparatedTargetList = "127.0.0.1";
+
+        private static string regPath = null;
 
         private static string username = string.Empty;
         private static string password = string.Empty;
@@ -109,7 +114,12 @@ namespace TestClient
 
             SessionStartInfo startInfo = new SessionStartInfo(headnode, ServiceName);
             startInfo.UseInprocessBroker = inproc;
+            startInfo.IsNoSession = standalone;
+            startInfo.RegPath = regPath;
             startInfo.Secure = false;
+            startInfo.IpAddress = commaSeparatedTargetList.Split(',');
+            
+
             if (http) startInfo.TransportScheme = TransportScheme.Http;
             startInfo.SessionResourceUnitType = SessionUnitType.Core;
             startInfo.MaximumUnits = max_cores;
@@ -280,6 +290,9 @@ namespace TestClient
             ArgumentsParser.SetIfExist(parser["sessionId"], ref sessionId);
 
             ArgumentsParser.SetIfExist(parser["inproc"], ref inproc);
+            ArgumentsParser.SetIfExist(parser["standalone"], ref standalone);
+            ArgumentsParser.SetIfExist(parser["targetList"], ref commaSeparatedTargetList);
+            ArgumentsParser.SetIfExist(parser["regPath"], ref regPath);
 
             ArgumentsParser.SetIfExist(parser["flushPerReq"], ref flush_per_req);
             if (flush_per_req == -1) flush_per_req = req_count;
