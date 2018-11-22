@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BF616414-1638-4776-8958-58FC282CC3DF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Hpc.SvcBroker.UnitTest</RootNamespace>
+    <AssemblyName>Microsoft.Hpc.SvcBroker.UnitTest</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+    <Reference Include="Microsoft.VisualStudio.TeamSystem.Data.UnitTesting" />
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Messaging" />
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BackEnd\DispatcherManagerTest.cs" />
+    <Compile Include="Common\RepeatableCallbackTriggerTest.cs" />
+    <None Include="FrontEnd\DuplexFrontEndTest.cs" />
+    <None Include="FrontEnd\FrontEndBuilderTest.cs" />
+    <Compile Include="FrontEnd\GetResponseFrontEndTest.cs" />
+    <None Include="FrontEnd\RequestReplyFrontEndTest.cs">
+      <SubType>Code</SubType>
+    </None>
+    <Compile Include="Mock\IMockServiceContract.cs" />
+    <Compile Include="Mock\MockBrokerAuthorization.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Mock\MockBrokerQueue.cs" />
+    <Compile Include="Mock\MockServiceHost.cs" />
+    <Compile Include="Mock\MockWCFClient.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Common\TimeoutManagerTest.cs" />
+    <Compile Include="Common\ThreadHelperTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AuthoringTests.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CcpWSLB\CcpWSLB.csproj">
+      <Project>{2629DC89-F12C-489D-8CF6-E0A6046B6863}</Project>
+      <Name>CcpWSLB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SessionAPI\Session.csproj">
+      <Project>{72FC4EEA-C32B-444B-80B7-0E2B137C05C7}</Project>
+      <Name>Session</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\StoreAPI\Property\Properties.csproj">
+      <Project>{61844849-3d26-4003-8146-5ae86985db3a}</Project>
+      <Name>Properties</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\StoreAPI\Scheduler\Scheduler.csproj">
+      <Project>{78e5e61b-dd12-475a-845b-7da3f6b0f987}</Project>
+      <Name>Scheduler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\StoreAPI\Store\Store.csproj">
+      <Project>{82f72b8b-372e-4a1c-8139-714ae932ebcb}</Project>
+      <Name>Store</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SourceCode\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
