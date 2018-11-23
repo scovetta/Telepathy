@@ -1,3 +1,4 @@
 ls=dir
 b=msbuild $* /p:Configuration=Debug
+br=msbuild $* /p:Configuration=Release
 ..=cd ..

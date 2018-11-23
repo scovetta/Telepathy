@@ -1257,9 +1257,17 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Stores registartion path in session info and ip address list
         /// </summary>
-        public string RegPath { get; set; }
+        public string RegPath
+        {
+            get => this.data.RegPath;
+            set => this.data.RegPath = value;
+        }
 
-        public string[] IpAddress { get; set; }
+        public string[] IpAddress
+        {
+            get => this.data.IpAddress;
+            set => this.data.IpAddress = value;
+        }
 
         public string[] BrokerLauncherEprs { get; set; }
 
