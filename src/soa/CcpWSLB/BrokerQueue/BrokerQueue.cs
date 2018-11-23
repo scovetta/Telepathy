@@ -79,6 +79,10 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
             this.brokerQueueFactory = factory;
         }
 
+        protected private BrokerQueue()
+        {
+        }
+
         /// <summary>
         /// the exception receive event.
         /// </summary>

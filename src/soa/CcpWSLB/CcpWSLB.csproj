@@ -44,6 +44,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -299,6 +300,7 @@
     <Compile Include="Persistences\MSMQPersist\MSMQPersist.cs" />
     <Compile Include="Persistences\MSMQPersist\MSMQPersistTransaction.cs" />
     <Compile Include="BrokerTrace.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SoaDiagTraceHelper.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
