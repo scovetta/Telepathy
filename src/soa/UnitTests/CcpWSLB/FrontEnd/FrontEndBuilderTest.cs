@@ -9,17 +9,17 @@
 namespace Microsoft.Hpc.SvcBroker.UnitTest.FrontEnd
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.Hpc.ServiceBroker.FrontEnd;
-    using Microsoft.Hpc.Scheduler.Session;
-    using System.ServiceModel;
-    using System.IO;
-    using Microsoft.Hpc.ServiceBroker;
-    using Microsoft.Hpc.SvcBroker.UnitTest.Mock;
     using System.Configuration;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+
+    using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Configuration;
+    using Microsoft.Hpc.ServiceBroker;
+    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
+    using Microsoft.Hpc.ServiceBroker.FrontEnd;
+    using Microsoft.Hpc.SvcBroker.UnitTest.Mock;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
     /// Unit Test for FrontEndBuilder
@@ -54,10 +54,9 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest.FrontEnd
         [TestMethod]
         public void BuildFrontEndTest_NetTcp()
         {
-            SessionStartInfo info = new SessionStartInfo("localhost", "CcpEchoSvc");
-            //info.TransportScheme = TransportScheme.WsHttp;
+            SessionStartInfoContract info = new SessionStartInfoContract();
+            info.ServiceName = "CcpEchoSvc";
             BrokerStartInfo startInfo = new BrokerStartInfo();
-            MockBrokerAuthorization auth = new MockBrokerAuthorization();
 
             string filename = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
             ExeConfigurationFileMap map = new ExeConfigurationFileMap();
@@ -66,25 +65,27 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest.FrontEnd
             BrokerConfigurations brokerConfig = BrokerConfigurations.GetSectionGroup(config);
 
             startInfo.Durable = true;
-            startInfo.BrokerPort = 9999;
-            startInfo.ControllerPort = 10000;
             startInfo.SessionId = 100;
-            ServiceHost host;
-            string controllerEpr, getResponseEpr;
-            FrontEndBase frontEnd;
-            FrontEndBuilder.BuildFrontEnd(info, startInfo, auth, brokerConfig, out frontEnd, out host, out controllerEpr, out getResponseEpr);
-            Assert.AreEqual("net.tcp://yanh-notebook:10000/Broker/Controller", controllerEpr);
-            Assert.AreEqual("net.tcp://yanh-notebook:10000/Broker/GetResponse", getResponseEpr);
-            Assert.AreEqual("net.tcp://yanh-notebook:9999/Broker", frontEnd.ListenUri);
+            startInfo.ConfigurationFile = "CcpEchoSvc.config";
+            ConfigurationHelper.LoadConfiguration(info, startInfo, out brokerConfig, out var serviceConfig, out var bindings);
+
+            var sharedData = new SharedData(startInfo, info, brokerConfig, serviceConfig);
+
+            var result = FrontEndBuilder.BuildFrontEnd(sharedData, new BrokerObserver(sharedData, new ClientInfo[0]), null, null, bindings, null);
+            Assert.IsTrue(Regex.IsMatch(result.ControllerUriList.FirstOrDefault(), @"net\.tcp://.+:9091/100/NetTcp/Controller"));
+            Assert.IsTrue(Regex.IsMatch(result.GetResponseUriList.FirstOrDefault(), @"net\.tcp://.+:9091/100/NetTcp/GetResponse"));
+            Assert.IsTrue(Regex.IsMatch(result.FrontendUriList.FirstOrDefault(), @"net\.tcp://.+:9091/100/NetTcp"));
         }
 
+        
         /// <summary>
         /// Unit test to create a controller front end
         /// </summary>
         [TestMethod]
         public void BuildFrontEndTest_Http()
         {
-            SessionStartInfo info = new SessionStartInfo("localhost", "CcpEchoSvc");
+            SessionStartInfoContract info = new SessionStartInfoContract();
+            info.ServiceName = "CcpEchoSvc";
             info.TransportScheme = TransportScheme.Http;
             BrokerStartInfo startInfo = new BrokerStartInfo();
             MockBrokerAuthorization auth = new MockBrokerAuthorization();
@@ -96,29 +97,34 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest.FrontEnd
             BrokerConfigurations brokerConfig = BrokerConfigurations.GetSectionGroup(config);
 
             startInfo.Durable = false;
-            startInfo.BrokerPort = 9999;
-            startInfo.ControllerPort = 10000;
             startInfo.SessionId = 100;
-            ServiceHost host;
-            string controllerEpr, getResponseEpr;
-            FrontEndBase frontEnd;
-            FrontEndBuilder.BuildFrontEnd(info, startInfo, auth, brokerConfig, out frontEnd, out host, out controllerEpr, out getResponseEpr);
-            Assert.AreEqual(null, controllerEpr);
-            Assert.AreEqual(null, getResponseEpr);
-            Assert.AreEqual("https://yanh-notebook:9999/Broker", frontEnd.ListenUri);
+            startInfo.ConfigurationFile = "CcpEchoSvc.config";
+
+
+            ConfigurationHelper.LoadConfiguration(info, startInfo, out brokerConfig, out var serviceConfig, out var bindings);
+
+
+            var sharedData = new SharedData(startInfo, info, brokerConfig, serviceConfig);
+            var result = FrontEndBuilder.BuildFrontEnd(sharedData, new BrokerObserver(sharedData, new ClientInfo[0]), null, null, bindings, null);
+
+
+            Assert.IsTrue(Regex.IsMatch(result.ControllerUriList[1], @"https://.+/100/Http/Controller"));
+            Assert.AreEqual(null, result.GetResponseUriList.FirstOrDefault());
+            Assert.IsTrue(Regex.IsMatch(result.FrontendUriList[1], @"https://.+/100/Http"));
         }
 
+        
         /// <summary>
         /// Unit test to create a controller front end
         /// </summary>
         [TestMethod]
         public void BuildFrontEndTest_Http_Unsecure()
         {
-            SessionStartInfo info = new SessionStartInfo("localhost", "CcpEchoSvc");
+            SessionStartInfoContract info = new SessionStartInfoContract();
+            info.ServiceName = "CcpEchoSvc";
             info.TransportScheme = TransportScheme.Http;
             info.Secure = false;
             BrokerStartInfo startInfo = new BrokerStartInfo();
-            MockBrokerAuthorization auth = new MockBrokerAuthorization();
 
             string filename = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
             ExeConfigurationFileMap map = new ExeConfigurationFileMap();
@@ -127,16 +133,20 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest.FrontEnd
             BrokerConfigurations brokerConfig = BrokerConfigurations.GetSectionGroup(config);
 
             startInfo.Durable = false;
-            startInfo.BrokerPort = 9999;
-            startInfo.ControllerPort = 10000;
             startInfo.SessionId = 100;
-            ServiceHost host;
-            string controllerEpr, getResponseEpr;
-            FrontEndBase frontEnd;
-            FrontEndBuilder.BuildFrontEnd(info, startInfo, auth, brokerConfig, out frontEnd, out host, out controllerEpr, out getResponseEpr);
-            Assert.AreEqual(null, controllerEpr);
-            Assert.AreEqual(null, getResponseEpr);
-            Assert.AreEqual("http://yanh-notebook:9999/Broker", frontEnd.ListenUri);
+            startInfo.ConfigurationFile = "CcpEchoSvc.config";
+
+            ConfigurationHelper.LoadConfiguration(info, startInfo, out brokerConfig, out var serviceConfig, out var bindings);
+
+            var sharedData = new SharedData(startInfo, info, brokerConfig, serviceConfig);
+
+            var result = FrontEndBuilder.BuildFrontEnd(sharedData, new BrokerObserver(sharedData, new ClientInfo[0]), null, null, bindings, null);
+
+            Assert.IsTrue(Regex.IsMatch(result.ControllerUriList[1], @"http://.+/100/Http/Controller"));
+            Assert.AreEqual(null, result.GetResponseUriList[1]);
+            Assert.IsTrue(Regex.IsMatch(result.FrontendUriList[1], @"http://.+/100/Http"));
+
         }
+
     }
 }

@@ -58,7 +58,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// <param name="azureQueueProxy">indicating the Azure storage proxy</param>
         public ControllerFrontendProvider(bool isSingleton, BrokerClientManager clientManager, BrokerAuthorization brokerAuth, BrokerObserver observer, AzureQueueProxy azureQueueProxy)
         {
-            if (isSingleton)
+            if (isSingleton && azureQueueProxy != null)
             {
                 this.singletonInstance = new BrokerController(true, clientManager, brokerAuth, observer, azureQueueProxy);
                 this.cloudQueueWatcher = new BrokerWorkerControllerQueueWatcher(this.singletonInstance, azureQueueProxy.AzureStorageConnectionString);

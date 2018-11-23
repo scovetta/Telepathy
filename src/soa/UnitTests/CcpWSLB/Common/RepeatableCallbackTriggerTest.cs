@@ -31,9 +31,9 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest
         {
             callbackResult = string.Empty;
             RepeatableCallbackTrigger trigger = new RepeatableCallbackTrigger();
-            trigger.RegisterCallback(TimeSpan.FromSeconds(1), this.CallbackMethod, "1");
+            trigger.RegisterCallback(TimeSpan.FromMilliseconds(100), this.CallbackMethod, "1");
             trigger.Start();
-            Thread.Sleep(3500);
+            Thread.Sleep(350);
             Assert.AreEqual("111", callbackResult);
         }
 

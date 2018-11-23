@@ -32,8 +32,8 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest
         public void SimpleTimeoutTest()
         {
             called = false;
-            this.GetTimeoutManager().RegisterTimeout(3000, CallbackMethod, null);
-            Thread.Sleep(3100);
+            this.GetTimeoutManager().RegisterTimeout(100, CallbackMethod, null);
+            Thread.Sleep(200);
             Assert.IsTrue(called);
         }
 
@@ -42,12 +42,12 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest
         {
             called = false;
             var manager = this.GetTimeoutManager();
-            manager.RegisterTimeout(3000, CallbackMethod, null);
-            Thread.Sleep(2500);
+            manager.RegisterTimeout(200, CallbackMethod, null);
+            Thread.Sleep(100);
             manager.ResetTimeout();
-            Thread.Sleep(600);
+            Thread.Sleep(100);
             Assert.IsFalse(called);
-            Thread.Sleep(2600);
+            Thread.Sleep(100);
             Assert.IsTrue(called);
         }
 

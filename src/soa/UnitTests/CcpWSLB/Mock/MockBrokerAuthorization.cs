@@ -63,5 +63,9 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest.Mock
         protected MockBrokerAuthorization(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
+
+        public MockBrokerAuthorization() : this(null)
+        {
+        }
     }
 }
