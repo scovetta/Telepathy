@@ -5,12 +5,18 @@
     public class AccountSettings
     {
         public string BatchServiceUrl { get; set; }
+
         public string BatchAccountName { get; set; }
+
         public string BatchAccountKey { get; set; }
 
         public string StorageServiceUrl { get; set; }
+
         public string StorageAccountName { get; set; }
+
         public string StorageAccountKey { get; set; }
+
+        public string BrokerStorageConnectionString { get; set; }
 
         public override string ToString()
         {
@@ -24,6 +30,8 @@
             AddSetting(stringBuilder, "StorageAccountKey", this.StorageAccountKey);
             AddSetting(stringBuilder, "StorageServiceUrl", this.StorageServiceUrl);
 
+            AddSetting(stringBuilder, nameof(this.BrokerStorageConnectionString), this.BrokerStorageConnectionString);
+
             return stringBuilder.ToString();
         }
 
@@ -31,5 +39,5 @@
         {
             stringBuilder.AppendFormat("{0} = {1}", settingName, settingValue).AppendLine();
         }
-}
+    }
 }
