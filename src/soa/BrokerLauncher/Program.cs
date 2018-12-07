@@ -10,9 +10,13 @@
 namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
 {
     using System;
+    using System.Collections.Specialized;
     using System.Diagnostics;
+    using System.Linq;
     using System.ServiceProcess;
     using System.Threading;
+
+    using CommandLine;
 
     using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
@@ -25,6 +29,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     /// </summary>
     internal static class Program
     {
+        private const string AzureBatchNodeListEnvVarName = "AZ_BATCH_NODE_LIST";
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -55,7 +61,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                     }
                 };
 
-            SetBrokerLauncherSettings(args, BrokerLauncherSettings.Default);
+            if (!ParseAndSetBrokerLauncherSettings(args, BrokerLauncherSettings.Default))
+            {
+                // parsing failed
+                return;
+            }
 
             TraceHelper.IsDiagTraceEnabled = SoaDiagTraceHelper.IsDiagTraceEnabled;
 
@@ -63,8 +73,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
             BrokerManagement brokerManagement = null;
 
             // richci : Run as a console application if user wants to debug (-D) or run in MSCS (-FAILOVER)
-            if (args.Length > 0
-                && (string.Compare(args[0], "-D", StringComparison.InvariantCultureIgnoreCase) == 0 || string.Compare(args[0], "-FAILOVER", StringComparison.InvariantCultureIgnoreCase) == 0))
+            if (BrokerLauncherSettings.Default.AsConsole)
             {
                 try
                 {
@@ -113,49 +122,62 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
             }
         }
 
-        // TODO: replace this with a industry strength level parsing package
-        private static void SetBrokerLauncherSettings(string[] args, BrokerLauncherSettings settings)
+        private static bool ParseAndSetBrokerLauncherSettings(string[] args, BrokerLauncherSettings settings)
         {
-            if (args == null || args.Length == 0)
+            void SetBrokerLauncherSettings(StartOption option)
             {
-                return;
-            }
-
-            for (int i = 0; i != args.Length; ++i)
-            {
-                void ThrowIfLastItem()
+                if (option.AsConsole)
                 {
-                    if (i + 1 >= args.Length)
+                    settings.AsConsole = true;
+                    Trace.TraceInformation("Starting as console");
+                }
+
+                if (bool.TryParse(option.EnableAzureStorageQueueEndpoint, out var res))
+                {
+                    settings.EnableAzureStorageQueueEndpoint = res;
+                    Trace.TraceInformation($"{nameof(settings.EnableAzureStorageQueueEndpoint)} set to {res}.");
+                }
+
+                if (!option.ReadSvcHostFromEnv && option.SvcHostList != null && option.SvcHostList.Any())
+                {
+                    var collection = new StringCollection();
+                    collection.AddRange(option.SvcHostList.ToArray());
+                    settings.SvcHostList = collection;
+                    Trace.TraceInformation($"{nameof(settings.SvcHostList)} set to {string.Join(",", option.SvcHostList)}.");
+                }
+
+                if (option.ReadSvcHostFromEnv)
+                {
+                    var nodeListVar = Environment.GetEnvironmentVariable(AzureBatchNodeListEnvVarName);
+                    string[] nodes = nodeListVar?.Split(';');
+                    if (nodes == null || !nodes.Any())
                     {
-                        throw new InvalidOperationException();
+                        throw new ArgumentException($"Environment {AzureBatchNodeListEnvVarName} is empty");
                     }
+
+                    var collection = new StringCollection();
+                    collection.AddRange(nodes);
+                    settings.SvcHostList = collection;
+                    Trace.TraceInformation($"{nameof(settings.SvcHostList)} set to {string.Join(",", nodes)} from env var {AzureBatchNodeListEnvVarName}={nodeListVar}.");
+
                 }
 
-                switch (args[i])
+                if (!string.IsNullOrEmpty(option.ServiceRegistrationPath))
                 {
-                    case "-CCP_SERVICEREGISTRATION_PATH":
-                        ThrowIfLastItem();
-                        settings.CCP_SERVICEREGISTRATION_PATH = args[i + 1];
-                        break;
-                    case "-AzureStorageConnectionString":
-                        ThrowIfLastItem();
-                        settings.AzureStorageConnectionString = args[i + 1];
-                        break;
-                    case "-EnableAzureStorageQueueEndpoint":
-                        ThrowIfLastItem();
-                        settings.EnableAzureStorageQueueEndpoint = bool.Parse(args[i + 1]);
-                        break;
-                    case "-SvcHostList":
-                        ThrowIfLastItem();
-                        var list = args[i + 1].Split(',');
-                        var strc = new System.Collections.Specialized.StringCollection();
-                        strc.AddRange(list);
-                        settings.SvcHostList = strc;
-                        break;
-                    default:
-                        break;
+                    settings.CCP_SERVICEREGISTRATION_PATH = option.ServiceRegistrationPath;
+                    Trace.TraceInformation($"{nameof(settings.CCP_SERVICEREGISTRATION_PATH)} set to {option.ServiceRegistrationPath}.");
+
+                }
+
+                if (!string.IsNullOrEmpty(option.AzureStorageConnectionString))
+                {
+                    settings.AzureStorageConnectionString = option.AzureStorageConnectionString;
+                    Trace.TraceInformation($"{nameof(settings.CCP_SERVICEREGISTRATION_PATH)} changed by cmd args.");
                 }
             }
+
+            var result = new Parser(s => s.CaseSensitive = false).ParseArguments<StartOption>(args).WithParsed(SetBrokerLauncherSettings);
+            return result.Tag == ParserResultType.Parsed;
         }
     }
 }
