@@ -4,5 +4,6 @@
   "batchServiceUrl": "",
   "storageAccountName": "",
   "storageAccountKey": "",
-  "storageServiceUrl": "core.windows.net"
+  "storageServiceUrl": "core.windows.net",
+  "brokerStorageConnectionString": ""
 }

@@ -17,7 +17,6 @@
             const string poolId = "EchoSvcSamplePool";
             const string jobId = "EchoSvcSampleJob";
             const string taskId = "EchoSvcSampleTask";
-            const string connectionString = "";
             const int numberOfNodes = 1;
 
             const string appPackageId = "EchoSvcSample";
@@ -36,7 +35,7 @@
                 CloudTask multiInstanceTask = new CloudTask(
                     id: taskId,
                     commandline:
-                    $@"cmd /c %AZ_BATCH_APP_PACKAGE_{appPackageId.ToUpper()}#{appPackageVersion}%\BrokerOutput\HpcBroker.exe -d -CCP_SERVICEREGISTRATION_PATH %AZ_BATCH_APP_PACKAGE_{appPackageId.ToUpper()}#{appPackageVersion}%\Registration -AzureStorageConnectionString {connectionString} -EnableAzureStorageQueueEndpoint True");
+                    $@"cmd /c %AZ_BATCH_APP_PACKAGE_{appPackageId.ToUpper()}#{appPackageVersion}%\BrokerOutput\HpcBroker.exe -d --ServiceRegistrationPath %AZ_BATCH_APP_PACKAGE_{appPackageId.ToUpper()}#{appPackageVersion}%\Registration --AzureStorageConnectionString {accountSettings.BrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --ReadSvcHostFromEnv");
                 multiInstanceTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
                 multiInstanceTask.MultiInstanceSettings = new MultiInstanceSettings($@"cmd /c start cmd /c %AZ_BATCH_APP_PACKAGE_{appPackageId.ToUpper()}#{appPackageVersion}%\CcpServiceHost\CcpServiceHost.exe -standalone", numberOfNodes);
 
