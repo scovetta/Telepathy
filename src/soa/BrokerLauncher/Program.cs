@@ -176,7 +176,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 }
             }
 
-            var result = new Parser(s => s.CaseSensitive = false).ParseArguments<StartOption>(args).WithParsed(SetBrokerLauncherSettings);
+            var result = new Parser(s =>
+                {
+                    s.CaseSensitive = false;
+                    s.HelpWriter = Console.Error;
+                }).ParseArguments<StartOption>(args).WithParsed(SetBrokerLauncherSettings);
             return result.Tag == ParserResultType.Parsed;
         }
     }
