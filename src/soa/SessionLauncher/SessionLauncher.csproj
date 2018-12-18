@@ -242,6 +242,11 @@
     <Compile Include="JobHelper.cs" />
     <Compile Include="SessionLauncher.cs" />
     <Compile Include="..\Common\ThreadSafeSchedulerAPI.cs" />
+    <Compile Include="SessionLauncherSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>SessionLauncherSettings.settings</DependentUpon>
+    </Compile>
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -295,6 +300,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="SessionLauncherSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>SessionLauncherSettings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Core">

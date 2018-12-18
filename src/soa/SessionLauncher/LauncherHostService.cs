@@ -195,7 +195,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 this.StartSchedulerDelegationService();
 
                 // start data service
-                if (!SoaHelper.IsOnAzure())
+                if (!SoaHelper.IsOnAzure() && SessionLauncherSettings.Default.EnableDataService)
                 {
                     this.dataService = this.sessionLauncher.GetDataService();
                     this.StartDataWcfService();

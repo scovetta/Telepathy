@@ -204,7 +204,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .SessionLauncher: Failed to set the RegistryPathEnv scheduler environment. {0}", e);
             }
 
-            dataService = new Microsoft.Hpc.Scheduler.Session.Data.Internal.DataService(clusterInfo, scheduler);
+            if (SessionLauncherSettings.Default.EnableDataService)
+            {
+                dataService = new Microsoft.Hpc.Scheduler.Session.Data.Internal.DataService(clusterInfo, scheduler);
+            }
 
             try
             {
@@ -1663,6 +1666,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             ParamCheckUtility.ThrowIfNullOrEmpty(startInfo.ServiceName, "startInfo.ServiceName");
             ParamCheckUtility.ThrowIfNullOrEmpty(endpointPrefix, "endpointPrefix");
 
+#if HPCPACK
             // check client api version, 4.3 or older client is not supported by 4.4 server for the broken changes
             if (startInfo.ClientVersion == null || startInfo.ClientVersion < new Version(4, 4))
             {
@@ -1674,6 +1678,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                                               startInfo.ClientVersion == null ? "NULL" : startInfo.ClientVersion.ToString(),
                                               ServerVersion.ToString());
             }
+#endif
 
             // Init service version to the service version passed in
             if (startInfo.ServiceVersion != null)
@@ -2049,7 +2054,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 }
 
                 // Pass DataServerInfo to service host via job environment variables
-                Microsoft.Hpc.Scheduler.Session.Data.DataServerInfo dsInfo = this.dataService.GetDataServerInfo();
+                DataServerInfo dsInfo = null;
+
+                if (SessionLauncherSettings.Default.EnableDataService)
+                {
+                    dsInfo = this.dataService.GetDataServerInfo();
+                }
+
                 if (dsInfo != null)
                 {
                     schedulerJob.SetEnvironmentVariable(Constant.SoaDataServerInfoEnvVar, dsInfo.AddressInfo);
@@ -2456,6 +2467,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 {
                     //TODO: set it when session service starts
                     regPath = JobHelper.GetEnvironmentVariable(this.scheduler, Constant.RegistryPathEnv);
+                    if (!string.IsNullOrEmpty(SessionLauncherSettings.Default.ServiceRegistrationPath))
+                    {
+                        regPath = SessionLauncherSettings.Default.ServiceRegistrationPath + ";" + regPath;
+                    }
                 }
                 catch (Exception e)
                 {
