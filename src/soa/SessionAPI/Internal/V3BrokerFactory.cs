@@ -10,7 +10,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading;
@@ -53,7 +55,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         public async Task<SessionBase> CreateBroker(SessionStartInfo startInfo, int sessionId, DateTime targetTimeout, string[] eprs, Binding binding)
         {
             Exception innerException = null;
-            foreach (string epr in eprs)
+            IEnumerable<string> endpoints = eprs;
+            if (startInfo.UseAzureQueue.GetValueOrDefault())
+            {
+                endpoints = endpoints.Concat(new[] { SessionInternalConstants.ConnectionStringToken });
+            }
+
+            foreach (string epr in endpoints)
             {
                 TimeSpan timeout = SessionBase.GetTimeout(targetTimeout);
                 IBrokerLauncher brokerLauncher = null;
@@ -61,7 +69,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 {
                     SessionBase.TraceSource.TraceInformation("[Session:{0}] Try to create broker... BrokerLauncherEpr = {1}", sessionId, epr);
 
-                    if (startInfo.UseAzureQueue.GetValueOrDefault())
+                    if (epr == SessionInternalConstants.ConnectionStringToken)
                     {
                         brokerLauncher = new BrokerLauncherCloudQueueClient(startInfo.BrokerLauncherStorageConnectionString);
                     }

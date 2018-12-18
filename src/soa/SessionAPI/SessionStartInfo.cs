@@ -1320,9 +1320,12 @@ namespace Microsoft.Hpc.Scheduler.Session
             int port = 9087;
             string affix = ":" + port + "/BrokerLauncher";
             List<string> strlist = new List<string>();
-            foreach (string epr in brokerLauncherEprs)
+            if (brokerLauncherEprs != null)
             {
-                strlist.Add(prefix + epr + affix);
+                foreach (string epr in brokerLauncherEprs)
+                {
+                    strlist.Add(prefix + epr + affix);
+                }
             }
 
             this.BrokerLauncherEprs = strlist.ToArray();

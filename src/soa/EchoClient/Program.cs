@@ -49,14 +49,14 @@ namespace Microsoft.Hpc.EchoClient
                 // Start session without session manager
                 if (config.InprocessBroker)
                 {
-                    info = new SessionStartInfo(config.ServiceName, config.RegPath, null, config.TargetList.ToArray());
+                    info = new SessionStartInfo(config.ServiceName, config.RegPath, null, config.TargetList?.ToArray());
                     info.UseInprocessBroker = true;
                     info.IsNoSession = true;
                 }
                 else
                 {
                     //TODO because registrying a broker in scheduler must have a appropriate session id in HPC pack
-                    info = new SessionStartInfo(config.HeadNode, config.ServiceName, config.RegPath, null, config.TargetList.ToArray());
+                    info = new SessionStartInfo(config.HeadNode, config.ServiceName, config.RegPath, null, config.TargetList?.ToArray());
                     info.UseInprocessBroker = false;
                     info.IsNoSession = true;
                 }
