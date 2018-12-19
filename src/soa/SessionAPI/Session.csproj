@@ -77,9 +77,6 @@
     <Compile Include="..\..\common\AzureNaming.cs">
       <Link>AzureNaming.cs</Link>
     </Compile>
-    <Compile Include="..\..\common\CertificateHelper.cs">
-      <Link>Softcard\CertificateHelper.cs</Link>
-    </Compile>
     <Compile Include="..\..\common\CredentialHelper.cs">
       <Link>CredentialHelper.cs</Link>
     </Compile>
@@ -94,17 +91,6 @@
     </Compile>
     <Compile Include="..\..\common\SecurityDescriptor.cs">
       <Link>SecurityDescriptor.cs</Link>
-    </Compile>
-    <Compile Include="..\..\StoreAPI\Store\CredentialType.cs">
-      <Link>Softcard\CredentialType.cs</Link>
-    </Compile>
-    <Compile Include="..\..\StoreAPI\Store\CredentialTypeDialog.cs">
-      <Link>Softcard\CredentialTypeDialog.cs</Link>
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="..\..\StoreAPI\Store\CredentialTypeDialog.designer.cs">
-      <Link>Softcard\CredentialTypeDialog.designer.cs</Link>
-      <DependentUpon>CredentialTypeDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="..\Common\BrokerSettingsConstants.cs">
       <Link>Internal\BrokerSettingsConstants.cs</Link>
