@@ -28,6 +28,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+
+    using Microsoft.Hpc.Scheduler.Session.HpcPack;
+
     /// <summary>
     /// Scheduler adapter for both broker and broker launcher
     /// </summary>
@@ -1646,7 +1649,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 if (job.GetBalanceRequest(out var balanceRequests))
                 {
                     TraceHelper.TraceInfo(jobId, "[SchedulerDelegation].GetGracefulPreemptionInfo: Job is using fast balancing mode. hold until: {0}", jobOnHold);
-                    balanceInfo = new BalanceInfo(balanceRequests);
+                    balanceInfo = BalanceInfoHpcFactory.FromBalanceRequests(balanceRequests);
                     if (jobOnHold)
                     {
                         TraceHelper.TraceInfo(jobId, "[SchedulerDelegation].GetGracefulPreemptionInfo: Job is on hold until {0}. Set allowed core count in all request to 0.", job.HoldUntil);

@@ -7,8 +7,8 @@
     <ProjectGuid>{23638265-A3F6-4DEE-8FD0-65C75A52BFF6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SessionAPI.HpcPack</RootNamespace>
-    <AssemblyName>SessionAPI.HpcPack</AssemblyName>
+    <RootNamespace>Microsoft.Hpc.Scheduler.Session.HpcPack</RootNamespace>
+    <AssemblyName>Microsoft.Hpc.Scheduler.Session.HpcPack</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -214,9 +214,9 @@
     <Compile Include="..\sessionlauncher\dataservice\IDataServiceAsync.cs">
       <Link>Data\DataServiceAgent\IDataServiceAsync.cs</Link>
     </Compile>
-    <Compile Include="BalanceInfo.cs" />
     <Compile Include="BrokerClient.cs" />
     <Compile Include="BrokerClientBase.cs" />
+    <Compile Include="BalanceInfoHpcFactory.cs" />
     <Compile Include="CredUtil.cs" />
     <Compile Include="Data\DataClient\DataServiceRestClient.cs" />
     <Compile Include="Data\DataClient\DTO\OpenDataClientBySecretParams.cs" />
@@ -296,6 +296,10 @@
     <ProjectReference Include="..\HpcDeploy\DataMovement\DataMovement.csproj">
       <Project>{f0a3e1b7-6c6f-4357-99ee-49210440fffd}</Project>
       <Name>DataMovement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SessionAPI.Data\SessionAPI.Data.csproj">
+      <Project>{40fc3ebb-d692-4d69-b6a9-6cbd46f19025}</Project>
+      <Name>SessionAPI.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\SessionAPI\Session.csproj">
       <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>

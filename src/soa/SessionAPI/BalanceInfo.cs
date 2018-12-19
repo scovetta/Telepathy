@@ -4,22 +4,22 @@
     using System.Linq;
     using System.Runtime.Serialization;
 
-    using Microsoft.Hpc.Scheduler.Properties;
+    using Microsoft.Hpc.Scheduler.Session.Data;
 
     [DataContract]
     public class BalanceInfo
     {
-        public BalanceInfo(IList<BalanceRequest> balanceRequests)
+        public BalanceInfo(IList<SoaBalanceRequest> balanceRequests)
             : this(true, balanceRequests)
         {
         }
 
         public BalanceInfo(int plannedCoreCount)
-            : this(false, new List<BalanceRequest>() { new BalanceRequest() { AllowedCoreCount = plannedCoreCount, TaskIds = null } })
+            : this(false, new List<SoaBalanceRequest>() { new SoaBalanceRequest() { AllowedCoreCount = plannedCoreCount, TaskIds = null } })
         {
         }
 
-        public BalanceInfo(bool useFastBalance, IList<BalanceRequest> balanceRequests)
+        public BalanceInfo(bool useFastBalance, IList<SoaBalanceRequest> balanceRequests)
         {
             this.UseFastBalance = useFastBalance;
             this.BalanceRequests = balanceRequests;
@@ -29,7 +29,7 @@
         public bool UseFastBalance { get; private set; }
 
         [DataMember]
-        public IList<BalanceRequest> BalanceRequests { get; private set; }
+        public IList<SoaBalanceRequest> BalanceRequests { get; private set; }
 
         public int AllowedCoreCount
         {

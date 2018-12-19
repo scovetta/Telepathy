@@ -134,6 +134,7 @@
     <None Include="..\HpcSOAWebSvc\ISOAWebService.cs">
       <Link>Interface\ISOAWebService.cs</Link>
     </None>
+    <Compile Include="BalanceInfo.cs" />
     <Compile Include="ChannelTypes.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="CredExtension.cs" />
@@ -252,6 +253,10 @@
     <ProjectReference Include="..\..\StandaloneDataClient\StandaloneDataClient.csproj">
       <Project>{8f4412aa-a6e0-49e5-a331-1b1047e2159d}</Project>
       <Name>StandaloneDataClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SessionAPI.Data\SessionAPI.Data.csproj">
+      <Project>{40fc3ebb-d692-4d69-b6a9-6cbd46f19025}</Project>
+      <Name>SessionAPI.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

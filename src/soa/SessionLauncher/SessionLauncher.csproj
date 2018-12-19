@@ -289,6 +289,10 @@
       <Project>{f0a3e1b7-6c6f-4357-99ee-49210440fffd}</Project>
       <Name>DataMovement</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SessionAPI.Data\SessionAPI.Data.csproj">
+      <Project>{40FC3EBB-D692-4D69-B6A9-6CBD46F19025}</Project>
+      <Name>SessionAPI.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SessionAPI.HpcPack\SessionAPI.HpcPack.csproj">
       <Project>{23638265-a3f6-4dee-8fd0-65c75a52bff6}</Project>
       <Name>SessionAPI.HpcPack</Name>
