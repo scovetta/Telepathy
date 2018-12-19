@@ -166,8 +166,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HpcRestServerCommon", "..\.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HpcRestServerCommon", "HpcRestServerCommon", "{92595871-43BD-4C69-90DD-52711157F9C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelepathyCommon", "..\..\TelepathyCommon\TelepathyCommon.csproj", "{1D024A49-1376-4BC4-AD0A-19426F8A8CEF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SessionAPI.HpcPack", "..\SessionAPI.HpcPack\SessionAPI.HpcPack.csproj", "{23638265-A3F6-4DEE-8FD0-65C75A52BFF6}"
 EndProject
 Global
@@ -397,14 +395,6 @@ Global
 		{8720315F-7BA8-4923-BD1E-DC2AF7690A72}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8720315F-7BA8-4923-BD1E-DC2AF7690A72}.Release|x64.ActiveCfg = Release|x64
 		{8720315F-7BA8-4923-BD1E-DC2AF7690A72}.Release|x64.Build.0 = Release|x64
-		{1D024A49-1376-4BC4-AD0A-19426F8A8CEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1D024A49-1376-4BC4-AD0A-19426F8A8CEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1D024A49-1376-4BC4-AD0A-19426F8A8CEF}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{1D024A49-1376-4BC4-AD0A-19426F8A8CEF}.Debug|x64.Build.0 = Debug|Any CPU
-		{1D024A49-1376-4BC4-AD0A-19426F8A8CEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1D024A49-1376-4BC4-AD0A-19426F8A8CEF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1D024A49-1376-4BC4-AD0A-19426F8A8CEF}.Release|x64.ActiveCfg = Release|Any CPU
-		{1D024A49-1376-4BC4-AD0A-19426F8A8CEF}.Release|x64.Build.0 = Release|Any CPU
 		{23638265-A3F6-4DEE-8FD0-65C75A52BFF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{23638265-A3F6-4DEE-8FD0-65C75A52BFF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23638265-A3F6-4DEE-8FD0-65C75A52BFF6}.Debug|x64.ActiveCfg = Debug|Any CPU
