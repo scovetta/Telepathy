@@ -1,6 +1,6 @@
 ﻿namespace Microsoft.Hpc.Scheduler.Session
 {
-    internal static class Constants
+    public static class TelepathyConstants
     {
         public static int StandaloneSessionId => 0;
     }

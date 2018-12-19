@@ -942,11 +942,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>response storage name</returns>
         public static string GetResponseStorageName(string clusterId, int sessionId, int requeueCount)
         {
-            if (sessionId < Constants.StandaloneSessionId)
+            if (sessionId < TelepathyConstants.StandaloneSessionId)
             {
                 throw new ArgumentOutOfRangeException(nameof(sessionId));
             }
-            else if (sessionId == Constants.StandaloneSessionId)
+            else if (sessionId == TelepathyConstants.StandaloneSessionId)
             {
                 sessionId = 0;
             }
@@ -962,11 +962,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns></returns>
         public static string GetRequestStorageName(int clusterHash, int sessionId)
         {
-            if (sessionId < Constants.StandaloneSessionId)
+            if (sessionId < TelepathyConstants.StandaloneSessionId)
             {
                 throw new ArgumentOutOfRangeException(nameof(sessionId));
             }
-            else if (sessionId == Constants.StandaloneSessionId)
+            else if (sessionId == TelepathyConstants.StandaloneSessionId)
             {
                 sessionId = 0;
             }
@@ -989,11 +989,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
         public static string GetControllerRequestStorageName(int clusterHash, int sessionId)
         {
-            if (sessionId < Constants.StandaloneSessionId)
+            if (sessionId < TelepathyConstants.StandaloneSessionId)
             {
                 throw new ArgumentOutOfRangeException(nameof(sessionId));
             }
-            else if (sessionId == Constants.StandaloneSessionId)
+            else if (sessionId == TelepathyConstants.StandaloneSessionId)
             {
                 sessionId = 0;
             }
@@ -1004,11 +1004,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
         public static string GetControllerResponseStorageName(int clusterHash, int sessionId)
         {
-            if (sessionId < Constants.StandaloneSessionId)
+            if (sessionId < TelepathyConstants.StandaloneSessionId)
             {
                 throw new ArgumentOutOfRangeException(nameof(sessionId));
             }
-            else if (sessionId == Constants.StandaloneSessionId)
+            else if (sessionId == TelepathyConstants.StandaloneSessionId)
             {
                 sessionId = 0;
             }
@@ -1026,11 +1026,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns></returns>
         public static string GetResponseStorageName(int clusterHash, int sessionId, int sessionHash)
         {
-            if (sessionId < Constants.StandaloneSessionId)
+            if (sessionId < TelepathyConstants.StandaloneSessionId)
             {
                 throw new ArgumentOutOfRangeException(nameof(sessionId));
             }
-            else if (sessionId == Constants.StandaloneSessionId)
+            else if (sessionId == TelepathyConstants.StandaloneSessionId)
             {
                 sessionId = 0;
             }
