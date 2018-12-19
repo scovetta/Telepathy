@@ -239,7 +239,6 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="info">session start info</param>
         /// <param name="sessionid">the session id which is also service job id</param>
         /// <returns>The created session info</returns>
-        [Refactor("Make this an async method, and pay attention to the sequential of the call")]
         public BrokerInitializationResult CreateDurable(SessionStartInfoContract info, int sessionId)
         {
             this.ThrowIfInitialized();

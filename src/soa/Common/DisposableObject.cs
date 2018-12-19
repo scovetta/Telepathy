@@ -13,7 +13,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Common
     /// Provide base class for all disposable objects
     /// Implemented IDisposable pattern
     /// </summary>
-    internal abstract class DisposableObject : IDisposable
+    public abstract class DisposableObject : IDisposable
     {
         /// <summary>
         /// Stores the dispose flag for not disposed

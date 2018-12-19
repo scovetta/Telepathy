@@ -305,19 +305,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public static async Task<string> GetSoaAadJwtToken(string headnode, string username, string password)
-        {
-            IHpcContext context = HpcContext.GetOrAdd(headnode, CancellationToken.None);
-
-            string node = null;
-            if (SoaHelper.IsSchedulerOnIaaS(headnode))
-            {
-                node = await context.ResolveSessionLauncherNodeOnIaasAsync(headnode).ConfigureAwait(false);
-            }
-
-            string token = await context.GetAADJwtTokenAsync(username, password, node).ConfigureAwait(false);
-            return token;
-        }
+        public static async Task<string> GetSoaAadJwtToken(string headnode, string username, string password) => await ClientCredExtension.GetSoaAadJwtToken(headnode, username, password);
 #endif
     }
 }

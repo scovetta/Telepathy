@@ -34,7 +34,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// Initializes a new instance of the RetryOperationException class
         /// </summary>
         /// <param name="reason">indicating the retry reason</param>
-        internal RetryOperationException(string reason)
+        public RetryOperationException(string reason)
             : base(SR.RetryOperationExceptionMessage)
         {
             this.reason = reason;
@@ -45,7 +45,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="message">indicating the exception message</param>
         /// <param name="reason">indicating the retry reason</param>
-        internal RetryOperationException(string message, string reason)
+        public RetryOperationException(string message, string reason)
             : base(message)
         {
             this.reason = reason;

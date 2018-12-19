@@ -77,9 +77,6 @@
     <Compile Include="..\..\common\AzureNaming.cs">
       <Link>AzureNaming.cs</Link>
     </Compile>
-    <Compile Include="..\..\common\AzureProxyFileReader.cs">
-      <Link>AzureProxyFileReader.cs</Link>
-    </Compile>
     <Compile Include="..\..\common\CertificateHelper.cs">
       <Link>Softcard\CertificateHelper.cs</Link>
     </Compile>
@@ -151,130 +148,19 @@
     <Compile Include="..\Common\ThrowHelper.cs">
       <Link>ThrowHelper.cs</Link>
     </Compile>
-    <Compile Include="..\Common\Utility.cs">
-      <Link>Internal\Utility.cs</Link>
-    </Compile>
     <Compile Include="..\Common\Win32API.cs">
       <Link>Win32API.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\AzureBlobHelper.cs">
-      <Link>Data\Common\AzureBlobHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\Constants.cs">
-      <Link>Data\Common\Constants.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\DataClientInfo.cs">
-      <Link>Data\Common\DataClientInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\DataErrorCode.cs">
-      <Link>Data\Common\DataErrorCode.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\DataException.cs">
-      <Link>Data\Common\DataException.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\DataFault.cs">
-      <Link>Data\Common\DataFault.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\DataLocation.cs">
-      <Link>Data\Common\DataLocation.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\DataServerInfo.cs">
-      <Link>Data\Common\DataServerInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\DataUtility.cs">
-      <Link>Data\Common\DataUtility.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\FileNativeMethods.cs">
-      <Link>Data\Common\FileNativeMethods.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\TraceHelper.cs">
-      <Link>Data\Common\TraceHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\Utility.cs">
-      <Link>Data\Common\Utility.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\DataClient\DataClient.cs">
-      <Link>Data\DataClient\DataClient.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\DataClient\DataLifeCycle.cs">
-      <Link>Data\DataClient\DataLifeCycle.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\DataContainer\BlobDataContainer.cs">
-      <Link>Data\DataContainer\BlobDataContainer.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\DataContainer\ComplexDataContainer.cs">
-      <Link>Data\DataContainer\ComplexDataContainer.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\DataContainer\DataContainerConfiguration.cs">
-      <Link>Data\DataContainer\DataContainerConfiguration.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\DataContainer\DataContainerHelper.cs">
-      <Link>Data\DataContainer\DataContainerHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\DataContainer\DataContent.cs">
-      <Link>Data\DataContainer\DataContent.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\DataContainer\EmptyDataContainer.cs">
-      <Link>Data\DataContainer\EmptyDataContainer.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\DataContainer\FileDataContainer.cs">
-      <Link>Data\DataContainer\FileDataContainer.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\DataContainer\IDataContainer.cs">
-      <Link>Data\DataContainer\IDataContainer.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\DataContainer\ObjectDataContent.cs">
-      <Link>Data\DataContainer\ObjectDataContent.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\DataContainer\RawBytesDataContent.cs">
-      <Link>Data\DataContainer\RawBytesDataContent.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\DataServiceAgent\DataProxyAgent.cs">
-      <Link>Data\DataServiceAgent\DataProxyAgent.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\DataServiceAgent\DataServiceAgent.cs">
-      <Link>Data\DataServiceAgent\DataServiceAgent.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\DataServiceAgent\DataMessageInspector.cs">
-      <Link>Data\DataServiceAgent\DataMessageInspector.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Internal\DataLifeCycleContext.cs">
-      <Link>Data\Internal\DataLifeCycleContext.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Internal\DataLifeCycleInternal.cs">
-      <Link>Data\Internal\DataLifeCycleInternal.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Internal\DataLifeCycleType.cs">
-      <Link>Data\Internal\DataLifeCycleType.cs</Link>
     </Compile>
     <None Include="..\HpcSOAWebSvc\ISOAWebService.cs">
       <Link>Interface\ISOAWebService.cs</Link>
     </None>
-    <Compile Include="..\SessionLauncher\DataService\IDataService.cs">
-      <Link>Data\DataServiceAgent\IDataService.cs</Link>
-    </Compile>
-    <Compile Include="..\SessionLauncher\DataService\IDataServiceAsync.cs">
-      <Link>Data\DataServiceAgent\IDataServiceAsync.cs</Link>
-    </Compile>
-    <Compile Include="BalanceInfo.cs" />
     <Compile Include="ChannelTypes.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="CredExtension.cs" />
-    <Compile Include="Data\DataClient\DataServiceRestClient.cs" />
-    <Compile Include="Data\DataClient\DTO\OpenDataClientBySecretParams.cs" />
     <Compile Include="IConnectionInfoExtension.cs" />
     <Compile Include="Interface\ClusterInfoContract.cs" />
     <Compile Include="Interface\IConnectionInfo.cs" />
-    <Compile Include="Interface\SessionAllocateInfoContract.cs" />
-    <Compile Include="Internal\AzureQueue\AzureQueueItem.cs" />
-    <Compile Include="Internal\AzureQueue\AzureQueueProxy.cs" />
-    <Compile Include="Internal\AzureQueue\AzureStorageClient.cs" />
-    <Compile Include="Internal\AzureQueue\MessageRetriever.cs" />
-    <Compile Include="Internal\AzureQueue\MessageSender.cs" />
-    <Compile Include="Internal\AzureQueue\ReliableQueueClient.cs" />
-    <Compile Include="Internal\HttpBrokerFrontendFactory.cs" />
     <Compile Include="AuthenticationFailure.cs" />
-    <Compile Include="BrokerClient.cs" />
-    <Compile Include="BrokerClientBase.cs" />
     <Compile Include="BrokerClientBehaviors.cs" />
     <Compile Include="Configuration\CustomBrokerRegistration.cs" />
     <Compile Include="Configuration\DebugModeSection.cs" />
@@ -294,27 +180,15 @@
     <Compile Include="Interface\IBrokerEntry.cs" />
     <Compile Include="Interface\IBrokerFrontend.cs" />
     <Compile Include="Internal\ISessionUserAuthenticator.cs" />
-    <Compile Include="Interface\SessionInfoContract.cs" />
     <None Include="app.config" />
     <None Include="Interface\WebSessionInfo.cs" />
     <None Include="Interface\WebSessionInfoContract.cs" />
     <None Include="Interface\WebSessionStartInfo.cs" />
-    <Compile Include="Internal\BrokerFrontendFactory.cs" />
     <Compile Include="Internal\BrokerHeartbeatEventArgs.cs" />
-    <Compile Include="Internal\BrokerLauncherClientFactory.cs" />
-    <Compile Include="Internal\BrokerResponseStateHandler.cs" />
     <Compile Include="Interface\IControllerAsync.cs" />
     <Compile Include="Interface\IResponseServiceAsync.cs" />
-    <Compile Include="Internal\BrokerHeartbeatHelper.cs" />
     <Compile Include="Internal\BrokerLauncherClientBase.cs" />
-    <Compile Include="Internal\DummyResourceProvider.cs" />
-    <Compile Include="Internal\IBrokerFactory.cs" />
     <Compile Include="Internal\IBrokerLauncherClientFactory.cs" />
-    <Compile Include="Internal\InprocBrokerAdapter.cs" />
-    <Compile Include="Internal\InprocessBrokerFactory.cs" />
-    <Compile Include="Internal\InprocessSessions.cs" />
-    <Compile Include="Internal\IResourceProvider.cs" />
-    <Compile Include="Internal\OnPremiseSessionFactory.cs" />
     <Compile Include="Internal\SessionInternalConstants.cs" />
     <Compile Include="QueueAdapter\Client\BrokerControllerCloudQueueClient.cs" />
     <Compile Include="QueueAdapter\Client\BrokerLauncherCloudQueueClient.cs" />
@@ -339,17 +213,10 @@
     <Compile Include="WinServiceHpcContextModule.cs" />
     <None Include="Internal\AzureRestSessionFactory.cs" />
     <Compile Include="Internal\SchedulerAdapterInternalClient.cs" />
-    <Compile Include="Internal\ServiceJobProvider.cs" />
-    <Compile Include="Internal\SessionAsyncResultBase.cs" />
-    <Compile Include="Internal\SessionAsyncResultForWebAPI.cs" />
-    <Compile Include="Internal\SessionFactory.cs" />
     <Compile Include="Internal\SessionInfoBase.cs" />
-    <Compile Include="Internal\SessionLauncherClientBase.cs" />
     <Compile Include="Internal\SOAWebServiceRequestBuilder.cs" />
-    <Compile Include="Internal\V3BrokerFactory.cs" />
     <Compile Include="Internal\WebAPIUtility.cs" />
     <None Include="Internal\WebBrokerFrontendFactory.cs" />
-    <Compile Include="Internal\WSBrokerFrontendFactory.cs" />
     <Compile Include="RetryOperationException.cs" />
     <Compile Include="RetryOperationError.cs" />
     <Compile Include="Exceptions\SessionFault.cs" />
@@ -366,11 +233,6 @@
     <Compile Include="Interface\EndOfResponsesReason.cs" />
     <Compile Include="Interface\IBrokerManagementService.cs" />
     <Compile Include="Interface\IHpcServiceHost.cs" />
-    <Compile Include="Interface\ISchedulerAdapter.cs" />
-    <Compile Include="Interface\ISchedulerNotify.cs" />
-    <Compile Include="Interface\ISchedulerNotifyAsync.cs" />
-    <Compile Include="Interface\TaskInfo.cs" />
-    <Compile Include="Internal\BrokerResponseHandler.cs" />
     <Compile Include="..\Common\BindingHelper.cs">
       <Link>BindingHelper.cs</Link>
     </Compile>
@@ -384,33 +246,13 @@
     <Compile Include="Interface\IController.cs" />
     <Compile Include="Interface\IResponseCallbackService.cs" />
     <Compile Include="Interface\IResponseService.cs" />
-    <Compile Include="Interface\ISessionLauncher.cs" />
-    <Compile Include="Interface\SessionInfo.cs" />
-    <Compile Include="Internal\AsyncResponseCallback.cs" />
-    <Compile Include="Internal\BrokerLauncherClient.cs" />
-    <Compile Include="Internal\BrokerResponse.cs" />
-    <Compile Include="Internal\BrokerResponseEnumerator.cs" />
     <Compile Include="Internal\BrokerShimExitCode.cs" />
-    <Compile Include="Internal\CallbackManager.cs" />
     <Compile Include="Internal\ISchedulerAdapterInternal.cs" />
-    <Compile Include="Internal\LocalSession.cs" />
-    <Compile Include="Internal\PersistantSessionAsyncResult.cs" />
-    <Compile Include="Internal\SessionAsyncResult.cs" />
-    <Compile Include="Internal\SessionLauncherClient.cs" />
-    <Compile Include="PersistantSession.cs" />
-    <Compile Include="ServiceContext.cs" />
-    <Compile Include="Session.cs" />
-    <Compile Include="SessionAttachInfo.cs" />
     <Compile Include="SessionAttachInfoBase.cs" />
-    <Compile Include="SessionBase.cs" />
-    <Compile Include="SessionException.cs" />
     <Compile Include="SessionIdentityImpersonation.cs" />
     <Compile Include="SessionInitInfoBase.cs" />
-    <Compile Include="SessionShim.cs" />
-    <Compile Include="SessionStartInfo.cs" />
     <Compile Include="SessionStartInfoBase.cs" />
     <Compile Include="SessionUnitType.cs" />
-    <Compile Include="CredUtil.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -427,18 +269,6 @@
       <Project>{8f4412aa-a6e0-49e5-a331-1b1047e2159d}</Project>
       <Name>StandaloneDataClient</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\StoreAPI\Property\Properties.csproj">
-      <Project>{61844849-3d26-4003-8146-5ae86985db3a}</Project>
-      <Name>Properties</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\StoreAPI\Scheduler\Scheduler.csproj">
-      <Project>{78e5e61b-dd12-475a-845b-7da3f6b0f987}</Project>
-      <Name>Scheduler</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\StoreAPI\Store\Store.csproj">
-      <Project>{82f72b8b-372e-4a1c-8139-714ae932ebcb}</Project>
-      <Name>Store</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HpcDeploy\DataMovement\DataMovement.csproj">
       <Project>{f0a3e1b7-6c6f-4357-99ee-49210440fffd}</Project>
       <Name>DataMovement</Name>
@@ -450,7 +280,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SR.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>SR.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>

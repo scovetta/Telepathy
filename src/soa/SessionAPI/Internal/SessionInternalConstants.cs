@@ -1,7 +1,7 @@
 ﻿namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
-    internal static class SessionInternalConstants
+    public static class SessionInternalConstants
     {
-        internal static string ConnectionStringToken => "ConnectionString";
+        public static string ConnectionStringToken => "ConnectionString";
     }
 }

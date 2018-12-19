@@ -15,9 +15,7 @@ namespace Microsoft.Hpc.Scheduler.Session
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading.Tasks;
-    using System.Windows.Forms.VisualStyles;
 
-    using SoaService.DataClient;
 
     /// <summary>
     ///   <para>Use to create an HPC session that binds the client application to

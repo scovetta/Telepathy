@@ -462,7 +462,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Only for internal use.
         /// </summary>
-        internal override string InternalPassword
+        public override string InternalPassword
         {
             get { return data.Password; }
             set { data.Password = value; }

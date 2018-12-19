@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Microsoft.Hpc.Scheduler.Session
 {
-    class HpcTraceSource : TraceSource
+    public class HpcTraceSource : TraceSource
     {
         /// <summary>
         /// the name for service trace source.

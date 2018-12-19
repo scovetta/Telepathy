@@ -17,7 +17,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// Async version of IResponseService
     /// </summary>
     [ServiceContract(Name = "ResponseService", CallbackContract = typeof(IResponseServiceCallback), Namespace = "http://hpc.microsoft.com")]
-    internal interface IResponseServiceAsync
+    public interface IResponseServiceAsync
     {
         /// <summary>
         /// Get specifies response messages

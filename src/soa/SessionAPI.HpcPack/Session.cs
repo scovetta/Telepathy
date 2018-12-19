@@ -129,7 +129,8 @@ namespace Microsoft.Hpc.Scheduler.Session
 
                 if (sessionStartInfo.TransportScheme == TransportScheme.WebAPI)
                 {
-                    return new SessionAsyncResultForWebAPI(sessionStartInfo, callback, state);
+                    // return new SessionAsyncResultForWebAPI(sessionStartInfo, callback, state);
+                    throw new NotSupportedException();
                 }
                 else
                 {

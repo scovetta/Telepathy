@@ -64,7 +64,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// Gets or sets the Internal Password.
         /// This property is safe to be pushed down to <see cref="SessionInfo"/>.
         /// </summary>
-        internal string InternalPassword { get; set; }
+        public string InternalPassword { get; set; }
 
         /// <summary>
         /// Gets or sets the head node name.

@@ -19,7 +19,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// The client implementation for the scheduler adapter
     /// </summary>
-    internal class SchedulerAdapterInternalClient : ClientBase<ISchedulerAdapterInternal>, ISchedulerAdapterInternal
+    public class SchedulerAdapterInternalClient : ClientBase<ISchedulerAdapterInternal>, ISchedulerAdapterInternal
     {
         /// <summary>
         /// Stores the operation timeout

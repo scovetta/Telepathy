@@ -21,7 +21,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// The async version of IControllerAsync
     /// </summary>
     [ServiceContract(Name = "IBrokerController", Namespace = "http://hpc.microsoft.com/brokercontroller/")]
-    internal interface IControllerAsync
+    public interface IControllerAsync
     {
         /// <summary>
         /// Flush messages

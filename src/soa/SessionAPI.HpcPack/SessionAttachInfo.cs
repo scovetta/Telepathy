@@ -151,7 +151,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Gets the password internal
         /// </summary>
-        internal override string InternalPassword
+        public override string InternalPassword
         {
             get { return this.password; }
             set { this.password = value; }
