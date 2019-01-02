@@ -11,7 +11,6 @@ namespace Microsoft.Hpc.Scheduler.Session
 {
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using System;
-    using System.Linq;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading.Tasks;
@@ -37,13 +36,13 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// v3 session instance
         /// </summary>
-        V3Session v3session;
+        HpcV3Session v3session;
 
         /// <summary>
         /// create the session shim based on a v3 session
         /// </summary>
         /// <param name="v2session"></param>
-        internal Session(V3Session v3session)
+        internal Session(HpcV3Session v3session)
         {
             this.v3session = v3session;
         }
@@ -255,30 +254,6 @@ namespace Microsoft.Hpc.Scheduler.Session
         }
 
         /// <summary>
-        ///   <para>Gets information about the version of the HPC Pack that is installed on the head node of the cluster that hosts the session.</para>
-        /// </summary>
-        /// <value>
-        ///   <para>A <see cref="System.Version" /> that contains the version information.</para>
-        /// </value>
-        /// <remarks>
-        ///   <para>The
-        /// <see cref="System.Version.Build" /> and
-        /// <see cref="System.Version.Revision" /> portions of the version that the
-        /// <see cref="System.Version" /> object represents are not defined for the HPC Pack.</para>
-        ///   <para>HPC Pack 2008 is version 2.0. HPC Pack 2008 R2 is version 3.0.</para>
-        /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.Session.ClientVersion" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.ServerVersion" />
-        /// <seealso cref="System.Version" />
-        public Version ServerVersion
-        {
-            get
-            {
-                return v3session.ServerVersion;
-            }
-        }
-
-        /// <summary>
         ///   <para>Gets information about the version of the HPC Pack that is
         /// installed on the node of the cluster that runs the SOA client application.</para>
         /// </summary>
@@ -320,7 +295,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <example />
         public static void SetInterfaceMode(bool console, IntPtr wnd)
         {
-            V3Session.SetInterfaceMode(console, wnd);
+            HpcV3Session.SetInterfaceMode(console, wnd);
         }
 
         /// <summary>
@@ -369,7 +344,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <returns>A service job session object, including the endpoint address and the two jobs related to this session</returns>
         public static async Task<Session> CreateSessionAsync(SessionStartInfo startInfo)
         {
-            return new Session(await V3Session.CreateSessionAsync(startInfo, null).ConfigureAwait(false));
+            return new Session(await HpcV3Session.CreateSessionAsync(startInfo, null).ConfigureAwait(false));
         }
 
         /// <summary>
@@ -382,7 +357,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             Utility.ThrowIfNull(startInfo, "startInfo");
 
-            return new Session(await V3Session.CreateSessionAsync(startInfo, binding).ConfigureAwait(false));
+            return new Session(await HpcV3Session.CreateSessionAsync(startInfo, binding).ConfigureAwait(false));
         }
 
         /// <summary>
@@ -414,7 +389,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             Utility.ThrowIfNull(headnode, "headnode");
 
-            V3Session.CloseSession(headnode, sessionId, isAadUser);
+            HpcV3Session.CloseSession(headnode, sessionId, isAadUser);
         }
 
         /// <summary>
@@ -427,94 +402,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             Utility.ThrowIfNull(headnode, "headnode");
 
-            V3Session.CloseSession(headnode, sessionId, binding, isAadUser);
-        }
-
-        /// <summary>
-        ///   <para>Creates a session asynchronously.</para>
-        /// </summary>
-        /// <param name="startInfo">
-        ///   <para>A <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo" /> class that contains information for starting the session.</para>
-        /// </param>
-        /// <param name="callback">
-        ///   <para>An
-        /// <see cref="System.AsyncCallback" /> object that identifies a method to be called when the asynchronous operation completes. Can be
-        /// null.</para>
-        /// </param>
-        /// <param name="state">
-        ///   <para>User-defined data to pass to the callback. To get the user-defined data in the callback, access the
-        /// <see cref="System.IAsyncResult.AsyncState" /> property that is passed to your callback. Can be
-        /// null.</para>
-        /// </param>
-        /// <returns>
-        ///   <para>An
-        /// <see cref="System.IAsyncResult" /> interface that represents the status of an asynchronous operation. Use the interface when calling the
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.EndCreateSession(System.IAsyncResult)" /> method.</para>
-        /// </returns>
-        public static IAsyncResult BeginCreateSession(
-                                                      SessionStartInfo startInfo,
-                                                      AsyncCallback callback,
-                                                      object state)
-        {
-            Utility.ThrowIfNull(startInfo, "startInfo");
-
-            return V3Session.BeginCreateSession(startInfo, callback, state);
-        }
-
-        /// <summary>
-        /// Asynchronous mode of submitting a job and get a ServiceJobSession object.
-        /// </summary>
-        /// <param name="startInfo">The session start info for creating the service session</param>
-        /// <param name="callback">A callback to be invoked after an endpoint address is got</param>
-        /// <param name="state">The parameter of the callback</param>
-        /// <returns>Async result</returns>
-        public static IAsyncResult BeginCreateSession(
-                                                      SessionStartInfo startInfo,
-                                                      Binding binding,
-                                                      AsyncCallback callback,
-                                                      object state)
-        {
-            Utility.ThrowIfNull(startInfo, "startInfo");
-
-            return V3Session.BeginCreateSession(startInfo, binding, callback, state);
-        }
-
-        /// <summary>
-        ///   <para>Cancels the attempt to create a session asynchronously.</para>
-        /// </summary>
-        /// <param name="result">
-        ///   <para>An
-        /// <see cref="System.IAsyncResult" /> interface that represents the status of an asynchronous operation. Specify the interface that the
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.BeginCreateSession(Microsoft.Hpc.Scheduler.Session.SessionStartInfo,System.AsyncCallback,System.Object)" /> method returns.</para>
-        /// </param>
-        public static void CancelCreateSession(IAsyncResult result)
-        {
-            Utility.ThrowIfNull(result, "result");
-
-            V3Session.CancelCreateSession(result);
-        }
-
-        /// <summary>
-        ///   <para>Blocks until the asynchronous process for creating the session completes.</para>
-        /// </summary>
-        /// <param name="result">
-        ///   <para>An <see cref="System.IAsyncResult" /> interface that represents the status of an asynchronous operation. </para>
-        /// </param>
-        /// <returns>
-        ///   <para>An <see cref="Microsoft.Hpc.Scheduler.Session.Session" /> object that defines the session.</para>
-        /// </returns>
-        /// <remarks>
-        ///   <para>Typically, you call this method from the callback that you specify when calling the
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.BeginCreateSession(Microsoft.Hpc.Scheduler.Session.SessionStartInfo,System.AsyncCallback,System.Object)" /> method. If you use a callback, pass the result object that is passed to your callback. If you do not use a callback, pass the result object that the
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.BeginCreateSession(Microsoft.Hpc.Scheduler.Session.SessionStartInfo,System.AsyncCallback,System.Object)" /> method returns.</para>
-        /// </remarks>
-        /// <example />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.Session.BeginCreateSession(Microsoft.Hpc.Scheduler.Session.SessionStartInfo,System.AsyncCallback,System.Object)"
-        /// />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.Session.CancelCreateSession(System.IAsyncResult)" />
-        public static Session EndCreateSession(IAsyncResult result)
-        {
-            return new Session(V3Session.EndCreateSession(result));
+            HpcV3Session.CloseSession(headnode, sessionId, binding, isAadUser);
         }
 
         /// <summary>
@@ -531,7 +419,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             Utility.ThrowIfNull(attachInfo, "attachInfo");
 
-            return new Session(V3Session.AttachSession(attachInfo));
+            return new Session(HpcV3Session.AttachSession(attachInfo));
         }
 
         /// <summary>
@@ -544,41 +432,9 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             Utility.ThrowIfNull(attachInfo, "attachInfo");
 
-            return new Session(V3Session.AttachSession(attachInfo, binding));
+            return new Session(HpcV3Session.AttachSession(attachInfo, binding));
         }
-
-        /// <summary>
-        ///   <para>Gets the value of a backend-specific property for a session.</para>
-        /// </summary>
-        /// <param name="name">
-        ///   <para>String that specifies the name of the property for which you want to get the value. The property names that you
-        /// can specify are HPC_ServiceJobId, HPC_Headnode, and HPC_ServiceJobStatus, which is a string
-        /// that indicates the current status of the service job for the session.</para>
-        /// </param>
-        /// <typeparam name="T">
-        ///   <para>The data type of the property for which you want to get the value. For information about the
-        /// properties for which you can get a value and their data types, see the description for the <paramref name="name" /> parameter.</para>
-        /// </typeparam>
-        /// <returns>
-        ///   <para>An item with the data type that the T type parameter specifies and which contains the value of the property
-        /// that the <paramref name="name" /> parameter specifies. The following table describes the
-        /// return values and their types for the properties for which you can get values.</para>
-        ///   <para>Property name</para>
-        ///   <para>Type</para>
-        ///   <para>Description</para>
-        /// </returns>
-        /// <remarks>
-        ///   <para>This method does not support getting the values of custom properties.</para>
-        /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Properties.JobState" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Headnode" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Id" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionAttachInfoBase.Headnode" />
-        public T GetProperty<T>(string name)
-        {
-            return v3session.GetProperty<T>(name);
-        }
-
+      
         /// <summary>
         ///   <para>Gets the version of the service used to start this <see cref="Microsoft.Hpc.Scheduler.Session.Session" />.</para>
         /// </summary>
@@ -623,7 +479,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             IBrokerFactory brokerFactory = new V3BrokerFactory(false);
             DateTime targetTimeout = DateTime.Now.AddMilliseconds(Constant.DefaultCreateSessionTimeout);
             //in HPC sessionId cannot be negative (out of range)   
-            return new Session((V3Session)await brokerFactory.CreateBroker(startInfo, SessionStartInfo.StandaloneSessionId, targetTimeout, startInfo.BrokerLauncherEprs, null).ConfigureAwait(false));
+            return new Session((HpcV3Session)await brokerFactory.CreateBroker(startInfo, SessionStartInfo.StandaloneSessionId, targetTimeout, startInfo.BrokerLauncherEprs, null).ConfigureAwait(false));
         }
 
 
@@ -643,7 +499,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             InprocessBrokerFactory brokerFactory = new InprocessBrokerFactory(startInfo.Headnode, false);
             DateTime targetTimeout = DateTime.Now.AddMilliseconds(Constant.DefaultCreateSessionTimeout);
-            return new Session((V3Session) await brokerFactory.CreateBroker(startInfo, SessionStartInfo.StandaloneSessionId, targetTimeout, null, null).ConfigureAwait(false));
+            return new Session((HpcV3Session) await brokerFactory.CreateBroker(startInfo, SessionStartInfo.StandaloneSessionId, targetTimeout, null, null).ConfigureAwait(false));
         }
     }
 }

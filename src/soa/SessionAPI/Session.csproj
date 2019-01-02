@@ -63,6 +63,7 @@
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.Runtime" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Xml" />
@@ -128,6 +129,9 @@
     <Compile Include="..\Common\ThrowHelper.cs">
       <Link>ThrowHelper.cs</Link>
     </Compile>
+    <Compile Include="..\Common\Utility.cs">
+      <Link>Internal\Utility.cs</Link>
+    </Compile>
     <Compile Include="..\Common\Win32API.cs">
       <Link>Win32API.cs</Link>
     </Compile>
@@ -135,9 +139,22 @@
       <Link>Interface\ISOAWebService.cs</Link>
     </None>
     <Compile Include="BalanceInfo.cs" />
+    <Compile Include="BrokerClient.cs" />
+    <Compile Include="BrokerClientBase.cs" />
     <Compile Include="ChannelTypes.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="CredExtension.cs" />
+    <Compile Include="Internal\AsyncResponseCallback.cs" />
+    <Compile Include="Internal\BrokerFrontendFactory.cs" />
+    <Compile Include="Internal\BrokerResponse.cs" />
+    <Compile Include="Internal\BrokerResponseEnumerator.cs" />
+    <Compile Include="Internal\BrokerResponseHandler.cs" />
+    <Compile Include="Internal\BrokerResponseStateHandler.cs" />
+    <Compile Include="Internal\CallbackManager.cs" />
+    <Compile Include="Internal\HttpBrokerFrontendFactory.cs" />
+    <Compile Include="Internal\WSBrokerFrontendFactory.cs" />
+    <Compile Include="PersistantSession.cs" />
+    <Compile Include="Session.cs" />
     <Compile Include="IConnectionInfoExtension.cs" />
     <Compile Include="Interface\ClusterInfoContract.cs" />
     <Compile Include="Interface\IConnectionInfo.cs" />
@@ -160,6 +177,26 @@
     <Compile Include="Interface\BrokerInstanceUnavailable.cs" />
     <Compile Include="Interface\IBrokerEntry.cs" />
     <Compile Include="Interface\IBrokerFrontend.cs" />
+    <Compile Include="Interface\ISchedulerNotify.cs" />
+    <Compile Include="Interface\ISessionLauncher.cs" />
+    <Compile Include="Interface\SessionAllocateInfoContract.cs" />
+    <Compile Include="Interface\SessionInfo.cs" />
+    <Compile Include="Interface\SessionInfoContract.cs" />
+    <Compile Include="Interface\TaskInfo.cs" />
+    <Compile Include="Internal\AzureQueue\AzureQueueItem.cs" />
+    <Compile Include="Internal\AzureQueue\AzureQueueProxy.cs" />
+    <Compile Include="Internal\AzureQueue\AzureStorageClient.cs" />
+    <Compile Include="Internal\AzureQueue\MessageRetriever.cs" />
+    <Compile Include="Internal\AzureQueue\MessageSender.cs" />
+    <Compile Include="Internal\AzureQueue\ReliableQueueClient.cs" />
+    <Compile Include="Internal\BrokerHeartbeatHelper.cs" />
+    <Compile Include="Internal\BrokerLauncherClient.cs" />
+    <Compile Include="Internal\BrokerLauncherClientFactory.cs" />
+    <Compile Include="Internal\IBrokerFactory.cs" />
+    <Compile Include="Internal\InprocBrokerAdapter.cs" />
+    <Compile Include="Internal\InprocessBrokerFactory.cs" />
+    <Compile Include="Internal\InprocessSessions.cs" />
+    <Compile Include="Internal\ISchedulerAdapter.cs" />
     <Compile Include="Internal\ISessionUserAuthenticator.cs" />
     <None Include="app.config" />
     <None Include="Interface\WebSessionInfo.cs" />
@@ -170,7 +207,15 @@
     <Compile Include="Interface\IResponseServiceAsync.cs" />
     <Compile Include="Internal\BrokerLauncherClientBase.cs" />
     <Compile Include="Internal\IBrokerLauncherClientFactory.cs" />
+    <Compile Include="Internal\LocalSession.cs" />
+    <None Include="Internal\PersistantSessionAsyncResult.cs" />
+    <None Include="Internal\SessionAsyncResult.cs" />
+    <Compile Include="Internal\SessionAsyncResultBase.cs" />
+    <Compile Include="Internal\SessionFactory.cs" />
     <Compile Include="Internal\SessionInternalConstants.cs" />
+    <Compile Include="Internal\SessionLauncherClient.cs" />
+    <Compile Include="Internal\SessionLauncherClientBase.cs" />
+    <Compile Include="Internal\V3BrokerFactory.cs" />
     <Compile Include="QueueAdapter\Client\BrokerControllerCloudQueueClient.cs" />
     <Compile Include="QueueAdapter\Client\BrokerLauncherCloudQueueClient.cs" />
     <Compile Include="QueueAdapter\Client\CloudQueueClientBase.cs" />
@@ -190,6 +235,10 @@
     <Compile Include="QueueAdapter\LocalQueueWriter.cs" />
     <Compile Include="QueueAdapter\Module\CloudQueueCreationModule.cs" />
     <Compile Include="QueueAdapter\Server\CloudQueueWatcherBase.cs" />
+    <Compile Include="SessionAttachInfo.cs" />
+    <Compile Include="sessionbase.cs" />
+    <Compile Include="SessionException.cs" />
+    <Compile Include="SessionStartInfo.cs" />
     <Compile Include="TaskInInterestUtil.cs" />
     <Compile Include="WinServiceHpcContextModule.cs" />
     <None Include="Internal\AzureRestSessionFactory.cs" />
@@ -257,6 +306,10 @@
     <ProjectReference Include="..\SessionAPI.Data\SessionAPI.Data.csproj">
       <Project>{40fc3ebb-d692-4d69-b6a9-6cbd46f19025}</Project>
       <Name>SessionAPI.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SessionAPI.SchedulerPort\SessionAPI.SchedulerPort.csproj">
+      <Project>{48f16289-58ed-47cc-8437-375306d2080c}</Project>
+      <Name>SessionAPI.SchedulerPort</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

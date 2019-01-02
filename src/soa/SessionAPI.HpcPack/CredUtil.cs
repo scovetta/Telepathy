@@ -9,9 +9,9 @@
 
 namespace Microsoft.Hpc.Scheduler.Session
 {
-    using Microsoft.Hpc.Scheduler.Properties;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Store;
+    using Properties;
+    using Internal;
+    using Store;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -22,7 +22,7 @@ namespace Microsoft.Hpc.Scheduler.Session
     using System.Threading.Tasks;
 
 #if !net40
-    using Microsoft.Hpc.AADAuthUtil;
+    using AADAuthUtil;
 #endif
 
     /// <summary>

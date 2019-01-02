@@ -9,7 +9,7 @@
 
     public static class BalanceInfoHpcFactory
     {
-        public static BalanceInfo FromBalanceRequests(IEnumerable<BalanceRequest> balanceRequests)
+        public static BalanceInfo FromBalanceRequests(IEnumerable<Properties.BalanceRequest> balanceRequests)
         {
             return new BalanceInfo(balanceRequests.Select(b => new SoaBalanceRequest() { AllowedCoreCount = b.AllowedCoreCount, TaskIds = b.TaskIds }).ToList());
         }

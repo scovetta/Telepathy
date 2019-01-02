@@ -6,7 +6,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    interface IScheduler<TTaskId>
+    public interface IScheduler
     {
         #region V2 scheduler methods/props. Don't modify this
 
@@ -80,7 +80,7 @@
         /// <seealso cref="Microsoft.Hpc.Scheduler.IScheduler.CloneJob(System.Int32)" />
         /// <seealso cref="Microsoft.Hpc.Scheduler.IScheduler.SubmitJobById(System.Int32,System.String,System.String)" />
         /// <seealso cref="Microsoft.Hpc.Scheduler.IScheduler.SubmitJob(Microsoft.Hpc.Scheduler.ISchedulerJob,System.String,System.String)" />
-        ISchedulerJob<TTaskId> CreateJob();
+        ISchedulerJob CreateJob();
 
         /// <summary>
         ///   <para>Retrieves the specified job from the scheduler.</para>
@@ -109,7 +109,7 @@
         /// /> 
         /// <seealso cref="Microsoft.Hpc.Scheduler.IScheduler.OpenJobEnumerator(Microsoft.Hpc.Scheduler.IPropertyIdCollection,Microsoft.Hpc.Scheduler.IFilterCollection,Microsoft.Hpc.Scheduler.ISortCollection)" 
         /// /> 
-        ISchedulerJob<TTaskId> OpenJob(int id);
+        ISchedulerJob OpenJob(int id);
 
         /// <summary>
         ///   <para>Clones the specified job.</para>
@@ -482,7 +482,7 @@
         /// </example>
         /// <seealso cref="Microsoft.Hpc.Scheduler.IScheduler.CreateJob" />
         /// <seealso cref="Microsoft.Hpc.Scheduler.ISchedulerJob.RestoreFromXml(System.String)" />
-        ISchedulerJob<TTaskId> CloneJob(int jobId);
+        ISchedulerJob CloneJob(int jobId);
 
         /// <summary>
         ///   <para>Adds the specified job to the scheduler.</para>
@@ -500,7 +500,7 @@
         /// <seealso cref="Microsoft.Hpc.Scheduler.IScheduler.CreateJob" />
         /// <seealso cref="Microsoft.Hpc.Scheduler.IScheduler.SubmitJob(Microsoft.Hpc.Scheduler.ISchedulerJob,System.String,System.String)" />
         /// <seealso cref="Microsoft.Hpc.Scheduler.IScheduler.SubmitJobById(System.Int32,System.String,System.String)" />
-        void AddJob(ISchedulerJob<TTaskId> job);
+        void AddJob(ISchedulerJob job);
 
         /// <summary>
         ///   <para>Adds a job to the scheduling queue using the job interface to identify the job.</para>
@@ -551,7 +551,7 @@
         /// <seealso cref="Microsoft.Hpc.Scheduler.IScheduler.AddJob(Microsoft.Hpc.Scheduler.ISchedulerJob)" />
         /// <seealso cref="Microsoft.Hpc.Scheduler.IScheduler.SubmitJobById(System.Int32,System.String,System.String)" />
         /// <seealso cref="Microsoft.Hpc.Scheduler.IScheduler.SetInterfaceMode(System.Boolean,System.IntPtr)" />
-        void SubmitJob(ISchedulerJob<TTaskId> job, string username, string password);
+        void SubmitJob(ISchedulerJob job, string username, string password);
 
         /// <summary>
         ///   <para>Adds the job to the scheduling queue using the job identifier to identify the job.</para>
@@ -727,7 +727,7 @@
         ///   <para>For an example, see <see href="https://msdn.microsoft.com/library/cc853421(v=vs.85).aspx">Cloning a Job</see>.</para>
         /// </example>
         /// <seealso cref="Microsoft.Hpc.Scheduler.IScheduler.CreateParametricTaskId(System.Int32,System.Int32)" />
-        TTaskId CreateTaskId(Int32 jobTaskId);
+        string CreateTaskId(Int32 jobTaskId);
 
         /// <summary>
         ///   <para>Creates a task identifier that identifies an instance of parametric task.</para>
@@ -745,7 +745,7 @@
         ///   <para>To create a task identifier object that identifies a task or parametric task, call the 
         /// <see cref="Microsoft.Hpc.Scheduler.IScheduler.CreateTaskId(System.Int32)" /> method.</para>
         /// </remarks>
-        TTaskId CreateParametricTaskId(Int32 jobTaskId, Int32 instanceId);
+        string CreateParametricTaskId(Int32 jobTaskId, Int32 instanceId);
 
         /// <summary>
         ///   <para>Sets a cluster-wide environment variable.</para>

@@ -8,7 +8,6 @@
 //------------------------------------------------------------------------------
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
-    using Microsoft.Hpc.Scheduler.Properties;
     using Microsoft.Hpc.Scheduler.Session.Data;
     using System;
     using System.Collections.Generic;

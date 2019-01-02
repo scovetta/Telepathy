@@ -8,7 +8,7 @@
     using Microsoft.Hpc.Scheduler.Session.Data;
 
     // TODO: Trim the interface down to miminal
-    public interface ISchedulerJob<in TTaskId>
+    public interface ISchedulerJob
     {
         #region V2 methods. Don't change
 
@@ -108,25 +108,25 @@
         /// </summary>
         /// <param name="taskId">ID of the task to open on the server.</param>
         /// <returns></returns>
-        ISchedulerTask OpenTask(TTaskId taskId);
+        ISchedulerTask OpenTask(string taskId);
 
         /// <summary>
         /// Cancels the task.
         /// </summary>
         /// <param name="taskId">ID of the task to Cancel</param>
-        void CancelTask(TTaskId taskId);
+        void CancelTask(string taskId);
 
         /// <summary>
         /// Requeues a failed or canceled Task.
         /// </summary>
         /// <param name="taskId">ID of the task to Requeue</param>
-        void RequeueTask(TTaskId taskId);
+        void RequeueTask(string taskId);
 
         /// <summary>
         /// Submits a task to a running job, where the Task has already been added to the cluster.
         /// </summary>
         /// <param name="taskId"></param>
-        void SubmitTaskById(TTaskId taskId);
+        void SubmitTaskById(string taskId);
 
         /// <summary>
         ///   <para>Submits a task to the job using the specified task.</para>
@@ -436,6 +436,14 @@
         ///   <para>The date and time that the job was last touched. The value is in Coordinated Universal Time.</para>
         /// </value>
         DateTime ChangeTime { get; }
+
+        /// <summary>
+        ///   <para>Retrieves the state of the job.</para>
+        /// </summary>
+        /// <value>
+        ///   <para>The state of the job. For possible values, see the <see cref="Microsoft.Hpc.Scheduler.Properties.JobState" /> enumeration.</para>
+        /// </value>
+        JobState State { get; }
 
         /// <summary>
         ///   <para>Retrieves or sets the minimum number of cores that the job requires to run.</para>
@@ -1180,7 +1188,7 @@
         /// </summary>
         /// <param name="taskId">ID of the task to Cancel</param>
         /// <param name="message">Message to be saved on the task object once the task has been canceled.  Can be null</param>
-        void CancelTask(TTaskId taskId, string message);
+        void CancelTask(string taskId, string message);
 
         /// <summary>
         /// Cancels the task.
@@ -1188,7 +1196,7 @@
         /// <param name="taskId">ID of the task to Cancel</param>
         /// <param name="message">Message to be saved on the task object once the task has been canceled.  Can be null</param>
         /// <param name="isForce">Should the task be force cancelled ?</param>
-        void CancelTask(TTaskId taskId, string message, bool isForce);
+        void CancelTask(string taskId, string message, bool isForce);
 
         /// <summary>
         ///   <para>Adds the specified nodes to the list of nodes that should not be used for the job.</para>
@@ -1639,7 +1647,7 @@
         /// </summary>
         /// <param name="taskId">the ID of the task to finish</param>
         /// <param name="message">the message to finish the task.</param>
-        void FinishTask(TTaskId taskId, string message);
+        void FinishTask(string taskId, string message);
 
         /// <summary>
         ///   <para />
@@ -1700,7 +1708,7 @@
 
         #region V5SP2 methods / properties
 
-        bool GetBalanceRequest(out IList<BalanceRequest> request);
+        bool GetBalanceRequest(out IList<SoaBalanceRequest> request);
 
         #endregion
     }
