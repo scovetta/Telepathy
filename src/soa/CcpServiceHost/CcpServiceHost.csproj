@@ -177,6 +177,10 @@
       <Project>{3f01d480-4cde-4f46-99ea-95ceda05063e}</Project>
       <Name>BrokerBase</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SessionAPI.HpcPack\SessionAPI.HpcPack.csproj">
+      <Project>{23638265-a3f6-4dee-8fd0-65c75a52bff6}</Project>
+      <Name>SessionAPI.HpcPack</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SvcHostRestServer\SvcHostRestServer.csproj">
       <Project>{602b999e-6203-432c-af7c-2c31dddde60a}</Project>
       <Name>RESTServiceModel</Name>
