@@ -42,8 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IScheduler.cs" />
-    <Compile Include="ISchedulerJob.cs" />
-    <Compile Include="ISchedulerTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

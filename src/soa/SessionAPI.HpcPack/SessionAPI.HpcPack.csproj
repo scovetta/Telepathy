@@ -100,6 +100,9 @@
     <Compile Include="..\Common\Constant.cs">
       <Link>Internal\Constant.cs</Link>
     </Compile>
+    <Compile Include="..\Common\ISchedulerAdapterInternalAsync.cs">
+      <Link>Internal\ISchedulerAdapterInternalAsync.cs</Link>
+    </Compile>
     <Compile Include="..\Common\ParamCheckUtility.cs">
       <Link>ParamCheckUtility.cs</Link>
     </Compile>
@@ -111,6 +114,9 @@
     </Compile>
     <Compile Include="..\Common\ServiceRegisteration.cs">
       <Link>ServiceRegisteration.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\SoaHelper.cs">
+      <Link>SoaHelper.cs</Link>
     </Compile>
     <Compile Include="..\Common\ThrowHelper.cs">
       <Link>ThrowHelper.cs</Link>
@@ -219,6 +225,9 @@
     <Compile Include="Data\DataClient\DataServiceRestClient.cs" />
     <Compile Include="Data\DataClient\DTO\OpenDataClientBySecretParams.cs" />
     <Compile Include="HpcSession.cs" />
+    <Compile Include="Internal\IHpcSchedulerAdapter.cs" />
+    <Compile Include="Internal\IHpcSchedulerAdapterInternal.cs" />
+    <Compile Include="Internal\SchedulerAdapterInternalClient.cs" />
     <Compile Include="SessionShim.cs" />
     <None Include="Interface\ISchedulerNotifyAsync.cs" />
     <Compile Include="HpcSessionCredUtil.cs" />

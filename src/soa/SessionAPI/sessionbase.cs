@@ -82,8 +82,6 @@ namespace Microsoft.Hpc.Scheduler.Session
         // This is for disposing it when disposing the session
         protected IScheduler _scheduler;
 
-        // The job object of the service job enclosed in this session
-        private ISchedulerJob _serviceJob;
 
         // Maintains list of broker clients associated with this session
         // Client id is case insensitive

@@ -62,7 +62,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
         /// <summary>
         /// Stores the scheduler delegation service instance
         /// </summary>
-        private SchedulerDelegation schedulerDelegation;
+        private HpcSchedulerDelegation hpcSchedulerDelegation;
 
         /// <summary>
         /// Store the data service instance
@@ -130,12 +130,12 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 if (!isNtService)
                 {
                     // only need to get cleaned in SF serivce
-                    if (this.schedulerDelegation != null)
+                    if (this.hpcSchedulerDelegation != null)
                     {
-                        this.schedulerDelegation.Close();
+                        this.hpcSchedulerDelegation.Close();
                         TraceHelper.TraceEvent(TraceEventType.Verbose, "Scheduler delegation closed");
                     }
-                    this.schedulerDelegation = null;
+                    this.hpcSchedulerDelegation = null;
 
                     if (this.sessionLauncher != null)
                     {
@@ -178,13 +178,13 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
 
                 this.brokerNodesManager = new BrokerNodesManager();
                 this.sessionLauncher = new SessionLauncher(SoaHelper.GetSchedulerName(true), /* runningLocal = */ false, this.brokerNodesManager);
-                this.schedulerDelegation = new SchedulerDelegation(this.sessionLauncher, this.brokerNodesManager);
+                this.hpcSchedulerDelegation = new HpcSchedulerDelegation(this.sessionLauncher, this.brokerNodesManager);
 
 #if AZURE
                 TraceHelper.IsDiagTraceEnabled = x => true;
 #else
                 // Bug 18448: Need to enable traces only for those who have enabled trace
-                SoaDiagTraceHelper.IsDiagTraceEnabledInternal = ((ISchedulerAdapterInternal)this.schedulerDelegation).IsDiagTraceEnabled;
+                SoaDiagTraceHelper.IsDiagTraceEnabledInternal = ((IHpcSchedulerAdapterInternal)this.hpcSchedulerDelegation).IsDiagTraceEnabled;
                 TraceHelper.IsDiagTraceEnabled = SoaDiagTraceHelper.IsDiagTraceEnabled;
 #endif
 
@@ -275,10 +275,10 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
         private void StartSchedulerDelegationService()
         {
             string schedulerDelegationAddress = SoaHelper.GetSchedulerDelegationAddress("localhost");
-            this.delegationHost = new ServiceHost(this.schedulerDelegation, new Uri(schedulerDelegationAddress));
+            this.delegationHost = new ServiceHost(this.hpcSchedulerDelegation, new Uri(schedulerDelegationAddress));
             BindingHelper.ApplyDefaultThrottlingBehavior(this.delegationHost);
-            this.delegationHost.AddServiceEndpoint(typeof(ISchedulerAdapterInternal), BindingHelper.HardCodedInternalSchedulerDelegationBinding, "Internal");
-            this.delegationHost.AddServiceEndpoint(typeof(ISchedulerAdapter), BindingHelper.HardCodedInternalSchedulerDelegationBinding, string.Empty);
+            this.delegationHost.AddServiceEndpoint(typeof(IHpcSchedulerAdapterInternal), BindingHelper.HardCodedInternalSchedulerDelegationBinding, "Internal");
+            this.delegationHost.AddServiceEndpoint(typeof(IHpcSchedulerAdapter), BindingHelper.HardCodedInternalSchedulerDelegationBinding, string.Empty);
             this.delegationHost.Credentials.ClientCertificate.Authentication.CertificateValidationMode = X509CertificateValidationMode.PeerOrChainTrust;
             this.delegationHost.Credentials.ClientCertificate.Authentication.RevocationMode = X509RevocationMode.NoCheck;
             this.delegationHost.Credentials.ServiceCertificate.SetCertificate(StoreLocation.LocalMachine,

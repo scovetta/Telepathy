@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="SchedulerDelegation.cs" company="Microsoft">
+// <copyright file="HpcSchedulerDelegation.cs" company="Microsoft">
 //      Copyright (c) Microsoft Corporation.  All rights reserved.
 // </copyright>
 // <summary>
@@ -35,7 +35,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
     /// Scheduler adapter for both broker and broker launcher
     /// </summary>
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple, IncludeExceptionDetailInFaults = true, MaxItemsInObjectGraph = int.MaxValue)]
-    internal class SchedulerDelegation : DisposableObject, ISchedulerAdapter, ISchedulerAdapterInternal
+    internal class HpcSchedulerDelegation : DisposableObject, IHpcSchedulerAdapter, IHpcSchedulerAdapterInternal
     {
         /// <summary>
         /// Stores the default job template name
@@ -171,20 +171,20 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         private BrokerNodesManager brokerNodesManager;
 
         /// <summary>
-        /// Initializes a new instance of the SchedulerDelegation class
+        /// Initializes a new instance of the HpcSchedulerDelegation class
         /// </summary>
-        public SchedulerDelegation(SessionLauncher launcher, BrokerNodesManager brokerNodesManager)
+        public HpcSchedulerDelegation(SessionLauncher launcher, BrokerNodesManager brokerNodesManager)
         {
             try
             {
                 this.launcher = launcher;
                 this.brokerNodesManager = brokerNodesManager;
                 this.scheduler = CommonSchedulerHelper.GetScheduler(HpcContext.Get().CancellationToken).GetAwaiter().GetResult();
-                TraceHelper.TraceEvent(TraceEventType.Information, "[SchedulerDelegation] Successfully initialized scheduler adapter.");
+                TraceHelper.TraceEvent(TraceEventType.Information, "[HpcSchedulerDelegation] Successfully initialized scheduler adapter.");
             }
             catch (Exception e)
             {
-                TraceHelper.TraceEvent(TraceEventType.Error, "[SchedulerDelegation] .InitializeSchedulerConnect: Failed to connect to the scheduler store, Exception:{0}", e);
+                TraceHelper.TraceEvent(TraceEventType.Error, "[HpcSchedulerDelegation] .InitializeSchedulerConnect: Failed to connect to the scheduler store, Exception:{0}", e);
 
                 throw;
             }
@@ -202,24 +202,24 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 }
                 catch (Exception e)
                 {
-                    TraceHelper.TraceEvent(TraceEventType.Warning, "[SchedulerDelegation] .Parsing JobRetryCount parameter {0} throws exception: {1}", strMaxRequeueCount, e);
+                    TraceHelper.TraceEvent(TraceEventType.Warning, "[HpcSchedulerDelegation] .Parsing JobRetryCount parameter {0} throws exception: {1}", strMaxRequeueCount, e);
                 }
             }
 
             this.jobStateMonitorTimer = new Timer(this.JobStateMonitorCallback, null, MonitorJobStateTimePeriod, MonitorJobStateTimePeriod);
         }
 
-        #region ISchedulerAdapter and ISchedulerAdapterInternal operations
+        #region IHpcSchedulerAdapter and ISchedulerAdapterInternal operations
         /// <summary>
         /// Start to subscribe the job and task event
         /// </summary>
         /// <param name="jobid">indicating the job id</param>
         /// <param name="autoMax">indicating the auto max property of the job</param>
         /// <param name="autoMin">indicating the auto min property of the job</param>
-        async Task<Tuple<JobState, int, int>> ISchedulerAdapter.RegisterJob(int jobid)
+        async Task<Tuple<JobState, int, int>> IHpcSchedulerAdapter.RegisterJob(int jobid)
         {
             ParamCheckUtility.ThrowIfOutofRange(jobid <= 0, "jobid");
-            TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[SchedulerDelegation] Begin: RegisterJob...");
+            TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[HpcSchedulerDelegation] Begin: RegisterJob...");
             CheckBrokerAccess(jobid);
 
             int autoMax = 0, autoMin = 0;
@@ -250,11 +250,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
             catch (Exception e)
             {
-                TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[SchedulerDelegation] Exception thrown while registering job: {0}", e);
+                TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[HpcSchedulerDelegation] Exception thrown while registering job: {0}", e);
                 throw;
             }
 
-            TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[SchedulerDelegation] End: RegisterJob. Current job state = {0}.", state);
+            TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[HpcSchedulerDelegation] End: RegisterJob. Current job state = {0}.", state);
             return await Task.FromResult(new Tuple<JobState, int, int>(state, autoMax, autoMin));
         }
 
@@ -263,9 +263,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         /// <param name="jobid">the job id</param>
         /// <param name="properties">the properties table</param>
-        async Task<bool> ISchedulerAdapterInternal.UpdateBrokerInfo(int jobid, Dictionary<string, object> properties)
+        async Task<bool> IHpcSchedulerAdapterInternal.UpdateBrokerInfo(int jobid, Dictionary<string, object> properties)
         {
-            return await ((ISchedulerAdapter)this).UpdateBrokerInfo(jobid, properties);
+            return await ((IHpcSchedulerAdapter)this).UpdateBrokerInfo(jobid, properties);
         }
 
         /// <summary>
@@ -273,19 +273,19 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         /// <param name="jobid">the job id</param>
         /// <param name="properties">the properties table</param>
-        async Task<bool> ISchedulerAdapter.UpdateBrokerInfo(int jobid, Dictionary<string, object> properties)
+        async Task<bool> IHpcSchedulerAdapter.UpdateBrokerInfo(int jobid, Dictionary<string, object> properties)
         {
             ParamCheckUtility.ThrowIfOutofRange(jobid <= 0, "jobid");
             ParamCheckUtility.ThrowIfNull(properties, "properties");
 
-            TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[SchedulerDelegation] UpdateBrokerInfo...");
+            TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[HpcSchedulerDelegation] UpdateBrokerInfo...");
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             foreach (KeyValuePair<string, object> property in properties)
             {
                 sb.AppendLine(String.Format("Property = {0}\tValue = {1}", property.Key, property.Value));
             }
 
-            TraceHelper.TraceEvent(jobid, TraceEventType.Verbose, "[SchedulerDelegation] Properties detail:\n{0}", sb.ToString());
+            TraceHelper.TraceEvent(jobid, TraceEventType.Verbose, "[HpcSchedulerDelegation] Properties detail:\n{0}", sb.ToString());
             CheckBrokerAccess(jobid);
 
             try
@@ -346,10 +346,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// Cancel all non-durable service jobs which owned by the caller
         /// </summary>
         /// <returns>broker recover info array</returns>
-        async Task<BrokerRecoverInfo[]> ISchedulerAdapterInternal.GetRecoverInfoFromJobs(string machineName)
+        async Task<BrokerRecoverInfo[]> IHpcSchedulerAdapterInternal.GetRecoverInfoFromJobs(string machineName)
         {
             ParamCheckUtility.ThrowIfNullOrEmpty(machineName, "machineName");
-            TraceHelper.TraceEvent(TraceEventType.Information, "[SchedulerDelegation] Get recover info from jobs, machineName = {0}", machineName);
+            TraceHelper.TraceEvent(TraceEventType.Information, "[HpcSchedulerDelegation] Get recover info from jobs, machineName = {0}", machineName);
             CheckBrokerAccess(0);
 
             try
@@ -386,7 +386,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     {
                         // Exception happens because convert the job property fails
                         // Ignore current property row
-                        TraceHelper.TraceEvent(TraceEventType.Warning, "[SchedulerDelegation] Failed to load information from job: {0}, {1}", id, e);
+                        TraceHelper.TraceEvent(TraceEventType.Warning, "[HpcSchedulerDelegation] Failed to load information from job: {0}, {1}", id, e);
                         continue;
                     }
 
@@ -399,12 +399,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     {
                         try
                         {
-                            TraceHelper.TraceEvent(TraceEventType.Information, "[SchedulerDelegation] Fail non-durable runaway job.");
+                            TraceHelper.TraceEvent(TraceEventType.Information, "[HpcSchedulerDelegation] Fail non-durable runaway job.");
                             this.FailJob(job, FailReason_CannotRecoverInteractiveServiceJob);
                         }
                         catch (Exception ex)
                         {
-                            TraceHelper.TraceEvent(TraceEventType.Warning, "[SchedulerDelegation] Fail non-durable runaway job failed: Id = {0}, Exception={1}", id, ex);
+                            TraceHelper.TraceEvent(TraceEventType.Warning, "[HpcSchedulerDelegation] Fail non-durable runaway job failed: Id = {0}, Exception={1}", id, ex);
                         }
 
                         continue;
@@ -413,15 +413,15 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     BrokerRecoverInfo info;
                     try
                     {
-                        info = await ((ISchedulerAdapterInternal)this).GetRecoverInfoFromJob(id);
+                        info = await ((IHpcSchedulerAdapterInternal)this).GetRecoverInfoFromJob(id);
                     }
                     catch (Exception e)
                     {
-                        TraceHelper.TraceEvent(TraceEventType.Warning, "[SchedulerDelegation] Failed to load start info from service job: {0}, {1}", id, e);
+                        TraceHelper.TraceEvent(TraceEventType.Warning, "[HpcSchedulerDelegation] Failed to load start info from service job: {0}, {1}", id, e);
                         continue;
                     }
 
-                    TraceHelper.TraceEvent(TraceEventType.Verbose, "[SchedulerDelegation] Get broker info: Id = {0}", id);
+                    TraceHelper.TraceEvent(TraceEventType.Verbose, "[HpcSchedulerDelegation] Get broker info: Id = {0}", id);
                     recoverInfoList.Add(info);
                 }
 
@@ -429,7 +429,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
             catch (Exception e)
             {
-                TraceHelper.TraceEvent(TraceEventType.Error, "[SchedulerDelegation] Failed to get recover info from jobs: {0}\nMachineName = {1}", e, machineName);
+                TraceHelper.TraceEvent(TraceEventType.Error, "[HpcSchedulerDelegation] Failed to get recover info from jobs: {0}\nMachineName = {1}", e, machineName);
                 throw;
             }
         }
@@ -439,10 +439,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         /// <param name="jobid">job id</param>
         /// <returns>the sessionstart info</returns>
-        async Task<BrokerRecoverInfo> ISchedulerAdapterInternal.GetRecoverInfoFromJob(int jobid)
+        async Task<BrokerRecoverInfo> IHpcSchedulerAdapterInternal.GetRecoverInfoFromJob(int jobid)
         {
             ParamCheckUtility.ThrowIfOutofRange(jobid <= 0, "jobid");
-            TraceHelper.TraceEvent(TraceEventType.Information, "[SchedulerDelegation] Get recover info from job {0}...", jobid);
+            TraceHelper.TraceEvent(TraceEventType.Information, "[HpcSchedulerDelegation] Get recover info from job {0}...", jobid);
             CheckBrokerAccess(jobid);
 
             try
@@ -518,7 +518,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     }
                     else
                     {
-                        TraceHelper.TraceEvent(TraceEventType.Warning, "[SchedulerDelegation].GetRecoverInfoFromJob: malformed AAD user identity information: {0}", strValue); 
+                        TraceHelper.TraceEvent(TraceEventType.Warning, "[HpcSchedulerDelegation].GetRecoverInfoFromJob: malformed AAD user identity information: {0}", strValue); 
                     }
                 }
 
@@ -584,7 +584,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     catch (Exception ex)
                     {
                         version = null;
-                        TraceHelper.TraceEvent(TraceEventType.Warning, "[SchedulerDelegation].GetRecoverInfoFromJob: New Version Exception {0}", ex);
+                        TraceHelper.TraceEvent(TraceEventType.Warning, "[HpcSchedulerDelegation].GetRecoverInfoFromJob: New Version Exception {0}", ex);
                     }
 
                     startInfo.ServiceVersion = version;
@@ -624,7 +624,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
             catch (Exception e)
             {
-                TraceHelper.TraceEvent(TraceEventType.Error, "[SchedulerDelegation] Failed to get recover info from job {0}: {1}", jobid, e);
+                TraceHelper.TraceEvent(TraceEventType.Error, "[HpcSchedulerDelegation] Failed to get recover info from job {0}: {1}", jobid, e);
                 throw;
             }
         }
@@ -634,10 +634,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         /// <param name="jobTemplate">the job template name</param>
         /// <returns>ACL string</returns>
-        async Task<string> ISchedulerAdapterInternal.GetJobOwnerSID(int jobid)
+        async Task<string> IHpcSchedulerAdapterInternal.GetJobOwnerSID(int jobid)
         {
             ParamCheckUtility.ThrowIfOutofRange(jobid <= 0, "jobid");
-            TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[SchedulerDelegation] GetUserSID...");
+            TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[HpcSchedulerDelegation] GetUserSID...");
             CheckBrokerAccess(jobid);
             return await Task.FromResult(GetJobOwnerSIDInternal(jobid));
         }
@@ -646,10 +646,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// verify a job is there
         /// </summary>
         /// <param name="jobId">indicating the job id</param>
-        async Task<bool> ISchedulerAdapterInternal.IsValidJob(int jobId)
+        async Task<bool> IHpcSchedulerAdapterInternal.IsValidJob(int jobId)
         {
             ParamCheckUtility.ThrowIfOutofRange(jobId <= 0, "jobId");
-            TraceHelper.TraceEvent(TraceEventType.Information, "[SchedulerDelegation] Verify job {0} is valid.", jobId);
+            TraceHelper.TraceEvent(TraceEventType.Information, "[HpcSchedulerDelegation] Verify job {0} is valid.", jobId);
             CheckBrokerAccess(jobId);
 
             try
@@ -660,17 +660,17 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             {
                 if (e.Code == ErrorCode.Operation_InvalidJobId)
                 {
-                    TraceHelper.TraceEvent(TraceEventType.Information, "[SchedulerDelegation] IsValidJob: job(id={0}) doesnot exist, Exception:{1}", jobId, e);
+                    TraceHelper.TraceEvent(TraceEventType.Information, "[HpcSchedulerDelegation] IsValidJob: job(id={0}) doesnot exist, Exception:{1}", jobId, e);
                     return false;
                 }
                 else
                 {
-                    TraceHelper.TraceEvent(TraceEventType.Information, "[SchedulerDelegation] IsValidJob: Open job(id={0}) raised exception:{1}", jobId, e);
+                    TraceHelper.TraceEvent(TraceEventType.Information, "[HpcSchedulerDelegation] IsValidJob: Open job(id={0}) raised exception:{1}", jobId, e);
                 }
             }
             catch (Exception e)
             {
-                TraceHelper.TraceEvent(TraceEventType.Information, "[SchedulerDelegation] IsValidJob: Open job(id={0}) raised exception:{1}", jobId, e);
+                TraceHelper.TraceEvent(TraceEventType.Information, "[HpcSchedulerDelegation] IsValidJob: Open job(id={0}) raised exception:{1}", jobId, e);
             }
 
             return await Task.FromResult(true);
@@ -682,11 +682,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <param name="jobId">job id</param>
         /// <param name="taskId">task id</param>
         /// <returns>list of the node name and location flag (on premise or not)</returns>
-        async Task<List<Tuple<string, bool>>> ISchedulerAdapterInternal.GetTaskAllocatedNodeName(int jobId, int taskId)
+        async Task<List<Tuple<string, bool>>> IHpcSchedulerAdapterInternal.GetTaskAllocatedNodeName(int jobId, int taskId)
         {
             ParamCheckUtility.ThrowIfOutofRange(jobId <= 0, "jobId");
             ParamCheckUtility.ThrowIfOutofRange(taskId <= 0, "taskId");
-            TraceHelper.TraceEvent(TraceEventType.Information, "[SchedulerDelegation] GetTaskAllocatedNodeName of task {0} in job {1}.", taskId, jobId);
+            TraceHelper.TraceEvent(TraceEventType.Information, "[HpcSchedulerDelegation] GetTaskAllocatedNodeName of task {0} in job {1}.", taskId, jobId);
 
             CheckBrokerAccess(jobId);
 
@@ -709,7 +709,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
                     Debug.Assert(
                         taskRowSet.GetCount() == 1,
-                        "[SchedulerDelegation] As global task id was given, there should be only one element in the row set.");
+                        "[HpcSchedulerDelegation] As global task id was given, there should be only one element in the row set.");
 
                     PropertyRow[] rows = taskRowSet.GetRows(0, 0).Rows;
                     StoreProperty prop = rows[0][TaskPropertyIds.AllocatedNodes];
@@ -717,7 +717,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
                     Debug.Assert(
                         nodes.Count == 1,
-                        "[SchedulerDelegation] Should have only one node for a task.");
+                        "[HpcSchedulerDelegation] Should have only one node for a task.");
 
                     List<Tuple<string, bool>> list = new List<Tuple<string, bool>>();
 
@@ -738,7 +738,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                             // the node does not exist in the cluster, so can not get its info
                             TraceHelper.TraceEvent(
                                 TraceEventType.Warning,
-                                "[SchedulerDelegation] Can not OpenNodeByName, the node may not exist in the cluster, NodeName: {0}, {1}",
+                                "[HpcSchedulerDelegation] Can not OpenNodeByName, the node may not exist in the cluster, NodeName: {0}, {1}",
                                 nodes[0].Key,
                                 se);
                         }
@@ -753,7 +753,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
             catch (Exception e)
             {
-                string messageFormat = "[SchedulerDelegation] Failed to GetTaskAllocatedNodeName of task {0} in job {1}: {2}";
+                string messageFormat = "[HpcSchedulerDelegation] Failed to GetTaskAllocatedNodeName of task {0} in job {1}: {2}";
 
                 TraceHelper.TraceEvent(TraceEventType.Error, messageFormat, taskId, jobId, e);
 
@@ -773,14 +773,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         /// <param name="jobId">job id</param>
         /// <returns>list of the node name and location flag (on premise or not)</returns>
-        async Task<List<Tuple<string, bool>>> ISchedulerAdapterInternal.GetJobAllocatedNodeName(int jobId)
+        async Task<List<Tuple<string, bool>>> IHpcSchedulerAdapterInternal.GetJobAllocatedNodeName(int jobId)
         {
             ParamCheckUtility.ThrowIfOutofRange(jobId <= 0, "jobId");
 
             TraceHelper.TraceEvent(
                 jobId,
                 TraceEventType.Information,
-                "[SchedulerDelegation] GetJobAllocatedNodeName: Get AllocatedNodeName of job {0}.",
+                "[HpcSchedulerDelegation] GetJobAllocatedNodeName: Get AllocatedNodeName of job {0}.",
                 jobId);
 
             CheckBrokerAccess(jobId);
@@ -814,7 +814,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                                 TraceHelper.TraceEvent(
                                     jobId,
                                     TraceEventType.Verbose,
-                                    "[SchedulerDelegation] GetJobAllocatedNodeName: Get allocated node {0}",
+                                    "[HpcSchedulerDelegation] GetJobAllocatedNodeName: Get allocated node {0}",
                                     nodeName);
                             }
                         }
@@ -824,7 +824,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 TraceHelper.TraceEvent(
                     jobId,
                     TraceEventType.Verbose,
-                    "[SchedulerDelegation] GetJobAllocatedNodeName: Get {0} allocated nodes.",
+                    "[HpcSchedulerDelegation] GetJobAllocatedNodeName: Get {0} allocated nodes.",
                     nodes.Count);
 
                 List<Tuple<string, bool>> list = new List<Tuple<string, bool>>();
@@ -843,13 +843,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                         TraceHelper.TraceEvent(
                             jobId,
                             TraceEventType.Verbose,
-                            "[SchedulerDelegation] GetJobAllocatedNodeName: Allocated node {0} is {1}.",
+                            "[HpcSchedulerDelegation] GetJobAllocatedNodeName: Allocated node {0} is {1}.",
                             node.Name,
                             node.Location);
                     }
                     catch (Exception e)
                     {
-                        TraceHelper.TraceWarning(jobId, "[SchedulerDelegation] GetJobAllocatedNodeName: Failed to open node by name {0}: {1}", nodeName, e);
+                        TraceHelper.TraceWarning(jobId, "[HpcSchedulerDelegation] GetJobAllocatedNodeName: Failed to open node by name {0}: {1}", nodeName, e);
                         continue;
                     }
                 }
@@ -861,7 +861,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 TraceHelper.TraceEvent(
                     jobId,
                     TraceEventType.Error,
-                    "[SchedulerDelegation] GetJobAllocatedNodeName: Failed to get allocated nodes of job {0}: {1}",
+                    "[HpcSchedulerDelegation] GetJobAllocatedNodeName: Failed to get allocated nodes of job {0}: {1}",
                     jobId,
                     e);
 
@@ -873,9 +873,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// Get all the exist session id list
         /// </summary>
         /// <returns>session id list</returns>
-        async Task<List<int>> ISchedulerAdapterInternal.GetAllSessionId()
+        async Task<List<int>> IHpcSchedulerAdapterInternal.GetAllSessionId()
         {
-            TraceHelper.TraceEvent(TraceEventType.Information, "[SchedulerDelegation] GetAllSessionId");
+            TraceHelper.TraceEvent(TraceEventType.Information, "[HpcSchedulerDelegation] GetAllSessionId");
 
             this.CheckClusterAccess();
 
@@ -890,7 +890,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
             catch (Exception e)
             {
-                TraceHelper.TraceEvent(TraceEventType.Error, "[SchedulerDelegation] Failed to GetAllSessionId {0}", e);
+                TraceHelper.TraceEvent(TraceEventType.Error, "[HpcSchedulerDelegation] Failed to GetAllSessionId {0}", e);
                 throw;
             }
         }
@@ -899,7 +899,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// Get the broker node name list.
         /// </summary>
         /// <returns>Get the broker node name list.</returns>
-        async Task<List<string>> ISchedulerAdapterInternal.GetBrokerNodeName()
+        async Task<List<string>> IHpcSchedulerAdapterInternal.GetBrokerNodeName()
         {
             this.CheckClusterAccess();
             return await Task.FromResult(this.brokerNodesManager.GetAvailableBrokerNodeName());
@@ -910,10 +910,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         /// <param name="jobId">job Id of the session</param>
         /// <returns>broker node name</returns>
-        async Task<string> ISchedulerAdapterInternal.GetSessionBrokerNodeName(int jobId)
+        async Task<string> IHpcSchedulerAdapterInternal.GetSessionBrokerNodeName(int jobId)
         {
             ParamCheckUtility.ThrowIfOutofRange(jobId <= 0, "jobId");
-            TraceHelper.TraceEvent(TraceEventType.Information, "[SchedulerDelegation] GetSessionBrokerNodeName of job {0}.", jobId);
+            TraceHelper.TraceEvent(TraceEventType.Information, "[HpcSchedulerDelegation] GetSessionBrokerNodeName of job {0}.", jobId);
             CheckBrokerAccess(jobId);
 
             try
@@ -925,15 +925,15 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 string brokerNode = null;
                 if (!dic.TryGetValue(BrokerSettingsConstants.BrokerNode, out brokerNode))
                 {
-                    TraceHelper.TraceEvent(TraceEventType.Error, "[SchedulerDelegation] Can't get broker node name of session {0}", jobId);
+                    TraceHelper.TraceEvent(TraceEventType.Error, "[HpcSchedulerDelegation] Can't get broker node name of session {0}", jobId);
                 }
 
-                TraceHelper.TraceEvent(TraceEventType.Verbose, "[SchedulerDelegation] The broker node name of session {0} is {1}", jobId, brokerNode);
+                TraceHelper.TraceEvent(TraceEventType.Verbose, "[HpcSchedulerDelegation] The broker node name of session {0} is {1}", jobId, brokerNode);
                 return await Task.FromResult(brokerNode);
             }
             catch (Exception e)
             {
-                TraceHelper.TraceEvent(TraceEventType.Error, "[SchedulerDelegation] Failed to GetSessionBrokerNodeName of job {0}: {1}", jobId, e);
+                TraceHelper.TraceEvent(TraceEventType.Error, "[HpcSchedulerDelegation] Failed to GetSessionBrokerNodeName of job {0}: {1}", jobId, e);
                 throw;
             }
         }
@@ -943,10 +943,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         /// <param name="jobId">job id of the session</param>
         /// <returns>soa diag trace is enabled or disabled </returns>
-        bool ISchedulerAdapterInternal.IsDiagTraceEnabled(int jobId)
+        bool IHpcSchedulerAdapterInternal.IsDiagTraceEnabled(int jobId)
         {
             ParamCheckUtility.ThrowIfOutofRange(jobId <= 0, "jobId");
-            TraceHelper.TraceEvent(TraceEventType.Information, "[SchedulerDelegation] IsDiagTraceEnabled of job {0}.", jobId);
+            TraceHelper.TraceEvent(TraceEventType.Information, "[HpcSchedulerDelegation] IsDiagTraceEnabled of job {0}.", jobId);
             if (OperationContext.Current != null) // could be null for service call
             {
                 CheckBrokerAccess(jobId);
@@ -972,7 +972,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             {
                 TraceHelper.TraceEvent(
                     TraceEventType.Error,
-                    "[SchedulerDelegation] Failed to get DiagTraceEnabled property of job {0}: {1}",
+                    "[HpcSchedulerDelegation] Failed to get DiagTraceEnabled property of job {0}: {1}",
                     jobId,
                     e);
 
@@ -980,10 +980,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
         }
 
-        async Task ISchedulerAdapterInternal.SetJobProgressMessage(int jobid, string message)
+        async Task IHpcSchedulerAdapterInternal.SetJobProgressMessage(int jobid, string message)
         {
             ParamCheckUtility.ThrowIfOutofRange(jobid <= 0, "jobid");
-            TraceHelper.TraceEvent(TraceEventType.Information, "[SchedulerDelegation] SetJobProgressMessage of job {0}.", jobid);
+            TraceHelper.TraceEvent(TraceEventType.Information, "[HpcSchedulerDelegation] SetJobProgressMessage of job {0}.", jobid);
             CheckBrokerAccess(jobid);
 
             try
@@ -996,7 +996,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             {
                 TraceHelper.TraceEvent(
                     TraceEventType.Error,
-                    "[SchedulerDelegation] Failed to SetJobProgressMessage of job {0}: {1}",
+                    "[HpcSchedulerDelegation] Failed to SetJobProgressMessage of job {0}: {1}",
                     jobid,
                     e);
 
@@ -1011,10 +1011,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         /// <param name="propNames">customized property names</param>
         /// <returns>customized properties</returns>
-        async Task<Dictionary<string, string>> ISchedulerAdapterInternal.GetJobCustomizedProperties(int jobid, string[] propNames)
+        async Task<Dictionary<string, string>> IHpcSchedulerAdapterInternal.GetJobCustomizedProperties(int jobid, string[] propNames)
         {
             ParamCheckUtility.ThrowIfOutofRange(jobid <= 0, "jobId");
-            TraceHelper.TraceEvent(TraceEventType.Information, "[SchedulerDelegation] GetJobCustomizedProperties of job {0}.", jobid);
+            TraceHelper.TraceEvent(TraceEventType.Information, "[HpcSchedulerDelegation] GetJobCustomizedProperties of job {0}.", jobid);
             this.CheckClusterAccess();
 
             try
@@ -1026,7 +1026,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             {
                 TraceHelper.TraceEvent(
                     TraceEventType.Error,
-                    "[SchedulerDelegation] Failed to get customized properties of job {0}: {1}",
+                    "[HpcSchedulerDelegation] Failed to get customized properties of job {0}: {1}",
                     jobid,
                     e);
 
@@ -1039,10 +1039,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         /// <param name="jobid">the job id</param>
         /// <param name="reason">the reason string</param>
-        async Task ISchedulerAdapter.FinishJob(int jobid, string reason)
+        async Task IHpcSchedulerAdapter.FinishJob(int jobid, string reason)
         {
             ParamCheckUtility.ThrowIfOutofRange(jobid <= 0, "jobid");
-            TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[SchedulerDelegation] Finish job: {0}", reason);
+            TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[HpcSchedulerDelegation] Finish job: {0}", reason);
             CheckBrokerAccess(jobid);
 
             try
@@ -1067,7 +1067,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 ISchedulerJob job = null;
                 if (entry != null)
                 {
-                    TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[SchedulerDelegation] Finish job: find and close the job monitor entry");
+                    TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[HpcSchedulerDelegation] Finish job: find and close the job monitor entry");
                     job = entry.SchedulerJob;
                     entry.Exit -= new EventHandler(JobMonitorEntry_Exit);
                     entry.Close();
@@ -1076,7 +1076,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 // the job in the Monitor can be null, so open it via scheduler
                 if (job == null)
                 {
-                    TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[SchedulerDelegation] Finish job: job is null, so open the job via the scheduler");
+                    TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[HpcSchedulerDelegation] Finish job: job is null, so open the job via the scheduler");
                     job = this.scheduler.OpenJob(jobid) as ISchedulerJob;
                     Debug.Assert(job != null);
                 }
@@ -1087,7 +1087,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
             catch (Exception e)
             {
-                TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[SchedulerDelegation] Finish job failed: {0}", e);
+                TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[HpcSchedulerDelegation] Finish job failed: {0}", e);
                 lock (this.JobMonitors)
                 {
                     this.finishingJobs.Remove(jobid);
@@ -1102,9 +1102,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         /// <param name="jobid">the job id</param>
         /// <param name="reason">the reason string</param>
-        async Task ISchedulerAdapterInternal.FailJob(int jobid, string reason)
+        async Task IHpcSchedulerAdapterInternal.FailJob(int jobid, string reason)
         {
-            await ((ISchedulerAdapter)this).FailJob(jobid, reason);
+            await ((IHpcSchedulerAdapter)this).FailJob(jobid, reason);
         }
 
         /// <summary>
@@ -1112,7 +1112,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         /// <param name="jobid">the job id</param>
         /// <param name="reason">the reason string</param>
-        async Task ISchedulerAdapter.FailJob(int jobid, string reason)
+        async Task IHpcSchedulerAdapter.FailJob(int jobid, string reason)
         {
             ParamCheckUtility.ThrowIfOutofRange(jobid <= 0, "jobid");
             CheckBrokerAccess(jobid);
@@ -1146,7 +1146,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
                 if (job == null)
                 {
-                    TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[SchedulerDelegation] FailJob: invalid job id");
+                    TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[HpcSchedulerDelegation] FailJob: invalid job id");
                 }
                 else
                 {
@@ -1155,7 +1155,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
             catch (Exception e)
             {
-                TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[SchedulerDelegation] FailJob failed: {0}", e);
+                TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[HpcSchedulerDelegation] FailJob failed: {0}", e);
                 throw;
             }
 
@@ -1167,9 +1167,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         /// <param name="jobid">the job id</param>
         /// <param name="reason">he reason string</param>
-        async Task ISchedulerAdapter.RequeueOrFailJob(int jobid, string reason)
+        async Task IHpcSchedulerAdapter.RequeueOrFailJob(int jobid, string reason)
         {
-            TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[SchedulerDelegation] Requeue or fail job: reason = {0}", reason);
+            TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[HpcSchedulerDelegation] Requeue or fail job: reason = {0}", reason);
             CheckBrokerAccess(jobid);
 
             try
@@ -1180,7 +1180,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 {
                     if (!this.JobMonitors.TryGetValue(jobid, out entry))
                     {
-                        TraceHelper.TraceEvent(jobid, TraceEventType.Warning, "[SchedulerDelegation] Requeue or fail job: job not found");
+                        TraceHelper.TraceEvent(jobid, TraceEventType.Warning, "[HpcSchedulerDelegation] Requeue or fail job: job not found");
                         return;
                     }
                 }
@@ -1191,7 +1191,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 // If the job is not running, leave it as it is
                 if (job.State != JobState.Running)
                 {
-                    TraceHelper.TraceInfo(jobid, "[SchedulerDelegation] Do not requeue or fail service job because the job is not running. It might has already been requeued by scheduler.");
+                    TraceHelper.TraceInfo(jobid, "[HpcSchedulerDelegation] Do not requeue or fail service job because the job is not running. It might has already been requeued by scheduler.");
                     return;
                 }
 
@@ -1200,7 +1200,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 if (requeueCount >= this.maxRequeueCount)
                 {
                     // Fail job
-                    TraceHelper.TraceEvent(jobid, TraceEventType.Warning, "[SchedulerDelegation] Fail job as requeue count reaches threshold");
+                    TraceHelper.TraceEvent(jobid, TraceEventType.Warning, "[HpcSchedulerDelegation] Fail job as requeue count reaches threshold");
                     bool removed = false;
                     lock (this.JobMonitors)
                     {
@@ -1217,7 +1217,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 else
                 {
                     // requeue job
-                    TraceHelper.TraceEvent(jobid, TraceEventType.Warning, "[SchedulerDelegation] Requeue job. Requeue count = {0}", requeueCount);
+                    TraceHelper.TraceEvent(jobid, TraceEventType.Warning, "[HpcSchedulerDelegation] Requeue job. Requeue count = {0}", requeueCount);
 
                     // indicate job's JobMonitorEntry that it is entering a requeue phase
                     if (entry.PrepareForRequeueJob())
@@ -1253,7 +1253,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                                     }
                                     catch(Exception e)
                                     {
-                                        TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[SchedulerDelegation] Failed to query task info: {0}", e);
+                                        TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[HpcSchedulerDelegation] Failed to query task info: {0}", e);
                                     }
                                 }
                             },
@@ -1265,7 +1265,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
                         if (!this.requeueJobRetryTimers.TryAdd(jobid, timer))
                         {
-                            TraceHelper.TraceEvent(jobid, TraceEventType.Warning, "[SchedulerDelegation] Failed to add the requeue job retry timer for job: {0}", jobid);
+                            TraceHelper.TraceEvent(jobid, TraceEventType.Warning, "[HpcSchedulerDelegation] Failed to add the requeue job retry timer for job: {0}", jobid);
                             timer.Dispose();
                         }
                         else
@@ -1277,7 +1277,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
             catch (Exception e)
             {
-                TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[SchedulerDelegation] Cancel job failed: {0}", e);
+                TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[HpcSchedulerDelegation] Cancel job failed: {0}", e);
                 throw;
             }
 
@@ -1290,7 +1290,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <param name="jobid">the job id</param>
         /// <param name="nodeName">name of the node to be excluded</param>
         /// <returns>true if the node is successfully excluded, or the job is failed. false otherwise</returns>
-        async Task<bool> ISchedulerAdapter.ExcludeNode(int jobid, string nodeName)
+        async Task<bool> IHpcSchedulerAdapter.ExcludeNode(int jobid, string nodeName)
         {
             CheckBrokerAccess(jobid);
 
@@ -1310,42 +1310,42 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 StringCollection excludeNodes = new StringCollection();
                 excludeNodes.Add(nodeName);
                 job.AddExcludedNodes(excludeNodes);
-                TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[SchedulerDelegation] Node = {0} excluded.", nodeName);
+                TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[HpcSchedulerDelegation] Node = {0} excluded.", nodeName);
                 return await Task.FromResult(true);
             }
             catch (SchedulerException e)
             {
                 if (e.Code == ErrorCode.Operation_ExcludedRequiredNode)
                 {
-                    TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[SchedulerDelegation] Node = {0} is required node. Deltail: exception = {1}", nodeName, e);
+                    TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[HpcSchedulerDelegation] Node = {0} is required node. Deltail: exception = {1}", nodeName, e);
 
                     // Requeue or fail the job if the node is a required node
                     // TODO: localize reason string
-                    await ((ISchedulerAdapter)this).RequeueOrFailJob(jobid, "Service on required node is failed");
+                    await ((IHpcSchedulerAdapter)this).RequeueOrFailJob(jobid, "Service on required node is failed");
                     return true;
                 }
                 else if (e.Code == ErrorCode.Operation_ExcludedTooManyNodes)
                 {
-                    TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[SchedulerDelegation] Job's min cannot be met when excluding node = {0}. Detail: exception = {1}", nodeName, e);
+                    TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[HpcSchedulerDelegation] Job's min cannot be met when excluding node = {0}. Detail: exception = {1}", nodeName, e);
 
                     // Requeue or fail the job if job's min cannot be met
                     // TODO: localize reason string
-                    await ((ISchedulerAdapter)this).RequeueOrFailJob(jobid, "Job's min cannot be met due to service failure");
+                    await ((IHpcSchedulerAdapter)this).RequeueOrFailJob(jobid, "Job's min cannot be met due to service failure");
                     return true;
                 }
                 else if (e.Code == ErrorCode.Operation_ExcludedNodeListTooLong)
                 {
-                    TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[SchedulerDelegation] ExcludedNodes list is too long when excluding node ={0}. Detail: {1}", nodeName, e);
+                    TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[HpcSchedulerDelegation] ExcludedNodes list is too long when excluding node ={0}. Detail: {1}", nodeName, e);
 
                     // Requeue or fail the job if job's ExcludedNodes list is too long
                     // TODO: localize reason string
-                    await ((ISchedulerAdapter)this).RequeueOrFailJob(jobid, "Job's ExcludedNodes list is too long");
+                    await ((IHpcSchedulerAdapter)this).RequeueOrFailJob(jobid, "Job's ExcludedNodes list is too long");
                     return true;
                 }
                 else
                 {
                     // for all other exception
-                    TraceHelper.TraceEvent(jobid, TraceEventType.Warning, "[SchedulerDelegation] Exclude node = {0} failed: {1}", nodeName, e);
+                    TraceHelper.TraceEvent(jobid, TraceEventType.Warning, "[HpcSchedulerDelegation] Exclude node = {0} failed: {1}", nodeName, e);
                     return false;
                 }
 
@@ -1353,7 +1353,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
             catch (Exception e)
             {
-                TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[SchedulerDelegation] Exclude node = {0} failed: {1}", nodeName, e);
+                TraceHelper.TraceEvent(jobid, TraceEventType.Error, "[HpcSchedulerDelegation] Exclude node = {0} failed: {1}", nodeName, e);
                 return false;
             }
         }
@@ -1363,10 +1363,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         /// <param name="jobid">the job id</param>
         /// <param name="taskUniqueId">the task unique id</param>
-        async Task<bool> ISchedulerAdapter.FinishTask(int jobid, int taskUniqueId)
+        async Task<bool> IHpcSchedulerAdapter.FinishTask(int jobid, int taskUniqueId)
         {
             CheckBrokerAccess(jobid);
-            TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[SchedulerDelegation] .FinishTask: start to finish task {0} of job {1} by broker.", taskUniqueId, jobid);
+            TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[HpcSchedulerDelegation] .FinishTask: start to finish task {0} of job {1} by broker.", taskUniqueId, jobid);
 
             try
             {
@@ -1376,7 +1376,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 {
                     if (!this.JobMonitors.TryGetValue(jobid, out entry))
                     {
-                        TraceHelper.TraceEvent(jobid, TraceEventType.Warning, "[SchedulerDelegation] .FinishTask: Failed to finish {0} because cannot find the job entry.", taskUniqueId);
+                        TraceHelper.TraceEvent(jobid, TraceEventType.Warning, "[HpcSchedulerDelegation] .FinishTask: Failed to finish {0} because cannot find the job entry.", taskUniqueId);
                         return true;
                     }
                 }
@@ -1389,7 +1389,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                         var state = job.EndFinishTask(ar);
 
                         // Here we don't check the final state, as when call back, the state should be in one of an end state.
-                        TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[SchedulerDelegation] .FinishTask: task {0} finish by broker, final state {1}.", taskUniqueId, state);
+                        TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[HpcSchedulerDelegation] .FinishTask: task {0} finish by broker, final state {1}.", taskUniqueId, state);
                     },
                     taskUniqueId,
                     "Finished by broker",
@@ -1402,22 +1402,22 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             {
                 if (se.Code == ErrorCode.Operation_InvalidTaskId)
                 {
-                    TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[SchedulerDelegation] .FinishTask: task {0} cannot be found.", taskUniqueId);
+                    TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[HpcSchedulerDelegation] .FinishTask: task {0} cannot be found.", taskUniqueId);
                     return true;
                 }
                 else if (se.Code == ErrorCode.Operation_InvalidCancelTaskState)
                 {
-                    TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[SchedulerDelegation] .FinishTask: task {0} is not in a state that can be cancelled.", taskUniqueId);
+                    TraceHelper.TraceEvent(jobid, TraceEventType.Information, "[HpcSchedulerDelegation] .FinishTask: task {0} is not in a state that can be cancelled.", taskUniqueId);
                     return true;
                 }
 
-                TraceHelper.TraceEvent(jobid, TraceEventType.Warning, "[SchedulerDelegation] .FinishTask: Task Id {0}, Failed with exception {1}", taskUniqueId, se);
+                TraceHelper.TraceEvent(jobid, TraceEventType.Warning, "[HpcSchedulerDelegation] .FinishTask: Task Id {0}, Failed with exception {1}", taskUniqueId, se);
                 return false;
             }
             catch (Exception e)
             {
                 // for all other exception
-                TraceHelper.TraceEvent(jobid, TraceEventType.Warning, "[SchedulerDelegation] .FinishTask: Task Id {0}, Failed with exception {1}", taskUniqueId, e);
+                TraceHelper.TraceEvent(jobid, TraceEventType.Warning, "[HpcSchedulerDelegation] .FinishTask: Task Id {0}, Failed with exception {1}", taskUniqueId, e);
                 return false;
                 // TODO: handle scheduler busy exception and retry!
             }
@@ -1428,9 +1428,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         /// <param name="jobTemplate">indicating job template</param>
         /// <returns>user's sid</returns>
-        async Task<string> ISchedulerAdapterInternal.GetJobTemlpateACL(string jobTemplate)
+        async Task<string> IHpcSchedulerAdapterInternal.GetJobTemlpateACL(string jobTemplate)
         {
-            TraceHelper.TraceEvent(TraceEventType.Information, "[SchedulerDelegation] Get job template ACL, Template = {0}", jobTemplate);
+            TraceHelper.TraceEvent(TraceEventType.Information, "[HpcSchedulerDelegation] Get job template ACL, Template = {0}", jobTemplate);
             CheckBrokerAccess(0);
 
             if (string.IsNullOrEmpty(jobTemplate))
@@ -1445,7 +1445,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
             catch (Exception e)
             {
-                TraceHelper.TraceEvent(TraceEventType.Error, "[SchedulerDelegation] Failed to get job template ACL: {0}", e);
+                TraceHelper.TraceEvent(TraceEventType.Error, "[HpcSchedulerDelegation] Failed to get job template ACL: {0}", e);
                 throw;
             }
         }
@@ -1457,9 +1457,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <param name="jobId">job id</param>
         /// <param name="globalTaskId">unique task id</param>
         /// <returns>return error code value if it exists, otherwise return null</returns>
-        async Task<int?> ISchedulerAdapter.GetTaskErrorCode(int jobId, int globalTaskId)
+        async Task<int?> IHpcSchedulerAdapter.GetTaskErrorCode(int jobId, int globalTaskId)
         {
-            TraceHelper.TraceEvent(TraceEventType.Information, "[SchedulerDelegation] Get task error code for job {0}, TaskId = {1}", jobId, globalTaskId);
+            TraceHelper.TraceEvent(TraceEventType.Information, "[HpcSchedulerDelegation] Get task error code for job {0}, TaskId = {1}", jobId, globalTaskId);
             CheckBrokerAccess(jobId);
             int? exitcode = null;
 
@@ -1499,9 +1499,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <param name="targetFolder">indicating the target folder to put the dumped file</param>
         /// <param name="logName">indicating the log name</param>
         /// <returns>returns the dumped file name</returns>
-        async Task<string> ISchedulerAdapterInternal.DumpEventLog(string targetFolder, string logName)
+        async Task<string> IHpcSchedulerAdapterInternal.DumpEventLog(string targetFolder, string logName)
         {
-            TraceHelper.TraceEvent(TraceEventType.Information, "[SchedulerDelegation] Dump event logs: TargetFolder = {0}, LogName = {1}", targetFolder, logName);
+            TraceHelper.TraceEvent(TraceEventType.Information, "[HpcSchedulerDelegation] Dump event logs: TargetFolder = {0}, LogName = {1}", targetFolder, logName);
 
             string targetFileName = Path.Combine(
                 targetFolder,
@@ -1518,7 +1518,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
             catch (Exception e)
             {
-                TraceHelper.TraceError(0, "[SchedulerDelegation] Failed to dump event logs. TargetFile = {0}, LogName = {1}, Exception = {2}", targetFileName, logName, e);
+                TraceHelper.TraceError(0, "[HpcSchedulerDelegation] Failed to dump event logs. TargetFile = {0}, LogName = {1}, Exception = {2}", targetFileName, logName, e);
 
                 try
                 {
@@ -1529,7 +1529,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 }
                 catch (Exception ex)
                 {
-                    TraceHelper.TraceError(0, "[SchedulerDelegation] Failed to cleanup temp file {0}: {1}", targetFileName, ex);
+                    TraceHelper.TraceError(0, "[HpcSchedulerDelegation] Failed to cleanup temp file {0}: {1}", targetFileName, ex);
                 }
 
                 throw;
@@ -1544,9 +1544,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// key: session Id
         /// value: requeue count
         /// </returns>
-        async Task<Dictionary<int, int>> ISchedulerAdapterInternal.GetNonTerminatedSession()
+        async Task<Dictionary<int, int>> IHpcSchedulerAdapterInternal.GetNonTerminatedSession()
         {
-            TraceHelper.TraceEvent(TraceEventType.Information, "[SchedulerDelegation] GetNonTerminatedSession");
+            TraceHelper.TraceEvent(TraceEventType.Information, "[HpcSchedulerDelegation] GetNonTerminatedSession");
 
             this.CheckBrokerAccess(0);
 
@@ -1593,7 +1593,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
             catch (Exception e)
             {
-                TraceHelper.TraceEvent(TraceEventType.Error, "[SchedulerDelegation] Failed to GetNonTerminatedSession {0}", e);
+                TraceHelper.TraceEvent(TraceEventType.Error, "[HpcSchedulerDelegation] Failed to GetNonTerminatedSession {0}", e);
                 throw;
             }
         }
@@ -1603,10 +1603,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         /// <param name="jobid">job id</param>
         /// <returns>requeue count</returns>
-        async Task<int> ISchedulerAdapterInternal.GetJobRequeueCount(int jobid)
+        async Task<int> IHpcSchedulerAdapterInternal.GetJobRequeueCount(int jobid)
         {
             ParamCheckUtility.ThrowIfOutofRange(jobid <= 0, "jobId");
-            TraceHelper.TraceEvent(TraceEventType.Information, "[SchedulerDelegation] GetJobRequeueCount of job {0}.", jobid);
+            TraceHelper.TraceEvent(TraceEventType.Information, "[HpcSchedulerDelegation] GetJobRequeueCount of job {0}.", jobid);
             this.CheckBrokerAccess(jobid);
 
             try
@@ -1617,7 +1617,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             {
                 TraceHelper.TraceEvent(
                     TraceEventType.Error,
-                    "[SchedulerDelegation] Failed to get requeue count of job {0}: {1}",
+                    "[HpcSchedulerDelegation] Failed to get requeue count of job {0}: {1}",
                     jobid,
                     e);
 
@@ -1632,7 +1632,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <param name="plannedCoreCount">the maximum count of cores that the job can have.</param>
         /// <param name="taskIds">a list of task ids of which the resources can be preempted.</param>
         /// <returns>returns a value indicating whether the operation succeeded</returns>
-        async Task<(bool succeed, BalanceInfo balanceInfo, List<int> taskIds, List<int> runningTaskIds)> ISchedulerAdapter.GetGracefulPreemptionInfo(int jobId)
+        async Task<(bool succeed, BalanceInfo balanceInfo, List<int> taskIds, List<int> runningTaskIds)> IHpcSchedulerAdapter.GetGracefulPreemptionInfo(int jobId)
         {
             bool succeed = false;
             BalanceInfo balanceInfo;
@@ -1642,17 +1642,17 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             try
             {
                 var job = this.scheduler.OpenJob(jobId);
-                TraceHelper.TraceInfo(jobId, "[SchedulerDelegation].GetGracefulPreemptionInfo: Job opened {0}", job != null);
+                TraceHelper.TraceInfo(jobId, "[HpcSchedulerDelegation].GetGracefulPreemptionInfo: Job opened {0}", job != null);
 
                 bool jobOnHold = job.HoldUntil > DateTime.UtcNow;
 
                 if (job.GetBalanceRequest(out var balanceRequests))
                 {
-                    TraceHelper.TraceInfo(jobId, "[SchedulerDelegation].GetGracefulPreemptionInfo: Job is using fast balancing mode. hold until: {0}", jobOnHold);
+                    TraceHelper.TraceInfo(jobId, "[HpcSchedulerDelegation].GetGracefulPreemptionInfo: Job is using fast balancing mode. hold until: {0}", jobOnHold);
                     balanceInfo = BalanceInfoHpcFactory.FromBalanceRequests(balanceRequests);
                     if (jobOnHold)
                     {
-                        TraceHelper.TraceInfo(jobId, "[SchedulerDelegation].GetGracefulPreemptionInfo: Job is on hold until {0}. Set allowed core count in all request to 0.", job.HoldUntil);
+                        TraceHelper.TraceInfo(jobId, "[HpcSchedulerDelegation].GetGracefulPreemptionInfo: Job is on hold until {0}. Set allowed core count in all request to 0.", job.HoldUntil);
                         foreach (var request in balanceInfo.BalanceRequests)
                         {
                             request.AllowedCoreCount = 0;
@@ -1665,7 +1665,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 {
                     if (jobOnHold)
                     {
-                        TraceHelper.TraceInfo(jobId, "[SchedulerDelegation].GetGracefulPreemptionInfo: Job is on hold until {0}", job.HoldUntil);
+                        TraceHelper.TraceInfo(jobId, "[HpcSchedulerDelegation].GetGracefulPreemptionInfo: Job is on hold until {0}", job.HoldUntil);
                         balanceInfo = new BalanceInfo(0);
                     }
                     else
@@ -1682,10 +1682,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     taskPropertyIds.AddPropertyId(TaskPropertyIds.ExitIfPossible);
                     using (var rowSet = job.OpenTaskRowSet(taskPropertyIds, filterRunning, null, true))
                     {
-                        TraceHelper.TraceInfo(jobId, "[SchedulerDelegation].GetGracefulPreemptionInfo: rowset opened {0}", rowSet != null);
+                        TraceHelper.TraceInfo(jobId, "[HpcSchedulerDelegation].GetGracefulPreemptionInfo: rowset opened {0}", rowSet != null);
 
                         var rows = rowSet.GetRows(0, rowSet.GetCount() - 1);
-                        TraceHelper.TraceInfo(jobId, "[SchedulerDelegation].GetGracefulPreemptionInfo: rows opened {0}, rows.Rows not null {1}", rows != null, rows.Rows != null);
+                        TraceHelper.TraceInfo(jobId, "[HpcSchedulerDelegation].GetGracefulPreemptionInfo: rows opened {0}, rows.Rows not null {1}", rows != null, rows.Rows != null);
 
                         if (rows.Rows != null)
                         {
@@ -1699,7 +1699,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                                     {
                                         if ((bool)value)
                                         {
-                                            TraceHelper.TraceInfo(jobId, "[SchedulerDelegation].GetGracefulPreemptionInfo: exit if possible is true for task {0}. Added to the list.", id);
+                                            TraceHelper.TraceInfo(jobId, "[HpcSchedulerDelegation].GetGracefulPreemptionInfo: exit if possible is true for task {0}. Added to the list.", id);
 
                                             taskIds.Add(id);
                                         }
@@ -1710,13 +1710,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                                     }
                                     else
                                     {
-                                        TraceHelper.TraceInfo(jobId, "[SchedulerDelegation].GetGracefulPreemptionInfo: exit if possible is null for task {0}. Exiting with false return value.", id);
+                                        TraceHelper.TraceInfo(jobId, "[HpcSchedulerDelegation].GetGracefulPreemptionInfo: exit if possible is null for task {0}. Exiting with false return value.", id);
                                         return (false, balanceInfo, taskIds, runningTaskIds);
                                     }
                                 }
                                 else
                                 {
-                                    TraceHelper.TraceInfo(jobId, "[SchedulerDelegation].GetGracefulPreemptionInfo: job on hold for task {0}. Added to the list.", id);
+                                    TraceHelper.TraceInfo(jobId, "[HpcSchedulerDelegation].GetGracefulPreemptionInfo: job on hold for task {0}. Added to the list.", id);
                                     taskIds.Add(id);
                                 }
                             }
@@ -1777,7 +1777,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             ISchedulerJob job = (ISchedulerJob)obj;
             Debug.Assert(job != null);
             int jobId = job.Id;
-            TraceHelper.TraceEvent(jobId, TraceEventType.Information, "[SchedulerDelegation] Callback to finish service job {0}.", jobId);
+            TraceHelper.TraceEvent(jobId, TraceEventType.Information, "[HpcSchedulerDelegation] Callback to finish service job {0}.", jobId);
 
             int retry = 3;
             while (retry > 0)
@@ -1786,19 +1786,19 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 {
                     if (job.State == JobState.Canceled || job.State == JobState.Finished || job.State == JobState.Finishing || job.State == JobState.Failed)
                     {
-                        TraceHelper.TraceEvent(jobId, TraceEventType.Warning, "[SchedulerDelegation] Cannot finish service job because service job is already in {0} state.", job.State);
+                        TraceHelper.TraceEvent(jobId, TraceEventType.Warning, "[HpcSchedulerDelegation] Cannot finish service job because service job is already in {0} state.", job.State);
                         break;
                     }
 
                     //todo: (qingzhi) can't specify message
                     job.Finish();
                     NotifyJobFinished(job);
-                    TraceHelper.TraceEvent(jobId, TraceEventType.Information, "[SchedulerDelegation] Successfully finished service job.");
+                    TraceHelper.TraceEvent(jobId, TraceEventType.Information, "[HpcSchedulerDelegation] Successfully finished service job.");
                     break;
                 }
                 catch (SchedulerException ex)
                 {
-                    TraceHelper.TraceEvent(jobId, TraceEventType.Error, "[SchedulerDelegation] Failed to finish service job: {0}", ex);
+                    TraceHelper.TraceEvent(jobId, TraceEventType.Error, "[HpcSchedulerDelegation] Failed to finish service job: {0}", ex);
                 }
                 finally
                 {
@@ -1826,14 +1826,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             t.Stop();
             int jobId = t.JobId;
             t.Count++;
-            TraceHelper.TraceEvent(jobId, TraceEventType.Information, "[SchedulerDelegation] Enter RequeueServiceJobSteps for job {0} step {1} try count {2} at {3}.", jobId, t.CurrentAction + 1, t.Count, e.SignalTime);
+            TraceHelper.TraceEvent(jobId, TraceEventType.Information, "[HpcSchedulerDelegation] Enter RequeueServiceJobSteps for job {0} step {1} try count {2} at {3}.", jobId, t.CurrentAction + 1, t.Count, e.SignalTime);
             try
             {
                 t.ActionList[t.CurrentAction].Invoke();
             }
             catch (Exception ex)
             {
-                TraceHelper.TraceEvent(jobId, TraceEventType.Error, "[SchedulerDelegation] Failed to requeue service job: {0}", ex);
+                TraceHelper.TraceEvent(jobId, TraceEventType.Error, "[HpcSchedulerDelegation] Failed to requeue service job: {0}", ex);
                 try
                 {
                     //reset the timer to retry this step
@@ -1844,12 +1844,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     }
                     else
                     {
-                        TraceHelper.TraceEvent(jobId, TraceEventType.Error, "[SchedulerDelegation] Failed to requeue service job after retries.");
+                        TraceHelper.TraceEvent(jobId, TraceEventType.Error, "[HpcSchedulerDelegation] Failed to requeue service job after retries.");
                     }
                 }
                 catch (Exception exc)
                 {
-                    TraceHelper.TraceEvent(jobId, TraceEventType.Error, "[SchedulerDelegation] Failed to reset the timer: {0}", exc);
+                    TraceHelper.TraceEvent(jobId, TraceEventType.Error, "[HpcSchedulerDelegation] Failed to reset the timer: {0}", exc);
                 }
                 return;
             }
@@ -1871,13 +1871,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     RetryTimer timer;
                     if (!requeueJobRetryTimers.TryRemove(jobId, out timer))
                     {
-                        TraceHelper.TraceEvent(jobId, TraceEventType.Error, "[SchedulerDelegation] Failed to remove the timer for job: {0}", jobId);
+                        TraceHelper.TraceEvent(jobId, TraceEventType.Error, "[HpcSchedulerDelegation] Failed to remove the timer for job: {0}", jobId);
                     }
                 }
             }
             catch (Exception ex)
             {
-                TraceHelper.TraceEvent(jobId, TraceEventType.Error, "[SchedulerDelegation] Failed to reset the timer for the next step or failed to stop and remove the timer: {0}", ex);
+                TraceHelper.TraceEvent(jobId, TraceEventType.Error, "[HpcSchedulerDelegation] Failed to reset the timer for the next step or failed to stop and remove the timer: {0}", ex);
             }
         }
 
@@ -1895,7 +1895,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
         internal static void FailJob(IScheduler scheduler, ISchedulerJob job, string reason)
         {
-            TraceHelper.TraceEvent(job.Id, TraceEventType.Information, "[SchedulerDelegation] Fail job: reason = {0}", reason);
+            TraceHelper.TraceEvent(job.Id, TraceEventType.Information, "[HpcSchedulerDelegation] Fail job: reason = {0}", reason);
             FailJobInternal(scheduler, job, reason);
         }
 
@@ -1906,7 +1906,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <param name="reason">the reason string</param>
         private void FailJob(ISchedulerJob job, string reason)
         {
-            TraceHelper.TraceEvent(job.Id, TraceEventType.Information, "[SchedulerDelegation] Fail job: reason = {0}", reason);
+            TraceHelper.TraceEvent(job.Id, TraceEventType.Information, "[HpcSchedulerDelegation] Fail job: reason = {0}", reason);
             ThreadPool.QueueUserWorkItem(this.CallbackToFailServiceJob, new object[] { job, reason });
         }
 
@@ -1939,7 +1939,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     case JobState.Finished:
                     case JobState.Canceled:
                     case JobState.Failed:
-                        TraceHelper.TraceEvent(jobId, TraceEventType.Error, "[SchedulerDelegation] Cannot fail a service job in {0} state.", job.State);
+                        TraceHelper.TraceEvent(jobId, TraceEventType.Error, "[HpcSchedulerDelegation] Cannot fail a service job in {0} state.", job.State);
                         break;
                     case JobState.Running:
                         // fail job
@@ -1950,7 +1950,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                         break;
                     default:
                         // cancel job
-                        TraceHelper.TraceEvent(jobId, TraceEventType.Warning, "[SchedulerDelegation] Cannot fail a service job in {0} state. Cancel it.", job.State);
+                        TraceHelper.TraceEvent(jobId, TraceEventType.Warning, "[HpcSchedulerDelegation] Cannot fail a service job in {0} state. Cancel it.", job.State);
                         scheduler.CancelJob(jobId, string.Format("Failed.  Trying to fail a service job in {0} state with reason: {1}.", job.State, reason));
                         break;
                 }
@@ -1959,11 +1959,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
             catch (SchedulerException e)
             {
-                TraceHelper.TraceEvent(jobId, TraceEventType.Error, "[SchedulerDelegation] Failed to fail service job: {0}", e);
+                TraceHelper.TraceEvent(jobId, TraceEventType.Error, "[HpcSchedulerDelegation] Failed to fail service job: {0}", e);
             }
             catch (Exception e)
             {
-                TraceHelper.TraceEvent(jobId, TraceEventType.Error, "[SchedulerDelegation] Failed to fail service job: {0}", e);
+                TraceHelper.TraceEvent(jobId, TraceEventType.Error, "[HpcSchedulerDelegation] Failed to fail service job: {0}", e);
             }
         }
 
@@ -1984,7 +1984,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 {
                     TraceHelper.TraceEvent(jobId,
                         TraceEventType.Verbose,
-                        "[SchedulerDelegation] .UpdateSoaRelatedProperties: Job custom property {0}={1}",
+                        "[HpcSchedulerDelegation] .UpdateSoaRelatedProperties: Job custom property {0}={1}",
                         pair.Key,
                         pair.Value);
 
@@ -1996,7 +1996,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
                             TraceHelper.TraceEvent(jobId,
                                 TraceEventType.Verbose,
-                                "[SchedulerDelegation] .UpdateSoaRelatedProperties: Call SetCustomProperty to set job custom property {0}={1}",
+                                "[HpcSchedulerDelegation] .UpdateSoaRelatedProperties: Call SetCustomProperty to set job custom property {0}={1}",
                                 pair.Key,
                                 pair.Value);
                         }
@@ -2035,7 +2035,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
                                         TraceHelper.TraceEvent(jobId,
                                             TraceEventType.Verbose,
-                                            "[SchedulerDelegation] .UpdateSoaRelatedProperties: Call SetCustomProperty to set job custom property {0}={1}",
+                                            "[HpcSchedulerDelegation] .UpdateSoaRelatedProperties: Call SetCustomProperty to set job custom property {0}={1}",
                                             pair.Key,
                                             pair.Value);
                                     }
@@ -2053,12 +2053,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 try
                 {
                     schedulerJob.Commit();
-                    TraceHelper.TraceEvent(jobId, TraceEventType.Information, "[SchedulerDelegation] .UpdateSoaRelatedProperties: Commit service job.");
+                    TraceHelper.TraceEvent(jobId, TraceEventType.Information, "[HpcSchedulerDelegation] .UpdateSoaRelatedProperties: Commit service job.");
                     break;
                 }
                 catch (Exception e)
                 {
-                    TraceHelper.TraceEvent(jobId, TraceEventType.Warning, "[SchedulerDelegation] Failed to commit service job property change: {0}\nRetryCount = {1}", e, retry);
+                    TraceHelper.TraceEvent(jobId, TraceEventType.Warning, "[HpcSchedulerDelegation] Failed to commit service job property change: {0}\nRetryCount = {1}", e, retry);
                 }
                 finally
                 {
@@ -2095,7 +2095,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                         {
                             TraceHelper.TraceEvent(jobId,
                                 TraceEventType.Verbose,
-                                "[SchedulerDelegation] .CheckSoaRelatedProperties: Job custom property {0} is missed.",
+                                "[HpcSchedulerDelegation] .CheckSoaRelatedProperties: Job custom property {0} is missed.",
                                 pair.Key);
 
                             // don't break here, in order to log all the missed props
@@ -2104,7 +2104,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                         {
                             TraceHelper.TraceEvent(jobId,
                                TraceEventType.Verbose,
-                               "[SchedulerDelegation] .CheckSoaRelatedProperties: Job custom property {0} exists.",
+                               "[HpcSchedulerDelegation] .CheckSoaRelatedProperties: Job custom property {0} exists.",
                                pair.Key);
                         }
                     }
@@ -2125,14 +2125,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                                 {
                                     TraceHelper.TraceEvent(jobId,
                                         TraceEventType.Verbose,
-                                        "[SchedulerDelegation] .CheckSoaRelatedProperties: Job custom property {0} is missed.",
+                                        "[HpcSchedulerDelegation] .CheckSoaRelatedProperties: Job custom property {0} is missed.",
                                         pair.Key);
                                 }
                                 else
                                 {
                                     TraceHelper.TraceEvent(jobId,
                                        TraceEventType.Verbose,
-                                       "[SchedulerDelegation] .CheckSoaRelatedProperties: Job custom property {0} exists.",
+                                       "[HpcSchedulerDelegation] .CheckSoaRelatedProperties: Job custom property {0} exists.",
                                        pair.Key);
                                 }
 
@@ -2165,7 +2165,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     return durable;
                 }
 
-                TraceHelper.TraceError(0, "[SchedulerDelegation] .IsDurableSessionJob: failed to parse durable attribute, value = {0}", strDurable);
+                TraceHelper.TraceError(0, "[HpcSchedulerDelegation] .IsDurableSessionJob: failed to parse durable attribute, value = {0}", strDurable);
             }
 
             return false;
@@ -2268,7 +2268,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
 
             string userName = identity == null ? "Anonymous" : identity.Name;
-            TraceHelper.TraceError(0, "[SchedulerDelegation] Unauthorized user: {0}", userName);
+            TraceHelper.TraceError(0, "[HpcSchedulerDelegation] Unauthorized user: {0}", userName);
             throw new AuthenticationException(String.Format(CultureInfo.InvariantCulture, "Unauthorized user: {0}", userName));
         }
 
@@ -2308,7 +2308,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
 
             string userName = identity == null ? "Anonymous" : identity.Name;
-            TraceHelper.TraceError(0, "[SchedulerDelegation] Unauthorized user: {0}", userName);
+            TraceHelper.TraceError(0, "[HpcSchedulerDelegation] Unauthorized user: {0}", userName);
             throw new AuthenticationException(String.Format(CultureInfo.InvariantCulture, "Unauthorized user: {0}", userName));
         }
 
@@ -2417,7 +2417,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         private void JobMonitorEntry_Exit(object sender, EventArgs e)
         {
             JobMonitorEntry entry = (JobMonitorEntry)sender;
-            Debug.Assert(entry != null, "[SchedulerDelegation] Sender should be an instance of JobMonitorEntry class.");
+            Debug.Assert(entry != null, "[HpcSchedulerDelegation] Sender should be an instance of JobMonitorEntry class.");
 
             // if a JobMonitorEntry is exited because of job state changed into Finished/Canceled/Failed
             if (entry.PreviousState == JobState.Finished)
@@ -2452,7 +2452,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             Dictionary<string, BrokerLauncherClient> brokerLauncherClientDic = GenerateBrokerLauncherClientDic();
             try
             {
-                TraceHelper.TraceVerbose(0, "[SchedulerDelegation] Callback to monitor job state.");
+                TraceHelper.TraceVerbose(0, "[HpcSchedulerDelegation] Callback to monitor job state.");
 
                 List<JobInfo> jobInfoList = this.GetPreRunningServiceJobIntoList();
                 List<JobInfo> runningServiceJobInfoList = this.GetRuningServiceJobIntoList();
@@ -2467,7 +2467,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 }
                 catch (Exception e)
                 {
-                    TraceHelper.TraceError(0, "[SchedulerDelegation] Exception thrown when updating session pool: {0}", e);
+                    TraceHelper.TraceError(0, "[HpcSchedulerDelegation] Exception thrown when updating session pool: {0}", e);
                 }
 
                 List<int> activeBrokerIdList = new List<int>();
@@ -2503,8 +2503,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     {
                         if (!activeBrokerIdList.Contains(activeEntry.SessionId))
                         {
-                            TraceHelper.TraceInfo(activeEntry.SessionId, "[SchedulerDelegation] Broker is missing.");
-                            TraceHelper.TraceInfo(activeEntry.SessionId, "[SchedulerDelegation] Remove job monitor entry because broker is missing.");
+                            TraceHelper.TraceInfo(activeEntry.SessionId, "[HpcSchedulerDelegation] Broker is missing.");
+                            TraceHelper.TraceInfo(activeEntry.SessionId, "[HpcSchedulerDelegation] Remove job monitor entry because broker is missing.");
                             if (activeEntry.PreviousState != JobState.Canceled
                                 && activeEntry.PreviousState != JobState.Canceling
                                 && activeEntry.PreviousState != JobState.Failed
@@ -2526,7 +2526,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     }
                     catch (Exception e)
                     {
-                        TraceHelper.TraceError(activeEntry.SessionId, "[SchedulerDelegation] Exception thrown when trying to find runaway service job: {0}", e);
+                        TraceHelper.TraceError(activeEntry.SessionId, "[HpcSchedulerDelegation] Exception thrown when trying to find runaway service job: {0}", e);
                     }
                 }
 
@@ -2571,7 +2571,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                                 }
                             }
 
-                            TraceHelper.TraceInfo(sessionId, "[SchedulerDelegation] Try to raise broker for runaway service job.");
+                            TraceHelper.TraceInfo(sessionId, "[HpcSchedulerDelegation] Try to raise broker for runaway service job.");
 
                             ISchedulerJob job;
                             lock (this.scheduler)
@@ -2585,7 +2585,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                                 // This is to avoid the race condition that when a service job is just
                                 // submitted and HPC_BROKER property has not been updated before this
                                 // logic failed it as "failed to initialize".
-                                TraceHelper.TraceInfo(sessionId, "[SchedulerDelegation] Skip raise broker as the service job is just submitted.");
+                                TraceHelper.TraceInfo(sessionId, "[HpcSchedulerDelegation] Skip raise broker as the service job is just submitted.");
                                 continue;
                             }
 
@@ -2607,40 +2607,40 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
                                 if (brokernode == null)
                                 {
-                                    TraceHelper.TraceWarning(sessionId, "[SchedulerDelegation] Cannot find broker node from service job.");
+                                    TraceHelper.TraceWarning(sessionId, "[HpcSchedulerDelegation] Cannot find broker node from service job.");
                                     this.FailJob(job, FailReason_RunawayServiceJob);
                                     continue;
                                 }
 
-                                TraceHelper.TraceInfo(sessionId, "[SchedulerDelegation] Got Broker node: {0}", brokernode);
+                                TraceHelper.TraceInfo(sessionId, "[HpcSchedulerDelegation] Got Broker node: {0}", brokernode);
                                 BrokerLauncherClient client;
                                 if (brokerLauncherClientDic.TryGetValue(brokernode, out client))
                                 {
                                     client.Attach(sessionId);
-                                    TraceHelper.TraceInfo(sessionId, "[SchedulerDelegation] Successfully raised up broker instance.");
+                                    TraceHelper.TraceInfo(sessionId, "[HpcSchedulerDelegation] Successfully raised up broker instance.");
                                 }
                                 else
                                 {
-                                    TraceHelper.TraceWarning(sessionId, "[SchedulerDelegation] Failed to find broker launcher client for broker node: {0}.", brokernode);
+                                    TraceHelper.TraceWarning(sessionId, "[HpcSchedulerDelegation] Failed to find broker launcher client for broker node: {0}.", brokernode);
                                     this.FailJob(job, FailReason_BrokerLauncherNotFound);
                                 }
                             }
                             catch (Exception e)
                             {
-                                TraceHelper.TraceWarning(sessionId, "[SchedulerDelegation] Failed to raise up broker: {0}", e);
+                                TraceHelper.TraceWarning(sessionId, "[HpcSchedulerDelegation] Failed to raise up broker: {0}", e);
                                 this.FailJob(job, FailReason_BrokerNotExist);
                             }
                         }
                     }
                     catch (Exception e)
                     {
-                        TraceHelper.TraceError(jobInfo.Id, "[SchedulerDelegation] Exception thrown when trying to find requeued service job: {0}", e);
+                        TraceHelper.TraceError(jobInfo.Id, "[HpcSchedulerDelegation] Exception thrown when trying to find requeued service job: {0}", e);
                     }
                 }
             }
             catch (Exception e)
             {
-                TraceHelper.TraceError(0, "[SchedulerDelegation] Exception thrown when querying runaway service jobs: {0}", e);
+                TraceHelper.TraceError(0, "[HpcSchedulerDelegation] Exception thrown when querying runaway service jobs: {0}", e);
             }
             finally
             {
@@ -2672,7 +2672,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 stringArray[i] = activeJobMonitorEntryList[i].SessionId.ToString();
             }
 
-            TraceHelper.TraceVerbose(0, "[SchedulerDelegation] Active job monitor entries: {0}", String.Join(",", stringArray));
+            TraceHelper.TraceVerbose(0, "[HpcSchedulerDelegation] Active job monitor entries: {0}", String.Join(",", stringArray));
         }
 
         /// <summary>
@@ -2688,7 +2688,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 stringArray[i] = activeBrokerIdList[i].ToString();
             }
 
-            TraceHelper.TraceVerbose(0, "[SchedulerDelegation] Active brokers: {0}", String.Join(",", stringArray));
+            TraceHelper.TraceVerbose(0, "[HpcSchedulerDelegation] Active brokers: {0}", String.Join(",", stringArray));
         }
 
         /// <summary>
@@ -2704,7 +2704,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 sb.AppendLine(info.ToString());
             }
 
-            TraceHelper.TraceVerbose(0, "[SchedulerDelegation] Running service job info list:\n{0}", sb.ToString());
+            TraceHelper.TraceVerbose(0, "[HpcSchedulerDelegation] Running service job info list:\n{0}", sb.ToString());
         }
 
         /// <summary>
@@ -2729,7 +2729,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             {
                 int count = rowSet.GetCount();
 
-                TraceHelper.TraceVerbose(0, "[SchedulerDelegation] Get {0} pre-running service jobs.", count);
+                TraceHelper.TraceVerbose(0, "[HpcSchedulerDelegation] Get {0} pre-running service jobs.", count);
 
                 list = new List<JobInfo>(count);
 
@@ -2772,7 +2772,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             using (ISchedulerRowSet rowSet = this.scheduler.OpenJobRowSet(pc, fc, null))
             {
                 int count = rowSet.GetCount();
-                TraceHelper.TraceVerbose(0, "[SchedulerDelegation] Get {0} failed/canceled service jobs.", count);
+                TraceHelper.TraceVerbose(0, "[HpcSchedulerDelegation] Get {0} failed/canceled service jobs.", count);
 
                 PropertyRow[] rows = rowSet.GetRows(0, count - 1).Rows;
                 if (rows != null)
@@ -2808,7 +2808,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             Dictionary<string, BrokerLauncherClient> brokerLauncherClientDic = new Dictionary<string, BrokerLauncherClient>();
             List<NodeInfo> brokerNodes;
             List<string> brokerEprList = new List<string>(this.GetAvailableBrokerEPRs(false, BrokerLauncherEndpointPrefix, out brokerNodes));
-            Debug.Assert(brokerNodes.Count == brokerEprList.Count, "[SchedulerDelegation] Broker node list should have the same count as broker epr list.");
+            Debug.Assert(brokerNodes.Count == brokerEprList.Count, "[HpcSchedulerDelegation] Broker node list should have the same count as broker epr list.");
             // Get internal cert thumbprint
             string certThumbprint = HpcContext.Get().GetSSLThumbprint().GetAwaiter().GetResult();
             for (int i = 0; i < brokerEprList.Count; i++)
@@ -2840,7 +2840,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             using (ISchedulerRowSet rowSet = this.scheduler.OpenJobRowSet(pc, fc, null))
             {
                 int count = rowSet.GetCount();
-                TraceHelper.TraceVerbose(0, "[SchedulerDelegation] Get {0} running service jobs.", count);
+                TraceHelper.TraceVerbose(0, "[HpcSchedulerDelegation] Get {0} running service jobs.", count);
                 runningServiceJobInfoList = new List<JobInfo>(count);
 
                 PropertyRow[] rows = rowSet.GetRows(0, count - 1).Rows;

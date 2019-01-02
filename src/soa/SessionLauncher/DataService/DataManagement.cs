@@ -119,8 +119,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
             this.cleanupThread.IsBackground = true;
             this.cleanupThread.Start();
 
-            SchedulerDelegation.OnJobFinished += this.OnSessionFinished;
-            SchedulerDelegation.OnJobFailedOrCanceled += this.OnSessionFailedOrCanceled;
+            HpcSchedulerDelegation.OnJobFinished += this.OnSessionFinished;
+            HpcSchedulerDelegation.OnJobFailedOrCanceled += this.OnSessionFailedOrCanceled;
         }
 
         /// <summary>
@@ -215,8 +215,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
 
                 if (dispose)
                 {
-                    SchedulerDelegation.OnJobFinished -= this.OnSessionFinished;
-                    SchedulerDelegation.OnJobFailedOrCanceled -= this.OnSessionFailedOrCanceled;
+                    HpcSchedulerDelegation.OnJobFinished -= this.OnSessionFinished;
+                    HpcSchedulerDelegation.OnJobFailedOrCanceled -= this.OnSessionFailedOrCanceled;
 
                     // notify auto cleanup thread to terminate
                     lock (this.lockCleanupItemQueue)
@@ -652,7 +652,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
                     {
                         try
                         {
-                            if (SchedulerDelegation.IsDurableSessionJob(job))
+                            if (HpcSchedulerDelegation.IsDurableSessionJob(job))
                             {
                                 // Failed/canceled job for durable session can be requeued, so keep its data for durable session
                                 activeSessionIdList.Add(job.Id);
@@ -710,7 +710,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
             try
             {
                 TraceHelper.TraceEvent(TraceEventType.Verbose, "[DataManagement] .OnSessionFailedOrCanceled: session {0} is failed/canceled.", schedulerJob.Id);
-                bool durable = SchedulerDelegation.IsDurableSessionJob(schedulerJob);
+                bool durable = HpcSchedulerDelegation.IsDurableSessionJob(schedulerJob);
                 if (!durable)
                 {
                     TraceHelper.TraceEvent(TraceEventType.Information, "[DataManagement] .OnSessionFailedOrCanceled: non-durable session {0} is failed/canceled.  add it into data cleanup queue", schedulerJob.Id);

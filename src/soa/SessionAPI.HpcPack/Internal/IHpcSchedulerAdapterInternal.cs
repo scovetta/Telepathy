@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="ISchedulerAdapterInternal.cs" company="Microsoft">
+// <copyright file="IHpcSchedulerAdapterInternal.cs" company="Microsoft">
 //      Copyright (c) Microsoft Corporation.  All rights reserved.
 // </copyright>
 // <summary>
@@ -17,7 +17,7 @@ namespace Microsoft.Hpc.Scheduler.Session
     /// Service contract of scheduler adapter for broker launcher
     /// </summary>
     [ServiceContract(Namespace = "http://hpc.microsoft.com")]
-    public interface ISchedulerAdapterInternal
+    public interface IHpcSchedulerAdapterInternal
     {
         /// <summary>
         /// Get ACL string from a job template

@@ -77,18 +77,18 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                     this.launcherHost = null;
                 }
 
-                if (this.schedulerDelegation != null)
+                if (this.hpcSchedulerDelegation != null)
                 {
                     try
                     {
-                        this.schedulerDelegation.Dispose();
+                        this.hpcSchedulerDelegation.Dispose();
                     }
                     catch (Exception e)
                     {
                         TraceHelper.TraceEvent(TraceEventType.Error, "Failed to close the scheduler delegation - {0}", e);
                     }
 
-                    this.schedulerDelegation = null;
+                    this.hpcSchedulerDelegation = null;
                 }
 
                 if (this.sessionLauncher != null)

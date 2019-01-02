@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="SchedulerAdapterInternalClient.cs" company="Microsoft">
+// <copyright file="HpcSchedulerAdapterInternalClient.cs" company="Microsoft">
 //      Copyright (c) Microsoft Corporation.  All rights reserved.
 // </copyright>
 // <summary>
@@ -19,7 +19,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// The client implementation for the scheduler adapter
     /// </summary>
-    public class SchedulerAdapterInternalClient : ClientBase<ISchedulerAdapterInternal>, ISchedulerAdapterInternal
+    public class HpcSchedulerAdapterInternalClient : ClientBase<IHpcSchedulerAdapterInternal>, IHpcSchedulerAdapterInternal
     {
         /// <summary>
         /// Stores the operation timeout
@@ -27,10 +27,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         private static readonly TimeSpan OperationTimeout = TimeSpan.FromMinutes(10);
 
         /// <summary>
-        /// Initializes a new instance of the SchedulerAdapterInternalClient class
+        /// Initializes a new instance of the HpcSchedulerAdapterInternalClient class
         /// </summary>
         /// <param name="headNode">indicating the headnode</param>
-        public SchedulerAdapterInternalClient(string headNode)
+        public HpcSchedulerAdapterInternalClient(string headNode)
             : base(
                 BindingHelper.HardCodedInternalSchedulerDelegationBinding,
                 SoaHelper.CreateInternalCertEndpointAddress(
@@ -235,7 +235,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// with the InstanceContext for the singleton service.
         /// </summary>
         /// <returns>A new channel</returns>
-        protected override ISchedulerAdapterInternal CreateChannel()
+        protected override IHpcSchedulerAdapterInternal CreateChannel()
         {
             OperationContext oldContext = OperationContext.Current;
             OperationContext.Current = null;

@@ -372,7 +372,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                                         string jobTemplateName = schedulerJob.JobTemplate;
                                         if (String.IsNullOrEmpty(jobTemplateName))
                                         {
-                                            jobTemplateName = SchedulerDelegation.DefaultJobTemplateName;
+                                            jobTemplateName = HpcSchedulerDelegation.DefaultJobTemplateName;
                                         }
 
                                         // Get its template's ACL
@@ -723,7 +723,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                                     string jobTemplateName = schedulerJob.JobTemplate;
                                     if (String.IsNullOrEmpty(jobTemplateName))
                                     {
-                                        jobTemplateName = SchedulerDelegation.DefaultJobTemplateName;
+                                        jobTemplateName = HpcSchedulerDelegation.DefaultJobTemplateName;
                                     }
 
                                     // Get its template's ACL

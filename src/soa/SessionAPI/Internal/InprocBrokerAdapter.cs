@@ -21,6 +21,7 @@ namespace Microsoft.Hpc.Scheduler.Session
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Hpc.Rest;
+    using Microsoft.Hpc.Scheduler.Session.ServiceContainer;
 
     /// <summary>
     /// Broker launcher adapter for inproc broker
@@ -535,7 +536,8 @@ namespace Microsoft.Hpc.Scheduler.Session
                     Utility.SafeCloseCommunicateObject(client);
                 }
 
-                SchedulerAdapterInternalClient schedulerAdapterClient = new SchedulerAdapterInternalClient(await this.startInfo.ResolveHeadnodeMachineAsync().ConfigureAwait(false));
+                // SchedulerAdapterInternalClient schedulerAdapterClient = new SchedulerAdapterInternalClient(await this.startInfo.ResolveHeadnodeMachineAsync().ConfigureAwait(false));
+                ISchedulerAdapter schedulerAdapterClient = SessionServiceContainer.SchedulerAdapterInstance;
                 try
                 {
                     this.brokerInfo.EnableDiagTrace = await RetryHelper<bool>.InvokeOperationAsync(
@@ -549,8 +551,14 @@ namespace Microsoft.Hpc.Scheduler.Session
                         async (e, count) =>
                         {
                             SessionBase.TraceSource.TraceEvent(TraceEventType.Warning, 0, "[InprocBrokerAdapter] Failed to get IsDiagTraceEnabled property via session launcher service: {0}\nRetryCount = {1}", e, count);
-                            Utility.SafeCloseCommunicateObject(schedulerAdapterClient);
-                            schedulerAdapterClient = new SchedulerAdapterInternalClient(await this.startInfo.ResolveHeadnodeMachineAsync().ConfigureAwait(false));
+                            var communicateObj = schedulerAdapterClient as ICommunicationObject;
+                            if (communicateObj != null)
+                            {
+                                Utility.SafeCloseCommunicateObject(communicateObj);
+                            }
+
+                            //schedulerAdapterClient = new SchedulerAdapterInternalClient(await this.startInfo.ResolveHeadnodeMachineAsync().ConfigureAwait(false));
+                            schedulerAdapterClient = SessionServiceContainer.SchedulerAdapterInstance;
                         },
                         SoaHelper.GetDefaultExponentialRetryManager()).ConfigureAwait(false);
                 }
@@ -560,7 +568,12 @@ namespace Microsoft.Hpc.Scheduler.Session
                 }
                 finally
                 {
-                    Utility.SafeCloseCommunicateObject(schedulerAdapterClient);
+                    var communicateObj = schedulerAdapterClient as ICommunicationObject;
+                    if (communicateObj != null)
+                    {
+                        Utility.SafeCloseCommunicateObject(communicateObj);
+                    }
+
                 }
             }
         }
@@ -681,14 +694,16 @@ namespace Microsoft.Hpc.Scheduler.Session
             properties.Add(BrokerSettingsConstants.Durable, info.Durable);
             properties.Add(BrokerSettingsConstants.PersistVersion, info.PersistVersion);
 
-            SchedulerAdapterInternalClient client = new SchedulerAdapterInternalClient(await this.startInfo.ResolveHeadnodeMachineAsync().ConfigureAwait(false));
+            //SchedulerAdapterInternalClient client = new SchedulerAdapterInternalClient(await this.startInfo.ResolveHeadnodeMachineAsync().ConfigureAwait(false));
+            ISchedulerAdapter client = SessionServiceContainer.SchedulerAdapterInstance;
+
             try
             {
                 while (retry > 0)
                 {
                     try
                     {
-                        if (await client.UpdateBrokerInfo(info.SessionId, properties).ConfigureAwait(false))
+                        if (await client.UpdateBrokerInfoAsync(info.SessionId, properties).ConfigureAwait(false))
                         {
                             return;
                         }
@@ -703,7 +718,11 @@ namespace Microsoft.Hpc.Scheduler.Session
             }
             finally
             {
-                Utility.SafeCloseCommunicateObject(client);
+                var communicateObj = client as ICommunicationObject;
+                if (communicateObj != null)
+                {
+                    Utility.SafeCloseCommunicateObject(communicateObj);
+                }
             }
 
             throw new InvalidOperationException("Can not update the properties in the scheduler database for EPRs");

@@ -105,9 +105,6 @@
     <Compile Include="..\Common\HeartbeatHelper.cs">
       <Link>HeartbeatHelper.cs</Link>
     </Compile>
-    <Compile Include="..\Common\ISchedulerAdapterInternalAsync.cs">
-      <Link>Internal\ISchedulerAdapterInternalAsync.cs</Link>
-    </Compile>
     <Compile Include="..\Common\ParamCheckUtility.cs">
       <Link>ParamCheckUtility.cs</Link>
     </Compile>
@@ -154,8 +151,10 @@
     <Compile Include="Internal\CallbackManager.cs" />
     <Compile Include="Internal\HttpBrokerFrontendFactory.cs" />
     <Compile Include="Internal\IResourceProvider.cs" />
+    <Compile Include="Internal\ISchedulerAdapter.cs" />
     <Compile Include="Internal\WSBrokerFrontendFactory.cs" />
     <Compile Include="PersistantSession.cs" />
+    <Compile Include="ServiceContainer\SessionServiceContainer.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="IConnectionInfoExtension.cs" />
     <Compile Include="Interface\ClusterInfoContract.cs" />
@@ -198,7 +197,6 @@
     <Compile Include="Internal\InprocBrokerAdapter.cs" />
     <Compile Include="Internal\InprocessBrokerFactory.cs" />
     <Compile Include="Internal\InprocessSessions.cs" />
-    <Compile Include="Internal\ISchedulerAdapter.cs" />
     <Compile Include="Internal\ISessionUserAuthenticator.cs" />
     <None Include="app.config" />
     <None Include="Interface\WebSessionInfo.cs" />
@@ -244,7 +242,6 @@
     <Compile Include="TaskInInterestUtil.cs" />
     <Compile Include="WinServiceHpcContextModule.cs" />
     <None Include="Internal\AzureRestSessionFactory.cs" />
-    <Compile Include="Internal\SchedulerAdapterInternalClient.cs" />
     <Compile Include="Internal\SessionInfoBase.cs" />
     <Compile Include="Internal\SOAWebServiceRequestBuilder.cs" />
     <Compile Include="Internal\WebAPIUtility.cs" />
@@ -279,7 +276,6 @@
     <Compile Include="Interface\IResponseCallbackService.cs" />
     <Compile Include="Interface\IResponseService.cs" />
     <Compile Include="Internal\BrokerShimExitCode.cs" />
-    <Compile Include="Internal\ISchedulerAdapterInternal.cs" />
     <Compile Include="SessionAttachInfoBase.cs" />
     <Compile Include="SessionIdentityImpersonation.cs" />
     <Compile Include="SessionInitInfoBase.cs" />
