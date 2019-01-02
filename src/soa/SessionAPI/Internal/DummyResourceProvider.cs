@@ -6,14 +6,17 @@
 //       Resource provider that does nothing
 // </summary>
 //------------------------------------------------------------------------------
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Hpc.Scheduler.Session
 {
     using System;
     using System.Threading.Tasks;
+
+    using Microsoft.Hpc.Scheduler.Session.Internal;
+
     /// <summary>
     /// Resource provider that does nothing
     /// </summary>
-    internal class DummyResourceProvider : IResourceProvider
+    public class DummyResourceProvider : IResourceProvider
     {
         /// <summary>
         /// Stores a value indicating whether it is a durable session

@@ -179,7 +179,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Gets or sets a value indicating whether the session is inprocess
         /// </summary>
-        internal bool UseInprocessBroker
+        public bool UseInprocessBroker
         {
             get
             {
@@ -201,7 +201,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Gets a value indicating whether debug mode is enabled
         /// </summary>
-        internal bool DebugModeEnabled
+        public bool DebugModeEnabled
         {
             get { return this.eprList != null; }
         }

@@ -15,6 +15,7 @@ namespace Microsoft.Hpc.Scheduler.Session
     using System.ServiceModel.Channels;
     using System.Threading.Tasks;
 
+    using Microsoft.Hpc.Scheduler.Session.HpcPack;
 
     /// <summary>
     ///   <para>Use to create an HPC session that binds the client application to
@@ -295,7 +296,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <example />
         public static void SetInterfaceMode(bool console, IntPtr wnd)
         {
-            HpcV3Session.SetInterfaceMode(console, wnd);
+            HpcSessionCredUtil.SetInterfaceMode(console, wnd);
         }
 
         /// <summary>

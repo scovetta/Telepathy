@@ -222,10 +222,8 @@
     <Compile Include="SessionShim.cs" />
     <None Include="Interface\ISchedulerNotifyAsync.cs" />
     <Compile Include="HpcSessionCredUtil.cs" />
-    <Compile Include="Internal\DummyResourceProvider.cs" />
     <Compile Include="Internal\HpcSessionFactory.cs" />
-    <Compile Include="Internal\IResourceProvider.cs" />
-    <Compile Include="Internal\OnPremiseSessionFactory.cs" />
+    <Compile Include="Internal\HpcOnPremiseSessionFactory.cs" />
     <Compile Include="Internal\ServiceJobProvider.cs" />
     <Compile Include="HpcPersistantSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

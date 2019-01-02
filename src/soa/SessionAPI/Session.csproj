@@ -144,6 +144,7 @@
     <Compile Include="ChannelTypes.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="CredExtension.cs" />
+    <Compile Include="Internal\DummyResourceProvider.cs" />
     <Compile Include="Internal\AsyncResponseCallback.cs" />
     <Compile Include="Internal\BrokerFrontendFactory.cs" />
     <Compile Include="Internal\BrokerResponse.cs" />
@@ -152,6 +153,7 @@
     <Compile Include="Internal\BrokerResponseStateHandler.cs" />
     <Compile Include="Internal\CallbackManager.cs" />
     <Compile Include="Internal\HttpBrokerFrontendFactory.cs" />
+    <Compile Include="Internal\IResourceProvider.cs" />
     <Compile Include="Internal\WSBrokerFrontendFactory.cs" />
     <Compile Include="PersistantSession.cs" />
     <Compile Include="Session.cs" />

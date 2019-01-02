@@ -20,6 +20,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.ServiceModel.Security;
     using System.Threading;
     using System.Threading.Tasks;
+
+    using Microsoft.Hpc.Scheduler.Session.HpcPack;
+
     /// <summary>
     /// Session factory for on-premise cluster
     /// </summary>
@@ -77,7 +80,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                         }
                         else if (SoaHelper.IsSchedulerOnAzure(startInfo.Headnode) || SoaHelper.IsSchedulerOnIaaS(startInfo.Headnode) || (startInfo.TransportScheme & TransportScheme.Http) == TransportScheme.Http || (startInfo.TransportScheme & TransportScheme.NetHttp) == TransportScheme.NetHttp)
                         {
-                            askForCredential = SessionBase.RetrieveCredentialOnAzure(startInfo);
+                            askForCredential = HpcSessionCredUtil.RetrieveCredentialOnAzure(startInfo);
 
                             if (askForCredential)
                             {
@@ -86,14 +89,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                         }
                         else
                         {
-                            askForCredential = await SessionBase.RetrieveCredentialOnPremise(startInfo, typeOfExpectedCred, binding).ConfigureAwait(false);
+                            askForCredential = await HpcSessionCredUtil.RetrieveCredentialOnPremise(startInfo, typeOfExpectedCred, binding).ConfigureAwait(false);
 
                             if (askForCredential)
                             {
                                 askForCredentialTimes++;
                             }
 
-                            SessionBase.CheckCredential(startInfo);
+                            HpcSessionCredUtil.CheckCredential(startInfo);
                         }
 
                         resourceProvider = BuildResourceProvider(startInfo, durable, binding);
@@ -121,7 +124,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                                     sessionAllocateInfo.BrokerLauncherEpr[i] = SoaHelper.UpdateEprWithCloudServiceName(sessionAllocateInfo.BrokerLauncherEpr[i], suffix);
                                 }
                             }
-                            SessionBase.SaveCrendential(startInfo, binding);
+                            HpcSessionCredUtil.SaveCrendential(startInfo, binding);
                             SessionBase.TraceSource.TraceInformation("Get the EPR list from headnode. number of eprs={0}", sessionAllocateInfo.BrokerLauncherEpr.Length);
                             break;
                         }
@@ -368,7 +371,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                         }
                         else if (SoaHelper.IsSchedulerOnAzure(attachInfo.Headnode) || SoaHelper.IsSchedulerOnIaaS(attachInfo.Headnode) || (attachInfo.TransportScheme & TransportScheme.Http) == TransportScheme.Http)
                         {
-                            askForCredential = SessionBase.RetrieveCredentialOnAzure(attachInfo);
+                            askForCredential = HpcSessionCredUtil.RetrieveCredentialOnAzure(attachInfo);
 
                             if (askForCredential)
                             {
@@ -377,14 +380,15 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                         }
                         else
                         {
-                            askForCredential = await SessionBase.RetrieveCredentialOnPremise(attachInfo, typeOfExpectedCred, binding).ConfigureAwait(false);
+                            askForCredential = await HpcSessionCredUtil.RetrieveCredentialOnPremise(attachInfo, typeOfExpectedCred, binding).ConfigureAwait(false);
 
                             if (askForCredential)
                             {
                                 askForCredentialTimes++;
                             }
 
-                            SessionBase.CheckCredential(attachInfo);
+                            HpcSessionCredUtil.CheckCredential(attachInfo);
+                            HpcSessionCredUtil.CheckCredential(attachInfo);
                         }
 
                         resourceProvider = BuildResourceProvider(attachInfo, durable, binding);
@@ -436,7 +440,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                                 SoaHelper.UpdateEprWithCloudServiceName(info.ResponseEpr, suffix);
                             }
                         }
-                        SessionBase.SaveCrendential(attachInfo);
+                        HpcSessionCredUtil.SaveCrendential(attachInfo);
                         break;
 
                     }

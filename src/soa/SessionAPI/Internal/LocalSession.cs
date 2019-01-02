@@ -15,7 +15,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.Reflection;
     using System.IO;
 
-    internal static class LocalSession
+    public static class LocalSession
     {
         static private bool LoadBrokerSession;
 

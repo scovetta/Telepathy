@@ -102,24 +102,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         private readonly SessionInfoBase _info;
 
         private readonly int serviceJobId;
-
-        static private IntPtr hwnd = IntPtr.Zero;
-
-        public static IntPtr Hwnd => hwnd;
-
-        /// <summary>
-        /// Set default value "true"
-        /// Keep consistent with v2 soa client
-        /// </summary>
-        static private bool bConsole = true;
-
-        public static bool BConsole
-        {
-            get
-            {
-                return bConsole;
-            }
-        }
+        
 
         /// <summary>
         /// Whether session is shutting down (dispose was called)
@@ -444,25 +427,6 @@ namespace Microsoft.Hpc.Scheduler.Session
             {
                 return _traceSource;
             }
-        }
-
-        /// <summary>
-        ///   <para>Specifies whether the client is a console or Windows application.</para>
-        /// </summary>
-        /// <param name="console">
-        ///   <para>Set to True if the client is a console application; otherwise, set to False.</para>
-        /// </param>
-        /// <param name="wnd">
-        ///   <para>The handle to the parent window if the client is a Windows application.</para>
-        /// </param>
-        /// <remarks>
-        ///   <para>This information is used to determine how to prompt the user for the credentials if the credentials are 
-        /// not specified in the job. If you do not call this method, the client is assumed to be a console application.</para>
-        /// </remarks>
-        public static void SetInterfaceMode(bool console, IntPtr wnd)
-        {
-            bConsole = console;
-            hwnd = wnd;
         }
 
         /// <summary>
@@ -1013,88 +977,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </remarks>
         public static Version[] GetServiceVersions(string headNode, string serviceName, TransportScheme scheme, string username, string password)
         {
-            if (scheme == TransportScheme.WebAPI)
-            {
-                bool savePassword = false;
-                int retry = 0;
-                bool askForCredential = false;
-                int askForCredentialTimes = 0;
-                Version[] result = null;
-
-                // Align the retry behavior of the RestSession with the original session.
-                // User can try credential at most SessionBase.MaxRetryCount times.
-                while (true)
-                {
-                    retry++;
-
-                    askForCredential = RetrieveCredentialOnAzure(headNode, ref username, ref password, ref savePassword);
-
-                    if (askForCredential)
-                    {
-                        askForCredentialTimes++;
-                    }
-
-                    NetworkCredential credential = Utility.BuildNetworkCredential(username, password);
-
-                    WebRequest request = null;
-
-                    try
-                    {
-                        // Following method needs to get cluster name, it may throw WebException because
-                        // of invalid credential. Give chance to users to re-enter the credential.
-                        request = SOAWebServiceRequestBuilder.GenerateGetServiceVersionsWebRequest(headNode, serviceName, credential);
-                    }
-                    catch (WebException e)
-                    {
-                        if (e.Status == WebExceptionStatus.ProtocolError)
-                        {
-                            HttpWebResponse response = (HttpWebResponse)e.Response;
-                            if (response.StatusCode == HttpStatusCode.Forbidden)
-                            {
-                                // cleanup local cached invalid credential
-                                PurgeCredential(headNode, username);
-
-                                if (Utility.CanRetry(retry, askForCredential, askForCredentialTimes))
-                                {
-                                    response.Close();
-                                    continue;
-                                }
-                            }
-                        }
-
-                        SessionBase.TraceSource.TraceEvent(TraceEventType.Error, 0, "[SessionBase] Failed to build GetServiceVersions request (WebAPI): {0}", e);
-
-                        Utility.HandleWebException(e);
-                    }
-
-                    try
-                    {
-                        using (WebResponse response = request.GetResponse())
-                        {
-                            DataContractSerializer serializer = new DataContractSerializer(typeof(Version[]));
-                            result = (Version[])serializer.ReadObject(response.GetResponseStream());
-                            break;
-                        }
-                    }
-                    catch (WebException e)
-                    {
-                        SessionBase.TraceSource.TraceEvent(TraceEventType.Error, 0, "[SessionBase] Failed to get service versions (WebAPI): {0}", e);
-
-                        Utility.HandleWebException(e);
-                    }
-                }
-
-                if (savePassword)
-                {
-                    SaveCrendential(headNode, username, password);
-                }
-
-                return result;
-            }
-            else
-            {
-                return GetServiceVersions(headNode, serviceName);
-            }
+            return GetServiceVersions(headNode, serviceName);
         }
 
         /// <summary>
@@ -1148,83 +1031,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             }
         }
 
-        /// <summary>
-        /// Save the credential at local Windows Vault, if
-        /// (1) scheduler is on Azure (credential is needed by session service to run as that user)
-        /// (2) debug mode (no scheduler)
-        /// (3) scheduler version is before 3.1 (scheduler side credential cache is not supported before 3.1)
-        /// </summary>
-        /// <param name="info">it contians credential and targeted scheduler</param>
-        /// <param name="binding">indicating the binding</param>
-        public static void SaveCrendential(SessionStartInfo info, Binding binding)
-        {
-            if (info.SavePassword && info.InternalPassword != null)
-            {
-                Debug.Assert(!string.IsNullOrEmpty(info.Headnode), "The headnode can't be null or empty.");
-
-                bool saveToLocal = false;
-
-                if (SoaHelper.IsSchedulerOnAzure(info.Headnode) || SoaHelper.IsSchedulerOnIaaS(info.Headnode))
-                {
-                    saveToLocal = true;
-                }
-                else if (info.DebugModeEnabled)
-                {
-                    saveToLocal = true;
-                }
-
-                if (saveToLocal)
-                {
-                    SaveCrendential(info.Headnode, info.Username, info.InternalPassword);
-                    SessionBase.TraceSource.TraceInformation("Cached credential is saved to local Windows Vault.");
-                }
-                else
-                {
-                    // the password is already sent to session service, which saves it to the scheduler.
-                    SessionBase.TraceSource.TraceInformation("Cached credential is expected to be saved to the scheduler by session service.");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Save the credential at local Windows Vault.
-        /// </summary>
-        /// <param name="info">
-        /// attach info
-        /// it specifies credential and targeted scheduler
-        /// </param>
-        internal static void SaveCrendential(SessionAttachInfo info)
-        {
-            if (info.SavePassword)
-            {
-                SaveCrendential(info.Headnode, info.Username, info.InternalPassword);
-            }
-        }
-
-        /// <summary>
-        /// Save the user credential to the local windows vault.
-        /// </summary>
-        /// <param name="headnode">head node name</param>
-        /// <param name="username">user name</param>
-        /// <param name="password">user password</param>
-        internal static void SaveCrendential(string headnode, string username, string password)
-        {
-            try
-            {
-                if (password != null)
-                {
-                    Debug.Assert(!string.IsNullOrEmpty(headnode), "The headnode can't be null or empty.");
-
-                    CredentialHelper.PersistPassword(headnode, username, ProtectedData.Protect(Encoding.Unicode.GetBytes(password), null, DataProtectionScope.CurrentUser));
-
-                    SessionBase.TraceSource.TraceInformation("Cached credential is saved to local Windows Vault.");
-                }
-            }
-            catch (Win32Exception)
-            {
-                SessionBase.TraceSource.TraceInformation("Cached credential can't be saved to local Windows Vault.");
-            }
-        }
+       
 
         /// <summary>
         /// Remove the cached password from the local Windows Vault.
@@ -1288,122 +1095,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             }
         }
 
-        /// <summary>
-        /// Validate the credential.
-        /// Throw AuthenticationException if validation fails.
-        /// </summary>
-        /// <param name="info">session start info contains credential</param>
-        internal static void CheckCredential(SessionStartInfo info)
-        {
-            if (info.InternalPassword != null)
-            {
-                // Verify the username password if we can.
-                // Verify the cached credential in case it is expired.
-                Credentials.ValidateCredentials(info.Username, info.InternalPassword, true);
-            }
-            else
-            {
-                // For back-compact, don't transmit null password to session service, which can causes exception there.
-                // It is fine to replace null by empty string even user's password is empty string.
-                info.InternalPassword = string.Empty;
-            }
-        }
 
-        internal static void CheckCredential(SessionAttachInfo info)
-        {
-            if (info.InternalPassword != null)
-            {
-                // Verify the username password if we can.
-                // Verify the cached credential in case it is expired.
-                Credentials.ValidateCredentials(info.Username, info.InternalPassword, true);
-            }
-            else
-            {
-                // For back-compact, don't transmit null password to session service, which can causes exception there.
-                // It is fine to replace null by empty string even user's password is empty string.
-                info.InternalPassword = string.Empty;
-            }
-        }
-
-        /// <summary>
-        /// Get user's credential for the Azure cluster.
-        /// We can't validate such credential at on-premise client.
-        /// This method doesn't save the credential.
-        /// </summary>
-        /// <returns>pops up credential dialog or not</returns>
-        internal static bool RetrieveCredentialOnAzure(SessionStartInfo info)
-        {
-            string username = info.Username;
-            string internalPassword = info.InternalPassword;
-            bool savePassword = info.SavePassword;
-
-            bool result = RetrieveCredentialOnAzure(info.Headnode, ref username, ref internalPassword, ref savePassword);
-
-            info.Username = username;
-            info.InternalPassword = internalPassword;
-            info.SavePassword = savePassword;
-            return result;
-        }
-
-        /// <summary>
-        /// Get user's credential for Azure cluster when attaching session.
-        /// </summary>
-        /// <param name="info">Session attach info</param>
-        /// <returns>pops up credential dialog or not</returns>
-        internal static bool RetrieveCredentialOnAzure(SessionAttachInfo info)
-        {
-            string username = info.Username;
-            string internalPassword = info.InternalPassword;
-            bool savePassword = info.SavePassword;
-
-            bool result = RetrieveCredentialOnAzure(info.Headnode, ref username, ref internalPassword, ref savePassword);
-
-            info.Username = username;
-            info.Password = internalPassword;
-            info.SavePassword = savePassword;
-            return result;
-        }
-
-        /// <summary>
-        /// Get user's credential for the Azure cluster.
-        /// We can't validate such credential at on-premise client.
-        /// This method doesn't save the credential.
-        /// </summary>
-        ///<param name="headnode">head node name</param>
-        ///<param name="username">user name</param>
-        ///<param name="internalPassword">user password</param>
-        ///<param name="savePassword">save password or not</param>
-        internal static bool RetrieveCredentialOnAzure(string headnode, ref string username, ref string internalPassword, ref bool savePassword)
-        {
-            if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(internalPassword))
-            {
-                return false;
-            }
-
-            // Try to get the default username if it is not specified.
-            if (string.IsNullOrEmpty(username))
-            {
-                username = CredentialHelper.FetchDefaultUsername(headnode);
-            }
-
-            // If the username is specified, try to get password from Windows Vault.
-            if (!string.IsNullOrEmpty(username))
-            {
-                byte[] cached = CredentialHelper.FetchPassword(headnode, username);
-                if (cached != null)
-                {
-                    internalPassword = Encoding.Unicode.GetString(ProtectedData.Unprotect(cached, null, DataProtectionScope.CurrentUser));
-
-                    return false;
-                }
-            }
-
-            // If username or password is not specified, popup credential dialog.
-            SecureString password = null;
-            Credentials.PromptForCredentials(headnode, ref username, ref password, ref savePassword, bConsole, hwnd);
-            internalPassword = Credentials.UnsecureString(password);
-            return true;
-        }
 
         /// <summary>
         /// Associated a BrokerClient with this Session

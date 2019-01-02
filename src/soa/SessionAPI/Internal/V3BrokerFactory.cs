@@ -25,7 +25,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// Broker factory for v3
     /// </summary>
-    internal class V3BrokerFactory : IBrokerFactory
+    public class V3BrokerFactory : IBrokerFactory
     {
         /// <summary>
         /// Stores the durable flag
