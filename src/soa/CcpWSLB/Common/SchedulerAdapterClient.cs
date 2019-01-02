@@ -18,12 +18,15 @@ namespace Microsoft.Hpc.ServiceBroker
     using System.ServiceModel;
     using System.ServiceModel.Description;
     using System.Threading.Tasks;
+
+    using Microsoft.Hpc.Scheduler.Session.HpcPack.DataMapping;
+
     using SoaAmbientConfig;
 
     /// <summary>
     /// The client implementation for the scheduler adapter
     /// </summary>
-    internal class SchedulerAdapterClient : DuplexClientBase<ISchedulerAdapter>, ISchedulerAdapter
+    internal class SchedulerAdapterClient : DuplexClientBase<IHpcSchedulerAdapter>, IHpcSchedulerAdapter, ISchedulerAdapter
     {
         /// <summary>
         /// Stores the timeout
@@ -172,6 +175,11 @@ namespace Microsoft.Hpc.ServiceBroker
             }
         }
 
+        public Task<bool> UpdateBrokerInfoAsync(int sessionId, Dictionary<string, object> properties)
+        {
+            return this.UpdateBrokerInfo(sessionId, properties);
+        }
+
         /// <summary>
         /// Get the graceful preemption info.
         /// </summary>
@@ -200,6 +208,32 @@ namespace Microsoft.Hpc.ServiceBroker
 
                 return this.Channel.FinishTask(jobid, taskUniqueId);
             }
+        }
+
+        public Task<bool> ExcludeNodeAsync(int jobid, string nodeName)
+        {
+            return this.ExcludeNode(jobid, nodeName);
+        }
+
+        public Task RequeueOrFailJobAsync(int sessionId, string reason)
+        {
+            return this.RequeueOrFailJob(sessionId, reason);
+        }
+
+        public Task FailJobAsync(int sessionId, string reason)
+        {
+            return this.FailJob(sessionId, reason);
+        }
+
+        public Task FinishJobAsync(int sessionId, string reason)
+        {
+            return this.FinishJob(sessionId, reason);
+        }
+
+        public async Task<(Scheduler.Session.Data.JobState jobState, int autoMax, int autoMin)> RegisterJobAsync(int jobid)
+        {
+            var tuple = await this.RegisterJob(jobid);
+            return (JobStateConverter.FromHpcJobState(tuple.Item1), tuple.Item2, tuple.Item3);
         }
     }
 }

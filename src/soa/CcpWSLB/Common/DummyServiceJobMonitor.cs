@@ -115,9 +115,9 @@ namespace Microsoft.Hpc.ServiceBroker
             ti.Id = taskIdStart + num;
             ti.Capacity = 1;
             ti.FirstCoreIndex = 3;
-            ti.Location = NodeLocation.OnPremise;
+            ti.Location = Scheduler.Session.Data.NodeLocation.OnPremise;
             ti.MachineName = ipAddress;
-            ti.State = TaskState.Dispatching;
+            ti.State = Scheduler.Session.Data.TaskState.Dispatching;
 
             using (var client = new HttpClient())
             {

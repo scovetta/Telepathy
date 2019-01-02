@@ -32,6 +32,9 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using Microsoft.WindowsAzure.Storage.Shared.Protocol;
     using System.Net.Http;
     using SoaAmbientConfig;
+
+    using SR = Microsoft.Hpc.SvcBroker.SR;
+
     /// <summary>
     /// Manage dispatchers
     /// </summary>
@@ -571,11 +574,11 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
             try
             {
                 BrokerTracing.TraceInfo("[DispatcherManager] Create new dispatcher: {0}", dispatcherInfo.AllocatedNodeLocation);
-                if (dispatcherInfo.AllocatedNodeLocation == NodeLocation.OnPremise
-                    || dispatcherInfo.AllocatedNodeLocation == NodeLocation.Linux
-                    || dispatcherInfo.AllocatedNodeLocation == NodeLocation.AzureEmbedded
-                    || dispatcherInfo.AllocatedNodeLocation == NodeLocation.AzureEmbeddedVM
-                    || dispatcherInfo.AllocatedNodeLocation == NodeLocation.NonDomainJoined)
+                if (dispatcherInfo.AllocatedNodeLocation == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.OnPremise
+                    || dispatcherInfo.AllocatedNodeLocation == Scheduler.Session.Data.NodeLocation.Linux
+                    || dispatcherInfo.AllocatedNodeLocation == Scheduler.Session.Data.NodeLocation.AzureEmbedded
+                    || dispatcherInfo.AllocatedNodeLocation == Scheduler.Session.Data.NodeLocation.AzureEmbeddedVM
+                    || dispatcherInfo.AllocatedNodeLocation == Scheduler.Session.Data.NodeLocation.NonDomainJoined)
                 {
                     // check if using backend-security (for java soa only)
                     if (dispatcherInfo is WssDispatcherInfo)
@@ -603,8 +606,8 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                             this.monitor.NeedAdjustAllocation);
                     }
                 }
-                else if (dispatcherInfo.AllocatedNodeLocation == NodeLocation.AzureVM
-                    || dispatcherInfo.AllocatedNodeLocation == NodeLocation.Azure)
+                else if (dispatcherInfo.AllocatedNodeLocation == Scheduler.Session.Data.NodeLocation.AzureVM
+                    || dispatcherInfo.AllocatedNodeLocation == Scheduler.Session.Data.NodeLocation.Azure)
                 {
                     // NodeLocation.Azure, NodeLocation.AzureVM
                     if (this.httpsBurst)

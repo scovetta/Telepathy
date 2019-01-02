@@ -31,6 +31,8 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
 
     using Microsoft.Hpc.ServiceBroker.Common.ThreadHelper;
 
+    using SR = Microsoft.Hpc.SvcBroker.SR;
+
     /// <summary>
     /// Dispatch messages to service hosts
     /// </summary>

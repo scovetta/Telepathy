@@ -536,7 +536,10 @@ namespace Microsoft.Hpc.Scheduler.Session
                     Utility.SafeCloseCommunicateObject(client);
                 }
 
+                this.brokerInfo.EnableDiagTrace = false; // TODO: retrieve this from session
+
                 // SchedulerAdapterInternalClient schedulerAdapterClient = new SchedulerAdapterInternalClient(await this.startInfo.ResolveHeadnodeMachineAsync().ConfigureAwait(false));
+                /*
                 ISchedulerAdapter schedulerAdapterClient = SessionServiceContainer.SchedulerAdapterInstance;
                 try
                 {
@@ -575,6 +578,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                     }
 
                 }
+                */
             }
         }
 

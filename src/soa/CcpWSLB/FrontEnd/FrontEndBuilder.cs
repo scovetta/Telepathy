@@ -27,6 +27,8 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using Microsoft.Hpc.ServiceBroker.FrontEnd.AzureQueue;
     using Microsoft.Hpc.SvcBroker;
 
+    using SR = Microsoft.Hpc.SvcBroker.SR;
+
     /// <summary>
     /// FrontEnd Builder
     /// </summary>

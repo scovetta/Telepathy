@@ -19,6 +19,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
     using System.Threading.Tasks;
     using SoaAmbientConfig;
     using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
 
     /// <summary>
     /// Factory class for scheduler adapter client
@@ -246,6 +247,12 @@ namespace Microsoft.Hpc.ServiceBroker.Common
                 this.eprList = eprList;
             }
 
+            public bool IsDiagTraceEnabled(int sessionId)
+            {
+                return false;
+            }
+
+            /*
             /// <summary>
             /// Start to subscribe the job and task event
             /// </summary>
@@ -306,6 +313,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
                 // Do nothing
                 return true;
             }
+            
 
             /// <summary>
             /// Update the job's properties
@@ -318,7 +326,21 @@ namespace Microsoft.Hpc.ServiceBroker.Common
                 // Do nothing
                 return true;
             }
+            */
 
+            /// <summary>
+            /// Update the job's properties
+            /// </summary>
+            /// <param name="jobid">the job id</param>
+            /// <param name="properties">the properties table</param>
+            /// <returns>returns a value indicating whether the operation succeeded</returns>
+            public Task<bool> UpdateBrokerInfoAsync(int jobid, System.Collections.Generic.Dictionary<string, object> properties)
+            {
+                // Do nothing
+                return Task<bool>.FromResult(true);
+            }
+
+            /*
             /// <summary>
             /// Get the error code property of the specified task.
             /// </summary>
@@ -355,8 +377,9 @@ namespace Microsoft.Hpc.ServiceBroker.Common
                 balanceInfo = new BalanceInfo(int.MaxValue);
                 return true;
             }
+            */
 
-            async Task<Tuple<JobState, int, int>> ISchedulerAdapter.RegisterJob(int jobid)
+            async Task<(Microsoft.Hpc.Scheduler.Session.Data.JobState jobState, int autoMax, int autoMin)> ISchedulerAdapter.RegisterJobAsync(int jobid)
             {
                 int autoMax = int.MaxValue;
                 int autoMin = 0;
@@ -366,38 +389,41 @@ namespace Microsoft.Hpc.ServiceBroker.Common
                     await this.dispatcherManager.NewDispatcherAsync(info).ConfigureAwait(false);
                 }
 
-                return new Tuple<JobState, int, int>(JobState.Running, autoMax, autoMin);
+                return (Scheduler.Session.Data.JobState.Running, autoMax, autoMin);
             }
 
-            async Task ISchedulerAdapter.FinishJob(int jobid, string reason)
+            async Task ISchedulerAdapter.FinishJobAsync(int jobid, string reason)
             {
                 await Task.CompletedTask;
             }
 
-            async Task ISchedulerAdapter.FailJob(int jobid, string reason)
+            async Task ISchedulerAdapter.FailJobAsync(int jobid, string reason)
             {
                 await Task.CompletedTask;
             }
 
-            async Task ISchedulerAdapter.RequeueOrFailJob(int jobid, string reason)
+            async Task ISchedulerAdapter.RequeueOrFailJobAsync(int jobid, string reason)
             {
                 await Task.CompletedTask;
             }
 
-            async Task<bool> ISchedulerAdapter.ExcludeNode(int jobid, string nodeName)
+            async Task<bool> ISchedulerAdapter.ExcludeNodeAsync(int jobid, string nodeName)
             {
                 return await Task.FromResult(true);
             }
 
-            async Task<bool> ISchedulerAdapter.UpdateBrokerInfo(int jobid, Dictionary<string, object> properties)
+            async Task<bool> ISchedulerAdapter.UpdateBrokerInfoAsync(int jobid, Dictionary<string, object> properties)
             {
                 return await Task.FromResult(true);
             }
-
+            
+            /*
             async Task<int?> ISchedulerAdapter.GetTaskErrorCode(int jobId, int globalTaskId)
             {
                 return await Task.FromResult<int?>(null);
             }
+            */
+
 
             async Task<(bool succeed, BalanceInfo balanceInfo, List<int> taskIds, List<int> runningTaskIds)> ISchedulerAdapter.GetGracefulPreemptionInfo(int jobId)
             {

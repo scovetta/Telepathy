@@ -23,6 +23,8 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using System.Threading;
     using System.Threading.Tasks;
 
+    using SR = Microsoft.Hpc.SvcBroker.SR;
+
     /// <summary>
     /// Base class for all frontends
     /// </summary>

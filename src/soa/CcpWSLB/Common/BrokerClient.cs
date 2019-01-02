@@ -24,6 +24,8 @@ namespace Microsoft.Hpc.ServiceBroker
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.SvcBroker;
 
+    using SR = Microsoft.Hpc.SvcBroker.SR;
+
     /// <summary>
     /// Represent a broker client
     /// </summary>

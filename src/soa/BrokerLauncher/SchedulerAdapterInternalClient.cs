@@ -19,7 +19,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     /// <summary>
     /// The client implementation for the scheduler adapter
     /// </summary>
-    internal class SchedulerAdapterInternalClient : ClientBase<ISchedulerAdapterInternal>, ISchedulerAdapterInternal
+    internal class SchedulerAdapterInternalClient : ClientBase<IHpcSchedulerAdapterInternal>, IHpcSchedulerAdapterInternal
     {
         /// <summary>
         /// Stores the operation timeout
@@ -321,7 +321,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// with the InstanceContext for the singleton service.
         /// </summary>
         /// <returns>A new channel</returns>
-        protected override ISchedulerAdapterInternal CreateChannel()
+        protected override IHpcSchedulerAdapterInternal CreateChannel()
         {
             OperationContext oldContext = OperationContext.Current;
             OperationContext.Current = null;

@@ -126,7 +126,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Interface
         /// <returns>returns a value indicating whether the operation succeeded</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task<(bool succeed, BalanceInfo balanceInfo, List<int> taskIds, List<int> runningTaskIds)> GetGracefulPreemptionInfo(int jobId); // TODO: Change to value tuple here
+        Task<(bool succeed, BalanceInfo balanceInfo, List<int> taskIds, List<int> runningTaskIds)> GetGracefulPreemptionInfo(int jobId); 
 
         /// <summary>
         /// Finish a task

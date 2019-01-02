@@ -21,6 +21,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
 
     /// <summary>
     /// This class handles the graceful preemption requests from scheduler.

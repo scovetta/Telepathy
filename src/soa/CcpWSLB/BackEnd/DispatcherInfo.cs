@@ -38,7 +38,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <summary>
         /// Allocated node location, OnPremise or Azure.
         /// </summary>
-        private NodeLocation nodeLocation;
+        private Scheduler.Session.Data.NodeLocation nodeLocation;
 
         /// <summary>
         /// Stores the time when the task is started.
@@ -61,7 +61,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="uniqueId">indicating the unique id of this dispatcher</param>
         /// <param name="capacity">indicating the capacity of this dispatcher</param>
         /// <param name="machineName">indicating the machine name</param>
-        protected DispatcherInfo(int uniqueId, int capacity, string machineName, string machineVirtualName, NodeLocation location)
+        protected DispatcherInfo(int uniqueId, int capacity, string machineName, string machineVirtualName, Scheduler.Session.Data.NodeLocation location)
         {
             this.uniqueId = uniqueId;
             this.capacity = capacity;
@@ -133,7 +133,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <summary>
         /// Location of the allocated node, on-premise or Azure.
         /// </summary>
-        public NodeLocation AllocatedNodeLocation
+        public Microsoft.Hpc.Scheduler.Session.Data.NodeLocation AllocatedNodeLocation
         {
             get { return this.nodeLocation; }
             set { this.nodeLocation = value; }

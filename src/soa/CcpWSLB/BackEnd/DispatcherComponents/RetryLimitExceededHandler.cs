@@ -17,6 +17,8 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.SvcBroker;
 
+    using SR = Microsoft.Hpc.SvcBroker.SR;
+
     /// <summary>
     /// Handle retry limit exceeded 
     /// </summary>

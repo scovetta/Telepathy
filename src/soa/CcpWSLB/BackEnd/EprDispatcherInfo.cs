@@ -14,7 +14,7 @@
         private string epr;
 
         public EprDispatcherInfo(string epr, int capacity, int unqiueId)
-            : base(unqiueId, capacity, null, null, NodeLocation.OnPremise)
+            : base(unqiueId, capacity, null, null, Scheduler.Session.Data.NodeLocation.OnPremise)
         {
             this.epr = epr;
 

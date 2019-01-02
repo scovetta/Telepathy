@@ -32,6 +32,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using Microsoft.Hpc.AADAuthUtil;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter;
 
+    using IBrokerLauncher = Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.IBrokerLauncher;
+
     /// <summary>
     /// Launcher Host Service
     /// </summary>

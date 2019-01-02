@@ -23,6 +23,8 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using SoaAmbientConfig;
     using System.IO;
 
+    using SR = Microsoft.Hpc.SvcBroker.SR;
+
     /// <summary>
     /// Implementation the broker controller service
     /// </summary>

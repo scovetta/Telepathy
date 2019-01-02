@@ -6,5 +6,10 @@
         {
             return (Data.JobState)jobstate;
         }
+
+        public static Properties.JobState FromSoaJobState(Data.JobState jobState)
+        {
+            return (Properties.JobState)jobState;
+        }
     }
 }

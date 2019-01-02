@@ -25,8 +25,13 @@ namespace Microsoft.Hpc.ServiceBroker
     using Microsoft.Hpc.SvcBroker;
     using System.Net;
     using System.Net.Http;
+
+    using Microsoft.Hpc.Scheduler.Session.HpcPack.DataMapping;
+
     using SoaAmbientConfig;
     using Microsoft.Hpc.ServiceBroker.Common.ThreadHelper;
+
+    using SR = Microsoft.Hpc.SvcBroker.SR;
 
     /// <summary>
     /// Internal Monitor the service job
@@ -299,7 +304,7 @@ namespace Microsoft.Hpc.ServiceBroker
                 await RetryHelper<object>.InvokeOperationAsync(
                         async () =>
                         {
-                            await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).UpdateBrokerInfo(this.sharedData.BrokerInfo.SessionId, props);
+                            await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).UpdateBrokerInfoAsync(this.sharedData.BrokerInfo.SessionId, props);
                             return null;
                         },
                         async (e, r) =>
@@ -349,7 +354,7 @@ namespace Microsoft.Hpc.ServiceBroker
                     await RetryHelper<object>.InvokeOperationAsync(
                             async () =>
                             {
-                                await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).FinishJob(this.sharedData.BrokerInfo.SessionId, reason);
+                                await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).FinishJobAsync(this.sharedData.BrokerInfo.SessionId, reason);
                                 return null;
                             },
                             async (e, r) =>
@@ -386,7 +391,7 @@ namespace Microsoft.Hpc.ServiceBroker
                 await RetryHelper<object>.InvokeOperationAsync(
                         async () =>
                         {
-                            await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).FailJob(this.sharedData.BrokerInfo.SessionId, reason);
+                            await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).FailJobAsync(this.sharedData.BrokerInfo.SessionId, reason);
                             return null;
                         },
                         async (e, r) =>
@@ -424,7 +429,7 @@ namespace Microsoft.Hpc.ServiceBroker
                     await RetryHelper<object>.InvokeOperationAsync(
                             async () =>
                             {
-                                await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).RequeueOrFailJob(this.sharedData.BrokerInfo.SessionId, reason);
+                                await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).RequeueOrFailJobAsync(this.sharedData.BrokerInfo.SessionId, reason);
                                 return null;
                             },
                             async (e, r) =>
@@ -468,7 +473,7 @@ namespace Microsoft.Hpc.ServiceBroker
             {
                 RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
                 excludeNodeSuccess = await RetryHelper<bool>.InvokeOperationAsync(
-                        async () => await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).ExcludeNode(this.sharedData.BrokerInfo.SessionId, nodeName),
+                        async () => await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).ExcludeNodeAsync(this.sharedData.BrokerInfo.SessionId, nodeName),
                         async (e, r) => await Task.FromResult<object>(new Func<object>(() => { BrokerTracing.TraceEvent(System.Diagnostics.TraceEventType.Error, 0, "[ServiceJobMonitor] Blacklist node={0} caught exception: {1} with retry: {2}", nodeName, e, r.RetryCount); return null; }).Invoke()),
                         retry);
 
@@ -583,7 +588,7 @@ namespace Microsoft.Hpc.ServiceBroker
                         async () =>
                         {
                             if (!SoaAmbientConfig.StandAlone)
-                                await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).UpdateBrokerInfo(this.sharedData.BrokerInfo.SessionId, props);
+                                await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).UpdateBrokerInfoAsync(this.sharedData.BrokerInfo.SessionId, props);
                             return null;
                         },
                         async (e, r) =>
@@ -614,7 +619,7 @@ namespace Microsoft.Hpc.ServiceBroker
                 await RetryHelper<object>.InvokeOperationAsync(
                         async () =>
                         {
-                            await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).UpdateBrokerInfo(this.sharedData.BrokerInfo.SessionId, props);
+                            await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).UpdateBrokerInfoAsync(this.sharedData.BrokerInfo.SessionId, props);
                             return null;
                         },
                         async (e, r) =>
@@ -778,7 +783,7 @@ namespace Microsoft.Hpc.ServiceBroker
                                             this.sharedData.BrokerInfo.SessionId,
                                             this.targetResourceCountInResourceUnitsCalculated);
 
-                                        this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync().GetAwaiter().GetResult()?.UpdateBrokerInfo(this.sharedData.BrokerInfo.SessionId, props);
+                                        this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync().GetAwaiter().GetResult()?.UpdateBrokerInfoAsync(this.sharedData.BrokerInfo.SessionId, props);
 
                                         // If target resource count increases, reset consecutive shrink counter
                                         if (this.targetResourceCountInResourceUnitsCalculated > this.targetResourceCountInResourceUnits)
@@ -806,7 +811,7 @@ namespace Microsoft.Hpc.ServiceBroker
                                             this.sharedData.BrokerInfo.SessionId,
                                             this.minUnits);
 
-                                        this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync().GetAwaiter().GetResult()?.UpdateBrokerInfo(this.sharedData.BrokerInfo.SessionId, props);
+                                        this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync().GetAwaiter().GetResult()?.UpdateBrokerInfoAsync(this.sharedData.BrokerInfo.SessionId, props);
 
                                         this.targetResourceCountInResourceUnits = this.minUnits;
                                         //}
@@ -910,7 +915,7 @@ namespace Microsoft.Hpc.ServiceBroker
                                 RetryHelper<object>.InvokeOperationAsync(
                                         async () =>
                                         {
-                                            await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).UpdateBrokerInfo(this.sharedData.BrokerInfo.SessionId, props);
+                                            await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).UpdateBrokerInfoAsync(this.sharedData.BrokerInfo.SessionId, props);
                                             return null;
                                         },
                                         async (e, r) =>
@@ -1327,20 +1332,17 @@ namespace Microsoft.Hpc.ServiceBroker
             BrokerTracing.TraceVerbose("[ServiceJobMonitor] Begin: RegisterJob");
 
             int autoMax, autoMin;
-            JobState jobState;
-            Tuple<JobState, int, int> jobResult;
+            Microsoft.Hpc.Scheduler.Session.Data.JobState jobState;
             try
             {
                 //lock (this.lockClient)
                 //{
                 RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
-                jobResult = await RetryHelper<Tuple<JobState, int, int>>.InvokeOperationAsync(
-                        async () => await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).RegisterJob(this.sharedData.BrokerInfo.SessionId),
+                (jobState, autoMax, autoMin) = await RetryHelper< (Hpc.Scheduler.Session.Data.JobState, int, int)>.InvokeOperationAsync(
+                        async () => await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).RegisterJobAsync(this.sharedData.BrokerInfo.SessionId),
                         async (e, r) => await Task.FromResult<object>(new Func<object>(() => { BrokerTracing.TraceEvent(System.Diagnostics.TraceEventType.Error, 0, "[ServiceJobMonitor] SessionFault throws when registering job: {0} with retry {1}", e, r.RetryCount); return null; }).Invoke()),
                         retry);
-                jobState = jobResult.Item1;
-                autoMax = jobResult.Item2;
-                autoMin = jobResult.Item3;
+                
                 //}
             }
             catch (FaultException<SessionFault> e)
@@ -1374,7 +1376,7 @@ namespace Microsoft.Hpc.ServiceBroker
             }
 
             BrokerTracing.TraceVerbose("[ServiceJobMonitor] Current job state is {0}", jobState);
-            if (jobState == JobState.Finished || jobState == JobState.Finishing || jobState == JobState.Failed)
+            if (jobState == Hpc.Scheduler.Session.Data.JobState.Finished || jobState == Hpc.Scheduler.Session.Data.JobState.Finishing || jobState == Hpc.Scheduler.Session.Data.JobState.Failed)
             {
                 // Bug 14543: If the job is already in the above state (suppose it should never go back to
                 // Running without user iteraction), set ServiceJobState to Finished as it should not allow
@@ -1423,11 +1425,17 @@ namespace Microsoft.Hpc.ServiceBroker
             }
         }
 
+        Task ISchedulerNotify.JobStateChanged(Microsoft.Hpc.Scheduler.Session.Data.JobState jobState)
+        {
+            return JobStateChangedInternal(JobStateConverter.FromSoaJobState(jobState));
+        }
+
+
         /// <summary>
         /// The callback event
         /// </summary>
         /// <param name="state">indicating new job state</param>
-        Task ISchedulerNotify.JobStateChanged(JobState state)
+        Task JobStateChangedInternal(JobState state)
         {
             return Task.Run(() =>
             {
@@ -1506,7 +1514,7 @@ namespace Microsoft.Hpc.ServiceBroker
 
                 foreach (TaskInfo info in taskInfoList)
                 {
-                    if (info.State == TaskState.Running || info.State == TaskState.Dispatching)
+                    if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Running || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Dispatching)
                     {
                         if (this.IsRemovedDispatcher(info.Id))
                         {
@@ -1516,7 +1524,7 @@ namespace Microsoft.Hpc.ServiceBroker
                         {
                             ServiceTaskDispatcherInfo serviceTaskDispatcherInfo = null;
 
-                            if (info.Location == NodeLocation.OnPremise || info.Location == NodeLocation.Linux || info.Location == NodeLocation.NonDomainJoined)
+                            if (info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.OnPremise || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.Linux || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.NonDomainJoined)
                             {
                                 //
                                 // the node is on-premise or Linux node
@@ -1571,13 +1579,13 @@ namespace Microsoft.Hpc.ServiceBroker
                                         this.dispatcherManager.BackEndIsHttp);
                                 }
                             }
-                            else if (info.Location == NodeLocation.AzureEmbedded || info.Location == NodeLocation.AzureEmbeddedVM)
+                            else if (info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.AzureEmbedded || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.AzureEmbeddedVM)
                             {
                                 //
                                 // the cluster is on Azure
                                 //
 
-                                if (info.State == TaskState.Running)
+                                if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Running)
                                 {
                                     lock (this.lockRemoteBlacklistCopy)
                                     {
@@ -1617,13 +1625,13 @@ namespace Microsoft.Hpc.ServiceBroker
                                         info.State);
                                 }
                             }
-                            else if (info.Location == NodeLocation.Azure || info.Location == NodeLocation.AzureVM)
+                            else if (info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.Azure || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.AzureVM)
                             {
                                 //
                                 // burst mode (the node is on Azure)
                                 //
 
-                                if (info.State == TaskState.Running)
+                                if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Running)
                                 {
                                     lock (this.lockRemoteBlacklistCopy)
                                     {
@@ -1673,7 +1681,7 @@ namespace Microsoft.Hpc.ServiceBroker
                             BrokerTracing.TraceInfo("[ServiceJobMonitor] Dispatcher {0} is already created. Task state {1}.", info.Id, info.State);
                         }
                     }
-                    else if (info.State == TaskState.Canceled || info.State == TaskState.Failed || info.State == TaskState.Finished || info.State == TaskState.Finishing)
+                    else if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Canceled || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Failed || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Finished || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Finishing)
                     {
                         // remove (info.State == TaskState.Canceling) from the condition above.
                         // when preemption happens to the task, it is in cancelling state. Should not remove the dispather,

@@ -21,6 +21,8 @@ namespace Microsoft.Hpc.ServiceBroker
     using Microsoft.Hpc.ServiceBroker.FrontEnd;
     using Microsoft.Hpc.SvcBroker;
 
+    using SR = Microsoft.Hpc.SvcBroker.SR;
+
     /// <summary>
     /// Handler for get responses
     /// </summary>
