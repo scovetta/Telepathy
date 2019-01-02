@@ -37,13 +37,13 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// v3 session instance
         /// </summary>
-        HpcV3Session v3session;
+        V3Session v3session;
 
         /// <summary>
         /// create the session shim based on a v3 session
         /// </summary>
         /// <param name="v2session"></param>
-        internal Session(HpcV3Session v3session)
+        internal Session(V3Session v3session)
         {
             this.v3session = v3session;
         }
@@ -480,7 +480,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             IBrokerFactory brokerFactory = new V3BrokerFactory(false);
             DateTime targetTimeout = DateTime.Now.AddMilliseconds(Constant.DefaultCreateSessionTimeout);
             //in HPC sessionId cannot be negative (out of range)   
-            return new Session((HpcV3Session)await brokerFactory.CreateBroker(startInfo, SessionStartInfo.StandaloneSessionId, targetTimeout, startInfo.BrokerLauncherEprs, null).ConfigureAwait(false));
+            return new Session((V3Session)await brokerFactory.CreateBroker(startInfo, SessionStartInfo.StandaloneSessionId, targetTimeout, startInfo.BrokerLauncherEprs, null).ConfigureAwait(false));
         }
 
 
@@ -500,7 +500,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             InprocessBrokerFactory brokerFactory = new InprocessBrokerFactory(startInfo.Headnode, false);
             DateTime targetTimeout = DateTime.Now.AddMilliseconds(Constant.DefaultCreateSessionTimeout);
-            return new Session((HpcV3Session) await brokerFactory.CreateBroker(startInfo, SessionStartInfo.StandaloneSessionId, targetTimeout, null, null).ConfigureAwait(false));
+            return new Session((V3Session) await brokerFactory.CreateBroker(startInfo, SessionStartInfo.StandaloneSessionId, targetTimeout, null, null).ConfigureAwait(false));
         }
     }
 }
