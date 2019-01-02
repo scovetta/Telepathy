@@ -235,7 +235,7 @@ namespace Microsoft.Hpc.EchoClient
                 watch.Start();
                 if (config.Durable)
                 {
-                    session = DurableSession.CreateSession(info);
+                    session = HpcDurableSession.CreateSession(info);
                 }
                 else
                 {
