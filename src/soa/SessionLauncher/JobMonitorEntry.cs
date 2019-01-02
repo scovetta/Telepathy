@@ -18,6 +18,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
     using Microsoft.Hpc.Scheduler.Properties;
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using System.Threading.Tasks;
+
+    using Microsoft.Hpc.Scheduler.Session.HpcPack.DataMapping;
+
     /// <summary>
     /// Entry class for job monitor
     /// </summary>
@@ -448,7 +451,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                                 if (0 == this.isRequeuingJob)
                                 {
                                     ISchedulerNotify proxy = this.context;
-                                    proxy.JobStateChanged(state).ContinueWith(this.OnEndJobStateChanged);
+                                    proxy.JobStateChanged(JobStateConverter.FromHpcJobState(state)).ContinueWith(this.OnEndJobStateChanged);
                                     TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[JobMonitorEntry] Job state change event triggered, new state: {0}", state);
                                 }
                             }
@@ -872,10 +875,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                             info.MachineName = machineName;
                         }
 
-                        info.Location = location;
+                        info.Location = NodeLocationConverter.FromHpcNodeLocation(location);
                         info.ProxyServiceName = azureServiceName;
                         info.AzureLoadBalancerAddress = azureLoadBalancerAddress;
-                        info.State = state;
+                        info.State = TaskStateConverter.FromHpcTaskState(state);
                         info.FirstCoreIndex = coreindex;
                         info.JobRequeueCount = jobRequeueCount;
                         results.Add(info);
@@ -884,7 +887,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     {
                         TaskInfo info = new TaskInfo();
                         info.Id = objectId;
-                        info.State = state;
+                        info.State = TaskStateConverter.FromHpcTaskState(state);
                         info.JobRequeueCount = jobRequeueCount;
                         results.Add(info);
                     }

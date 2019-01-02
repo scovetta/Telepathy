@@ -640,11 +640,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
             {
                 IFilterCollection collection = new FilterCollection();
                 collection.Add(new FilterProperty(FilterOperator.NotEqual, JobPropertyIds.ServiceName, string.Empty));
-                collection.Add(new FilterProperty(FilterOperator.HasNoBitSet, JobPropertyIds.State, JobState.Finished));
+                collection.Add(new FilterProperty(FilterOperator.HasNoBitSet, JobPropertyIds.State, Microsoft.Hpc.Scheduler.Properties.JobState.Finished));
 
                 foreach (ISchedulerJob job in this.scheduler.GetJobList(collection, null))
                 {
-                    if (job.State != JobState.Canceled && job.State != JobState.Failed)
+                    if (job.State != Properties.JobState.Canceled && job.State != Properties.JobState.Failed)
                     {
                         activeSessionIdList.Add(job.Id);
                     }

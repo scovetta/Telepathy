@@ -222,6 +222,9 @@
     </Compile>
     <Compile Include="BalanceInfoHpcFactory.cs" />
     <Compile Include="CredUtil.cs" />
+    <Compile Include="DataMapping\JobStateConverter.cs" />
+    <Compile Include="DataMapping\NodeLocationConverter.cs" />
+    <Compile Include="DataMapping\TaskStateConverter.cs" />
     <Compile Include="Data\DataClient\DataServiceRestClient.cs" />
     <Compile Include="Data\DataClient\DTO\OpenDataClientBySecretParams.cs" />
     <Compile Include="HpcSession.cs" />

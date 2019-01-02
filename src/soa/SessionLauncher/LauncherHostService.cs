@@ -29,6 +29,8 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
     using Microsoft.Hpc.Scheduler.Session.Data.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.DataService.REST;
 
+    using ISessionLauncher = Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.ISessionLauncher;
+
     /// <summary>
     /// Launcher Host Service
     /// </summary>

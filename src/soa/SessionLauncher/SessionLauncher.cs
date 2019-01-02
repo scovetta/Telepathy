@@ -33,6 +33,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.AADAuthUtil;
+    using Microsoft.Hpc.Scheduler.Session.HpcPack.DataMapping;
+
+    using JobState = Microsoft.Hpc.Scheduler.Session.Data.JobState;
 
     /// <summary>
     /// the session launcher service.
@@ -349,7 +352,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     {
                         sessionInfo = new SessionInfoContract();
                         sessionInfo.Id = sessionId;
-                        sessionInfo.JobState = schedulerJob.State;
+                        sessionInfo.JobState = JobStateConverter.FromHpcJobState(schedulerJob.State);
                         sessionInfo.UseAad = useAad;
 
                         // Return the owner of the session
@@ -701,7 +704,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 {
                     sessionInfo = new SessionInfoContract();
                     sessionInfo.Id = sessionId;
-                    sessionInfo.JobState = schedulerJob.State;
+                    sessionInfo.JobState = JobStateConverter.FromHpcJobState(schedulerJob.State);
 
                     // Return the owner of the session
                     sessionInfo.SessionOwner = schedulerJob.Owner;
@@ -913,7 +916,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
                 TraceHelper.TraceEvent(sessionId, TraceEventType.Information, "[SessionLauncher] .Terminate: Try to get the job state for the job[id={0}].", sessionId);
 
-                JobState jobState = schedulerJob.State;
+                JobState jobState = JobStateConverter.FromHpcJobState(schedulerJob.State);
                 if ((jobState & JobState.Canceled) != 0 || (jobState & JobState.Failed) != 0 || (jobState & JobState.Finished) != 0 || (jobState & JobState.Finishing) != 0)
                 {
                     return;
@@ -2831,12 +2834,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     {
                         ISchedulerJob job = this.scheduler.OpenJob(jobid);
                         if ((job.State
-                            & (JobState.Configuring
-                             | JobState.Submitted
-                             | JobState.Validating
-                             | JobState.ExternalValidation
-                             | JobState.Queued
-                             | JobState.Running)) != 0)
+                            & (Properties.JobState.Configuring
+                             | Properties.JobState.Submitted
+                             | Properties.JobState.Validating
+                             | Properties.JobState.ExternalValidation
+                             | Properties.JobState.Queued
+                             | Properties.JobState.Running)) != 0)
                         {
                             TraceHelper.TraceEvent(TraceEventType.Verbose,
                                 "[SessionLauncher] .PickSessionIdFromPool: Find the session {0} in the pool.", jobid);
