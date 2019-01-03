@@ -41,7 +41,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="startInfo">The session start info for creating the service session</param>
         /// <returns>A service job session object, including the endpoint address and the two jobs related to this session</returns>
-        public static HpcV3Session CreateSession(SessionStartInfo startInfo)
+        public static V3Session CreateSession(SessionStartInfo startInfo)
         {
             return CreateSessionAsync(startInfo).GetAwaiter().GetResult();
         }
@@ -51,7 +51,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="startInfo">The session start info for creating the service session</param>
         /// <returns>A service job session object, including the endpoint address and the two jobs related to this session</returns>
-        public static async Task<HpcV3Session> CreateSessionAsync(SessionStartInfo startInfo)
+        public static async Task<V3Session> CreateSessionAsync(SessionStartInfo startInfo)
         {
             return await CreateSessionAsync(startInfo, null).ConfigureAwait(false);
         }
@@ -62,7 +62,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="startInfo">The session start info for creating the service session</param>
         /// <param name="binding">indicting the binding</param>
         /// <returns>A service job session object, including the endpoint address and the two jobs related to this session</returns>
-        public static HpcV3Session CreateSession(SessionStartInfo startInfo, Binding binding)
+        public static V3Session CreateSession(SessionStartInfo startInfo, Binding binding)
         {
             return CreateSessionAsync(startInfo, binding).GetAwaiter().GetResult();
         }
@@ -73,7 +73,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="startInfo">The session start info for creating the service session</param>
         /// <param name="binding">indicting the binding</param>
         /// <returns>A service job session object, including the endpoint address and the two jobs related to this session</returns>
-        public static async Task<HpcV3Session> CreateSessionAsync(SessionStartInfo startInfo, Binding binding)
+        public static async Task<V3Session> CreateSessionAsync(SessionStartInfo startInfo, Binding binding)
         {
             Utility.ThrowIfNull(startInfo, "startInfo");
 
@@ -81,7 +81,7 @@ namespace Microsoft.Hpc.Scheduler.Session
 
             if (Utility.IsHpcSessionType(startInfo.GetType()))
             {
-                return (HpcV3Session)await HpcSessionFactory.BuildSessionFactory(startInfo).CreateSession(startInfo, false, Constant.DefaultCreateSessionTimeout, binding).ConfigureAwait(false);
+                return (V3Session)await HpcSessionFactory.BuildSessionFactory(startInfo).CreateSession(startInfo, false, Constant.DefaultCreateSessionTimeout, binding).ConfigureAwait(false);
             }
             else
             {
@@ -172,7 +172,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="attachInfo">The attach info</param>
         /// <returns>A persistant session</returns>
-        public static HpcV3Session AttachSession(SessionAttachInfo attachInfo)
+        public static V3Session AttachSession(SessionAttachInfo attachInfo)
         {
             return AttachSession(attachInfo, null);
         }
@@ -183,7 +183,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="attachInfo">The attach info</param>
         /// <param name="binding">indicting the binding</param>
         /// <returns>A persistant session</returns>
-        public static HpcV3Session AttachSession(SessionAttachInfo attachInfo, Binding binding)
+        public static V3Session AttachSession(SessionAttachInfo attachInfo, Binding binding)
         {
             return AttachSessionAsync(attachInfo, binding).GetAwaiter().GetResult();
         }
@@ -193,7 +193,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="attachInfo">The attach info</param>
         /// <returns>A persistant session</returns>
-        public static async Task<HpcV3Session> AttachSessionAsync(SessionAttachInfo attachInfo)
+        public static async Task<V3Session> AttachSessionAsync(SessionAttachInfo attachInfo)
         {
             return await AttachSessionAsync(attachInfo, null).ConfigureAwait(false);
         }
@@ -204,7 +204,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="attachInfo">The attach info</param>
         /// <param name="binding">indicting the binding</param>
         /// <returns>A persistant session</returns>
-        public static async Task<HpcV3Session> AttachSessionAsync(SessionAttachInfo attachInfo, Binding binding)
+        public static async Task<V3Session> AttachSessionAsync(SessionAttachInfo attachInfo, Binding binding)
         {
             Utility.ThrowIfNull(attachInfo, "attachInfo");
 
@@ -212,7 +212,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             {
                 Utility.ThrowIfEmpty(attachInfo.Headnode, "headNode");
 
-                return (HpcV3Session)await HpcSessionFactory.BuildSessionFactory(attachInfo).AttachSession(attachInfo, false, Timeout.Infinite, binding).ConfigureAwait(false);
+                return (V3Session)await HpcSessionFactory.BuildSessionFactory(attachInfo).AttachSession(attachInfo, false, Timeout.Infinite, binding).ConfigureAwait(false);
             }
             else
             {
