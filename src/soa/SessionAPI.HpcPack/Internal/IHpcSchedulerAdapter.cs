@@ -14,12 +14,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Interface
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Properties;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
 
     /// <summary>
     /// Service contract of scheduler adapter
     /// </summary>
     [ServiceContract(CallbackContract = typeof(ISchedulerNotify), Namespace = "http://hpc.microsoft.com")]
-    public interface IHpcSchedulerAdapter
+    public interface IHpcSchedulerAdapter : ISchedulerAdapter
     {
         /// <summary>
         /// Start to subscribe the job and task event

@@ -35,7 +35,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
     /// Scheduler adapter for both broker and broker launcher
     /// </summary>
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple, IncludeExceptionDetailInFaults = true, MaxItemsInObjectGraph = int.MaxValue)]
-    internal class HpcSchedulerDelegation : DisposableObject, IHpcSchedulerAdapter, IHpcSchedulerAdapterInternal
+    internal class HpcSchedulerDelegation : DisposableObject, IHpcSchedulerAdapter, IHpcSchedulerAdapterInternal, ISchedulerAdapter
     {
         /// <summary>
         /// Stores the default job template name
@@ -1358,6 +1358,41 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
         }
 
+        public async Task<(bool succeed, BalanceInfo balanceInfo, List<int> taskIds, List<int> runningTaskIds)> GetGracefulPreemptionInfoAsync(int sessionId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> FinishTaskAsync(int jobId, int taskUniqueId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> ExcludeNodeAsync(int jobid, string nodeName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task RequeueOrFailJobAsync(int sessionId, string reason)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task FailJobAsync(int sessionId, string reason)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task FinishJobAsync(int sessionId, string reason)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<(Data.JobState jobState, int autoMax, int autoMin)> RegisterJobAsync(int jobid)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Cancel a task.
         /// </summary>
@@ -1623,6 +1658,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
                 throw;
             }
+        }
+
+        public async Task<bool> UpdateBrokerInfoAsync(int sessionId, Dictionary<string, object> properties)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

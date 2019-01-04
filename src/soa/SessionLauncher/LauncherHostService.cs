@@ -64,7 +64,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
         /// <summary>
         /// Stores the scheduler delegation service instance
         /// </summary>
-        private HpcSchedulerDelegation hpcSchedulerDelegation;
+        private ISchedulerAdapter schedulerDelegation;
 
         /// <summary>
         /// Store the data service instance
@@ -132,12 +132,12 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 if (!isNtService)
                 {
                     // only need to get cleaned in SF serivce
-                    if (this.hpcSchedulerDelegation != null)
+                    if (this.schedulerDelegation is IDisposable disposable)
                     {
-                        this.hpcSchedulerDelegation.Close();
+                        disposable.Dispose();
                         TraceHelper.TraceEvent(TraceEventType.Verbose, "Scheduler delegation closed");
                     }
-                    this.hpcSchedulerDelegation = null;
+                    this.schedulerDelegation = null;
 
                     if (this.sessionLauncher != null)
                     {
@@ -180,14 +180,21 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
 
                 this.brokerNodesManager = new BrokerNodesManager();
                 this.sessionLauncher = new SessionLauncher(SoaHelper.GetSchedulerName(true), /* runningLocal = */ false, this.brokerNodesManager);
-                this.hpcSchedulerDelegation = new HpcSchedulerDelegation(this.sessionLauncher, this.brokerNodesManager);
+                this.schedulerDelegation = new HpcSchedulerDelegation(this.sessionLauncher, this.brokerNodesManager);
 
 #if AZURE
                 TraceHelper.IsDiagTraceEnabled = x => true;
 #else
                 // Bug 18448: Need to enable traces only for those who have enabled trace
-                SoaDiagTraceHelper.IsDiagTraceEnabledInternal = ((IHpcSchedulerAdapterInternal)this.hpcSchedulerDelegation).IsDiagTraceEnabled;
-                TraceHelper.IsDiagTraceEnabled = SoaDiagTraceHelper.IsDiagTraceEnabled;
+                if (this.schedulerDelegation is IHpcSchedulerAdapterInternal hpcAdapterInternal)
+                {
+                    SoaDiagTraceHelper.IsDiagTraceEnabledInternal = hpcAdapterInternal.IsDiagTraceEnabled;
+                    TraceHelper.IsDiagTraceEnabled = SoaDiagTraceHelper.IsDiagTraceEnabled;
+                }
+                else
+                {
+                    TraceHelper.IsDiagTraceEnabled = _ => true;
+                }
 #endif
 
                 // start session launcher service
@@ -277,17 +284,27 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
         private void StartSchedulerDelegationService()
         {
             string schedulerDelegationAddress = SoaHelper.GetSchedulerDelegationAddress("localhost");
-            this.delegationHost = new ServiceHost(this.hpcSchedulerDelegation, new Uri(schedulerDelegationAddress));
+            this.delegationHost = new ServiceHost(this.schedulerDelegation, new Uri(schedulerDelegationAddress));
             BindingHelper.ApplyDefaultThrottlingBehavior(this.delegationHost);
-            this.delegationHost.AddServiceEndpoint(typeof(IHpcSchedulerAdapterInternal), BindingHelper.HardCodedInternalSchedulerDelegationBinding, "Internal");
-            this.delegationHost.AddServiceEndpoint(typeof(IHpcSchedulerAdapter), BindingHelper.HardCodedInternalSchedulerDelegationBinding, string.Empty);
-            this.delegationHost.Credentials.ClientCertificate.Authentication.CertificateValidationMode = X509CertificateValidationMode.PeerOrChainTrust;
-            this.delegationHost.Credentials.ClientCertificate.Authentication.RevocationMode = X509RevocationMode.NoCheck;
-            this.delegationHost.Credentials.ServiceCertificate.SetCertificate(StoreLocation.LocalMachine,
-                        StoreName.My,
-                        X509FindType.FindByThumbprint,
-                        HpcContext.Get().GetSSLThumbprint().GetAwaiter().GetResult()
-                        );
+            if (this.schedulerDelegation is IHpcSchedulerAdapterInternal)
+            {
+                this.delegationHost.AddServiceEndpoint(typeof(IHpcSchedulerAdapterInternal), BindingHelper.HardCodedInternalSchedulerDelegationBinding, "Internal");
+                this.delegationHost.AddServiceEndpoint(typeof(IHpcSchedulerAdapter), BindingHelper.HardCodedInternalSchedulerDelegationBinding, string.Empty);
+                this.delegationHost.Credentials.ClientCertificate.Authentication.CertificateValidationMode = X509CertificateValidationMode.PeerOrChainTrust;
+                this.delegationHost.Credentials.ClientCertificate.Authentication.RevocationMode = X509RevocationMode.NoCheck;
+                this.delegationHost.Credentials.ServiceCertificate.SetCertificate(
+                    StoreLocation.LocalMachine,
+                    StoreName.My,
+                    X509FindType.FindByThumbprint,
+                    HpcContext.Get().GetSSLThumbprint().GetAwaiter().GetResult());
+            }
+            else
+            {
+                // Use insecure binding until unified authentication logic is implemented
+                this.delegationHost.AddServiceEndpoint(typeof(ISchedulerAdapter), BindingHelper.HardCodedUnSecureNetTcpBinding, string.Empty);
+            }
+
+            
 
             this.delegationHost.Faulted += SchedulerDelegationHostFaultHandler;
             this.delegationHost.Open();
