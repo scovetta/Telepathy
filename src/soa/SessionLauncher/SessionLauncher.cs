@@ -216,9 +216,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             {
                 this.ConstructSessionPool();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .SessionLauncher: Failed to construct session pool.");
+                TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .SessionLauncher: Failed to construct session pool. Exception:{0}", ex.ToString());
             }
         }
 
