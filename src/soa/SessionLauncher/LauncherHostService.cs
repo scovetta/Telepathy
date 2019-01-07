@@ -29,6 +29,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
     using Microsoft.Hpc.Scheduler.Session.Data.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.DataService.REST;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls;
+    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack;
 
     using ISessionLauncher = Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.ISessionLauncher;
 
@@ -205,9 +206,9 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 this.StartSchedulerDelegationService();
 
                 // start data service
-                if (!SoaHelper.IsOnAzure() && SessionLauncherSettings.Default.EnableDataService)
+                if (!SoaHelper.IsOnAzure() && this.sessionLauncher is HpcPackSessionLauncher hpcSessionLauncher)
                 {
-                    this.dataService = this.sessionLauncher.GetDataService();
+                    this.dataService = hpcSessionLauncher.GetDataService();
                     this.StartDataWcfService();
                     this.StartDataRestService(this.dataService);
                 }

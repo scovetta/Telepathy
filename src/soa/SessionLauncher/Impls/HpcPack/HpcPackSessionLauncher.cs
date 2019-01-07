@@ -111,7 +111,7 @@
 
             if (SessionLauncherSettings.Default.EnableDataService)
             {
-                dataService = new Microsoft.Hpc.Scheduler.Session.Data.Internal.DataService(clusterInfo, scheduler);
+                this.dataService = new Microsoft.Hpc.Scheduler.Session.Data.Internal.DataService(clusterInfo, scheduler);
             }
 
             try
@@ -143,6 +143,11 @@
         /// a value indicating the current state of connection to scheduler.
         /// </summary>
         private SchedulerConnectState schedulerConnectState = SchedulerConnectState.None;
+
+        /// <summary>
+        /// data service instance
+        /// </summary>
+        private Microsoft.Hpc.Scheduler.Session.Data.Internal.DataService dataService;
 
         /// <summary>
         /// the timeout setting for retring to conect to the scheduler.
@@ -2491,6 +2496,15 @@
             {
                 return callerWindowsIdentity;
             }
+        }
+
+        /// <summary>
+        /// Gets data server information
+        /// </summary>
+        /// <returns>returns data server information</returns>
+        internal Microsoft.Hpc.Scheduler.Session.Data.Internal.DataService GetDataService()
+        {
+            return this.dataService;
         }
     }
 }

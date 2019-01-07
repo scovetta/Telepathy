@@ -59,11 +59,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         protected BrokerNodesManager brokerNodesManager;
 
         /// <summary>
-        /// data service instance
-        /// </summary>
-        protected Microsoft.Hpc.Scheduler.Session.Data.Internal.DataService dataService;
-
-        /// <summary>
         /// session pool for durable session
         /// Key: ServiceName_Version
         /// Value: Session Id list
@@ -87,15 +82,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <param name="headNode">the specified head node.</param>
         protected SessionLauncher()
         {
-        }
-
-        /// <summary>
-        /// Gets data server information
-        /// </summary>
-        /// <returns>returns data server information</returns>
-        internal Microsoft.Hpc.Scheduler.Session.Data.Internal.DataService GetDataService()
-        {
-            return this.dataService;
         }
 
         #region SessionLauncher operations
