@@ -22,10 +22,6 @@ namespace Microsoft.Hpc.ServiceBroker
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
     using Microsoft.Hpc.ServiceBroker.BackEnd;
     using Microsoft.Hpc.ServiceBroker.Common;
-    using Microsoft.Hpc.SvcBroker;
-    using System.Net;
-    using System.Net.Http;
-
     using Microsoft.Hpc.Scheduler.Session.HpcPack.DataMapping;
 
     using SoaAmbientConfig;
@@ -1711,57 +1707,48 @@ namespace Microsoft.Hpc.ServiceBroker
                             options,
                             info =>
 
-
-                            {
-                                try
-                                {
-                                    if (this.newDispatcherThreadCount.WaitOne())
-                                    {
-                                        // WCF BUG:
-                                        // We need a sync call Open on ClientBase<> to get the correct impersonation context
-                                        // this is a WCF bug, so we create the client on a dedicated thread.
-                                        // If we call it in thread pool thread, it will block the thread pool thread for a while
-                                        // and drops the performance.
-                                        Thread t = new Thread(
-                                            () =>
-                                            {
-                                                try
-                                                {
-                                                    this.dispatcherManager.NewDispatcherAsync(info).GetAwaiter().GetResult();
-                                                }
-                                                catch (Exception e)
-                                                {
-                                                    BrokerTracing.TraceError("[ServiceJobMonitor] Exception happened when create a dispatcher for task {0}, {1}", info.TaskId, e);
-                                                }
-                                            });
-
-                                        t.Start();
-                                    }
-                                }
-                                catch (Exception e)
-
-
-
-
-
-
-
-                                {
-                                    BrokerTracing.TraceError("[ServiceJobMonitor] Exception happened when create a thread to create a new dispatcher for task {0}, {1}", info.TaskId, e);
-                                }
-                                finally
                                 {
                                     try
                                     {
-                                        this.newDispatcherThreadCount.Release();
+                                        if (this.newDispatcherThreadCount.WaitOne())
+                                        {
+                                            // WCF BUG:
+                                            // We need a sync call Open on ClientBase<> to get the correct impersonation context
+                                            // this is a WCF bug, so we create the client on a dedicated thread.
+                                            // If we call it in thread pool thread, it will block the thread pool thread for a while
+                                            // and drops the performance.
+                                            Thread t = new Thread(
+                                                () =>
+                                                    {
+                                                        try
+                                                        {
+                                                            this.dispatcherManager.NewDispatcherAsync(info).GetAwaiter().GetResult();
+                                                        }
+                                                        catch (Exception e)
+                                                        {
+                                                            BrokerTracing.TraceError("[ServiceJobMonitor] Exception happened when create a dispatcher for task {0}, {1}", info.TaskId, e);
+                                                        }
+                                                    });
+
+                                            t.Start();
+                                        }
                                     }
                                     catch (Exception e)
                                     {
-                                        BrokerTracing.TraceError("[ServiceJobMonitor] Exception happened when release the semaphore for task {0}, {1}", info.TaskId, e);
+                                        BrokerTracing.TraceError("[ServiceJobMonitor] Exception happened when create a thread to create a new dispatcher for task {0}, {1}", info.TaskId, e);
                                     }
-                                }
-
-                            });
+                                    finally
+                                    {
+                                        try
+                                        {
+                                            this.newDispatcherThreadCount.Release();
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            BrokerTracing.TraceError("[ServiceJobMonitor] Exception happened when release the semaphore for task {0}, {1}", info.TaskId, e);
+                                        }
+                                    }
+                                });
                     }
                     else
                     {
