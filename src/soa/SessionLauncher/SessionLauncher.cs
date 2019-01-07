@@ -4,6 +4,7 @@
 // </copyright>
 // <summary>the session launcher serivce.</summary>
 //-----------------------------------------------------------------------------------------------------------------------------------------
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 {
     using Microsoft.Hpc.RuntimeTrace;
@@ -23,10 +24,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
     /// <summary>
     /// the session launcher service.
     /// </summary>
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple,
-                     Name = "SessionLauncher",
-                     Namespace = "http://hpc.microsoft.com/sessionlauncher/",
-                     IncludeExceptionDetailInFaults = true)]
+    [ServiceBehavior(
+        InstanceContextMode = InstanceContextMode.Single,
+        ConcurrencyMode = ConcurrencyMode.Multiple,
+        Name = "SessionLauncher",
+        Namespace = "http://hpc.microsoft.com/sessionlauncher/",
+        IncludeExceptionDetailInFaults = true)]
     internal abstract class SessionLauncher : DisposableObject, ISessionLauncher
     {
         #region private fields
@@ -34,7 +37,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <summary>
         /// service registration related environment variables
         /// </summary>
-       // private const string RegistryPathEnv = "CCP_SERVICEREGISTRATION_PATH";
+        // private const string RegistryPathEnv = "CCP_SERVICEREGISTRATION_PATH";
 
         /// <summary>
         /// the commandline for the service task.
@@ -80,6 +83,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         }
 
         #region SessionLauncher operations
+
         /// <summary>
         /// Gets server version
         /// </summary>
@@ -104,8 +108,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <param name="endpointPrefix">the prefix of the endpoint epr.</param>
         /// <param name="sessionId">the session id</param>
         /// <returns>the session information.</returns>
-        Task<SessionInfoContract> ISessionLauncher.GetInfoV5Async(string endpointPrefix, int sessionId) =>
-            ((ISessionLauncher)this).GetInfoV5Sp1Async(endpointPrefix, sessionId, false);
+        Task<SessionInfoContract> ISessionLauncher.GetInfoV5Async(string endpointPrefix, int sessionId) => ((ISessionLauncher)this).GetInfoV5Sp1Async(endpointPrefix, sessionId, false);
 
         public abstract Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, int sessionId, bool useAad);
 
@@ -140,13 +143,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             return ((ISessionLauncher)this).GetInfoV5Async(endpointPrefix, sessionId).GetAwaiter().GetResult();
         }
 
-
         /// <summary>
         /// terminate a session (cancel the service job specified by the id)
         /// </summary>
         /// <param name="headnode">the headnode.</param>
         /// <param name="sessionId">the session id</param>
-
         void ISessionLauncher.Terminate(string headnode, int sessionId)
         {
             ((ISessionLauncher)this).TerminateV5Async(sessionId).GetAwaiter().GetResult();
@@ -169,6 +170,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         //{
         //    return ((ISessionLauncher)this).GetSOAConfigurationAsync(key).Result;
         //}
+
         #endregion
 
         #endregion
@@ -183,7 +185,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <param name="unversionedServiceAdded">is un-versioned service added or not</param>
         protected void GetVersionFromRegistrationDir(string serviceRegistrationDir, string serviceName, bool addUnversionedService, List<Version> versions, ref bool unversionedServiceAdded)
         {
-            TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] GetVersionFromRegistration identity {0},serviceRegistrationDir:{1}:", Thread.CurrentPrincipal.Identity.Name, serviceRegistrationDir ?? "null");
+            TraceHelper.TraceEvent(
+                TraceEventType.Information,
+                "[SessionLauncher] GetVersionFromRegistration identity {0},serviceRegistrationDir:{1}:",
+                Thread.CurrentPrincipal.Identity.Name,
+                serviceRegistrationDir ?? "null");
 #if HPCPACK
             if (string.IsNullOrEmpty(serviceRegistrationDir) || SoaRegistrationAuxModule.IsRegistrationStoreToken(serviceRegistrationDir))
             {
@@ -342,8 +348,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 }
             }
 
-            foreach (Dictionary<string, SessionPool> dictionary in
-                new Dictionary<string, SessionPool>[] { this.nonDurableSessionPool, this.durableSessionPool })
+            foreach (Dictionary<string, SessionPool> dictionary in new Dictionary<string, SessionPool>[] { this.nonDurableSessionPool, this.durableSessionPool })
             {
                 Debug.Assert(dictionary != null, "the session pool is null");
                 lock (dictionary)
@@ -372,7 +377,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             return Task.FromResult(this.clusterInfo.Contract);
         }
 
-#endregion
+        #endregion
 
         /// <summary>
         /// the class holds session pool info of a service
@@ -381,45 +386,78 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         {
             public int this[int i]
             {
-                get { return SessionIds[i]; }
-                set { SessionIds[i] = value; }
+                get
+                {
+                    return SessionIds[i];
+                }
+                set
+                {
+                    SessionIds[i] = value;
+                }
             }
 
             private int index = 0;
 
             public int Index
             {
-                get { return index; }
-                set { index = value; }
+                get
+                {
+                    return index;
+                }
+                set
+                {
+                    index = value;
+                }
             }
 
             private int preparing = 0;
 
             public int Preparing
             {
-                get { return preparing; }
-                set { preparing = value; }
+                get
+                {
+                    return preparing;
+                }
+                set
+                {
+                    preparing = value;
+                }
             }
 
             public int Length
             {
-                get { return SessionIds.Count; }
+                get
+                {
+                    return SessionIds.Count;
+                }
             }
 
             private List<int> sessionIds = new List<int>();
 
             public List<int> SessionIds
             {
-                get { return sessionIds; }
-                set { sessionIds = value; }
+                get
+                {
+                    return sessionIds;
+                }
+                set
+                {
+                    sessionIds = value;
+                }
             }
 
             private ManualResetEvent poolChangeEvent = new ManualResetEvent(true);
 
             public ManualResetEvent PoolChangeEvent
             {
-                get { return poolChangeEvent; }
-                set { poolChangeEvent = value; }
+                get
+                {
+                    return poolChangeEvent;
+                }
+                set
+                {
+                    poolChangeEvent = value;
+                }
             }
 
             public void RemoveAt(int i)

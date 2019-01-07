@@ -48,8 +48,7 @@
 
             ParamCheckUtility.ThrowIfEmpty(headNode, "headNode");
 
-            TraceHelper.TraceEvent(TraceEventType.Information,
-                                              "Header node:{0}", headNode);
+            TraceHelper.TraceEvent(TraceEventType.Information, "Header node:{0}", headNode);
 
             this.runningLocal = runningLocal;
             this.headNodeName = headNode;
@@ -71,8 +70,7 @@
                 {
                     if (stopWatch.ElapsedMilliseconds > ConnectToSchedulerTimeout)
                     {
-                        TraceHelper.TraceEvent(TraceEventType.Error,
-                                                          "[SessionLauncher] .SessionLauncher: Connecting to the scheduler, {0}, timeout.", headNode);
+                        TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .SessionLauncher: Connecting to the scheduler, {0}, timeout.", headNode);
                         throw;
                     }
 
@@ -89,11 +87,9 @@
                 if (regPath == null)
                 {
                     var context = HpcContext.Get();
-                    regPath =
-                        context.Registry.GetValueAsync<string>(HpcConstants.HpcFullKeyName,
-                                HpcConstants.ServiceRegistrationSharePropertyName, context.CancellationToken)
-                            .GetAwaiter()
-                            .GetResult();
+                    regPath = context.Registry.GetValueAsync<string>(HpcConstants.HpcFullKeyName, HpcConstants.ServiceRegistrationSharePropertyName, context.CancellationToken)
+                        .GetAwaiter()
+                        .GetResult();
 
                     // v5sp1: Enable soa registration store by default
                     if (!regPath.Contains(HpcConstants.RegistrationStoreToken))
@@ -415,15 +411,11 @@
                                 }
                                 else if (!localUser)
                                 {
-                                    sessionInfo.BrokerLauncherEpr = BrokerNodesManager.GenerateBrokerLauncherEpr(
-                                        endpointPrefix,
-                                        brokerNodeString,
-                                        sessionInfo.TransportScheme);
+                                    sessionInfo.BrokerLauncherEpr = BrokerNodesManager.GenerateBrokerLauncherEpr(endpointPrefix, brokerNodeString, sessionInfo.TransportScheme);
                                 }
                                 else
                                 {
-                                    sessionInfo.BrokerLauncherEpr =
-                                        BrokerNodesManager.GenerateBrokerLauncherInternalEpr(endpointPrefix, brokerNodeString);
+                                    sessionInfo.BrokerLauncherEpr = BrokerNodesManager.GenerateBrokerLauncherInternalEpr(endpointPrefix, brokerNodeString);
                                 }
                             }
                         }
@@ -520,38 +512,35 @@
             ParamCheckUtility.ThrowIfNullOrEmpty(endpointPrefix, "endpointPrefix");
             ParamCheckUtility.ThrowIfOutofRange(sessionId <= 0, "sessionId");
 
-            TraceHelper.TraceEvent(sessionId,
-                TraceEventType.Information, "[SessionLauncher] .GetInfo: headnode={0}, endpointPrefix={1}, sessionId={2}", headnode, endpointPrefix, sessionId);
+            TraceHelper.TraceEvent(sessionId, TraceEventType.Information, "[SessionLauncher] .GetInfo: headnode={0}, endpointPrefix={1}, sessionId={2}", headnode, endpointPrefix, sessionId);
 
             if (!IsEndpointPrefixSupported(endpointPrefix))
             {
-                TraceHelper.TraceEvent(sessionId,
-                    TraceEventType.Error,
-                    "[SessionLauncher] .GetInfo: {0} is not a supported endpoint prefix.", endpointPrefix);
+                TraceHelper.TraceEvent(sessionId, TraceEventType.Error, "[SessionLauncher] .GetInfo: {0} is not a supported endpoint prefix.", endpointPrefix);
 
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.InvalidArgument,
-                    SR.SessionLauncher_EndpointNotSupported,
-                    endpointPrefix);
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.InvalidArgument, SR.SessionLauncher_EndpointNotSupported, endpointPrefix);
             }
 
             if (this.schedulerConnectState != SchedulerConnectState.ConnectionComplete)
             {
-                TraceHelper.TraceEvent(sessionId,
+                TraceHelper.TraceEvent(
+                    sessionId,
                     TraceEventType.Information,
-                    "[SessionLauncher] .GetInfo: session launcher is not conected to the scheduler, schedulerConnectState={0}", this.schedulerConnectState);
+                    "[SessionLauncher] .GetInfo: session launcher is not conected to the scheduler, schedulerConnectState={0}",
+                    this.schedulerConnectState);
 
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.ConnectToSchedulerFailure,
-                    SR.SessionLauncher_NoConnectionToScheduler,
-                    null);
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.ConnectToSchedulerFailure, SR.SessionLauncher_NoConnectionToScheduler, null);
             }
 
-            //ISchedulerJob schedulerJob = this.OpenSessionJob(sessionId);
+            // ISchedulerJob schedulerJob = this.OpenSessionJob(sessionId);
 
             if (schedulerJob != null)
             {
-                TraceHelper.TraceEvent(sessionId,
+                TraceHelper.TraceEvent(
+                    sessionId,
                     TraceEventType.Information,
-                    "[SessionLauncher] .GetInfo: try to get the job properties(Secure, TransportScheme, BrokerEpr, BrokerNode, ControllerEpr, ResponseEpr) for the job, jobid={0}.", sessionId);
+                    "[SessionLauncher] .GetInfo: try to get the job properties(Secure, TransportScheme, BrokerEpr, BrokerNode, ControllerEpr, ResponseEpr) for the job, jobid={0}.",
+                    sessionId);
 
                 try
                 {
@@ -599,15 +588,11 @@
                             if (bool.TryParse(secureString, out secure))
                             {
                                 sessionInfo.Secure = secure;
-                                TraceHelper.TraceEvent(sessionId,
-                                    TraceEventType.Information,
-                                    "[SessionLauncher] .GetInfo: get the job secure property, Secure={0}.", secure);
+                                TraceHelper.TraceEvent(sessionId, TraceEventType.Information, "[SessionLauncher] .GetInfo: get the job secure property, Secure={0}.", secure);
                             }
                             else
                             {
-                                TraceHelper.TraceEvent(sessionId,
-                                    TraceEventType.Error,
-                                    "Illegal secure value[{0}] for job's " + BrokerSettingsConstants.Secure + " property", secureString);
+                                TraceHelper.TraceEvent(sessionId, TraceEventType.Error, "Illegal secure value[{0}] for job's " + BrokerSettingsConstants.Secure + " property", secureString);
                             }
                         }
                         else if (pair.Name.Equals(BrokerSettingsConstants.TransportScheme, StringComparison.OrdinalIgnoreCase))
@@ -619,15 +604,19 @@
                             if (int.TryParse(schemeString, out scheme))
                             {
                                 sessionInfo.TransportScheme = (TransportScheme)scheme;
-                                TraceHelper.TraceEvent(sessionId,
+                                TraceHelper.TraceEvent(
+                                    sessionId,
                                     TraceEventType.Information,
-                                    "[SessionLauncher] .GetInfo: get the job TransportScheme property, TransportScheme={0}.", sessionInfo.TransportScheme);
+                                    "[SessionLauncher] .GetInfo: get the job TransportScheme property, TransportScheme={0}.",
+                                    sessionInfo.TransportScheme);
                             }
                             else
                             {
-                                TraceHelper.TraceEvent(sessionId,
+                                TraceHelper.TraceEvent(
+                                    sessionId,
                                     TraceEventType.Error,
-                                    "Illegal transport scheme value[{0}] for job's " + BrokerSettingsConstants.TransportScheme + " property", schemeString);
+                                    "Illegal transport scheme value[{0}] for job's " + BrokerSettingsConstants.TransportScheme + " property",
+                                    schemeString);
                             }
                         }
                         else if (pair.Name.Equals(BrokerSettingsConstants.BrokerNode, StringComparison.OrdinalIgnoreCase))
@@ -635,9 +624,11 @@
                             brokerNodeString = pair.Value;
                             Debug.Assert(brokerNodeString != null, "BrokerSettingsConstants.BrokerNode value should be a string.");
 
-                            TraceHelper.TraceEvent(sessionId,
+                            TraceHelper.TraceEvent(
+                                sessionId,
                                 TraceEventType.Information,
-                                "[SessionLauncher] .GetInfo: get the job BrokerLauncherEpr property, BrokerLauncherEpr={0}.", sessionInfo.BrokerLauncherEpr);
+                                "[SessionLauncher] .GetInfo: get the job BrokerLauncherEpr property, BrokerLauncherEpr={0}.",
+                                sessionInfo.BrokerLauncherEpr);
                         }
                         else if (pair.Name.Equals(BrokerSettingsConstants.LocalUser, StringComparison.OrdinalIgnoreCase))
                         {
@@ -645,37 +636,27 @@
                             Debug.Assert(localUserString != null, "BrokerSettingsConstants.LocalUser value should be a string.");
                             if (Boolean.TryParse(localUserString, out localUser))
                             {
-                                TraceHelper.TraceEvent(sessionId,
-                                    TraceEventType.Information,
-                                    "[SessionLauncher] .GetInfo: get the job LocalUser property, LocalUser={0}.", localUser);
+                                TraceHelper.TraceEvent(sessionId, TraceEventType.Information, "[SessionLauncher] .GetInfo: get the job LocalUser property, LocalUser={0}.", localUser);
                             }
                             else
                             {
-                                TraceHelper.TraceEvent(sessionId,
-                                    TraceEventType.Error, "Illegal LocalUser value[{0}] for job's " + BrokerSettingsConstants.LocalUser + " property", localUserString);
+                                TraceHelper.TraceEvent(sessionId, TraceEventType.Error, "Illegal LocalUser value[{0}] for job's " + BrokerSettingsConstants.LocalUser + " property", localUserString);
                             }
                         }
                         else if (pair.Name.Equals(BrokerSettingsConstants.Durable, StringComparison.OrdinalIgnoreCase))
                         {
                             string durableString = pair.Value;
-                            Debug.Assert(durableString != null,
-                                "BrokerSettingsConstants.Durable value should be a string.");
+                            Debug.Assert(durableString != null, "BrokerSettingsConstants.Durable value should be a string.");
 
                             bool durable;
                             if (Boolean.TryParse(durableString, out durable))
                             {
                                 sessionInfo.Durable = durable;
-                                TraceHelper.TraceEvent(sessionId,
-                                    TraceEventType.Information,
-                                    "[SessionLauncher] .GetInfo: get the job Durable property, Durable={0}.",
-                                    sessionInfo.Durable);
+                                TraceHelper.TraceEvent(sessionId, TraceEventType.Information, "[SessionLauncher] .GetInfo: get the job Durable property, Durable={0}.", sessionInfo.Durable);
                             }
                             else
                             {
-                                TraceHelper.TraceEvent(sessionId,
-                                    TraceEventType.Error,
-                                    "Illegal secure value[{0}] for job's " + BrokerSettingsConstants.Durable +
-                                    " property", durableString);
+                                TraceHelper.TraceEvent(sessionId, TraceEventType.Error, "Illegal secure value[{0}] for job's " + BrokerSettingsConstants.Durable + " property", durableString);
                             }
                         }
                         else if (pair.Name.Equals(BrokerSettingsConstants.ServiceVersion, StringComparison.OrdinalIgnoreCase))
@@ -686,20 +667,21 @@
                                 try
                                 {
                                     sessionInfo.ServiceVersion = new Version(pair.Value);
-                                    TraceHelper.TraceEvent(sessionId,
+                                    TraceHelper.TraceEvent(
+                                        sessionId,
                                         TraceEventType.Information,
                                         "[SessionLauncher] .GetInfo: get the job ServiceVersion property, ServiceVersion={0}.",
-                                        (sessionInfo.ServiceVersion != null)
-                                            ? sessionInfo.ServiceVersion.ToString()
-                                            : String.Empty);
+                                        (sessionInfo.ServiceVersion != null) ? sessionInfo.ServiceVersion.ToString() : String.Empty);
                                 }
 
                                 catch (Exception e)
                                 {
-                                    TraceHelper.TraceEvent(sessionId,
+                                    TraceHelper.TraceEvent(
+                                        sessionId,
                                         TraceEventType.Error,
-                                        "Illegal secure value[{0}] for job's " + BrokerSettingsConstants.ServiceVersion +
-                                        " property. Exception = {1}", pair.Value, e);
+                                        "Illegal secure value[{0}] for job's " + BrokerSettingsConstants.ServiceVersion + " property. Exception = {1}",
+                                        pair.Value,
+                                        e);
                                 }
                             }
                         }
@@ -709,35 +691,49 @@
                     {
                         if (brokerNodeString != Constant.InprocessBrokerNode)
                         {
-                            sessionInfo.BrokerLauncherEpr = localUser ? BrokerNodesManager.GenerateBrokerLauncherInternalEpr(endpointPrefix, brokerNodeString) : BrokerNodesManager.GenerateBrokerLauncherEpr(endpointPrefix, brokerNodeString, sessionInfo.TransportScheme);
+                            sessionInfo.BrokerLauncherEpr =
+                                localUser
+                                    ? BrokerNodesManager.GenerateBrokerLauncherInternalEpr(endpointPrefix, brokerNodeString)
+                                    : BrokerNodesManager.GenerateBrokerLauncherEpr(endpointPrefix, brokerNodeString, sessionInfo.TransportScheme);
                         }
                         else
                         {
                             sessionInfo.UseInprocessBroker = true;
                         }
 
-                        TraceHelper.TraceEvent(sessionId,
+                        TraceHelper.TraceEvent(
+                            sessionId,
                             TraceEventType.Information,
-                            "[SessionLauncher] .GetInfo: get the job BrokerLauncherEpr property, BrokerLauncherEpr={0}.", sessionInfo.BrokerLauncherEpr);
+                            "[SessionLauncher] .GetInfo: get the job BrokerLauncherEpr property, BrokerLauncherEpr={0}.",
+                            sessionInfo.BrokerLauncherEpr);
                     }
                 }
                 catch (Exception e)
                 {
-                    TraceHelper.TraceEvent(sessionId,
-                        TraceEventType.Error,
-                        "[SessionLauncher] .GetInfo: Failed to get all properties from job[{0}], Exception:{1}", sessionId, e);
+                    TraceHelper.TraceEvent(sessionId, TraceEventType.Error, "[SessionLauncher] .GetInfo: Failed to get all properties from job[{0}], Exception:{1}", sessionId, e);
 
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.GetJobPropertyFailure,
-                        SR.SessionLauncher_FailToGetJobProperty,
-                        e.ToString());
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.GetJobPropertyFailure, SR.SessionLauncher_FailToGetJobProperty, e.ToString());
                 }
 
                 #region Debug Failure Test
+
                 Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+
                 #endregion
             }
 
-            TraceHelper.TraceEvent(sessionId, TraceEventType.Information, "[SessionLauncher] .GetInfo: return the sessionInfo, BrokerEpr={0}, BrokerLauncherEpr={1}, ControllerEpr={2}, Id={3}, JobState={4}, ResponseEpr={5}, Secure={6}, TransportScheme={7}.", sessionInfo.BrokerEpr, sessionInfo.BrokerLauncherEpr, sessionInfo.ControllerEpr, sessionInfo.Id, sessionInfo.JobState, sessionInfo.ResponseEpr, sessionInfo.Secure, sessionInfo.TransportScheme);
+            TraceHelper.TraceEvent(
+                sessionId,
+                TraceEventType.Information,
+                "[SessionLauncher] .GetInfo: return the sessionInfo, BrokerEpr={0}, BrokerLauncherEpr={1}, ControllerEpr={2}, Id={3}, JobState={4}, ResponseEpr={5}, Secure={6}, TransportScheme={7}.",
+                sessionInfo.BrokerEpr,
+                sessionInfo.BrokerLauncherEpr,
+                sessionInfo.ControllerEpr,
+                sessionInfo.Id,
+                sessionInfo.JobState,
+                sessionInfo.ResponseEpr,
+                sessionInfo.Secure,
+                sessionInfo.TransportScheme);
             return sessionInfo;
         }
 
@@ -918,6 +914,7 @@
                     }
                 }
             }
+
             Dictionary<string, string> result = new Dictionary<string, string>();
             try
             {
@@ -954,6 +951,7 @@
                     result.Add(key, value);
                     TraceHelper.TraceInfo(0, "[SessionLauncher] .GetSOAConfiguration: Value for key {0} is {1}.", key, value);
                 }
+
                 return await Task.FromResult(result);
             }
             catch (Exception e)
@@ -1107,8 +1105,7 @@
                 {
                     try
                     {
-                        TraceHelper.TraceEvent(TraceEventType.Information,
-                            "[SessionLauncher] .InitializeSchedulerConnect: Try to connect to the head node fabric connection string: null");
+                        TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] .InitializeSchedulerConnect: Try to connect to the head node fabric connection string: null");
 
                         if (this.scheduler != null)
                         {
@@ -1121,8 +1118,7 @@
                     }
                     catch (Exception e)
                     {
-                        TraceHelper.TraceEvent(TraceEventType.Error,
-                            "[SessionLauncher] .InitializeSchedulerConnect: Failed to connect to the scheduler store, Exception:{0}", e);
+                        TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .InitializeSchedulerConnect: Failed to connect to the scheduler store, Exception:{0}", e);
 
                         throw new SessionException(SR.CannotConnectToScheduler, e);
                     }
@@ -1133,15 +1129,13 @@
                 {
                     try
                     {
-                        TraceHelper.TraceEvent(TraceEventType.Information,
-                            "[SessionLauncher] .InitializeSchedulerConnect: Try to create the job monitor.");
+                        TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] .InitializeSchedulerConnect: Try to create the job monitor.");
 
                         this.schedulerConnectState |= SchedulerConnectState.StartedJobMonitor;
                     }
                     catch (Exception e)
                     {
-                        TraceHelper.TraceEvent(TraceEventType.Error,
-                            "[SessionLauncher] .InitializeSchedulerConnect: Failed to connect to the scheduler for job monitor, Exception:{0}", e);
+                        TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .InitializeSchedulerConnect: Failed to connect to the scheduler for job monitor, Exception:{0}", e);
 
                         throw new SessionException(SR.SessionLauncher_FailToConnectToScheduler, e);
                     }
@@ -1152,16 +1146,14 @@
                 {
                     try
                     {
-                        TraceHelper.TraceEvent(TraceEventType.Information,
-                            "[SessionLauncher] .InitializeSchedulerConnect: Try to initialize the broker nodes manager.");
+                        TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] .InitializeSchedulerConnect: Try to initialize the broker nodes manager.");
 
                         // this.brokerNodesManager = BrokerNodesManager.Instance;
                         this.schedulerConnectState |= SchedulerConnectState.StartedBrokerNodesManager;
                     }
                     catch (Exception e)
                     {
-                        TraceHelper.TraceEvent(TraceEventType.Error,
-                            "[SessionLauncher] .InitializeSchedulerConnect: Failed to create broker nodes manager, Exception:{0}", e);
+                        TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .InitializeSchedulerConnect: Failed to create broker nodes manager, Exception:{0}", e);
 
                         throw new SessionException(SR.SessionLauncher_FailToCreateBrokerManager, e);
                     }
@@ -1171,8 +1163,7 @@
                 {
                     this.schedulerConnectState = SchedulerConnectState.ConnectionComplete;
 
-                    TraceHelper.TraceEvent(TraceEventType.Information,
-                        "[SessionLauncher] .InitializeSchedulerConnect: Finished connecting to the nead node: null");
+                    TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] .InitializeSchedulerConnect: Finished connecting to the nead node: null");
                 }
             }
         }
@@ -1227,12 +1218,13 @@
 
             if (this.schedulerConnectState != SchedulerConnectState.ConnectionComplete)
             {
-                TraceHelper.TraceEvent(TraceEventType.Information,
-                    "[SessionLauncher] .AllocateInternal: callId={0}, session launcher is not conected to the scheduler, schedulerConnectState={1}", callId, this.schedulerConnectState);
+                TraceHelper.TraceEvent(
+                    TraceEventType.Information,
+                    "[SessionLauncher] .AllocateInternal: callId={0}, session launcher is not conected to the scheduler, schedulerConnectState={1}",
+                    callId,
+                    this.schedulerConnectState);
 
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.ConnectToSchedulerFailure,
-                    SR.SessionLauncher_NoConnectionToScheduler,
-                    null);
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.ConnectToSchedulerFailure, SR.SessionLauncher_NoConnectionToScheduler, null);
             }
 
             // BUG 4522 : Use CCP_SCHEDULER when referencing service registration file share so HA HN virtual name is used when needed
@@ -1294,15 +1286,11 @@
             {
                 if (startInfo.ServiceVersion != null)
                 {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.ServiceVersion_NotFound,
-                        SR.SessionLauncher_ServiceVersionNotFound,
-                        startInfo.ServiceName, startInfo.ServiceVersion.ToString());
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.ServiceVersion_NotFound, SR.SessionLauncher_ServiceVersionNotFound, startInfo.ServiceName, startInfo.ServiceVersion.ToString());
                 }
                 else
                 {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Service_NotFound,
-                        SR.SessionLauncher_ServiceNotFound,
-                        startInfo.ServiceName);
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Service_NotFound, SR.SessionLauncher_ServiceNotFound, startInfo.ServiceName);
                 }
             }
 
@@ -1371,27 +1359,20 @@
             // for sessions to add in session pool
             try
             {
-                TraceHelper.TraceEvent(TraceEventType.Information,
-                    "[SessionLauncher] .AllocateInternal: callId={0}, endpointPrefix={1}, durable={2}.", callId, endpointPrefix, durable);
+                TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] .AllocateInternal: callId={0}, endpointPrefix={1}, durable={2}.", callId, endpointPrefix, durable);
 
                 if (!startInfo.UseAad && (string.IsNullOrEmpty(startInfo.Username) || securePassword == null))
                 {
-                    TraceHelper.TraceEvent(TraceEventType.Error,
-                        "[SessionLauncher] .AllocateInternal: callId={0}, Username and password is necessary.", callId);
+                    TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternal: callId={0}, Username and password is necessary.", callId);
 
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.AuthenticationFailure,
-                        SR.SessionLauncher_NeedUserNameAndPassword,
-                        null);
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.AuthenticationFailure, SR.SessionLauncher_NeedUserNameAndPassword, null);
                 }
 
                 if (!IsEndpointPrefixSupported(endpointPrefix))
                 {
-                    TraceHelper.TraceEvent(TraceEventType.Error,
-                        "[SessionLauncher] .AllocateInternal: callId={0}, enpoint prfix, {1}, is not support.", callId, endpointPrefix);
+                    TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternal: callId={0}, enpoint prfix, {1}, is not support.", callId, endpointPrefix);
 
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.InvalidArgument,
-                        SR.SessionLauncher_EndpointNotSupported,
-                        endpointPrefix);
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.InvalidArgument, SR.SessionLauncher_EndpointNotSupported, endpointPrefix);
                 }
 
                 ISchedulerJob schedulerJob = null;
@@ -1403,12 +1384,9 @@
                 }
                 catch (Exception e)
                 {
-                    TraceHelper.TraceEvent(TraceEventType.Error,
-                        "[SessionLauncher] .AllocateInternal: callId={0}, Create job failed, Exception:{1}", callId, e);
+                    TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternal: callId={0}, Create job failed, Exception:{1}", callId, e);
 
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.CreateJobFailure,
-                        SR.SessionLauncher_FailToCreateJob,
-                        e.ToString());
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.CreateJobFailure, SR.SessionLauncher_FailToCreateJob, e.ToString());
                 }
 
                 try
@@ -1417,12 +1395,9 @@
                 }
                 catch (Exception e)
                 {
-                    TraceHelper.TraceEvent(TraceEventType.Error,
-                        "[SessionLauncher] .AllocateInternal: callId={0}, Make job properties failed, Exception:{1}", callId, e);
+                    TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternal: callId={0}, Make job properties failed, Exception:{1}", callId, e);
 
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.CreateJobPropertiesFailure,
-                        SR.SessionLauncher_SchedulerException,
-                        e.ToString());
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.CreateJobPropertiesFailure, SR.SessionLauncher_SchedulerException, e.ToString());
                 }
 
                 // Set JobRuntimeType for usage tracking
@@ -1460,8 +1435,7 @@
                     sessionAllocateInfo.BrokerLauncherEpr = this.brokerNodesManager.GetAvailableAzureBrokerEPRs(out nodeInfos);
                     if (sessionAllocateInfo.BrokerLauncherEpr.Length <= 0)
                     {
-                        TraceHelper.TraceEvent(TraceEventType.Information,
-                            "[SessionLauncher] .AllocateInternal: callId={0}, no available Azure broker nodes", callId);
+                        TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] .AllocateInternal: callId={0}, no available Azure broker nodes", callId);
                         return sessionAllocateInfo;
                     }
                 }
@@ -1475,10 +1449,7 @@
                     {
                         if (bool.TryParse(enableFqdnStr, out enableFQDN))
                         {
-                            TraceHelper.TraceEvent(
-                                TraceEventType.Verbose,
-                                "[SessionLauncher] .AllocateInternal: The enableFQDN setting in cluster env var is {0}",
-                                enableFQDN);
+                            TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternal: The enableFQDN setting in cluster env var is {0}", enableFQDN);
                         }
                         else
                         {
@@ -1492,12 +1463,17 @@
                     // get available broker eprs
                     // GetAvailableBrokerEPRs is thread safe.
 
-                    sessionAllocateInfo.BrokerLauncherEpr = this.brokerNodesManager.GetAvailableBrokerEPRs(durable, endpointPrefix, enableFQDN, startInfo.ChannelType, startInfo.TransportScheme, out nodeInfos);
+                    sessionAllocateInfo.BrokerLauncherEpr = this.brokerNodesManager.GetAvailableBrokerEPRs(
+                        durable,
+                        endpointPrefix,
+                        enableFQDN,
+                        startInfo.ChannelType,
+                        startInfo.TransportScheme,
+                        out nodeInfos);
 
                     if (sessionAllocateInfo.BrokerLauncherEpr.Length <= 0)
                     {
-                        TraceHelper.TraceEvent(TraceEventType.Information,
-                            "[SessionLauncher] .AllocateInternal: callId={0}, no available broker nodes", callId);
+                        TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] .AllocateInternal: callId={0}, no available broker nodes", callId);
                         return sessionAllocateInfo;
                     }
                 }
@@ -1543,10 +1519,7 @@
                 }
 
                 // pass taskcancelgraceperiod as environment variable to svchosts
-                string taskCancelGracePeriod = JobHelper.GetClusterParameterValue(
-                    this.scheduler,
-                    Constant.TaskCancelGracePeriodClusParam,
-                    Constant.DefaultCancelTaskGracePeriod.ToString());
+                string taskCancelGracePeriod = JobHelper.GetClusterParameterValue(this.scheduler, Constant.TaskCancelGracePeriodClusParam, Constant.DefaultCancelTaskGracePeriod.ToString());
                 schedulerJob.SetEnvironmentVariable(Constant.CancelTaskGracePeriodEnvVar, taskCancelGracePeriod);
 
                 // pass service config file name to services
@@ -1619,9 +1592,7 @@
 
                 // Get the how many tasks to add
                 // If there is user specified max units, then use it, otherwise a default 16
-                int numTasks = (startInfo.MaxUnits != null && startInfo.MaxUnits.Value > 0) ?
-                                   startInfo.MaxUnits.Value :
-                                   DefaultInitTaskNumber;
+                int numTasks = (startInfo.MaxUnits != null && startInfo.MaxUnits.Value > 0) ? startInfo.MaxUnits.Value : DefaultInitTaskNumber;
 
                 try
                 {
@@ -1639,11 +1610,11 @@
                     {
                         TraceHelper.TraceEvent(
                             TraceEventType.Error,
-                            "[SessionLauncher] .AllocateInternal: callId={0}, Failed to get the property of TotalCoreCount, TotalSocketCount and TotalNodeCount, Exception:{1}", callId, e);
+                            "[SessionLauncher] .AllocateInternal: callId={0}, Failed to get the property of TotalCoreCount, TotalSocketCount and TotalNodeCount, Exception:{1}",
+                            callId,
+                            e);
 
-                        ThrowHelper.ThrowSessionFault(SOAFaultCode.GetClusterPropertyFailure,
-                            SR.SessionLauncher_FailToGetClusterProperty,
-                            e.ToString());
+                        ThrowHelper.ThrowSessionFault(SOAFaultCode.GetClusterPropertyFailure, SR.SessionLauncher_FailToGetClusterProperty, e.ToString());
                     }
 
                     int maxSize = totalCountNumbers[0];
@@ -1664,9 +1635,7 @@
                         }
                     }
 
-                    TraceHelper.TraceEvent(
-                        TraceEventType.Information,
-                        "[SessionLauncher] .AllocateInternal: callId={0}, numTasks={1}, maxSize={2}", callId, numTasks, maxSize);
+                    TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] .AllocateInternal: callId={0}, numTasks={1}, maxSize={2}", callId, numTasks, maxSize);
 
                     if (numTasks > maxSize)
                     {
@@ -1678,12 +1647,9 @@
                         ISchedulerTask schedulerTask = schedulerJob.CreateTask();
 
                         // Add service tasks
-                        schedulerTask.MinimumNumberOfCores =
-                            schedulerTask.MaximumNumberOfCores =
-                                schedulerTask.MinimumNumberOfSockets =
-                                    schedulerTask.MaximumNumberOfSockets =
-                                        schedulerTask.MinimumNumberOfNodes =
-                                            schedulerTask.MaximumNumberOfNodes = 1;
+                        schedulerTask.MinimumNumberOfCores = schedulerTask.MaximumNumberOfCores =
+                                                                 schedulerTask.MinimumNumberOfSockets =
+                                                                     schedulerTask.MaximumNumberOfSockets = schedulerTask.MinimumNumberOfNodes = schedulerTask.MaximumNumberOfNodes = 1;
 
                         // Use service task to submit initial tasks
                         schedulerTask.Type = TaskType.Service;
@@ -1706,19 +1672,20 @@
 
                         TraceHelper.TraceEvent(
                             TraceEventType.Information,
-                            "[SessionLauncher] .AllocateInternal: callId={0}, set job environment: {1}={2}, {3}={4}.", callId, BrokerSettingsConstants.Secure, startInfo.Secure, BrokerSettingsConstants.TransportScheme, startInfo.TransportScheme);
+                            "[SessionLauncher] .AllocateInternal: callId={0}, set job environment: {1}={2}, {3}={4}.",
+                            callId,
+                            BrokerSettingsConstants.Secure,
+                            startInfo.Secure,
+                            BrokerSettingsConstants.TransportScheme,
+                            startInfo.TransportScheme);
 
                         schedulerJob.AddTask(schedulerTask);
                     }
                     catch (SchedulerException e)
                     {
-                        TraceHelper.TraceEvent(
-                            TraceEventType.Error,
-                            "[SessionLauncher] .AllocateInternal: callId={0}, Create task failed, Exception:{1}", callId, e);
+                        TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternal: callId={0}, Create task failed, Exception:{1}", callId, e);
 
-                        ThrowHelper.ThrowSessionFault(SOAFaultCode.CreateJobTasksFailure,
-                            SR.SessionLauncher_CreateJobTasksFailure,
-                            e.ToString());
+                        ThrowHelper.ThrowSessionFault(SOAFaultCode.CreateJobTasksFailure, SR.SessionLauncher_CreateJobTasksFailure, e.ToString());
                     }
 
                     // Add job first then we can get a job id.
@@ -1731,7 +1698,10 @@
                     {
                         TraceHelper.TraceEvent(
                             TraceEventType.Information,
-                            "[SessionLauncher] .AllocateInternal: callId={0}, JobId={1}, DependFiles:{2}", callId, schedulerJob.Id, startInfo.DependFiles);
+                            "[SessionLauncher] .AllocateInternal: callId={0}, JobId={1}, DependFiles:{2}",
+                            callId,
+                            schedulerJob.Id,
+                            startInfo.DependFiles);
                         string userRoot = Path.Combine(this.dataService.GetUserJobDataRoot(), startInfo.Username.Replace('\\', '.'));
                         string jobSharePath = Path.Combine(userRoot, schedulerJob.Id.ToString());
                         Directory.CreateDirectory(jobSharePath);
@@ -1761,13 +1731,16 @@
                     }
 
                     // Add prepare and release tasks to server job if specified by the user
-                    AddPrepReleaseTasks(schedulerJob,
+                    AddPrepReleaseTasks(
+                        schedulerJob,
                         GetServiceAssemblyDirectory(registration.Service.AssemblyPath),
                         registration.Service.PrepareNodeCommandLine,
                         registration.Service.ReleaseNodeCommandLine);
 
                     #region Debug Failure Test
+
                     Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+
                     #endregion
 
                     try
@@ -1810,9 +1783,12 @@
                     }
                     catch (InvalidCredentialException e)
                     {
-                        TraceHelper.TraceEvent(sessionAllocateInfo.Id,
+                        TraceHelper.TraceEvent(
+                            sessionAllocateInfo.Id,
                             TraceEventType.Error,
-                            "[SessionLauncher] .AllocateInternal: callId={0}, Invalide credential to submit the job, Exception:{1}", callId, e);
+                            "[SessionLauncher] .AllocateInternal: callId={0}, Invalide credential to submit the job, Exception:{1}",
+                            callId,
+                            e);
 
                         try
                         {
@@ -1820,7 +1796,8 @@
                         }
                         catch
                         {
-                            TraceHelper.TraceEvent(sessionAllocateInfo.Id,
+                            TraceHelper.TraceEvent(
+                                sessionAllocateInfo.Id,
                                 TraceEventType.Warning,
                                 $"[SessionLauncher] .AllocateInternal: callId={callId}, Failed to delete the job {schedulerJob.Id}, Exception:{e}");
                         }
@@ -1843,13 +1820,9 @@
                     }
                     catch (Exception e)
                     {
-                        TraceHelper.TraceEvent(sessionAllocateInfo.Id,
-                            TraceEventType.Error,
-                            "[SessionLauncher] .AllocateInternal: callId={0}, Failed to submit job, Exception:{1}", callId, e);
+                        TraceHelper.TraceEvent(sessionAllocateInfo.Id, TraceEventType.Error, "[SessionLauncher] .AllocateInternal: callId={0}, Failed to submit job, Exception:{1}", callId, e);
 
-                        ThrowHelper.ThrowSessionFault(SOAFaultCode.SubmitJobFailure,
-                            SR.SessionLauncher_FailToSubmitJob,
-                            e.Message);
+                        ThrowHelper.ThrowSessionFault(SOAFaultCode.SubmitJobFailure, SR.SessionLauncher_FailToSubmitJob, e.Message);
                     }
 
                     StringBuilder brokerEprsString = new StringBuilder();
@@ -1858,16 +1831,18 @@
                         brokerEprsString.AppendLine(epr);
                     }
 
-                    TraceHelper.TraceEvent(sessionAllocateInfo.Id,
+                    TraceHelper.TraceEvent(
+                        sessionAllocateInfo.Id,
                         TraceEventType.Information,
-                        "[SessionLauncher] .AllocateInternal: callId={0}, Alloc returned Broker eprs:{1}", callId, brokerEprsString.ToString());
+                        "[SessionLauncher] .AllocateInternal: callId={0}, Alloc returned Broker eprs:{1}",
+                        callId,
+                        brokerEprsString.ToString());
 
                     return await Task.FromResult(sessionAllocateInfo);
                 }
                 catch (Exception e)
                 {
-                    TraceHelper.TraceEvent(TraceEventType.Error,
-                        "[SessionLauncher] .AllocateInternal: callId={0}, Exception raised, Exception:{1}", callId, e);
+                    TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternal: callId={0}, Exception raised, Exception:{1}", callId, e);
 
                     if (e is FaultException<SessionFault>)
                     {
@@ -1875,9 +1850,7 @@
                     }
                     else
                     {
-                        ThrowHelper.ThrowSessionFault(SOAFaultCode.UnknownError,
-                            SR.UnknownError,
-                            e.ToString());
+                        ThrowHelper.ThrowSessionFault(SOAFaultCode.UnknownError, SR.UnknownError, e.ToString());
                     }
                 }
             }
@@ -1889,6 +1862,7 @@
                     this.AddSessionToPool(Path.GetFileNameWithoutExtension(serviceConfigFile), durable, sessionAllocateInfo.Id, registration.Service.MaxSessionPoolSize);
                 }
             }
+
             return null;
         }
 
@@ -1924,12 +1898,9 @@
                 }
                 catch (Exception e)
                 {
-                    TraceHelper.TraceEvent(TraceEventType.Error,
-                        "[SessionLauncher] .GetRegistrationRepo: callId={0}, Get the scheduler environment failed. exception = {1}", callId, e);
+                    TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .GetRegistrationRepo: callId={0}, Get the scheduler environment failed. exception = {1}", callId, e);
 
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.GetClusterPropertyFailure,
-                        SR.SessionLauncher_FailToGetClusterProperty,
-                        e.ToString());
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.GetClusterPropertyFailure, SR.SessionLauncher_FailToGetClusterProperty, e.ToString());
                 }
 
                 if (!string.IsNullOrEmpty(regPath))
@@ -1942,8 +1913,7 @@
                 }
                 else
                 {
-                    TraceHelper.TraceEvent(TraceEventType.Error,
-                        "[SessionLauncher] .GetRegistrationRepo: callId={0}, Get the scheduler environment for RegistryPathEnv is empty or null.", callId);
+                    TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .GetRegistrationRepo: callId={0}, Get the scheduler environment for RegistryPathEnv is empty or null.", callId);
                 }
             }
 
@@ -1953,11 +1923,9 @@
             }
             else
             {
-                TraceHelper.TraceEvent(TraceEventType.Error,
-                    "[SessionLauncher] .GetRegistrationRepo: No service registration directories are configured");
+                TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .GetRegistrationRepo: No service registration directories are configured");
 
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.Service_RegistrationDirsMissing,
-                    SR.SessionLauncher_NoServiceRegistrationDirs);
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.Service_RegistrationDirsMissing, SR.SessionLauncher_NoServiceRegistrationDirs);
 
                 return null;
             }
@@ -1974,22 +1942,13 @@
 
             try
             {
-                TraceHelper.TraceEvent(
-                    sessionId,
-                    TraceEventType.Information,
-                    "[SessionLauncher] .OpenSessionJob: Try to open the job[{0}].",
-                    sessionId);
+                TraceHelper.TraceEvent(sessionId, TraceEventType.Information, "[SessionLauncher] .OpenSessionJob: Try to open the job[{0}].", sessionId);
 
                 schedulerJob = this.scheduler.OpenJob(sessionId);
             }
             catch (SchedulerException e)
             {
-                TraceHelper.TraceEvent(
-                    sessionId,
-                    TraceEventType.Error,
-                    "[SessionLauncher] .OpenSessionJob: Failed to open job[{0}], Exception:{1}",
-                    sessionId,
-                    e.ToString());
+                TraceHelper.TraceEvent(sessionId, TraceEventType.Error, "[SessionLauncher] .OpenSessionJob: Failed to open job[{0}], Exception:{1}", sessionId, e.ToString());
 
                 if (e.Code == ErrorCode.Operation_InvalidJobId)
                 {
@@ -2002,12 +1961,7 @@
             }
             catch (Exception e)
             {
-                TraceHelper.TraceEvent(
-                    sessionId,
-                    TraceEventType.Error,
-                    "[SessionLauncher] .OpenSessionJob: Failed to open job[{0}], Exception:{1}",
-                    sessionId,
-                    e.ToString());
+                TraceHelper.TraceEvent(sessionId, TraceEventType.Error, "[SessionLauncher] .OpenSessionJob: Failed to open job[{0}], Exception:{1}", sessionId, e.ToString());
 
                 ThrowHelper.ThrowSessionFault(SOAFaultCode.OpenJobFailure, SR.SessionLauncher_FailToOpenJob, e.ToString());
             }
@@ -2149,7 +2103,8 @@
                                 | Properties.JobState.Validating
                                 | Properties.JobState.ExternalValidation
                                 | Properties.JobState.Queued
-                                | Properties.JobState.Running)) != 0)
+                                | Properties.JobState.Running))
+                            != 0)
                         {
                             TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .PickSessionIdFromPool: Find the session {0} in the pool.", jobid);
                             sessionJob = job;
@@ -2491,8 +2446,7 @@
 
         private static WindowsIdentity GetCallerWindowsIdentity()
         {
-            WindowsIdentity callerWindowsIdentity =
-                ServiceSecurityContext.Current.WindowsIdentity;
+            WindowsIdentity callerWindowsIdentity = ServiceSecurityContext.Current.WindowsIdentity;
             if (callerWindowsIdentity == null)
             {
                 throw new InvalidOperationException("The caller cannot be mapped to a WindowsIdentity");
