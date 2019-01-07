@@ -150,6 +150,11 @@
         private Microsoft.Hpc.Scheduler.Session.Data.Internal.DataService dataService;
 
         /// <summary>
+        /// the broker node manager.
+        /// </summary>
+        private BrokerNodesManager brokerNodesManager;
+
+        /// <summary>
         /// the timeout setting for retring to conect to the scheduler.
         /// </summary>
         private static int ConnectToSchedulerTimeout => int.MaxValue; // 9 * 60 * 1000;

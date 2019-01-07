@@ -54,11 +54,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         internal static readonly Version ServerVersion = new Version(FileVersionInfo.GetVersionInfo(Assembly.GetEntryAssembly().Location).FileVersion);
 
         /// <summary>
-        /// the broker node manager.
-        /// </summary>
-        protected BrokerNodesManager brokerNodesManager;
-
-        /// <summary>
         /// session pool for durable session
         /// Key: ServiceName_Version
         /// Value: Session Id list
@@ -435,7 +430,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     Index--;
                 }
             }
-
         }
     }
 }
