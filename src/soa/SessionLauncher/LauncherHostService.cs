@@ -28,6 +28,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
     using Microsoft.Hpc.AADAuthUtil;
     using Microsoft.Hpc.Scheduler.Session.Data.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.DataService.REST;
+    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls;
 
     using ISessionLauncher = Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.ISessionLauncher;
 
@@ -179,7 +180,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 }
 
                 this.brokerNodesManager = new BrokerNodesManager();
-                this.sessionLauncher = new SessionLauncher(SoaHelper.GetSchedulerName(true), /* runningLocal = */ false, this.brokerNodesManager);
+                this.sessionLauncher = SessionLauncherFactory.CreateHpcPackSessionLauncher(SoaHelper.GetSchedulerName(true), false, this.brokerNodesManager);
                 this.schedulerDelegation = new HpcSchedulerDelegation(this.sessionLauncher, this.brokerNodesManager);
 
 #if AZURE

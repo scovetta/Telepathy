@@ -223,6 +223,8 @@
     <Compile Include="DataService\IDataServiceAsync.cs" />
     <Compile Include="DataService\REST\DataClientController.cs" />
     <Compile Include="DataService\REST\DataServiceRestServer.cs" />
+    <Compile Include="Impls\HpcPack\HpcPackSessionLauncher.cs" />
+    <Compile Include="Impls\SessionLauncherFactory.cs" />
     <Compile Include="JobInfo.cs" />
     <Compile Include="JobMonitorEntry.cs" />
     <Compile Include="LauncherHostService.cs">
@@ -239,6 +241,7 @@
     <Compile Include="JobHelper.cs" />
     <Compile Include="SessionLauncher.cs" />
     <Compile Include="..\Common\ThreadSafeSchedulerAPI.cs" />
+    <Compile Include="Impls\HpcPack\SchedulerConnectState.cs" />
     <Compile Include="SessionLauncherSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
