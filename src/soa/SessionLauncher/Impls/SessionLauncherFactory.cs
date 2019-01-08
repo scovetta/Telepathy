@@ -6,6 +6,5 @@
     {
         public static HpcPackSessionLauncher CreateHpcPackSessionLauncher(string headNode, bool runningLocal, BrokerNodesManager brokerNodesManager) =>
             new HpcPackSessionLauncher(headNode, runningLocal, brokerNodesManager);
-
     }
 }

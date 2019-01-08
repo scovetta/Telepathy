@@ -223,6 +223,7 @@
     <Compile Include="DataService\IDataServiceAsync.cs" />
     <Compile Include="DataService\REST\DataClientController.cs" />
     <Compile Include="DataService\REST\DataServiceRestServer.cs" />
+    <Compile Include="Impls\AzureBatch\AzureBatchSessionLauncher.cs" />
     <Compile Include="Impls\HpcPack\HpcPackSessionLauncher.cs" />
     <Compile Include="Impls\SessionLauncherFactory.cs" />
     <Compile Include="JobInfo.cs" />

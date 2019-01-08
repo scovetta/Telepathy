@@ -14,12 +14,23 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
+    using System.Security;
+    using System.Security.Authentication;
     using System.ServiceModel;
+    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+
+    using Microsoft.Hpc.Scheduler.Properties;
+    using Microsoft.Hpc.Scheduler.Session.Configuration;
+    using Microsoft.Hpc.Scheduler.Session.Data;
+    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
+    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack;
 
     /// <summary>
     /// the session launcher service.
@@ -467,6 +478,348 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 {
                     Index--;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Allocate a new durable or non-durable session
+        /// </summary>
+        /// <param name="startInfo">session start info</param>
+        /// <param name="durable">whether session should be durable</param>
+        /// <param name="endpointPrefix">the endpoint prefix, net.tcp:// or https:// </param>
+        /// <returns>the Broker Launcher EPRs, sorted by the preference.</returns>
+        protected virtual async Task<SessionAllocateInfoContract> AllocateInternalAsync(SessionStartInfoContract startInfo, string endpointPrefix, bool durable)
+        {
+            TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] Begin: AllocateInternalAsync");
+            SessionAllocateInfoContract sessionAllocateInfo = new SessionAllocateInfoContract();
+
+            ParamCheckUtility.ThrowIfNull(startInfo, "startInfo");
+            ParamCheckUtility.ThrowIfNullOrEmpty(startInfo.ServiceName, "startInfo.ServiceName");
+            ParamCheckUtility.ThrowIfNullOrEmpty(endpointPrefix, "endpointPrefix");
+
+#if HPCPACK
+            // check client api version, 4.3 or older client is not supported by 4.4 server for the broken changes
+            if (startInfo.ClientVersion == null || startInfo.ClientVersion < new Version(4, 4))
+            {
+                TraceHelper.TraceEvent(TraceEventType.Error,
+                    "[SessionLauncher] .AllocateInternalAsync: ClientVersion {0} does not match ServerVersion {1}.", startInfo.ClientVersion, ServerVersion);
+
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.ClientServerVersionMismatch,
+                                              SR.SessionLauncher_ClientServerVersionMismatch,
+                                              startInfo.ClientVersion == null ? "NULL" : startInfo.ClientVersion.ToString(),
+                                              ServerVersion.ToString());
+            }
+#endif
+
+            // Init service version to the service version passed in
+            if (startInfo.ServiceVersion != null)
+            {
+                sessionAllocateInfo.ServiceVersion = startInfo.ServiceVersion;
+                TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternalAsync: Original service version is {0}", sessionAllocateInfo.ServiceVersion);
+            }
+            else
+            {
+                sessionAllocateInfo.ServiceVersion = null;
+                TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternalAsync: Original service version is null.");
+            }
+
+            string callId = Guid.NewGuid().ToString();
+            this.CheckAccess();
+
+            SecureString securePassword = CreateSecureString(startInfo.Password);
+            startInfo.Password = null;
+
+            // BUG 4522 : Use CCP_SCHEDULER when referencing service registration file share so HA HN virtual name is used when needed
+            //var reliableRegistry = new ReliableRegistry(this.fabricClient.PropertyManager);
+            //string defaultServiceRegistrationServerName = await reliableRegistry.GetValueAsync<string>(HpcConstants.HpcFullKeyName, HpcConstants.FileShareServerRegVal, this.token);
+
+            //if (String.IsNullOrEmpty(defaultServiceRegistrationServerName))
+            //{
+            //    defaultServiceRegistrationServerName = "localhost";
+            //}
+
+            // the reg repo path is from scheduler environments, defaultServiceRegistrationServerName is actually not used
+
+            string serviceConfigFile;
+            ServiceRegistrationRepo serviceRegistration = this.GetRegistrationRepo(callId);
+            serviceConfigFile = serviceRegistration.GetServiceRegistrationPath(startInfo.ServiceName, startInfo.ServiceVersion);
+
+            // If the serviceConfigFile wasnt found and serviceversion isnt specified, try getitng the service config based on the service's latest version
+            if (string.IsNullOrEmpty(serviceConfigFile) && (startInfo.ServiceVersion == null))
+            {
+                TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternalAsync: Try to find out versioned service.");
+
+                Version[] versions = this.GetServiceVersionsInternal(startInfo.ServiceName, false);
+
+                if (versions != null && versions.Length != 0)
+                {
+                    TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternalAsync: {0} versioned services are found.", versions.Length);
+
+                    Version dynamicServiceVersion = versions[0];
+
+                    if (dynamicServiceVersion != null)
+                    {
+                        TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternalAsync: Selected dynamicServiceVersion is {0}.", dynamicServiceVersion.ToString());
+                    }
+
+                    serviceConfigFile = serviceRegistration.GetServiceRegistrationPath(startInfo.ServiceName, dynamicServiceVersion);
+
+                    // If a config file is found, update the serviceVersion that is returned to client and stored in recovery info
+                    if (!string.IsNullOrEmpty(serviceConfigFile))
+                    {
+                        TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternalAsync: serviceConfigFile is {0}.", serviceConfigFile);
+
+                        startInfo.ServiceVersion = dynamicServiceVersion;
+
+                        if (dynamicServiceVersion != null)
+                        {
+                            sessionAllocateInfo.ServiceVersion = dynamicServiceVersion;
+                        }
+                    }
+                }
+            }
+
+            string serviceName = ServiceRegistrationRepo.GetServiceRegistrationFileName(startInfo.ServiceName, startInfo.ServiceVersion);
+            TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternalAsync: Service name = {0}, Configuration file = {1}", serviceName, serviceConfigFile);
+
+            // If the service is not found and user code doesn't specify
+            // version, we will use the latest version. 
+            if (string.IsNullOrEmpty(serviceConfigFile))
+            {
+                if (startInfo.ServiceVersion != null)
+                {
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.ServiceVersion_NotFound, SR.SessionLauncher_ServiceVersionNotFound, startInfo.ServiceName, startInfo.ServiceVersion.ToString());
+                }
+                else
+                {
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Service_NotFound, SR.SessionLauncher_ServiceNotFound, startInfo.ServiceName);
+                }
+            }
+
+            ExeConfigurationFileMap map = new ExeConfigurationFileMap();
+            map.ExeConfigFilename = serviceConfigFile;
+
+            ServiceRegistration registration = null;
+            BrokerConfigurations brokerConfigurations = null;
+            string hostpath = null;
+            string traceSwitchValue = null;
+
+            try
+            {
+                Configuration config = null;
+
+                RetryManager.RetryOnceAsync(
+                        () => config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None),
+                        TimeSpan.FromSeconds(1),
+                        ex => ex is ConfigurationErrorsException)
+                    .GetAwaiter()
+                    .GetResult();
+
+                Debug.Assert(config != null, "Configuration is not opened properly.");
+                registration = ServiceRegistration.GetSectionGroup(config);
+                brokerConfigurations = BrokerConfigurations.GetSectionGroup(config);
+
+                if (registration != null && registration.Host != null && registration.Host.Path != null)
+                {
+                    hostpath = registration.Host.Path;
+                }
+                else
+                {
+                    // x86 or x64
+                    hostpath = registration.Service.Architecture == ServiceArch.X86 ? TaskCommandLine32 : TaskCommandLine64;
+                }
+
+                traceSwitchValue = registration.Service.SoaDiagTraceLevel;
+
+                // TODO: should deprecate the previous settings
+                if (string.IsNullOrEmpty(traceSwitchValue))
+                {
+                    traceSwitchValue = ConfigurationHelper.GetTraceSwitchValue(config);
+                }
+            }
+            catch (ConfigurationErrorsException e)
+            {
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.ConfigFile_Invalid, SR.SessionLauncher_ConfigFileInvalid, e.ToString());
+            }
+
+            // after figuring out the service and version, and the session pool size, we check if the service pool already has the instance.
+            sessionAllocateInfo.Id = 0;
+            sessionAllocateInfo.SessionInfo = null;
+            if (startInfo.UseSessionPool)
+            {
+                if (this.TryGetSessionAllocateInfoFromPooled(endpointPrefix, durable, sessionAllocateInfo, serviceConfigFile, registration, out var allocateInternal))
+                {
+                    return allocateInternal;
+                }
+            }
+
+            // for sessions to add in session pool
+            try
+            {
+                var sessionAllocateInfoContract = await this.CreateAndSubmitSessionJob(
+                                                      startInfo,
+                                                      endpointPrefix,
+                                                      durable,
+                                                      callId,
+                                                      securePassword,
+                                                      registration,
+                                                      sessionAllocateInfo,
+                                                      traceSwitchValue,
+                                                      serviceName,
+                                                      brokerConfigurations,
+                                                      hostpath);
+                if (sessionAllocateInfoContract != null)
+                {
+                    return sessionAllocateInfoContract;
+                }
+            }
+            finally
+            {
+                // Add the submitted job to the session pool.
+                if (startInfo.UseSessionPool)
+                {
+                    this.AddSessionToPool(Path.GetFileNameWithoutExtension(serviceConfigFile), durable, sessionAllocateInfo.Id, registration.Service.MaxSessionPoolSize);
+                }
+            }
+
+            return null;
+        }
+
+        protected abstract Task<SessionAllocateInfoContract> CreateAndSubmitSessionJob(
+            SessionStartInfoContract startInfo,
+            string endpointPrefix,
+            bool durable,
+            string callId,
+            SecureString securePassword,
+            ServiceRegistration registration,
+            SessionAllocateInfoContract sessionAllocateInfo,
+            string traceSwitchValue,
+            string serviceName,
+            BrokerConfigurations brokerConfigurations,
+            string hostpath);
+
+        protected abstract void AddSessionToPool(string serviceNameWithVersion, bool durable, int sessionId, int poolSize);
+
+        protected abstract bool TryGetSessionAllocateInfoFromPooled(
+            string endpointPrefix,
+            bool durable,
+            SessionAllocateInfoContract sessionAllocateInfo,
+            string serviceConfigFile,
+            ServiceRegistration registration,
+            out SessionAllocateInfoContract allocateInternal);
+
+        /// <summary>
+        /// Implement authorization logic here
+        /// </summary>
+        protected abstract void CheckAccess();
+
+        protected virtual ServiceRegistrationRepo GetRegistrationRepo(string callId)
+        {
+            ServiceRegistrationRepo repo = null;
+            string regPath = string.Empty;
+
+            try
+            {
+                if (!string.IsNullOrEmpty(SessionLauncherSettings.Default.ServiceRegistrationPath))
+                {
+                    regPath = SessionLauncherSettings.Default.ServiceRegistrationPath + ";" + regPath;
+                }
+            }
+            catch (Exception e)
+            {
+                TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .GetRegistrationRepo: callId={0}, Get the scheduler environment failed. exception = {1}", callId, e);
+
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.GetClusterPropertyFailure, SR.SessionLauncher_FailToGetClusterProperty, e.ToString());
+            }
+
+            if (!string.IsNullOrEmpty(regPath))
+            {
+
+                repo = new ServiceRegistrationRepo(regPath);
+            }
+            else
+            {
+                TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .GetRegistrationRepo: callId={0}, Get the scheduler environment for RegistryPathEnv is empty or null.", callId);
+            }
+
+            if (repo != null && repo.GetServiceRegistrationDirectories() != null)
+            {
+                return repo;
+            }
+            else
+            {
+                TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .GetRegistrationRepo: No service registration directories are configured");
+
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.Service_RegistrationDirsMissing, SR.SessionLauncher_NoServiceRegistrationDirs);
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Convert plain text string to SecureString
+        /// </summary>
+        private static SecureString CreateSecureString(string textString)
+        {
+            if (textString == null)
+            {
+                return null;
+            }
+            else
+            {
+                SecureString secureString = new SecureString();
+                foreach (char c in textString)
+                {
+                    secureString.AppendChar(c);
+                }
+
+                return secureString;
+            }
+        }
+
+        /// <summary>
+        /// Get specified service's versions in the on-premise cluster.
+        /// </summary>
+        /// <param name="serviceName">specified service name</param>
+        /// <param name="addUnversionedService">include un-versioned service or not</param>
+        /// <returns>service versions</returns>
+        protected virtual Version[] GetServiceVersionsInternal(string serviceName, bool addUnversionedService)
+        {
+            string callId = Guid.NewGuid().ToString();
+
+            // Ensure the caller only supplies alpha-numeric characters
+            for (int i = 0; i < serviceName.Length; i++)
+            {
+                if (!char.IsLetterOrDigit(serviceName[i]) && !char.IsPunctuation(serviceName[i]))
+                {
+                    throw new ArgumentException(SR.SessionLauncher_ArgumentMustBeAlphaNumeric, "serviceName");
+                }
+            }
+
+            ServiceRegistrationRepo serviceRegistration = this.GetRegistrationRepo(callId);
+
+            // TODO: What if there a huge number of files? Unlikely for the same service
+            try
+            {
+                List<Version> versions = new List<Version>();
+                bool unversionedServiceAdded = false;
+
+                string[] directories = serviceRegistration.GetServiceRegistrationDirectories();
+                if (directories != null)
+                {
+                    foreach (string serviceRegistrationDir in directories)
+                    {
+                        this.GetVersionFromRegistrationDir(serviceRegistrationDir, serviceName, addUnversionedService, versions, ref unversionedServiceAdded);
+                    }
+                }
+
+                return versions.ToArray();
+            }
+            catch (Exception e)
+            {
+                TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .GetServiceVersionsInternalOnPremise: Get service versions. exception = {0}", e);
+
+                throw new SessionException(SR.SessionLauncher_FailToEnumerateServicVersions, e);
             }
         }
     }

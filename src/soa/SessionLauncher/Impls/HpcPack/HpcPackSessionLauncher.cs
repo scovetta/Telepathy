@@ -174,7 +174,7 @@
                 }
             }
 
-            return await this.AllocateInternal(startInfo, endpointPrefix, false);
+            return await this.AllocateInternalAsync(startInfo, endpointPrefix, false);
         }
 
         /// <summary>
@@ -194,7 +194,7 @@
                 ThrowHelper.ThrowSessionFault(SOAFaultCode.Azure_NotSupportDurableSession, SR.Azure_NotSupportDurableSession);
             }
 
-            return await this.AllocateInternal(startInfo, endpointPrefix, true);
+            return await this.AllocateInternalAsync(startInfo, endpointPrefix, true);
         }
 
         /// <summary>
@@ -471,7 +471,7 @@
         /// <returns>the Broker Launcher EPRs, sorted by the preference.</returns>
         public override string[] Allocate(SessionStartInfoContract startInfo, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
         {
-            SessionAllocateInfoContract contract = this.AllocateInternal(startInfo, endpointPrefix, false).GetAwaiter().GetResult();
+            SessionAllocateInfoContract contract = this.AllocateInternalAsync(startInfo, endpointPrefix, false).GetAwaiter().GetResult();
             sessionid = contract.Id;
             serviceVersion = contract.ServiceVersion?.ToString();
             sessionInfo = contract.SessionInfo;
@@ -489,7 +489,7 @@
         /// <returns>the Broker Launcher EPRs, sorted by the preference.</returns>
         public override string[] AllocateDurable(SessionStartInfoContract startInfo, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
         {
-            SessionAllocateInfoContract contract = this.AllocateInternal(startInfo, endpointPrefix, true).GetAwaiter().GetResult();
+            SessionAllocateInfoContract contract = this.AllocateInternalAsync(startInfo, endpointPrefix, true).GetAwaiter().GetResult();
             sessionid = contract.Id;
             serviceVersion = contract.ServiceVersion?.ToString();
             sessionInfo = contract.SessionInfo;
@@ -981,7 +981,7 @@
         /// <param name="serviceName">name of service whose versions are to be returned</param>
         /// <param name="addUnversionedService">add the un-versioned service or not</param>
         /// <returns>Available service versions</returns>
-        private Version[] GetServiceVersionsInternal(string serviceName, bool addUnversionedService)
+        protected override Version[] GetServiceVersionsInternal(string serviceName, bool addUnversionedService)
         {
             if (SoaHelper.IsOnAzure())
             {
@@ -989,54 +989,33 @@
             }
             else
             {
-                return this.GetServiceVersionsInternalOnPremise(serviceName, addUnversionedService);
+                return base.GetServiceVersionsInternal(serviceName, addUnversionedService);
             }
         }
 
-        /// <summary>
-        /// Get specified service's versions in the on-premise cluster.
-        /// </summary>
-        /// <param name="serviceName">specified service name</param>
-        /// <param name="addUnversionedService">include un-versioned service or not</param>
-        /// <returns>service versions</returns>
-        private Version[] GetServiceVersionsInternalOnPremise(string serviceName, bool addUnversionedService)
+        protected override bool TryGetSessionAllocateInfoFromPooled(
+            string endpointPrefix,
+            bool durable,
+            SessionAllocateInfoContract sessionAllocateInfo,
+            string serviceConfigFile,
+            ServiceRegistration registration,
+            out SessionAllocateInfoContract allocateInternal)
         {
-            string callId = Guid.NewGuid().ToString();
+            allocateInternal = null;
+            ISchedulerJob sessionJob = null;
+            sessionAllocateInfo.Id = this.PickSessionIdFromPool(Path.GetFileNameWithoutExtension(serviceConfigFile), durable, registration.Service.MaxSessionPoolSize, out sessionJob);
 
-            // Ensure the caller only supplies alpha-numeric characters
-            for (int i = 0; i < serviceName.Length; i++)
+            if (sessionAllocateInfo.Id > 0)
             {
-                if (!char.IsLetterOrDigit(serviceName[i]) && !char.IsPunctuation(serviceName[i]))
+                // better to getinfo here to eliminate the second call.
+                sessionAllocateInfo.SessionInfo = this.GetInfo(string.Empty, endpointPrefix, sessionAllocateInfo.Id, sessionJob);
                 {
-                    throw new ArgumentException(SR.SessionLauncher_ArgumentMustBeAlphaNumeric, "serviceName");
+                    allocateInternal = sessionAllocateInfo;
+                    return true;
                 }
             }
 
-            ServiceRegistrationRepo serviceRegistration = this.GetRegistrationRepo(callId);
-
-            // TODO: What if there a huge number of files? Unlikely for the same service
-            try
-            {
-                List<Version> versions = new List<Version>();
-                bool unversionedServiceAdded = false;
-
-                string[] directories = serviceRegistration.GetServiceRegistrationDirectories();
-                if (directories != null)
-                {
-                    foreach (string serviceRegistrationDir in directories)
-                    {
-                        this.GetVersionFromRegistrationDir(serviceRegistrationDir, serviceName, addUnversionedService, versions, ref unversionedServiceAdded);
-                    }
-                }
-
-                return versions.ToArray();
-            }
-            catch (Exception e)
-            {
-                TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .GetServiceVersionsInternalOnPremise: Get service versions. exception = {0}", e);
-
-                throw new SessionException(SR.SessionLauncher_FailToEnumerateServicVersions, e);
-            }
+            return false;
         }
 
         /// <summary>
@@ -1169,707 +1148,9 @@
         }
 
         /// <summary>
-        /// Allocate a new durable or non-durable session
-        /// </summary>
-        /// <param name="startInfo">session start info</param>
-        /// <param name="durable">whether session should be durable</param>
-        /// <param name="endpointPrefix">the endpoint prefix, net.tcp:// or https:// </param>
-        /// <returns>the Broker Launcher EPRs, sorted by the preference.</returns>
-        private async Task<SessionAllocateInfoContract> AllocateInternal(SessionStartInfoContract startInfo, string endpointPrefix, bool durable)
-        {
-            TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] Begin: AllocateInternal");
-            SessionAllocateInfoContract sessionAllocateInfo = new SessionAllocateInfoContract();
-
-            ParamCheckUtility.ThrowIfNull(startInfo, "startInfo");
-            ParamCheckUtility.ThrowIfNullOrEmpty(startInfo.ServiceName, "startInfo.ServiceName");
-            ParamCheckUtility.ThrowIfNullOrEmpty(endpointPrefix, "endpointPrefix");
-
-#if HPCPACK
-            // check client api version, 4.3 or older client is not supported by 4.4 server for the broken changes
-            if (startInfo.ClientVersion == null || startInfo.ClientVersion < new Version(4, 4))
-            {
-                TraceHelper.TraceEvent(TraceEventType.Error,
-                    "[SessionLauncher] .AllocateInternal: ClientVersion {0} does not match ServerVersion {1}.", startInfo.ClientVersion, ServerVersion);
-
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.ClientServerVersionMismatch,
-                                              SR.SessionLauncher_ClientServerVersionMismatch,
-                                              startInfo.ClientVersion == null ? "NULL" : startInfo.ClientVersion.ToString(),
-                                              ServerVersion.ToString());
-            }
-#endif
-
-            // Init service version to the service version passed in
-            if (startInfo.ServiceVersion != null)
-            {
-                sessionAllocateInfo.ServiceVersion = startInfo.ServiceVersion;
-                TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternal: Original service version is {0}", sessionAllocateInfo.ServiceVersion);
-            }
-            else
-            {
-                sessionAllocateInfo.ServiceVersion = null;
-                TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternal: Original service version is null.");
-            }
-
-            string callId = Guid.NewGuid().ToString();
-            CheckAccess();
-
-            SecureString securePassword = CreateSecureString(startInfo.Password);
-            startInfo.Password = null;
-
-            if (this.schedulerConnectState != SchedulerConnectState.ConnectionComplete)
-            {
-                TraceHelper.TraceEvent(
-                    TraceEventType.Information,
-                    "[SessionLauncher] .AllocateInternal: callId={0}, session launcher is not conected to the scheduler, schedulerConnectState={1}",
-                    callId,
-                    this.schedulerConnectState);
-
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.ConnectToSchedulerFailure, SR.SessionLauncher_NoConnectionToScheduler, null);
-            }
-
-            // BUG 4522 : Use CCP_SCHEDULER when referencing service registration file share so HA HN virtual name is used when needed
-            //var reliableRegistry = new ReliableRegistry(this.fabricClient.PropertyManager);
-            //string defaultServiceRegistrationServerName = await reliableRegistry.GetValueAsync<string>(HpcConstants.HpcFullKeyName, HpcConstants.FileShareServerRegVal, this.token);
-
-            //if (String.IsNullOrEmpty(defaultServiceRegistrationServerName))
-            //{
-            //    defaultServiceRegistrationServerName = "localhost";
-            //}
-
-            // the reg repo path is from scheduler environments, defaultServiceRegistrationServerName is actually not used
-
-            string serviceConfigFile;
-            ServiceRegistrationRepo serviceRegistration = this.GetRegistrationRepo(callId);
-            serviceConfigFile = serviceRegistration.GetServiceRegistrationPath(startInfo.ServiceName, startInfo.ServiceVersion);
-
-            // If the serviceConfigFile wasnt found and serviceversion isnt specified, try getitng the service config based on the service's latest version
-            if (string.IsNullOrEmpty(serviceConfigFile) && (startInfo.ServiceVersion == null))
-            {
-                TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternal: Try to find out versioned service.");
-
-                Version[] versions = this.GetServiceVersionsInternal(startInfo.ServiceName, false);
-
-                if (versions != null && versions.Length != 0)
-                {
-                    TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternal: {0} versioned services are found.", versions.Length);
-
-                    Version dynamicServiceVersion = versions[0];
-
-                    if (dynamicServiceVersion != null)
-                    {
-                        TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternal: Selected dynamicServiceVersion is {0}.", dynamicServiceVersion.ToString());
-                    }
-
-                    serviceConfigFile = serviceRegistration.GetServiceRegistrationPath(startInfo.ServiceName, dynamicServiceVersion);
-
-                    // If a config file is found, update the serviceVersion that is returned to client and stored in recovery info
-                    if (!string.IsNullOrEmpty(serviceConfigFile))
-                    {
-                        TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternal: serviceConfigFile is {0}.", serviceConfigFile);
-
-                        startInfo.ServiceVersion = dynamicServiceVersion;
-
-                        if (dynamicServiceVersion != null)
-                        {
-                            sessionAllocateInfo.ServiceVersion = dynamicServiceVersion;
-                        }
-                    }
-                }
-            }
-
-            string serviceName = ServiceRegistrationRepo.GetServiceRegistrationFileName(startInfo.ServiceName, startInfo.ServiceVersion);
-            TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternal: Service name = {0}, Configuration file = {1}", serviceName, serviceConfigFile);
-
-            // If the service is not found and user code doesn't specify
-            // version, we will use the latest version. 
-            if (string.IsNullOrEmpty(serviceConfigFile))
-            {
-                if (startInfo.ServiceVersion != null)
-                {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.ServiceVersion_NotFound, SR.SessionLauncher_ServiceVersionNotFound, startInfo.ServiceName, startInfo.ServiceVersion.ToString());
-                }
-                else
-                {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Service_NotFound, SR.SessionLauncher_ServiceNotFound, startInfo.ServiceName);
-                }
-            }
-
-            ExeConfigurationFileMap map = new ExeConfigurationFileMap();
-            map.ExeConfigFilename = serviceConfigFile;
-
-            ServiceRegistration registration = null;
-            BrokerConfigurations brokerConfigurations = null;
-            string hostpath = null;
-            string traceSwitchValue = null;
-
-            try
-            {
-                Configuration config = null;
-
-                RetryManager.RetryOnceAsync(
-                        () => config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None),
-                        TimeSpan.FromSeconds(1),
-                        ex => ex is ConfigurationErrorsException)
-                    .GetAwaiter()
-                    .GetResult();
-
-                Debug.Assert(config != null, "Configuration is not opened properly.");
-                registration = ServiceRegistration.GetSectionGroup(config);
-                brokerConfigurations = BrokerConfigurations.GetSectionGroup(config);
-
-                if (registration != null && registration.Host != null && registration.Host.Path != null)
-                {
-                    hostpath = registration.Host.Path;
-                }
-                else
-                {
-                    // x86 or x64
-                    hostpath = registration.Service.Architecture == ServiceArch.X86 ? TaskCommandLine32 : TaskCommandLine64;
-                }
-
-                traceSwitchValue = registration.Service.SoaDiagTraceLevel;
-
-                // TODO: should deprecate the previous settings
-                if (string.IsNullOrEmpty(traceSwitchValue))
-                {
-                    traceSwitchValue = ConfigurationHelper.GetTraceSwitchValue(config);
-                }
-            }
-            catch (ConfigurationErrorsException e)
-            {
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.ConfigFile_Invalid, SR.SessionLauncher_ConfigFileInvalid, e.ToString());
-            }
-
-            // after figuring out the service and version, and the session pool size, we check if the service pool already has the instance.
-            sessionAllocateInfo.Id = 0;
-            sessionAllocateInfo.SessionInfo = null;
-            if (startInfo.UseSessionPool)
-            {
-                ISchedulerJob sessionJob = null;
-                sessionAllocateInfo.Id = this.PickSessionIdFromPool(Path.GetFileNameWithoutExtension(serviceConfigFile), durable, registration.Service.MaxSessionPoolSize, out sessionJob);
-
-                if (sessionAllocateInfo.Id > 0)
-                {
-                    // better to getinfo here to eliminate the second call.
-                    sessionAllocateInfo.SessionInfo = this.GetInfo(string.Empty, endpointPrefix, sessionAllocateInfo.Id, sessionJob);
-                    return sessionAllocateInfo;
-                }
-            }
-
-            // for sessions to add in session pool
-            try
-            {
-                TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] .AllocateInternal: callId={0}, endpointPrefix={1}, durable={2}.", callId, endpointPrefix, durable);
-
-                if (!startInfo.UseAad && (string.IsNullOrEmpty(startInfo.Username) || securePassword == null))
-                {
-                    TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternal: callId={0}, Username and password is necessary.", callId);
-
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.AuthenticationFailure, SR.SessionLauncher_NeedUserNameAndPassword, null);
-                }
-
-                if (!IsEndpointPrefixSupported(endpointPrefix))
-                {
-                    TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternal: callId={0}, enpoint prfix, {1}, is not support.", callId, endpointPrefix);
-
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.InvalidArgument, SR.SessionLauncher_EndpointNotSupported, endpointPrefix);
-                }
-
-                ISchedulerJob schedulerJob = null;
-                try
-                {
-                    schedulerJob = this.scheduler.CreateJob() as ISchedulerJob;
-
-                    Debug.Assert(schedulerJob != null);
-                }
-                catch (Exception e)
-                {
-                    TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternal: callId={0}, Create job failed, Exception:{1}", callId, e);
-
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.CreateJobFailure, SR.SessionLauncher_FailToCreateJob, e.ToString());
-                }
-
-                try
-                {
-                    JobHelper.MakeJobProperties(startInfo, schedulerJob, registration.Service.SoaDiagTraceLevel);
-                }
-                catch (Exception e)
-                {
-                    TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternal: callId={0}, Make job properties failed, Exception:{1}", callId, e);
-
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.CreateJobPropertiesFailure, SR.SessionLauncher_SchedulerException, e.ToString());
-                }
-
-                // Set JobRuntimeType for usage tracking
-                schedulerJob.RuntimeType = JobRuntimeType.SOA;
-
-                // Set the parent jobs if specified
-                if (startInfo.ParentJobIds != null && startInfo.ParentJobIds.Count > 0)
-                {
-                    schedulerJob.ParentJobIds = new IntCollection(startInfo.ParentJobIds);
-                }
-
-                sessionAllocateInfo.Id = 0;
-                sessionAllocateInfo.BrokerLauncherEpr = null;
-                List<NodeInfo> nodeInfos = new List<NodeInfo>();
-
-                if (startInfo.UseInprocessBroker)
-                {
-                    // Do not get broker eprs for inprocess broker session
-                    sessionAllocateInfo.BrokerLauncherEpr = new string[0];
-
-                    // Bug 11378: Set JobOwner's user name into job's environment
-                    schedulerJob.SetEnvironmentVariable(Constant.JobOwnerNameEnvVar, OperationContext.Current.ServiceSecurityContext.WindowsIdentity.Name);
-                }
-                // if this is a diagnostic case which specific the broker node
-                else if (!String.IsNullOrEmpty(startInfo.DiagnosticBrokerNode))
-                {
-                    //sessionAllocateInfo.BrokerLauncherEpr = new string[] { startInfo.IsAadOrLocalUser ? BrokerNodesManager.GenerateBrokerLauncherInternalEpr(endpointPrefix, startInfo.DiagnosticBrokerNode) : BrokerNodesManager.GenerateBrokerLauncherEpr(endpointPrefix, startInfo.DiagnosticBrokerNode, startInfo.TransportScheme) };
-                    sessionAllocateInfo.BrokerLauncherEpr = new string[] { GenerateBrokerLauncherAddress(endpointPrefix, startInfo) };
-
-                    // TODO: RICHCI: GetSDDI cannot be called here. Need to look up SDDI from brokermanager
-                    nodeInfos.Add(BrokerNodesManager.GenerateNodeInfo(startInfo.DiagnosticBrokerNode));
-                }
-                else if (SoaHelper.IsOnAzure())
-                {
-                    sessionAllocateInfo.BrokerLauncherEpr = this.brokerNodesManager.GetAvailableAzureBrokerEPRs(out nodeInfos);
-                    if (sessionAllocateInfo.BrokerLauncherEpr.Length <= 0)
-                    {
-                        TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] .AllocateInternal: callId={0}, no available Azure broker nodes", callId);
-                        return sessionAllocateInfo;
-                    }
-                }
-                else if (!this.runningLocal)
-                {
-                    bool enableFQDN = false;
-
-                    string enableFqdnStr = JobHelper.GetEnvironmentVariable(this.scheduler, Constant.EnableFqdnEnv);
-
-                    if (!string.IsNullOrEmpty(enableFqdnStr))
-                    {
-                        if (bool.TryParse(enableFqdnStr, out enableFQDN))
-                        {
-                            TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternal: The enableFQDN setting in cluster env var is {0}", enableFQDN);
-                        }
-                        else
-                        {
-                            TraceHelper.TraceEvent(
-                                TraceEventType.Error,
-                                "[SessionLauncher] .AllocateInternal: The enableFQDN setting \"{0}\" in cluster env var is not a valid bool value.",
-                                enableFqdnStr);
-                        }
-                    }
-
-                    // get available broker eprs
-                    // GetAvailableBrokerEPRs is thread safe.
-
-                    sessionAllocateInfo.BrokerLauncherEpr = this.brokerNodesManager.GetAvailableBrokerEPRs(
-                        durable,
-                        endpointPrefix,
-                        enableFQDN,
-                        startInfo.ChannelType,
-                        startInfo.TransportScheme,
-                        out nodeInfos);
-
-                    if (sessionAllocateInfo.BrokerLauncherEpr.Length <= 0)
-                    {
-                        TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] .AllocateInternal: callId={0}, no available broker nodes", callId);
-                        return sessionAllocateInfo;
-                    }
-                }
-                else
-                {
-                    sessionAllocateInfo.BrokerLauncherEpr = new string[] { "net.pipe://localhost/BrokerLauncher" };
-                }
-
-                // make job envs
-                foreach (NameValueConfigurationElement entry in registration.Service.EnvironmentVariables)
-                {
-                    schedulerJob.SetEnvironmentVariable(entry.Name, entry.Value);
-                }
-
-                // pass service serviceInitializationTimeout as job environment variables
-                schedulerJob.SetEnvironmentVariable(Constant.ServiceInitializationTimeoutEnvVar, registration.Service.ServiceInitializationTimeout.ToString());
-
-                if (startInfo.ServiceHostIdleTimeout == null)
-                {
-                    schedulerJob.SetEnvironmentVariable(Constant.ServiceHostIdleTimeoutEnvVar, registration.Service.ServiceHostIdleTimeout.ToString());
-                }
-                else
-                {
-                    schedulerJob.SetEnvironmentVariable(Constant.ServiceHostIdleTimeoutEnvVar, startInfo.ServiceHostIdleTimeout.ToString());
-                }
-
-                if (startInfo.ServiceHangTimeout == null)
-                {
-                    schedulerJob.SetEnvironmentVariable(Constant.ServiceHangTimeoutEnvVar, registration.Service.ServiceHangTimeout.ToString());
-                }
-                else
-                {
-                    schedulerJob.SetEnvironmentVariable(Constant.ServiceHangTimeoutEnvVar, startInfo.ServiceHangTimeout.ToString());
-                }
-
-                // pass MessageLevelPreemption switcher as job environment variables
-                schedulerJob.SetEnvironmentVariable(Constant.EnableMessageLevelPreemptionEnvVar, registration.Service.EnableMessageLevelPreemption.ToString());
-
-                // pass trace switcher to svchost
-                if (!string.IsNullOrEmpty(traceSwitchValue))
-                {
-                    schedulerJob.SetEnvironmentVariable(Constant.TraceSwitchValue, traceSwitchValue);
-                }
-
-                // pass taskcancelgraceperiod as environment variable to svchosts
-                string taskCancelGracePeriod = JobHelper.GetClusterParameterValue(this.scheduler, Constant.TaskCancelGracePeriodClusParam, Constant.DefaultCancelTaskGracePeriod.ToString());
-                schedulerJob.SetEnvironmentVariable(Constant.CancelTaskGracePeriodEnvVar, taskCancelGracePeriod);
-
-                // pass service config file name to services
-                schedulerJob.SetEnvironmentVariable(Constant.ServiceConfigFileNameEnvVar, serviceName);
-
-                // pass maxMessageSize to service hosts
-                int maxMessageSize = startInfo.MaxMessageSize.HasValue ? startInfo.MaxMessageSize.Value : registration.Service.MaxMessageSize;
-                schedulerJob.SetEnvironmentVariable(Constant.ServiceConfigMaxMessageEnvVar, maxMessageSize.ToString());
-
-                // pass service operation timeout to service hosts
-                int? serviceOperationTimeout = null;
-                if (startInfo.ServiceOperationTimeout.HasValue)
-                {
-                    serviceOperationTimeout = startInfo.ServiceOperationTimeout;
-                }
-                else if (brokerConfigurations != null && brokerConfigurations.LoadBalancing != null)
-                {
-                    serviceOperationTimeout = brokerConfigurations.LoadBalancing.ServiceOperationTimeout;
-                }
-
-                if (serviceOperationTimeout.HasValue)
-                {
-                    schedulerJob.SetEnvironmentVariable(Constant.ServiceConfigServiceOperatonTimeoutEnvVar, serviceOperationTimeout.Value.ToString());
-                }
-
-                if (startInfo.Environments != null)
-                {
-                    foreach (KeyValuePair<string, string> entry in startInfo.Environments)
-                    {
-                        schedulerJob.SetEnvironmentVariable(entry.Key, entry.Value);
-                    }
-                }
-
-                // Pass DataServerInfo to service host via job environment variables
-                DataServerInfo dsInfo = null;
-
-                if (SessionLauncherSettings.Default.EnableDataService)
-                {
-                    dsInfo = this.dataService.GetDataServerInfo();
-                }
-
-                if (dsInfo != null)
-                {
-                    schedulerJob.SetEnvironmentVariable(Constant.SoaDataServerInfoEnvVar, dsInfo.AddressInfo);
-                }
-
-                // Each SOA job is assigned a GUID "secret", which is used
-                // to identify soa job owner. When a job running in Azure 
-                // tries to access common data, it sends this "secret" together
-                // with a data request to data service.  Data service trusts
-                // the data request only if the job id and job "secret" 
-                // match. 
-                schedulerJob.SetEnvironmentVariable(Constant.JobSecretEnvVar, Guid.NewGuid().ToString());
-
-                // Set CCP_SERVICE_SESSIONPOOL env var of the job
-                if (startInfo.UseSessionPool)
-                {
-                    schedulerJob.SetEnvironmentVariable(Constant.ServiceUseSessionPoolEnvVar, bool.TrueString);
-                }
-
-                // Add the broker nodes available to the session as env variables so that services only
-                // process requests from BNs
-                List<string> nodeSSDLList = new List<string>(nodeInfos.Count);
-                foreach (NodeInfo info in nodeInfos)
-                {
-                    nodeSSDLList.Add(info.SSDL);
-                }
-
-                SessionBrokerNodes.SetSessionBrokerNodes(schedulerJob, nodeSSDLList);
-
-                // Get the how many tasks to add
-                // If there is user specified max units, then use it, otherwise a default 16
-                int numTasks = (startInfo.MaxUnits != null && startInfo.MaxUnits.Value > 0) ? startInfo.MaxUnits.Value : DefaultInitTaskNumber;
-
-                try
-                {
-                    // Limit the task number within the cluster size
-                    int[] totalCountNumbers = new int[3];
-
-                    try
-                    {
-                        ISchedulerCounters counters = this.scheduler.GetCounters();
-                        totalCountNumbers[0] = counters.TotalCores;
-                        totalCountNumbers[1] = counters.TotalSockets;
-                        totalCountNumbers[2] = counters.TotalNodes;
-                    }
-                    catch (Exception e)
-                    {
-                        TraceHelper.TraceEvent(
-                            TraceEventType.Error,
-                            "[SessionLauncher] .AllocateInternal: callId={0}, Failed to get the property of TotalCoreCount, TotalSocketCount and TotalNodeCount, Exception:{1}",
-                            callId,
-                            e);
-
-                        ThrowHelper.ThrowSessionFault(SOAFaultCode.GetClusterPropertyFailure, SR.SessionLauncher_FailToGetClusterProperty, e.ToString());
-                    }
-
-                    int maxSize = totalCountNumbers[0];
-                    if (startInfo.ResourceUnitType != null)
-                    {
-                        switch ((JobUnitType)startInfo.ResourceUnitType)
-                        {
-                            case JobUnitType.Socket:
-                                maxSize = totalCountNumbers[1];
-                                break;
-
-                            case JobUnitType.Node:
-                                maxSize = totalCountNumbers[2];
-                                break;
-
-                            default:
-                                break;
-                        }
-                    }
-
-                    TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] .AllocateInternal: callId={0}, numTasks={1}, maxSize={2}", callId, numTasks, maxSize);
-
-                    if (numTasks > maxSize)
-                    {
-                        numTasks = maxSize;
-                    }
-
-                    try
-                    {
-                        ISchedulerTask schedulerTask = schedulerJob.CreateTask();
-
-                        // Add service tasks
-                        schedulerTask.MinimumNumberOfCores = schedulerTask.MaximumNumberOfCores =
-                                                                 schedulerTask.MinimumNumberOfSockets =
-                                                                     schedulerTask.MaximumNumberOfSockets = schedulerTask.MinimumNumberOfNodes = schedulerTask.MaximumNumberOfNodes = 1;
-
-                        // Use service task to submit initial tasks
-                        schedulerTask.Type = TaskType.Service;
-
-                        schedulerTask.CommandLine = hostpath;
-
-                        string stderrPath = registration.Service.StdError;
-                        if (!string.IsNullOrEmpty(stderrPath))
-                        {
-                            schedulerTask.StdErrFilePath = stderrPath;
-                        }
-
-                        // Bug 8153: Use FailJobOnFailureCount task property to monitor for runaway service tasks (i.e. service tasks with a bad command line) instead of monitoring
-                        //  failed task instances from HpcSession which is too slow
-                        schedulerTask.FailJobOnFailure = true;
-                        schedulerTask.FailJobOnFailureCount = MaxFailedTask;
-
-                        schedulerJob.SetEnvironmentVariable(BrokerSettingsConstants.Secure, startInfo.Secure.ToString());
-                        schedulerJob.SetEnvironmentVariable(BrokerSettingsConstants.TransportScheme, startInfo.TransportScheme.ToString());
-
-                        TraceHelper.TraceEvent(
-                            TraceEventType.Information,
-                            "[SessionLauncher] .AllocateInternal: callId={0}, set job environment: {1}={2}, {3}={4}.",
-                            callId,
-                            BrokerSettingsConstants.Secure,
-                            startInfo.Secure,
-                            BrokerSettingsConstants.TransportScheme,
-                            startInfo.TransportScheme);
-
-                        schedulerJob.AddTask(schedulerTask);
-                    }
-                    catch (SchedulerException e)
-                    {
-                        TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternal: callId={0}, Create task failed, Exception:{1}", callId, e);
-
-                        ThrowHelper.ThrowSessionFault(SOAFaultCode.CreateJobTasksFailure, SR.SessionLauncher_CreateJobTasksFailure, e.ToString());
-                    }
-
-                    // Add job first then we can get a job id.
-                    using (new SessionIdentityImpersonation(startInfo.UseAad))
-                    {
-                        this.scheduler.AddJob(schedulerJob);
-                    }
-
-                    if (!string.IsNullOrEmpty(startInfo.DependFiles))
-                    {
-                        TraceHelper.TraceEvent(
-                            TraceEventType.Information,
-                            "[SessionLauncher] .AllocateInternal: callId={0}, JobId={1}, DependFiles:{2}",
-                            callId,
-                            schedulerJob.Id,
-                            startInfo.DependFiles);
-                        string userRoot = Path.Combine(this.dataService.GetUserJobDataRoot(), startInfo.Username.Replace('\\', '.'));
-                        string jobSharePath = Path.Combine(userRoot, schedulerJob.Id.ToString());
-                        Directory.CreateDirectory(jobSharePath);
-                        schedulerJob.SetEnvironmentVariable(Constant.SoaDataJobDirEnvVar, jobSharePath);
-                        string[] filePairs = startInfo.DependFiles.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                        foreach (var filepair in filePairs)
-                        {
-                            int eq_index = filepair.IndexOf('=');
-                            string clientId = filepair.Substring(0, eq_index);
-                            string targetPath = filepair.Substring(eq_index + 1);
-                            string localCachePath = Path.Combine(userRoot, clientId);
-                            if (!File.Exists(localCachePath))
-                            {
-                                DataClient client = DataClient.Open("localhost", clientId, Data.DataLocation.AzureBlob);
-                                File.WriteAllBytes(localCachePath, client.ReadRawBytesAll());
-                            }
-
-                            targetPath = Path.Combine(jobSharePath, targetPath);
-                            string targetDir = Path.GetDirectoryName(targetPath);
-                            if (!Directory.Exists(targetDir))
-                            {
-                                Directory.CreateDirectory(targetDir);
-                            }
-
-                            File.Copy(localCachePath, targetPath);
-                        }
-                    }
-
-                    // Add prepare and release tasks to server job if specified by the user
-                    AddPrepReleaseTasks(
-                        schedulerJob,
-                        GetServiceAssemblyDirectory(registration.Service.AssemblyPath),
-                        registration.Service.PrepareNodeCommandLine,
-                        registration.Service.ReleaseNodeCommandLine);
-
-                    #region Debug Failure Test
-
-                    Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
-
-                    #endregion
-
-                    try
-                    {
-                        using (new SessionIdentityImpersonation(startInfo.UseAad))
-                        {
-                            if (startInfo.SavePassword.HasValue && startInfo.SavePassword.Value)
-                            {
-                                this.scheduler.SetCachedCredentials(startInfo.Username, UnsecureString(securePassword));
-                            }
-
-                            // upload the certificate to the scheduler if it exists in the startInfo
-                            if (!string.IsNullOrEmpty(startInfo.PfxPassword) && startInfo.Certificate != null)
-                            {
-                                this.scheduler.SetCertificateCredentialsPfx(startInfo.Username, startInfo.PfxPassword, startInfo.Certificate);
-                            }
-
-                            TraceHelper.TraceEvent(
-                                TraceEventType.Information,
-                                "[SessionLauncher].AllocateInternal: UseAad={0}, UserName={1}, CurrentPrincipal={2}",
-                                startInfo.UseAad,
-                                startInfo.Username,
-                                Thread.CurrentPrincipal.Identity.Name);
-
-                            if (startInfo.UseAad)
-                            {
-                                this.scheduler.SubmitJob(schedulerJob, null, null);
-                            }
-                            else if (startInfo.LocalUser.GetValueOrDefault())
-                            {
-                                this.scheduler.SubmitJob(schedulerJob, startInfo.Username.Split('\\').Last(), UnsecureString(securePassword));
-                            }
-                            else
-                            {
-                                this.scheduler.SubmitJob(schedulerJob, startInfo.Username, UnsecureString(securePassword));
-                            }
-                        }
-
-                        sessionAllocateInfo.Id = schedulerJob.Id;
-                    }
-                    catch (InvalidCredentialException e)
-                    {
-                        TraceHelper.TraceEvent(
-                            sessionAllocateInfo.Id,
-                            TraceEventType.Error,
-                            "[SessionLauncher] .AllocateInternal: callId={0}, Invalide credential to submit the job, Exception:{1}",
-                            callId,
-                            e);
-
-                        try
-                        {
-                            this.scheduler.DeleteJob(schedulerJob.Id);
-                        }
-                        catch
-                        {
-                            TraceHelper.TraceEvent(
-                                sessionAllocateInfo.Id,
-                                TraceEventType.Warning,
-                                $"[SessionLauncher] .AllocateInternal: callId={callId}, Failed to delete the job {schedulerJob.Id}, Exception:{e}");
-                        }
-
-                        SchedulerException schedulerExcep = e.InnerException as SchedulerException;
-                        if (schedulerExcep == null)
-                        {
-                            ThrowHelper.ThrowSessionFault(SOAFaultCode.AuthenticationFailure, SR.SessionLauncher_CannotLogon, null);
-                        }
-                        else
-                        {
-                            int faultCode = SOAFaultCode.UnknownError;
-                            if (schedulerExcep.Code == ErrorCode.Operation_AuthenticationFailure)
-                            {
-                                faultCode = ConvertToFaultCode(schedulerExcep.Params);
-                            }
-
-                            ThrowHelper.ThrowSessionFault(faultCode, schedulerExcep.Message, null);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        TraceHelper.TraceEvent(sessionAllocateInfo.Id, TraceEventType.Error, "[SessionLauncher] .AllocateInternal: callId={0}, Failed to submit job, Exception:{1}", callId, e);
-
-                        ThrowHelper.ThrowSessionFault(SOAFaultCode.SubmitJobFailure, SR.SessionLauncher_FailToSubmitJob, e.Message);
-                    }
-
-                    StringBuilder brokerEprsString = new StringBuilder();
-                    foreach (string epr in sessionAllocateInfo.BrokerLauncherEpr)
-                    {
-                        brokerEprsString.AppendLine(epr);
-                    }
-
-                    TraceHelper.TraceEvent(
-                        sessionAllocateInfo.Id,
-                        TraceEventType.Information,
-                        "[SessionLauncher] .AllocateInternal: callId={0}, Alloc returned Broker eprs:{1}",
-                        callId,
-                        brokerEprsString.ToString());
-
-                    return await Task.FromResult(sessionAllocateInfo);
-                }
-                catch (Exception e)
-                {
-                    TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternal: callId={0}, Exception raised, Exception:{1}", callId, e);
-
-                    if (e is FaultException<SessionFault>)
-                    {
-                        throw;
-                    }
-                    else
-                    {
-                        ThrowHelper.ThrowSessionFault(SOAFaultCode.UnknownError, SR.UnknownError, e.ToString());
-                    }
-                }
-            }
-            finally
-            {
-                // Add the submitted job to the session pool.
-                if (startInfo.UseSessionPool)
-                {
-                    this.AddSessionToPool(Path.GetFileNameWithoutExtension(serviceConfigFile), durable, sessionAllocateInfo.Id, registration.Service.MaxSessionPoolSize);
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// if the RegistrationPath doesn't exist, throws an exception with proper error code
         /// </summary>
-        private ServiceRegistrationRepo GetRegistrationRepo(string callId)
+        protected override ServiceRegistrationRepo GetRegistrationRepo(string callId)
         {
             ServiceRegistrationRepo repo = null;
             if (SoaHelper.IsOnAzure())
@@ -2135,7 +1416,7 @@
         /// <param name="durable">durable session or not</param>
         /// <param name="sessionId">session id</param>
         /// <param name="poolSize">the session pool size</param>
-        private void AddSessionToPool(string serviceNameWithVersion, bool durable, int sessionId, int poolSize)
+        protected override void AddSessionToPool(string serviceNameWithVersion, bool durable, int sessionId, int poolSize)
         {
             Dictionary<string, SessionPool> dictionary = durable ? this.durableSessionPool : this.nonDurableSessionPool;
             Debug.Assert(dictionary != null, "the session pool is null");
@@ -2166,6 +1447,498 @@
                     sp.Preparing,
                     string.Join(",", sp.SessionIds));
             }
+        }
+
+        protected override async Task<SessionAllocateInfoContract> CreateAndSubmitSessionJob(
+           SessionStartInfoContract startInfo,
+           string endpointPrefix,
+           bool durable,
+           string callId,
+           SecureString securePassword,
+           ServiceRegistration registration,
+           SessionAllocateInfoContract sessionAllocateInfo,
+           string traceSwitchValue,
+           string serviceName,
+           BrokerConfigurations brokerConfigurations,
+           string hostpath)
+        {
+            TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] .AllocateInternalAsync: callId={0}, endpointPrefix={1}, durable={2}.", callId, endpointPrefix, durable);
+
+            if (!startInfo.UseAad && (string.IsNullOrEmpty(startInfo.Username) || securePassword == null))
+            {
+                TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternalAsync: callId={0}, Username and password is necessary.", callId);
+
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.AuthenticationFailure, SR.SessionLauncher_NeedUserNameAndPassword, null);
+            }
+
+            if (!HpcPackSessionLauncher.IsEndpointPrefixSupported(endpointPrefix))
+            {
+                TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternalAsync: callId={0}, enpoint prfix, {1}, is not support.", callId, endpointPrefix);
+
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.InvalidArgument, SR.SessionLauncher_EndpointNotSupported, endpointPrefix);
+            }
+
+            ISchedulerJob schedulerJob = null;
+            try
+            {
+                schedulerJob = this.scheduler.CreateJob() as ISchedulerJob;
+
+                Debug.Assert(schedulerJob != null);
+            }
+            catch (Exception e)
+            {
+                TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternalAsync: callId={0}, Create job failed, Exception:{1}", callId, e);
+
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.CreateJobFailure, SR.SessionLauncher_FailToCreateJob, e.ToString());
+            }
+
+            try
+            {
+                JobHelper.MakeJobProperties(startInfo, schedulerJob, registration.Service.SoaDiagTraceLevel);
+            }
+            catch (Exception e)
+            {
+                TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternalAsync: callId={0}, Make job properties failed, Exception:{1}", callId, e);
+
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.CreateJobPropertiesFailure, SR.SessionLauncher_SchedulerException, e.ToString());
+            }
+
+            // Set JobRuntimeType for usage tracking
+            schedulerJob.RuntimeType = JobRuntimeType.SOA;
+
+            // Set the parent jobs if specified
+            if (startInfo.ParentJobIds != null && startInfo.ParentJobIds.Count > 0)
+            {
+                schedulerJob.ParentJobIds = new IntCollection(startInfo.ParentJobIds);
+            }
+
+            sessionAllocateInfo.Id = 0;
+            sessionAllocateInfo.BrokerLauncherEpr = null;
+            List<NodeInfo> nodeInfos = new List<NodeInfo>();
+
+            if (startInfo.UseInprocessBroker)
+            {
+                // Do not get broker eprs for inprocess broker session
+                sessionAllocateInfo.BrokerLauncherEpr = new string[0];
+
+                // Bug 11378: Set JobOwner's user name into job's environment
+                schedulerJob.SetEnvironmentVariable(Constant.JobOwnerNameEnvVar, OperationContext.Current.ServiceSecurityContext.WindowsIdentity.Name);
+            }
+            // if this is a diagnostic case which specific the broker node
+            else if (!String.IsNullOrEmpty(startInfo.DiagnosticBrokerNode))
+            {
+                //sessionAllocateInfo.BrokerLauncherEpr = new string[] { startInfo.IsAadOrLocalUser ? BrokerNodesManager.GenerateBrokerLauncherInternalEpr(endpointPrefix, startInfo.DiagnosticBrokerNode) : BrokerNodesManager.GenerateBrokerLauncherEpr(endpointPrefix, startInfo.DiagnosticBrokerNode, startInfo.TransportScheme) };
+                sessionAllocateInfo.BrokerLauncherEpr = new string[] { HpcPackSessionLauncher.GenerateBrokerLauncherAddress(endpointPrefix, startInfo) };
+
+                // TODO: RICHCI: GetSDDI cannot be called here. Need to look up SDDI from brokermanager
+                nodeInfos.Add(BrokerNodesManager.GenerateNodeInfo(startInfo.DiagnosticBrokerNode));
+            }
+            else if (SoaHelper.IsOnAzure())
+            {
+                sessionAllocateInfo.BrokerLauncherEpr = this.brokerNodesManager.GetAvailableAzureBrokerEPRs(out nodeInfos);
+                if (sessionAllocateInfo.BrokerLauncherEpr.Length <= 0)
+                {
+                    TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] .AllocateInternalAsync: callId={0}, no available Azure broker nodes", callId);
+                    return sessionAllocateInfo;
+                }
+            }
+            else if (!this.runningLocal)
+            {
+                bool enableFQDN = false;
+
+                string enableFqdnStr = JobHelper.GetEnvironmentVariable(this.scheduler, Constant.EnableFqdnEnv);
+
+                if (!string.IsNullOrEmpty(enableFqdnStr))
+                {
+                    if (bool.TryParse(enableFqdnStr, out enableFQDN))
+                    {
+                        TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternalAsync: The enableFQDN setting in cluster env var is {0}", enableFQDN);
+                    }
+                    else
+                    {
+                        TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternalAsync: The enableFQDN setting \"{0}\" in cluster env var is not a valid bool value.", enableFqdnStr);
+                    }
+                }
+
+                // get available broker eprs
+                // GetAvailableBrokerEPRs is thread safe.
+
+                sessionAllocateInfo.BrokerLauncherEpr = this.brokerNodesManager.GetAvailableBrokerEPRs(durable, endpointPrefix, enableFQDN, startInfo.ChannelType, startInfo.TransportScheme, out nodeInfos);
+
+                if (sessionAllocateInfo.BrokerLauncherEpr.Length <= 0)
+                {
+                    TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] .AllocateInternalAsync: callId={0}, no available broker nodes", callId);
+                    return sessionAllocateInfo;
+                }
+            }
+            else
+            {
+                sessionAllocateInfo.BrokerLauncherEpr = new string[] { "net.pipe://localhost/BrokerLauncher" };
+            }
+
+            // make job envs
+            foreach (NameValueConfigurationElement entry in registration.Service.EnvironmentVariables)
+            {
+                schedulerJob.SetEnvironmentVariable(entry.Name, entry.Value);
+            }
+
+            // pass service serviceInitializationTimeout as job environment variables
+            schedulerJob.SetEnvironmentVariable(Constant.ServiceInitializationTimeoutEnvVar, registration.Service.ServiceInitializationTimeout.ToString());
+
+            if (startInfo.ServiceHostIdleTimeout == null)
+            {
+                schedulerJob.SetEnvironmentVariable(Constant.ServiceHostIdleTimeoutEnvVar, registration.Service.ServiceHostIdleTimeout.ToString());
+            }
+            else
+            {
+                schedulerJob.SetEnvironmentVariable(Constant.ServiceHostIdleTimeoutEnvVar, startInfo.ServiceHostIdleTimeout.ToString());
+            }
+
+            if (startInfo.ServiceHangTimeout == null)
+            {
+                schedulerJob.SetEnvironmentVariable(Constant.ServiceHangTimeoutEnvVar, registration.Service.ServiceHangTimeout.ToString());
+            }
+            else
+            {
+                schedulerJob.SetEnvironmentVariable(Constant.ServiceHangTimeoutEnvVar, startInfo.ServiceHangTimeout.ToString());
+            }
+
+            // pass MessageLevelPreemption switcher as job environment variables
+            schedulerJob.SetEnvironmentVariable(Constant.EnableMessageLevelPreemptionEnvVar, registration.Service.EnableMessageLevelPreemption.ToString());
+
+            // pass trace switcher to svchost
+            if (!string.IsNullOrEmpty(traceSwitchValue))
+            {
+                schedulerJob.SetEnvironmentVariable(Constant.TraceSwitchValue, traceSwitchValue);
+            }
+
+            // pass taskcancelgraceperiod as environment variable to svchosts
+            string taskCancelGracePeriod = JobHelper.GetClusterParameterValue(this.scheduler, Constant.TaskCancelGracePeriodClusParam, Constant.DefaultCancelTaskGracePeriod.ToString());
+            schedulerJob.SetEnvironmentVariable(Constant.CancelTaskGracePeriodEnvVar, taskCancelGracePeriod);
+
+            // pass service config file name to services
+            schedulerJob.SetEnvironmentVariable(Constant.ServiceConfigFileNameEnvVar, serviceName);
+
+            // pass maxMessageSize to service hosts
+            int maxMessageSize = startInfo.MaxMessageSize.HasValue ? startInfo.MaxMessageSize.Value : registration.Service.MaxMessageSize;
+            schedulerJob.SetEnvironmentVariable(Constant.ServiceConfigMaxMessageEnvVar, maxMessageSize.ToString());
+
+            // pass service operation timeout to service hosts
+            int? serviceOperationTimeout = null;
+            if (startInfo.ServiceOperationTimeout.HasValue)
+            {
+                serviceOperationTimeout = startInfo.ServiceOperationTimeout;
+            }
+            else if (brokerConfigurations != null && brokerConfigurations.LoadBalancing != null)
+            {
+                serviceOperationTimeout = brokerConfigurations.LoadBalancing.ServiceOperationTimeout;
+            }
+
+            if (serviceOperationTimeout.HasValue)
+            {
+                schedulerJob.SetEnvironmentVariable(Constant.ServiceConfigServiceOperatonTimeoutEnvVar, serviceOperationTimeout.Value.ToString());
+            }
+
+            if (startInfo.Environments != null)
+            {
+                foreach (KeyValuePair<string, string> entry in startInfo.Environments)
+                {
+                    schedulerJob.SetEnvironmentVariable(entry.Key, entry.Value);
+                }
+            }
+
+            // Pass DataServerInfo to service host via job environment variables
+            DataServerInfo dsInfo = null;
+
+            if (SessionLauncherSettings.Default.EnableDataService)
+            {
+                dsInfo = this.dataService.GetDataServerInfo();
+            }
+
+            if (dsInfo != null)
+            {
+                schedulerJob.SetEnvironmentVariable(Constant.SoaDataServerInfoEnvVar, dsInfo.AddressInfo);
+            }
+
+            // Each SOA job is assigned a GUID "secret", which is used
+            // to identify soa job owner. When a job running in Azure 
+            // tries to access common data, it sends this "secret" together
+            // with a data request to data service.  Data service trusts
+            // the data request only if the job id and job "secret" 
+            // match. 
+            schedulerJob.SetEnvironmentVariable(Constant.JobSecretEnvVar, Guid.NewGuid().ToString());
+
+            // Set CCP_SERVICE_SESSIONPOOL env var of the job
+            if (startInfo.UseSessionPool)
+            {
+                schedulerJob.SetEnvironmentVariable(Constant.ServiceUseSessionPoolEnvVar, bool.TrueString);
+            }
+
+            // Add the broker nodes available to the session as env variables so that services only
+            // process requests from BNs
+            List<string> nodeSSDLList = new List<string>(nodeInfos.Count);
+            foreach (NodeInfo info in nodeInfos)
+            {
+                nodeSSDLList.Add(info.SSDL);
+            }
+
+            SessionBrokerNodes.SetSessionBrokerNodes(schedulerJob, nodeSSDLList);
+
+            // Get the how many tasks to add
+            // If there is user specified max units, then use it, otherwise a default 16
+            int numTasks = (startInfo.MaxUnits != null && startInfo.MaxUnits.Value > 0) ? startInfo.MaxUnits.Value : HpcPackSessionLauncher.DefaultInitTaskNumber;
+
+            try
+            {
+                // Limit the task number within the cluster size
+                int[] totalCountNumbers = new int[3];
+
+                try
+                {
+                    ISchedulerCounters counters = this.scheduler.GetCounters();
+                    totalCountNumbers[0] = counters.TotalCores;
+                    totalCountNumbers[1] = counters.TotalSockets;
+                    totalCountNumbers[2] = counters.TotalNodes;
+                }
+                catch (Exception e)
+                {
+                    TraceHelper.TraceEvent(
+                        TraceEventType.Error,
+                        "[SessionLauncher] .AllocateInternalAsync: callId={0}, Failed to get the property of TotalCoreCount, TotalSocketCount and TotalNodeCount, Exception:{1}",
+                        callId,
+                        e);
+
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.GetClusterPropertyFailure, SR.SessionLauncher_FailToGetClusterProperty, e.ToString());
+                }
+
+                int maxSize = totalCountNumbers[0];
+                if (startInfo.ResourceUnitType != null)
+                {
+                    switch ((JobUnitType)startInfo.ResourceUnitType)
+                    {
+                        case JobUnitType.Socket:
+                            maxSize = totalCountNumbers[1];
+                            break;
+
+                        case JobUnitType.Node:
+                            maxSize = totalCountNumbers[2];
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+
+                TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] .AllocateInternalAsync: callId={0}, numTasks={1}, maxSize={2}", callId, numTasks, maxSize);
+
+                if (numTasks > maxSize)
+                {
+                    numTasks = maxSize;
+                }
+
+                try
+                {
+                    ISchedulerTask schedulerTask = schedulerJob.CreateTask();
+
+                    // Add service tasks
+                    schedulerTask.MinimumNumberOfCores = schedulerTask.MaximumNumberOfCores =
+                                                             schedulerTask.MinimumNumberOfSockets =
+                                                                 schedulerTask.MaximumNumberOfSockets = schedulerTask.MinimumNumberOfNodes = schedulerTask.MaximumNumberOfNodes = 1;
+
+                    // Use service task to submit initial tasks
+                    schedulerTask.Type = TaskType.Service;
+
+                    schedulerTask.CommandLine = hostpath;
+
+                    string stderrPath = registration.Service.StdError;
+                    if (!string.IsNullOrEmpty(stderrPath))
+                    {
+                        schedulerTask.StdErrFilePath = stderrPath;
+                    }
+
+                    // Bug 8153: Use FailJobOnFailureCount task property to monitor for runaway service tasks (i.e. service tasks with a bad command line) instead of monitoring
+                    //  failed task instances from HpcSession which is too slow
+                    schedulerTask.FailJobOnFailure = true;
+                    schedulerTask.FailJobOnFailureCount = HpcPackSessionLauncher.MaxFailedTask;
+
+                    schedulerJob.SetEnvironmentVariable(BrokerSettingsConstants.Secure, startInfo.Secure.ToString());
+                    schedulerJob.SetEnvironmentVariable(BrokerSettingsConstants.TransportScheme, startInfo.TransportScheme.ToString());
+
+                    TraceHelper.TraceEvent(
+                        TraceEventType.Information,
+                        "[SessionLauncher] .AllocateInternalAsync: callId={0}, set job environment: {1}={2}, {3}={4}.",
+                        callId,
+                        BrokerSettingsConstants.Secure,
+                        startInfo.Secure,
+                        BrokerSettingsConstants.TransportScheme,
+                        startInfo.TransportScheme);
+
+                    schedulerJob.AddTask(schedulerTask);
+                }
+                catch (SchedulerException e)
+                {
+                    TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternalAsync: callId={0}, Create task failed, Exception:{1}", callId, e);
+
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.CreateJobTasksFailure, SR.SessionLauncher_CreateJobTasksFailure, e.ToString());
+                }
+
+                // Add job first then we can get a job id.
+                using (new SessionIdentityImpersonation(startInfo.UseAad))
+                {
+                    this.scheduler.AddJob(schedulerJob);
+                }
+
+                if (!string.IsNullOrEmpty(startInfo.DependFiles))
+                {
+                    TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] .AllocateInternalAsync: callId={0}, JobId={1}, DependFiles:{2}", callId, schedulerJob.Id, startInfo.DependFiles);
+                    string userRoot = Path.Combine(this.dataService.GetUserJobDataRoot(), startInfo.Username.Replace('\\', '.'));
+                    string jobSharePath = Path.Combine(userRoot, schedulerJob.Id.ToString());
+                    Directory.CreateDirectory(jobSharePath);
+                    schedulerJob.SetEnvironmentVariable(Constant.SoaDataJobDirEnvVar, jobSharePath);
+                    string[] filePairs = startInfo.DependFiles.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var filepair in filePairs)
+                    {
+                        int eq_index = filepair.IndexOf('=');
+                        string clientId = filepair.Substring(0, eq_index);
+                        string targetPath = filepair.Substring(eq_index + 1);
+                        string localCachePath = Path.Combine(userRoot, clientId);
+                        if (!File.Exists(localCachePath))
+                        {
+                            DataClient client = DataClient.Open("localhost", clientId, Data.DataLocation.AzureBlob);
+                            File.WriteAllBytes(localCachePath, client.ReadRawBytesAll());
+                        }
+
+                        targetPath = Path.Combine(jobSharePath, targetPath);
+                        string targetDir = Path.GetDirectoryName(targetPath);
+                        if (!Directory.Exists(targetDir))
+                        {
+                            Directory.CreateDirectory(targetDir);
+                        }
+
+                        File.Copy(localCachePath, targetPath);
+                    }
+                }
+
+                // Add prepare and release tasks to server job if specified by the user
+                HpcPackSessionLauncher.AddPrepReleaseTasks(
+                    schedulerJob,
+                    HpcPackSessionLauncher.GetServiceAssemblyDirectory(registration.Service.AssemblyPath),
+                    registration.Service.PrepareNodeCommandLine,
+                    registration.Service.ReleaseNodeCommandLine);
+
+                #region Debug Failure Test
+
+                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+
+                #endregion
+
+                try
+                {
+                    using (new SessionIdentityImpersonation(startInfo.UseAad))
+                    {
+                        if (startInfo.SavePassword.HasValue && startInfo.SavePassword.Value)
+                        {
+                            this.scheduler.SetCachedCredentials(startInfo.Username, HpcPackSessionLauncher.UnsecureString(securePassword));
+                        }
+
+                        // upload the certificate to the scheduler if it exists in the startInfo
+                        if (!string.IsNullOrEmpty(startInfo.PfxPassword) && startInfo.Certificate != null)
+                        {
+                            this.scheduler.SetCertificateCredentialsPfx(startInfo.Username, startInfo.PfxPassword, startInfo.Certificate);
+                        }
+
+                        TraceHelper.TraceEvent(
+                            TraceEventType.Information,
+                            "[SessionLauncher].AllocateInternalAsync: UseAad={0}, UserName={1}, CurrentPrincipal={2}",
+                            startInfo.UseAad,
+                            startInfo.Username,
+                            Thread.CurrentPrincipal.Identity.Name);
+
+                        if (startInfo.UseAad)
+                        {
+                            this.scheduler.SubmitJob(schedulerJob, null, null);
+                        }
+                        else if (startInfo.LocalUser.GetValueOrDefault())
+                        {
+                            this.scheduler.SubmitJob(schedulerJob, startInfo.Username.Split('\\').Last(), HpcPackSessionLauncher.UnsecureString(securePassword));
+                        }
+                        else
+                        {
+                            this.scheduler.SubmitJob(schedulerJob, startInfo.Username, HpcPackSessionLauncher.UnsecureString(securePassword));
+                        }
+                    }
+
+                    sessionAllocateInfo.Id = schedulerJob.Id;
+                }
+                catch (InvalidCredentialException e)
+                {
+                    TraceHelper.TraceEvent(sessionAllocateInfo.Id, TraceEventType.Error, "[SessionLauncher] .AllocateInternalAsync: callId={0}, Invalide credential to submit the job, Exception:{1}", callId, e);
+
+                    try
+                    {
+                        this.scheduler.DeleteJob(schedulerJob.Id);
+                    }
+                    catch
+                    {
+                        TraceHelper.TraceEvent(
+                            sessionAllocateInfo.Id,
+                            TraceEventType.Warning,
+                            $"[SessionLauncher] .AllocateInternalAsync: callId={callId}, Failed to delete the job {schedulerJob.Id}, Exception:{e}");
+                    }
+
+                    SchedulerException schedulerExcep = e.InnerException as SchedulerException;
+                    if (schedulerExcep == null)
+                    {
+                        ThrowHelper.ThrowSessionFault(SOAFaultCode.AuthenticationFailure, SR.SessionLauncher_CannotLogon, null);
+                    }
+                    else
+                    {
+                        int faultCode = SOAFaultCode.UnknownError;
+                        if (schedulerExcep.Code == ErrorCode.Operation_AuthenticationFailure)
+                        {
+                            faultCode = HpcPackSessionLauncher.ConvertToFaultCode(schedulerExcep.Params);
+                        }
+
+                        ThrowHelper.ThrowSessionFault(faultCode, schedulerExcep.Message, null);
+                    }
+                }
+                catch (Exception e)
+                {
+                    TraceHelper.TraceEvent(sessionAllocateInfo.Id, TraceEventType.Error, "[SessionLauncher] .AllocateInternalAsync: callId={0}, Failed to submit job, Exception:{1}", callId, e);
+
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.SubmitJobFailure, SR.SessionLauncher_FailToSubmitJob, e.Message);
+                }
+
+                StringBuilder brokerEprsString = new StringBuilder();
+                foreach (string epr in sessionAllocateInfo.BrokerLauncherEpr)
+                {
+                    brokerEprsString.AppendLine(epr);
+                }
+
+                TraceHelper.TraceEvent(
+                    sessionAllocateInfo.Id,
+                    TraceEventType.Information,
+                    "[SessionLauncher] .AllocateInternalAsync: callId={0}, Alloc returned Broker eprs:{1}",
+                    callId,
+                    brokerEprsString.ToString());
+
+                return await Task.FromResult(sessionAllocateInfo);
+            }
+            catch (Exception e)
+            {
+                TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternalAsync: callId={0}, Exception raised, Exception:{1}", callId, e);
+
+                if (e is FaultException<SessionFault>)
+                {
+                    throw;
+                }
+                else
+                {
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.UnknownError, SR.UnknownError, e.ToString());
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -2237,7 +2010,7 @@
         /// <summary>
         /// Ensure the caller is a valid cluster user
         /// </summary>
-        private static void CheckAccess()
+        protected override void CheckAccess()
         {
             if (Thread.CurrentPrincipal.IsHpcAadPrincipal())
             {
@@ -2255,25 +2028,19 @@
             }
         }
 
-        /// <summary>
-        /// Convert plain text string to SecureString
-        /// </summary>
-        private static SecureString CreateSecureString(string textString)
+        protected override Task<SessionAllocateInfoContract> AllocateInternalAsync(SessionStartInfoContract startInfo, string endpointPrefix, bool durable)
         {
-            if (textString == null)
-            {
-                return null;
-            }
-            else
-            {
-                SecureString secureString = new SecureString();
-                foreach (char c in textString)
-                {
-                    secureString.AppendChar(c);
-                }
 
-                return secureString;
+            if (this.schedulerConnectState != SchedulerConnectState.ConnectionComplete)
+            {
+                TraceHelper.TraceEvent(
+                    TraceEventType.Information,
+                    "[SessionLauncher] .AllocateInternalAsync: session launcher is not conected to the scheduler, schedulerConnectState={0}",
+                    this.schedulerConnectState);
+
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.ConnectToSchedulerFailure, SR.SessionLauncher_NoConnectionToScheduler, null);
             }
+            return base.AllocateInternalAsync(startInfo, endpointPrefix, durable);
         }
 
         /// <summary>
