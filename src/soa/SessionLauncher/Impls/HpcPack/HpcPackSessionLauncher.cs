@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Configuration;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -20,9 +21,12 @@
     using Microsoft.Hpc.Scheduler.Properties;
     using Microsoft.Hpc.Scheduler.Session.Configuration;
     using Microsoft.Hpc.Scheduler.Session.Data;
+    using Microsoft.Hpc.Scheduler.Session.Data.Internal;
     using Microsoft.Hpc.Scheduler.Session.HpcPack.DataMapping;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
+    using Microsoft.Hpc.ServiceBroker;
 
+    using Constant = Microsoft.Hpc.Scheduler.Session.Internal.Constant;
     using JobState = Microsoft.Hpc.Scheduler.Session.Data.JobState;
 
     internal class HpcPackSessionLauncher : SessionLauncher
@@ -54,7 +58,7 @@
             this.headNodeName = headNode;
             this.brokerNodesManager = brokerNodesManager;
 
-            //retrive the cluster info from the reliable registry and keep a watcher to update the value
+            // retrive the cluster info from the reliable registry and keep a watcher to update the value
             clusterInfo = new ClusterInfo();
 
             Stopwatch stopWatch = new Stopwatch();
@@ -79,7 +83,7 @@
             }
             while (this.schedulerConnectState != SchedulerConnectState.ConnectionComplete);
 
-            //set the CCP_SERVICEREGISTRATION_PATH scheduler environment for scheduler only if the value is not already set
+            // set the CCP_SERVICEREGISTRATION_PATH scheduler environment for scheduler only if the value is not already set
             try
             {
                 string regPath = null;
@@ -107,7 +111,7 @@
 
             if (SessionLauncherSettings.Default.EnableDataService)
             {
-                this.dataService = new Microsoft.Hpc.Scheduler.Session.Data.Internal.DataService(clusterInfo, scheduler);
+                this.dataService = new DataService(clusterInfo, scheduler);
             }
 
             try
@@ -143,7 +147,7 @@
         /// <summary>
         /// data service instance
         /// </summary>
-        private Microsoft.Hpc.Scheduler.Session.Data.Internal.DataService dataService;
+        private DataService dataService;
 
         /// <summary>
         /// the broker node manager.
@@ -241,7 +245,7 @@
                     ThrowHelper.ThrowSessionFault(SOAFaultCode.ConnectToSchedulerFailure, SR.SessionLauncher_NoConnectionToScheduler, null);
                 }
 
-                //TODO: SF: Utilze reliable collection instead of job properties.
+                // TODO: SF: Utilze reliable collection instead of job properties.
                 ISchedulerJob schedulerJob = this.OpenSessionJob(sessionId);
 
                 if (schedulerJob != null)
@@ -277,7 +281,7 @@
                                     {
                                         // Get its job template
                                         string jobTemplateName = schedulerJob.JobTemplate;
-                                        if (String.IsNullOrEmpty(jobTemplateName))
+                                        if (string.IsNullOrEmpty(jobTemplateName))
                                         {
                                             jobTemplateName = HpcSchedulerDelegation.DefaultJobTemplateName;
                                         }
@@ -286,7 +290,7 @@
                                         JobTemplateInfo info = this.scheduler.GetJobTemplateInfo(jobTemplateName);
 
                                         // Return list of granted and denied users by name to REST service so it can 
-                                        //  authorize use of session
+                                        // authorize use of session
                                         sessionInfo.SessionACL = SoaHelper.GetGrantedUsers(info.SecurityDescriptor, (uint)JobTemplateRights.SubmitJob);
                                     }
                                 }
@@ -345,7 +349,7 @@
                             {
                                 string localUserString = pair.Value;
                                 Debug.Assert(localUserString != null, "BrokerSettingsConstants.LocalUser value should be a string.");
-                                if (Boolean.TryParse(localUserString, out localUser))
+                                if (bool.TryParse(localUserString, out localUser))
                                 {
                                     TraceHelper.TraceEvent(sessionId, TraceEventType.Information, "[SessionLauncher] .GetInfo: get the job LocalUser property, LocalUser={0}.", localUser);
                                 }
@@ -364,7 +368,7 @@
                                 Debug.Assert(durableString != null, "BrokerSettingsConstants.Durable value should be a string.");
 
                                 bool durable;
-                                if (Boolean.TryParse(durableString, out durable))
+                                if (bool.TryParse(durableString, out durable))
                                 {
                                     sessionInfo.Durable = durable;
                                     TraceHelper.TraceEvent(sessionId, TraceEventType.Information, "[SessionLauncher] .GetInfo: get the job Durable property, Durable={0}.", sessionInfo.Durable);
@@ -385,7 +389,7 @@
                                             sessionId,
                                             TraceEventType.Information,
                                             "[SessionLauncher] .GetInfo: get the job ServiceVersion property, ServiceVersion={0}.",
-                                            (sessionInfo.ServiceVersion != null) ? sessionInfo.ServiceVersion.ToString() : String.Empty);
+                                            (sessionInfo.ServiceVersion != null) ? sessionInfo.ServiceVersion.ToString() : string.Empty);
                                     }
                                     catch (Exception e)
                                     {
@@ -437,11 +441,7 @@
                         ThrowHelper.ThrowSessionFault(SOAFaultCode.GetJobPropertyFailure, SR.SessionLauncher_FailToGetJobProperty, e.ToString());
                     }
 
-                    #region Debug Failure Test
-
-                    Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
-
-                    #endregion
+                    SimulateFailure.FailOperation(1);
                 }
 
                 TraceHelper.TraceEvent(
@@ -533,7 +533,6 @@
             }
 
             // ISchedulerJob schedulerJob = this.OpenSessionJob(sessionId);
-
             if (schedulerJob != null)
             {
                 TraceHelper.TraceEvent(
@@ -566,7 +565,7 @@
                                 {
                                     // Get its job template
                                     string jobTemplateName = schedulerJob.JobTemplate;
-                                    if (String.IsNullOrEmpty(jobTemplateName))
+                                    if (string.IsNullOrEmpty(jobTemplateName))
                                     {
                                         jobTemplateName = HpcSchedulerDelegation.DefaultJobTemplateName;
                                     }
@@ -575,7 +574,7 @@
                                     JobTemplateInfo info = this.scheduler.GetJobTemplateInfo(jobTemplateName);
 
                                     // Return list of granted and denied users by name to REST service so it can 
-                                    //  authorize use of session
+                                    // authorize use of session
                                     sessionInfo.SessionACL = SoaHelper.GetGrantedUsers(info.SecurityDescriptor, (uint)JobTemplateRights.SubmitJob);
                                 }
                             }
@@ -634,7 +633,7 @@
                         {
                             string localUserString = pair.Value;
                             Debug.Assert(localUserString != null, "BrokerSettingsConstants.LocalUser value should be a string.");
-                            if (Boolean.TryParse(localUserString, out localUser))
+                            if (bool.TryParse(localUserString, out localUser))
                             {
                                 TraceHelper.TraceEvent(sessionId, TraceEventType.Information, "[SessionLauncher] .GetInfo: get the job LocalUser property, LocalUser={0}.", localUser);
                             }
@@ -649,7 +648,7 @@
                             Debug.Assert(durableString != null, "BrokerSettingsConstants.Durable value should be a string.");
 
                             bool durable;
-                            if (Boolean.TryParse(durableString, out durable))
+                            if (bool.TryParse(durableString, out durable))
                             {
                                 sessionInfo.Durable = durable;
                                 TraceHelper.TraceEvent(sessionId, TraceEventType.Information, "[SessionLauncher] .GetInfo: get the job Durable property, Durable={0}.", sessionInfo.Durable);
@@ -671,9 +670,8 @@
                                         sessionId,
                                         TraceEventType.Information,
                                         "[SessionLauncher] .GetInfo: get the job ServiceVersion property, ServiceVersion={0}.",
-                                        (sessionInfo.ServiceVersion != null) ? sessionInfo.ServiceVersion.ToString() : String.Empty);
+                                        (sessionInfo.ServiceVersion != null) ? sessionInfo.ServiceVersion.ToString() : string.Empty);
                                 }
-
                                 catch (Exception e)
                                 {
                                     TraceHelper.TraceEvent(
@@ -715,11 +713,7 @@
                     ThrowHelper.ThrowSessionFault(SOAFaultCode.GetJobPropertyFailure, SR.SessionLauncher_FailToGetJobProperty, e.ToString());
                 }
 
-                #region Debug Failure Test
-
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
-
-                #endregion
+                SimulateFailure.FailOperation(1);
             }
 
             TraceHelper.TraceEvent(
@@ -776,11 +770,7 @@
 
                 await Task.CompletedTask;
 
-                #region Debug Failure Test
-
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
-
-                #endregion
+                SimulateFailure.FailOperation(1);
             }
         }
 
@@ -805,7 +795,7 @@
 #pragma warning restore 618 // disable obsolete warning for UserPrivilege
 
                 // Get the versioned services
-                return await Task.FromResult<Version[]>(this.GetServiceVersionsInternal(serviceName, true));
+                return await Task.FromResult(this.GetServiceVersionsInternal(serviceName, true));
             }
         }
 
@@ -849,7 +839,7 @@
                         value = true.ToString();
 
                         // If balanced scheduling isnt used, get AutomaticShrinkEnabled clusparam. Otherwise default AutomaticShrinkEnabled to true
-                        if (0 != String.Compare(schedulingMode, Constant.SchedulingMode_Balanced, true))
+                        if (0 != string.Compare(schedulingMode, Constant.SchedulingMode_Balanced, true))
                         {
                             value = JobHelper.GetClusterParameterValue(this.scheduler, Constant.AutomaticShrinkEnabled, true.ToString());
                         }
@@ -928,7 +918,7 @@
                             value = true.ToString();
 
                             // If balanced scheduling isnt used, get AutomaticShrinkEnabled clusparam. Otherwise default AutomaticShrinkEnabled to true
-                            if (0 != String.Compare(schedulingMode, Constant.SchedulingMode_Balanced, true))
+                            if (0 != string.Compare(schedulingMode, Constant.SchedulingMode_Balanced, true))
                             {
                                 value = JobHelper.GetClusterParameterValue(this.scheduler, Constant.AutomaticShrinkEnabled, true.ToString());
                             }
@@ -987,10 +977,8 @@
             {
                 return this.GetServiceVersionsInternalAzure(serviceName, addUnversionedService);
             }
-            else
-            {
-                return base.GetServiceVersionsInternal(serviceName, addUnversionedService);
-            }
+
+            return base.GetServiceVersionsInternal(serviceName, addUnversionedService);
         }
 
         protected override bool TryGetSessionAllocateInfoFromPooled(
@@ -1170,7 +1158,7 @@
 
                 try
                 {
-                    //TODO: set it when session service starts
+                    // TODO: set it when session service starts
                     regPath = JobHelper.GetEnvironmentVariable(this.scheduler, Constant.RegistryPathEnv);
                     if (!string.IsNullOrEmpty(SessionLauncherSettings.Default.ServiceRegistrationPath))
                     {
@@ -1202,14 +1190,12 @@
             {
                 return repo;
             }
-            else
-            {
-                TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .GetRegistrationRepo: No service registration directories are configured");
 
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.Service_RegistrationDirsMissing, SR.SessionLauncher_NoServiceRegistrationDirs);
+            TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .GetRegistrationRepo: No service registration directories are configured");
 
-                return null;
-            }
+            ThrowHelper.ThrowSessionFault(SOAFaultCode.Service_RegistrationDirsMissing, SR.SessionLauncher_NoServiceRegistrationDirs);
+
+            return null;
         }
 
         /// <summary>
@@ -1351,8 +1337,8 @@
                     {
                         if (sp.Length > 0)
                         {
-                            //DONE: (Session Pool, post v3sp2) Need a config setting to specify the pool size; Get a session in round robin, probably load balancing way next
-                            //from v3sp2 to v4sp5rtm, only have one session in the pool
+                            // DONE: (Session Pool, post v3sp2) Need a config setting to specify the pool size; Get a session in round robin, probably load balancing way next
+                            // from v3sp2 to v4sp5rtm, only have one session in the pool
                             sp.Index %= Math.Min(sp.Length, poolSize);
                             jobid = sp[sp.Index++];
                             sp.Index %= Math.Min(sp.Length, poolSize);
@@ -1402,8 +1388,9 @@
                     TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .PickSessionIdFromPool: wait for the sessions ready for the session pool.");
                     sp.PoolChangeEvent.WaitOne();
                 }
-                else // jobid == 0
+                else
                 {
+                    // jobid == 0
                     return 0;
                 }
             }
@@ -1450,17 +1437,17 @@
         }
 
         protected override async Task<SessionAllocateInfoContract> CreateAndSubmitSessionJob(
-           SessionStartInfoContract startInfo,
-           string endpointPrefix,
-           bool durable,
-           string callId,
-           SecureString securePassword,
-           ServiceRegistration registration,
-           SessionAllocateInfoContract sessionAllocateInfo,
-           string traceSwitchValue,
-           string serviceName,
-           BrokerConfigurations brokerConfigurations,
-           string hostpath)
+            SessionStartInfoContract startInfo,
+            string endpointPrefix,
+            bool durable,
+            string callId,
+            SecureString securePassword,
+            ServiceRegistration registration,
+            SessionAllocateInfoContract sessionAllocateInfo,
+            string traceSwitchValue,
+            string serviceName,
+            BrokerConfigurations brokerConfigurations,
+            string hostpath)
         {
             TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] .AllocateInternalAsync: callId={0}, endpointPrefix={1}, durable={2}.", callId, endpointPrefix, durable);
 
@@ -1471,7 +1458,7 @@
                 ThrowHelper.ThrowSessionFault(SOAFaultCode.AuthenticationFailure, SR.SessionLauncher_NeedUserNameAndPassword, null);
             }
 
-            if (!HpcPackSessionLauncher.IsEndpointPrefixSupported(endpointPrefix))
+            if (!IsEndpointPrefixSupported(endpointPrefix))
             {
                 TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternalAsync: callId={0}, enpoint prfix, {1}, is not support.", callId, endpointPrefix);
 
@@ -1481,7 +1468,7 @@
             ISchedulerJob schedulerJob = null;
             try
             {
-                schedulerJob = this.scheduler.CreateJob() as ISchedulerJob;
+                schedulerJob = this.scheduler.CreateJob();
 
                 Debug.Assert(schedulerJob != null);
             }
@@ -1524,11 +1511,12 @@
                 // Bug 11378: Set JobOwner's user name into job's environment
                 schedulerJob.SetEnvironmentVariable(Constant.JobOwnerNameEnvVar, OperationContext.Current.ServiceSecurityContext.WindowsIdentity.Name);
             }
+
             // if this is a diagnostic case which specific the broker node
-            else if (!String.IsNullOrEmpty(startInfo.DiagnosticBrokerNode))
+            else if (!string.IsNullOrEmpty(startInfo.DiagnosticBrokerNode))
             {
-                //sessionAllocateInfo.BrokerLauncherEpr = new string[] { startInfo.IsAadOrLocalUser ? BrokerNodesManager.GenerateBrokerLauncherInternalEpr(endpointPrefix, startInfo.DiagnosticBrokerNode) : BrokerNodesManager.GenerateBrokerLauncherEpr(endpointPrefix, startInfo.DiagnosticBrokerNode, startInfo.TransportScheme) };
-                sessionAllocateInfo.BrokerLauncherEpr = new string[] { HpcPackSessionLauncher.GenerateBrokerLauncherAddress(endpointPrefix, startInfo) };
+                // sessionAllocateInfo.BrokerLauncherEpr = new string[] { startInfo.IsAadOrLocalUser ? BrokerNodesManager.GenerateBrokerLauncherInternalEpr(endpointPrefix, startInfo.DiagnosticBrokerNode) : BrokerNodesManager.GenerateBrokerLauncherEpr(endpointPrefix, startInfo.DiagnosticBrokerNode, startInfo.TransportScheme) };
+                sessionAllocateInfo.BrokerLauncherEpr = new[] { GenerateBrokerLauncherAddress(endpointPrefix, startInfo) };
 
                 // TODO: RICHCI: GetSDDI cannot be called here. Need to look up SDDI from brokermanager
                 nodeInfos.Add(BrokerNodesManager.GenerateNodeInfo(startInfo.DiagnosticBrokerNode));
@@ -1556,14 +1544,22 @@
                     }
                     else
                     {
-                        TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .AllocateInternalAsync: The enableFQDN setting \"{0}\" in cluster env var is not a valid bool value.", enableFqdnStr);
+                        TraceHelper.TraceEvent(
+                            TraceEventType.Error,
+                            "[SessionLauncher] .AllocateInternalAsync: The enableFQDN setting \"{0}\" in cluster env var is not a valid bool value.",
+                            enableFqdnStr);
                     }
                 }
 
                 // get available broker eprs
                 // GetAvailableBrokerEPRs is thread safe.
-
-                sessionAllocateInfo.BrokerLauncherEpr = this.brokerNodesManager.GetAvailableBrokerEPRs(durable, endpointPrefix, enableFQDN, startInfo.ChannelType, startInfo.TransportScheme, out nodeInfos);
+                sessionAllocateInfo.BrokerLauncherEpr = this.brokerNodesManager.GetAvailableBrokerEPRs(
+                    durable,
+                    endpointPrefix,
+                    enableFQDN,
+                    startInfo.ChannelType,
+                    startInfo.TransportScheme,
+                    out nodeInfos);
 
                 if (sessionAllocateInfo.BrokerLauncherEpr.Length <= 0)
                 {
@@ -1573,7 +1569,7 @@
             }
             else
             {
-                sessionAllocateInfo.BrokerLauncherEpr = new string[] { "net.pipe://localhost/BrokerLauncher" };
+                sessionAllocateInfo.BrokerLauncherEpr = new[] { "net.pipe://localhost/BrokerLauncher" };
             }
 
             // make job envs
@@ -1686,7 +1682,7 @@
 
             // Get the how many tasks to add
             // If there is user specified max units, then use it, otherwise a default 16
-            int numTasks = (startInfo.MaxUnits != null && startInfo.MaxUnits.Value > 0) ? startInfo.MaxUnits.Value : HpcPackSessionLauncher.DefaultInitTaskNumber;
+            int numTasks = (startInfo.MaxUnits != null && startInfo.MaxUnits.Value > 0) ? startInfo.MaxUnits.Value : DefaultInitTaskNumber;
 
             try
             {
@@ -1723,9 +1719,6 @@
                         case JobUnitType.Node:
                             maxSize = totalCountNumbers[2];
                             break;
-
-                        default:
-                            break;
                     }
                 }
 
@@ -1757,9 +1750,9 @@
                     }
 
                     // Bug 8153: Use FailJobOnFailureCount task property to monitor for runaway service tasks (i.e. service tasks with a bad command line) instead of monitoring
-                    //  failed task instances from HpcSession which is too slow
+                    // failed task instances from HpcSession which is too slow
                     schedulerTask.FailJobOnFailure = true;
-                    schedulerTask.FailJobOnFailureCount = HpcPackSessionLauncher.MaxFailedTask;
+                    schedulerTask.FailJobOnFailureCount = MaxFailedTask;
 
                     schedulerJob.SetEnvironmentVariable(BrokerSettingsConstants.Secure, startInfo.Secure.ToString());
                     schedulerJob.SetEnvironmentVariable(BrokerSettingsConstants.TransportScheme, startInfo.TransportScheme.ToString());
@@ -1790,12 +1783,17 @@
 
                 if (!string.IsNullOrEmpty(startInfo.DependFiles))
                 {
-                    TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] .AllocateInternalAsync: callId={0}, JobId={1}, DependFiles:{2}", callId, schedulerJob.Id, startInfo.DependFiles);
+                    TraceHelper.TraceEvent(
+                        TraceEventType.Information,
+                        "[SessionLauncher] .AllocateInternalAsync: callId={0}, JobId={1}, DependFiles:{2}",
+                        callId,
+                        schedulerJob.Id,
+                        startInfo.DependFiles);
                     string userRoot = Path.Combine(this.dataService.GetUserJobDataRoot(), startInfo.Username.Replace('\\', '.'));
                     string jobSharePath = Path.Combine(userRoot, schedulerJob.Id.ToString());
                     Directory.CreateDirectory(jobSharePath);
                     schedulerJob.SetEnvironmentVariable(Constant.SoaDataJobDirEnvVar, jobSharePath);
-                    string[] filePairs = startInfo.DependFiles.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] filePairs = startInfo.DependFiles.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                     foreach (var filepair in filePairs)
                     {
                         int eq_index = filepair.IndexOf('=');
@@ -1804,7 +1802,7 @@
                         string localCachePath = Path.Combine(userRoot, clientId);
                         if (!File.Exists(localCachePath))
                         {
-                            DataClient client = DataClient.Open("localhost", clientId, Data.DataLocation.AzureBlob);
+                            DataClient client = DataClient.Open("localhost", clientId, DataLocation.AzureBlob);
                             File.WriteAllBytes(localCachePath, client.ReadRawBytesAll());
                         }
 
@@ -1820,17 +1818,13 @@
                 }
 
                 // Add prepare and release tasks to server job if specified by the user
-                HpcPackSessionLauncher.AddPrepReleaseTasks(
+                AddPrepReleaseTasks(
                     schedulerJob,
-                    HpcPackSessionLauncher.GetServiceAssemblyDirectory(registration.Service.AssemblyPath),
+                    GetServiceAssemblyDirectory(registration.Service.AssemblyPath),
                     registration.Service.PrepareNodeCommandLine,
                     registration.Service.ReleaseNodeCommandLine);
 
-                #region Debug Failure Test
-
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
-
-                #endregion
+                SimulateFailure.FailOperation(1);
 
                 try
                 {
@@ -1838,7 +1832,7 @@
                     {
                         if (startInfo.SavePassword.HasValue && startInfo.SavePassword.Value)
                         {
-                            this.scheduler.SetCachedCredentials(startInfo.Username, HpcPackSessionLauncher.UnsecureString(securePassword));
+                            this.scheduler.SetCachedCredentials(startInfo.Username, UnsecureString(securePassword));
                         }
 
                         // upload the certificate to the scheduler if it exists in the startInfo
@@ -1860,11 +1854,11 @@
                         }
                         else if (startInfo.LocalUser.GetValueOrDefault())
                         {
-                            this.scheduler.SubmitJob(schedulerJob, startInfo.Username.Split('\\').Last(), HpcPackSessionLauncher.UnsecureString(securePassword));
+                            this.scheduler.SubmitJob(schedulerJob, startInfo.Username.Split('\\').Last(), UnsecureString(securePassword));
                         }
                         else
                         {
-                            this.scheduler.SubmitJob(schedulerJob, startInfo.Username, HpcPackSessionLauncher.UnsecureString(securePassword));
+                            this.scheduler.SubmitJob(schedulerJob, startInfo.Username, UnsecureString(securePassword));
                         }
                     }
 
@@ -1872,7 +1866,12 @@
                 }
                 catch (InvalidCredentialException e)
                 {
-                    TraceHelper.TraceEvent(sessionAllocateInfo.Id, TraceEventType.Error, "[SessionLauncher] .AllocateInternalAsync: callId={0}, Invalide credential to submit the job, Exception:{1}", callId, e);
+                    TraceHelper.TraceEvent(
+                        sessionAllocateInfo.Id,
+                        TraceEventType.Error,
+                        "[SessionLauncher] .AllocateInternalAsync: callId={0}, Invalide credential to submit the job, Exception:{1}",
+                        callId,
+                        e);
 
                     try
                     {
@@ -1896,7 +1895,7 @@
                         int faultCode = SOAFaultCode.UnknownError;
                         if (schedulerExcep.Code == ErrorCode.Operation_AuthenticationFailure)
                         {
-                            faultCode = HpcPackSessionLauncher.ConvertToFaultCode(schedulerExcep.Params);
+                            faultCode = ConvertToFaultCode(schedulerExcep.Params);
                         }
 
                         ThrowHelper.ThrowSessionFault(faultCode, schedulerExcep.Message, null);
@@ -1932,10 +1931,8 @@
                 {
                     throw;
                 }
-                else
-                {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.UnknownError, SR.UnknownError, e.ToString());
-                }
+
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.UnknownError, SR.UnknownError, e.ToString());
             }
 
             return null;
@@ -1987,8 +1984,6 @@
                         catch (Exception e)
                         {
                             TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] GetServiceVersionsInternalAzure: Failed to parse name {0}. Exception:{1}", name, e);
-
-                            continue;
                         }
                     }
                 }
@@ -2030,7 +2025,6 @@
 
         protected override Task<SessionAllocateInfoContract> AllocateInternalAsync(SessionStartInfoContract startInfo, string endpointPrefix, bool durable)
         {
-
             if (this.schedulerConnectState != SchedulerConnectState.ConnectionComplete)
             {
                 TraceHelper.TraceEvent(
@@ -2040,6 +2034,7 @@
 
                 ThrowHelper.ThrowSessionFault(SOAFaultCode.ConnectToSchedulerFailure, SR.SessionLauncher_NoConnectionToScheduler, null);
             }
+
             return base.AllocateInternalAsync(startInfo, endpointPrefix, durable);
         }
 
@@ -2050,9 +2045,9 @@
         /// <returns></returns>
         private static string GetServiceAssemblyDirectory(string serviceAssemblyPath)
         {
-            if (String.IsNullOrEmpty(serviceAssemblyPath))
+            if (string.IsNullOrEmpty(serviceAssemblyPath))
             {
-                return String.Empty;
+                return string.Empty;
             }
 
             return Path.GetDirectoryName(serviceAssemblyPath);
@@ -2061,29 +2056,27 @@
         /// <summary>
         /// Convert a SecureString password back to a plain string
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         private static string UnsecureString(SecureString secureString)
         {
             if (secureString == null)
             {
                 return null;
             }
-            else
+
+            string unsecureString;
+            IntPtr ptr = Marshal.SecureStringToGlobalAllocUnicode(secureString);
+
+            try
             {
-                string unsecureString;
-                IntPtr ptr = Marshal.SecureStringToGlobalAllocUnicode(secureString);
-
-                try
-                {
-                    unsecureString = Marshal.PtrToStringUni(ptr);
-                }
-                finally
-                {
-                    Marshal.ZeroFreeGlobalAllocUnicode(ptr);
-                }
-
-                return unsecureString;
+                unsecureString = Marshal.PtrToStringUni(ptr);
             }
+            finally
+            {
+                Marshal.ZeroFreeGlobalAllocUnicode(ptr);
+            }
+
+            return unsecureString;
         }
 
         private static string GenerateBrokerLauncherAddress(string endpointPrefix, SessionStartInfoContract startInfo)
@@ -2092,15 +2085,14 @@
             {
                 return BrokerNodesManager.GenerateBrokerLauncherAadEpr(endpointPrefix, startInfo.DiagnosticBrokerNode);
             }
-            else if (startInfo.IsAadOrLocalUser)
+
+            if (startInfo.IsAadOrLocalUser)
             {
                 // Local user goes here
                 return BrokerNodesManager.GenerateBrokerLauncherInternalEpr(endpointPrefix, startInfo.DiagnosticBrokerNode);
             }
-            else
-            {
-                return BrokerNodesManager.GenerateBrokerLauncherEpr(endpointPrefix, startInfo.DiagnosticBrokerNode, startInfo.TransportScheme);
-            }
+
+            return BrokerNodesManager.GenerateBrokerLauncherEpr(endpointPrefix, startInfo.DiagnosticBrokerNode, startInfo.TransportScheme);
         }
 
         /// <summary>
@@ -2218,17 +2210,15 @@
             {
                 throw new InvalidOperationException("The caller cannot be mapped to a WindowsIdentity");
             }
-            else
-            {
-                return callerWindowsIdentity;
-            }
+
+            return callerWindowsIdentity;
         }
 
         /// <summary>
         /// Gets data server information
         /// </summary>
         /// <returns>returns data server information</returns>
-        internal Microsoft.Hpc.Scheduler.Session.Data.Internal.DataService GetDataService()
+        internal DataService GetDataService()
         {
             return this.dataService;
         }
