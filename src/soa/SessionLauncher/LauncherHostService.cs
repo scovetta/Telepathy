@@ -29,10 +29,12 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
     using Microsoft.Hpc.Scheduler.Session.Data.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.DataService.REST;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls;
+    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack;
 
     using ISessionLauncher = Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.ISessionLauncher;
 
+    // TODO: Consider changing the if/switch branching for schedulers into sub-classes
     /// <summary>
     /// Launcher Host Service
     /// </summary>
@@ -180,9 +182,16 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                     TraceHelper.TraceEvent(TraceEventType.Information, "Azure HAController service monitoring enabled");
                 }
 
-                this.brokerNodesManager = new BrokerNodesManager();
-                this.sessionLauncher = SessionLauncherFactory.CreateHpcPackSessionLauncher(SoaHelper.GetSchedulerName(true), false, this.brokerNodesManager);
-                this.schedulerDelegation = new HpcSchedulerDelegation(this.sessionLauncher, this.brokerNodesManager);
+                if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.HpcPack)
+                {
+                    this.brokerNodesManager = new BrokerNodesManager();
+                    this.sessionLauncher = SessionLauncherFactory.CreateHpcPackSessionLauncher(SoaHelper.GetSchedulerName(true), false, this.brokerNodesManager);
+                    this.schedulerDelegation = new HpcSchedulerDelegation(this.sessionLauncher, this.brokerNodesManager);
+                }
+                else if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.AzureBatch)
+                {
+                    this.sessionLauncher = SessionLauncherFactory.CreateAzureBatchSessionLauncher();
+                }
 
 #if AZURE
                 TraceHelper.IsDiagTraceEnabled = x => true;
@@ -202,8 +211,11 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 // start session launcher service
                 this.StartSessionLauncherService();
 
-                // start scheduler delegation service
-                this.StartSchedulerDelegationService();
+                if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.HpcPack)
+                {
+                    // start scheduler delegation service
+                    this.StartSchedulerDelegationService();
+                }
 
                 // start data service
                 if (!SoaHelper.IsOnAzure() && this.sessionLauncher is HpcPackSessionLauncher hpcSessionLauncher)

@@ -17,6 +17,11 @@
 
     internal class AzureBatchSessionLauncher : SessionLauncher
     {
+        // TODO: remove parameter less ctor and add specific parameters for the sake of test-ablity
+        public AzureBatchSessionLauncher()
+        {
+        }
+
         public override async Task<SessionAllocateInfoContract> AllocateV5Async(SessionStartInfoContract info, string endpointPrefix)
         {
             return await this.AllocateInternalAsync(info, endpointPrefix, false);
