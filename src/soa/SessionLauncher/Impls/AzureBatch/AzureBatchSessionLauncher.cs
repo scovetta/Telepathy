@@ -7,6 +7,7 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Security;
+    using System.Security.Cryptography;
     using System.ServiceModel;
     using System.Threading.Tasks;
 
@@ -196,6 +197,7 @@
                         // TODO: set the information needed by compute node to authenticate broker node
                         return;
                     }
+
                     SetBrokerNodeAuthenticationInfo();
 
                     env.Add(new EnvironmentSetting(BrokerSettingsConstants.Secure, startInfo.Secure.ToString()));
@@ -212,11 +214,15 @@
 
                     return env;
                 }
+
                 var environment = ConstructEnvironmentVariable();
 
                 async Task<string> CreateJobAsync()
                 {
-                    string newJobId = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() + Guid.NewGuid().ToString();
+                    var hashed = MD5.Create().ComputeHash(Guid.NewGuid().ToByteArray());
+                    string idSuffix = BitConverter.ToUInt16(hashed, 0).ToString().PadLeft(6, '0');
+                    string newJobId = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() + idSuffix;
+                    Debug.Assert(batchClient != null, nameof(batchClient) + " != null");
                     var job = batchClient.JobOperations.CreateJob(newJobId, new PoolInformation() { PoolId = AzureBatchConfiguration.BatchPoolName });
                     await job.CommitAsync();
                     return job.Id;
@@ -229,18 +235,21 @@
                     int numTasks = nodes.Count - 1;
                     var comparer = new EnvironmentSettingComparer();
 
-                    CloudTask CreateTask(string taskId, string cmdLine)
+                    CloudTask CreateTask(string taskId)
                     {
                         CloudTask multiInstanceTask = new CloudTask(
-                     taskId,
-                     $@"cmd /c %AZ_BATCH_APP_PACKAGE_{AzureBatchConstants.SoaAppPackageId.ToUpper()}#{AzureBatchConstants.SoaAppPackageVersion}%\BrokerOutput\HpcBroker.exe -d --ServiceRegistrationPath %AZ_BATCH_APP_PACKAGE_{AzureBatchConstants.SoaAppPackageId.ToUpper()}#{AzureBatchConstants.SoaAppPackageVersion}%\Registration --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --ReadSvcHostFromEnv");
+                            taskId,
+                            $@"cmd /c %AZ_BATCH_APP_PACKAGE_{AzureBatchConstants.SoaAppPackageId.ToUpper()}#{AzureBatchConstants.SoaAppPackageVersion}%\BrokerOutput\HpcBroker.exe -d --ServiceRegistrationPath %AZ_BATCH_APP_PACKAGE_{AzureBatchConstants.SoaAppPackageId.ToUpper()}#{AzureBatchConstants.SoaAppPackageVersion}%\Registration --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --ReadSvcHostFromEnv");
                         multiInstanceTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
-                        multiInstanceTask.MultiInstanceSettings = new MultiInstanceSettings($@"cmd /c start cmd /c %AZ_BATCH_APP_PACKAGE_{AzureBatchConstants.SoaAppPackageId.ToUpper()}#{AzureBatchConstants.SoaAppPackageVersion}%\CcpServiceHost\CcpServiceHost.exe -standalone", numTasks);
-                        multiInstanceTask.EnvironmentSettings = multiInstanceTask.EnvironmentSettings == null ? environment : environment.Union(multiInstanceTask.EnvironmentSettings, comparer).ToList();
+                        multiInstanceTask.MultiInstanceSettings = new MultiInstanceSettings(
+                            $@"cmd /c start cmd /c %AZ_BATCH_APP_PACKAGE_{AzureBatchConstants.SoaAppPackageId.ToUpper()}#{AzureBatchConstants.SoaAppPackageVersion}%\CcpServiceHost\CcpServiceHost.exe -standalone",
+                            numTasks);
+                        multiInstanceTask.EnvironmentSettings =
+                            multiInstanceTask.EnvironmentSettings == null ? environment : environment.Union(multiInstanceTask.EnvironmentSettings, comparer).ToList();
                         return multiInstanceTask;
                     }
 
-                    var tasks = Enumerable.Range(0, numTasks).Select(_ => CreateTask(Guid.NewGuid().ToString(), "cmd /c set")).ToArray();
+                    var tasks = Enumerable.Range(0, numTasks).Select(_ => CreateTask(Guid.NewGuid().ToString())).ToArray();
                     return batchClient.JobOperations.AddTaskAsync(jobId, tasks);
                 }
                 await AddTasksAsync();
