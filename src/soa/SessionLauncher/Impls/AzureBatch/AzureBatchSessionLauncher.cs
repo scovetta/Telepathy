@@ -213,17 +213,25 @@
                 }
                 var environment = ConstructEnvironmentVariable();
 
+                async Task<string> CreateJobAsnyc()
+                {
+                    string newJobId = Guid.NewGuid().ToString();
+                    var job = batchClient.JobOperations.CreateJob(newJobId, new PoolInformation() { PoolId = AzureBatchConfiguration.BatchPoolName });
+                    await job.CommitAsync();
+                    return job.Id;
+                }
+
+                var jobId = await CreateJobAsnyc();
+
                 Task AddTasksAsync()
                 {
                     int numTasks = nodes.Count - 1;
-                    string jobId = AzureBatchEnvVarReader.GetJobId();
-
                     var comparer = new EnvironmentSettingComparer();
 
                     CloudTask CreateTask(string taskId, string cmdLine)
                     {
                         var task = new CloudTask(taskId, cmdLine);
-                        task.EnvironmentSettings = environment.Union(task.EnvironmentSettings, comparer).ToList();
+                        task.EnvironmentSettings = task.EnvironmentSettings == null ? environment : environment.Union(task.EnvironmentSettings, comparer).ToList();
                         return task;
                     }
 
