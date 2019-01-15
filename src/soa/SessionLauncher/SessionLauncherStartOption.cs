@@ -10,22 +10,25 @@
 
     internal class SessionLauncherStartOption
     {
-        [Option("AzureBatchServiceUrl", SetName = "AzureBatch")]
+        [Option('s', "AzureBatchServiceUrl", SetName = "AzureBatch")]
         public string AzureBatchServiceUrl { get; set; }
 
-        [Option("AzureBatchAccountName", SetName = "AzureBatch")]
+        [Option('n', "AzureBatchAccountName", SetName = "AzureBatch")]
         public string AzureBatchAccountName { get; set; }
 
-        [Option("AzureBatchAccountKey", SetName = "AzureBatch")]
+        [Option('k', "AzureBatchAccountKey", SetName = "AzureBatch")]
         public string AzureBatchAccountKey { get; set; }
 
-        [Option("AzureBatchJobId", SetName = "AzureBatch")]
+        [Option('j', "AzureBatchJobId", SetName = "AzureBatch")]
         public string AzureBatchJobId { get; set; }
 
-        [Option("AzureBatchPoolName", SetName = "AzureBatch")]
+        [Option('p', "AzureBatchPoolName", SetName = "AzureBatch")]
         public string AzureBatchPoolName { get; set; }
 
-        [Option("HpcPackSchedulerAddress", SetName = "HpcPack")]
+        [Option('c', "AzureBatchBrokerStorageConnectionString", SetName = "AzureBatch")]
+        public string AzureBatchBrokerStorageConnectionString { get; set; }
+
+        [Option('h', "HpcPackSchedulerAddress", SetName = "HpcPack")]
         public string HpcPackSchedulerAddress { get; set; }
 
         [Option('d', HelpText = "Start as console application")]

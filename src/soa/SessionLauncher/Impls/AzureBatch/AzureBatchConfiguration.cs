@@ -17,6 +17,8 @@
 
         public static string BatchJobId { get; set; }
 
+        public static string SoaBrokerStorageConnectionString { get; set; }
+
         public static string GetBatchJobId()
         {
             if (!string.IsNullOrEmpty(BatchJobId))

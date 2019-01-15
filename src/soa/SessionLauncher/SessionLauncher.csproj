@@ -224,6 +224,7 @@
     <Compile Include="DataService\REST\DataClientController.cs" />
     <Compile Include="DataService\REST\DataServiceRestServer.cs" />
     <Compile Include="Impls\AzureBatch\AzureBatchConfiguration.cs" />
+    <Compile Include="Impls\AzureBatch\AzureBatchConstants.cs" />
     <Compile Include="Impls\AzureBatch\AzureBatchEnvVarReader.cs" />
     <Compile Include="Impls\AzureBatch\AzureBatchSessionLauncher.cs" />
     <Compile Include="Impls\HpcPack\HpcPackSessionLauncher.cs" />

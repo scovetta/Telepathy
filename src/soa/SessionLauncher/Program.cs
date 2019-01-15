@@ -112,6 +112,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                     AzureBatchConfiguration.BatchServiceUrl = option.AzureBatchServiceUrl;
                     AzureBatchConfiguration.BatchAccountName = option.AzureBatchAccountName;
                     AzureBatchConfiguration.BatchAccountKey = option.AzureBatchAccountKey;
+                    AzureBatchConfiguration.SoaBrokerStorageConnectionString = option.AzureBatchBrokerStorageConnectionString;
                 }
                 else if (!string.IsNullOrEmpty(option.HpcPackSchedulerAddress))
                 {
