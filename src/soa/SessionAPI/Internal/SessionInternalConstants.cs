@@ -2,6 +2,6 @@
 {
     public static class SessionInternalConstants
     {
-        public static string ConnectionStringToken => "ConnectionString";
+        public static string BrokerConnectionStringToken => "ConnectionString";
     }
 }

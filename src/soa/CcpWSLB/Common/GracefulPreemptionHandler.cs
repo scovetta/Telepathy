@@ -375,7 +375,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
             List<int> taskIds;
             List<int> runningTaskIds;
             BalanceInfo balanceInfo;
-            (result, balanceInfo, taskIds, runningTaskIds) = await schedulerAdapter.GetGracefulPreemptionInfo(this.sessionId);
+            (result, balanceInfo, taskIds, runningTaskIds) = await schedulerAdapter.GetGracefulPreemptionInfoAsync(this.sessionId);
             
             if (result)
             {

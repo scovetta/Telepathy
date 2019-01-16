@@ -224,7 +224,7 @@
     <Compile Include="Internal\IHpcSchedulerAdapter.cs" />
     <Compile Include="Internal\IHpcSchedulerAdapterInternal.cs" />
     <Compile Include="Internal\SchedulerAdapterInternalClient.cs" />
-    <Compile Include="SessionShim.cs" />
+    <Compile Include="HpcSessionShim.cs" />
     <None Include="Interface\ISchedulerNotifyAsync.cs" />
     <Compile Include="HpcSessionCredUtil.cs" />
     <Compile Include="Internal\HpcSessionFactory.cs" />

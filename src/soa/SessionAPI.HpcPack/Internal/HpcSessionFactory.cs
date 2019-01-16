@@ -3,21 +3,21 @@ using Microsoft.Hpc.Scheduler.Session.Internal;
 
 namespace Microsoft.Hpc.Scheduler.Session.HpcPack.Internal
 {
-    public abstract class HpcSessionFactory : SessionFactory
+    public abstract class HpcSessionFactory : AbstractSessionFactory
     {
         /// <summary>
-        /// Build an instance of the SessionFactory class to create session
+        /// Build an instance of the AbstractSessionFactory class to create session
         /// </summary>
         /// <param name="startInfo">indicating the session start information</param>
-        /// <returns>returns an instance of the SessionFactory class</returns>
-        public static SessionFactory BuildSessionFactory(SessionStartInfo startInfo) => new OnPremiseSessionFactory();
+        /// <returns>returns an instance of the AbstractSessionFactory class</returns>
+        public static AbstractSessionFactory BuildSessionFactory(SessionStartInfo startInfo) => new OnPremiseSessionFactory();
 
         /// <summary>
-        /// Build an instance of the SessionFactory class to create session
+        /// Build an instance of the AbstractSessionFactory class to create session
         /// </summary>
         /// <param name="sessionAttachInfo">indicating the session attach information</param>
-        /// <returns>returns an instance of the SessionFactory class</returns>
-        public static SessionFactory BuildSessionFactory(SessionAttachInfo sessionAttachInfo)
+        /// <returns>returns an instance of the AbstractSessionFactory class</returns>
+        public static AbstractSessionFactory BuildSessionFactory(SessionAttachInfo sessionAttachInfo)
         {
             if ((sessionAttachInfo.TransportScheme & TransportScheme.WebAPI) == TransportScheme.WebAPI)
             {

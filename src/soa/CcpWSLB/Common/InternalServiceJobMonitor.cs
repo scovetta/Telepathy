@@ -1840,7 +1840,7 @@ namespace Microsoft.Hpc.ServiceBroker
             bool finishTaskSucceed = false;
             try
             {
-                finishTaskSucceed = await client.FinishTask(this.sharedData.BrokerInfo.SessionId, taskId);
+                finishTaskSucceed = await client.FinishTaskAsync(this.sharedData.BrokerInfo.SessionId, taskId);
 
             }
             catch (Exception e)
@@ -1868,7 +1868,7 @@ namespace Microsoft.Hpc.ServiceBroker
                 bool finishTaskSucceed = false;
                 try
                 {
-                    finishTaskSucceed = client.FinishTask(this.sharedData.BrokerInfo.SessionId, kvp.Key).GetAwaiter().GetResult();
+                    finishTaskSucceed = client.FinishTaskAsync(this.sharedData.BrokerInfo.SessionId, kvp.Key).GetAwaiter().GetResult();
                 }
                 catch (Exception e)
                 {

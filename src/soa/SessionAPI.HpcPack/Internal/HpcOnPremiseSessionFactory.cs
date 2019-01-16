@@ -26,7 +26,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// Session factory for on-premise cluster
     /// </summary>
-    internal class OnPremiseSessionFactory : SessionFactory
+    internal class OnPremiseSessionFactory : AbstractSessionFactory
     {
         /// <summary>
         /// Create session
@@ -92,7 +92,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                             askForCredential = await HpcSessionCredUtil.RetrieveCredentialOnPremise(startInfo, typeOfExpectedCred, binding).ConfigureAwait(false);
 
                             if (askForCredential)
-                            {
+                            { 
                                 askForCredentialTimes++;
                             }
 
@@ -638,7 +638,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         {
             if (!startInfo.DebugModeEnabled)
             {
-                Debug.Assert(startInfo.Headnode != null, "[SessionFactory] Head node should not be null if debug mode is enabled.");
+                Debug.Assert(startInfo.Headnode != null, "[AbstractSessionFactory] Head node should not be null if debug mode is enabled.");
                 return new ServiceJobProvider(startInfo, binding);
             }
             else
@@ -658,42 +658,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         {
             if (!attachInfo.DebugModeEnabled)
             {
-                Debug.Assert(attachInfo.Headnode != null, "[SessionFactory] Head node should not be null if debug mode is enabled.");
+                Debug.Assert(attachInfo.Headnode != null, "[AbstractSessionFactory] Head node should not be null if debug mode is enabled.");
                 return new ServiceJobProvider(attachInfo, binding);
             }
             else
             {
                 return new DummyResourceProvider(durable);
-            }
-        }
-
-        /// <summary>
-        /// Build broker factory
-        /// </summary>
-        private static IBrokerFactory BuildBrokerFactory(SessionStartInfo startInfo, bool durable)
-        {
-            if (startInfo.UseInprocessBroker)
-            {
-                return new InprocessBrokerFactory(startInfo.Headnode, durable);
-            }
-            else
-            {
-                return new V3BrokerFactory(durable);
-            }
-        }
-
-        /// <summary>
-        /// Build broker factory
-        /// </summary>
-        private static IBrokerFactory BuildBrokerFactory(SessionAttachInfo attachInfo, bool durable)
-        {
-            if (attachInfo.UseInprocessBroker)
-            {
-                return new InprocessBrokerFactory(attachInfo.Headnode, durable);
-            }
-            else
-            {
-                return new V3BrokerFactory(durable);
             }
         }
 

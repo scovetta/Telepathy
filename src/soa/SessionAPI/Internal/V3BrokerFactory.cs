@@ -55,9 +55,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         {
             Exception innerException = null;
             IEnumerable<string> endpoints = eprs;
-            if (startInfo.UseAzureQueue.GetValueOrDefault())
+            if (startInfo.UseAzureQueue.GetValueOrDefault() && !endpoints.Contains(SessionInternalConstants.BrokerConnectionStringToken))
             {
-                endpoints = endpoints.Concat(new[] { SessionInternalConstants.ConnectionStringToken });
+                endpoints = endpoints.Concat(new[] { SessionInternalConstants.BrokerConnectionStringToken });
             }
 
             foreach (string epr in endpoints)
@@ -68,7 +68,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 {
                     SessionBase.TraceSource.TraceInformation("[Session:{0}] Try to create broker... BrokerLauncherEpr = {1}", sessionId, epr);
 
-                    if (epr == SessionInternalConstants.ConnectionStringToken)
+                    if (epr == SessionInternalConstants.BrokerConnectionStringToken)
                     {
                         brokerLauncher = new BrokerLauncherCloudQueueClient(startInfo.BrokerLauncherStorageConnectionString);
                     }

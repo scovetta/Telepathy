@@ -17,6 +17,8 @@ namespace Microsoft.Hpc.Scheduler.Session
 
     using Microsoft.Hpc.Scheduler.Session.HpcPack;
 
+    // TODO: (Design) change this class to proper factory class
+
     /// <summary>
     ///   <para>Use to create an HPC session that binds the client application to
     /// a service that supports the service-oriented architecture (SOA) programming model based on Windows Communication Foundation (WCF).</para>
@@ -32,32 +34,14 @@ namespace Microsoft.Hpc.Scheduler.Session
     ///   <para>For an example, see <see href="https://msdn.microsoft.com/library/cc853427(v=vs.85).aspx">Creating a SOA Client</see>.</para>
     /// </example>
     /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo" />
-    public class Session : IDisposable
+    public class HpcSession : Session
     {
-        /// <summary>
-        /// v3 session instance
-        /// </summary>
-        V3Session v3session;
-
         /// <summary>
         /// create the session shim based on a v3 session
         /// </summary>
         /// <param name="v2session"></param>
-        internal Session(V3Session v3session)
+        internal HpcSession(V3Session v3session) : base(v3session)
         {
-            this.v3session = v3session;
-        }
-
-        /// <summary>
-        ///   <para>Releases all unmanaged resources that are used by the session.</para>
-        /// </summary>
-        public void Dispose()
-        {
-            if (v3session != null)
-                v3session.Dispose();
-
-            // Suppress finalization of this disposed instance.
-            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -74,25 +58,11 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             get
             {
-                return v3session.AutoClose;
+                return this.v3session.AutoClose;
             }
             set
             {
-                v3session.AutoClose = value;
-            }
-        }
-
-        /// <summary>
-        ///   <para>An identifier that uniquely identifies the session.</para>
-        /// </summary>
-        /// <value>
-        ///   <para>An identifier that uniquely identifies the session.</para>
-        /// </value>
-        public int Id
-        {
-            get
-            {
-                return v3session.Id;
+                this.v3session.AutoClose = value;
             }
         }
 
@@ -117,7 +87,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             get
             {
-                return v3session.EndpointReference;
+                return this.v3session.EndpointReference;
             }
         }
 
@@ -138,98 +108,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             get
             {
-                return v3session.NetTcpEndpointReference;
+                return this.v3session.NetTcpEndpointReference;
             }
-        }
-
-        /// <summary>
-        ///   <para>Closes the session without finishing the job for the session or deleting response messages.</para>
-        /// </summary>
-        /// <remarks>
-        ///   <para>This method is equivalent to the
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean)" /> method with the purge parameter set to
-        /// False. To finish the job for the session if the job is still active and delete the response messages when you close the session, use the
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean)" /> or
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean,System.Int32)" /> method instead. </para>
-        ///   <para>When you create a session, you will also start a new job. To close the job and the session, use
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean)" />(True). To close the job but keep the durable session active, use
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean)" />(False). If you use
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean)" />(False) on a durable session, you will still be able to attach to the session after the job completes by using the
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.DurableSession.AttachSession(Microsoft.Hpc.Scheduler.Session.SessionAttachInfo)" /> method.</para>
-        /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean,System.Int32)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Close()" />
-        public void Close()
-        {
-            v3session.Close();
-        }
-
-        /// <summary>
-        ///   <para>Closes the session and optionally finishes the job for the session and deletes the response messages.</para>
-        /// </summary>
-        /// <param name="purge">
-        ///   <para>A
-        /// <see cref="System.Boolean" /> object that specifies whether to finish the job for the session and delete the response messages.
-        /// True finishes the job for the session and deletes the response messages.
-        /// False indicates that the method should not finish the job for the session and should not delete the response messages.</para>
-        /// </param>
-        /// <remarks>
-        ///   <para>When you create a session, you will also start a new job. To close the job and the session, use
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean)" />(True). To close the job but keep the durable session active, use
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean)" />(False). If you use
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean)" />(False) on a durable session, you will still be able to attach to the session after the job completes by using the
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.DurableSession.AttachSession(Microsoft.Hpc.Scheduler.Session.SessionAttachInfo)" /> method.</para>
-        ///   <para>Calling this method with the <paramref name="purge" /> parameter set to
-        /// False is equivalent to calling the
-        /// <see cref="VisualStyleElement.ToolTip.Close" /> method.</para>
-        ///   <para>The default timeout period for finishing the job and deleting the response
-        /// messages is 60,000 milliseconds. To specify a specific length for the timeout period, use the
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean,System.Int32)" /> method instead.</para>
-        /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.Session.Close()" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean,System.Int32)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Close(System.Boolean,System.Int32)" />
-        public void Close(bool purge)
-        {
-            v3session.Close(purge);
-        }
-
-        /// <summary>
-        ///   <para>Closes the session, and optionally finishes the job for
-        /// the session and deletes the response messages subject to the specified timeout period.</para>
-        /// </summary>
-        /// <param name="purge">
-        ///   <para>A
-        /// <see cref="System.Boolean" /> object that specifies whether to finish the job for the session and delete the response messages.
-        /// True finishes the job for the session and deletes the response messages.
-        /// False indicates that the method should not finish the job for the session and should not delete the response messages.</para>
-        /// </param>
-        /// <param name="timeoutMilliseconds">
-        ///   <para>Specifies the length of time in milliseconds that the method
-        /// should wait for the job to finish and the response messages to be deleted.</para>
-        /// </param>
-        /// <exception cref="System.TimeoutException">
-        ///   <para>Specifies that the job for the session did not finish or
-        /// the response messages were not deleted before the end of the specified time period.</para>
-        /// </exception>
-        /// <remarks>
-        ///   <para>To close the session subject to default timeout period for
-        /// finishing the job and deleting the response messages of 60,000 milliseconds, use the
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.Close()" /> or
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean)" /> method instead.</para>
-        ///   <para>When you create a session, you will also start a new job. To close the job and the session, use
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean)" />(True). To close the job but keep the durable session active, use
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean)" />(False). If you use
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean)" />(False) on a durable session, you will still be able to attach to the session after the job completes by using the
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.DurableSession.AttachSession(Microsoft.Hpc.Scheduler.Session.SessionAttachInfo)" /> method.</para>
-        /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.Session.Close()" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.Session.Close(System.Boolean)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Close(System.Boolean,System.Int32)" />
-        public void Close(bool purge, int timeoutMilliseconds)
-        {
-            v3session.Close(purge, timeoutMilliseconds);
         }
 
         /// <summary>
@@ -250,7 +130,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             get
             {
-                return v3session.HttpEndpointReference;
+                return this.v3session.HttpEndpointReference;
             }
         }
 
@@ -308,17 +188,17 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <returns>
         ///   <para>A <see cref="Microsoft.Hpc.Scheduler.Session.Session" /> object that defines the session.</para>
         /// </returns>
-        public static Session CreateSession(SessionStartInfo startInfo)
+        public static new Session CreateSession(SessionStartInfo startInfo)
         {
-            if (startInfo.IsNoSession )
+            if (startInfo.IsNoSession)
             {
                 if (startInfo.UseInprocessBroker)
                 {
-                    return CreateIPSession(startInfo);
+                    return CreateCoreLayerSession(startInfo);
                 }
                 else
                 {
-                    throw new NotSupportedException();
+                    return CreateBrokerLayerSession(startInfo);
                 }
             }
             else
@@ -333,7 +213,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="info">The session start info for creating the service session</param>
         /// <param name="binding">indicating the binding</param>
         /// <returns>A service job session object, including the endpoint address and the two jobs related to this session</returns>
-        public static Session CreateSession(SessionStartInfo startInfo, Binding binding)
+        public static HpcSession CreateSession(SessionStartInfo startInfo, Binding binding)
         {
             return CreateSessionAsync(startInfo, binding).GetAwaiter().GetResult();
         }
@@ -343,9 +223,9 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="info">The session start info for creating the service session</param>
         /// <returns>A service job session object, including the endpoint address and the two jobs related to this session</returns>
-        public static async Task<Session> CreateSessionAsync(SessionStartInfo startInfo)
+        public static async Task<HpcSession> CreateSessionAsync(SessionStartInfo startInfo)
         {
-            return new Session(await HpcV3Session.CreateSessionAsync(startInfo, null).ConfigureAwait(false));
+            return new HpcSession(await HpcV3Session.CreateSessionAsync(startInfo, null).ConfigureAwait(false));
         }
 
         /// <summary>
@@ -354,31 +234,11 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="info">The session start info for creating the service session</param>
         /// <param name="binding">indicating the binding</param>
         /// <returns>A service job session object, including the endpoint address and the two jobs related to this session</returns>
-        public static async Task<Session> CreateSessionAsync(SessionStartInfo startInfo, Binding binding)
+        public static async Task<HpcSession> CreateSessionAsync(SessionStartInfo startInfo, Binding binding)
         {
             Utility.ThrowIfNull(startInfo, "startInfo");
 
-            return new Session(await HpcV3Session.CreateSessionAsync(startInfo, binding).ConfigureAwait(false));
-        }
-
-        /// <summary>
-        ///   <para>Creates a session by using the specified timeout value (the session must be created within the specified period or the call fails).</para>
-        /// </summary>
-        /// <param name="startInfo">
-        ///   <para>A <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo" /> class that contains information for starting the session.</para>
-        /// </param>
-        /// <param name="timeoutMilliseconds">
-        ///   <para>The amount of time, in milliseconds, in which the session must be created. If
-        /// the time to create the session exceeds the timeout value, the call fails. The default is
-        /// <see cref="System.Threading.Timeout.Infinite" />.</para>
-        /// </param>
-        /// <returns>
-        ///   <para>A <see cref="Microsoft.Hpc.Scheduler.Session.Session" /> object that defines the session.</para>
-        /// </returns>
-        [Obsolete("This CreateSession method overload is obsolete. The timeoutMilliseconds argument is no longer supported. Please use a version that does not take a timeoutMilliseconds argument.")] // Obsolete added for V4 RTM.
-        public static Session CreateSession(SessionStartInfo startInfo, int timeoutMilliseconds)
-        {
-            return CreateSession(startInfo);
+            return new HpcSession(await HpcV3Session.CreateSessionAsync(startInfo, binding).ConfigureAwait(false));
         }
 
         /// <summary>
@@ -416,11 +276,11 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <returns>
         ///   <para>A <see cref="Microsoft.Hpc.Scheduler.Session.Session" /> that represents the session to which the client attached.</para>
         /// </returns>
-        public static Session AttachSession(SessionAttachInfo attachInfo)
+        public static HpcSession AttachSession(SessionAttachInfo attachInfo)
         {
             Utility.ThrowIfNull(attachInfo, "attachInfo");
 
-            return new Session(HpcV3Session.AttachSession(attachInfo));
+            return new HpcSession(HpcV3Session.AttachSession(attachInfo));
         }
 
         /// <summary>
@@ -429,11 +289,11 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="attachInfo">The attach info</param>
         /// <param name="binding">indicating the binding</param>
         /// <returns>A persistant session</returns>
-        public static Session AttachSession(SessionAttachInfo attachInfo, Binding binding)
+        public static HpcSession AttachSession(SessionAttachInfo attachInfo, Binding binding)
         {
             Utility.ThrowIfNull(attachInfo, "attachInfo");
 
-            return new Session(HpcV3Session.AttachSession(attachInfo, binding));
+            return new HpcSession(HpcV3Session.AttachSession(attachInfo, binding));
         }
       
         /// <summary>
@@ -448,59 +308,10 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             get
             {
-                return v3session.ServiceVersion;
+                return this.v3session.ServiceVersion;
             }
         }
 
-        /// <summary>
-        /// Convert v3 session based object to SessionBase
-        /// </summary>
-        /// <param name="session"></param>
-        /// <returns></returns>
-        public static implicit operator SessionBase(Session session)
-        {
-            return ToSessionBase(session);
-        }
-
-        public static SessionBase ToSessionBase(Session session)
-        {
-            return (SessionBase)session.v3session;
-        }
-
-
-        // TODO: rename
-        public static Session CreateBrkSession(SessionStartInfo startInfo)
-        {
-            return CreateBrkSessionAsync(startInfo).GetAwaiter().GetResult();
-        }
-
-        // TODO: rename
-        public static async Task<Session> CreateBrkSessionAsync(SessionStartInfo startInfo)
-        {
-            IBrokerFactory brokerFactory = new V3BrokerFactory(false);
-            DateTime targetTimeout = DateTime.Now.AddMilliseconds(Constant.DefaultCreateSessionTimeout);
-            //in HPC sessionId cannot be negative (out of range)   
-            return new Session((V3Session)await brokerFactory.CreateBroker(startInfo, SessionStartInfo.StandaloneSessionId, targetTimeout, startInfo.BrokerLauncherEprs, null).ConfigureAwait(false));
-        }
-
-
-        /// <summary>
-        /// create in process session
-        /// </summary>
-        /// <param name="startInfo"></param>
-        /// <returns></returns>
-        // TODO: rename
-        public static Session CreateIPSession(SessionStartInfo startInfo)
-        {
-            return CreateIPSessionAsync(startInfo).GetAwaiter().GetResult();
-        }
-
-        // TODO: rename
-        public static async Task<Session> CreateIPSessionAsync(SessionStartInfo startInfo)
-        {
-            InprocessBrokerFactory brokerFactory = new InprocessBrokerFactory(startInfo.Headnode, false);
-            DateTime targetTimeout = DateTime.Now.AddMilliseconds(Constant.DefaultCreateSessionTimeout);
-            return new Session((V3Session) await brokerFactory.CreateBroker(startInfo, SessionStartInfo.StandaloneSessionId, targetTimeout, null, null).ConfigureAwait(false));
-        }
+       
     }
 }

@@ -149,9 +149,11 @@
     <Compile Include="Internal\BrokerResponseHandler.cs" />
     <Compile Include="Internal\BrokerResponseStateHandler.cs" />
     <Compile Include="Internal\CallbackManager.cs" />
+    <Compile Include="Internal\GeneralResourceProvider.cs" />
     <Compile Include="Internal\HttpBrokerFrontendFactory.cs" />
     <Compile Include="Internal\IResourceProvider.cs" />
     <Compile Include="Internal\ISchedulerAdapter.cs" />
+    <Compile Include="Internal\SessionFactory\SessionFactory.cs" />
     <Compile Include="Internal\WSBrokerFrontendFactory.cs" />
     <Compile Include="PersistantSession.cs" />
     <Compile Include="ServiceContainer\SessionServiceContainer.cs" />
@@ -211,7 +213,7 @@
     <None Include="Internal\PersistantSessionAsyncResult.cs" />
     <None Include="Internal\SessionAsyncResult.cs" />
     <Compile Include="Internal\SessionAsyncResultBase.cs" />
-    <Compile Include="Internal\SessionFactory.cs" />
+    <Compile Include="Internal\SessionFactory\AbstractSessionFactory.cs" />
     <Compile Include="Internal\SessionInternalConstants.cs" />
     <Compile Include="Internal\SessionLauncherClient.cs" />
     <Compile Include="Internal\SessionLauncherClientBase.cs" />
@@ -238,6 +240,7 @@
     <Compile Include="SessionAttachInfo.cs" />
     <Compile Include="sessionbase.cs" />
     <Compile Include="SessionException.cs" />
+    <Compile Include="SessionShim.cs" />
     <Compile Include="SessionStartInfo.cs" />
     <Compile Include="TaskInInterestUtil.cs" />
     <Compile Include="WinServiceHpcContextModule.cs" />

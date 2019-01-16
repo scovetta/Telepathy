@@ -237,10 +237,15 @@ namespace Microsoft.Hpc.EchoClient
                 {
                     session = HpcDurableSession.CreateSession(info);
                 }
+                else if (info.IsNoSession)
+                {
+                    session = info.UseInprocessBroker ? Session.CreateCoreLayerSession(info) : Session.CreateBrokerLayerSession(info); // TODO: Usability fix
+                }
                 else
                 {
-                    session = info.IsNoSession ? (info.UseInprocessBroker? Session.CreateIPSession(info) : Session.CreateBrkSession(info)) : Session.CreateSession(info);
+                    session = Session.CreateSession(info);
                 }
+                
                 watch.Stop();
                 Logger.Info("{0, -35} : {1}", "Session ID", session.Id);
                 Logger.Info("{0, -35} : {1:F3} sec", "Session creation time", watch.Elapsed.TotalSeconds);

@@ -90,9 +90,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 this.brokerLauncher = sessionInfo.InprocessBrokerAdapter;
                 this.brokerLauncherForHeartbeat = sessionInfo.InprocessBrokerAdapter;
             }
-            else if (sessionInfo.BrokerLauncherEpr == SessionInternalConstants.ConnectionStringToken)
+            else if (sessionInfo.BrokerLauncherEpr == SessionInternalConstants.BrokerConnectionStringToken)
             {
-                Trace.TraceInformation($"[{nameof(BrokerLauncherClientFactory)}] will not connect to frontend as EPR is {nameof(SessionInternalConstants.ConnectionStringToken)}.");
+                Trace.TraceInformation($"[{nameof(BrokerLauncherClientFactory)}] will not connect to frontend as EPR is {nameof(SessionInternalConstants.BrokerConnectionStringToken)}.");
             }
             else
             {

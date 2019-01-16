@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="SessionFactory.cs" company="Microsoft">
+// <copyright file="AbstractSessionFactory.cs" company="Microsoft">
 //      Copyright (c) Microsoft Corporation.  All rights reserved.
 // </copyright>
 // <summary>
@@ -17,7 +17,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// Factory class to create session instance
     /// </summary>
-    public abstract class SessionFactory
+    public abstract class AbstractSessionFactory
     {
         /// <summary>
         /// Default library directory path on on-premise installation and Azure VM role
@@ -34,7 +34,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         private const string StorageClientAssemblyName = "Microsoft.WindowsAzure.Storage.dll";
 
-        static SessionFactory()
+        static AbstractSessionFactory()
         {
             AppDomain.CurrentDomain.AssemblyResolve += ResolveHandler;
         }
@@ -115,6 +115,36 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Build broker factory
+        /// </summary>
+        protected static IBrokerFactory BuildBrokerFactory(SessionStartInfo startInfo, bool durable)
+        {
+            if (startInfo.UseInprocessBroker)
+            {
+                return new InprocessBrokerFactory(startInfo.Headnode, durable);
+            }
+            else
+            {
+                return new V3BrokerFactory(durable);
+            }
+        }
+
+        /// <summary>
+        /// Build broker factory
+        /// </summary>
+        protected static IBrokerFactory BuildBrokerFactory(SessionAttachInfo attachInfo, bool durable)
+        {
+            if (attachInfo.UseInprocessBroker)
+            {
+                return new InprocessBrokerFactory(attachInfo.Headnode, durable);
+            }
+            else
+            {
+                return new V3BrokerFactory(durable);
+            }
         }
     }
 }

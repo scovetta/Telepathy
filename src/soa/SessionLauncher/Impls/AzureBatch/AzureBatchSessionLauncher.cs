@@ -104,7 +104,7 @@
                 }
 
                 sessionAllocateInfo.Id = 0;
-                sessionAllocateInfo.BrokerLauncherEpr = new[] { SoaHelper.GetBrokerLauncherInternalAddress("127.0.0.1") };
+                sessionAllocateInfo.BrokerLauncherEpr = new[] { SessionInternalConstants.BrokerConnectionStringToken };
 
                 IList<EnvironmentSetting> ConstructEnvironmentVariable()
                 {
@@ -221,7 +221,8 @@
                 {
                     var hashed = MD5.Create().ComputeHash(Guid.NewGuid().ToByteArray());
                     string idSuffix = BitConverter.ToUInt16(hashed, 0).ToString().PadLeft(6, '0');
-                    string newJobId = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() + idSuffix;
+                    // string newJobId = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() + idSuffix;
+                    string newJobId = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
                     Debug.Assert(batchClient != null, nameof(batchClient) + " != null");
                     var job = batchClient.JobOperations.CreateJob(newJobId, new PoolInformation() { PoolId = AzureBatchConfiguration.BatchPoolName });
                     await job.CommitAsync();
@@ -229,6 +230,14 @@
                 }
 
                 var jobId = await CreateJobAsync();
+                if (int.TryParse(jobId, out int jobIdL))
+                {
+                    sessionAllocateInfo.Id = jobIdL;
+                }
+                else
+                {
+                    TraceHelper.TraceEvent(TraceEventType.Error, "[AzureBatchSessionLauncher] .CreateAndSubmitSessionJob: JobId was failed to parse. callId={0}, jobId={1}.", callId, jobId);
+                }
 
                 Task AddTasksAsync()
                 {

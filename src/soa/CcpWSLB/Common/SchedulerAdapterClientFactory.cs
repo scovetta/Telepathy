@@ -425,12 +425,12 @@ namespace Microsoft.Hpc.ServiceBroker.Common
             */
 
 
-            async Task<(bool succeed, BalanceInfo balanceInfo, List<int> taskIds, List<int> runningTaskIds)> ISchedulerAdapter.GetGracefulPreemptionInfo(int jobId)
+            async Task<(bool succeed, BalanceInfo balanceInfo, List<int> taskIds, List<int> runningTaskIds)> ISchedulerAdapter.GetGracefulPreemptionInfoAsync(int jobId)
             {
                 return (true, new BalanceInfo(int.MaxValue), null, null); 
             }
 
-            public Task<bool> FinishTask(int jobId, int taskUniqueId)
+            public Task<bool> FinishTaskAsync(int jobId, int taskUniqueId)
             {
                 return Task.FromResult(true);
             }

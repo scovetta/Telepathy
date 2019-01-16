@@ -12,11 +12,14 @@ namespace Microsoft.Hpc.Scheduler.Session
 {
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using System;
-    using System.Diagnostics;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading;
     using System.Threading.Tasks;
+
+    using Microsoft.Hpc.Scheduler.Session.Internal.SessionFactory;
+
+    // TODO: remove the "V3" prefix
 
     /// <summary>
     /// The jobs associated with this object will be automatically closed on disposing this object
@@ -209,6 +212,21 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             int index = (int)Math.Log((int)scheme, 2);
             return new EndpointAddress(eprList[index]);
+        }
+
+        /// <summary>
+        /// Asynchronous mode of submitting a job and get a ServiceJobSession object.
+        /// </summary>
+        /// <param name="startInfo">The session start info for creating the service session</param>
+        /// <param name="binding">indicting the binding</param>
+        /// <returns>A service job session object, including the endpoint address and the two jobs related to this session</returns>
+        public static async Task<V3Session> CreateSessionAsync(SessionStartInfo startInfo, Binding binding)
+        {
+            Utility.ThrowIfNull(startInfo, "startInfo");
+
+            Utility.ThrowIfEmpty(startInfo.Headnode, "headNode");
+
+            return (V3Session)await new SessionFactory().CreateSession(startInfo, false, Constant.DefaultCreateSessionTimeout, binding).ConfigureAwait(false);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Microsoft.Hpc.ServiceBroker
     /// <summary>
     /// The client implementation for the scheduler adapter
     /// </summary>
-    internal class SchedulerAdapterClient : DuplexClientBase<IHpcSchedulerAdapter>, IHpcSchedulerAdapter, ISchedulerAdapter
+    internal class SchedulerAdapterClient : DuplexClientBase<IHpcSchedulerAdapter>, IHpcSchedulerAdapter
     {
         /// <summary>
         /// Stores the timeout
@@ -178,6 +178,16 @@ namespace Microsoft.Hpc.ServiceBroker
         public Task<bool> UpdateBrokerInfoAsync(int sessionId, Dictionary<string, object> properties)
         {
             return this.UpdateBrokerInfo(sessionId, properties);
+        }
+
+        public Task<(bool succeed, BalanceInfo balanceInfo, List<int> taskIds, List<int> runningTaskIds)> GetGracefulPreemptionInfoAsync(int sessionId)
+        {
+            return this.GetGracefulPreemptionInfo(sessionId);
+        }
+
+        public Task<bool> FinishTaskAsync(int jobId, int taskUniqueId)
+        {
+            return this.FinishTask(jobId, taskUniqueId);
         }
 
         /// <summary>
