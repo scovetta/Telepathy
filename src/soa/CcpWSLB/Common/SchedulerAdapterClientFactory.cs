@@ -150,9 +150,15 @@ namespace Microsoft.Hpc.ServiceBroker.Common
         /// </summary>
         private async Task CreateClient()
         {
-            if (this.sharedData.StartInfo.EprList != null)
+            BrokerTracing.TraceVerbose(
+                "[SchedulerAdapterClientFactory] Creating client with StartInfo.IpAddress: {0}, StartInfo.EprList: {1}, StandAlone: {2}",
+                this.sharedData.StartInfo.IpAddress != null,
+                this.sharedData.StartInfo.EprList != null,
+                SoaAmbientConfig.StandAlone);
+
+            if (this.sharedData.StartInfo.IpAddress != null)
             {
-                this.schedulerAdapterClient = new DummySchedulerAdapterClient(this.sharedData.StartInfo.EprList, this.dispatcherManager);
+                this.schedulerAdapterClient = new DummySchedulerAdapterClient(this.sharedData.StartInfo.IpAddress, this.dispatcherManager);
             }
             else
             {

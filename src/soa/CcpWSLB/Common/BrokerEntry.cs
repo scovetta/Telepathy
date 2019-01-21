@@ -231,7 +231,7 @@ namespace Microsoft.Hpc.ServiceBroker
                 ServiceConfiguration serviceConfig;
                 BrokerConfigurations brokerConfig;
                 BindingsSection bindings;
-                SoaAmbientConfig.StandAlone = startInfo.IsNoSession;
+                SoaAmbientConfig.StandAlone = startInfo.IsNoSession || startInfo.IpAddress != null; // TODO: this is a hack. Working mode should be decided by something like a *SchedulerType* filed.
 
                 ConfigurationHelper.LoadConfiguration(startInfo, brokerInfo, out brokerConfig, out serviceConfig, out bindings);
                 this.sharedData = new SharedData(brokerInfo, startInfo, brokerConfig, serviceConfig);
