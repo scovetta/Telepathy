@@ -226,7 +226,9 @@
     <Compile Include="Impls\AzureBatch\AzureBatchConfiguration.cs" />
     <Compile Include="Impls\AzureBatch\AzureBatchConstants.cs" />
     <Compile Include="Impls\AzureBatch\AzureBatchEnvVarReader.cs" />
+    <Compile Include="Impls\AzureBatch\AzureBatchSessionIdGenerator.cs" />
     <Compile Include="Impls\AzureBatch\AzureBatchSessionLauncher.cs" />
+    <Compile Include="Impls\AzureBatch\AzureBatchSessionJobIdConverter.cs" />
     <Compile Include="Impls\HpcPack\HpcPackSessionLauncher.cs" />
     <Compile Include="Impls\SchedulerType.cs" />
     <Compile Include="Impls\SessionLauncherFactory.cs" />

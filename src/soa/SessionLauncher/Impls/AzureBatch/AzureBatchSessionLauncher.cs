@@ -59,7 +59,11 @@
 
         public override async Task TerminateV5Async(int sessionId)
         {
-            throw new NotImplementedException();
+            using (var batchClient = AzureBatchConfiguration.GetBatchClient())
+            {
+                var batchJob = await batchClient.JobOperations.GetJobAsync(AzureBatchSessionJobIdConverter.ConvertToAzureBatchJobId(sessionId));
+                await batchJob.TerminateAsync();
+            }
         }
 
         public override async Task<Version[]> GetServiceVersionsAsync(string serviceName)
@@ -90,6 +94,7 @@
             BrokerConfigurations brokerConfigurations,
             string hostpath)
         {
+            
             TraceHelper.TraceEvent(TraceEventType.Information, "[AzureBatchSessionLauncher] .CreateAndSubmitSessionJob: callId={0}, endpointPrefix={1}, durable={2}.", callId, endpointPrefix, durable);
             using (var batchClient = AzureBatchConfiguration.GetBatchClient())
             {
@@ -219,10 +224,10 @@
 
                 async Task<string> CreateJobAsync()
                 {
-                    var hashed = MD5.Create().ComputeHash(Guid.NewGuid().ToByteArray());
-                    string idSuffix = BitConverter.ToUInt16(hashed, 0).ToString().PadLeft(6, '0');
+                    // var hashed = MD5.Create().ComputeHash(Guid.NewGuid().ToByteArray());
+                    // string idSuffix = BitConverter.ToUInt16(hashed, 0).ToString().PadLeft(6, '0');
                     // string newJobId = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() + idSuffix;
-                    string newJobId = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+                    string newJobId = AzureBatchSessionJobIdConverter.ConvertToAzureBatchJobId(AzureBatchSessionIdGenerator.GenerateSessionId());
                     Debug.Assert(batchClient != null, nameof(batchClient) + " != null");
                     var job = batchClient.JobOperations.CreateJob(newJobId, new PoolInformation() { PoolId = AzureBatchConfiguration.BatchPoolName });
                     await job.CommitAsync();
@@ -230,9 +235,10 @@
                 }
 
                 var jobId = await CreateJobAsync();
-                if (int.TryParse(jobId, out int jobIdL))
+                int sessionId = AzureBatchSessionJobIdConverter.ConvertToSessionId(jobId);
+                if (sessionId != -1)
                 {
-                    sessionAllocateInfo.Id = jobIdL;
+                    sessionAllocateInfo.Id = sessionId;
                 }
                 else
                 {
