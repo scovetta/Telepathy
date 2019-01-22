@@ -230,6 +230,8 @@
     <Compile Include="Impls\AzureBatch\AzureBatchSessionLauncher.cs" />
     <Compile Include="Impls\AzureBatch\AzureBatchSessionJobIdConverter.cs" />
     <Compile Include="Impls\HpcPack\HpcPackSessionLauncher.cs" />
+    <Compile Include="Impls\Local\LocalSessionConfiguration.cs" />
+    <Compile Include="Impls\Local\LocalSessionLauncher.cs" />
     <Compile Include="Impls\SchedulerType.cs" />
     <Compile Include="Impls\SessionLauncherFactory.cs" />
     <Compile Include="Impls\SessionLauncherRuntimeConfiguration.cs" />

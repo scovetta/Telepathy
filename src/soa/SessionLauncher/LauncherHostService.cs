@@ -192,6 +192,10 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 {
                     this.sessionLauncher = SessionLauncherFactory.CreateAzureBatchSessionLauncher();
                 }
+                else if(SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.Local)
+                {
+                    this.sessionLauncher = SessionLauncherFactory.CreateLocalSessionLauncher();
+                }
 
 #if AZURE
                 TraceHelper.IsDiagTraceEnabled = x => true;

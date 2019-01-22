@@ -19,6 +19,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch;
+    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Local;
     using Microsoft.Hpc.Scheduler.Session.LauncherHostService;
 
     /// <summary>
@@ -117,6 +118,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 else if (!string.IsNullOrEmpty(option.HpcPackSchedulerAddress))
                 {
                     SessionLauncherRuntimeConfiguration.SchedulerType = SchedulerType.HpcPack;
+                }
+                else if (!string.IsNullOrEmpty(option.BrokerLauncherExePath))
+                {
+                    SessionLauncherRuntimeConfiguration.SchedulerType = SchedulerType.Local;
+                    LocalSessionConfiguration.BrokerLauncherExePath = option.BrokerLauncherExePath;
+                    LocalSessionConfiguration.ServiceHostExePath = option.ServiceHostExePath;
+                    LocalSessionConfiguration.ServiceRegistrationPath = option.ServiceRegistrationPath;
+                    LocalSessionConfiguration.BrokerStorageConnectionString = option.LocalBrokerStorageConnectionString;
                 }
 
                 if (!string.IsNullOrEmpty(option.AzureBatchPoolName))

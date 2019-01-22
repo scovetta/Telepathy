@@ -9,7 +9,8 @@
     internal enum SchedulerType
     {
         Unknown = 0,
-        HpcPack = 1,
-        AzureBatch = 2
+        Local = 1,
+        HpcPack = 2,
+        AzureBatch = 3,
     }
 }

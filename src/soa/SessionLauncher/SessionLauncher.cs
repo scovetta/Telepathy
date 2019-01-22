@@ -17,20 +17,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
     using System.Configuration;
     using System.Diagnostics;
     using System.IO;
-    using System.Linq;
     using System.Reflection;
     using System.Security;
-    using System.Security.Authentication;
     using System.ServiceModel;
-    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Properties;
     using Microsoft.Hpc.Scheduler.Session.Configuration;
-    using Microsoft.Hpc.Scheduler.Session.Data;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack;
 
     /// <summary>
     /// the session launcher service.
@@ -104,13 +98,33 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             return await Task.FromResult<Version>(SessionLauncher.ServerVersion); // (new Func<Version>(() => SessionLauncher.ServerVersion).Invoke());
         }
 
-        public abstract Task<SessionAllocateInfoContract> AllocateV5Async(SessionStartInfoContract info, string endpointPrefix);
+        public virtual async Task<SessionAllocateInfoContract> AllocateV5Async(SessionStartInfoContract info, string endpointPrefix)
+        {
+            return await this.AllocateInternalAsync(info, endpointPrefix, false);
+        }
 
-        public abstract string[] Allocate(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo);
+        public virtual string[] Allocate(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
+        {
+            var contract = this.AllocateV5Async(info, endpointPrefix).GetAwaiter().GetResult();
+            sessionid = contract.Id;
+            serviceVersion = contract.ServiceVersion?.ToString();
+            sessionInfo = contract.SessionInfo;
+            return contract.BrokerLauncherEpr;
+        }
 
-        public abstract Task<SessionAllocateInfoContract> AllocateDurableV5Async(SessionStartInfoContract info, string endpointPrefix);
+        public virtual async Task<SessionAllocateInfoContract> AllocateDurableV5Async(SessionStartInfoContract info, string endpointPrefix)
+        {
+            return await this.AllocateInternalAsync(info, endpointPrefix, true);
+        }
 
-        public abstract string[] AllocateDurable(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo);
+        public virtual string[] AllocateDurable(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
+        {
+            SessionAllocateInfoContract contract = this.AllocateDurableV5Async(info, endpointPrefix).GetAwaiter().GetResult();
+            sessionid = contract.Id;
+            serviceVersion = contract.ServiceVersion?.ToString();
+            sessionInfo = contract.SessionInfo;
+            return contract.BrokerLauncherEpr;
+        }
 
         /// <summary>
         /// Attach to an exisiting session (create a session info by the specified service job)

@@ -31,6 +31,18 @@
         [Option('h', "HpcPackSchedulerAddress", SetName = "HpcPack")]
         public string HpcPackSchedulerAddress { get; set; }
 
+        [Option("BrokerLauncherExePath", SetName = "Local")]
+        public string BrokerLauncherExePath { get; set; }
+
+        [Option("ServiceHostExePath", SetName = "Local")]
+        public string ServiceHostExePath { get; set; }
+
+        [Option("ServiceRegistrationPath", SetName = "Local")]
+        public string ServiceRegistrationPath { get; set; }
+
+        [Option("LocalBrokerStorageConnectionString", SetName = "Local")]
+        public string LocalBrokerStorageConnectionString { get; set; }
+
         [Option('d', HelpText = "Start as console application")]
         public bool AsConsole { get; set; }
     }

@@ -24,32 +24,9 @@
         {
         }
 
-        public override async Task<SessionAllocateInfoContract> AllocateV5Async(SessionStartInfoContract info, string endpointPrefix)
-        {
-            return await this.AllocateInternalAsync(info, endpointPrefix, false);
-        }
-
-        public override string[] Allocate(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
-        {
-            var contract = this.AllocateV5Async(info, endpointPrefix).GetAwaiter().GetResult();
-            sessionid = contract.Id;
-            serviceVersion = contract.ServiceVersion?.ToString();
-            sessionInfo = contract.SessionInfo;
-            return contract.BrokerLauncherEpr;
-        }
-
         public override async Task<SessionAllocateInfoContract> AllocateDurableV5Async(SessionStartInfoContract info, string endpointPrefix)
         {
             throw new NotSupportedException("Currently Session Launcher does not support durable session on Azure Batch.");
-        }
-
-        public override string[] AllocateDurable(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
-        {
-            SessionAllocateInfoContract contract = this.AllocateDurableV5Async(info, endpointPrefix).GetAwaiter().GetResult();
-            sessionid = contract.Id;
-            serviceVersion = contract.ServiceVersion?.ToString();
-            sessionInfo = contract.SessionInfo;
-            return contract.BrokerLauncherEpr;
         }
 
         public override async Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, int sessionId, bool useAad)
