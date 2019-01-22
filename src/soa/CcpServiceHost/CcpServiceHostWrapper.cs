@@ -244,6 +244,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 _taskId);
 
             string procNumEnvVar = Environment.GetEnvironmentVariable(Constant.ProcNumEnvVar);
+            Debug.WriteLine($"{Constant.ProcNumEnvVar}={procNumEnvVar}");
 
             if (string.IsNullOrEmpty(procNumEnvVar) || !int.TryParse(procNumEnvVar, out _procNum))
             {
@@ -376,6 +377,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
             _serviceTypeName = registration.Service.ServiceType;
 
             _maxConcurrentCalls = registration.Service.MaxConcurrentCalls == 0 ? _procNum : registration.Service.MaxConcurrentCalls;
+            Debug.WriteLine($"{nameof(this._maxConcurrentCalls)}={this._maxConcurrentCalls}");
             _includeFaultedException = registration.Service.IncludeExceptionDetailInFaults;
 
             // we have to use this to avoid to load the service config in main domain
