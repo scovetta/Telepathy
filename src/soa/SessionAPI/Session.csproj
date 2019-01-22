@@ -308,10 +308,6 @@
       <Project>{40fc3ebb-d692-4d69-b6a9-6cbd46f19025}</Project>
       <Name>SessionAPI.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SessionAPI.SchedulerPort\SessionAPI.SchedulerPort.csproj">
-      <Project>{48f16289-58ed-47cc-8437-375306d2080c}</Project>
-      <Name>SessionAPI.SchedulerPort</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SR.resx">

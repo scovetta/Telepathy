@@ -29,7 +29,6 @@ namespace Microsoft.Hpc.Scheduler.Session
     using Microsoft.Hpc.Scheduler.Session.Data;
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.SchedulerPort;
 
     /// <summary>
     ///   <para>Serves as a base class to provide methods and properties that are common to classes that represent different kinds of sessions, such as 
@@ -80,7 +79,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         private object lockObj = new object();
 
         // This is for disposing it when disposing the session
-        protected IScheduler _scheduler;
+        protected IDisposable _scheduler;
 
 
         // Maintains list of broker clients associated with this session
@@ -675,7 +674,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                     {
                         try
                         {
-                            var disposable = this._scheduler as IDisposable;
+                            var disposable = this._scheduler;
                             disposable?.Dispose();
                         }
                         catch (Exception)
