@@ -156,6 +156,7 @@
     <Compile Include="Internal\SessionFactory\SessionFactory.cs" />
     <Compile Include="Internal\WSBrokerFrontendFactory.cs" />
     <Compile Include="PersistantSession.cs" />
+    <Compile Include="QueueAdapter\Client\ResponsePool.cs" />
     <Compile Include="ServiceContainer\SessionServiceContainer.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="IConnectionInfoExtension.cs" />
@@ -218,8 +219,8 @@
     <Compile Include="Internal\SessionLauncherClient.cs" />
     <Compile Include="Internal\SessionLauncherClientBase.cs" />
     <Compile Include="Internal\V3BrokerFactory.cs" />
-    <Compile Include="QueueAdapter\Client\BrokerControllerCloudQueueClient.cs" />
-    <Compile Include="QueueAdapter\Client\BrokerLauncherCloudQueueClient.cs" />
+    <Compile Include="QueueAdapter\Client\Impls\BrokerControllerCloudQueueClient.cs" />
+    <Compile Include="QueueAdapter\Client\Impls\BrokerLauncherCloudQueueClient.cs" />
     <Compile Include="QueueAdapter\Client\CloudQueueClientBase.cs" />
     <Compile Include="QueueAdapter\CloudQueueConstants.cs" />
     <Compile Include="QueueAdapter\CloudQueueListener.cs" />

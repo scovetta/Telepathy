@@ -9,17 +9,19 @@
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
 
-    public abstract class CloudQueueClientBase
+    public abstract class CloudQueueClientBase : IDisposable
     {
         protected CloudQueueClientBase()
         {
+            ResponsePool.OnMessagePut += this.CheckResponseFromPool;
         }
 
-        protected CloudQueueClientBase(IQueueListener<CloudQueueResponseDto> listener, IQueueWriter<CloudQueueCmdDto> writer)
+        protected CloudQueueClientBase(IQueueListener<CloudQueueResponseDto> listener, IQueueWriter<CloudQueueCmdDto> writer) : this()
         {
             this.Listener = listener;
             this.Writer = writer;
             this.Listener.MessageReceivedCallback = this.ReceiveResponse;
+            
         }
 
         protected IQueueListener<CloudQueueResponseDto> Listener { get; set; }
@@ -64,9 +66,32 @@
             else
             {
                 Trace.TraceError($"Unknown request ID: {item.RequestId}");
+                ResponsePool.Put(item);
+            }
+        }
 
-                // TODO: add to message hospital
-                // throw new InvalidOperationException($"Unknown request ID: {item.RequestId}");
+        protected void CheckResponseFromPool(string requestId)
+        {
+            if (this.requestTrackDictionary.ContainsKey(requestId))
+            {
+                if (ResponsePool.TryGetAndRemove(requestId, out var item))
+                {
+                    if (this.requestTrackDictionary.TryRemove(item.RequestId, out var tcs))
+                    {
+                        if (this.responseTypeMapping.TryGetValue(item.CmdName, out var setRes))
+                        {
+                            setRes(item.Response, tcs);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException($"Unknown cmd for request {item.RequestId}: {item.CmdName}");
+                        }
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException($"Task completion source for request {requestId} missing");
+                    }
+                }
             }
         }
 
@@ -97,6 +122,30 @@
             {
                 throw new InvalidOperationException($"TaskCompletionSource type mismatch.");
             }
+        }
+
+        private void ReleaseUnmanagedResources()
+        {
+            ResponsePool.OnMessagePut -= this.CheckResponseFromPool;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            ReleaseUnmanagedResources();
+            if (disposing)
+            {
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~CloudQueueClientBase()
+        {
+            Dispose(false);
         }
     }
 }
