@@ -241,7 +241,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                         this.SessionInfo.Headnode,
                         this.SessionInfo.Id,
                         this.sessionHash,
-                        this.SessionInfo.AzureRequestQueueUri,
+                        this.SessionInfo.AzureRequestQueueUris,
                         this.SessionInfo.AzureRequestBlobUri);
                 }
             }
@@ -570,7 +570,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             info.UseWindowsClientCredential = startInfo.UseWindowsClientCredential;
 
             info.UseAzureQueue = startInfo.UseAzureQueue;
-            info.AzureRequestQueueUri = result.AzureRequestQueueUri;
+            info.AzureRequestQueueUris = result.AzureRequestQueueUris;
             info.AzureRequestBlobUri = result.AzureRequestBlobUri;
             info.UseAad = startInfo.UseAad;
             info.AzureControllerRequestQueueUri = result.AzureControllerRequestQueueUri;

@@ -186,7 +186,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 info.BrokerUniqueId = result.BrokerUniqueId;
 
                 info.UseAzureQueue = result.UseAzureQueue;
-                info.AzureRequestQueueUri = result.AzureRequestQueueUri;
+                info.AzureRequestQueueUris = result.AzureRequestQueueUris;
                 info.AzureRequestBlobUri = result.AzureRequestBlobUri;
 
                 info.Username = attachInfo.Username;
