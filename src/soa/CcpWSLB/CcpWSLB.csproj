@@ -11,6 +11,7 @@
     <DefineConstants>$(DefineConstants);Broker</DefineConstants>
     <DefineTrace>true</DefineTrace>
     <Localizable>true</Localizable>
+	<LangVersion>latest</LangVersion>
     <!--
       NoWarn 0436 because broker is referencing both session API's assembly and its
       source file "AuthenticationFailure.cs" and "RetryOperationError.cs".
@@ -43,8 +44,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>latest</LangVersion>
+    <WarningLevel>4</WarningLevel>    
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>

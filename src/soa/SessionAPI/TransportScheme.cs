@@ -59,6 +59,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Specifies a string constant for the NetHttp binding scheme
         /// </summary>
-        NetHttp = 0x10
+        NetHttp = 0x10,
+
+        AzureStorageTable = 0x20
     }
 }

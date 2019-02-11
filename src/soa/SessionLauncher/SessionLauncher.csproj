@@ -292,6 +292,10 @@
       <Project>{78e5e61b-dd12-475a-845b-7da3f6b0f987}</Project>
       <Name>Scheduler</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\WcfUtil\AzureStorageBinding\AzureStorageBinding.csproj">
+      <Project>{5FDAE262-06FD-49C6-B44F-EC1AF1F326E5}</Project>
+      <Name>AzureStorageBinding</Name>
+    </ProjectReference>
     <ProjectReference Include="..\base\BrokerBase.csproj">
       <Project>{3f01d480-4cde-4f46-99ea-95ceda05063e}</Project>
       <Name>BrokerBase</Name>

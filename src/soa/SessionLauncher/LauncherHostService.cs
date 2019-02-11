@@ -25,6 +25,8 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
     using System.Threading;
     using System.Threading.Tasks;
 
+    using AzureStorageBinding.Table.Binding;
+
     using Microsoft.Hpc.AADAuthUtil;
     using Microsoft.Hpc.Scheduler.Session.Data.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.DataService.REST;
@@ -256,6 +258,10 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
             this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher), BindingHelper.HardCodedSessionLauncherNetTcpBinding, string.Empty);
             this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher), BindingHelper.HardCodedInternalSessionLauncherNetTcpBinding, "Internal");
             this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher), BindingHelper.HardCodedNoAuthSessionLauncherNetTcpBinding, "AAD");
+            this.launcherHost.AddServiceEndpoint(
+                typeof(ISessionLauncher),
+                new TableTransportBinding() { ConnectionString = "UseDevelopmentStorage=true", TargetPartitionKey = "all" },
+                "az.table://SessionLauncher");
             TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher find cert {0}", HpcContext.Get().GetSSLThumbprint().GetAwaiter().GetResult());
             this.launcherHost.Credentials.UseInternalAuthenticationAsync().GetAwaiter().GetResult();
             this.launcherHost.Faulted += this.SessionLauncherHostFaultHandler;

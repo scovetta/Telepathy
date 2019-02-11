@@ -9,9 +9,12 @@
 
 namespace Microsoft.Hpc.Scheduler.Session
 {
+    using System;
     using System.Collections.Generic;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
+
+    using AzureStorageBinding.Table.Binding;
 
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;
@@ -186,6 +189,10 @@ namespace Microsoft.Hpc.Scheduler.Session
                     binding = BindingHelper.HardCodedSessionLauncherHttpsBinding;
                 }
                 return binding;
+            }
+            else if((info.TransportScheme & TransportScheme.AzureStorageTable) == TransportScheme.AzureStorageTable)
+            {
+                return new TableTransportBinding(){ ConnectionString = "UseDevelopmentStorage=true", TargetPartitionKey = Guid.NewGuid().ToString()};
             }
             else if ((info.TransportScheme & TransportScheme.Custom) == TransportScheme.Custom)
             {

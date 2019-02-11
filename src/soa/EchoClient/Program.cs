@@ -126,6 +126,9 @@ namespace Microsoft.Hpc.EchoClient
                 case "custom":
                     info.TransportScheme = TransportScheme.Custom;
                     break;
+                case "aztable":
+                    info.TransportScheme = TransportScheme.AzureStorageTable;
+                    break;
                 default:
                     break;
             }

@@ -21,7 +21,6 @@
             this.Listener = listener;
             this.Writer = writer;
             this.Listener.MessageReceivedCallback = this.ReceiveResponse;
-            
         }
 
         protected IQueueListener<CloudQueueResponseDto> Listener { get; set; }

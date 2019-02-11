@@ -305,6 +305,10 @@
       <Project>{8f4412aa-a6e0-49e5-a331-1b1047e2159d}</Project>
       <Name>StandaloneDataClient</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\WcfUtil\AzureStorageBinding\AzureStorageBinding.csproj">
+      <Project>{5FDAE262-06FD-49C6-B44F-EC1AF1F326E5}</Project>
+      <Name>AzureStorageBinding</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SessionAPI.Data\SessionAPI.Data.csproj">
       <Project>{40fc3ebb-d692-4d69-b6a9-6cbd46f19025}</Project>
       <Name>SessionAPI.Data</Name>

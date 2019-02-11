@@ -213,6 +213,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             return SoaHelper.CreateEndpointAddress(uri, true, useInternalChannel);
         }
 
-        private static EndpointAddress GetEndpoint(SessionInitInfoBase info) => GetEndpoint(new Uri(info.GetSessionLauncherAddressAsync().GetAwaiter().GetResult()), info.IsAadOrLocalUser);
+        private static EndpointAddress GetEndpoint(SessionInitInfoBase info)
+        {
+            if (info.TransportScheme == TransportScheme.AzureStorageTable)
+            {
+                return new EndpointAddress( new Uri("az.table://SessionLauncher"));
+            }
+
+            return GetEndpoint(new Uri(info.GetSessionLauncherAddressAsync().GetAwaiter().GetResult()), info.IsAadOrLocalUser);
+        }
     }
 }
