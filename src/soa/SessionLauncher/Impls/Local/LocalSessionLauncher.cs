@@ -55,7 +55,8 @@
             BrokerConfigurations brokerConfigurations,
             string hostpath)
         {
-            int sessionId = LocalSessionConfiguration.GetNextSessionId();
+            // int sessionId = LocalSessionConfiguration.GetNextSessionId();
+            int sessionId = SessionStartInfo.StandaloneSessionId;
             Process.Start(
                 LocalSessionConfiguration.BrokerLauncherExePath,
                 $"-d --ServiceRegistrationPath {LocalSessionConfiguration.ServiceRegistrationPath} --AzureStorageConnectionString {LocalSessionConfiguration.BrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True");

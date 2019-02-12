@@ -14,17 +14,17 @@
     {
         private IController instance;
 
-        internal BrokerWorkerControllerQueueWatcher(IController instance, string connectionString)
+        internal BrokerWorkerControllerQueueWatcher(IController instance, string connectionString, int sessionId)
         {
             this.instance = instance;
             CloudQueueSerializer serializer = new CloudQueueSerializer(CloudQueueCmdTypeBinder.BrokerLauncherBinder);
 
             this.QueueListener = new CloudQueueListener<CloudQueueCmdDto>(
                 connectionString,
-                CloudQueueConstants.BrokerWorkerControllerRequestQueueName,
+                CloudQueueConstants.GetBrokerWorkerControllerRequestQueueName(sessionId),
                 serializer,
                 this.InvokeInstanceMethodFromCmdObj);
-            this.QueueWriter = new CloudQueueWriter<CloudQueueResponseDto>(connectionString, CloudQueueConstants.BrokerWorkerControllerResponseQueueName, serializer);
+            this.QueueWriter = new CloudQueueWriter<CloudQueueResponseDto>(connectionString, CloudQueueConstants.GetBrokerWorkerControllerResponseQueueName(sessionId), serializer);
             this.QueueListener.StartListen();
 
             this.RegisterCmdDelegates();

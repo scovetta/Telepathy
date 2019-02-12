@@ -950,7 +950,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                         }
 
                         AzureQueueProxy azureQueueProxy = this.frontendFactory.GetBrokerClientAQ();
-                        azureQueueProxy.SendMessage(message);
+                        azureQueueProxy.SendMessage(this.clientId, message);
                     }
                     else
                     {

@@ -28,6 +28,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
     <DebugSymbols>true</DebugSymbols>
@@ -249,7 +250,7 @@
     <Compile Include="Common\GracefulPreemptionHandler.cs" />
     <Compile Include="Common\IBrokerObserver.cs" />
     <Compile Include="Common\INodeMappingCache.cs" />
-    <Compile Include="Common\InternalServiceJobMonitor.cs" />
+    <Compile Include="Common\ServiceJobMonitorBase.cs" />
     <Compile Include="Common\ISchedulerAdapterAsync.cs" />
     <Compile Include="Common\NodeMappingData.cs" />
     <Compile Include="Common\ObserverItem.cs" />

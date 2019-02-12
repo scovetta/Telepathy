@@ -579,6 +579,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// store a dummy session Id by default
         /// </summary>
+        // TODO: rename
         private static readonly int standaloneSessionId = 0;
 
         public static int StandaloneSessionId

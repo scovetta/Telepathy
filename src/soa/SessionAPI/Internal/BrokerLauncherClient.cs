@@ -178,7 +178,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             //     return SoaHelper.CreateInternalCertEndpointAddress(uri, certThrumbprint);
             // }
 
-            return SoaHelper.CreateEndpointAddress(uri, true, info.IsAadOrLocalUser);
+            return SoaHelper.CreateEndpointAddress(uri,false, info.IsAadOrLocalUser);
         }
     }
 }

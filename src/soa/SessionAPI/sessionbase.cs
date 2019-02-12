@@ -223,7 +223,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                 }
 
                 // Start heartbeat to broker
-                if (!this.SessionInfo.UseInprocessBroker)
+                if (!this.SessionInfo.UseInprocessBroker && this.SessionInfo.UseAzureQueue != true /* TODO: recover heartbeat via storage queue */)
                 {
                     this.heartbeatHelper = new BrokerHeartbeatHelper(
                         this.Info.Id,
@@ -241,7 +241,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                         this.SessionInfo.Headnode,
                         this.SessionInfo.Id,
                         this.sessionHash,
-                        this.SessionInfo.AzureRequestQueueUri,
+                        this.SessionInfo.AzureRequestQueueUris,
                         this.SessionInfo.AzureRequestBlobUri);
                 }
             }
@@ -570,7 +570,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             info.UseWindowsClientCredential = startInfo.UseWindowsClientCredential;
 
             info.UseAzureQueue = startInfo.UseAzureQueue;
-            info.AzureRequestQueueUri = result.AzureRequestQueueUri;
+            info.AzureRequestQueueUris = result.AzureRequestQueueUris;
             info.AzureRequestBlobUri = result.AzureRequestBlobUri;
             info.UseAad = startInfo.UseAad;
             info.AzureControllerRequestQueueUri = result.AzureControllerRequestQueueUri;

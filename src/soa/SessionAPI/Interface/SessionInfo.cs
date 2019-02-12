@@ -121,15 +121,15 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Azure request queue SAS Uri
         /// </summary>
-        private string azureRequestQueueUri;
+        private string[] azureRequestQueueUris;
 
         /// <summary>
         /// Get or set Azure request queue SAS Uri
         /// </summary>
-        public string AzureRequestQueueUri
+        public string[] AzureRequestQueueUris
         {
-            get { return azureRequestQueueUri; }
-            set { azureRequestQueueUri = value; }
+            get { return this.azureRequestQueueUris; }
+            set { this.azureRequestQueueUris = value; }
         }
 
         /// <summary>

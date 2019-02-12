@@ -57,7 +57,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Interface
         /// <summary>
         /// The request queue SAS Uri
         /// </summary>
-        private string azureRequestQueueUri;
+        private string[] azureRequestQueueUris;
 
         /// <summary>
         /// The request blob container SAS Uri
@@ -170,10 +170,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Interface
         ///   <para />
         /// </value>
         [DataMember]
-        public string AzureRequestQueueUri
+        public string[] AzureRequestQueueUris
         {
-            get { return this.azureRequestQueueUri; }
-            set { this.azureRequestQueueUri = value; }
+            get { return this.azureRequestQueueUris; }
+            set { this.azureRequestQueueUris = value; }
         }
 
         /// <summary>

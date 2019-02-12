@@ -44,7 +44,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
         /// <summary>
         /// Stores the service job monitor instance
         /// </summary>
-        private InternalServiceJobMonitor monitor;
+        private ServiceJobMonitorBase monitor;
 
         /// <summary>
         /// Stores the dispatcher manager
@@ -62,7 +62,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
         /// <param name="sharedData">indicating the shared data</param>
         /// <param name="monitor">indicating the monitor</param>
         /// <param name="dispatcherManager">indicating the dispatcher manager</param>
-        public SchedulerAdapterClientFactory(SharedData sharedData, InternalServiceJobMonitor monitor, DispatcherManager dispatcherManager, IHpcContext context)
+        public SchedulerAdapterClientFactory(SharedData sharedData, ServiceJobMonitorBase monitor, DispatcherManager dispatcherManager, IHpcContext context)
         {
             this.sharedData = sharedData;
             this.monitor = monitor;
