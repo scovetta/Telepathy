@@ -315,11 +315,11 @@ namespace Microsoft.Hpc.ServiceBroker
                         requestBlobUri = this.azureQueueProxy.RequestBlobUri;
                         controllerRequestQueueUri = CloudQueueCreationModule.CreateCloudQueueAndGetSas(
                             brokerInfo.AzureStorageConnectionString,
-                            CloudQueueConstants.BrokerWorkerControllerRequestQueueName,
+                            CloudQueueConstants.GetBrokerWorkerControllerRequestQueueName(this.SessionId),
                             CloudQueueCreationModule.AddMessageSasPolicy).GetAwaiter().GetResult();
                         controllerResponseQueueUri = CloudQueueCreationModule.CreateCloudQueueAndGetSas(
                             brokerInfo.AzureStorageConnectionString,
-                            CloudQueueConstants.BrokerWorkerControllerResponseQueueName,
+                            CloudQueueConstants.GetBrokerWorkerControllerResponseQueueName(this.SessionId),
                             CloudQueueCreationModule.ProcessMessageSasPolicy).GetAwaiter().GetResult();
                     }
                     else

@@ -96,7 +96,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// <summary>
         /// Session Id.
         /// </summary>
-        private int sessionId;
+        public int SessionId { get; private set; }
 
         /// <summary>
         /// Azure storage connection string
@@ -314,17 +314,17 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             ServicePointManager.UseNagleAlgorithm = false;
 
             this.clusterName = clusterName;
-            this.sessionId = sessionId;
+            this.SessionId = sessionId;
             this.clusterHash = clusterHash;
 
             this.azureStorageConnectionString = azureStorageConnectionString;
 
             // build the request and response queue
-            // var requestStorageName = SoaHelper.GetRequestStorageName(clusterHash, sessionId);
+            // var requestStorageName = SoaHelper.GetRequestStorageName(clusterHash, SessionId);
             var requestBlobContainerName = SoaHelper.GetRequestStorageName(clusterHash, sessionId);
             var requestQueueNames = Enumerable.Range(0, MessageRetrieveConcurrencyLevel).Select(i => SoaHelper.GetRequestStorageName(clusterHash, sessionId) + $"-{i}").ToArray();
 
-            // this.responseStorageNamePrefix = SoaHelper.GetResponseStorageName(clusterId, sessionId);
+            // this.responseStorageNamePrefix = SoaHelper.GetResponseStorageName(clusterId, SessionId);
 
             // exponential retry
             this.CreateStorageClient(DefaultRetryPolicy);
@@ -687,11 +687,11 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             {
                 if (!this.responseMessageClients.Keys.Contains(sessionHash))
                 {
-                    string responseStorageName = SoaHelper.GetResponseStorageName(this.clusterHash, this.sessionId, sessionHash);
+                    string responseStorageName = SoaHelper.GetResponseStorageName(this.clusterHash, this.SessionId, sessionHash);
                     CloudQueue responseQueue = this.queueClient.GetQueueReference(responseStorageName);
                     CreateQueueWithRetry(responseQueue);
 
-                    if (this.sessionId == SessionStartInfo.StandaloneSessionId)
+                    if (this.SessionId == SessionStartInfo.StandaloneSessionId)
                     {
                         responseQueue.Clear();
                     }
