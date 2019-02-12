@@ -20,7 +20,7 @@ namespace Microsoft.Hpc.ServiceBroker
     /// Monitor the service job
     /// </summary>
     [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Multiple)]
-    class ServiceJobMonitor : InternalServiceJobMonitor
+    class ServiceJobMonitor : ServiceJobMonitorBase
     {      
         /// <summary>
         /// Initializes a new instance of the ServiceJobMonitor class

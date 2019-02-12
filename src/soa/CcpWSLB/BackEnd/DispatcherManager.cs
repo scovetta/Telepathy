@@ -129,7 +129,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <summary>
         /// Stores the service job monitor
         /// </summary>
-        private InternalServiceJobMonitor monitor;
+        private ServiceJobMonitorBase monitor;
 
         /// <summary>
         /// Stores a value indicating whether backend binding is http
@@ -169,7 +169,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="queueFactory">indicating the queue factory</param>
         /// <param name="sharedData">indicating the shared data</param>
         /// <param name="frontendResult">indicating the frontend result</param>
-        public DispatcherManager(BindingsSection bindings, SharedData sharedData, BrokerObserver observer, InternalServiceJobMonitor monitor, BrokerQueueFactory queueFactory, IHpcContext context)
+        public DispatcherManager(BindingsSection bindings, SharedData sharedData, BrokerObserver observer, ServiceJobMonitorBase monitor, BrokerQueueFactory queueFactory, IHpcContext context)
         {
             this.dispatcherDic = new Dictionary<int, Dispatcher>();
             this.failedDispatcherList = new List<int>();

@@ -66,7 +66,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// <summary>
         /// Store the service job monitor
         /// </summary>
-        private InternalServiceJobMonitor monitor;
+        private ServiceJobMonitorBase monitor;
 
         /// <summary>
         /// Stores the frontend result

@@ -23,7 +23,7 @@ namespace Microsoft.Hpc.ServiceBroker
 
     using Microsoft.Hpc.RESTServiceModel;
 
-    class DummyServiceJobMonitor : InternalServiceJobMonitor
+    class DummyServiceJobMonitor : ServiceJobMonitorBase
     {
         /// <summary>
         /// Stores some uri informations for REST server

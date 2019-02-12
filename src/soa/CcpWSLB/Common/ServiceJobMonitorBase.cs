@@ -33,7 +33,7 @@ namespace Microsoft.Hpc.ServiceBroker
     /// Internal Monitor the service job
     /// </summary>
     [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Multiple)]
-    internal abstract class InternalServiceJobMonitor : ReferenceObject, ISchedulerNotify
+    internal abstract class ServiceJobMonitorBase : ReferenceObject, ISchedulerNotify
     {
         /// <summary>
         /// The first time the update status is called.
@@ -220,7 +220,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// </summary>
         /// <param name="sharedData">indicating the shared data</param>
         /// <param name="stateManager">indicating the state manager</param>
-        public InternalServiceJobMonitor(SharedData sharedData, BrokerStateManager stateManager, NodeMappingData nodeMappingData, IHpcContext context)
+        public ServiceJobMonitorBase(SharedData sharedData, BrokerStateManager stateManager, NodeMappingData nodeMappingData, IHpcContext context)
         {
             this.context = context;
             this.sharedData = sharedData;
