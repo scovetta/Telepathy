@@ -32,7 +32,7 @@
             {
                 this.endpointPrefix = SessionLauncherClient.EndpointPrefix;
             }
-            else if ((info.TransportScheme & TransportScheme.AzureStorageTable) == TransportScheme.AzureStorageTable)
+            else if ((info.TransportScheme & TransportScheme.AzureStorage) == TransportScheme.AzureStorage)
             {
                 this.endpointPrefix = "az.table";
             }

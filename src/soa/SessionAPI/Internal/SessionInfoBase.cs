@@ -71,5 +71,9 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// This property is safe to be pushed down to <see cref="SessionInfo"/>.
         /// </summary>
         public string Headnode { get; set; }
+
+        public string AzureStorageConnectionString { get; set; }
+
+        public string AzureTableStoragePartitionKey { get; set; }
     }
 }

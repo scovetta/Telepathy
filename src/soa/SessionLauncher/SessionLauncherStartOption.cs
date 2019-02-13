@@ -1,11 +1,5 @@
 ﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
     using CommandLine;
 
     internal class SessionLauncherStartOption
@@ -42,6 +36,9 @@
 
         [Option("LocalBrokerStorageConnectionString", SetName = "Local")]
         public string LocalBrokerStorageConnectionString { get; set; }
+
+        [Option("SessionLauncherStorageConnectionString")]
+        public string SessionLauncherStorageConnectionString { get; set; }
 
         [Option('d', HelpText = "Start as console application")]
         public bool AsConsole { get; set; }

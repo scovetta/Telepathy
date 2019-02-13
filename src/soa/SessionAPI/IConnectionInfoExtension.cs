@@ -11,13 +11,13 @@ namespace Microsoft.Hpc.Scheduler.Session
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
 
     using AzureStorageBinding.Table.Binding;
 
     using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker;
 
     /// <summary>
@@ -190,9 +190,27 @@ namespace Microsoft.Hpc.Scheduler.Session
                 }
                 return binding;
             }
-            else if((info.TransportScheme & TransportScheme.AzureStorageTable) == TransportScheme.AzureStorageTable)
+            else if ((info.TransportScheme & TransportScheme.AzureStorage) == TransportScheme.AzureStorage)
             {
-                return new TableTransportBinding(){ ConnectionString = "UseDevelopmentStorage=true", TargetPartitionKey = Guid.NewGuid().ToString()};
+                if (string.IsNullOrEmpty(info.AzureStorageConnectionString))
+                {
+                    Trace.TraceError($"{nameof(info.AzureStorageConnectionString)} is not presented in {nameof(IConnectionInfo)}");
+                    throw new InvalidOperationException($"{nameof(info.AzureStorageConnectionString)} is not presented in {nameof(IConnectionInfo)}");
+                }
+
+                string partitionKey;
+                if (string.IsNullOrEmpty(info.AzureTableStoragePartitionKey))
+                {
+                    partitionKey = Guid.NewGuid().ToString();
+                    Trace.TraceWarning($"{nameof(info.AzureTableStoragePartitionKey)} is not presented in {nameof(IConnectionInfo)}. Use generated key {partitionKey}");
+                }
+                else
+                {
+                    partitionKey = info.AzureTableStoragePartitionKey;
+                    Trace.TraceInformation($"{nameof(info.AzureTableStoragePartitionKey)}: {partitionKey}");
+                }
+
+                return new TableTransportBinding() { ConnectionString = info.AzureStorageConnectionString, TargetPartitionKey = partitionKey };
             }
             else if ((info.TransportScheme & TransportScheme.Custom) == TransportScheme.Custom)
             {

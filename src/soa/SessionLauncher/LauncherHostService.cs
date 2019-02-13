@@ -258,10 +258,14 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
             this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher), BindingHelper.HardCodedSessionLauncherNetTcpBinding, string.Empty);
             this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher), BindingHelper.HardCodedInternalSessionLauncherNetTcpBinding, "Internal");
             this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher), BindingHelper.HardCodedNoAuthSessionLauncherNetTcpBinding, "AAD");
-            this.launcherHost.AddServiceEndpoint(
-                typeof(ISessionLauncher),
-                new TableTransportBinding() { ConnectionString = "UseDevelopmentStorage=true", TargetPartitionKey = "all" },
-                "az.table://SessionLauncher");
+            if (SessionLauncherRuntimeConfiguration.OpenAzureStorageListener)
+            {
+                this.launcherHost.AddServiceEndpoint(
+                    typeof(ISessionLauncher),
+                    new TableTransportBinding() { ConnectionString = SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString, TargetPartitionKey = "all" },
+                    "az.table://SessionLauncher");
+            }
+
             TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher find cert {0}", HpcContext.Get().GetSSLThumbprint().GetAwaiter().GetResult());
             this.launcherHost.Credentials.UseInternalAuthenticationAsync().GetAwaiter().GetResult();
             this.launcherHost.Faulted += this.SessionLauncherHostFaultHandler;
@@ -327,8 +331,6 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 // Use insecure binding until unified authentication logic is implemented
                 this.delegationHost.AddServiceEndpoint(typeof(ISchedulerAdapter), BindingHelper.HardCodedUnSecureNetTcpBinding, string.Empty);
             }
-
-            
 
             this.delegationHost.Faulted += SchedulerDelegationHostFaultHandler;
             this.delegationHost.Open();

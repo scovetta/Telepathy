@@ -215,7 +215,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
         private static EndpointAddress GetEndpoint(SessionInitInfoBase info)
         {
-            if (info.TransportScheme == TransportScheme.AzureStorageTable)
+            if (info.TransportScheme == TransportScheme.AzureStorage)
             {
                 return new EndpointAddress( new Uri("az.table://SessionLauncher"));
             }

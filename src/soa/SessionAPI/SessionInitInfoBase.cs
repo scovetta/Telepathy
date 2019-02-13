@@ -31,6 +31,9 @@
             }
         }
 
+        public string AzureStorageConnectionString { get; set; }
+
+        public string AzureTableStoragePartitionKey { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="TransportScheme"/>

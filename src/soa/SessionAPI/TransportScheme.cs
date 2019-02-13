@@ -61,6 +61,6 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         NetHttp = 0x10,
 
-        AzureStorageTable = 0x20
+        AzureStorage = 0x20
     }
 }

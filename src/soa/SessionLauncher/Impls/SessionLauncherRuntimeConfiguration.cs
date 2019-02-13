@@ -5,5 +5,9 @@
         internal static bool AsConsole { get; set; } = false;
 
         internal static SchedulerType SchedulerType { get; set; } = SchedulerType.Unknown;
+
+        internal static bool OpenAzureStorageListener => !string.IsNullOrEmpty(SessionLauncherStorageConnectionString);
+
+        internal static string SessionLauncherStorageConnectionString { get; set; }
     }
 }
