@@ -290,7 +290,7 @@ namespace Microsoft.Hpc.ServiceBroker
                 string requestBlobUri = string.Empty;
                 string controllerRequestQueueUri = string.Empty;
                 string controllerResponseQueueUri = string.Empty;
-                if (startInfo.UseAzureQueue == true)
+                if (startInfo.UseAzureStorage)
                 {
                     int clusterHash = 0;
                     if (!string.IsNullOrEmpty(brokerInfo.ClusterId))

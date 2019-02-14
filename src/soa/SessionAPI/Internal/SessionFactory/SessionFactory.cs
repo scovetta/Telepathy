@@ -29,12 +29,12 @@
                         && sessionAllocateInfo.BrokerLauncherEpr.Count() == 1
                         && sessionAllocateInfo.BrokerLauncherEpr[0] == SessionInternalConstants.BrokerConnectionStringToken)
                     {
-                        if (!startInfo.UseAzureQueue.GetValueOrDefault())
+                        if (!startInfo.UseAzureStorage)
                         {
                             SessionBase.TraceSource.TraceEvent(
                                 TraceEventType.Error,
                                 0,
-                                "[Session:{0}] Server side only supports communication via AzureStorageQueue while client doesn't specify UseAzureQueue property.",
+                                "[Session:{0}] Server side only supports communication via AzureStorageQueue while client doesn't specify UseAzureQueue property and not using AzureStorage scheme.",
                                 sessionAllocateInfo.Id);
                             throw new InvalidOperationException("Server side only supports communication via AzureStorageQueue while client doesn't specify UseAzureQueue property.");
                         }

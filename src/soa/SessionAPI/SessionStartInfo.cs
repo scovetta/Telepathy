@@ -1222,6 +1222,8 @@ namespace Microsoft.Hpc.Scheduler.Session
             }
         }
 
+        public bool UseAzureStorage => this.data.UseAzureStorage;
+
         #region ISerializable Members
         /// <summary>
         ///   <para>Initializes a new instance of the 
