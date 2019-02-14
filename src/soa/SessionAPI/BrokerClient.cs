@@ -472,6 +472,10 @@ namespace Microsoft.Hpc.Scheduler.Session
                 Utility.ThrowIfInvalid((this.session.Info.TransportScheme & TransportScheme.Custom) == TransportScheme.Custom, "binding", SR.BindingTransportSchemeMismatch);
                 scheme = TransportScheme.Custom;
             }
+            else if (this.session.Info is SessionInfo sessionInfo && sessionInfo.UseAzureStorage)
+            {
+                // Do not need to check binding
+            }
             else if (this.session.Info.UseInprocessBroker)
             {
                 // Do not need to check binding
@@ -484,7 +488,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             //save the transport scheme for the client
             this.transportScheme = scheme;
 
-            if (((SessionInfo)this.session.Info).UseAzureQueue.GetValueOrDefault() || scheme == TransportScheme.Http)
+            if (((SessionInfo)this.session.Info).UseAzureStorage|| scheme == TransportScheme.Http)
             {
                 this.frontendFactory = new HttpBrokerFrontendFactory(this.clientId, binding, this.session, scheme, this.callbackManager);
             }
@@ -852,7 +856,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             bool isFailed = false;
             lock (typedMessageConverter)
             {
-                if (this.transportScheme == TransportScheme.Http)
+                if (this.transportScheme == TransportScheme.Http || this.transportScheme == TransportScheme.AzureStorage)
                 {
                     message = typedMessageConverter.ToMessage(request, MessageVersion.Soap11);
                 }
@@ -941,7 +945,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                     this.CheckDisposed();
                     this.CheckBrokerAvailability();
 
-                    if ((this.session.Info as SessionInfo).UseAzureQueue == true)
+                    if ((this.session.Info as SessionInfo).UseAzureStorage == true)
                     {
                         // add username in the message header if secure
                         if ((this.session.Info as SessionInfo).Secure)
@@ -2030,6 +2034,10 @@ namespace Microsoft.Hpc.Scheduler.Session
                 binding = BindingHelper.GetBinding(TransportScheme.Http, this.session.Info.Secure);
                 binding.ReceiveTimeout = this.defaultResponsesTimeout == Timeout.Infinite ? TimeSpan.MaxValue : new TimeSpan(0, 0, 0, 0, this.defaultResponsesTimeout);
                 binding.SendTimeout = binding.ReceiveTimeout; // send timeout for http should be the same as receive timeout to pull the response
+            }
+            else if ((this.session.Info.TransportScheme & TransportScheme.AzureStorage) == TransportScheme.AzureStorage)
+            {
+                Trace.TraceInformation("No binding returned for AzureStorage scheme");
             }
             else if ((this.session.Info.TransportScheme & TransportScheme.Custom) == TransportScheme.Custom)
             {

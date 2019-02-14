@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter.Module
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Microsoft.WindowsAzure.Storage;
@@ -59,5 +60,9 @@
         {
             return GetCloudQueueSas(await CreateCloudQueueIfNotExistsAsync(GetCloudQueueReference(connectionString, queueName)), queuePolicy);
         }
+
+        public static async Task ClearCloudQueueAsync(string connectionString, string queueName) => await GetCloudQueueReference(connectionString, queueName).ClearAsync();
+
+        public static Task ClearCloudQueuesAsync(string connectionString, string[] queueNames) => Task.WhenAll(queueNames.Select(n => ClearCloudQueueAsync(connectionString, n)));
     }
 }

@@ -313,14 +313,20 @@ namespace Microsoft.Hpc.ServiceBroker
                         this.azureQueueProxy = new AzureQueueProxy(brokerInfo.ClusterName, clusterHash, this.SessionId, brokerInfo.AzureStorageConnectionString);
                         requestQueueUris = this.azureQueueProxy.RequestQueueUris;
                         requestBlobUri = this.azureQueueProxy.RequestBlobUri;
+                        var requestQName = CloudQueueConstants.GetBrokerWorkerControllerRequestQueueName(this.SessionId);
+                        var responseQName = CloudQueueConstants.GetBrokerWorkerControllerResponseQueueName(this.SessionId);
                         controllerRequestQueueUri = CloudQueueCreationModule.CreateCloudQueueAndGetSas(
                             brokerInfo.AzureStorageConnectionString,
-                            CloudQueueConstants.GetBrokerWorkerControllerRequestQueueName(this.SessionId),
+                            requestQName,
                             CloudQueueCreationModule.AddMessageSasPolicy).GetAwaiter().GetResult();
                         controllerResponseQueueUri = CloudQueueCreationModule.CreateCloudQueueAndGetSas(
                             brokerInfo.AzureStorageConnectionString,
-                            CloudQueueConstants.GetBrokerWorkerControllerResponseQueueName(this.SessionId),
+                            responseQName,
                             CloudQueueCreationModule.ProcessMessageSasPolicy).GetAwaiter().GetResult();
+                        if (this.SessionId == SessionStartInfo.StandaloneSessionId)
+                        {
+                            CloudQueueCreationModule.ClearCloudQueuesAsync(brokerInfo.AzureStorageConnectionString, new[] { requestQName, responseQName });
+                        }
                     }
                     else
                     {
@@ -350,7 +356,7 @@ namespace Microsoft.Hpc.ServiceBroker
                     requestBlobUri,
                     controllerRequestQueueUri,
                     controllerResponseQueueUri,
-                    startInfo.UseAzureQueue);
+                    startInfo.UseAzureStorage);
                 BrokerTracing.TraceVerbose("[BrokerEntry] Initialization: Step 12: Build initialization result suceeded.");
                 BrokerTracing.TraceInfo("[BrokerEntry] Initialization succeeded.");
                 return result;

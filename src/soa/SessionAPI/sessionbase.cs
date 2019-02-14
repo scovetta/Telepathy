@@ -201,10 +201,10 @@ namespace Microsoft.Hpc.Scheduler.Session
                 this.sessionHash = Guid.NewGuid().ToString().GetHashCode();
             }
 
-            if (info is SessionInfo)
+            if (info is SessionInfo sessionInfo)
             {
-                this.UserName = (info as SessionInfo).Username;
-                this.InternalPassword = (info as SessionInfo).InternalPassword;
+                this.UserName = sessionInfo.Username;
+                this.InternalPassword = sessionInfo.InternalPassword;
 
                 foreach (string uri in this.SessionInfo.BrokerEpr)
                 {
@@ -223,7 +223,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                 }
 
                 // Start heartbeat to broker
-                if (!this.SessionInfo.UseInprocessBroker && this.SessionInfo.UseAzureQueue != true /* TODO: recover heartbeat via storage queue */)
+                if (!this.SessionInfo.UseInprocessBroker && !this.SessionInfo.UseAzureStorage /* TODO: recover heartbeat via storage queue */)
                 {
                     this.heartbeatHelper = new BrokerHeartbeatHelper(
                         this.Info.Id,
@@ -235,7 +235,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                 }
 
                 // build the proxy if using azure storage queue
-                if (this.SessionInfo.UseAzureQueue == true)
+                if (this.SessionInfo.UseAzureStorage)
                 {
                     this.AzureQueueProxy = new AzureQueueProxy(
                         this.SessionInfo.Headnode,

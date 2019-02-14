@@ -403,5 +403,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         internal string AzureControllerRequestQueueUri { get; set; }
 
         internal string AzureControllerResponseQueueUri { get; set; }
+
+        public bool UseAzureStorage => this.TransportScheme == TransportScheme.AzureStorage || this.UseAzureQueue.GetValueOrDefault();
     }
 }

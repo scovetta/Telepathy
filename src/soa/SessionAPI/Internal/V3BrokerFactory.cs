@@ -104,7 +104,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     {
 
                         var session = new V3Session(info, startInfo.Headnode, startInfo.ShareSession, binding);
-                        if (startInfo.UseAzureQueue.GetValueOrDefault())
+                        if (startInfo.UseAzureStorage)
                         {
                             session.BrokerLauncherClient = brokerLauncher;
                         }

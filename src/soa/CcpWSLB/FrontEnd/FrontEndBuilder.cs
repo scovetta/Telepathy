@@ -478,7 +478,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             BrokerTracing.TraceVerbose("[FrontEndBuilder] Build frontend: Step 3: Generate broker uri: {0}", brokerHttpUri);
 
             // Build the frontend
-            if (sharedData.StartInfo.UseAzureQueue == true)
+            if (sharedData.StartInfo.UseAzureStorage == true)
             {
                 BrokerTracing.TraceVerbose("[FrontEndBuilder] Build frontend: AzureQueueFrontEnd");
                 result.FrontEnd = new AzureQueueFrontEnd(azureQueueProxy, brokerHttpUri, observer, clientManager, brokerAuth, sharedData);
@@ -505,7 +505,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             Debug.Assert(behavior != null, "BrokerController must have a behavior.");
             behavior.InstanceContextMode = InstanceContextMode.Single;
             ServiceEndpoint endpoint = result.ControllerFrontend.AddServiceEndpoint(typeof(IController), binding, DefaultControllerPostfix);
-            if (sharedData.StartInfo.UseAzureQueue == true)
+            if (sharedData.StartInfo.UseAzureStorage == true)
             {
                 endpoint.Behaviors.Add(new ControllerFrontendProvider(true, clientManager, brokerAuth, observer, azureQueueProxy));
             }
