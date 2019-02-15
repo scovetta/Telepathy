@@ -231,7 +231,7 @@ namespace Microsoft.Hpc.ServiceBroker
                 ServiceConfiguration serviceConfig;
                 BrokerConfigurations brokerConfig;
                 BindingsSection bindings;
-                SoaAmbientConfig.StandAlone = startInfo.IsNoSession || startInfo.IpAddress != null; // TODO: this is a hack. Working mode should be decided by something like a *SchedulerType* filed.
+                SoaCommonConfig.WithoutSessionLayer = startInfo.IsNoSession; // TODO: this is a hack. Working mode should be decided by something like a *SchedulerType* filed.
 
                 ConfigurationHelper.LoadConfiguration(startInfo, brokerInfo, out brokerConfig, out serviceConfig, out bindings);
                 this.sharedData = new SharedData(brokerInfo, startInfo, brokerConfig, serviceConfig);
@@ -259,7 +259,7 @@ namespace Microsoft.Hpc.ServiceBroker
 #else
                 var context = new SoaContext();
 #endif
-                if (SoaAmbientConfig.StandAlone)
+                if (SoaCommonConfig.WithoutSessionLayer)
                 { 
                     this.monitor = new DummyServiceJobMonitor(this.sharedData, this.stateManager, this.nodeMappingData, context);
                 }
@@ -487,10 +487,10 @@ namespace Microsoft.Hpc.ServiceBroker
             }
 
             
-            //Check the StrategyConfig.StandAlone for the close progress.
+            //Check the StrategyConfig.WithoutSessionLayer for the close progress.
             //Step 3: Finish the service job if it is needed.
             // We only finish the service job if clean data is required, in other cases, the service job monitor will finish the service job according to the service job life cycle before we enter this stage
-            if (this.monitor != null && !SoaAmbientConfig.StandAlone)
+            if (this.monitor != null && !SoaCommonConfig.WithoutSessionLayer)
             {
                 try
                 {
@@ -512,7 +512,7 @@ namespace Microsoft.Hpc.ServiceBroker
                 try
                 {
                     // Update suspended state
-                    if (!SoaAmbientConfig.StandAlone)
+                    if (!SoaCommonConfig.WithoutSessionLayer)
                     { 
                         await this.monitor.UpdateSuspended(!cleanData);
                     }

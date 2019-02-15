@@ -590,7 +590,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                         {
                             //get domainUsername.
                             string domainUsername;
-                            if (SoaAmbientConfig.StandAlone)
+                            if (SoaCommonConfig.WithoutSessionLayer)
                             {
                                 string domain = Environment.UserDomainName;
                                 string username = Environment.UserName;

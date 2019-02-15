@@ -575,17 +575,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// Storage connection string used to connect to broker launcher storage queue endpoint
         /// </summary>
         public string BrokerLauncherStorageConnectionString { get; set; }
-
-        /// <summary>
-        /// store a dummy session Id by default
-        /// </summary>
-        // TODO: rename
-        private static readonly int standaloneSessionId = 0;
-
-        public static int StandaloneSessionId
-        {
-            get { return standaloneSessionId; }
-        }
+        
+        public static int StandaloneSessionId => TelepathyConstants.StandaloneSessionId;
 
         /// <summary>
         ///   <para>Determines if a secure connection is used between the client and the HPC broker.</para>

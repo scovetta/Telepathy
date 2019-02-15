@@ -1010,8 +1010,8 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                     client.ToString(),
                     messageId,
                     "(Preemption) Attempt to get the SchedulerAdapterClient to retrieve the task error code."));
-            SchedulerAdapterClient adapterClient =
-                await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync().ConfigureAwait(false) as SchedulerAdapterClient;
+            HpcSchedulerAdapterClient adapterClient =
+                await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync().ConfigureAwait(false) as HpcSchedulerAdapterClient;
 
             if (adapterClient == null)
             {
@@ -1260,7 +1260,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
             TaskErrorCodeState state = asyncResult.AsyncState as TaskErrorCodeState;
             Debug.Assert(state != null, "TaskErrorCodeReceived: asyncResult.AsyncState must be TaskErrorCodeState");
 
-            SchedulerAdapterClient adapterClient = state.AdapterClient;
+            HpcSchedulerAdapterClient adapterClient = state.AdapterClient;
             int clientIndex = state.ClientIndex;
             IService client = state.ServiceClient;
             BrokerQueueItem item = state.QueueItem;
@@ -1305,7 +1305,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
             TaskErrorCodeState state = asyncResult.AsyncState as TaskErrorCodeState;
             Debug.Assert(state != null, "HandleTaskErrorCode: asyncResult.AsyncState must be TaskErrorCodeState");
 
-            SchedulerAdapterClient adapterClient = state.AdapterClient;
+            HpcSchedulerAdapterClient adapterClient = state.AdapterClient;
             Exception exception = state.Exception;
             bool exceptionIndirect = this.IsExceptionIndirect(exception);
             int clientIndex = state.ClientIndex;
@@ -1921,7 +1921,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// </summary>
         private class TaskErrorCodeState
         {
-            public SchedulerAdapterClient AdapterClient
+            public HpcSchedulerAdapterClient AdapterClient
             {
                 get;
                 set;

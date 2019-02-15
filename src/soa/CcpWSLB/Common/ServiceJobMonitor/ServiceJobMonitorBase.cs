@@ -215,6 +215,10 @@ namespace Microsoft.Hpc.ServiceBroker
         /// </summary>
         protected IHpcContext context;
 
+        public TransportScheme TransportScheme => this.sharedData.StartInfo.TransportScheme;
+
+        public SharedData SharedData => this.sharedData;
+
         /// <summary>
         /// Initializes a new instance of the ServiceJobMonitor class
         /// </summary>
@@ -583,7 +587,7 @@ namespace Microsoft.Hpc.ServiceBroker
                 RetryHelper<object>.InvokeOperationAsync(
                         async () =>
                         {
-                            if (!SoaAmbientConfig.StandAlone)
+                            if (!SoaCommonConfig.WithoutSessionLayer)
                                 await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).UpdateBrokerInfoAsync(this.sharedData.BrokerInfo.SessionId, props);
                             return null;
                         },

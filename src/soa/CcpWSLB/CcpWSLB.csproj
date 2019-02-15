@@ -11,7 +11,7 @@
     <DefineConstants>$(DefineConstants);Broker</DefineConstants>
     <DefineTrace>true</DefineTrace>
     <Localizable>true</Localizable>
-	<LangVersion>latest</LangVersion>
+    <LangVersion>latest</LangVersion>
     <!--
       NoWarn 0436 because broker is referencing both session API's assembly and its
       source file "AuthenticationFailure.cs" and "RetryOperationError.cs".
@@ -45,7 +45,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>    
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -78,7 +78,7 @@
       <Link>SecurityDescriptor.cs</Link>
     </Compile>
     <Compile Include="..\BrokerLauncher\SchedulerAdapterInternalClient.cs">
-      <Link>Common\SchedulerAdapterInternalClient.cs</Link>
+      <Link>Common\SchedulerAdapter\SchedulerAdapterInternalClient.cs</Link>
     </Compile>
     <None Include="..\Common\AzureRoleHelper.cs">
       <Link>Common\AzureRoleHelper.cs</Link>
@@ -245,12 +245,14 @@
     <Compile Include="Common\BrokerState.cs" />
     <Compile Include="Common\BrokerStateManager.cs" />
     <Compile Include="Common\ConfigurationHelper.cs" />
-    <Compile Include="Common\DummyServiceJobMonitor.cs" />
+    <Compile Include="Common\SchedulerAdapter\SchedulerAdapterClient.cs" />
+    <Compile Include="Common\ServiceJobMonitor\DummyServiceJobMonitor.cs" />
     <Compile Include="Common\GetResponsesHandler.cs" />
     <Compile Include="Common\GracefulPreemptionHandler.cs" />
     <Compile Include="Common\IBrokerObserver.cs" />
     <Compile Include="Common\INodeMappingCache.cs" />
-    <Compile Include="Common\ServiceJobMonitorBase.cs" />
+    <Compile Include="Common\SchedulerAdapter\DummySchedulerAdapterClient.cs" />
+    <Compile Include="Common\ServiceJobMonitor\ServiceJobMonitorBase.cs" />
     <Compile Include="Common\ISchedulerAdapterAsync.cs" />
     <Compile Include="Common\NodeMappingData.cs" />
     <Compile Include="Common\ObserverItem.cs" />
@@ -262,8 +264,8 @@
     <Compile Include="Common\ReferenceObject.cs" />
     <Compile Include="Common\RepeatableCallbackTrigger.cs" />
     <Compile Include="Common\BaseResponsesHandler.cs" />
-    <Compile Include="Common\SchedulerAdapterClient.cs" />
-    <Compile Include="Common\SchedulerAdapterClientFactory.cs" />
+    <Compile Include="Common\SchedulerAdapter\HpcSchedulerAdapterClient.cs" />
+    <Compile Include="Common\SchedulerAdapter\SchedulerAdapterClientFactory.cs" />
     <Compile Include="Common\ServiceJobState.cs" />
     <Compile Include="Common\SharedData.cs" />
     <Compile Include="Common\ThreadHelper.cs" />
@@ -291,7 +293,7 @@
     <Compile Include="FrontEnd\RequestContextBase.cs" />
     <Compile Include="FrontEnd\RequestReplyFrontEnd.cs" />
     <Compile Include="FrontEnd\RequestReplyRequestContext.cs" />
-    <Compile Include="Common\ServiceJobMonitor.cs" />
+    <Compile Include="Common\ServiceJobMonitor\ServiceJobMonitor.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="GracefulPreemptionResult.cs" />
     <Compile Include="Persistences\MemoryPersist.cs" />
@@ -332,6 +334,10 @@
     <ProjectReference Include="..\..\StoreAPI\Scheduler\Scheduler.csproj">
       <Project>{78e5e61b-dd12-475a-845b-7da3f6b0f987}</Project>
       <Name>Scheduler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\WcfUtil\AzureStorageBinding\AzureStorageBinding.csproj">
+      <Project>{5fdae262-06fd-49c6-b44f-ec1af1f326e5}</Project>
+      <Name>AzureStorageBinding</Name>
     </ProjectReference>
     <ProjectReference Include="..\base\BrokerBase.csproj">
       <Project>{3f01d480-4cde-4f46-99ea-95ceda05063e}</Project>

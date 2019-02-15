@@ -1045,7 +1045,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                 this.unblockTimer.Dispose();
             }
 
-            if (SoaAmbientConfig.StandAlone)
+            if (SoaCommonConfig.WithoutSessionLayer)
             {
                 this.DeleteFromHosts().GetAwaiter().GetResult();
             }

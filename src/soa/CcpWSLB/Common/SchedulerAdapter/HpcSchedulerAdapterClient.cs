@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="SchedulerAdapterClient.cs" company="Microsoft">
+// <copyright file="HpcSchedulerAdapterClient.cs" company="Microsoft">
 //      Copyright (c) Microsoft Corporation.  All rights reserved.
 // </copyright>
 // <summary>
@@ -26,7 +26,7 @@ namespace Microsoft.Hpc.ServiceBroker
     /// <summary>
     /// The client implementation for the scheduler adapter
     /// </summary>
-    internal class SchedulerAdapterClient : DuplexClientBase<IHpcSchedulerAdapter>, IHpcSchedulerAdapter
+    internal class HpcSchedulerAdapterClient : DuplexClientBase<IHpcSchedulerAdapter>, IHpcSchedulerAdapter
     {
         /// <summary>
         /// Stores the timeout
@@ -34,17 +34,17 @@ namespace Microsoft.Hpc.ServiceBroker
         private static readonly TimeSpan SchedulerAdapterTimeout = TimeSpan.FromMinutes(30);
 
         /// <summary>
-        /// Initializes a new instance of the SchedulerAdapterClient class
+        /// Initializes a new instance of the HpcSchedulerAdapterClient class
         /// </summary>
         /// <param name="headnode">indicating the headnode</param>
         /// <param name="instanceContext">indicating the instance context</param>
-        public SchedulerAdapterClient(string headnode, string certThrumbprint, InstanceContext instanceContext)
+        public HpcSchedulerAdapterClient(string headnode, string certThrumbprint, InstanceContext instanceContext)
             : base(
                 instanceContext,
                 BindingHelper.HardCodedInternalSchedulerDelegationBinding,
                 SoaHelper.CreateInternalCertEndpointAddress(new Uri(SoaHelper.GetSchedulerDelegationAddress(headnode)), certThrumbprint))
         {
-            BrokerTracing.TraceVerbose("[SchedulerAdapterClient] In constructor");
+            BrokerTracing.TraceVerbose("[HpcSchedulerAdapterClient] In constructor");
             this.ClientCredentials.UseInternalAuthentication(certThrumbprint);
             if (BrokerIdentity.IsHAMode)
             {

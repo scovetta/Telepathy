@@ -217,7 +217,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         {
             if (info.TransportScheme == TransportScheme.AzureStorage)
             {
-                return new EndpointAddress( new Uri("az.table://SessionLauncher"));
+                return new EndpointAddress( new Uri(TelepathyConstants.SessionLauncherAzureTableBindingAddress));
             }
 
             return GetEndpoint(new Uri(info.GetSessionLauncherAddressAsync().GetAwaiter().GetResult()), info.IsAadOrLocalUser);

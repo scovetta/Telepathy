@@ -33,6 +33,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack;
+    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.SchedulerDelegations.Local;
 
     using ISessionLauncher = Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.ISessionLauncher;
 
@@ -194,9 +195,11 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 {
                     this.sessionLauncher = SessionLauncherFactory.CreateAzureBatchSessionLauncher();
                 }
-                else if(SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.Local)
+                else if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.Local)
                 {
-                    this.sessionLauncher = SessionLauncherFactory.CreateLocalSessionLauncher();
+                    var instance = SessionLauncherFactory.CreateLocalSessionLauncher();
+                    this.sessionLauncher = instance;
+                    this.schedulerDelegation = new LocalSchedulerDelegation(instance);
                 }
 
 #if AZURE
@@ -217,7 +220,8 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 // start session launcher service
                 this.StartSessionLauncherService();
 
-                if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.HpcPack)
+                if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.HpcPack 
+                    || SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.Local)
                 {
                     // start scheduler delegation service
                     this.StartSchedulerDelegationService();
@@ -263,7 +267,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 this.launcherHost.AddServiceEndpoint(
                     typeof(ISessionLauncher),
                     new TableTransportBinding() { ConnectionString = SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString, TargetPartitionKey = "all" },
-                    "az.table://SessionLauncher");
+                    TelepathyConstants.SessionLauncherAzureTableBindingAddress);
             }
 
             TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher find cert {0}", HpcContext.Get().GetSSLThumbprint().GetAwaiter().GetResult());
@@ -330,6 +334,13 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
             {
                 // Use insecure binding until unified authentication logic is implemented
                 this.delegationHost.AddServiceEndpoint(typeof(ISchedulerAdapter), BindingHelper.HardCodedUnSecureNetTcpBinding, string.Empty);
+                if (SessionLauncherRuntimeConfiguration.OpenAzureStorageListener)
+                {
+                    this.delegationHost.AddServiceEndpoint(
+                        typeof(ISchedulerAdapter),
+                        new TableTransportBinding() { ConnectionString = SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString, TargetPartitionKey = "all" },
+                        TelepathyConstants.SessionSchedulerDelegationAzureTableBindingAddress);
+                }
             }
 
             this.delegationHost.Faulted += SchedulerDelegationHostFaultHandler;

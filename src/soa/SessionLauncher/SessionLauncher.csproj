@@ -223,18 +223,19 @@
     <Compile Include="DataService\IDataServiceAsync.cs" />
     <Compile Include="DataService\REST\DataClientController.cs" />
     <Compile Include="DataService\REST\DataServiceRestServer.cs" />
-    <Compile Include="Impls\AzureBatch\AzureBatchConfiguration.cs" />
-    <Compile Include="Impls\AzureBatch\AzureBatchConstants.cs" />
-    <Compile Include="Impls\AzureBatch\AzureBatchEnvVarReader.cs" />
-    <Compile Include="Impls\AzureBatch\AzureBatchSessionIdGenerator.cs" />
-    <Compile Include="Impls\AzureBatch\AzureBatchSessionLauncher.cs" />
-    <Compile Include="Impls\AzureBatch\AzureBatchSessionJobIdConverter.cs" />
-    <Compile Include="Impls\HpcPack\HpcPackSessionLauncher.cs" />
-    <Compile Include="Impls\Local\LocalSessionConfiguration.cs" />
-    <Compile Include="Impls\Local\LocalSessionLauncher.cs" />
-    <Compile Include="Impls\SchedulerType.cs" />
-    <Compile Include="Impls\SessionLauncherFactory.cs" />
-    <Compile Include="Impls\SessionLauncherRuntimeConfiguration.cs" />
+    <Compile Include="Impls\SchedulerDelegations\Local\LocalSchedulerDelegation.cs" />
+    <Compile Include="Impls\SessionLaunchers\AzureBatch\AzureBatchConfiguration.cs" />
+    <Compile Include="Impls\SessionLaunchers\AzureBatch\AzureBatchConstants.cs" />
+    <Compile Include="Impls\SessionLaunchers\AzureBatch\AzureBatchEnvVarReader.cs" />
+    <Compile Include="Impls\SessionLaunchers\AzureBatch\AzureBatchSessionIdGenerator.cs" />
+    <Compile Include="Impls\SessionLaunchers\AzureBatch\AzureBatchSessionLauncher.cs" />
+    <Compile Include="Impls\SessionLaunchers\AzureBatch\AzureBatchSessionJobIdConverter.cs" />
+    <Compile Include="Impls\SessionLaunchers\HpcPack\HpcPackSessionLauncher.cs" />
+    <Compile Include="Impls\SessionLaunchers\Local\LocalSessionConfiguration.cs" />
+    <Compile Include="Impls\SessionLaunchers\Local\LocalSessionLauncher.cs" />
+    <Compile Include="Impls\SessionLaunchers\SchedulerType.cs" />
+    <Compile Include="Impls\SessionLaunchers\SessionLauncherFactory.cs" />
+    <Compile Include="Impls\SessionLaunchers\SessionLauncherRuntimeConfiguration.cs" />
     <Compile Include="JobInfo.cs" />
     <Compile Include="JobMonitorEntry.cs" />
     <Compile Include="LauncherHostService.cs">
@@ -246,12 +247,12 @@
     <Compile Include="NodeInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ResourceGroupInfo.cs" />
-    <Compile Include="SchedulerDelegation.cs" />
+    <Compile Include="Impls\SchedulerDelegations\HpcPack\HpcSchedulerDelegation.cs" />
     <Compile Include="ISessionLauncher.cs" />
     <Compile Include="JobHelper.cs" />
     <Compile Include="SessionLauncher.cs" />
     <Compile Include="..\Common\ThreadSafeSchedulerAPI.cs" />
-    <Compile Include="Impls\HpcPack\SchedulerConnectState.cs" />
+    <Compile Include="Impls\SessionLaunchers\HpcPack\SchedulerConnectState.cs" />
     <Compile Include="SessionLauncherSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
