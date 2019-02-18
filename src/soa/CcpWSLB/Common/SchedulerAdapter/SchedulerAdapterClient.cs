@@ -3,16 +3,29 @@
     using System.Collections.Generic;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Data;
     using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Hpc.ServiceBroker.BackEnd;
 
     internal class SchedulerAdapterClient : ClientBase<ISchedulerAdapter>, ISchedulerAdapter
     {
-        public SchedulerAdapterClient(Binding binding, EndpointAddress address) : base(binding, address)
+        /// <summary>
+        /// Stores the unique id
+        /// </summary>
+        private static int uniqueIdx;
+
+        private string[] predefinedSvcHost = new string[0];
+
+        private DispatcherManager dispatcherManager = null;
+
+        public SchedulerAdapterClient(Binding binding, EndpointAddress address, string[] predefinedSvcHost, DispatcherManager dispatcherManager) : base(binding, address)
         {
+            this.predefinedSvcHost = predefinedSvcHost;
+            this.dispatcherManager = dispatcherManager;
         }
 
         public async Task<bool> UpdateBrokerInfoAsync(int sessionId, Dictionary<string, object> properties) => await this.Channel.UpdateBrokerInfoAsync(sessionId, properties);
@@ -39,6 +52,20 @@
             await this.Channel.FinishJobAsync(sessionId, reason);
         }
 
-        public async Task<(JobState jobState, int autoMax, int autoMin)> RegisterJobAsync(int jobid) => await this.Channel.RegisterJobAsync(jobid);
+        public async Task<(JobState jobState, int autoMax, int autoMin)> RegisterJobAsync(int jobid)
+        {
+            // TODO: this is not proper place to put dispatcher creating logic. Remove this.
+
+            int autoMax = int.MaxValue;
+            int autoMin = 0;
+            foreach (string epr in this.predefinedSvcHost)
+            {
+                DispatcherInfo info = new EprDispatcherInfo(epr, 1, Interlocked.Increment(ref uniqueIdx));
+                await this.dispatcherManager.NewDispatcherAsync(info).ConfigureAwait(false);
+            }
+
+            return (Scheduler.Session.Data.JobState.Running, autoMax, autoMin);
+            return await this.Channel.RegisterJobAsync(jobid);
+        }
     }
 }

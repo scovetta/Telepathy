@@ -181,7 +181,9 @@ namespace Microsoft.Hpc.ServiceBroker.Common
                 {
                     this.schedulerAdapterClient = new SchedulerAdapterClient(
                         new TableTransportBinding() { ConnectionString = this.monitor.SharedData.BrokerInfo.AzureStorageConnectionString, TargetPartitionKey = Guid.NewGuid().ToString() },
-                        new EndpointAddress(new Uri(TelepathyConstants.SessionSchedulerDelegationAzureTableBindingAddress)));
+                        new EndpointAddress(new Uri(TelepathyConstants.SessionSchedulerDelegationAzureTableBindingAddress)),
+                        this.sharedData.StartInfo.IpAddress,
+                        this.dispatcherManager);
                 }
                 else
                 {

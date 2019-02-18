@@ -8,13 +8,19 @@
 namespace Microsoft.Hpc.ServiceBroker
 {
     using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Net.Http;
     using System.ServiceModel;
     using System.Threading;
     using System.Threading.Tasks;
+
+    using Microsoft.Hpc.RESTServiceModel;
     using Microsoft.Hpc.ServiceBroker.BackEnd;
     using Microsoft.Hpc.ServiceBroker.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Hpc.Scheduler.Session.Interface;
 
     /// <summary>
     /// Monitor the service job
@@ -110,7 +116,80 @@ namespace Microsoft.Hpc.ServiceBroker
 
             this.schedulerNotifyTimeoutManager.RegisterTimeout(TimeoutPeriodFromSchedulerDelegationEvent, schedulerDelegationTimeoutCallback, null);
 
+            // TODO: hack! rafactor this
+            var startInfo = this.sharedData.StartInfo;
+            if (startInfo != null)
+            {
+                List<TaskInfo> taskInfoList = new List<TaskInfo>();
+                Task<TaskInfo>[] tl = new Task<TaskInfo>[startInfo.IpAddress.Length];
+
+                for (int i = 0; i < startInfo.IpAddress.Length; i++)
+                {
+                    tl[i] = this.OpenSvcHostsAsync(i, startInfo.IpAddress[i], startInfo.RegPath, startInfo.ServiceName, startInfo.Environments, startInfo.DependFilesStorageInfo);
+                }
+
+                await Task.WhenAll(tl);
+                for (int i = 0; i < tl.Length; i++)
+                {
+                    TaskInfo ti = tl[i].Result;
+                    if (ti != null)
+                    {
+                        taskInfoList.Add(ti);
+                    }
+                }
+
+                Debug.Assert(taskInfoList.Count != 0, "No available endpoint.");
+                await ((ISchedulerNotify)this).TaskStateChanged(taskInfoList);
+            }
+
             BrokerTracing.TraceVerbose("[ServiceJobMonitor].Start: Exit");
+        }
+
+        // TODO: hack. refactor this
+        private const int taskIdStart = 9300;
+        private const string prefix = "http://";
+        private const int port = 80;
+        private const string serverName = "SvcHost";
+        private const string endPoint = "svchostserver";
+
+        /// <summary>
+        /// Asyn open service host.
+        /// </summary>
+        /// <param name="num"></param>
+        /// <param name="ipAddress"></param>
+        /// <param name="regPath"></param>
+        /// <param name="svcName"></param>
+        /// <returns></returns>
+        private async Task<TaskInfo> OpenSvcHostsAsync(int num, string ipAddress, string regPath, string svcName, Dictionary<string, string> environment, Dictionary<string, string> dependFilesInfo)
+        {
+            TaskInfo ti = new TaskInfo();
+            ti.Id = taskIdStart + num;
+            ti.Capacity = 1;
+            ti.FirstCoreIndex = 3;
+            ti.Location = Scheduler.Session.Data.NodeLocation.OnPremise;
+            ti.MachineName = ipAddress;
+            ti.State = Scheduler.Session.Data.TaskState.Dispatching;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(prefix + ipAddress + ":" + port + "/" + serverName + "/api/");
+                //HTTP POST
+                var serviceInfo = new ServiceInfo(this.sharedData.BrokerInfo.SessionId, ti.Id, ti.FirstCoreIndex, regPath + "\\", svcName + ".config", environment, dependFilesInfo);
+                try
+                {
+                    var result = await client.PostAsJsonAsync<ServiceInfo>(endPoint, serviceInfo);
+                    BrokerTracing.TraceVerbose("[OpenSvcHost].result:{0}", result);
+                    if (result.IsSuccessStatusCode)
+                        return ti;
+                    else
+                        return null;
+                }
+                catch (Exception e) //for the romote host closed 
+                {
+                    BrokerTracing.TraceVerbose("[OpenSvcHost].post: Exception: {0}", e.ToString());
+                    return null;
+                }
+            }
         }
 
     }
