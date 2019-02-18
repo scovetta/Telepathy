@@ -32,7 +32,6 @@
 
         public static async Task OpenSvcHostsAsync(int sessionId, SessionStartInfoContract startInfo, Func<List<TaskInfo>, Task> taskStateChangedCallBack)
         {
-            List<TaskInfo> taskInfoList = new List<TaskInfo>();
             Task<TaskInfo>[] tl = new Task<TaskInfo>[startInfo.IpAddress.Length];
 
             for (int i = 0; i < startInfo.IpAddress.Length; i++)
@@ -41,14 +40,7 @@
             }
 
             await Task.WhenAll(tl);
-            for (int i = 0; i < tl.Length; i++)
-            {
-                TaskInfo ti = tl[i].Result;
-                if (ti != null)
-                {
-                    taskInfoList.Add(ti);
-                }
-            }
+            List<TaskInfo> taskInfoList = tl.Select(t => t.Result).Where(ti => ti != null).ToList();
 
             Debug.Assert(taskInfoList.Count != 0, "No available endpoint.");
             if (taskStateChangedCallBack != null)
