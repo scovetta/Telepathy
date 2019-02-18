@@ -12,6 +12,10 @@
 
     internal class LocalSessionLauncher : SessionLauncher
     {
+        private Process brokerLauncherProcess;
+
+        private Process svcHostProcess;
+
         public override async Task<SessionAllocateInfoContract> AllocateDurableV5Async(SessionStartInfoContract info, string endpointPrefix)
         {
             throw new NotSupportedException("Currently Session Launcher does not support durable session in Local Session mode.");
@@ -24,7 +28,8 @@
 
         public override async Task TerminateV5Async(int sessionId)
         {
-            throw new NotImplementedException();
+            this.brokerLauncherProcess.Kill();
+            this.svcHostProcess.Kill();
         }
 
         public override async Task<Version[]> GetServiceVersionsAsync(string serviceName)
@@ -57,10 +62,10 @@
         {
             // int sessionId = LocalSessionConfiguration.GetNextSessionId();
             int sessionId = SessionStartInfo.StandaloneSessionId;
-            Process.Start(
+            this.brokerLauncherProcess = Process.Start(
                 LocalSessionConfiguration.BrokerLauncherExePath,
                 $"-d --ServiceRegistrationPath {LocalSessionConfiguration.ServiceRegistrationPath} --AzureStorageConnectionString {LocalSessionConfiguration.BrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True");
-            Process.Start(LocalSessionConfiguration.ServiceHostExePath, "-standalone");
+            this.svcHostProcess = Process.Start(LocalSessionConfiguration.ServiceHostExePath, "-standalone");
 
             sessionAllocateInfo.Id = sessionId;
             sessionAllocateInfo.BrokerLauncherEpr = new[] { SessionInternalConstants.BrokerConnectionStringToken };
