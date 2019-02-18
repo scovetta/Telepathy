@@ -135,6 +135,7 @@
     <Compile Include="ParameterContainer.cs" />
     <Compile Include="ParameterException.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ServiceHostRuntimeConfiguration.cs" />
     <Compile Include="SoaDiagTraceListener.cs" />
     <Compile Include="StringParameter.cs" />
     <Compile Include="StringTable.Designer.cs">
@@ -188,10 +189,6 @@
     <ProjectReference Include="..\SessionAPI\Session.csproj">
       <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>
       <Name>Session</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SoaAmbientConfig\SoaAmbientConfig.csproj">
-      <Project>{9ad369c0-f404-4591-ae7a-6dff3d2d99a2}</Project>
-      <Name>SoaAmbientConfig</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

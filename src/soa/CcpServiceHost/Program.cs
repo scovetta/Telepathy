@@ -35,7 +35,6 @@ namespace Microsoft.Hpc.CcpServiceHosting
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
     using Microsoft.Win32.SafeHandles;
-    using SoaAmbientConfig;
 
     using SoaService.DataClient;
 
@@ -71,16 +70,16 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 {
                     if (args.Length > 1 && !string.IsNullOrEmpty(args[1]))
                     {
-                        SoaAmbientConfig.StorageCredential = args[1];
+                        ServiceHostRuntimeConfiguration.StorageCredential = args[1];
                     }
 
-                    SoaAmbientConfig.StandAlone = true;
+                    ServiceHostRuntimeConfiguration.Standalone = true;
                     StartService();
                     ListenSvcInfoChanged();
                 }
                 else
                 {
-                    SoaAmbientConfig.StandAlone = false;
+                    ServiceHostRuntimeConfiguration.Standalone = false;
                     ParameterContainer param = new ParameterContainer(args);
                     NormalMethod(param);
                 }
@@ -304,7 +303,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
                                                             Assembly.GetExecutingAssembly().Location,
                                                             serviceConfigFullPath,
                                                             onAzure,
-                                                            SoaAmbientConfig.StandAlone))
+                                                            ServiceHostRuntimeConfiguration.Standalone))
                 {
                     host.Initialize();
                     host.Run();
@@ -312,7 +311,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
                         jobId,
                         "Sleep...");
 
-                    if (SoaAmbientConfig.StandAlone)
+                    if (ServiceHostRuntimeConfiguration.Standalone)
                     {
                         // Endless listening, till service info deleted.
                         while (true)
@@ -373,8 +372,8 @@ namespace Microsoft.Hpc.CcpServiceHosting
                                                         domain,
                                                         Assembly.GetExecutingAssembly().Location,
                                                         string.Empty,
-                                                        onAzure, 
-                                                        SoaAmbientConfig.StandAlone))
+                                                        onAzure,
+                                                        ServiceHostRuntimeConfiguration.Standalone))
             {
                 host.Run();
                 // Endless waiting, till it's being killed
@@ -393,7 +392,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
             {
                 //TODO get headnode
                 string headnode; 
-                if (SoaAmbientConfig.StandAlone)
+                if (ServiceHostRuntimeConfiguration.Standalone)
                 { 
                     headnode = System.Net.Dns.GetHostName();
                 }
@@ -405,7 +404,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 Debug.Assert(!string.IsNullOrEmpty(headnode), "Head node connection string is null or empty.");
                 ServiceRegistrationRepo serviceRegistration = new ServiceRegistrationRepo(
                         Environment.GetEnvironmentVariable(Constant.RegistryPathEnv),
-                        SoaAmbientConfig.StandAlone? null:
+                        ServiceHostRuntimeConfiguration.Standalone ? null:
                         HpcContext.GetOrAdd(headnode, CancellationToken.None).GetServiceRegistrationRestClient());
 
                 // Get the path to the service config file name
