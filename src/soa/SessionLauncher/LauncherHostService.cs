@@ -33,6 +33,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack;
+    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.SchedulerDelegations.AzureBatch;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.SchedulerDelegations.Local;
 
     using ISessionLauncher = Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.ISessionLauncher;
@@ -193,7 +194,10 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 }
                 else if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.AzureBatch)
                 {
-                    this.sessionLauncher = SessionLauncherFactory.CreateAzureBatchSessionLauncher();
+                    var instance = SessionLauncherFactory.CreateAzureBatchSessionLauncher();
+                    this.sessionLauncher = instance;
+                    this.schedulerDelegation = new AzureBatchSchedulerDelegation(instance);
+
                 }
                 else if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.Local)
                 {
@@ -221,7 +225,8 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 this.StartSessionLauncherService();
 
                 if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.HpcPack 
-                    || SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.Local)
+                    || SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.Local
+                    || SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.AzureBatch)
                 {
                     // start scheduler delegation service
                     this.StartSchedulerDelegationService();
