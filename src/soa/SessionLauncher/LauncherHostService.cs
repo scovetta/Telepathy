@@ -261,29 +261,55 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
         /// </summary>
         private void StartSessionLauncherService()
         {
-            string sessionLauncherAddress = SoaHelper.GetSessionLauncherAddress("localhost");
-            this.launcherHost = new ServiceHost(this.sessionLauncher, new Uri(sessionLauncherAddress));
-            BindingHelper.ApplyDefaultThrottlingBehavior(this.launcherHost);
-            this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher), BindingHelper.HardCodedSessionLauncherNetTcpBinding, string.Empty);
-            this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher), BindingHelper.HardCodedInternalSessionLauncherNetTcpBinding, "Internal");
-            this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher), BindingHelper.HardCodedNoAuthSessionLauncherNetTcpBinding, "AAD");
-            if (SessionLauncherRuntimeConfiguration.OpenAzureStorageListener)
+            try
             {
-                this.launcherHost.AddServiceEndpoint(
-                    typeof(ISessionLauncher),
-                    new TableTransportBinding() { ConnectionString = SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString, TargetPartitionKey = "all" },
-                    TelepathyConstants.SessionLauncherAzureTableBindingAddress);
-            }
+                string sessionLauncherAddress = SoaHelper.GetSessionLauncherAddress("localhost");
+                this.launcherHost = new ServiceHost(this.sessionLauncher, new Uri(sessionLauncherAddress));
+                BindingHelper.ApplyDefaultThrottlingBehavior(this.launcherHost);
+                
+                if (SessionLauncherRuntimeConfiguration.OpenAzureStorageListener)
+                {
+                    this.launcherHost.AddServiceEndpoint(
+                        typeof(ISessionLauncher),
+                        new TableTransportBinding()
+                        {
+                            ConnectionString = SessionLauncherRuntimeConfiguration
+                                .SessionLauncherStorageConnectionString,
+                            TargetPartitionKey = "all"
+                        },
+                        TelepathyConstants.SessionLauncherAzureTableBindingAddress);
+                }
 
-            TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher find cert {0}", HpcContext.Get().GetSSLThumbprint().GetAwaiter().GetResult());
-            this.launcherHost.Credentials.UseInternalAuthenticationAsync().GetAwaiter().GetResult();
-            this.launcherHost.Faulted += this.SessionLauncherHostFaultHandler;
-            string addFormat = SoaHelper.SessionLauncherAadAddressFormat;
-            this.launcherHost.Authorization.ServiceAuthorizationManager = new AADServiceAuthorizationManager(addFormat.Substring(addFormat.IndexOf('/')));
-            ServiceAuthorizationBehavior myServiceBehavior = this.launcherHost.Description.Behaviors.Find<ServiceAuthorizationBehavior>();
-            myServiceBehavior.PrincipalPermissionMode = PrincipalPermissionMode.None;
-            this.launcherHost.Open();
-            TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher service at {0}", sessionLauncherAddress);
+                if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.HpcPack)
+                {
+                    this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher),
+                        BindingHelper.HardCodedSessionLauncherNetTcpBinding, string.Empty);
+                    this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher),
+                        BindingHelper.HardCodedNoAuthSessionLauncherNetTcpBinding, "AAD");
+                    this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher),
+                        BindingHelper.HardCodedInternalSessionLauncherNetTcpBinding, "Internal");
+
+                    TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher find cert {0}",
+                        HpcContext.Get().GetSSLThumbprint().GetAwaiter().GetResult());
+                    this.launcherHost.Credentials.UseInternalAuthenticationAsync().GetAwaiter().GetResult();
+                }
+
+                this.launcherHost.Faulted += this.SessionLauncherHostFaultHandler;
+                string addFormat = SoaHelper.SessionLauncherAadAddressFormat;
+                this.launcherHost.Authorization.ServiceAuthorizationManager =
+                    new AADServiceAuthorizationManager(addFormat.Substring(addFormat.IndexOf('/')));
+                ServiceAuthorizationBehavior myServiceBehavior =
+                    this.launcherHost.Description.Behaviors.Find<ServiceAuthorizationBehavior>();
+                myServiceBehavior.PrincipalPermissionMode = PrincipalPermissionMode.None;
+                this.launcherHost.Open();
+                TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher service at {0}",
+                    sessionLauncherAddress);
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError(ex.ToString());
+                throw;
+            }
         }
 
         /// <summary>
