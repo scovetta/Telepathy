@@ -20,7 +20,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// Factory for broker launcher client
     /// </summary>
-    internal class BrokerLauncherClientFactory : DisposableObject, IBrokerLauncherClientFactoryForHeartbeat
+    public class BrokerLauncherClientFactory : DisposableObject, IBrokerLauncherClientFactoryForHeartbeat
     {
         /// <summary>
         /// Stores the broker launcher client
@@ -89,6 +89,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             {
                 this.brokerLauncher = sessionInfo.InprocessBrokerAdapter;
                 this.brokerLauncherForHeartbeat = sessionInfo.InprocessBrokerAdapter;
+            }
+            else if (sessionInfo.BrokerLauncherEpr == SessionInternalConstants.BrokerConnectionStringToken)
+            {
+                Trace.TraceInformation($"[{nameof(BrokerLauncherClientFactory)}] will not connect to frontend as EPR is {nameof(SessionInternalConstants.BrokerConnectionStringToken)}.");
             }
             else
             {

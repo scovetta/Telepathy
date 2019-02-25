@@ -10,10 +10,8 @@
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using System;
-    using System.Security.Principal;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using System.Threading;
 
 #if !net40
     using Microsoft.Hpc.AADAuthUtil;
@@ -23,7 +21,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// The Broker Launcher Client
     /// </summary>
-    internal class BrokerLauncherClient : BrokerLauncherClientBase
+    public class BrokerLauncherClient : BrokerLauncherClientBase
     {
         /// <summary>
         /// Initializes a new instance of the BrokerLauncherClient class.
@@ -180,7 +178,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             //     return SoaHelper.CreateInternalCertEndpointAddress(uri, certThrumbprint);
             // }
 
-            return SoaHelper.CreateEndpointAddress(uri, true, info.IsAadOrLocalUser);
+            return SoaHelper.CreateEndpointAddress(uri,false, info.IsAadOrLocalUser);
         }
     }
 }

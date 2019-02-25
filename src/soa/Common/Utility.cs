@@ -325,9 +325,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
+        // TODO: remove this
         public static bool IsHpcSessionType(Type t)
         {
-            return (t.Assembly == typeof(Session).Assembly);
+            //return (t.Assembly == typeof(Session).Assembly);
+            return true;
         }
 
         /// <summary>

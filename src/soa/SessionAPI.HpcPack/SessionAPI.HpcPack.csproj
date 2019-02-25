@@ -1,0 +1,288 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{23638265-A3F6-4DEE-8FD0-65C75A52BFF6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Hpc.Scheduler.Session.HpcPack</RootNamespace>
+    <AssemblyName>Microsoft.Hpc.Scheduler.Session.HpcPack</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\common\AzureNaming.cs">
+      <Link>AzureNaming.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\AzureProxyFileReader.cs">
+      <Link>AzureProxyFileReader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\CertificateHelper.cs">
+      <Link>Softcard\CertificateHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\CredentialHelper.cs">
+      <Link>CredentialHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\CredentialNativeMethods.cs">
+      <Link>CredentialNativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\Credentials.cs">
+      <Link>Credentials.cs</Link>
+    </Compile>
+    <Compile Include="..\..\storeapi\store\CredentialType.cs">
+      <Link>Softcard\CredentialType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\storeapi\store\CredentialTypeDialog.cs">
+      <Link>Softcard\CredentialTypeDialog.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\..\storeapi\store\CredentialTypeDialog.designer.cs">
+      <Link>Softcard\CredentialTypeDialog.designer.cs</Link>
+      <DependentUpon>CredentialTypeDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\BindingHelper.cs">
+      <Link>BindingHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\BrokerSettingsConstants.cs">
+      <Link>Internal\BrokerSettingsConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\BrokerVersion.cs">
+      <Link>Internal\BrokerVersion.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\BurstUtility.cs">
+      <Link>BurstUtility.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Constant.cs">
+      <Link>Internal\Constant.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ISchedulerAdapterInternalAsync.cs">
+      <Link>Internal\ISchedulerAdapterInternalAsync.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ParamCheckUtility.cs">
+      <Link>ParamCheckUtility.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\RetryHelper.cs">
+      <Link>RetryHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\RetryPolicy.cs">
+      <Link>RetryPolicy.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ServiceRegisteration.cs">
+      <Link>ServiceRegisteration.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\SoaHelper.cs">
+      <Link>SoaHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ThrowHelper.cs">
+      <Link>ThrowHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Utility.cs">
+      <Link>Internal\Utility.cs</Link>
+    </Compile>
+    <Compile Include="..\data\common\AzureBlobHelper.cs">
+      <Link>Data\Common\AzureBlobHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\data\common\Constants.cs">
+      <Link>Data\Common\Constants.cs</Link>
+    </Compile>
+    <Compile Include="..\data\common\DataClientInfo.cs">
+      <Link>Data\Common\DataClientInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\data\common\DataErrorCode.cs">
+      <Link>Data\Common\DataErrorCode.cs</Link>
+    </Compile>
+    <Compile Include="..\data\common\DataException.cs">
+      <Link>Data\Common\DataException.cs</Link>
+    </Compile>
+    <Compile Include="..\data\common\DataFault.cs">
+      <Link>Data\Common\DataFault.cs</Link>
+    </Compile>
+    <Compile Include="..\data\common\DataLocation.cs">
+      <Link>Data\Common\DataLocation.cs</Link>
+    </Compile>
+    <Compile Include="..\data\common\DataServerInfo.cs">
+      <Link>Data\Common\DataServerInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\data\common\DataUtility.cs">
+      <Link>Data\Common\DataUtility.cs</Link>
+    </Compile>
+    <Compile Include="..\data\common\FileNativeMethods.cs">
+      <Link>Data\Common\FileNativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\data\common\TraceHelper.cs">
+      <Link>Data\Common\TraceHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\data\common\Utility.cs">
+      <Link>Data\Common\Utility.cs</Link>
+    </Compile>
+    <Compile Include="..\data\dataclient\DataClient.cs">
+      <Link>Data\DataClient\DataClient.cs</Link>
+    </Compile>
+    <Compile Include="..\data\dataclient\DataLifeCycle.cs">
+      <Link>Data\DataClient\DataLifeCycle.cs</Link>
+    </Compile>
+    <Compile Include="..\data\datacontainer\BlobDataContainer.cs">
+      <Link>Data\DataContainer\BlobDataContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\data\datacontainer\ComplexDataContainer.cs">
+      <Link>Data\DataContainer\ComplexDataContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\data\datacontainer\DataContainerConfiguration.cs">
+      <Link>Data\DataContainer\DataContainerConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="..\data\datacontainer\DataContainerHelper.cs">
+      <Link>Data\DataContainer\DataContainerHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\data\datacontainer\DataContent.cs">
+      <Link>Data\DataContainer\DataContent.cs</Link>
+    </Compile>
+    <Compile Include="..\data\datacontainer\EmptyDataContainer.cs">
+      <Link>Data\DataContainer\EmptyDataContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\data\datacontainer\FileDataContainer.cs">
+      <Link>Data\DataContainer\FileDataContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\data\datacontainer\IDataContainer.cs">
+      <Link>Data\DataContainer\IDataContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\data\datacontainer\ObjectDataContent.cs">
+      <Link>Data\DataContainer\ObjectDataContent.cs</Link>
+    </Compile>
+    <Compile Include="..\data\datacontainer\RawBytesDataContent.cs">
+      <Link>Data\DataContainer\RawBytesDataContent.cs</Link>
+    </Compile>
+    <Compile Include="..\data\dataserviceagent\DataMessageInspector.cs">
+      <Link>Data\DataServiceAgent\DataMessageInspector.cs</Link>
+    </Compile>
+    <Compile Include="..\data\dataserviceagent\DataProxyAgent.cs">
+      <Link>Data\DataServiceAgent\DataProxyAgent.cs</Link>
+    </Compile>
+    <Compile Include="..\data\dataserviceagent\DataServiceAgent.cs">
+      <Link>Data\DataServiceAgent\DataServiceAgent.cs</Link>
+    </Compile>
+    <Compile Include="..\data\internal\DataLifeCycleContext.cs">
+      <Link>Data\Internal\DataLifeCycleContext.cs</Link>
+    </Compile>
+    <Compile Include="..\data\internal\DataLifeCycleInternal.cs">
+      <Link>Data\Internal\DataLifeCycleInternal.cs</Link>
+    </Compile>
+    <Compile Include="..\data\internal\DataLifeCycleType.cs">
+      <Link>Data\Internal\DataLifeCycleType.cs</Link>
+    </Compile>
+    <Compile Include="..\sessionlauncher\dataservice\IDataService.cs">
+      <Link>Data\DataServiceAgent\IDataService.cs</Link>
+    </Compile>
+    <Compile Include="..\sessionlauncher\dataservice\IDataServiceAsync.cs">
+      <Link>Data\DataServiceAgent\IDataServiceAsync.cs</Link>
+    </Compile>
+    <Compile Include="BalanceInfoHpcFactory.cs" />
+    <Compile Include="CredUtil.cs" />
+    <Compile Include="DataMapping\JobStateConverter.cs" />
+    <Compile Include="DataMapping\NodeLocationConverter.cs" />
+    <Compile Include="DataMapping\TaskStateConverter.cs" />
+    <Compile Include="Data\DataClient\DataServiceRestClient.cs" />
+    <Compile Include="Data\DataClient\DTO\OpenDataClientBySecretParams.cs" />
+    <Compile Include="HpcSession.cs" />
+    <Compile Include="Internal\IHpcSchedulerAdapter.cs" />
+    <Compile Include="Internal\IHpcSchedulerAdapterInternal.cs" />
+    <Compile Include="Internal\SchedulerAdapterInternalClient.cs" />
+    <Compile Include="HpcSessionShim.cs" />
+    <None Include="Interface\ISchedulerNotifyAsync.cs" />
+    <Compile Include="HpcSessionCredUtil.cs" />
+    <Compile Include="Internal\HpcSessionFactory.cs" />
+    <Compile Include="Internal\HpcOnPremiseSessionFactory.cs" />
+    <Compile Include="Internal\ServiceJobProvider.cs" />
+    <Compile Include="HpcPersistantSession.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceContext.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AADAuthUtil\AADAuthUtil.csproj">
+      <Project>{895fcbfb-73b4-46f3-8a89-76c236f01bf4}</Project>
+      <Name>AADAuthUtil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\HpcCommon\HpcCommon.csproj">
+      <Project>{2C3936C7-4850-41D7-9497-9040BE302328}</Project>
+      <Name>HpcCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\StoreAPI\Property\Properties.csproj">
+      <Project>{61844849-3d26-4003-8146-5ae86985db3a}</Project>
+      <Name>Properties</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\StoreAPI\Scheduler\Scheduler.csproj">
+      <Project>{78e5e61b-dd12-475a-845b-7da3f6b0f987}</Project>
+      <Name>Scheduler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\StoreAPI\Store\Store.csproj">
+      <Project>{82f72b8b-372e-4a1c-8139-714ae932ebcb}</Project>
+      <Name>Store</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HpcDeploy\DataMovement\DataMovement.csproj">
+      <Project>{f0a3e1b7-6c6f-4357-99ee-49210440fffd}</Project>
+      <Name>DataMovement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SessionAPI.Data\SessionAPI.Data.csproj">
+      <Project>{40fc3ebb-d692-4d69-b6a9-6cbd46f19025}</Project>
+      <Name>SessionAPI.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SessionAPI.SchedulerPort\SessionAPI.SchedulerPort.csproj">
+      <Project>{48F16289-58ED-47CC-8437-375306D2080C}</Project>
+      <Name>SessionAPI.SchedulerPort</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SessionAPI\Session.csproj">
+      <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>
+      <Name>Session</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.ValueTuple">
+      <Version>4.5.0</Version>
+    </PackageReference>
+    <PackageReference Include="WindowsAzure.Storage">
+      <Version>8.4.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

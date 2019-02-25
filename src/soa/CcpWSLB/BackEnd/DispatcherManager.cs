@@ -32,6 +32,9 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using Microsoft.WindowsAzure.Storage.Shared.Protocol;
     using System.Net.Http;
     using SoaAmbientConfig;
+
+    using SR = Microsoft.Hpc.SvcBroker.SR;
+
     /// <summary>
     /// Manage dispatchers
     /// </summary>
@@ -126,7 +129,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <summary>
         /// Stores the service job monitor
         /// </summary>
-        private InternalServiceJobMonitor monitor;
+        private ServiceJobMonitorBase monitor;
 
         /// <summary>
         /// Stores a value indicating whether backend binding is http
@@ -166,7 +169,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="queueFactory">indicating the queue factory</param>
         /// <param name="sharedData">indicating the shared data</param>
         /// <param name="frontendResult">indicating the frontend result</param>
-        public DispatcherManager(BindingsSection bindings, SharedData sharedData, BrokerObserver observer, InternalServiceJobMonitor monitor, BrokerQueueFactory queueFactory, IHpcContext context)
+        public DispatcherManager(BindingsSection bindings, SharedData sharedData, BrokerObserver observer, ServiceJobMonitorBase monitor, BrokerQueueFactory queueFactory, IHpcContext context)
         {
             this.dispatcherDic = new Dictionary<int, Dispatcher>();
             this.failedDispatcherList = new List<int>();
@@ -571,11 +574,11 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
             try
             {
                 BrokerTracing.TraceInfo("[DispatcherManager] Create new dispatcher: {0}", dispatcherInfo.AllocatedNodeLocation);
-                if (dispatcherInfo.AllocatedNodeLocation == NodeLocation.OnPremise
-                    || dispatcherInfo.AllocatedNodeLocation == NodeLocation.Linux
-                    || dispatcherInfo.AllocatedNodeLocation == NodeLocation.AzureEmbedded
-                    || dispatcherInfo.AllocatedNodeLocation == NodeLocation.AzureEmbeddedVM
-                    || dispatcherInfo.AllocatedNodeLocation == NodeLocation.NonDomainJoined)
+                if (dispatcherInfo.AllocatedNodeLocation == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.OnPremise
+                    || dispatcherInfo.AllocatedNodeLocation == Scheduler.Session.Data.NodeLocation.Linux
+                    || dispatcherInfo.AllocatedNodeLocation == Scheduler.Session.Data.NodeLocation.AzureEmbedded
+                    || dispatcherInfo.AllocatedNodeLocation == Scheduler.Session.Data.NodeLocation.AzureEmbeddedVM
+                    || dispatcherInfo.AllocatedNodeLocation == Scheduler.Session.Data.NodeLocation.NonDomainJoined)
                 {
                     // check if using backend-security (for java soa only)
                     if (dispatcherInfo is WssDispatcherInfo)
@@ -603,8 +606,8 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                             this.monitor.NeedAdjustAllocation);
                     }
                 }
-                else if (dispatcherInfo.AllocatedNodeLocation == NodeLocation.AzureVM
-                    || dispatcherInfo.AllocatedNodeLocation == NodeLocation.Azure)
+                else if (dispatcherInfo.AllocatedNodeLocation == Scheduler.Session.Data.NodeLocation.AzureVM
+                    || dispatcherInfo.AllocatedNodeLocation == Scheduler.Session.Data.NodeLocation.Azure)
                 {
                     // NodeLocation.Azure, NodeLocation.AzureVM
                     if (this.httpsBurst)
@@ -1042,7 +1045,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                 this.unblockTimer.Dispose();
             }
 
-            if (SoaAmbientConfig.StandAlone)
+            if (SoaCommonConfig.WithoutSessionLayer)
             {
                 this.DeleteFromHosts().GetAwaiter().GetResult();
             }

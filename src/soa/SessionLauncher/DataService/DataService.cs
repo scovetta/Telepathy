@@ -101,13 +101,15 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
             this.clusterInfo = clusterInfo;
             this.scheduler = scheduler;
             this.dataManagement = new DataManagement(clusterInfo, scheduler);
-            
+
+#if HPCPACK
             if (!SoaHelper.IsOnAzure())
             {
                 // start data request listener for on-premise cluster only
                 this.requestListener = new DataRequestListener(clusterInfo, this);
                 this.requestListener.Start();
             }
+#endif
 
             // register azure storage connection string updated event to reload data service
             this.clusterInfo.OnAzureStorageConnectionStringOrClusterIdUpdated += ClusterInfo_OnAzureStorageConnectionStringOrClusterIdUpdated;

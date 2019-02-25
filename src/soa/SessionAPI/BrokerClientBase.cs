@@ -7,16 +7,15 @@
 // </summary>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Hpc.Scheduler.Session.Internal;
-using System.ServiceModel.Channels;
-using System.ServiceModel.Description;
-using System.Diagnostics;
-
 namespace Microsoft.Hpc.Scheduler.Session
 {
+    using System;
+    using System.Diagnostics;
+    using System.ServiceModel.Channels;
+    using System.ServiceModel.Description;
+
+    using Microsoft.Hpc.Scheduler.Session.Internal;
+
     /// <summary>
     ///   <para />
     /// </summary>
@@ -57,7 +56,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Shutdown lock
         /// </summary>
-        internal object objectLock = new object();
+        protected object objectLock = new object();
 
         /// <summary>
         ///   <para />
@@ -78,7 +77,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// All BrokerClients need to know when broker goes down
         /// </summary>
-        internal abstract void SendBrokerDownSignal(bool isBrokerNodeDown);
+        public abstract void SendBrokerDownSignal(bool isBrokerNodeDown);
 
         /// <summary>
         ///   <para />
@@ -141,7 +140,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Detachs BrokerClient from Session stopping any hearbeat signals
         /// </summary>
-        internal void DetachFromSession()
+        public void DetachFromSession()
         {
             if (this.session != null)
             {

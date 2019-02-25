@@ -10,10 +10,8 @@
 namespace Microsoft.Hpc.Scheduler.Session
 {
     using System;
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
-    using System.Text;
-    using Microsoft.Hpc.Scheduler.Properties;
+
+    using Microsoft.Hpc.Scheduler.Session.Data;
 
     /// <summary>
     /// The structure contains all the information about a session
@@ -123,15 +121,15 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Azure request queue SAS Uri
         /// </summary>
-        private string azureRequestQueueUri;
+        private string[] azureRequestQueueUris;
 
         /// <summary>
         /// Get or set Azure request queue SAS Uri
         /// </summary>
-        public string AzureRequestQueueUri
+        public string[] AzureRequestQueueUris
         {
-            get { return azureRequestQueueUri; }
-            set { azureRequestQueueUri = value; }
+            get { return this.azureRequestQueueUris; }
+            set { this.azureRequestQueueUris = value; }
         }
 
         /// <summary>
@@ -405,5 +403,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         internal string AzureControllerRequestQueueUri { get; set; }
 
         internal string AzureControllerResponseQueueUri { get; set; }
+
+        public bool UseAzureStorage => this.TransportScheme == TransportScheme.AzureStorage || this.UseAzureQueue.GetValueOrDefault();
     }
 }

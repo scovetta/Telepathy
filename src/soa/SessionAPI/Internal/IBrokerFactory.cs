@@ -15,7 +15,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// Interface for broker factory
     /// </summary>
-    internal interface IBrokerFactory
+    public interface IBrokerFactory
     {
         /// <summary>
         /// Create broker

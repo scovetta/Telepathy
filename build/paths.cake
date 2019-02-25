@@ -5,7 +5,9 @@ public static class Paths
 		@"src\soa\CcpServiceHost\CcpServiceHost.csproj",
 		@"src\soa\EchoSvcLib\EchoSvcLib.csproj",
 		@"src\soa\BrokerLauncher\BrokerLauncher.csproj",
-		@"src\soa\HpcBrokerWorker\HpcBrokerWorker.csproj" };
+		@"src\soa\HpcBrokerWorker\HpcBrokerWorker.csproj",
+		@"src\soa\SessionLauncher\SessionLauncher.csproj" 
+	};
 
 	public static FilePath[] TestFiles => new FilePath[]{
 		@"src\soa\BrokerLauncher.UnitTest\BrokerLauncher.UnitTest.csproj",

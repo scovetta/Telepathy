@@ -13,7 +13,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// Provides an event argument for broker heartbeat event
     /// </summary>
-    internal class BrokerHeartbeatEventArgs : EventArgs
+    public class BrokerHeartbeatEventArgs : EventArgs
     {
         /// <summary>
         /// Stores a value indicating whether it is broker node down

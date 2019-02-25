@@ -18,7 +18,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// Utility class for Web API related staff
     /// </summary>
-    internal static class WebAPIUtility
+    public static class WebAPIUtility
     {
         static DataContractSerializer FaultSerializer = new DataContractSerializer(typeof(HpcWebServiceFault));
 

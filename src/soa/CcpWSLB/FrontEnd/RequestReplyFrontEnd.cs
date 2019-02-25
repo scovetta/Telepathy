@@ -17,6 +17,8 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using Microsoft.Hpc.ServiceBroker.Common.ThreadHelper;
     using Microsoft.Hpc.SvcBroker;
 
+    using SR = Microsoft.Hpc.SvcBroker.SR;
+
     /// <summary>
     /// The FrontEnd for request/reply MEP (works for both BasicHttpBinding and WSHttpBinding)
     /// </summary>

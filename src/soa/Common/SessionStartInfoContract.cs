@@ -358,6 +358,8 @@
             }
         }
 
+        public bool UseAzureStorage => this.TransportScheme == TransportScheme.AzureStorage || this.UseAzureQueue.GetValueOrDefault();
+
         [DataMember(IsRequired = false)]
         public Dictionary<string, string> DependFilesStorageInfo = new Dictionary<string, string>(0);
     }

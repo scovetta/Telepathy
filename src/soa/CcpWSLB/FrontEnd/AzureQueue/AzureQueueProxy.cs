@@ -9,7 +9,19 @@
 
 namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 {
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Runtime.CompilerServices;
+    using System.ServiceModel.Channels;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Xml;
+
     using Microsoft.Hpc.BrokerBurst;
+    using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
@@ -19,17 +31,6 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using Microsoft.WindowsAzure.Storage.Queue.Protocol;
     using Microsoft.WindowsAzure.Storage.RetryPolicies;
     using Microsoft.WindowsAzure.Storage.Shared.Protocol;
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.ServiceModel.Channels;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using System.Xml;
-
-    using Microsoft.Hpc.Scheduler.Session;
 
     /// <summary>
     /// It is the manager to control both request and response queue.
@@ -45,6 +46,8 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// It is wait time for messageProcessorTask to exit.
         /// </summary>
         private const int WaitTimeForTaskInMillisecond = 3 * 1000;
+
+        private const int MessageRetrieveConcurrencyLevel = 10;
 
         /// <summary>
         /// Default retry policy for request storage operation.
@@ -69,8 +72,15 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// </summary>
         public int ClusterHash
         {
-            get { return clusterHash; }
-            set { clusterHash = value; }
+            get
+            {
+                return clusterHash;
+            }
+
+            set
+            {
+                clusterHash = value;
+            }
         }
 
         /// <summary>
@@ -86,7 +96,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// <summary>
         /// Session Id.
         /// </summary>
-        private int sessionId;
+        public int SessionId { get; private set; }
 
         /// <summary>
         /// Azure storage connection string
@@ -96,14 +106,9 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         internal string AzureStorageConnectionString => this.azureStorageConnectionString;
 
         /// <summary>
-        /// the request queue/blob container name
-        /// </summary>
-        private string requestStorageName;
-        
-        /// <summary>
         /// the request Azure queue
         /// </summary>
-        private CloudQueue requestQueue;
+        private CloudQueue[] requestQueues;
 
         /// <summary>
         /// the request Azure blob container;
@@ -113,7 +118,8 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// <summary>
         /// the local request queue
         /// </summary>
-        //ConcurrentQueue<Message> requestMessageQueue = new ConcurrentQueue<Message>();
+
+        // ConcurrentQueue<Message> requestMessageQueue = new ConcurrentQueue<Message>();
         BlockingCollection<Message> requestMessageQueue = new BlockingCollection<Message>();
 
         /// <summary>
@@ -126,8 +132,8 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// key:session hash
         /// value:local response queue and the Azure storage client
         /// </summary>
-        Dictionary<int, Tuple<ConcurrentQueue<Message>, AzureStorageClient>> responseMessageClients = new Dictionary<int,Tuple<ConcurrentQueue<Message>,AzureStorageClient>>();
-        
+        Dictionary<int, Tuple<ConcurrentQueue<Message>, AzureStorageClient>> responseMessageClients = new Dictionary<int, Tuple<ConcurrentQueue<Message>, AzureStorageClient>>();
+
         /// <summary>
         /// the dictionary for callback id
         /// key:callback id
@@ -139,11 +145,11 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// lock for syncing dictionaries
         /// </summary>
         private object dicSyncLock = new object();
-        
+
         /// <summary>
         /// the request storage client
         /// </summary>
-        private AzureStorageClient requestStorageClient;
+        private AzureStorageClient[] requestStorageClients;
 
         /// <summary>
         /// the response storage client
@@ -158,20 +164,27 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// <summary>
         /// the message retriever;
         /// </summary>
-        private MessageRetriever messageRetriever;
+        private MessageRetriever[] messageRetrievers;
 
         /// <summary>
         /// the request queue SAS Uri
         /// </summary>
-        private string requestQueueUri;
+        private string[] requestQueueUris;
 
         /// <summary>
         /// the request queue SAS Uri
         /// </summary>
-        public string RequestQueueUri
+        public string[] RequestQueueUris
         {
-            get { return requestQueueUri; }
-            set { requestQueueUri = value; }
+            get
+            {
+                return requestQueueUris;
+            }
+
+            private set
+            {
+                requestQueueUris = value;
+            }
         }
 
         /// <summary>
@@ -184,8 +197,15 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// </summary>
         public string RequestBlobUri
         {
-            get { return requestBlobUri; }
-            set { requestBlobUri = value; }
+            get
+            {
+                return requestBlobUri;
+            }
+
+            set
+            {
+                requestBlobUri = value;
+            }
         }
 
         /// <summary>
@@ -202,8 +222,15 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// </summary>
         public Dictionary<int, Tuple<string, string>> ResponseClientUris
         {
-            get { return responseClientUris; }
-            set { responseClientUris = value; }
+            get
+            {
+                return responseClientUris;
+            }
+
+            set
+            {
+                responseClientUris = value;
+            }
         }
 
         /// <summary>
@@ -219,7 +246,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// that there are several proxy roles, use a smaller value than the
         /// value used by on-premise AzureQueueManager.
         /// </remarks>
-        private const int RetrieverConcurrency = 16; 
+        private const int RetrieverConcurrency = 16;
 
         /// <summary>
         /// The upper limit concurrency of adding response messages to the
@@ -252,8 +279,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// Local cache for the request message. Message retriever gets
         /// requests from queue and put them in this cache.
         /// </summary>
-        private ConcurrentQueue<IEnumerable<CloudQueueMessage>> requestCache
-            = new ConcurrentQueue<IEnumerable<CloudQueueMessage>>();
+        private ConcurrentQueue<IEnumerable<CloudQueueMessage>> requestCache = new ConcurrentQueue<IEnumerable<CloudQueueMessage>>();
 
         /// <summary>
         /// It controls the request messages in local cache.
@@ -288,44 +314,53 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             ServicePointManager.UseNagleAlgorithm = false;
 
             this.clusterName = clusterName;
-            this.sessionId = sessionId;
+            this.SessionId = sessionId;
             this.clusterHash = clusterHash;
 
             this.azureStorageConnectionString = azureStorageConnectionString;
 
             // build the request and response queue
-            this.requestStorageName = SoaHelper.GetRequestStorageName(clusterHash, sessionId);
-            // this.responseStorageNamePrefix = SoaHelper.GetResponseStorageName(clusterId, sessionId);
+            // var requestStorageName = SoaHelper.GetRequestStorageName(clusterHash, SessionId);
+            var requestBlobContainerName = SoaHelper.GetRequestStorageName(clusterHash, sessionId);
+            var requestQueueNames = Enumerable.Range(0, MessageRetrieveConcurrencyLevel).Select(i => SoaHelper.GetRequestStorageName(clusterHash, sessionId) + $"-{i}").ToArray();
+
+            // this.responseStorageNamePrefix = SoaHelper.GetResponseStorageName(clusterId, SessionId);
 
             // exponential retry
             this.CreateStorageClient(DefaultRetryPolicy);
 
-            this.requestQueue = this.queueClient.GetQueueReference(requestStorageName);
-            CreateQueueWithRetry(this.requestQueue);
+            this.requestQueues = requestQueueNames.Select(n => this.queueClient.GetQueueReference(n)).ToArray();
+            foreach (var requestQueue in this.requestQueues)
+            {
+                CreateQueueWithRetry(requestQueue);
+            }
 
             if (sessionId == SessionStartInfo.StandaloneSessionId)
             {
                 // Clear the queue in standalone session
-                this.requestQueue.Clear();
+                foreach (var requestQueue in this.requestQueues)
+                {
+                    requestQueue.Clear();
+                }
             }
 
-            this.requestBlobContainer = this.blobClient.GetContainerReference(requestStorageName);
+            this.requestBlobContainer = this.blobClient.GetContainerReference(requestBlobContainerName);
             CreateContainerWithRetry(this.requestBlobContainer);
 
-            //generate the SAS token for the queue and blob container
-
+            // generate the SAS token for the queue and blob container
             SharedAccessQueuePolicy queuePolicy = new SharedAccessQueuePolicy() { Permissions = SharedAccessQueuePermissions.Add, SharedAccessExpiryTime = DateTime.UtcNow.AddDays(7) };
-            this.requestQueueUri = string.Join(string.Empty, this.requestQueue.Uri, this.requestQueue.GetSharedAccessSignature(queuePolicy));
+            this.requestQueueUris = this.requestQueues.Select(q => string.Join(string.Empty, q.Uri, q.GetSharedAccessSignature(queuePolicy))).ToArray();
 
             SharedAccessBlobPolicy blobPolicy = new SharedAccessBlobPolicy() { Permissions = SharedAccessBlobPermissions.Write, SharedAccessExpiryTime = DateTime.UtcNow.AddDays(7) };
             this.requestBlobUri = string.Join(string.Empty, this.requestBlobContainer.Uri, this.requestBlobContainer.GetSharedAccessSignature(blobPolicy));
 
-            this.requestStorageClient = new AzureStorageClient(this.requestQueue, this.requestBlobContainer);
-            //this.responseStorageClient = new AzureStorageClient(this.responseQueue, this.responseBlobContainer);
+            this.requestStorageClients = this.requestQueues.Select(q => new AzureStorageClient(q, this.requestBlobContainer)).ToArray();
+
+            // this.responseStorageClient = new AzureStorageClient(this.responseQueue, this.responseBlobContainer);
 
             // initialize sender and retriever
             this.messageSender = new MessageSender(this.responseMessageClients, SenderConcurrency);
-            this.messageRetriever = new MessageRetriever(this.requestStorageClient.Queue, RetrieverConcurrency, DefaultVisibleTimeout, this.HandleMessages, null);
+            this.messageRetrievers = this.requestStorageClients.Select(c => new MessageRetriever(c.Queue, RetrieverConcurrency, DefaultVisibleTimeout, this.HandleMessages, null)).ToArray();
 
             this.receiveRequest = this.ReceiveRequest;
         }
@@ -337,7 +372,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         {
             ThreadPool.QueueUserWorkItem(this.InternalStart);
         }
-        
+
         /// <summary>
         /// Start the proxy. Proxy waits for the request queue to be created,
         /// and processes request messages.
@@ -345,12 +380,14 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// <param name="state">state object</param>
         private void InternalStart(object state)
         {
-            //ThreadPool.SetMinThreads(MinThreadsOfThreadpool, MinThreadsOfThreadpool);
-
+            // ThreadPool.SetMinThreads(MinThreadsOfThreadpool, MinThreadsOfThreadpool);
             this.semaphoreForRequest = new Semaphore(0, int.MaxValue);
             this.semaphoreForWorker = new Semaphore(MessageProcessWorker, MessageProcessWorker);
-            
-            this.messageRetriever.Start();
+
+            foreach (var messageRetriever in this.messageRetrievers)
+            {
+                messageRetriever.Start();
+            }
 
             CancellationToken token = this.taskCancellation.Token;
 
@@ -359,7 +396,6 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 
             return;
         }
-
 
         /// <summary>
         /// Cleanup current object.
@@ -374,37 +410,31 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                 }
                 catch (Exception e)
                 {
-                    BrokerTracing.TraceError(
-                        SoaHelper.CreateTraceMessage(
-                            "Proxy",
-                            "Cleanup",
-                            string.Format("Closing message retriever failed, {0}", e)));
+                    BrokerTracing.TraceError(SoaHelper.CreateTraceMessage("Proxy", "Cleanup", string.Format("Closing message retriever failed, {0}", e)));
                 }
 
                 this.messageSender = null;
             }
 
-            if (this.messageRetriever != null)
+            foreach (var messageRetriever in this.messageRetrievers)
             {
-                try
+                if (messageRetriever != null)
                 {
-                    this.messageRetriever.Close();
-                }
-                catch (Exception e)
-                {
-                    BrokerTracing.TraceError(
-                        SoaHelper.CreateTraceMessage(
-                            "Proxy",
-                            "Cleanup",
-                            string.Format("Closing message retrier failed, {0}", e)));
-                }
+                    try
+                    {
+                        messageRetriever.Close();
+                    }
+                    catch (Exception e)
+                    {
+                        BrokerTracing.TraceError(SoaHelper.CreateTraceMessage("Proxy", "Cleanup", string.Format("Closing message retrier failed, {0}", e)));
+                    }
 
-                this.messageRetriever = null;
+                    // messageRetriever = null;
+                }
             }
 
             if (this.messageProcessorTask != null)
             {
-
                 if (this.taskCancellation != null)
                 {
                     try
@@ -414,16 +444,12 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                             this.taskCancellation.Cancel();
 
                             // no need to wait here for the task could be waiting for the semaphore
-                            //this.messageProcessorTask.Wait(WaitTimeForTaskInMillisecond, this.taskCancellation.Token);
+                            // this.messageProcessorTask.Wait(WaitTimeForTaskInMillisecond, this.taskCancellation.Token);
                         }
                     }
                     catch (Exception e)
                     {
-                        BrokerTracing.TraceError(
-                        SoaHelper.CreateTraceMessage(
-                            "Proxy",
-                            "Cleanup",
-                            string.Format("Cancelling messageProcessorTask failed, {0}", e)));
+                        BrokerTracing.TraceError(SoaHelper.CreateTraceMessage("Proxy", "Cleanup", string.Format("Cancelling messageProcessorTask failed, {0}", e)));
                     }
                 }
 
@@ -434,11 +460,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                 }
                 catch (Exception e)
                 {
-                    BrokerTracing.TraceError(
-                        SoaHelper.CreateTraceMessage(
-                            "Proxy",
-                            "Cleanup",
-                            string.Format("Disposing message processor task failed, {0}", e)));
+                    BrokerTracing.TraceError(SoaHelper.CreateTraceMessage("Proxy", "Cleanup", string.Format("Disposing message processor task failed, {0}", e)));
                 }
 
                 this.messageProcessorTask = null;
@@ -452,11 +474,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                 }
                 catch (Exception e)
                 {
-                    BrokerTracing.TraceError(
-                        SoaHelper.CreateTraceMessage(
-                            "Proxy",
-                            "Cleanup",
-                            string.Format("Disposing semaphoreForRequest failed, {0}", e)));
+                    BrokerTracing.TraceError(SoaHelper.CreateTraceMessage("Proxy", "Cleanup", string.Format("Disposing semaphoreForRequest failed, {0}", e)));
                 }
 
                 this.semaphoreForRequest = null;
@@ -470,32 +488,27 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                 }
                 catch (Exception e)
                 {
-                    BrokerTracing.TraceError(
-                        SoaHelper.CreateTraceMessage(
-                            "Proxy",
-                            "Cleanup",
-                            string.Format("Disposing semaphoreForWorker failed, {0}", e)));
+                    BrokerTracing.TraceError(SoaHelper.CreateTraceMessage("Proxy", "Cleanup", string.Format("Disposing semaphoreForWorker failed, {0}", e)));
                 }
 
                 this.semaphoreForWorker = null;
             }
 
-            if (this.requestStorageClient != null)
+            foreach (var requestStorageClient in this.requestStorageClients)
             {
-                try
+                if (requestStorageClient != null)
                 {
-                    this.requestStorageClient.Close();
-                }
-                catch (Exception e)
-                {
-                    BrokerTracing.TraceError(
-                        SoaHelper.CreateTraceMessage(
-                            "Proxy",
-                            "Cleanup",
-                            string.Format("Disposing requestStorageClient failed, {0}", e)));
-                }
+                    try
+                    {
+                        requestStorageClient.Close();
+                    }
+                    catch (Exception e)
+                    {
+                        BrokerTracing.TraceError(SoaHelper.CreateTraceMessage("Proxy", "Cleanup", string.Format("Disposing requestStorageClient failed, {0}", e)));
+                    }
 
-                this.requestStorageClient = null;
+                    // requestStorageClient = null;
+                }
             }
 
             if (this.responseStorageClient != null)
@@ -506,18 +519,13 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                 }
                 catch (Exception e)
                 {
-                    BrokerTracing.TraceError(
-                        SoaHelper.CreateTraceMessage(
-                            "Proxy",
-                            "Cleanup",
-                            string.Format("Disposing responseStorageClient failed, {0}", e)));
+                    BrokerTracing.TraceError(SoaHelper.CreateTraceMessage("Proxy", "Cleanup", string.Format("Disposing responseStorageClient failed, {0}", e)));
                 }
 
                 this.responseStorageClient = null;
             }
 
             this.requestMessageQueue?.Dispose();
-
         }
 
         /// <summary>
@@ -533,11 +541,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             }
             catch (Exception e)
             {
-                BrokerTracing.TraceError(
-                    SoaHelper.CreateTraceMessage(
-                        "Proxy",
-                        "HandleMessages",
-                        string.Format("Error occurs, {0}", e)));
+                BrokerTracing.TraceError(SoaHelper.CreateTraceMessage("Proxy", "HandleMessages", string.Format("Error occurs, {0}", e)));
             }
         }
 
@@ -570,14 +574,9 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             }
             catch (Exception e)
             {
-                BrokerTracing.TraceError(
-                    SoaHelper.CreateTraceMessage(
-                        "Proxy",
-                        "MessageProcessor",
-                        string.Format("Error occurs, {0}", e)));
+                BrokerTracing.TraceError(SoaHelper.CreateTraceMessage("Proxy", "MessageProcessor", string.Format("Error occurs, {0}", e)));
             }
         }
-
 
         /// <summary>
         /// Process a collection of queue messages.
@@ -585,47 +584,32 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// <param name="messages">collection of the queue messages</param>
         private void ProcessMessages(IEnumerable<CloudQueueMessage> messages)
         {
-            BrokerTracing.TraceInfo(
-                SoaHelper.CreateTraceMessage(
-                    "Proxy",
-                    "ProcessMessages",
-                    string.Format("Process {0} messages.", messages.Count<CloudQueueMessage>())));
+            BrokerTracing.TraceInfo(SoaHelper.CreateTraceMessage("Proxy", "ProcessMessages", string.Format("Process {0} messages.", messages.Count<CloudQueueMessage>())));
 
-            messages.AsParallel<CloudQueueMessage>().ForAll<CloudQueueMessage>(
-            (requestQueueMessage) =>
-            {
-                
-                Message request = null;
+            messages.AsParallel<CloudQueueMessage>()
+                .ForAll<CloudQueueMessage>(
+                    (requestQueueMessage) =>
+                        {
+                            Message request = null;
 
-                try
-                {
-                    BrokerTracing.TraceInfo(
-                        string.Format("SOA broker proxy perf1 - {0}", DateTime.UtcNow.TimeOfDay.TotalSeconds));
+                            try
+                            {
+                                BrokerTracing.TraceInfo(string.Format("SOA broker proxy perf1 - {0}", DateTime.UtcNow.TimeOfDay.TotalSeconds));
 
-                    request = this.requestStorageClient.GetWcfMessageFromQueueMessage(requestQueueMessage);
+                                request = this.requestStorageClients.First().GetWcfMessageFromQueueMessage(requestQueueMessage);
 
-                    this.requestMessageQueue.Add(request);
-                    //this.requestMessageQueue.Enqueue(request);
+                                this.requestMessageQueue.Add(request);
 
-                    UniqueId messageId = SoaHelper.GetMessageId(request);
+                                // this.requestMessageQueue.Enqueue(request);
+                                UniqueId messageId = SoaHelper.GetMessageId(request);
 
-                    BrokerTracing.TraceInfo(
-                        SoaHelper.CreateTraceMessage(
-                            "Proxy",
-                            "Request received inqueue",
-                            string.Empty,
-                            messageId,
-                            "Request message in queue"));
-
-                }
-                catch (Exception e)
-                {
-                    BrokerTracing.TraceError(
-                        SoaHelper.CreateTraceMessage(
-                            "Proxy", "ProcessMessages", string.Format("Error occurs {0}", e)));
-
-                }
-            });
+                                BrokerTracing.TraceInfo(SoaHelper.CreateTraceMessage("Proxy", "Request received inqueue", string.Empty, messageId, "Request message in queue"));
+                            }
+                            catch (Exception e)
+                            {
+                                BrokerTracing.TraceError(SoaHelper.CreateTraceMessage("Proxy", "ProcessMessages", string.Format("Error occurs {0}", e)));
+                            }
+                        });
 
             this.semaphoreForWorker.Release();
         }
@@ -646,11 +630,12 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                 BrokerTracing.TraceWarning("[AzureQueueProxy] requestMessageQueue is disposed.");
                 return null;
             }
-            //while (!requestMessageQueue.TryDequeue(out request))
-            //{
-            //    BrokerTracing.TraceInfo("[AzureQueueProxy] No message in the request message queue. Sleep wait.");
-            //    Thread.Sleep(RequestWaitIntervalMs);
-            //}
+
+            // while (!requestMessageQueue.TryDequeue(out request))
+            // {
+            // BrokerTracing.TraceInfo("[AzureQueueProxy] No message in the request message queue. Sleep wait.");
+            // Thread.Sleep(RequestWaitIntervalMs);
+            // }
             BrokerTracing.TraceInfo("[AzureQueueProxy] Request is dequeued {0}", request.Version.ToString());
             return request;
         }
@@ -658,11 +643,12 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         public delegate Message ReceiveRequestDelegate();
 
         private ReceiveRequestDelegate receiveRequest;
-        
+
         public IAsyncResult BeginReceiveRequest(AsyncCallback callback, object state)
         {
             IAsyncResult ar = receiveRequest.BeginInvoke(callback, state);
-            //BrokerTracing.TraceInfo("[AzureQueueProxy] BeginReceiveRequest ar.CompletedSynchronously {0}", ar.CompletedSynchronously);
+
+            // BrokerTracing.TraceInfo("[AzureQueueProxy] BeginReceiveRequest ar.CompletedSynchronously {0}", ar.CompletedSynchronously);
             return ar;
         }
 
@@ -679,7 +665,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             MessageBuffer messageBuffer = null;
             messageBuffer = response.CreateBufferedCopy(int.MaxValue);
             Message m = messageBuffer.CreateMessage();
-            
+
             this.responseMessageQueue.Enqueue(m);
         }
 
@@ -695,18 +681,17 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             this.responseMessageClients[this.sessionClientData[clientData]].Item1.Enqueue(m);
         }
 
-
         public void AddResponseQueues(string clientData, int sessionHash)
         {
             lock (this.dicSyncLock)
             {
                 if (!this.responseMessageClients.Keys.Contains(sessionHash))
                 {
-                    string responseStorageName = SoaHelper.GetResponseStorageName(this.clusterHash, this.sessionId, sessionHash);
+                    string responseStorageName = SoaHelper.GetResponseStorageName(this.clusterHash, this.SessionId, sessionHash);
                     CloudQueue responseQueue = this.queueClient.GetQueueReference(responseStorageName);
                     CreateQueueWithRetry(responseQueue);
 
-                    if (this.sessionId == SessionStartInfo.StandaloneSessionId)
+                    if (this.SessionId == SessionStartInfo.StandaloneSessionId)
                     {
                         responseQueue.Clear();
                     }
@@ -714,13 +699,17 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                     // use default retry option for the cloud queue
                     CloudBlobContainer responseBlobContainer = this.blobClient.GetContainerReference(responseStorageName);
                     CreateContainerWithRetry(responseBlobContainer);
+
                     // use default retry option for the cloud blob
-                    SharedAccessQueuePolicy queuePolicy = new SharedAccessQueuePolicy() { Permissions = SharedAccessQueuePermissions.ProcessMessages, SharedAccessExpiryTime = DateTime.UtcNow.AddDays(7) };
+                    SharedAccessQueuePolicy queuePolicy =
+                        new SharedAccessQueuePolicy() { Permissions = SharedAccessQueuePermissions.ProcessMessages, SharedAccessExpiryTime = DateTime.UtcNow.AddDays(7) };
                     string responseQueueUri = string.Join(string.Empty, responseQueue.Uri, responseQueue.GetSharedAccessSignature(queuePolicy));
 
-                    SharedAccessBlobPolicy blobPolicy = new SharedAccessBlobPolicy() { Permissions = SharedAccessBlobPermissions.Read | SharedAccessBlobPermissions.Delete, SharedAccessExpiryTime = DateTime.UtcNow.AddDays(7) };
+                    SharedAccessBlobPolicy blobPolicy = new SharedAccessBlobPolicy()
+                                                            {
+                                                                Permissions = SharedAccessBlobPermissions.Read | SharedAccessBlobPermissions.Delete, SharedAccessExpiryTime = DateTime.UtcNow.AddDays(7)
+                                                            };
                     string responseBlobUri = string.Join(string.Empty, responseBlobContainer.Uri, responseBlobContainer.GetSharedAccessSignature(blobPolicy));
-
 
                     this.responseMessageClients.Add(sessionHash, Tuple.Create(new ConcurrentQueue<Message>(), new AzureStorageClient(responseQueue, responseBlobContainer)));
                     this.responseClientUris.Add(sessionHash, Tuple.Create(responseQueueUri, responseBlobUri));
@@ -744,31 +733,29 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         public static void CreateQueueWithRetry(CloudQueue queue)
         {
             RetryHelper<object>.InvokeOperation(
-            () =>
-            {
-                if (queue.CreateIfNotExists())
-                {
-                    BrokerTracing.TraceInfo(
-                        "[AzureQueueManager].CreateQueueWithRetry: Create the queue {0}", queue.Name);
-                }
-
-                return null;
-            },
-            (e, count) =>
-            {
-                BrokerTracing.TraceError(
-                    "Failed to create the queue {0}: {1}. Retry Count = {2}", queue.Name, e, count);
-
-                StorageException se = e as StorageException;
-
-                if (se != null)
-                {
-                    if (BurstUtility.GetStorageErrorCode(se) == QueueErrorCodeStrings.QueueAlreadyExists)
+                () =>
                     {
-                        Thread.Sleep(TimeSpan.FromMinutes(1));
-                    }
-                }
-            });
+                        if (queue.CreateIfNotExists())
+                        {
+                            BrokerTracing.TraceInfo("[AzureQueueManager].CreateQueueWithRetry: Create the queue {0}", queue.Name);
+                        }
+
+                        return null;
+                    },
+                (e, count) =>
+                    {
+                        BrokerTracing.TraceError("Failed to create the queue {0}: {1}. Retry Count = {2}", queue.Name, e, count);
+
+                        StorageException se = e as StorageException;
+
+                        if (se != null)
+                        {
+                            if (BurstUtility.GetStorageErrorCode(se) == QueueErrorCodeStrings.QueueAlreadyExists)
+                            {
+                                Thread.Sleep(TimeSpan.FromMinutes(1));
+                            }
+                        }
+                    });
         }
 
         /// <summary>
@@ -778,39 +765,37 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         public static void CreateContainerWithRetry(CloudBlobContainer container)
         {
             RetryHelper<object>.InvokeOperation(
-            () =>
-            {
-                if (container.CreateIfNotExists())
-                {
-                    BrokerTracing.TraceInfo(
-                      "[AzureQueueManager].CreateContainerWithRetry: Create the container {0}", container.Name);
-                }
-
-                return null;
-            },
-            (e, count) =>
-            {
-                BrokerTracing.TraceError("Failed to create the container {0}: {1}. Retry Count = {2}", container.Name, e, count);
-
-                StorageException se = e as StorageException;
-
-                if (se != null)
-                {
-                    string errorCode = BurstUtility.GetStorageErrorCode(se);
-
-                    // According to test, the error code is ResourceAlreadyExists.
-                    // There is no doc about this, add ContainerAlreadyExists here.
-
-                    // TODO: Azure storage SDK 2.0
-                    if (//errorCode == StorageErrorCodeStrings.ResourceAlreadyExists ||
-                          errorCode == StorageErrorCodeStrings.ContainerAlreadyExists)
+                () =>
                     {
-                        Thread.Sleep(TimeSpan.FromMinutes(1));
-                    }
-                }
-            });
-        }
+                        if (container.CreateIfNotExists())
+                        {
+                            BrokerTracing.TraceInfo("[AzureQueueManager].CreateContainerWithRetry: Create the container {0}", container.Name);
+                        }
 
+                        return null;
+                    },
+                (e, count) =>
+                    {
+                        BrokerTracing.TraceError("Failed to create the container {0}: {1}. Retry Count = {2}", container.Name, e, count);
+
+                        StorageException se = e as StorageException;
+
+                        if (se != null)
+                        {
+                            string errorCode = BurstUtility.GetStorageErrorCode(se);
+
+                            // According to test, the error code is ResourceAlreadyExists.
+                            // There is no doc about this, add ContainerAlreadyExists here.
+
+                            // TODO: Azure storage SDK 2.0
+                            if ( // errorCode == StorageErrorCodeStrings.ResourceAlreadyExists ||
+                                errorCode == StorageErrorCodeStrings.ContainerAlreadyExists)
+                            {
+                                Thread.Sleep(TimeSpan.FromMinutes(1));
+                            }
+                        }
+                    });
+        }
 
         /// <summary>
         /// Dispose the object.
@@ -824,7 +809,6 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             {
                 this.Cleanup();
             }
-            
         }
 
         /// <summary>
@@ -860,7 +844,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                 }
             }
         }
-                
+
         void IResponseServiceCallback.Close()
         {
             throw new NotImplementedException();
@@ -871,7 +855,5 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         {
             throw new NotImplementedException();
         }
-
-        
     }
 }

@@ -151,18 +151,18 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Gets the password internal
         /// </summary>
-        internal override string InternalPassword
+        public override string InternalPassword
         {
             get { return this.password; }
             set { this.password = value; }
         }
 
-        internal bool SavePassword { get; set; }
+        public bool SavePassword { get; set; }
 
         /// <summary>
         /// Remove the password info.
         /// </summary>
-        internal void ClearCredential()
+        public void ClearCredential()
         {
             this.Password = null;
             this.SavePassword = false;
@@ -179,7 +179,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Gets or sets a value indicating whether the session is inprocess
         /// </summary>
-        internal bool UseInprocessBroker
+        public bool UseInprocessBroker
         {
             get
             {
@@ -201,7 +201,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Gets a value indicating whether debug mode is enabled
         /// </summary>
-        internal bool DebugModeEnabled
+        public bool DebugModeEnabled
         {
             get { return this.eprList != null; }
         }
@@ -210,7 +210,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// The certificate
         /// </summary>
         private byte[] certificate;
-        internal byte[] Certificate
+        public byte[] Certificate
         {
             set { this.certificate = value; }
         }
@@ -219,7 +219,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// The pfx password
         /// </summary>
         private string pfxPassword;
-        internal string PfxPassword
+        public string PfxPassword
         {
             set { this.pfxPassword = value; }
         }

@@ -8,12 +8,11 @@
 //------------------------------------------------------------------------------
 namespace Microsoft.Hpc.Scheduler.Session.Interface
 {
-    using System;
     using System.Collections.Generic;
     using System.ServiceModel;
-    using System.Text;
-    using Microsoft.Hpc.Scheduler.Properties;
     using System.Threading.Tasks;
+
+    using Microsoft.Hpc.Scheduler.Session.Data;
 
     /// <summary>
     /// The event handler for the job and task events

@@ -6,8 +6,11 @@
 
         public static string BrokerLauncherResponseQueueName => "brokerlaunchres";
 
-        public static string BrokerWorkerControllerRequestQueueName => "brokerworkerctrlreq";
+        private const string BrokerWorkerControllerRequestQueueNamePrefix = "brokerworkerctrlreq";
 
-        public static string BrokerWorkerControllerResponseQueueName => "brokerworkerctrlres";
+        private const string BrokerWorkerControllerResponseQueueNamePrefix = "brokerworkerctrlres";
+
+        public static string GetBrokerWorkerControllerRequestQueueName(int sessionId) => BrokerWorkerControllerRequestQueueNamePrefix + $"-{sessionId}";
+        public static string GetBrokerWorkerControllerResponseQueueName(int sessionId) => BrokerWorkerControllerResponseQueueNamePrefix + $"-{sessionId}";
     }
 }

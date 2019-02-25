@@ -10,7 +10,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Interface
 {
     using System;
     using System.Runtime.Serialization;
-    using Microsoft.Hpc.Scheduler.Properties;
+
+    using Microsoft.Hpc.Scheduler.Session.Data;
 
     /// <summary>
     ///   <para />

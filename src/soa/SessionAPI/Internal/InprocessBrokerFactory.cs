@@ -16,7 +16,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// Factory to create inprocess broker
     /// </summary>
-    internal class InprocessBrokerFactory : IBrokerFactory
+    public class InprocessBrokerFactory : IBrokerFactory
     {
         /// <summary>
         /// Stores the head node
@@ -146,7 +146,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="attached">indicating whether it is attaching</param>
         /// <param name="binding">indicating the binding</param>
         /// <returns>returns the broker initialization result</returns>
-        [Refactor("Make the create broker internal a real async method")]
         private Task<SessionBase> CreateBrokerInternal(SessionStartInfo startInfo, int sessionId, bool attached, Binding binding)
         {
             InprocBrokerAdapter adapter = new InprocBrokerAdapter(startInfo, attached, startInfo.DebugModeEnabled, binding);

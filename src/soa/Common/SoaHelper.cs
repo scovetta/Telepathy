@@ -34,7 +34,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// It is a helper class, shared by broker and proxy.
     /// </summary>
-    internal static class SoaHelper
+    public static class SoaHelper
     {
         /// <summary>
         /// Environment Variable to pass the localtion of the process.
@@ -472,7 +472,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             }
         }
 
-        internal static EndpointAddress CreateEndpointAddress(Uri uri, bool secure, bool certIdentity)
+        public static EndpointAddress CreateEndpointAddress(Uri uri, bool secure, bool certIdentity)
         {
             if (certIdentity)
             {
@@ -942,11 +942,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>response storage name</returns>
         public static string GetResponseStorageName(string clusterId, int sessionId, int requeueCount)
         {
-            if (sessionId < SessionStartInfo.StandaloneSessionId)
+            if (sessionId < TelepathyConstants.StandaloneSessionId)
             {
                 throw new ArgumentOutOfRangeException(nameof(sessionId));
             }
-            else if (sessionId == SessionStartInfo.StandaloneSessionId)
+            else if (sessionId == TelepathyConstants.StandaloneSessionId)
             {
                 sessionId = 0;
             }
@@ -962,11 +962,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns></returns>
         public static string GetRequestStorageName(int clusterHash, int sessionId)
         {
-            if (sessionId < SessionStartInfo.StandaloneSessionId)
+            if (sessionId < TelepathyConstants.StandaloneSessionId)
             {
                 throw new ArgumentOutOfRangeException(nameof(sessionId));
             }
-            else if (sessionId == SessionStartInfo.StandaloneSessionId)
+            else if (sessionId == TelepathyConstants.StandaloneSessionId)
             {
                 sessionId = 0;
             }
@@ -989,11 +989,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
         public static string GetControllerRequestStorageName(int clusterHash, int sessionId)
         {
-            if (sessionId < SessionStartInfo.StandaloneSessionId)
+            if (sessionId < TelepathyConstants.StandaloneSessionId)
             {
                 throw new ArgumentOutOfRangeException(nameof(sessionId));
             }
-            else if (sessionId == SessionStartInfo.StandaloneSessionId)
+            else if (sessionId == TelepathyConstants.StandaloneSessionId)
             {
                 sessionId = 0;
             }
@@ -1004,11 +1004,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
         public static string GetControllerResponseStorageName(int clusterHash, int sessionId)
         {
-            if (sessionId < SessionStartInfo.StandaloneSessionId)
+            if (sessionId < TelepathyConstants.StandaloneSessionId)
             {
                 throw new ArgumentOutOfRangeException(nameof(sessionId));
             }
-            else if (sessionId == SessionStartInfo.StandaloneSessionId)
+            else if (sessionId == TelepathyConstants.StandaloneSessionId)
             {
                 sessionId = 0;
             }
@@ -1026,11 +1026,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns></returns>
         public static string GetResponseStorageName(int clusterHash, int sessionId, int sessionHash)
         {
-            if (sessionId < SessionStartInfo.StandaloneSessionId)
+            if (sessionId < TelepathyConstants.StandaloneSessionId)
             {
                 throw new ArgumentOutOfRangeException(nameof(sessionId));
             }
-            else if (sessionId == SessionStartInfo.StandaloneSessionId)
+            else if (sessionId == TelepathyConstants.StandaloneSessionId)
             {
                 sessionId = 0;
             }
@@ -1086,7 +1086,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         /// <param name="headnode"></param>
         /// <returns></returns>
-        internal static string GetSuffixFromHeadNodeEpr(string headnode) => headnode.Substring(headnode.IndexOf('.') - ClusterIdentityHashLength);
+        public static string GetSuffixFromHeadNodeEpr(string headnode) => headnode.Substring(headnode.IndexOf('.') - ClusterIdentityHashLength);
 
         /// <summary>
         /// Check the windows identity authenticated.

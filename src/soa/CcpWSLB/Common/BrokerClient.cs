@@ -24,6 +24,8 @@ namespace Microsoft.Hpc.ServiceBroker
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.SvcBroker;
 
+    using SR = Microsoft.Hpc.SvcBroker.SR;
+
     /// <summary>
     /// Represent a broker client
     /// </summary>
@@ -94,7 +96,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// <summary>
         /// Stores the ServiceJob monitor
         /// </summary>
-        private InternalServiceJobMonitor monitor;
+        private ServiceJobMonitorBase monitor;
 
         /// <summary>
         /// Stores a value indicating whether a singleton instance has connected or not
@@ -136,7 +138,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// <param name="stateManager">indicating the state manager</param>
         /// <param name="monitor">indicating the monitor</param>
         /// <param name="sharedData">indicating the shared data</param>
-        public BrokerClient(string clientId, string userName, BrokerQueueFactory queueFactory, BrokerObserver observer, BrokerStateManager stateManager, InternalServiceJobMonitor monitor, SharedData sharedData)
+        public BrokerClient(string clientId, string userName, BrokerQueueFactory queueFactory, BrokerObserver observer, BrokerStateManager stateManager, ServiceJobMonitorBase monitor, SharedData sharedData)
         {
             bool isNewCreated;
 

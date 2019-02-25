@@ -19,6 +19,8 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 
     using Microsoft.Hpc.ServiceBroker.Common.ThreadHelper;
 
+    using SR = Microsoft.Hpc.SvcBroker.SR;
+
     /// <summary>
     /// The FrontEnd for using Azure Storage Queue
     /// </summary>

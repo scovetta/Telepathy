@@ -9,9 +9,6 @@
 
 namespace Microsoft.Hpc.Scheduler.Session
 {
-    using Microsoft.Hpc.Scheduler.Properties;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -28,6 +25,11 @@ namespace Microsoft.Hpc.Scheduler.Session
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+
+    using Microsoft.Hpc.Scheduler.Session.Data;
+    using Microsoft.Hpc.Scheduler.Session.Interface;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
+
     /// <summary>
     ///   <para>Serves as a base class to provide methods and properties that are common to classes that represent different kinds of sessions, such as 
     /// <see cref="Microsoft.Hpc.Scheduler.Session.DurableSession" /> and 
@@ -48,12 +50,12 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// name of the env variable for launching service host in an admin job.
         /// </summary>
-        internal const string EnvVarNameForAdminJob = "AdminJobForHostInDiag";
+        public static string EnvVarNameForAdminJob => "AdminJobForHostInDiag";
 
         /// <summary>
         /// max retry count when creating session
         /// </summary>
-        internal const int MaxRetryCount = 3;
+        public static int MaxRetryCount => 3;
 
         // the client version
         private static Version clientVersion;
@@ -66,7 +68,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         private static readonly Version V3Sp1Version = new Version(3, 1);
 
         // the server version
-        private Version serverVersion;
+        protected Version serverVersion;
 
         // The endpoint address
         private readonly EndpointAddress _endpointReference;
@@ -77,10 +79,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         private object lockObj = new object();
 
         // This is for disposing it when disposing the session
-        private IScheduler _scheduler;
+        protected IDisposable _scheduler;
 
-        // The job object of the service job enclosed in this session
-        private ISchedulerJob _serviceJob;
 
         // Maintains list of broker clients associated with this session
         // Client id is case insensitive
@@ -94,24 +94,12 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// The scheduler headnode name
         /// </summary>
-        private readonly string _headnode;
+        protected readonly string _headnode;
 
         private readonly SessionInfoBase _info;
 
         private readonly int serviceJobId;
-
-        static private IntPtr hwnd = IntPtr.Zero;
-
-        /// <summary>
-        /// Set default value "true"
-        /// Keep consistent with v2 soa client
-        /// </summary>
-        static private bool bConsole = true;
-
-        internal static bool BConsole
-        {
-            get { return bConsole; }
-        }
+        
 
         /// <summary>
         /// Whether session is shutting down (dispose was called)
@@ -142,11 +130,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// The Azure storage proxy
         /// </summary>
-        internal AzureQueueProxy AzureQueueProxy
-        {
-            get;
-            set;
-        }
+        internal AzureQueueProxy AzureQueueProxy { get; set; }
 
         /// <summary>
         /// The session hash code
@@ -161,7 +145,10 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </value>
         public int SessionHash
         {
-            get { return sessionHash; }
+            get
+            {
+                return sessionHash;
+            }
         }
 
         /// <summary>
@@ -179,27 +166,26 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         private const string StorageClientAssemblyName = "Microsoft.WindowsAzure.Storage.dll";
 
-        //protected Lazy<FabricClient> fabricClient;
+        // protected Lazy<FabricClient> fabricClient;
 
-        //protected CancellationTokenSource cts;
+        // protected CancellationTokenSource cts;
 
-        //protected CancellationToken token;
-
+        // protected CancellationToken token;
         static SessionBase()
         {
             AppDomain.CurrentDomain.AssemblyResolve += ResolveHandler;
         }
 
         // It can't be constructed outside
-        internal SessionBase(SessionInfoBase info, string headnode, Binding binding)
+        internal protected SessionBase(SessionInfoBase info, string headnode, Binding binding)
         {
-            //EndpointsConnectionString endpoints = null;
-            //if (EndpointsConnectionString.TryParseConnectionString(headnode, out endpoints))
-            //{
-            //    this.fabricClient = new Lazy<FabricClient>(() => new FabricClient(endpoints.EndPoints), LazyThreadSafetyMode.ExecutionAndPublication);
-            //}
-            //this.cts = new CancellationTokenSource();
-            //this.token = cts.Token;
+            // EndpointsConnectionString endpoints = null;
+            // if (EndpointsConnectionString.TryParseConnectionString(headnode, out endpoints))
+            // {
+            // this.fabricClient = new Lazy<FabricClient>(() => new FabricClient(endpoints.EndPoints), LazyThreadSafetyMode.ExecutionAndPublication);
+            // }
+            // this.cts = new CancellationTokenSource();
+            // this.token = cts.Token;
             this.serviceJobId = info.Id;
             this.factory = new BrokerLauncherClientFactory(info, binding);
             this._info = info;
@@ -215,16 +201,17 @@ namespace Microsoft.Hpc.Scheduler.Session
                 this.sessionHash = Guid.NewGuid().ToString().GetHashCode();
             }
 
-            if (info is SessionInfo)
+            if (info is SessionInfo sessionInfo)
             {
-                this.UserName = (info as SessionInfo).Username;
-                this.InternalPassword = (info as SessionInfo).InternalPassword;
+                this.UserName = sessionInfo.Username;
+                this.InternalPassword = sessionInfo.InternalPassword;
 
                 foreach (string uri in this.SessionInfo.BrokerEpr)
                 {
-                    if (!String.IsNullOrEmpty(uri))
+                    if (!string.IsNullOrEmpty(uri))
                     {
                         _endpointReference = new EndpointAddress(uri);
+
                         // this will automatically get the priority order
                         break;
                     }
@@ -236,7 +223,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                 }
 
                 // Start heartbeat to broker
-                if (!this.SessionInfo.UseInprocessBroker)
+                if (!this.SessionInfo.UseInprocessBroker && !this.SessionInfo.UseAzureStorage /* TODO: recover heartbeat via storage queue */)
                 {
                     this.heartbeatHelper = new BrokerHeartbeatHelper(
                         this.Info.Id,
@@ -248,9 +235,14 @@ namespace Microsoft.Hpc.Scheduler.Session
                 }
 
                 // build the proxy if using azure storage queue
-                if (this.SessionInfo.UseAzureQueue == true)
+                if (this.SessionInfo.UseAzureStorage)
                 {
-                    this.AzureQueueProxy = new AzureQueueProxy(this.SessionInfo.Headnode, this.SessionInfo.Id, this.sessionHash, this.SessionInfo.AzureRequestQueueUri, this.SessionInfo.AzureRequestBlobUri);
+                    this.AzureQueueProxy = new AzureQueueProxy(
+                        this.SessionInfo.Headnode,
+                        this.SessionInfo.Id,
+                        this.sessionHash,
+                        this.SessionInfo.AzureRequestQueueUris,
+                        this.SessionInfo.AzureRequestBlobUri);
                 }
             }
         }
@@ -258,9 +250,12 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Gets the broker launcher client factory
         /// </summary>
-        internal BrokerLauncherClientFactory BrokerLauncherClientFactory
+        public BrokerLauncherClientFactory BrokerLauncherClientFactory
         {
-            get { return this.factory; }
+            get
+            {
+                return this.factory;
+            }
         }
 
         internal IBrokerLauncher BrokerLauncherClient { get; set; }
@@ -268,9 +263,12 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Gets the instance of SessionInfo
         /// </summary>
-        internal SessionInfoBase Info
+        public SessionInfoBase Info
         {
-            get { return this._info; }
+            get
+            {
+                return this._info;
+            }
         }
 
         /// <summary>
@@ -278,112 +276,30 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         internal string HeadNode
         {
-            get { return this._headnode; }
+            get
+            {
+                return this._headnode;
+            }
         }
 
         /// <summary>
         /// Gets and sets the user name
         /// </summary>
-        internal string UserName
-        {
-            set;
-            get;
-        }
+        internal string UserName { get; set; }
 
         /// <summary>
         /// Gets and sets the password
         /// </summary>
-        internal string InternalPassword
-        {
-            set;
-            get;
-        }
+        internal string InternalPassword { get; set; }
 
         /// <summary>
         /// Gets the session info
         /// </summary>
         private SessionInfo SessionInfo
         {
-            get { return (SessionInfo)this._info; }
-        }
-
-        /// <summary>
-        ///   <para>Gets the value of a backend-specific property for a session.</para>
-        /// </summary>
-        /// <param name="name">
-        ///   <para>String that specifies the name of the property for which you want to get the value. The property names that you 
-        /// can specify are HPC_ServiceJobId, HPC_Headnode, and HPC_ServiceJobStatus, which is a string 
-        /// that indicates the current status of the service job for the session.</para> 
-        /// </param>
-        /// <typeparam name="T">
-        ///   <para>The data type of the property for which you want to get the value. For information about the 
-        /// properties for which you can get a value and their data types, see the description for the <paramref name="name" /> parameter.</para>
-        /// </typeparam>
-        /// <returns>
-        ///   <para>An item with the data type that the T type parameter specifies and which contains the value of the property 
-        /// that the <paramref name="name" /> parameter specifies. The following table describes the 
-        /// return values and their types for the properties for which you can get values.</para> 
-        ///   <para>Property name</para>
-        ///   <para>Type</para>
-        ///   <para>Description</para>
-        /// </returns>
-        /// <remarks>
-        ///   <para>This method does not support getting the values of custom properties.</para>
-        /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Properties.JobState" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Headnode" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Id" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionAttachInfoBase.Headnode" />
-        public T GetProperty<T>(string name)
-        {
-            Utility.ThrowIfNullOrEmpty(name, "name");
-
-            if (name.Equals(Constant.ServiceJobId, StringComparison.InvariantCultureIgnoreCase) && typeof(T) == typeof(int))
+            get
             {
-                return (T)(object)serviceJobId;
-            }
-            else if (name.Equals(Constant.HeadnodeName, StringComparison.InvariantCultureIgnoreCase) && typeof(T) == typeof(string))
-            {
-                return (T)(object)this._headnode;
-            }
-            else if (name.Equals(Constant.ServiceJobStatus, StringComparison.InvariantCultureIgnoreCase) && typeof(T) == typeof(string))
-            {
-                if (!shuttingDown)
-                {
-                    ISchedulerJob job = this.GetScheduler().OpenJob(serviceJobId);
-                    return (T)(object)job.State.ToString();
-                }
-                return (T)(object)"Finished";
-            }
-            else
-            {
-                throw new ArgumentException(SR.BackendPropertyNotFound);
-            }
-        }
-
-        internal ISchedulerJob GetServiceJob()
-        {
-            if (this._info is SessionInfo)
-            {
-                // Bug 9332: Return null if inprocess broker is used
-                if (this.SessionInfo.DebugModeEnabled)
-                {
-                    return null;
-                }
-
-                lock (this.lockObj)
-                {
-                    if (_serviceJob == null)
-                    {
-                        _serviceJob = GetScheduler().OpenJob(serviceJobId);
-                    }
-                }
-
-                return _serviceJob;
-            }
-            else
-            {
-                throw new NotSupportedException("It is not supported when using Web API.");
+                return (SessionInfo)this._info;
             }
         }
 
@@ -428,7 +344,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.HttpEndpointReference" /> and 
         /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.NetTcpEndpointReference" /> properties to access the endpoint references.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.ISchedulerJob.EndpointAddresses" />
+        /// <seealso cref="ISchedulerJob{TTaskId}.EndpointAddresses" />
         public EndpointAddress EndpointReference
         {
             get
@@ -466,7 +382,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// client version, it is used internally.
         /// </summary>
-        internal static Version ClientVersionInternal
+        public static Version ClientVersionInternal
         {
             get
             {
@@ -502,49 +418,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             }
         }
 
-
-        /// <summary>
-        ///   <para>Gets information about the version of the HPC Pack that is installed on the head node of the cluster that hosts the session.</para>
-        /// </summary>
-        /// <value>
-        ///   <para>A <see cref="System.Version" /> that contains the version information.</para>
-        /// </value>
-        /// <remarks>
-        ///   <para>The 
-        /// <see cref="System.Version.Build" /> and 
-        /// <see cref="System.Version.Revision" /> portions of the version that the 
-        /// <see cref="System.Version" /> object represents are not defined for the HPC Pack.</para>
-        ///   <para>HPC Pack 2008 is version 2.0. HPC Pack 2008 R2 is version 3.0.</para>
-        ///   <para>SOA applications can use this version information when accessing cluster features in order to remain backward compatible.</para>
-        /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.ClientVersion" />
-        public Version ServerVersion
-        {
-            get
-            {
-                if (this.serverVersion == null)
-                {
-                    IServerVersion version = null;
-                    try
-                    {
-                        using (IScheduler scheduler = new Scheduler())
-                        {
-                            scheduler.Connect(_headnode);
-                            version = scheduler.GetServerVersion();
-                            this.serverVersion = new Version(version.Major, version.Minor, version.Build, version.Revision);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        throw new SessionException(SOAFaultCode.ConnectToSchedulerFailure, SR.ConnectToSchedulerFailure, e);
-                    }
-                }
-
-                return this.serverVersion;
-            }
-        }
-
-        internal static TraceSource TraceSource
+        public static TraceSource TraceSource
         {
             get
             {
@@ -553,29 +427,10 @@ namespace Microsoft.Hpc.Scheduler.Session
         }
 
         /// <summary>
-        ///   <para>Specifies whether the client is a console or Windows application.</para>
-        /// </summary>
-        /// <param name="console">
-        ///   <para>Set to True if the client is a console application; otherwise, set to False.</para>
-        /// </param>
-        /// <param name="wnd">
-        ///   <para>The handle to the parent window if the client is a Windows application.</para>
-        /// </param>
-        /// <remarks>
-        ///   <para>This information is used to determine how to prompt the user for the credentials if the credentials are 
-        /// not specified in the job. If you do not call this method, the client is assumed to be a console application.</para>
-        /// </remarks>
-        public static void SetInterfaceMode(bool console, IntPtr wnd)
-        {
-            bConsole = console;
-            hwnd = wnd;
-        }
-
-        /// <summary>
         /// the help function to check the sanity of SessionStartInfo before creating sesison.
         /// </summary>
         /// <param name="startInfo"></param>
-        internal static void CheckSessionStartInfo(SessionStartInfo startInfo)
+        public static void CheckSessionStartInfo(SessionStartInfo startInfo)
         {
             if (startInfo == null)
             {
@@ -587,8 +442,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                 throw new ArgumentException(SR.MustIndicateTransportScheme, "TransportScheme");
             }
 
-            if ((startInfo.TransportScheme & TransportScheme.WebAPI) == TransportScheme.WebAPI &&
-                startInfo.TransportScheme != TransportScheme.WebAPI)
+            if ((startInfo.TransportScheme & TransportScheme.WebAPI) == TransportScheme.WebAPI && startInfo.TransportScheme != TransportScheme.WebAPI)
             {
                 throw new ArgumentException(SR.TransportSchemeWebAPIExclusive);
             }
@@ -599,14 +453,12 @@ namespace Microsoft.Hpc.Scheduler.Session
                 throw new NotSupportedException(SR.InprocessBroker_NotSupportShareSession);
             }
 
-            if (startInfo.BrokerSettings.SessionIdleTimeout != null
-                && startInfo.BrokerSettings.SessionIdleTimeout < 0)
+            if (startInfo.BrokerSettings.SessionIdleTimeout != null && startInfo.BrokerSettings.SessionIdleTimeout < 0)
             {
                 throw new ArgumentException(SR.SessionIdleTimeoutNotNegative, "SessionIdleTimeout");
             }
 
-            if (startInfo.BrokerSettings.ClientIdleTimeout != null
-                && startInfo.BrokerSettings.ClientIdleTimeout <= 0)
+            if (startInfo.BrokerSettings.ClientIdleTimeout != null && startInfo.BrokerSettings.ClientIdleTimeout <= 0)
             {
                 throw new ArgumentException(SR.ClientIdleTimeoutNotNegative, "ClientIdleTimeout");
             }
@@ -616,8 +468,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                 throw new ArgumentException(SR.DispatcherCapacityInGrowShrinkNonNegative, "DispatcherCapacityInGrowShrink");
             }
 
-            if (startInfo.BrokerSettings.MessagesThrottleStopThreshold != null
-                && startInfo.BrokerSettings.MessagesThrottleStopThreshold < 0)
+            if (startInfo.BrokerSettings.MessagesThrottleStopThreshold != null && startInfo.BrokerSettings.MessagesThrottleStopThreshold < 0)
             {
                 throw new ArgumentException(SR.MessageThrottleStopThresholdPositive, "MessagesThrottleStopThreshold");
             }
@@ -629,8 +480,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                 throw new ArgumentException(SR.MessageThrottleStartGreaterStop, "MessagesThrottleStartThreshold");
             }
 
-            if (startInfo.BrokerSettings.MessagesThrottleStartThreshold != null
-                && startInfo.BrokerSettings.MessagesThrottleStartThreshold <= 0)
+            if (startInfo.BrokerSettings.MessagesThrottleStartThreshold != null && startInfo.BrokerSettings.MessagesThrottleStartThreshold <= 0)
             {
                 throw new ArgumentException(SR.MessageThrottleStartGreaterStop, "MessagesThrottleStartThreshold");
             }
@@ -670,9 +520,9 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// Handle endpoint not found exception
         /// </summary>
         /// <param name="headnode">indicating headnode</param>
-        internal static void HandleEndpointNotFoundException(string headnode)
+        public static void HandleEndpointNotFoundException(string headnode)
         {
-            throw new SessionException(SOAFaultCode.SessionLauncherEndpointNotFound, String.Format(SR.SessionLauncherEndpointNotFound, headnode));
+            throw new SessionException(SOAFaultCode.SessionLauncherEndpointNotFound, string.Format(SR.SessionLauncherEndpointNotFound, headnode));
         }
 
         /// <summary>
@@ -685,8 +535,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="brokerLauncherEpr">indicating the broker launcher epr</param>
         /// <param name="scheme">indicating the transport scheme</param>
         /// <returns>returns the session info</returns>
-        internal static SessionInfo BuildSessionInfo(BrokerInitializationResult result, bool durable, int id, string brokerLauncherEpr,
-                        Version serviceVersion, SessionStartInfo startInfo)
+        internal static SessionInfo BuildSessionInfo(BrokerInitializationResult result, bool durable, int id, string brokerLauncherEpr, Version serviceVersion, SessionStartInfo startInfo)
         {
             SessionInfo info = new SessionInfo();
 
@@ -705,7 +554,8 @@ namespace Microsoft.Hpc.Scheduler.Session
             info.ControllerEpr = result.ControllerEpr;
             info.ResponseEpr = result.ResponseEpr;
             info.Secure = startInfo.Secure;
-            //TODO: update the server version
+
+            // TODO: update the server version
             info.ServerVersion = new Version(3, 0);
             info.TransportScheme = startInfo.TransportScheme;
             info.ServiceOperationTimeout = result.ServiceOperationTimeout;
@@ -720,7 +570,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             info.UseWindowsClientCredential = startInfo.UseWindowsClientCredential;
 
             info.UseAzureQueue = startInfo.UseAzureQueue;
-            info.AzureRequestQueueUri = result.AzureRequestQueueUri;
+            info.AzureRequestQueueUris = result.AzureRequestQueueUris;
             info.AzureRequestBlobUri = result.AzureRequestBlobUri;
             info.UseAad = startInfo.UseAad;
             info.AzureControllerRequestQueueUri = result.AzureControllerRequestQueueUri;
@@ -824,7 +674,8 @@ namespace Microsoft.Hpc.Scheduler.Session
                     {
                         try
                         {
-                            this._scheduler.Dispose();
+                            var disposable = this._scheduler;
+                            disposable?.Dispose();
                         }
                         catch (Exception)
                         {
@@ -847,7 +698,6 @@ namespace Microsoft.Hpc.Scheduler.Session
                         catch (Exception)
                         {
                         }
-
                     }
 
                     if (this.factory != null)
@@ -1124,90 +974,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </remarks>
         public static Version[] GetServiceVersions(string headNode, string serviceName, TransportScheme scheme, string username, string password)
         {
-            if (scheme == TransportScheme.WebAPI)
-            {
-                bool savePassword = false;
-                int retry = 0;
-                bool askForCredential = false;
-                int askForCredentialTimes = 0;
-                Version[] result = null;
-
-                // Align the retry behavior of the RestSession with the original session.
-                // User can try credential at most SessionBase.MaxRetryCount times.
-                while (true)
-                {
-                    retry++;
-
-                    askForCredential = RetrieveCredentialOnAzure(headNode, ref username, ref password, ref savePassword);
-
-                    if (askForCredential)
-                    {
-                        askForCredentialTimes++;
-                    }
-
-                    NetworkCredential credential = Utility.BuildNetworkCredential(username, password);
-
-                    WebRequest request = null;
-
-                    try
-                    {
-                        // Following method needs to get cluster name, it may throw WebException because
-                        // of invalid credential. Give chance to users to re-enter the credential.
-                        request = SOAWebServiceRequestBuilder.GenerateGetServiceVersionsWebRequest(headNode, serviceName, credential);
-                    }
-                    catch (WebException e)
-                    {
-                        if (e.Status == WebExceptionStatus.ProtocolError)
-                        {
-                            HttpWebResponse response = (HttpWebResponse)e.Response;
-                            if (response.StatusCode == HttpStatusCode.Forbidden)
-                            {
-                                // cleanup local cached invalid credential
-                                PurgeCredential(headNode, username);
-
-                                if (Utility.CanRetry(retry, askForCredential, askForCredentialTimes))
-                                {
-                                    response.Close();
-                                    continue;
-                                }
-                            }
-                        }
-
-                        SessionBase.TraceSource.TraceEvent(
-                            TraceEventType.Error, 0, "[SessionBase] Failed to build GetServiceVersions request (WebAPI): {0}", e);
-
-                        Utility.HandleWebException(e);
-                    }
-
-                    try
-                    {
-                        using (WebResponse response = request.GetResponse())
-                        {
-                            DataContractSerializer serializer = new DataContractSerializer(typeof(Version[]));
-                            result = (Version[])serializer.ReadObject(response.GetResponseStream());
-                            break;
-                        }
-                    }
-                    catch (WebException e)
-                    {
-                        SessionBase.TraceSource.TraceEvent(
-                            TraceEventType.Error, 0, "[SessionBase] Failed to get service versions (WebAPI): {0}", e);
-
-                        Utility.HandleWebException(e);
-                    }
-                }
-
-                if (savePassword)
-                {
-                    SaveCrendential(headNode, username, password);
-                }
-
-                return result;
-            }
-            else
-            {
-                return GetServiceVersions(headNode, serviceName);
-            }
+            return GetServiceVersions(headNode, serviceName);
         }
 
         /// <summary>
@@ -1261,92 +1028,13 @@ namespace Microsoft.Hpc.Scheduler.Session
             }
         }
 
-        /// <summary>
-        /// Save the credential at local Windows Vault, if
-        /// (1) scheduler is on Azure (credential is needed by session service to run as that user)
-        /// (2) debug mode (no scheduler)
-        /// (3) scheduler version is before 3.1 (scheduler side credential cache is not supported before 3.1)
-        /// </summary>
-        /// <param name="info">it contians credential and targeted scheduler</param>
-        /// <param name="binding">indicating the binding</param>
-        internal static void SaveCrendential(SessionStartInfo info, Binding binding)
-        {
-            if (info.SavePassword && info.InternalPassword != null)
-            {
-                Debug.Assert(!string.IsNullOrEmpty(info.Headnode), "The headnode can't be null or empty.");
-
-                bool saveToLocal = false;
-
-                if (SoaHelper.IsSchedulerOnAzure(info.Headnode) || SoaHelper.IsSchedulerOnIaaS(info.Headnode))
-                {
-                    saveToLocal = true;
-                }
-                else if (info.DebugModeEnabled)
-                {
-                    saveToLocal = true;
-                }
-
-                if (saveToLocal)
-                {
-                    SaveCrendential(info.Headnode, info.Username, info.InternalPassword);
-                    SessionBase.TraceSource.TraceInformation("Cached credential is saved to local Windows Vault.");
-                }
-                else
-                {
-                    // the password is already sent to session service, which saves it to the scheduler.
-                    SessionBase.TraceSource.TraceInformation("Cached credential is expected to be saved to the scheduler by session service.");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Save the credential at local Windows Vault.
-        /// </summary>
-        /// <param name="info">
-        /// attach info
-        /// it specifies credential and targeted scheduler
-        /// </param>
-        internal static void SaveCrendential(SessionAttachInfo info)
-        {
-            if (info.SavePassword)
-            {
-                SaveCrendential(info.Headnode, info.Username, info.InternalPassword);
-            }
-        }
-
-        /// <summary>
-        /// Save the user credential to the local windows vault.
-        /// </summary>
-        /// <param name="headnode">head node name</param>
-        /// <param name="username">user name</param>
-        /// <param name="password">user password</param>
-        internal static void SaveCrendential(string headnode, string username, string password)
-        {
-            try
-            {
-                if (password != null)
-                {
-                    Debug.Assert(!string.IsNullOrEmpty(headnode), "The headnode can't be null or empty.");
-
-                    CredentialHelper.PersistPassword(
-                        headnode,
-                        username,
-                        ProtectedData.Protect(Encoding.Unicode.GetBytes(password), null, DataProtectionScope.CurrentUser));
-
-                    SessionBase.TraceSource.TraceInformation("Cached credential is saved to local Windows Vault.");
-                }
-            }
-            catch (Win32Exception)
-            {
-                SessionBase.TraceSource.TraceInformation("Cached credential can't be saved to local Windows Vault.");
-            }
-        }
+       
 
         /// <summary>
         /// Remove the cached password from the local Windows Vault.
         /// </summary>
         /// <param name="info">the info specifies targeted headnode and username</param>
-        internal static void PurgeCredential(SessionStartInfo info)
+        public static void PurgeCredential(SessionStartInfo info)
         {
             PurgeCredential(info.Headnode, info.Username);
         }
@@ -1358,7 +1046,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// attach info
         /// it specifies headnode and username
         /// </param>
-        internal static void PurgeCredential(SessionAttachInfo info)
+        public static void PurgeCredential(SessionAttachInfo info)
         {
             PurgeCredential(info.Headnode, info.Username);
         }
@@ -1368,7 +1056,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         ///<param name="headnode">head node name</param>
         ///<param name="username">user name</param>
-        internal static void PurgeCredential(string headnode, string username)
+        public static void PurgeCredential(string headnode, string username)
         {
             try
             {
@@ -1387,7 +1075,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="targetTimeout">the target time to timeout</param>
         /// <returns>a timespan if timeout if not reached. otherwise a timeout exception will throw.</returns>
-        internal static TimeSpan GetTimeout(DateTime targetTimeout)
+        public static TimeSpan GetTimeout(DateTime targetTimeout)
         {
             if (targetTimeout == DateTime.MaxValue)
             {
@@ -1404,374 +1092,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             }
         }
 
-        /// <summary>
-        /// Get the password from the local Windows Vault.
-        /// If no cached password found, return null or popups dialog asking for credential,
-        /// the logic is under the control of expectedCredType.
-        /// </summary>
-        /// <param name="info">The session start info</param>
-        ///<param name="expectedCredType">It specifies which type of credential is expected</param>
-        ///<param name="binding">indicating the binding</param>
-        ///<returns>pops up credential dialog or not</returns>
-        internal static async Task<bool> RetrieveCredentialOnPremise(SessionStartInfo info, CredType expectedCredType, Binding binding)
-        {
-            bool popupDialog = false;
 
-            // Make sure that we have a password and credentials for the user.
-            if (string.IsNullOrEmpty(info.Username) || string.IsNullOrEmpty(info.InternalPassword))
-            {
-                string username = null;
-
-                // First try to get something from the cache.
-                if (string.IsNullOrEmpty(info.Username))
-                {
-                    username = WindowsIdentity.GetCurrent().Name;
-                }
-                else
-                {
-                    username = info.Username;
-                }
-
-                // Use local machine name for session without service job
-                string headnode = info.Headnode;
-                if (string.IsNullOrEmpty(headnode))
-                {
-                    headnode = Environment.MachineName;
-                }
-
-                //TODO: SF: headnode is a gateway string now
-                // For back compact, get the cached password if it exists.
-                byte[] cached = CredentialHelper.FetchPassword(headnode, username);
-                if (cached != null)
-                {
-                    info.Username = username;
-                    info.InternalPassword = Encoding.Unicode.GetString(ProtectedData.Unprotect(cached, null, DataProtectionScope.CurrentUser));
-                }
-                else
-                {
-                    if (expectedCredType != CredType.None)
-                    {
-                        if (expectedCredType == CredType.Either || expectedCredType == CredType.Either_CredUnreusable)
-                        {
-                            // Pops up dialog asking users to specify the type of the credetial (password or certificate).
-                            // The behavior here aligns with the job submission.
-                            expectedCredType = CredUtil.PromptForCredentialType(bConsole, hwnd, expectedCredType);
-                        }
-
-                        Debug.Assert(expectedCredType == CredType.Password
-                            || expectedCredType == CredType.Password_CredUnreusable
-                            || expectedCredType == CredType.Certificate);
-
-                        if (expectedCredType == CredType.Password)
-                        {
-                            bool fSave = false;
-                            SecureString password = null;
-                            Credentials.PromptForCredentials(headnode, ref username, ref password, ref fSave, bConsole, hwnd);
-                            popupDialog = true;
-
-                            info.Username = username;
-                            info.SavePassword = fSave;
-                            info.InternalPassword = Credentials.UnsecureString(password);
-                        }
-                        else if (expectedCredType == CredType.Password_CredUnreusable)
-                        {
-                            SecureString password = null;
-                            Credentials.PromptForCredentials(headnode, ref username, ref password, bConsole, hwnd);
-                            popupDialog = true;
-
-                            info.Username = username;
-                            info.SavePassword = false;
-                            info.InternalPassword = Credentials.UnsecureString(password);
-                        }
-                        else
-                        {
-                            // Get the value of cluster parameter HpcSoftCardTemplate.
-                            SessionLauncherClient client = new SessionLauncherClient(await Utility.GetSessionLauncherAsync(info, binding).ConfigureAwait(false), binding, info.IsAadOrLocalUser);
-                            string softCardTemplate = string.Empty;
-                            try
-                            {
-                                softCardTemplate = await client.GetSOAConfigurationAsync(Constant.HpcSoftCardTemplateParam).ConfigureAwait(false);
-                            }
-                            finally
-                            {
-                                Utility.SafeCloseCommunicateObject(client);
-                            }
-
-                            // Query certificate from local store, and pops up CertSelectionDialog.
-                            SecureString pfxPwd;
-                            info.Certificate = CredUtil.GetCertFromStore(null, softCardTemplate, bConsole, hwnd, out pfxPwd);
-                            info.PfxPassword = Credentials.UnsecureString(pfxPwd);
-                        }
-                    }
-                    else
-                    {
-                        // Expect to use the cached credential at scheuler side.
-                        // Exception may happen later if no cached redential or it is invalid.
-                        info.ClearCredential();
-                        info.Username = username;
-                    }
-                }
-            }
-
-            return popupDialog;
-        }
-
-        /// <summary>
-        /// Get the password from the local Windows Vault for attaching sessions.
-        /// </summary>
-        /// <param name="info">The session start info</param>
-        ///<param name="expectedCredType">It specifies which type of credential is expected</param>
-        ///<param name="binding">indicating the binding</param>
-        ///<returns>pops up credential dialog or not</returns>
-        internal static async Task<bool> RetrieveCredentialOnPremise(SessionAttachInfo info, CredType expectedCredType, Binding binding)
-        {
-            bool popupDialog = false;
-
-            // Make sure that we have a password and credentials for the user.
-            if (string.IsNullOrEmpty(info.Username) || string.IsNullOrEmpty(info.InternalPassword))
-            {
-                string username = null;
-
-                // First try to get something from the cache.
-                if (string.IsNullOrEmpty(info.Username))
-                {
-                    username = WindowsIdentity.GetCurrent().Name;
-                }
-                else
-                {
-                    username = info.Username;
-                }
-
-                // Use local machine name for session without service job
-                string headnode = info.Headnode;
-                if (string.IsNullOrEmpty(headnode))
-                {
-                    headnode = Environment.MachineName;
-                }
-
-                // For back compact, get the cached password if it exists.
-                byte[] cached = CredentialHelper.FetchPassword(headnode, username);
-                if (cached != null)
-                {
-                    info.Username = username;
-                    info.InternalPassword = Encoding.Unicode.GetString(ProtectedData.Unprotect(cached, null, DataProtectionScope.CurrentUser));
-                }
-                else
-                {
-                    if (expectedCredType != CredType.None)
-                    {
-                        if (expectedCredType == CredType.Either || expectedCredType == CredType.Either_CredUnreusable)
-                        {
-                            // Pops up dialog asking users to specify the type of the credetial (password or certificate).
-                            // The behavior here aligns with the job submission.
-                            expectedCredType = CredUtil.PromptForCredentialType(bConsole, hwnd, expectedCredType);
-                        }
-
-                        Debug.Assert(expectedCredType == CredType.Password
-                            || expectedCredType == CredType.Password_CredUnreusable
-                            || expectedCredType == CredType.Certificate);
-
-                        if (expectedCredType == CredType.Password)
-                        {
-                            bool fSave = false;
-                            SecureString password = null;
-                            Credentials.PromptForCredentials(headnode, ref username, ref password, ref fSave, bConsole, hwnd);
-                            popupDialog = true;
-
-                            info.Username = username;
-                            info.SavePassword = fSave;
-                            info.InternalPassword = Credentials.UnsecureString(password);
-                        }
-                        else if (expectedCredType == CredType.Password_CredUnreusable)
-                        {
-                            SecureString password = null;
-                            Credentials.PromptForCredentials(headnode, ref username, ref password, bConsole, hwnd);
-                            popupDialog = true;
-
-                            info.Username = username;
-                            info.SavePassword = false;
-                            info.InternalPassword = Credentials.UnsecureString(password);
-                        }
-                        else
-                        {
-                            // Get the value of cluster parameter HpcSoftCardTemplate.
-                            SessionLauncherClient client = new SessionLauncherClient(await Utility.GetSessionLauncherAsync(info, binding).ConfigureAwait(false), binding, info.IsAadOrLocalUser);
-                            string softCardTemplate = string.Empty;
-                            try
-                            {
-                                softCardTemplate = await client.GetSOAConfigurationAsync(Constant.HpcSoftCardTemplateParam).ConfigureAwait(false);
-                            }
-                            finally
-                            {
-                                Utility.SafeCloseCommunicateObject(client);
-                            }
-
-                            // Query certificate from local store, and pops up CertSelectionDialog.
-                            SecureString pfxPwd;
-                            info.Certificate = CredUtil.GetCertFromStore(null, softCardTemplate, bConsole, hwnd, out pfxPwd);
-                            info.PfxPassword = Credentials.UnsecureString(pfxPwd);
-                        }
-                    }
-                    else
-                    {
-                        // Expect to use the cached credential at scheuler side.
-                        // Exception may happen later if no cached redential or it is invalid.
-                        info.ClearCredential();
-                        info.Username = username;
-                    }
-                }
-            }
-
-            return popupDialog;
-        }
-
-        /// <summary>
-        /// Validate the credential.
-        /// Throw AuthenticationException if validation fails.
-        /// </summary>
-        /// <param name="info">session start info contains credential</param>
-        internal static void CheckCredential(SessionStartInfo info)
-        {
-            if (info.InternalPassword != null)
-            {
-                // Verify the username password if we can.
-                // Verify the cached credential in case it is expired.
-                Credentials.ValidateCredentials(info.Username, info.InternalPassword, true);
-            }
-            else
-            {
-                // For back-compact, don't transmit null password to session service, which can causes exception there.
-                // It is fine to replace null by empty string even user's password is empty string.
-                info.InternalPassword = string.Empty;
-            }
-        }
-
-        internal static void CheckCredential(SessionAttachInfo info)
-        {
-            if (info.InternalPassword != null)
-            {
-                // Verify the username password if we can.
-                // Verify the cached credential in case it is expired.
-                Credentials.ValidateCredentials(info.Username, info.InternalPassword, true);
-            }
-            else
-            {
-                // For back-compact, don't transmit null password to session service, which can causes exception there.
-                // It is fine to replace null by empty string even user's password is empty string.
-                info.InternalPassword = string.Empty;
-            }
-        }
-
-        /// <summary>
-        /// Get user's credential for the Azure cluster.
-        /// We can't validate such credential at on-premise client.
-        /// This method doesn't save the credential.
-        /// </summary>
-        /// <returns>pops up credential dialog or not</returns>
-        internal static bool RetrieveCredentialOnAzure(SessionStartInfo info)
-        {
-            string username = info.Username;
-            string internalPassword = info.InternalPassword;
-            bool savePassword = info.SavePassword;
-
-            bool result = RetrieveCredentialOnAzure(info.Headnode, ref username, ref internalPassword, ref savePassword);
-
-            info.Username = username;
-            info.InternalPassword = internalPassword;
-            info.SavePassword = savePassword;
-            return result;
-        }
-
-        /// <summary>
-        /// Get user's credential for Azure cluster when attaching session.
-        /// </summary>
-        /// <param name="info">Session attach info</param>
-        /// <returns>pops up credential dialog or not</returns>
-        internal static bool RetrieveCredentialOnAzure(SessionAttachInfo info)
-        {
-            string username = info.Username;
-            string internalPassword = info.InternalPassword;
-            bool savePassword = info.SavePassword;
-
-            bool result = RetrieveCredentialOnAzure(info.Headnode, ref username, ref internalPassword, ref savePassword);
-
-            info.Username = username;
-            info.Password = internalPassword;
-            info.SavePassword = savePassword;
-            return result;
-        }
-
-        /// <summary>
-        /// Get user's credential for the Azure cluster.
-        /// We can't validate such credential at on-premise client.
-        /// This method doesn't save the credential.
-        /// </summary>
-        ///<param name="headnode">head node name</param>
-        ///<param name="username">user name</param>
-        ///<param name="internalPassword">user password</param>
-        ///<param name="savePassword">save password or not</param>
-        internal static bool RetrieveCredentialOnAzure(string headnode, ref string username, ref string internalPassword, ref bool savePassword)
-        {
-            if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(internalPassword))
-            {
-                return false;
-            }
-
-            // Try to get the default username if it is not specified.
-            if (string.IsNullOrEmpty(username))
-            {
-                username = CredentialHelper.FetchDefaultUsername(headnode);
-            }
-
-            // If the username is specified, try to get password from Windows Vault.
-            if (!string.IsNullOrEmpty(username))
-            {
-                byte[] cached = CredentialHelper.FetchPassword(headnode, username);
-                if (cached != null)
-                {
-                    internalPassword = Encoding.Unicode.GetString(
-                        ProtectedData.Unprotect(cached, null, DataProtectionScope.CurrentUser));
-
-                    return false;
-                }
-            }
-
-            // If username or password is not specified, popup credential dialog.
-            SecureString password = null;
-            Credentials.PromptForCredentials(headnode, ref username, ref password, ref savePassword, bConsole, hwnd);
-            internalPassword = Credentials.UnsecureString(password);
-            return true;
-        }
-
-        /// <summary>
-        /// Singleton of the scheduler object
-        /// </summary>
-        /// <returns>the scheduler object</returns>
-        private IScheduler GetScheduler()
-        {
-            if (SoaHelper.IsSchedulerOnAzure(this._headnode))
-            {
-                // TODO: on Azure, we don't support this in SP3 CTP.
-                throw new NotSupportedException("It is not supported when the scheduler is in Azure.");
-            }
-
-            // we already acquire the lockstate here.
-            if (_scheduler == null)
-            {
-                try
-                {
-                    IScheduler scheduler = new Scheduler();
-                    scheduler.Connect(_headnode);
-                    _scheduler = scheduler;
-                }
-                catch (SchedulerException ex)
-                {
-                    throw new SessionException(ex);
-                }
-            }
-
-            return _scheduler;
-        }
 
         /// <summary>
         /// Associated a BrokerClient with this Session
@@ -1806,7 +1127,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Reset the heartbeat
         /// </summary>
-        internal void ResetHeartbeat()
+        public void ResetHeartbeat()
         {
             if (this.heartbeatHelper != null)
             {
@@ -1863,10 +1184,11 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Returns exception thrown when heartbeat expires
         /// </summary>
-        static internal Exception GetHeartbeatException(bool isBrokerNodeUnavailable)
+        static public Exception GetHeartbeatException(bool isBrokerNodeUnavailable)
         {
-            return isBrokerNodeUnavailable ? new SessionException(SOAFaultCode.Broker_BrokerNodeUnavailable, SR.BrokerNodeIsUnavailable) :
-                                            new SessionException(SOAFaultCode.Broker_BrokerUnavailable, SR.BrokerIsUnavailable);
+            return isBrokerNodeUnavailable
+                       ? new SessionException(SOAFaultCode.Broker_BrokerNodeUnavailable, SR.BrokerNodeIsUnavailable)
+                       : new SessionException(SOAFaultCode.Broker_BrokerUnavailable, SR.BrokerIsUnavailable);
         }
 
         /// <summary>
@@ -1885,13 +1207,16 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         static internal Exception ClientTimeoutException
         {
-            get { return new SessionException(SOAFaultCode.ClientTimeout, SR.ClientTimeout); }
+            get
+            {
+                return new SessionException(SOAFaultCode.ClientTimeout, SR.ClientTimeout);
+            }
         }
 
         /// <summary>
         /// Returns event signalled when broker is down
         /// </summary>
-        internal WaitHandle HeartbeatSignaledEvent
+        public WaitHandle HeartbeatSignaledEvent
         {
             get
             {
@@ -1902,23 +1227,18 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// If corresponding broker is avaiable or not.
         /// </summary>
-        internal bool IsBrokerAvailable
-        {
-            get;
-            private set;
-        }
+        public bool IsBrokerAvailable { get; private set; }
 
         /// <summary>
         /// Is broker node unavailable. This field is used by interactive session only
         /// </summary>
-        internal bool IsBrokerNodeUnavailable
+        public bool IsBrokerNodeUnavailable
         {
             get
             {
                 return this.isBrokerNodeUnavailable;
             }
         }
-
 
         /// <summary>
         /// Load the assembly from some customized path, if it cannot be found automatically.
@@ -1946,6 +1266,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                 {
                     assemblyPath = Path.Combine(Environment.ExpandEnvironmentVariables(HpcAssemblyDir2), StorageClientAssemblyName);
                 }
+
                 if (!File.Exists(assemblyPath))
                 {
                     return null;
@@ -1957,9 +1278,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                 }
                 catch (Exception ex)
                 {
-                    SessionBase.TraceSource.TraceInformation(
-                        "[SessionBase] .ResolveHandler: failed to load assembly {0}: {1}",
-                        assemblyPath, ex);
+                    TraceSource.TraceInformation("[SessionBase] .ResolveHandler: failed to load assembly {0}: {1}", assemblyPath, ex);
                     return null;
                 }
             }

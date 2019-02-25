@@ -25,10 +25,20 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
     using System.Threading;
     using System.Threading.Tasks;
 
+    using AzureStorageBinding.Table.Binding;
+
     using Microsoft.Hpc.AADAuthUtil;
     using Microsoft.Hpc.Scheduler.Session.Data.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.DataService.REST;
+    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls;
+    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch;
+    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack;
+    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.SchedulerDelegations.AzureBatch;
+    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.SchedulerDelegations.Local;
 
+    using ISessionLauncher = Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.ISessionLauncher;
+
+    // TODO: Consider changing the if/switch branching for schedulers into sub-classes
     /// <summary>
     /// Launcher Host Service
     /// </summary>
@@ -62,7 +72,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
         /// <summary>
         /// Stores the scheduler delegation service instance
         /// </summary>
-        private SchedulerDelegation schedulerDelegation;
+        private ISchedulerAdapter schedulerDelegation;
 
         /// <summary>
         /// Store the data service instance
@@ -130,9 +140,9 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 if (!isNtService)
                 {
                     // only need to get cleaned in SF serivce
-                    if (this.schedulerDelegation != null)
+                    if (this.schedulerDelegation is IDisposable disposable)
                     {
-                        this.schedulerDelegation.Close();
+                        disposable.Dispose();
                         TraceHelper.TraceEvent(TraceEventType.Verbose, "Scheduler delegation closed");
                     }
                     this.schedulerDelegation = null;
@@ -176,28 +186,56 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                     TraceHelper.TraceEvent(TraceEventType.Information, "Azure HAController service monitoring enabled");
                 }
 
-                this.brokerNodesManager = new BrokerNodesManager();
-                this.sessionLauncher = new SessionLauncher(SoaHelper.GetSchedulerName(true), /* runningLocal = */ false, this.brokerNodesManager);
-                this.schedulerDelegation = new SchedulerDelegation(this.sessionLauncher, this.brokerNodesManager);
+                if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.HpcPack)
+                {
+                    this.brokerNodesManager = new BrokerNodesManager();
+                    this.sessionLauncher = SessionLauncherFactory.CreateHpcPackSessionLauncher(SoaHelper.GetSchedulerName(true), false, this.brokerNodesManager);
+                    this.schedulerDelegation = new HpcSchedulerDelegation(this.sessionLauncher, this.brokerNodesManager);
+                }
+                else if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.AzureBatch)
+                {
+                    var instance = SessionLauncherFactory.CreateAzureBatchSessionLauncher();
+                    this.sessionLauncher = instance;
+                    this.schedulerDelegation = new AzureBatchSchedulerDelegation(instance);
+
+                }
+                else if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.Local)
+                {
+                    var instance = SessionLauncherFactory.CreateLocalSessionLauncher();
+                    this.sessionLauncher = instance;
+                    this.schedulerDelegation = new LocalSchedulerDelegation(instance);
+                }
 
 #if AZURE
                 TraceHelper.IsDiagTraceEnabled = x => true;
 #else
                 // Bug 18448: Need to enable traces only for those who have enabled trace
-                SoaDiagTraceHelper.IsDiagTraceEnabledInternal = ((ISchedulerAdapterInternal)this.schedulerDelegation).IsDiagTraceEnabled;
-                TraceHelper.IsDiagTraceEnabled = SoaDiagTraceHelper.IsDiagTraceEnabled;
+                if (this.schedulerDelegation is IHpcSchedulerAdapterInternal hpcAdapterInternal)
+                {
+                    SoaDiagTraceHelper.IsDiagTraceEnabledInternal = hpcAdapterInternal.IsDiagTraceEnabled;
+                    TraceHelper.IsDiagTraceEnabled = SoaDiagTraceHelper.IsDiagTraceEnabled;
+                }
+                else
+                {
+                    TraceHelper.IsDiagTraceEnabled = _ => true;
+                }
 #endif
 
                 // start session launcher service
                 this.StartSessionLauncherService();
 
-                // start scheduler delegation service
-                this.StartSchedulerDelegationService();
+                if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.HpcPack 
+                    || SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.Local
+                    || SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.AzureBatch)
+                {
+                    // start scheduler delegation service
+                    this.StartSchedulerDelegationService();
+                }
 
                 // start data service
-                if (!SoaHelper.IsOnAzure())
+                if (!SoaHelper.IsOnAzure() && this.sessionLauncher is HpcPackSessionLauncher hpcSessionLauncher)
                 {
-                    this.dataService = this.sessionLauncher.GetDataService();
+                    this.dataService = hpcSessionLauncher.GetDataService();
                     this.StartDataWcfService();
                     this.StartDataRestService(this.dataService);
                 }
@@ -223,21 +261,55 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
         /// </summary>
         private void StartSessionLauncherService()
         {
-            string sessionLauncherAddress = SoaHelper.GetSessionLauncherAddress("localhost");
-            this.launcherHost = new ServiceHost(this.sessionLauncher, new Uri(sessionLauncherAddress));
-            BindingHelper.ApplyDefaultThrottlingBehavior(this.launcherHost);
-            this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher), BindingHelper.HardCodedSessionLauncherNetTcpBinding, string.Empty);
-            this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher), BindingHelper.HardCodedInternalSessionLauncherNetTcpBinding, "Internal");
-            this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher), BindingHelper.HardCodedNoAuthSessionLauncherNetTcpBinding, "AAD");
-            TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher find cert {0}", HpcContext.Get().GetSSLThumbprint().GetAwaiter().GetResult());
-            this.launcherHost.Credentials.UseInternalAuthenticationAsync().GetAwaiter().GetResult();
-            this.launcherHost.Faulted += this.SessionLauncherHostFaultHandler;
-            string addFormat = SoaHelper.SessionLauncherAadAddressFormat;
-            this.launcherHost.Authorization.ServiceAuthorizationManager = new AADServiceAuthorizationManager(addFormat.Substring(addFormat.IndexOf('/')));
-            ServiceAuthorizationBehavior myServiceBehavior = this.launcherHost.Description.Behaviors.Find<ServiceAuthorizationBehavior>();
-            myServiceBehavior.PrincipalPermissionMode = PrincipalPermissionMode.None;
-            this.launcherHost.Open();
-            TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher service at {0}", sessionLauncherAddress);
+            try
+            {
+                string sessionLauncherAddress = SoaHelper.GetSessionLauncherAddress("localhost");
+                this.launcherHost = new ServiceHost(this.sessionLauncher, new Uri(sessionLauncherAddress));
+                BindingHelper.ApplyDefaultThrottlingBehavior(this.launcherHost);
+                
+                if (SessionLauncherRuntimeConfiguration.OpenAzureStorageListener)
+                {
+                    this.launcherHost.AddServiceEndpoint(
+                        typeof(ISessionLauncher),
+                        new TableTransportBinding()
+                        {
+                            ConnectionString = SessionLauncherRuntimeConfiguration
+                                .SessionLauncherStorageConnectionString,
+                            TargetPartitionKey = "all"
+                        },
+                        TelepathyConstants.SessionLauncherAzureTableBindingAddress);
+                }
+
+                if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.HpcPack)
+                {
+                    this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher),
+                        BindingHelper.HardCodedSessionLauncherNetTcpBinding, string.Empty);
+                    this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher),
+                        BindingHelper.HardCodedNoAuthSessionLauncherNetTcpBinding, "AAD");
+                    this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher),
+                        BindingHelper.HardCodedInternalSessionLauncherNetTcpBinding, "Internal");
+
+                    TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher find cert {0}",
+                        HpcContext.Get().GetSSLThumbprint().GetAwaiter().GetResult());
+                    this.launcherHost.Credentials.UseInternalAuthenticationAsync().GetAwaiter().GetResult();
+                }
+
+                this.launcherHost.Faulted += this.SessionLauncherHostFaultHandler;
+                string addFormat = SoaHelper.SessionLauncherAadAddressFormat;
+                this.launcherHost.Authorization.ServiceAuthorizationManager =
+                    new AADServiceAuthorizationManager(addFormat.Substring(addFormat.IndexOf('/')));
+                ServiceAuthorizationBehavior myServiceBehavior =
+                    this.launcherHost.Description.Behaviors.Find<ServiceAuthorizationBehavior>();
+                myServiceBehavior.PrincipalPermissionMode = PrincipalPermissionMode.None;
+                this.launcherHost.Open();
+                TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher service at {0}",
+                    sessionLauncherAddress);
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError(ex.ToString());
+                throw;
+            }
         }
 
         /// <summary>
@@ -277,15 +349,30 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
             string schedulerDelegationAddress = SoaHelper.GetSchedulerDelegationAddress("localhost");
             this.delegationHost = new ServiceHost(this.schedulerDelegation, new Uri(schedulerDelegationAddress));
             BindingHelper.ApplyDefaultThrottlingBehavior(this.delegationHost);
-            this.delegationHost.AddServiceEndpoint(typeof(ISchedulerAdapterInternal), BindingHelper.HardCodedInternalSchedulerDelegationBinding, "Internal");
-            this.delegationHost.AddServiceEndpoint(typeof(ISchedulerAdapter), BindingHelper.HardCodedInternalSchedulerDelegationBinding, string.Empty);
-            this.delegationHost.Credentials.ClientCertificate.Authentication.CertificateValidationMode = X509CertificateValidationMode.PeerOrChainTrust;
-            this.delegationHost.Credentials.ClientCertificate.Authentication.RevocationMode = X509RevocationMode.NoCheck;
-            this.delegationHost.Credentials.ServiceCertificate.SetCertificate(StoreLocation.LocalMachine,
-                        StoreName.My,
-                        X509FindType.FindByThumbprint,
-                        HpcContext.Get().GetSSLThumbprint().GetAwaiter().GetResult()
-                        );
+            if (this.schedulerDelegation is IHpcSchedulerAdapterInternal)
+            {
+                this.delegationHost.AddServiceEndpoint(typeof(IHpcSchedulerAdapterInternal), BindingHelper.HardCodedInternalSchedulerDelegationBinding, "Internal");
+                this.delegationHost.AddServiceEndpoint(typeof(IHpcSchedulerAdapter), BindingHelper.HardCodedInternalSchedulerDelegationBinding, string.Empty);
+                this.delegationHost.Credentials.ClientCertificate.Authentication.CertificateValidationMode = X509CertificateValidationMode.PeerOrChainTrust;
+                this.delegationHost.Credentials.ClientCertificate.Authentication.RevocationMode = X509RevocationMode.NoCheck;
+                this.delegationHost.Credentials.ServiceCertificate.SetCertificate(
+                    StoreLocation.LocalMachine,
+                    StoreName.My,
+                    X509FindType.FindByThumbprint,
+                    HpcContext.Get().GetSSLThumbprint().GetAwaiter().GetResult());
+            }
+            else
+            {
+                // Use insecure binding until unified authentication logic is implemented
+                this.delegationHost.AddServiceEndpoint(typeof(ISchedulerAdapter), BindingHelper.HardCodedUnSecureNetTcpBinding, string.Empty);
+                if (SessionLauncherRuntimeConfiguration.OpenAzureStorageListener)
+                {
+                    this.delegationHost.AddServiceEndpoint(
+                        typeof(ISchedulerAdapter),
+                        new TableTransportBinding() { ConnectionString = SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString, TargetPartitionKey = "all" },
+                        TelepathyConstants.SessionSchedulerDelegationAzureTableBindingAddress);
+                }
+            }
 
             this.delegationHost.Faulted += SchedulerDelegationHostFaultHandler;
             this.delegationHost.Open();

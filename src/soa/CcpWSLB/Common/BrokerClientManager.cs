@@ -47,7 +47,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// <summary>
         /// Stores the service job monitor
         /// </summary>
-        private InternalServiceJobMonitor monitor;
+        private ServiceJobMonitorBase monitor;
 
         /// <summary>
         /// Initializes a new instance of the BrokerClientManager class
@@ -58,7 +58,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// <param name="stateManager">indicating the state manager</param>
         /// <param name="monitor">indicating the monitor</param>
         /// <param name="sharedData">indicating the shared data</param>
-        public BrokerClientManager(ClientInfo[] clientList, BrokerQueueFactory queueFactory, BrokerObserver observer, BrokerStateManager stateManager, InternalServiceJobMonitor monitor, SharedData sharedData)
+        public BrokerClientManager(ClientInfo[] clientList, BrokerQueueFactory queueFactory, BrokerObserver observer, BrokerStateManager stateManager, ServiceJobMonitorBase monitor, SharedData sharedData)
         {
             this.clientDic = new Dictionary<string, BrokerClient>(StringComparer.OrdinalIgnoreCase);
             this.queueFactory = queueFactory;

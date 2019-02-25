@@ -37,13 +37,25 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
         [LoaderOptimization(LoaderOptimization.MultiDomain)]
         private static void Main(string[] args)
         {
+            if (!ParseAndSetBrokerLauncherSettings(args, BrokerLauncherSettings.Default))
+            {
+                // parsing failed
+                return;
+            }
+
             // clusterconnectionstring could be a machine name (for single headnode) or a connection string
-#if HPCPACK
-            string clusterConnectionString = SoaHelper.GetSchedulerName(false);
-            var context = HpcContext.GetOrAdd(clusterConnectionString, CancellationToken.None, true);
-#else
-            var context = new SoaContext();
-#endif
+            IHpcContext context;
+
+            if (!BrokerLauncherEnvironment.Standalone)
+            {
+                string clusterConnectionString = SoaHelper.GetSchedulerName(false);
+                context = HpcContext.GetOrAdd(clusterConnectionString, CancellationToken.None, true);
+            }
+            else
+            {
+                context = new SoaContext();
+            }
+
             Trace.TraceInformation("Get diag trace enabled internal.");
             SoaDiagTraceHelper.IsDiagTraceEnabledInternal = (sessionId) =>
                 {
@@ -60,12 +72,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                         return false;
                     }
                 };
-
-            if (!ParseAndSetBrokerLauncherSettings(args, BrokerLauncherSettings.Default))
-            {
-                // parsing failed
-                return;
-            }
 
             TraceHelper.IsDiagTraceEnabled = SoaDiagTraceHelper.IsDiagTraceEnabled;
 
@@ -176,7 +182,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 }
             }
 
-            var result = new Parser(s => s.CaseSensitive = false).ParseArguments<StartOption>(args).WithParsed(SetBrokerLauncherSettings);
+            var result = new Parser(s =>
+                {
+                    s.CaseSensitive = false;
+                    s.HelpWriter = Console.Error;
+                }).ParseArguments<StartOption>(args).WithParsed(SetBrokerLauncherSettings);
             return result.Tag == ParserResultType.Parsed;
         }
     }

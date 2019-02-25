@@ -17,7 +17,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// The Broker Launcher Client Base
     /// </summary>
-    internal class BrokerLauncherClientBase : ClientBase<IBrokerLauncher>, IBrokerLauncher
+    public class BrokerLauncherClientBase : ClientBase<IBrokerLauncher>, IBrokerLauncher
     {
 
         /// <summary>

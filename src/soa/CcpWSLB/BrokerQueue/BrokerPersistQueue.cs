@@ -24,6 +24,8 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
     using System.Threading.Tasks;
     using System.Collections.Concurrent;
 
+    using SR = Microsoft.Hpc.SvcBroker.SR;
+
     /// <summary>
     /// the persist queue that will save the messages to the persistence
     /// TODO: BrokerPersistQueue should be inherited from the BrokerQueue directly.

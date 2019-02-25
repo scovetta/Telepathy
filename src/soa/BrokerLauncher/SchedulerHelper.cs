@@ -226,23 +226,23 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             return acl;
         }
 
-        /// <summary>
-        /// Get specified job requeue count.
-        /// </summary>
-        /// <param name="jobid">job id</param>
-        /// <returns>requeue count</returns>
-        private async Task<int> GetJobRequeueCount(int jobid)
-        {
-            RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
-            return await RetryHelper<int>.InvokeOperationAsync(
-                async () => await this.schedulerClient.Value.GetJobRequeueCount(jobid),
-                async (e, r) =>
-                {
-                    TraceHelper.TraceError(0, "[SchedulerHelper] Failed to get job requeue count: {0}\nRetryCount = {1}",
-                        e, r.RetryCount);
-                    await this.RenewSchedulerAdapterClientAsync();
-                }, retry);
-        }
+        // /// <summary>
+        // /// Get specified job requeue count.
+        // /// </summary>
+        // /// <param name="jobid">job id</param>
+        // /// <returns>requeue count</returns>
+        // private async Task<int> GetJobRequeueCount(int jobid)
+        // {
+        //     RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
+        //     return await RetryHelper<int>.InvokeOperationAsync(
+        //         async () => await this.schedulerClient.Value.GetJobRequeueCount(jobid),
+        //         async (e, r) =>
+        //         {
+        //             TraceHelper.TraceError(0, "[SchedulerHelper] Failed to get job requeue count: {0}\nRetryCount = {1}",
+        //                 e, r.RetryCount);
+        //             await this.RenewSchedulerAdapterClientAsync();
+        //         }, retry);
+        // }
 
         /// <summary>
         /// Gets job owner's sid
@@ -549,38 +549,38 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 retry);
         }
 
-        /// <summary>
-        /// Create the SchedulerAdapterInternalClient with the session node
-        /// </summary>
-        /// <returns>The SchedulerAdapterInternalClient, null if exception happens</returns>
-        private SchedulerAdapterInternalClient CreateSchedulerAdapterInternalClient()
-        {
-            try
-            {
-                return new SchedulerAdapterInternalClient(this.sessionNode.Value, this.certThumbprint.Value);
-            }
-            catch (Exception e)
-            {
-                TraceHelper.TraceError(0, "[SchedulerHelper] Failed to CreateSchedulerAdapterInternalClient: {0}", e);
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Create the SessionLauncherClient with the session node
-        /// </summary>
-        /// <returns>The SessionLauncherClient, null if exception happens</returns>
-        private SessionLauncherClient CreateSessionLauncherClient()
-        {
-            try
-            {
-                return new SessionLauncherClient(this.sessionNode.Value, this.certThumbprint.Value);
-            }
-            catch (Exception e)
-            {
-                TraceHelper.TraceError(0, "[SchedulerHelper] Failed to CreateSessionLauncherClient: {0}", e);
-                return null;
-            }
-        }
+        // /// <summary>
+        // /// Create the SchedulerAdapterInternalClient with the session node
+        // /// </summary>
+        // /// <returns>The SchedulerAdapterInternalClient, null if exception happens</returns>
+        // private SchedulerAdapterInternalClient CreateSchedulerAdapterInternalClient()
+        // {
+        //     try
+        //     {
+        //         return new SchedulerAdapterInternalClient(this.sessionNode.Value, this.certThumbprint.Value);
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         TraceHelper.TraceError(0, "[SchedulerHelper] Failed to CreateSchedulerAdapterInternalClient: {0}", e);
+        //         return null;
+        //     }
+        // }
+        // 
+        // /// <summary>
+        // /// Create the SessionLauncherClient with the session node
+        // /// </summary>
+        // /// <returns>The SessionLauncherClient, null if exception happens</returns>
+        // private SessionLauncherClient CreateSessionLauncherClient()
+        // {
+        //     try
+        //     {
+        //         return new SessionLauncherClient(this.sessionNode.Value, this.certThumbprint.Value);
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         TraceHelper.TraceError(0, "[SchedulerHelper] Failed to CreateSessionLauncherClient: {0}", e);
+        //         return null;
+        //     }
+        // }
     }
 }

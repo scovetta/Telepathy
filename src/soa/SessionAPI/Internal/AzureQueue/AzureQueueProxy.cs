@@ -19,6 +19,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Net;
     using System.ServiceModel.Channels;
@@ -31,6 +32,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// </summary>
     internal class AzureQueueProxy : DisposableObject
     {
+        private int sendConcurrencyLevel;
+
+        private int queueAssignIndex = -1;
+
+        private readonly ConcurrentDictionary<string, ConcurrentQueue<Message>> ClientIdToQueueMapping = new ConcurrentDictionary<string, ConcurrentQueue<Message>>();
+
         /// <summary>
         /// The wait time interval for new requests
         /// </summary>
@@ -68,14 +75,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             set { sessionHash = value; }
         }
 
-        private CloudQueue requestQueue;
+        private CloudQueue[] requestQueues;
         private CloudBlobContainer requestBlobContainer;
 
         private CloudQueue responseQueue;
         private CloudBlobContainer responseBlobContainer;
 
         // request message queue
-        ConcurrentQueue<Message> requestMessageQueue = new ConcurrentQueue<Message>();
+        private ConcurrentQueue<Message>[] requestMessageQueues = null; //new ConcurrentQueue<Message>();
 
         // response message queue
         ConcurrentQueue<Message> responseMessageQueue = new ConcurrentQueue<Message>();
@@ -83,10 +90,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         // multiple concurrent queue for clientData and action
         Dictionary<Tuple<string>, ConcurrentQueue<Message>> responseMessageQueues = new Dictionary<Tuple<string>, ConcurrentQueue<Message>>();
 
-        private AzureStorageClient requestStorageClient;
+        private AzureStorageClient[] requestStorageClients;
         private AzureStorageClient responseStorageClient;
 
-        private MessageSender messageSender;
+        private MessageSender[] messageSenders;
         private MessageRetriever messageRetriever;
 
         /// <summary>
@@ -161,8 +168,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// Initializes a new instance of the AzureQueueManager class.
         /// </summary>
         /// <param name="sessionId">session Id</param>
-        public AzureQueueProxy(string clusterName, int sessionId, int sessionHash, string azureRequestQueueUri, string azureRequestBlobUri)
+        public AzureQueueProxy(string clusterName, int sessionId, int sessionHash, string[] azureRequestQueueUris, string azureRequestBlobUri)
         {
+            this.sendConcurrencyLevel = azureRequestQueueUris.Length;
+            this.requestMessageQueues = Enumerable.Range(0, this.sendConcurrencyLevel).Select(_ => new ConcurrentQueue<Message>()).ToArray();
 
             // this doesn't work for client.
             // ThreadPool.SetMinThreads(MinThreadsOfThreadpool, MinThreadsOfThreadpool);
@@ -176,14 +185,20 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             this.sessionId = sessionId;
             this.sessionHash = sessionHash;
 
-            this.requestQueue = new CloudQueue(new Uri(azureRequestQueueUri));
+            this.requestQueues = azureRequestQueueUris.Select(u => new CloudQueue(new Uri(u))).ToArray();
+
             // use default retry option
             this.requestBlobContainer = new CloudBlobContainer(new Uri(azureRequestBlobUri));
-            // use default retry option
-            this.requestStorageClient = new AzureStorageClient(this.requestQueue, this.requestBlobContainer);
-            // initialize the sender
-            this.messageSender = new MessageSender(this.requestMessageQueue, this.requestStorageClient, SenderConcurrency);
 
+            // use default retry option
+            this.requestStorageClients = this.requestQueues.Select(q => new AzureStorageClient(q, this.requestBlobContainer)).ToArray();
+
+            // initialize the sender
+            this.messageSenders = new MessageSender[this.sendConcurrencyLevel];
+            for (int i = 0; i != this.sendConcurrencyLevel; i++)
+            {
+                this.messageSenders[i] = new MessageSender(this.requestMessageQueues[i], this.requestStorageClients[i], SenderConcurrency/this.sendConcurrencyLevel);
+            }
         }
 
         /// <summary>
@@ -229,23 +244,27 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         private void Cleanup()
         {
-            if (this.messageSender != null)
+            foreach (var messageSender in this.messageSenders)
             {
-                try
+                if (messageSender != null)
                 {
-                    this.messageSender.Close();
-                }
-                catch (Exception e)
-                {
-                    SessionBase.TraceSource.TraceInformation(
-                        SoaHelper.CreateTraceMessage(
-                            "Proxy",
-                            "Cleanup",
-                            string.Format("Closing message retriever failed, {0}", e)));
-                }
+                    try
+                    {
+                        messageSender.Close();
+                    }
+                    catch (Exception e)
+                    {
+                        SessionBase.TraceSource.TraceInformation(
+                            SoaHelper.CreateTraceMessage(
+                                "Proxy",
+                                "Cleanup",
+                                string.Format("Closing message retriever failed, {0}", e)));
+                    }
 
-                this.messageSender = null;
+                    // this.messageSenders = null;
+                }
             }
+            
 
             if (this.messageRetriever != null)
             {
@@ -319,23 +338,27 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 this.semaphoreForWorker = null;
             }
 
-            if (this.requestStorageClient != null)
+            foreach (var requestStorageClient in this.requestStorageClients)
             {
-                try
+                if (requestStorageClient != null)
                 {
-                    this.requestStorageClient.Close();
-                }
-                catch (Exception e)
-                {
-                    SessionBase.TraceSource.TraceInformation(
-                        SoaHelper.CreateTraceMessage(
-                            "Proxy",
-                            "Cleanup",
-                            string.Format("Disposing semaphoreForWorker failed, {0}", e)));
-                }
+                    try
+                    {
+                        requestStorageClient.Close();
+                    }
+                    catch (Exception e)
+                    {
+                        SessionBase.TraceSource.TraceInformation(
+                            SoaHelper.CreateTraceMessage(
+                                "Proxy",
+                                "Cleanup",
+                                string.Format("Disposing semaphoreForWorker failed, {0}", e)));
+                    }
 
-                this.requestStorageClient = null;
+                    //requestStorageClients = null;
+                }
             }
+            
 
             if (this.responseStorageClient != null)
             {
@@ -511,7 +534,20 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
         public void SendMessage(Message message)
         {
-            requestMessageQueue.Enqueue(message);
+            this.SendMessage(string.Empty, message);
+        }
+
+        public void SendMessage(string clientId, Message message)
+        {
+            var queue = this.ClientIdToQueueMapping.GetOrAdd(
+                clientId,
+                id =>
+                    {
+                        int queueIdx = Interlocked.Increment(ref this.queueAssignIndex) % this.sendConcurrencyLevel;
+                        return this.requestMessageQueues[queueIdx];
+                    });
+
+            queue.Enqueue(message);
         }
 
         /// <summary>

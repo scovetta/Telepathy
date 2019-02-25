@@ -16,7 +16,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <remarks>
     /// Resource provider is used when creating session. It provides methods to allocate resource for session or free them (when failed to create session).
     /// </remarks>
-    internal interface IResourceProvider
+    public interface IResourceProvider
     {
         /// <summary>
         /// Allocate resource for service job and provide broker epr

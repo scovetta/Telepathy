@@ -33,7 +33,7 @@ namespace Microsoft.Hpc.Scheduler.Session
 #elif BROKER
     internal 
 #endif
-    sealed class AuthenticationFailure
+    public sealed class AuthenticationFailure
     {
         /// <summary>
         ///   <para>Specifies the value of the SOAP action for the error message.</para>

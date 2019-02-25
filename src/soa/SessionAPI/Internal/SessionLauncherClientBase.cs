@@ -9,19 +9,17 @@
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
-    using Microsoft.Hpc.Scheduler.Session.Data.Internal;
     using System;
     using System.Collections.Generic;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Data;
 
     /// <summary>
     /// Service client base to connect the session launcher in headnode
     /// </summary>
-    internal class SessionLauncherClientBase : ClientBase<ISessionLauncher>, ISessionLauncher
+    public class SessionLauncherClientBase : ClientBase<ISessionLauncher>, ISessionLauncher
     {
         /// <summary>
         /// the default endpoint prefix.
@@ -323,6 +321,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             return this.Channel.GetServiceVersions(serviceName);
         }
 
+#if HPCPACK
         /// <summary>
         /// Returns soa data server information
         /// </summary>
@@ -364,6 +363,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         {
             return this.Channel.EndGetDataServerInfo(result);
         }
+#endif
 
         /// <summary>
         /// Gets SOA configuration

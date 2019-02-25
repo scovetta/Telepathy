@@ -21,6 +21,8 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using Microsoft.Hpc.ServiceBroker.Common.ThreadHelper;
     using Microsoft.Hpc.SvcBroker;
 
+    using SR = Microsoft.Hpc.SvcBroker.SR;
+
     /// <summary>
     /// The FrontEnd for duplex MEP (works for NetTcpBinding)
     /// </summary>

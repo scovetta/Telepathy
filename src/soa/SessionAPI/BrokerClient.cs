@@ -472,6 +472,10 @@ namespace Microsoft.Hpc.Scheduler.Session
                 Utility.ThrowIfInvalid((this.session.Info.TransportScheme & TransportScheme.Custom) == TransportScheme.Custom, "binding", SR.BindingTransportSchemeMismatch);
                 scheme = TransportScheme.Custom;
             }
+            else if (this.session.Info is SessionInfo sessionInfo && sessionInfo.UseAzureStorage)
+            {
+                // Do not need to check binding
+            }
             else if (this.session.Info.UseInprocessBroker)
             {
                 // Do not need to check binding
@@ -484,7 +488,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             //save the transport scheme for the client
             this.transportScheme = scheme;
 
-            if (((SessionInfo)this.session.Info).UseAzureQueue.GetValueOrDefault() || scheme == TransportScheme.Http)
+            if (((SessionInfo)this.session.Info).UseAzureStorage|| scheme == TransportScheme.Http)
             {
                 this.frontendFactory = new HttpBrokerFrontendFactory(this.clientId, binding, this.session, scheme, this.callbackManager);
             }
@@ -506,7 +510,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             //     this.frontendFactory = new WebBrokerFrontendFactory((WebSessionInfo)this.session.Info, this.clientId, this.callbackManager);
             //     SessionBase.TraceSource.TraceInformation("[Session:{0}] BrokerClient instance created. ClientId = {1}, Scheme = {2}, DefaultSendTimeout = {3}, DefaultResponsesTimeout = {4}", this.session.Id, this.clientId, TransportScheme.WebAPI, this.defaultSendTimeout, this.defaultResponsesTimeout);
             // }
-#if !net40
+#if !net40 && HPCPACK
             if (this.session.Info.UseAad)
             {
                 this.jwtTokenCache = CredUtil.GetSoaAadJwtToken(this.session.Info.Headnode, this.session.UserName, this.session.InternalPassword).GetAwaiter().GetResult();
@@ -852,7 +856,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             bool isFailed = false;
             lock (typedMessageConverter)
             {
-                if (this.transportScheme == TransportScheme.Http)
+                if (this.transportScheme == TransportScheme.Http || this.transportScheme == TransportScheme.AzureStorage)
                 {
                     message = typedMessageConverter.ToMessage(request, MessageVersion.Soap11);
                 }
@@ -941,7 +945,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                     this.CheckDisposed();
                     this.CheckBrokerAvailability();
 
-                    if ((this.session.Info as SessionInfo).UseAzureQueue == true)
+                    if ((this.session.Info as SessionInfo).UseAzureStorage == true)
                     {
                         // add username in the message header if secure
                         if ((this.session.Info as SessionInfo).Secure)
@@ -950,7 +954,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                         }
 
                         AzureQueueProxy azureQueueProxy = this.frontendFactory.GetBrokerClientAQ();
-                        azureQueueProxy.SendMessage(message);
+                        azureQueueProxy.SendMessage(this.clientId, message);
                     }
                     else
                     {
@@ -2031,6 +2035,10 @@ namespace Microsoft.Hpc.Scheduler.Session
                 binding.ReceiveTimeout = this.defaultResponsesTimeout == Timeout.Infinite ? TimeSpan.MaxValue : new TimeSpan(0, 0, 0, 0, this.defaultResponsesTimeout);
                 binding.SendTimeout = binding.ReceiveTimeout; // send timeout for http should be the same as receive timeout to pull the response
             }
+            else if ((this.session.Info.TransportScheme & TransportScheme.AzureStorage) == TransportScheme.AzureStorage)
+            {
+                Trace.TraceInformation("No binding returned for AzureStorage scheme");
+            }
             else if ((this.session.Info.TransportScheme & TransportScheme.Custom) == TransportScheme.Custom)
             {
                 throw new SessionException(SOAFaultCode.MustIndicateBindingForCustomTransportScheme, SR.MustIndicateBindingForCustomTransportScheme);
@@ -2217,13 +2225,13 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.EndRequests()" /> method commits all pending request messages, and does not allow further request messages to be sent.</para> 
         ///   <para>A 
         /// <see cref="Microsoft.Hpc.Scheduler.Session.Session" /> object and a 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.DurableSession" /> object handle requests differently. A 
+        /// <see cref="HpcDurableSession" /> object handle requests differently. A 
         /// <see cref="Microsoft.Hpc.Scheduler.Session.Session" /> object may begin processing requests before the 
         /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.EndRequests(0" /> method is called. However, a 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.DurableSession" /> object will not process requests until the 
+        /// <see cref="HpcDurableSession" /> object will not process requests until the 
         /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.EndRequests()" /> method is called. After the 
         /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.EndRequests()" /> method is called, the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.DurableSession" /> object will commit the requests to the message queue.</para>
+        /// <see cref="HpcDurableSession" /> object will commit the requests to the message queue.</para>
         /// </remarks>
         /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.EndRequests(System.Int32)" />
         public void EndRequests()
@@ -2253,13 +2261,13 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.EndRequests(System.Int32)" /> method commits all pending request messages, and does not allow further request messages to be sent.</para> 
         ///   <para>A 
         /// <see cref="Microsoft.Hpc.Scheduler.Session.Session" /> object and a 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.DurableSession" /> object handle requests differently. A 
+        /// <see cref="HpcDurableSession" /> object handle requests differently. A 
         /// <see cref="Microsoft.Hpc.Scheduler.Session.Session" /> object may begin processing requests before the 
         /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.EndRequests(System.Int32)" /> method is called. However, a 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.DurableSession" /> object will not process requests until the 
+        /// <see cref="HpcDurableSession" /> object will not process requests until the 
         /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.EndRequests(System.Int32)" /> method is called. After the 
         /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.EndRequests(System.Int32)" /> method is called, the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.DurableSession" /> object will commit the requests to the message queue.</para>
+        /// <see cref="HpcDurableSession" /> object will commit the requests to the message queue.</para>
         /// </remarks>
         /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.EndRequests()" />
         public void EndRequests(int timeoutMilliseconds)
@@ -2678,7 +2686,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Called by SessionBase when broker heartbeat signals
         /// </summary>
-        internal override void SendBrokerDownSignal(bool isBrokerNodeDown)
+        public override void SendBrokerDownSignal(bool isBrokerNodeDown)
         {
             lock (this.objectLock)
             {

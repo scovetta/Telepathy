@@ -11,17 +11,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using System;
     using System.ServiceModel;
-    using Microsoft.Hpc.Scheduler.Session.Data.Internal;
     using System.Threading.Tasks;
     using System.Collections.Generic;
-
-    using Microsoft.Hpc.Scheduler.Session.Data;
 
     /// <summary>
     /// The interface for session Launcher
     /// </summary>
     [ServiceContract(Name = "ISessionLauncher", Namespace = "http://hpc.microsoft.com/sessionlauncher/")]
-    internal interface ISessionLauncher
+    public interface ISessionLauncher
     {
         /// <summary>
         /// Gets server version
@@ -240,6 +237,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
         Version[] GetServiceVersions(string serviceName);
 
+#if HPCPACK
         /// <summary>
         /// Returns soa data server information
         /// </summary>
@@ -270,6 +268,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="result">indicating the async result</param>
         /// <returns>returns the data server information</returns>
         DataServerInfo EndGetDataServerInfo(IAsyncResult result);
+#endif
 
         /// <summary>
         /// Gets SOA configuration

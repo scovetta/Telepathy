@@ -11,6 +11,6 @@
 
         public IFabricContext FabricContext => SoaFabricContext.Instance;
 
-        public IRegistry Registry { get; }
+        public IRegistry Registry { get; } = new NonHARegistry();
     }
 }

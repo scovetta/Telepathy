@@ -66,7 +66,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// <summary>
         /// Store the service job monitor
         /// </summary>
-        private InternalServiceJobMonitor monitor;
+        private ServiceJobMonitorBase monitor;
 
         /// <summary>
         /// Stores the frontend result
@@ -231,7 +231,7 @@ namespace Microsoft.Hpc.ServiceBroker
                 ServiceConfiguration serviceConfig;
                 BrokerConfigurations brokerConfig;
                 BindingsSection bindings;
-                SoaAmbientConfig.StandAlone = startInfo.IsNoSession;
+                SoaCommonConfig.WithoutSessionLayer = startInfo.IsNoSession; // TODO: this is a hack. Working mode should be decided by something like a *SchedulerType* filed.
 
                 ConfigurationHelper.LoadConfiguration(startInfo, brokerInfo, out brokerConfig, out serviceConfig, out bindings);
                 this.sharedData = new SharedData(brokerInfo, startInfo, brokerConfig, serviceConfig);
@@ -259,7 +259,7 @@ namespace Microsoft.Hpc.ServiceBroker
 #else
                 var context = new SoaContext();
 #endif
-                if (SoaAmbientConfig.StandAlone)
+                if (SoaCommonConfig.WithoutSessionLayer)
                 { 
                     this.monitor = new DummyServiceJobMonitor(this.sharedData, this.stateManager, this.nodeMappingData, context);
                 }
@@ -286,11 +286,11 @@ namespace Microsoft.Hpc.ServiceBroker
                 BrokerTracing.TraceVerbose("[BrokerEntry] Initialization: Step 9: Initialize client manager succeeded.");
 
                 // if using AzureQueue, retrieve the connection string and build the request and response message queues if not exist
-                string requestQueueUri = string.Empty;
+                string[] requestQueueUris = { };
                 string requestBlobUri = string.Empty;
-                string controllerRequstQueueUri = string.Empty;
+                string controllerRequestQueueUri = string.Empty;
                 string controllerResponseQueueUri = string.Empty;
-                if (startInfo.UseAzureQueue == true)
+                if (startInfo.UseAzureStorage)
                 {
                     int clusterHash = 0;
                     if (!string.IsNullOrEmpty(brokerInfo.ClusterId))
@@ -311,16 +311,22 @@ namespace Microsoft.Hpc.ServiceBroker
                     if (!string.IsNullOrEmpty(brokerInfo.AzureStorageConnectionString))
                     {
                         this.azureQueueProxy = new AzureQueueProxy(brokerInfo.ClusterName, clusterHash, this.SessionId, brokerInfo.AzureStorageConnectionString);
-                        requestQueueUri = this.azureQueueProxy.RequestQueueUri;
+                        requestQueueUris = this.azureQueueProxy.RequestQueueUris;
                         requestBlobUri = this.azureQueueProxy.RequestBlobUri;
-                        controllerRequstQueueUri = CloudQueueCreationModule.CreateCloudQueueAndGetSas(
+                        var requestQName = CloudQueueConstants.GetBrokerWorkerControllerRequestQueueName(this.SessionId);
+                        var responseQName = CloudQueueConstants.GetBrokerWorkerControllerResponseQueueName(this.SessionId);
+                        controllerRequestQueueUri = CloudQueueCreationModule.CreateCloudQueueAndGetSas(
                             brokerInfo.AzureStorageConnectionString,
-                            CloudQueueConstants.BrokerWorkerControllerRequestQueueName,
+                            requestQName,
                             CloudQueueCreationModule.AddMessageSasPolicy).GetAwaiter().GetResult();
                         controllerResponseQueueUri = CloudQueueCreationModule.CreateCloudQueueAndGetSas(
                             brokerInfo.AzureStorageConnectionString,
-                            CloudQueueConstants.BrokerWorkerControllerResponseQueueName,
+                            responseQName,
                             CloudQueueCreationModule.ProcessMessageSasPolicy).GetAwaiter().GetResult();
+                        if (this.SessionId == SessionStartInfo.StandaloneSessionId)
+                        {
+                            CloudQueueCreationModule.ClearCloudQueuesAsync(brokerInfo.AzureStorageConnectionString, new[] { requestQName, responseQName });
+                        }
                     }
                     else
                     {
@@ -346,11 +352,11 @@ namespace Microsoft.Hpc.ServiceBroker
                     this.sharedData.Config.LoadBalancing.ServiceOperationTimeout,
                     this.sharedData.Config.Monitor.ClientBrokerHeartbeatInterval,
                     this.sharedData.Config.Monitor.ClientBrokerHeartbeatRetryCount,
-                    requestQueueUri,
+                    requestQueueUris,
                     requestBlobUri,
-                    controllerRequstQueueUri,
+                    controllerRequestQueueUri,
                     controllerResponseQueueUri,
-                    startInfo.UseAzureQueue);
+                    startInfo.UseAzureStorage);
                 BrokerTracing.TraceVerbose("[BrokerEntry] Initialization: Step 12: Build initialization result suceeded.");
                 BrokerTracing.TraceInfo("[BrokerEntry] Initialization succeeded.");
                 return result;
@@ -481,10 +487,10 @@ namespace Microsoft.Hpc.ServiceBroker
             }
 
             
-            //Check the StrategyConfig.StandAlone for the close progress.
+            //Check the StrategyConfig.WithoutSessionLayer for the close progress.
             //Step 3: Finish the service job if it is needed.
             // We only finish the service job if clean data is required, in other cases, the service job monitor will finish the service job according to the service job life cycle before we enter this stage
-            if (this.monitor != null && !SoaAmbientConfig.StandAlone)
+            if (this.monitor != null && !SoaCommonConfig.WithoutSessionLayer)
             {
                 try
                 {
@@ -506,7 +512,7 @@ namespace Microsoft.Hpc.ServiceBroker
                 try
                 {
                     // Update suspended state
-                    if (!SoaAmbientConfig.StandAlone)
+                    if (!SoaCommonConfig.WithoutSessionLayer)
                     { 
                         await this.monitor.UpdateSuspended(!cleanData);
                     }
@@ -652,7 +658,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// <param name="serviceOperationTimeout">indicating service operation timeout</param>
         /// <param name="clientBrokerHeartbeatInterval">indicating client broker heartbeat interval</param>
         /// <param name="clientBrokerHeartbeatRetryCount">indicating client broker heartbeat retry count</param>
-        /// <param name="azureRequestQueueUri">the Azure storage queue SAS Uri</param>
+        /// <param name="azureRequestQueueUris">the Azure storage queue SAS Uri</param>
         /// <param name="azureRequestBlobUri">the Azure storage blob container SAS Uri</param>
         /// <param name="useAzureQueue">if the azure storage queue(blob) is used</param>
         /// <returns>returns the initialization result</returns>
@@ -662,7 +668,7 @@ namespace Microsoft.Hpc.ServiceBroker
             int serviceOperationTimeout,
             int clientBrokerHeartbeatInterval,
             int clientBrokerHeartbeatRetryCount,
-            string azureRequestQueueUri,
+            string[] azureRequestQueueUris,
             string azureRequestBlobUri,
             bool? useAzureQueue)
         {
@@ -675,7 +681,7 @@ namespace Microsoft.Hpc.ServiceBroker
             info.ClientBrokerHeartbeatRetryCount = clientBrokerHeartbeatRetryCount;
             info.MaxMessageSize = frontendResult.MaxMessageSize;
             info.SupportsMessageDetails = frontendResult.FrontendSupportsMessageDetails && dispatcherManager.BackendSupportsMessageDetails;
-            info.AzureRequestQueueUri = azureRequestQueueUri;
+            info.AzureRequestQueueUris = azureRequestQueueUris;
             info.AzureRequestBlobUri = azureRequestBlobUri;
             info.UseAzureQueue = (useAzureQueue == true);
             return info;
@@ -687,7 +693,7 @@ namespace Microsoft.Hpc.ServiceBroker
             int serviceOperationTimeout,
             int clientBrokerHeartbeatInterval,
             int clientBrokerHeartbeatRetryCount,
-            string azureRequestQueueUri,
+            string[] azureRequestQueueUris,
             string azureRequestBlobUri,
             string controllerRequestQueueUri,
             string controllerResponseQueueUri,
@@ -700,7 +706,7 @@ namespace Microsoft.Hpc.ServiceBroker
                 serviceOperationTimeout,
                 clientBrokerHeartbeatInterval,
                 clientBrokerHeartbeatRetryCount,
-                azureRequestQueueUri,
+                azureRequestQueueUris,
                 azureRequestBlobUri,
                 useAzureQueue);
             info.AzureControllerRequestQueueUri = controllerRequestQueueUri;

@@ -10,10 +10,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using System.Threading;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Client;
@@ -24,7 +25,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// Broker factory for v3
     /// </summary>
-    internal class V3BrokerFactory : IBrokerFactory
+    public class V3BrokerFactory : IBrokerFactory
     {
         /// <summary>
         /// Stores the durable flag
@@ -53,7 +54,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         public async Task<SessionBase> CreateBroker(SessionStartInfo startInfo, int sessionId, DateTime targetTimeout, string[] eprs, Binding binding)
         {
             Exception innerException = null;
-            foreach (string epr in eprs)
+            IEnumerable<string> endpoints = eprs;
+            if (startInfo.UseAzureQueue.GetValueOrDefault() && !endpoints.Contains(SessionInternalConstants.BrokerConnectionStringToken))
+            {
+                endpoints = endpoints.Concat(new[] { SessionInternalConstants.BrokerConnectionStringToken });
+            }
+
+            foreach (string epr in endpoints)
             {
                 TimeSpan timeout = SessionBase.GetTimeout(targetTimeout);
                 IBrokerLauncher brokerLauncher = null;
@@ -61,7 +68,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 {
                     SessionBase.TraceSource.TraceInformation("[Session:{0}] Try to create broker... BrokerLauncherEpr = {1}", sessionId, epr);
 
-                    if (startInfo.UseAzureQueue.GetValueOrDefault())
+                    if (epr == SessionInternalConstants.BrokerConnectionStringToken)
                     {
                         brokerLauncher = new BrokerLauncherCloudQueueClient(startInfo.BrokerLauncherStorageConnectionString);
                     }
@@ -97,7 +104,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     {
 
                         var session = new V3Session(info, startInfo.Headnode, startInfo.ShareSession, binding);
-                        if (startInfo.UseAzureQueue.GetValueOrDefault())
+                        if (startInfo.UseAzureStorage)
                         {
                             session.BrokerLauncherClient = brokerLauncher;
                         }
@@ -179,7 +186,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 info.BrokerUniqueId = result.BrokerUniqueId;
 
                 info.UseAzureQueue = result.UseAzureQueue;
-                info.AzureRequestQueueUri = result.AzureRequestQueueUri;
+                info.AzureRequestQueueUris = result.AzureRequestQueueUris;
                 info.AzureRequestBlobUri = result.AzureRequestBlobUri;
 
                 info.Username = attachInfo.Username;

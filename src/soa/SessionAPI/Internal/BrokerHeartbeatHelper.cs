@@ -10,7 +10,6 @@
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using System;
-    using System.Diagnostics;
     using System.ServiceModel;
     using System.Threading;
     using Microsoft.Hpc.Scheduler.Session.Common;

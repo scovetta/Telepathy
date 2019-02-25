@@ -13,7 +13,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// Provides an interface for broker launcher client factories who provide
     /// broker launcher client for heartbeat
     /// </summary>
-    internal interface IBrokerLauncherClientFactoryForHeartbeat
+    public interface IBrokerLauncherClientFactoryForHeartbeat
     {
         /// <summary>
         /// Close the broker launcher client for heartbeat

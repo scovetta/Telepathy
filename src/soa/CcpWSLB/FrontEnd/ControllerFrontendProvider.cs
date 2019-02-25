@@ -61,7 +61,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             if (isSingleton && azureQueueProxy != null)
             {
                 this.singletonInstance = new BrokerController(true, clientManager, brokerAuth, observer, azureQueueProxy);
-                this.cloudQueueWatcher = new BrokerWorkerControllerQueueWatcher(this.singletonInstance, azureQueueProxy.AzureStorageConnectionString);
+                this.cloudQueueWatcher = new BrokerWorkerControllerQueueWatcher(this.singletonInstance, azureQueueProxy.AzureStorageConnectionString, azureQueueProxy.SessionId);
             }
 
             this.clientManager = clientManager;

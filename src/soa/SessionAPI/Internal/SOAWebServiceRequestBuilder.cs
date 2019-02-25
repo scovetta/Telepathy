@@ -17,7 +17,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// Builder class to generate SOA web service web request
     /// </summary>
-    internal static class SOAWebServiceRequestBuilder
+    public static class SOAWebServiceRequestBuilder
     {
         /// <summary>
         /// Stores the dictionary contains ContentTypes for different message formats

@@ -24,7 +24,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// Service client to connect the session launcher in headnode
     /// </summary>
-    internal class SessionLauncherClient : SessionLauncherClientBase
+    public class SessionLauncherClient : SessionLauncherClientBase
     {
         /// <summary>
         /// if the scheduler is running on IaaS
@@ -142,7 +142,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <summary>
         /// Gets the endpoint prefix.
         /// </summary>
-        internal static string EndpointPrefix
+        public static string EndpointPrefix
         {
             get
             {
@@ -153,7 +153,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <summary>
         /// Get the https endpoint prefix
         /// </summary>
-        internal static string HttpsEndpointPrefix
+        public static string HttpsEndpointPrefix
         {
             get
             {
@@ -213,6 +213,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             return SoaHelper.CreateEndpointAddress(uri, true, useInternalChannel);
         }
 
-        private static EndpointAddress GetEndpoint(SessionInitInfoBase info) => GetEndpoint(new Uri(info.GetSessionLauncherAddressAsync().GetAwaiter().GetResult()), info.IsAadOrLocalUser);
+        private static EndpointAddress GetEndpoint(SessionInitInfoBase info)
+        {
+            if (info.TransportScheme == TransportScheme.AzureStorage)
+            {
+                return new EndpointAddress( new Uri(TelepathyConstants.SessionLauncherAzureTableBindingAddress));
+            }
+
+            return GetEndpoint(new Uri(info.GetSessionLauncherAddressAsync().GetAwaiter().GetResult()), info.IsAadOrLocalUser);
+        }
     }
 }

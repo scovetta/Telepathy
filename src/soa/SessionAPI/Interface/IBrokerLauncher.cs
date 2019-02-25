@@ -17,7 +17,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// Interface for Broker Launcher
     /// </summary>
     [ServiceContract(Name = "IBrokerLauncher", Namespace = "http://hpc.microsoft.com/brokerlauncher/")]
-    internal interface IBrokerLauncher
+    public interface IBrokerLauncher
     {
         /// <summary>
         /// Create a new broker

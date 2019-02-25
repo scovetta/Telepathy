@@ -12,7 +12,7 @@ namespace Microsoft.Hpc.Scheduler.Session
     /// <summary>
     /// The type of the credential.
     /// </summary>
-    enum CredType
+    public enum CredType
     {
         None = 0,
 

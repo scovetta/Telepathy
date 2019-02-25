@@ -42,28 +42,26 @@ namespace Microsoft.Hpc.EchoClient
                 return;
             }
 
-            // strategies for the EchoClient
+            // TODO: SessionStartInfoFactory
             SessionStartInfo info = null;
             if (config.IsNoSession)
             {
                 // Start session without session manager
                 if (config.InprocessBroker)
                 {
-                    info = new SessionStartInfo(config.ServiceName, config.RegPath, null, config.TargetList.ToArray());
+                    info = new SessionStartInfo(config.ServiceName, config.RegPath, null, config.TargetList?.ToArray());
                     info.UseInprocessBroker = true;
                     info.IsNoSession = true;
                 }
                 else
                 {
-                    //TODO because registrying a broker in scheduler must have a appropriate session id in HPC pack
-                    info = new SessionStartInfo(config.HeadNode, config.ServiceName, config.RegPath, null, config.TargetList.ToArray());
+                    info = new SessionStartInfo(config.HeadNode, config.ServiceName, config.RegPath, null, config.TargetList?.ToArray());
                     info.UseInprocessBroker = false;
                     info.IsNoSession = true;
                 }
             }
             else
             {
-                //normal with Hpc
                 info = new SessionStartInfo(config.HeadNode, config.ServiceName);
                 info.IsNoSession = false;
                 info.UseInprocessBroker = config.InprocessBroker;
@@ -84,6 +82,7 @@ namespace Microsoft.Hpc.EchoClient
 
             if (!string.IsNullOrEmpty(config.AzureStorageConnectionString))
             {
+                info.AzureStorageConnectionString = config.AzureStorageConnectionString;
                 info.BrokerLauncherStorageConnectionString = config.AzureStorageConnectionString;
             }
 
@@ -126,9 +125,13 @@ namespace Microsoft.Hpc.EchoClient
                 case "custom":
                     info.TransportScheme = TransportScheme.Custom;
                     break;
+                case "azstorage":
+                    info.TransportScheme = TransportScheme.AzureStorage;
+                    break;
                 default:
                     break;
             }
+
             info.JobTemplate = config.JobTemplate;
             info.SessionPriority = config.Priority;
             info.NodeGroupList = new List<string>(config.NodeGroups.Split(new char[] { ',' }));
@@ -235,12 +238,18 @@ namespace Microsoft.Hpc.EchoClient
                 watch.Start();
                 if (config.Durable)
                 {
-                    session = DurableSession.CreateSession(info);
+                    session = HpcDurableSession.CreateSession(info);
+                }
+                // TODO: consolidate this
+                else if (info.IsNoSession)
+                {
+                    session = info.UseInprocessBroker ? Session.CreateCoreLayerSession(info) : Session.CreateBrokerLayerSession(info); // TODO: Usability fix
                 }
                 else
                 {
-                    session = info.IsNoSession ? (info.UseInprocessBroker? Session.CreateIPSession(info) : Session.CreateBrkSession(info)) : Session.CreateSession(info);
+                    session = Session.CreateSession(info);
                 }
+                
                 watch.Stop();
                 Logger.Info("{0, -35} : {1}", "Session ID", session.Id);
                 Logger.Info("{0, -35} : {1:F3} sec", "Session creation time", watch.Elapsed.TotalSeconds);

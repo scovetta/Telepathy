@@ -10,10 +10,7 @@
 namespace Microsoft.Hpc.Scheduler.Session
 {
     using System;
-    using System.Collections.Generic;
     using System.Runtime.Serialization;
-    using System.Text;
-    using Microsoft.Hpc.Scheduler.Properties;
 
     /// <summary>
     /// The structure contains all the information about a session

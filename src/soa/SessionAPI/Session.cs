@@ -7,20 +7,24 @@
 // </summary>
 //------------------------------------------------------------------------------
 
+
 namespace Microsoft.Hpc.Scheduler.Session
 {
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using System;
-    using System.Diagnostics;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Microsoft.Hpc.Scheduler.Session.Internal.SessionFactory;
+
+    // TODO: remove the "V3" prefix
+
     /// <summary>
     /// The jobs associated with this object will be automatically closed on disposing this object
     /// </summary>
-    internal class V3Session : SessionBase
+    public class V3Session : SessionBase
     {
         /// <summary>
         /// Whether the jobs will be closed on disposing this session
@@ -34,7 +38,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="headnode">headnode name</param>
         /// <param name="sharedSession">if this is a shared session</param>
         /// <param name="binding">indicating the binding</param>
-        internal V3Session(SessionInfoBase info, string headnode, bool autoClose, Binding binding)
+        public V3Session(SessionInfoBase info, string headnode, bool autoClose, Binding binding)
             : base(info, headnode, binding)
         {
             this.autoCloseJob = !autoClose;
@@ -88,191 +92,6 @@ namespace Microsoft.Hpc.Scheduler.Session
                 {
                     return GenerateEndpointAddress(((SessionInfo)this.Info).BrokerEpr, TransportScheme.Http);
                 }
-            }
-        }
-
-        /// <summary>
-        /// Asynchronous mode of submitting a job and get a ServiceJobSession object.
-        /// </summary>
-        /// <param name="startInfo">The session start info for creating the service session</param>
-        /// <param name="callback">A callback to be invoked after an endpoint address is got</param>
-        /// <param name="state">The parameter of the callback</param>
-        /// <returns>Async result</returns>
-        public static IAsyncResult BeginCreateSession(
-                                                      SessionStartInfo startInfo,
-                                                      AsyncCallback callback,
-                                                      object state)
-        {
-            return BeginCreateSession(startInfo, null, callback, state);
-        }
-
-        /// <summary>
-        /// Asynchronous mode of submitting a job and get a ServiceJobSession object.
-        /// </summary>
-        /// <param name="startInfo">The session start info for creating the service session</param>
-        /// <param name="binding">indicating the binding</param>
-        /// <param name="callback">A callback to be invoked after an endpoint address is got</param>
-        /// <param name="state">The parameter of the callback</param>
-        /// <returns>Async result</returns>
-        public static IAsyncResult BeginCreateSession(
-                                                      SessionStartInfo startInfo,
-                                                      Binding binding,
-                                                      AsyncCallback callback,
-                                                      object state)
-        {
-            Utility.ThrowIfNull(startInfo, "startInfo");
-
-            if (Utility.IsHpcSessionType(startInfo.GetType()))
-            {
-                SessionStartInfo sessionStartInfo = (SessionStartInfo)startInfo;
-                SessionBase.CheckSessionStartInfo(sessionStartInfo);
-
-                if (sessionStartInfo.TransportScheme == TransportScheme.WebAPI)
-                {
-                    return new SessionAsyncResultForWebAPI(sessionStartInfo, callback, state);
-                }
-                else
-                {
-                    return new SessionAsyncResult(sessionStartInfo, binding, callback, state);
-                }
-            }
-            else
-            {
-                throw new ArgumentException(SR.BackendNotSupported, "startInfo");
-            }
-        }
-
-        /// <summary>
-        /// Asynchronous mode of submitting a job and get a ServiceJobSession object.
-        /// </summary>
-        /// <param name="result">The IAsyncResult object returned from BeginSubmitJobAndGetSession method</param>
-        /// <returns>A service job session object, including the endpoint address and the two jobs related to this session</returns>
-        public static V3Session EndCreateSession(IAsyncResult result)
-        {
-            Utility.ThrowIfNull(result, "result");
-
-            SessionAsyncResultBase ar = result as SessionAsyncResultBase;
-            if (ar == null || ar is DurableSessionAsyncResult)
-            {
-                throw new ArgumentException(SR.NotCorrectAsyncResultObj, "result");
-            }
-
-            if (ar.Canceled)
-            {
-                throw new SessionException(SOAFaultCode.CreateSessionCanceled, SR.CreateSessionCanceled);
-            }
-
-            if (ar.Disposed)
-            {
-                throw new ObjectDisposedException("result");
-            }
-
-            if (!result.IsCompleted)
-            {
-                result.AsyncWaitHandle.WaitOne();
-            }
-
-            Debug.Assert(result.IsCompleted, "Reached the completed state.");
-
-            try
-            {
-                if (ar.ExceptionResult != null)
-                {
-                    Exception ex = ar.ExceptionResult;
-                    throw ex;
-                }
-
-                Debug.Assert(ar.Session != null, "Session creation should either be canceled, or have an exception or session instance as the result.");
-                return (V3Session)ar.Session;
-            }
-            finally
-            {
-                ar.Close();
-            }
-        }
-
-        /// <summary>
-        /// Cancel the session creating before it's finished.
-        /// </summary>
-        /// <param name="result">Async Result</param>
-        public static void CancelCreateSession(IAsyncResult result)
-        {
-            Utility.ThrowIfNull(result, "result");
-
-            SessionAsyncResultBase ar = result as SessionAsyncResultBase;
-            if (ar == null)
-            {
-                throw new ArgumentException(SR.NotCorrectAsyncResultObj, "result");
-            }
-
-            if (ar.Disposed)
-            {
-                throw new ObjectDisposedException("result");
-            }
-
-            // TODO: Do we really care about the race condition
-            if (ar.IsCompleted)
-            {
-                throw new InvalidOperationException();
-            }
-
-            ar.Cancel();
-
-            // Instead of calling EndCreateSession(), we should directly call
-            // the Close method to dispose related resources
-            ar.Close();
-        }
-
-        /// <summary>
-        /// Synchronous mode of submitting a job and get a ServiceJobSession object.
-        /// </summary>
-        /// <param name="startInfo">The session start info for creating the service session</param>
-        /// <returns>A service job session object, including the endpoint address and the two jobs related to this session</returns>
-        public static V3Session CreateSession(SessionStartInfo startInfo)
-        {
-            return CreateSessionAsync(startInfo).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Asynchronous mode of submitting a job and get a ServiceJobSession object.
-        /// </summary>
-        /// <param name="startInfo">The session start info for creating the service session</param>
-        /// <returns>A service job session object, including the endpoint address and the two jobs related to this session</returns>
-        public static async Task<V3Session> CreateSessionAsync(SessionStartInfo startInfo)
-        {
-            return await CreateSessionAsync(startInfo, null).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Synchronous mode of submitting a job and get a ServiceJobSession object.
-        /// </summary>
-        /// <param name="startInfo">The session start info for creating the service session</param>
-        /// <param name="binding">indicting the binding</param>
-        /// <returns>A service job session object, including the endpoint address and the two jobs related to this session</returns>
-        public static V3Session CreateSession(SessionStartInfo startInfo, Binding binding)
-        {
-            return CreateSessionAsync(startInfo, binding).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Asynchronous mode of submitting a job and get a ServiceJobSession object.
-        /// </summary>
-        /// <param name="startInfo">The session start info for creating the service session</param>
-        /// <param name="binding">indicting the binding</param>
-        /// <returns>A service job session object, including the endpoint address and the two jobs related to this session</returns>
-        public static async Task<V3Session> CreateSessionAsync(SessionStartInfo startInfo, Binding binding)
-        {
-            Utility.ThrowIfNull(startInfo, "startInfo");
-
-            Utility.ThrowIfEmpty(startInfo.Headnode, "headNode");
-
-            if (Utility.IsHpcSessionType(startInfo.GetType()))
-            {
-                return (V3Session)await SessionFactory.BuildSessionFactory(startInfo).CreateSession(startInfo, false, Constant.DefaultCreateSessionTimeout, binding).ConfigureAwait(false);
-            }
-            else
-            {
-                throw new ArgumentException(SR.BackendNotSupported, "startInfo");
             }
         }
 
@@ -355,59 +174,6 @@ namespace Microsoft.Hpc.Scheduler.Session
         }
 
         /// <summary>
-        /// Attach to a existing session with the session attach info
-        /// </summary>
-        /// <param name="attachInfo">The attach info</param>
-        /// <returns>A persistant session</returns>
-        public static V3Session AttachSession(SessionAttachInfo attachInfo)
-        {
-            return AttachSession(attachInfo, null);
-        }
-
-        /// <summary>
-        /// Attach to a existing session with the session attach info and binding
-        /// </summary>
-        /// <param name="attachInfo">The attach info</param>
-        /// <param name="binding">indicting the binding</param>
-        /// <returns>A persistant session</returns>
-        public static V3Session AttachSession(SessionAttachInfo attachInfo, Binding binding)
-        {
-            return AttachSessionAsync(attachInfo, binding).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Attach to a existing session async with the session attach info
-        /// </summary>
-        /// <param name="attachInfo">The attach info</param>
-        /// <returns>A persistant session</returns>
-        public static async Task<V3Session> AttachSessionAsync(SessionAttachInfo attachInfo)
-        {
-            return await AttachSessionAsync(attachInfo, null).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Attach to a existing session async with the session attach info and binding
-        /// </summary>
-        /// <param name="attachInfo">The attach info</param>
-        /// <param name="binding">indicting the binding</param>
-        /// <returns>A persistant session</returns>
-        public static async Task<V3Session> AttachSessionAsync(SessionAttachInfo attachInfo, Binding binding)
-        {
-            Utility.ThrowIfNull(attachInfo, "attachInfo");
-
-            if (Utility.IsHpcSessionType(attachInfo.GetType()))
-            {
-                Utility.ThrowIfEmpty(attachInfo.Headnode, "headNode");
-
-                return (V3Session)await SessionFactory.BuildSessionFactory(attachInfo).AttachSession(attachInfo, false, Timeout.Infinite, binding).ConfigureAwait(false);
-            }
-            else
-            {
-                throw new ArgumentException(SR.BackendNotSupported, "attachInfo");
-            }
-        }
-
-        /// <summary>
         /// Dispose the service job if autoclose is true
         /// </summary>
         /// <param name="disposing">if we called from destructor</param>
@@ -446,6 +212,21 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             int index = (int)Math.Log((int)scheme, 2);
             return new EndpointAddress(eprList[index]);
+        }
+
+        /// <summary>
+        /// Asynchronous mode of submitting a job and get a ServiceJobSession object.
+        /// </summary>
+        /// <param name="startInfo">The session start info for creating the service session</param>
+        /// <param name="binding">indicting the binding</param>
+        /// <returns>A service job session object, including the endpoint address and the two jobs related to this session</returns>
+        public static async Task<V3Session> CreateSessionAsync(SessionStartInfo startInfo, Binding binding)
+        {
+            Utility.ThrowIfNull(startInfo, "startInfo");
+
+            Utility.ThrowIfEmpty(startInfo.Headnode, "headNode");
+
+            return (V3Session)await new SessionFactory().CreateSession(startInfo, false, Constant.DefaultCreateSessionTimeout, binding).ConfigureAwait(false);
         }
     }
 }

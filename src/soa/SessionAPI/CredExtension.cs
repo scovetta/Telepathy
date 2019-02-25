@@ -23,6 +23,7 @@ namespace Microsoft.Hpc.Scheduler.Session
 
 #if !net40
     using Microsoft.Hpc.AADAuthUtil;
+
 #endif
 
     /// <summary>
@@ -43,7 +44,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="client"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<ClientBase<T>> UseInternalAuthenticationAsync<T>(this ClientBase<T> client, CancellationToken cancellationToken = default(CancellationToken)) where T : class
+        public static async Task<ClientBase<T>> UseInternalAuthenticationAsync<T>(this ClientBase<T> client, CancellationToken cancellationToken = default(CancellationToken))
+            where T : class
         {
             Debug.Assert(client != null);
             Debug.Assert(client.ClientCredentials != null);
@@ -73,11 +75,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             clientCredentials.ServiceCertificate.Authentication.CertificateValidationMode = X509CertificateValidationMode.PeerOrChainTrust;
             clientCredentials.ServiceCertificate.Authentication.RevocationMode = X509RevocationMode.NoCheck;
-            clientCredentials.ClientCertificate.SetCertificate(
-                StoreLocation.LocalMachine,
-                StoreName.My,
-                X509FindType.FindByThumbprint,
-                thumbprint);
+            clientCredentials.ClientCertificate.SetCertificate(StoreLocation.LocalMachine, StoreName.My, X509FindType.FindByThumbprint, thumbprint);
             return clientCredentials;
         }
 
@@ -88,7 +86,10 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="winService"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<ServiceCredentials> UseInternalAuthenticationAsync(this ServiceCredentials serviceCredentials, bool winService = false, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<ServiceCredentials> UseInternalAuthenticationAsync(
+            this ServiceCredentials serviceCredentials,
+            bool winService = false,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             IRegistry registry = winService ? Registry : HpcContext.GetOrAdd(cancellationToken).Registry;
             serviceCredentials.ClientCertificate.Authentication.CertificateValidationMode = X509CertificateValidationMode.PeerOrChainTrust;
@@ -130,10 +131,10 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="identity"></param>
         /// <returns></returns>
-        public static bool AuthByKerberosOrNtlmOrBasic(this IIdentity identity)
-            => identity.AuthenticationType.Equals("Kerberos", StringComparison.OrdinalIgnoreCase) ||
-            identity.AuthenticationType.Equals("NTLM", StringComparison.OrdinalIgnoreCase) ||
-            identity.AuthenticationType.Equals("Basic", StringComparison.OrdinalIgnoreCase);
+        public static bool AuthByKerberosOrNtlmOrBasic(this IIdentity identity) =>
+            identity.AuthenticationType.Equals("Kerberos", StringComparison.OrdinalIgnoreCase)
+            || identity.AuthenticationType.Equals("NTLM", StringComparison.OrdinalIgnoreCase)
+            || identity.AuthenticationType.Equals("Basic", StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         /// Check if the <see cref="WindowsIdentity"/> can be impersonated
@@ -147,8 +148,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                 return false;
             }
 
-            return identity.ImpersonationLevel == TokenImpersonationLevel.Delegation
-                || identity.ImpersonationLevel == TokenImpersonationLevel.Impersonation;
+            return identity.ImpersonationLevel == TokenImpersonationLevel.Delegation || identity.ImpersonationLevel == TokenImpersonationLevel.Impersonation;
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             string password = null)
         {
             // If this headnode is an Azure IaaS cluster, we use AadIntegrationService on headnode instead of resolving it again
-            var token = await CredUtil.GetSoaAadJwtToken(headnode, username, password).ConfigureAwait(false);
+            var token = await GetSoaAadJwtToken(headnode, username, password).ConfigureAwait(false);
             behaviors.Add(new AADClientEndpointBehavior(token));
             return behaviors;
         }
@@ -197,8 +197,29 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="behaviors"></param>
         /// <param name="sessionInitInfo"></param>
         /// <returns></returns>
-        public static Task<KeyedByTypeCollection<IEndpointBehavior>> UseAadClientBehaviors(this KeyedByTypeCollection<IEndpointBehavior> behaviors, SessionInitInfoBase sessionInitInfo)
-            => behaviors.UseAadClientBehaviors(sessionInitInfo.Headnode, sessionInitInfo.Username, sessionInitInfo.InternalPassword);
+        public static Task<KeyedByTypeCollection<IEndpointBehavior>> UseAadClientBehaviors(this KeyedByTypeCollection<IEndpointBehavior> behaviors, SessionInitInfoBase sessionInitInfo) =>
+            behaviors.UseAadClientBehaviors(sessionInitInfo.Headnode, sessionInitInfo.Username, sessionInitInfo.InternalPassword);
+        
+        /// <summary>
+        /// This method will query head node for cluster AAD info if cluster is an Azure IaaS cluster. 
+        /// </summary>
+        /// <param name="headnode">Headnode address of cluster headnode</param>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public static async Task<string> GetSoaAadJwtToken(string headnode, string username, string password)
+        {
+            IHpcContext context = HpcContext.GetOrAdd(headnode, CancellationToken.None);
+
+            string node = null;
+            if (SoaHelper.IsSchedulerOnIaaS(headnode))
+            {
+                node = await context.ResolveSessionLauncherNodeOnIaasAsync(headnode).ConfigureAwait(false);
+            }
+
+            string token = await context.GetAADJwtTokenAsync(username, password, node).ConfigureAwait(false);
+            return token;
+        }
 #endif
     }
 }

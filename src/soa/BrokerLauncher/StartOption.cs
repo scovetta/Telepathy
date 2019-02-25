@@ -15,7 +15,7 @@
         [Option("EnableAzureStorageQueueEndpoint", HelpText = "Weather to enable Azure Storage Queue endpoint")]
         public string EnableAzureStorageQueueEndpoint { get; set; }
 
-        [Option("SvcHostLit", HelpText = "Specify the list of service host addresses", Min = 1)]
+        [Option("SvcHostList", HelpText = "Specify the list of service host addresses", Min = 1, Separator = ',')]
         public IEnumerable<string> SvcHostList { get; set; }
 
         [Option("ReadSvcHostFromEnv", HelpText = "Read service host from Azure Batch environment variable. Disables --SvcHostList")]

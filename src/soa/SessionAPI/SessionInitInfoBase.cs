@@ -31,6 +31,9 @@
             }
         }
 
+        public string AzureStorageConnectionString { get; set; }
+
+        public string AzureTableStoragePartitionKey { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="TransportScheme"/>
@@ -61,12 +64,12 @@
 
         public abstract string Username { get; set; }
 
-        internal abstract string InternalPassword { get; set; }
+        public abstract string InternalPassword { get; set; }
 
         /// <summary>
         /// Resolved machine name of head node for internal use.
         /// </summary>
-        internal Task<string> ResolveHeadnodeMachineAsync() => this.Context.ResolveSessionLauncherNodeOnIaasAsync(this.Headnode);
+        public Task<string> ResolveHeadnodeMachineAsync() => this.Context.ResolveSessionLauncherNodeOnIaasAsync(this.Headnode);
 
         /// <summary>
         /// Stores the fabric cluster context

@@ -38,5 +38,15 @@ namespace Microsoft.Hpc.Scheduler.Session.Interface
         /// Gets the headnode name
         /// </summary>
         string Headnode { get; }
+
+        /// <summary>
+        /// Storage connection string used in Azure Storage Transport Scheme
+        /// </summary>
+        string AzureStorageConnectionString { get; }
+
+        /// <summary>
+        /// Partition key when using Azure Table Storage for transporting
+        /// </summary>
+        string AzureTableStoragePartitionKey { get; }
     }
 }

@@ -106,7 +106,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             this.info = session.Info as SessionInfo;
             this.binding = binding;
             this.scheme = scheme;
-            if (this.info.UseAzureQueue == true)
+            if (this.info.UseAzureStorage == true)
             {
                 this.useAzureQueue = true;
                 this.azureQueueProxy = session.AzureQueueProxy;

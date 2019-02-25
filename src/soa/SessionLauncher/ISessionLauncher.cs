@@ -14,9 +14,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Data.Internal;
     using System.Threading.Tasks;
-    using System.Collections.Generic;    /// <summary>
-                                         /// The interface for session Launcher
-                                         /// </summary>
+    using System.Collections.Generic;
+    
+    /// <summary>
+    /// The interface for session Launcher
+    /// </summary>
     [ServiceContract(Name = "ISessionLauncher", Namespace = "http://hpc.microsoft.com/sessionlauncher/")]
     internal interface ISessionLauncher
     {

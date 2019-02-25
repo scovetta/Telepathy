@@ -13,16 +13,10 @@ namespace Microsoft.Hpc.Scheduler.Session
     using System.Collections.Generic;
     using System.Runtime.Serialization;
     using System.Security;
-    using System.Security.Permissions;
-    using System.ServiceModel;
-    using System.ServiceModel.Channels;
     using System.Text;
     using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Properties;
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker;
 
     /// <summary>
     ///   <para>Defines a set of values used to create a session.</para>
@@ -269,8 +263,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         private SessionStartInfoContract data = new SessionStartInfoContract();
         //private string _headnode;
         //private string _headnodeMachine = null;
-        private IStringCollection _nodeGroups = new StringCollection();
-        private IStringCollection _requestedNodes = new StringCollection();
+        private ICollection<string> _nodeGroups = new List<string>();
+        private ICollection<string> _requestedNodes = new List<string>();
         private List<string> _requestedNodesList = new List<string>();
         private List<string> _nodeGroupsList = new List<string>();
         private IDictionary<string, string> _dependFiles = null;
@@ -462,7 +456,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Only for internal use.
         /// </summary>
-        internal override string InternalPassword
+        public override string InternalPassword
         {
             get { return data.Password; }
             set { data.Password = value; }
@@ -484,7 +478,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// If we need save password after we get encrypt password
         /// </summary>
-        internal bool SavePassword
+        public bool SavePassword
         {
             get
             {
@@ -496,12 +490,12 @@ namespace Microsoft.Hpc.Scheduler.Session
             }
         }
 
-        internal byte[] Certificate
+        public byte[] Certificate
         {
             set { data.Certificate = value; }
         }
 
-        internal string PfxPassword
+        public string PfxPassword
         {
             set { data.PfxPassword = value; }
         }
@@ -581,16 +575,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// Storage connection string used to connect to broker launcher storage queue endpoint
         /// </summary>
         public string BrokerLauncherStorageConnectionString { get; set; }
-
-        /// <summary>
-        /// store a dummy session Id by default
-        /// </summary>
-        private static readonly int standaloneSessionId = 0;
-
-        public static int StandaloneSessionId
-        {
-            get { return standaloneSessionId; }
-        }
+        
+        public static int StandaloneSessionId => TelepathyConstants.StandaloneSessionId;
 
         /// <summary>
         ///   <para>Determines if a secure connection is used between the client and the HPC broker.</para>
@@ -1119,7 +1105,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="collection">the string collection.</param>
         /// <returns>the translated string from the string collection.</returns>
-        private static string Collection2String(IStringCollection collection)
+        private static string Collection2String(ICollection<string> collection)
         {
             if (collection == null)
             {
@@ -1145,7 +1131,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             return builder.ToString();
         }
 
-        internal SessionStartInfoContract Data
+        public SessionStartInfoContract Data
         {
             get
             {
@@ -1174,7 +1160,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Gets a value indicating whether debug mode is enabled
         /// </summary>
-        internal bool DebugModeEnabled
+        public bool DebugModeEnabled
         {
             get { return this.data.EprList != null; }
         }
@@ -1182,7 +1168,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Remove the password and cert info.
         /// </summary>
-        internal void ClearCredential()
+        public void ClearCredential()
         {
             this.InternalPassword = null;
             this.SavePassword = false;
@@ -1219,13 +1205,15 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// it is only used by SOA diagnostic
         /// </summary>
-        internal bool AdminJobForHostInDiag
+        public bool AdminJobForHostInDiag
         {
             set
             {
                 this.data.AdminJobForHostInDiag = value;
             }
         }
+
+        public bool UseAzureStorage => this.data.UseAzureStorage;
 
         #region ISerializable Members
         /// <summary>
@@ -1248,10 +1236,10 @@ namespace Microsoft.Hpc.Scheduler.Session
             _brokerSettings = new BrokerSettingsInfo(data);
 
             if (!String.IsNullOrEmpty(data.RequestedNodesStr))
-                _requestedNodes = new StringCollection(data.RequestedNodesStr.Split(','));
+                _requestedNodes = new List<string>(data.RequestedNodesStr.Split(','));
 
             if (!String.IsNullOrEmpty(data.NodeGroupsStr))
-                _nodeGroups = new StringCollection(data.NodeGroupsStr.Split(','));
+                _nodeGroups = new List<string>(data.NodeGroupsStr.Split(','));
         }
 
         /// <summary>
@@ -1320,9 +1308,12 @@ namespace Microsoft.Hpc.Scheduler.Session
             int port = 9087;
             string affix = ":" + port + "/BrokerLauncher";
             List<string> strlist = new List<string>();
-            foreach (string epr in brokerLauncherEprs)
+            if (brokerLauncherEprs != null)
             {
-                strlist.Add(prefix + epr + affix);
+                foreach (string epr in brokerLauncherEprs)
+                {
+                    strlist.Add(prefix + epr + affix);
+                }
             }
 
             this.BrokerLauncherEprs = strlist.ToArray();

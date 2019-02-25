@@ -10,11 +10,7 @@
 namespace Microsoft.Hpc.Scheduler.Session
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using Microsoft.Hpc.Scheduler.Properties;
     using System.Runtime.Serialization;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
 
     /// <summary>
     ///   <para>Represents an exception that occurs when a session error occurs.</para>
@@ -24,23 +20,23 @@ namespace Microsoft.Hpc.Scheduler.Session
     {
         private int errorCode = SOAFaultCode.UnknownError;
 
-        internal SessionException(Exception e)
+        public SessionException(Exception e)
             : base(SR.ExceptionInCreatingSession, e)
         {
         }
 
-        internal SessionException(string msg)
+        public SessionException(string msg)
             : base(msg)
         {
         }
 
-        internal SessionException(int errorCode, string msg)
+        public SessionException(int errorCode, string msg)
             : base(msg)
         {
             this.errorCode = errorCode;
         }
 
-        internal SessionException(int errorCode, string msg, Exception innerException)
+        public SessionException(int errorCode, string msg, Exception innerException)
             : base(msg, innerException)
         {
             this.errorCode = errorCode;
@@ -69,7 +65,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="context">
         ///   <para />
         /// </param>
-        protected SessionException(SessionInfo info, StreamingContext context)
+        public SessionException(SessionInfo info, StreamingContext context)
         {
         }
 
