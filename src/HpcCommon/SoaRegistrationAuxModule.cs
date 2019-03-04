@@ -145,7 +145,7 @@
 
         public static string GetRegistrationName(string serviceName, Version serviceVersion)
         {
-            string valueName = serviceName.RemoveConfigExtensionName();
+            string valueName = serviceName.RemoveConfigExtensionName().ToLowerInvariant();
             if (serviceVersion != null)
             {
                 valueName = valueName + "_" + serviceVersion.ToString();
