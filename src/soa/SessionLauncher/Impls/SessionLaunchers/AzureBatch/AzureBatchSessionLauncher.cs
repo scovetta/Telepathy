@@ -268,7 +268,7 @@
                     {
                         List<ResourceFile> resourceFiles = new List<ResourceFile>();
                         resourceFiles.Add(GetResourceFileReference(RuntimeContainer, CcpServiceHostFolder));
-                        resourceFiles.Add(GetResourceFileReference(ServiceAssemblyContainer, "ccpechosvc"));
+                        resourceFiles.Add(GetResourceFileReference(ServiceAssemblyContainer, startInfo.ServiceName.ToLower()));
                         resourceFiles.Add(GetResourceFileReference(RuntimeContainer, BrokerFolder));
                         resourceFiles.Add(GetResourceFileReference(ServiceRegistrationContainer, null));
 
@@ -289,7 +289,7 @@
                     {
                         List<ResourceFile> resourceFiles = new List<ResourceFile>();
                         resourceFiles.Add(GetResourceFileReference(RuntimeContainer, CcpServiceHostFolder));
-                        resourceFiles.Add(GetResourceFileReference(ServiceAssemblyContainer, "ccpechosvc"));
+                        resourceFiles.Add(GetResourceFileReference(ServiceAssemblyContainer, startInfo.ServiceName.ToLower()));
 
                         CloudTask cloudTask = new CloudTask(taskId, $@"cmd /c set & dir wd");
                         cloudTask.ResourceFiles = resourceFiles;
