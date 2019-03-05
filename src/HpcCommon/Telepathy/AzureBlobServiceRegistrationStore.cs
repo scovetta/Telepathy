@@ -20,7 +20,7 @@
 
         private CloudBlobContainer blobContainer;
 
-        private const string ServiceRegistrationBlobContainerName = "service-registraion";
+        private const string ServiceRegistrationBlobContainerName = "service-registration";
 
         public AzureBlobServiceRegistrationStore(string connectionString)
         {
