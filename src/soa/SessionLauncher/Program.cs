@@ -22,6 +22,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Local;
     using Microsoft.Hpc.Scheduler.Session.LauncherHostService;
 
+    using Serilog;
+
     /// <summary>
     /// Main entry point
     /// </summary>
@@ -33,6 +35,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
         [LoaderOptimization(LoaderOptimization.MultiDomain)]
         private static void Main(string[] args)
         {
+            var log = new LoggerConfiguration().ReadFrom.AppSettings().Enrich.WithMachineName().CreateLogger();
+            Serilog.Debugging.SelfLog.Enable(Console.Out);
+
+            Log.Logger = log;
+
             if (!ParseAndSetGlobalConfiguration(args))
             {
                 // Parsing error
@@ -86,6 +93,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 servicesToRun = new ServiceBase[] { new LauncherHostService() };
                 ServiceBase.Run(servicesToRun);
             }
+
+            Log.CloseAndFlush();
         }
 
         /// <summary>
@@ -96,6 +105,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             TraceHelper.TraceEvent(TraceEventType.Critical, "[SessionLauncher] Unhandled {2} exception found in {0}: \n{1}", sender, e.ExceptionObject, e.IsTerminating ? "fatal" : String.Empty);
+            Log.CloseAndFlush();
         }
 
         private static bool ParseAndSetGlobalConfiguration(string[] args)
