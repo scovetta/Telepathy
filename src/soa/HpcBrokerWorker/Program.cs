@@ -19,6 +19,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.ServiceBroker;
 
+    using Serilog;
+
     /// <summary>
     /// The main entry point for the application.
     /// </summary>
@@ -41,6 +43,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim
         /// <param name="args">indicating arguments</param>
         private static int Main(string[] args)
         {
+            var log = new LoggerConfiguration().ReadFrom.AppSettings().Enrich.WithMachineName().CreateLogger();
+            Serilog.Debugging.SelfLog.Enable(Console.Error);
+
+            Log.Logger = log;
+
             //SingletonRegistry.Initialize(SingletonRegistry.RegistryMode.WindowsNonHA);
 #if HPCPACK
             WinServiceHpcContextModule.GetOrAddWinServiceHpcContextFromEnv().GetAADClientAppIdAsync().FireAndForget(); // cache AAD AppId now.
@@ -148,6 +155,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim
             finally
             {
                 trace.LogBrokerWorkerMessage(pid, "[Main] Process exit.");
+                Log.CloseAndFlush();
             }
         }
 

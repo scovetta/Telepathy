@@ -24,6 +24,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Hpc.SoaContext;
 
+    using Serilog;
+
     /// <summary>
     /// Main entry point
     /// </summary>
@@ -37,6 +39,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
         [LoaderOptimization(LoaderOptimization.MultiDomain)]
         private static void Main(string[] args)
         {
+            var log = new LoggerConfiguration().ReadFrom.AppSettings().Enrich.WithMachineName().CreateLogger();
+            Serilog.Debugging.SelfLog.Enable(Console.Error);
+            Log.Logger = log;
+
             if (!ParseAndSetBrokerLauncherSettings(args, BrokerLauncherSettings.Default))
             {
                 // parsing failed
@@ -126,6 +132,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 servicesToRun = new ServiceBase[] { new LauncherHostService(context) };
                 ServiceBase.Run(servicesToRun);
             }
+
+            Log.CloseAndFlush();
+
         }
 
         private static bool ParseAndSetBrokerLauncherSettings(string[] args, BrokerLauncherSettings settings)
