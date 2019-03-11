@@ -177,12 +177,13 @@
             {
                 int autoMax = int.MaxValue;
                 int autoMin = 0;
-                foreach (string epr in this.eprList)
-                {
-                    DispatcherInfo info = new EprDispatcherInfo(epr, 1, Interlocked.Increment(ref uniqueId));
-                    await this.dispatcherManager.NewDispatcherAsync(info).ConfigureAwait(false);
-                }
-
+                // foreach (string epr in this.eprList)
+                // {
+                //     BrokerTracing.TraceInfo($"Creating Dispatcher for predefined Service Host {epr}");
+                //     DispatcherInfo info = new EprDispatcherInfo(epr, 1, Interlocked.Increment(ref uniqueId));
+                //     await this.dispatcherManager.NewDispatcherAsync(info).ConfigureAwait(false);
+                // }
+                // 
                 return (Scheduler.Session.Data.JobState.Running, autoMax, autoMin);
             }
 

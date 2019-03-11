@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.Hpc.ServiceBroker.Common.SchedulerAdapter
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading;
@@ -58,12 +59,6 @@
 
             int autoMax = int.MaxValue;
             int autoMin = 0;
-            foreach (string epr in this.predefinedSvcHost)
-            {
-                DispatcherInfo info = new EprDispatcherInfo(epr, 1, Interlocked.Increment(ref uniqueIdx));
-                await this.dispatcherManager.NewDispatcherAsync(info).ConfigureAwait(false);
-            }
-
             return (Scheduler.Session.Data.JobState.Running, autoMax, autoMin);
             return await this.Channel.RegisterJobAsync(jobid);
         }
