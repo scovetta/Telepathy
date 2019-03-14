@@ -44,8 +44,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim
         private static int Main(string[] args)
         {
             var log = new LoggerConfiguration().ReadFrom.AppSettings().Enrich.WithMachineName().CreateLogger();
-            Serilog.Debugging.SelfLog.Enable(Console.Error);
-
             Log.Logger = log;
 
             //SingletonRegistry.Initialize(SingletonRegistry.RegistryMode.WindowsNonHA);
@@ -64,7 +62,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             ManualResetEvent exitWaitHandle = new ManualResetEvent(false);
 
-            ThreadPoolMonitor.StartOnlyInDebug();
+            // ThreadPoolMonitor.StartOnlyInDebug();
 
             try
             {
