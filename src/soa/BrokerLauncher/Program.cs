@@ -187,7 +187,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 if (!string.IsNullOrEmpty(option.AzureStorageConnectionString))
                 {
                     settings.AzureStorageConnectionString = option.AzureStorageConnectionString;
-                    Trace.TraceInformation($"{nameof(settings.CCP_SERVICEREGISTRATION_PATH)} changed by cmd args.");
+                    Trace.TraceInformation($"{nameof(settings.AzureStorageConnectionString)} changed by cmd args.");
                 }
             }
 

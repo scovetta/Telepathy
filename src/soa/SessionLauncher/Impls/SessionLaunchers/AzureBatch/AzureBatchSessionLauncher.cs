@@ -33,6 +33,12 @@
 
         private const string AzureBatchTaskWorkingDirEnvVar = "%AZ_BATCH_TASK_WORKING_DIR%";
 
+        private const string AzureBatchJobPrepTaskWorkingDirEnvVar = "%AZ_BATCH_JOB_PREP_WORKING_DIR%";
+
+        private const string OpenNetTcpPortSharingAndDisableStrongNameValidationCmdLine =
+            @"cmd /c ""sc.exe config NetTcpPortSharing start= demand & reg ADD ^""HKLM\Software\Microsoft\StrongName\Verification\*,*^"" /f & reg ADD ^""HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^"" /f""";
+
+
         // TODO: remove parameter less ctor and add specific parameters for the sake of test-ablity
         public AzureBatchSessionLauncher()
         {
@@ -92,10 +98,9 @@
                 ODATADetailLevel detailLevel = new ODATADetailLevel();
                 detailLevel.SelectClause = "ipAddress";
                 var nodes = await pool.ListComputeNodes(detailLevel).ToListAsync();
-                if (nodes.Count < 2)
+                if (nodes.Count < 1)
                 {
-                    // We don't expect the node running job manager task also performing computing
-                    throw new InvalidOperationException("Compute node count in selected pool is less then 2.");
+                    throw new InvalidOperationException("Compute node count in selected pool is less then 1.");
                 }
 
                 sessionAllocateInfo.Id = 0;
@@ -224,25 +229,30 @@
                     {
                         rf = ResourceFile.FromStorageContainerUrl(sasToken, blobPrefix: blobPrefix);
                     }
-
+                    
                     return rf;
                 }
 
                 async Task<string> CreateJobAsync()
                 {
-                    // var hashed = MD5.Create().ComputeHash(Guid.NewGuid().ToByteArray());
-                    // string idSuffix = BitConverter.ToUInt16(hashed, 0).ToString().PadLeft(6, '0');
-                    // string newJobId = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() + idSuffix;
                     string newJobId = AzureBatchSessionJobIdConverter.ConvertToAzureBatchJobId(AzureBatchSessionIdGenerator.GenerateSessionId());
                     Debug.Assert(batchClient != null, nameof(batchClient) + " != null");
                     var job = batchClient.JobOperations.CreateJob(newJobId, new PoolInformation() { PoolId = AzureBatchConfiguration.BatchPoolName });
                     job.JobPreparationTask = new JobPreparationTask(
-                        @"cmd /c ""sc.exe config NetTcpPortSharing start= demand & reg ADD ^""HKLM\Software\Microsoft\StrongName\Verification\*,*^"" /f & reg ADD ^""HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^"" /f""");
+                        OpenNetTcpPortSharingAndDisableStrongNameValidationCmdLine);
                     job.JobPreparationTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
+                    job.JobPreparationTask.ResourceFiles = new List<ResourceFile>() { GetResourceFileReference(ServiceRegistrationContainer, null) };
 
-                    // job.JobManagerTask = new JobManagerTask("Broker",
-                    // $@"cmd /c broker\HpcBroker.exe -d --ServiceRegistrationPath %AZ_BATCH_APP_PACKAGE_{AzureBatchConstants.SoaAppPackageId.ToUpper()}#{AzureBatchConstants.SoaAppPackageVersion}%\Registration --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --ReadSvcHostFromEnv");
-                    // job.JobManagerTask.ResourceFiles = new List<ResourceFile>(){ GetResourceFileReference(RuntimeContainer, BrokerFolder) };
+                    // List<ResourceFile> resourceFiles = new List<ResourceFile>();
+                    // resourceFiles.Add(GetResourceFileReference(RuntimeContainer, BrokerFolder));
+                    // resourceFiles.Add(GetResourceFileReference(ServiceRegistrationContainer, null));
+
+
+                    // // job.JobManagerTask = new JobManagerTask("Broker",
+                    // // $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --ServiceRegistrationPath {AzureBatchTaskWorkingDirEnvVar} --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}");
+                    // job.JobManagerTask = new JobManagerTask("List",
+                    //     $@"cmd /c dir & set");
+                    // job.JobManagerTask.ResourceFiles = resourceFiles;
                     // job.JobManagerTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
                     await job.CommitAsync();
                     return job.Id;
@@ -261,7 +271,7 @@
 
                 Task AddTasksAsync()
                 {
-                    int numTasks = nodes.Count - 1;
+                    int numTasks = nodes.Count;
                     var comparer = new EnvironmentSettingComparer();
 
                     CloudTask CreateMultiInstanceTask(string taskId)
@@ -291,14 +301,28 @@
                         resourceFiles.Add(GetResourceFileReference(RuntimeContainer, CcpServiceHostFolder));
                         resourceFiles.Add(GetResourceFileReference(ServiceAssemblyContainer, startInfo.ServiceName.ToLower()));
 
-                        CloudTask cloudTask = new CloudTask(taskId, $@"cmd /c set & dir wd");
+                        CloudTask cloudTask = new CloudTask(taskId, $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\ccpservicehost\CcpServiceHost.exe -standalone");
                         cloudTask.ResourceFiles = resourceFiles;
                         cloudTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
                         cloudTask.EnvironmentSettings = cloudTask.EnvironmentSettings == null ? environment : environment.Union(cloudTask.EnvironmentSettings, comparer).ToList();
                         return cloudTask;
                     }
 
-                    var tasks = Enumerable.Range(0, numTasks).Select(_ => CreateMultiInstanceTask(Guid.NewGuid().ToString())).ToArray();
+                    CloudTask CreateBrokerTask()
+                    {
+                        List<ResourceFile> resourceFiles = new List<ResourceFile>();
+                        resourceFiles.Add(GetResourceFileReference(RuntimeContainer, BrokerFolder));
+
+                        CloudTask cloudTask = new CloudTask(
+                            "Broker",
+                            $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --ServiceRegistrationPath {AzureBatchJobPrepTaskWorkingDirEnvVar} --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}");
+                        cloudTask.ResourceFiles = resourceFiles;
+                        cloudTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
+                        cloudTask.EnvironmentSettings = cloudTask.EnvironmentSettings == null ? environment : environment.Union(cloudTask.EnvironmentSettings, comparer).ToList();
+                        return cloudTask;
+                    }
+
+                    var tasks = Enumerable.Range(0, numTasks - 1).Select(_ => CreateTask(Guid.NewGuid().ToString())).Union(new[] { CreateBrokerTask() }).ToArray();
                     return batchClient.JobOperations.AddTaskAsync(jobId, tasks);
                 }
 
@@ -312,6 +336,11 @@
         {
             public bool Equals(EnvironmentSetting x, EnvironmentSetting y)
             {
+                if (x == null || y == null)
+                {
+                    return false;
+                }
+
                 return x.Name == y.Name;
             }
 
