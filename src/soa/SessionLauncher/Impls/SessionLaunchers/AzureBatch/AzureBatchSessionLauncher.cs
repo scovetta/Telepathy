@@ -97,6 +97,7 @@
                 var pool = await batchClient.PoolOperations.GetPoolAsync(AzureBatchConfiguration.BatchPoolName);
                 ODATADetailLevel detailLevel = new ODATADetailLevel();
                 detailLevel.SelectClause = "ipAddress";
+                detailLevel.FilterClause = @"state eq 'idle'";
                 var nodes = await pool.ListComputeNodes(detailLevel).ToListAsync();
                 if (nodes.Count < 1)
                 {
