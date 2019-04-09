@@ -26,5 +26,10 @@
             await Task.WhenAll(tasks);
             Log.Information($"Done creating containers.");
         }
+
+        public static Task CreateContainersAsync(string connectionString)
+        {
+            return new StorageInitializer(connectionString).CreateContainersAsync();
+        }
     }
 }

@@ -1,10 +1,6 @@
 ﻿namespace AzureBatchAdminCli
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Net;
-    using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
@@ -61,7 +57,8 @@
             var candidates = queueClient.ListQueues(BrokerWorkerControllerRequestQueuePrefix)
                 .Where(c => BrokerWorkerControllerRequestQueueNamePattern.IsMatch(c.Name))
                 .Union(queueClient.ListQueues(BrokerWorkerControllerResponseQueuePrefix).Where(c => BrokerWorkerControllerResponseQueueNamePattern.IsMatch(c.Name)))
-                .Union(queueClient.ListQueues(MessageQueuePrefix).Where(c => MessageQueueNamePattern.IsMatch(c.Name))).ToArray();
+                .Union(queueClient.ListQueues(MessageQueuePrefix).Where(c => MessageQueueNamePattern.IsMatch(c.Name)))
+                .ToArray();
 
             foreach (var queue in candidates)
             {
@@ -77,8 +74,13 @@
 
         public async Task CleanAsync()
         {
-             await this.CleanBlobContainerAsync();
-             await this.CleanQueueAsync();
+            await this.CleanBlobContainerAsync();
+            await this.CleanQueueAsync();
+        }
+
+        public static Task CleanAsync(string connectionString)
+        {
+            return new StorageCleaner(connectionString).CleanAsync();
         }
     }
 }
