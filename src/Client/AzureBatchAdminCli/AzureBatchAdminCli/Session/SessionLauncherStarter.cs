@@ -66,6 +66,17 @@
             }
         }
 
+        public async Task StopAsync()
+        {
+            BatchSharedKeyCredentials cred = new BatchSharedKeyCredentials(this.accountSettings.BatchServiceUrl, this.accountSettings.BatchAccountName, this.accountSettings.BatchAccountKey);
+
+            using (BatchClient batchClient = BatchClient.Open(cred))
+            {
+               var job = await batchClient.JobOperations.GetJobAsync(SessionLauncherJobId);
+               await job.DeleteAsync();
+            }
+        }
+
         static ResourceFile GetResourceFileReference(string cloudStorageConnectionString, string containerName, string blobPrefix)
         {
             var sasToken = ConstructContainerSas(cloudStorageConnectionString, containerName);
