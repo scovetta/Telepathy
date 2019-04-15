@@ -749,7 +749,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             if (!string.IsNullOrEmpty(regPath))
             {
 
-                repo = new ServiceRegistrationRepo(regPath);
+                repo = this.CreateServiceRegistrationRepo(regPath);
             }
             else
             {
@@ -769,6 +769,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 return null;
             }
         }
+
+        protected internal virtual ServiceRegistrationRepo CreateServiceRegistrationRepo(string regPath) => new ServiceRegistrationRepo(regPath);
 
         /// <summary>
         /// Convert plain text string to SecureString

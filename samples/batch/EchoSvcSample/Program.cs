@@ -1,10 +1,12 @@
-﻿namespace EchoSvcSample
+﻿using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.Blob;
+
+namespace EchoSvcSample
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
-
     using Microsoft.Azure.Batch;
     using Microsoft.Azure.Batch.Auth;
     using Microsoft.Azure.Batch.Common;
@@ -12,35 +14,53 @@
 
     class Program
     {
+        const string OpenNetTcpPortSharingAndDisableStrongNameValidationCmdLine =
+            @"cmd /c ""sc.exe config NetTcpPortSharing start= demand & reg ADD ^""HKLM\Software\Microsoft\StrongName\Verification\*,*^"" /f & reg ADD ^""HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^"" /f""";
+
+        private const string AzureBatchTaskWorkingDirEnvVar = "%AZ_BATCH_TASK_WORKING_DIR%";
+        private const string RuntimeContainer = "runtime";
+        private const string SessionLauncherFolder = "session-launcher";
+
+
+        private static Func<string> GetStorageConnectionString;
+
+
         static async Task Main(string[] args)
         {
             const string poolId = "EchoSvcSamplePool";
-            const string jobId = "EchoSvcSampleJob";
-            const string taskId = "EchoSvcSampleTask";
+            const string jobId = "SessionLauncherJob";
+            const string taskId = "SessionLauncherTask";
             const int numberOfNodes = 1;
 
-            const string appPackageId = "EchoSvcSample";
-            const string appPackageVersion = "1.0";
 
             TimeSpan timeout = TimeSpan.FromMinutes(30);
 
             AccountSettings accountSettings = LoadAccountSettings();
+            GetStorageConnectionString = () => accountSettings.BrokerStorageConnectionString;
+
             BatchSharedKeyCredentials cred = new BatchSharedKeyCredentials(accountSettings.BatchServiceUrl, accountSettings.BatchAccountName, accountSettings.BatchAccountKey);
+
 
             using (BatchClient batchClient = BatchClient.Open(cred))
             {
-                await CreatePoolAsync(batchClient, poolId, numberOfNodes, appPackageId, appPackageVersion);
-                await CreateJobAsync(batchClient, jobId, poolId);
+                // await CreatePoolAsync(batchClient, poolId, numberOfNodes);
+                // await CreateJobAsync(batchClient, jobId, poolId);
 
-                CloudTask multiInstanceTask = new CloudTask(
-                    id: taskId,
-                    commandline:
-                    $@"cmd /c %AZ_BATCH_APP_PACKAGE_{appPackageId.ToUpper()}#{appPackageVersion}%\BrokerOutput\HpcBroker.exe -d --ServiceRegistrationPath %AZ_BATCH_APP_PACKAGE_{appPackageId.ToUpper()}#{appPackageVersion}%\Registration --AzureStorageConnectionString {accountSettings.BrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --ReadSvcHostFromEnv");
-                multiInstanceTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
-                multiInstanceTask.MultiInstanceSettings = new MultiInstanceSettings($@"cmd /c start cmd /c %AZ_BATCH_APP_PACKAGE_{appPackageId.ToUpper()}#{appPackageVersion}%\CcpServiceHost\CcpServiceHost.exe -standalone", numberOfNodes);
+                CloudTask CreateTask()
+                {
+                    List<ResourceFile> resourceFiles = new List<ResourceFile>();
+                    resourceFiles.Add(GetResourceFileReference(accountSettings.BrokerStorageConnectionString, RuntimeContainer, SessionLauncherFolder));
+                    string sessionLauncherParameters =
+                        $"--AzureBatchServiceUrl {accountSettings.BatchServiceUrl} --AzureBatchAccountName {accountSettings.BatchAccountName} --AzureBatchAccountKey {accountSettings.BatchAccountKey} --AzureBatchPoolName {poolId} -c {accountSettings.BrokerStorageConnectionString} --SessionLauncherStorageConnectionString {accountSettings.BrokerStorageConnectionString}";
+
+                    CloudTask cloudTask = new CloudTask(taskId, $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\{SessionLauncherFolder}\HpcSession.exe -d " + sessionLauncherParameters);
+                    cloudTask.ResourceFiles = resourceFiles;
+                    cloudTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
+                    return cloudTask;
+                }
 
                 Console.WriteLine($"Adding task [{taskId}] to job [{jobId}]...");
-                await batchClient.JobOperations.AddTaskAsync(jobId, multiInstanceTask);
+                await batchClient.JobOperations.AddTaskAsync(jobId, CreateTask());
 
                 CloudTask mainTask = await batchClient.JobOperations.GetTaskAsync(jobId, taskId);
                 Console.WriteLine($"Awaiting task completion, timeout in {timeout}...");
@@ -61,7 +81,7 @@
         /// <param name="numberOfNodes">The target number of compute nodes for the pool.</param>
         /// <param name="appPackageId">The id of the application package to install on the compute nodes.</param>
         /// <param name="appPackageVersion">The application package version to install on the compute nodes.</param>
-        private static async Task CreatePoolAsync(BatchClient batchClient, string poolId, int numberOfNodes, string appPackageId, string appPackageVersion)
+        private static async Task CreatePoolAsync(BatchClient batchClient, string poolId, int numberOfNodes)
         {
             // Create the unbound pool. Until we call CloudPool.Commit() or CommitAsync(),
             // the pool isn't actually created in the Batch service. This CloudPool instance
@@ -73,26 +93,10 @@
                 targetDedicatedComputeNodes: numberOfNodes,
                 cloudServiceConfiguration: new CloudServiceConfiguration(osFamily: "5"));
 
-            // REQUIRED for communication between the MS-MPI processes (in this
-            // sample, MPIHelloWorld.exe) running on the different nodes
             unboundPool.InterComputeNodeCommunicationEnabled = true;
 
             // REQUIRED for multi-instance tasks
             unboundPool.MaxTasksPerComputeNode = 1;
-
-            // Specify the application and version to deploy to the compute nodes.
-            unboundPool.ApplicationPackageReferences = new List<ApplicationPackageReference> { new ApplicationPackageReference { ApplicationId = appPackageId, Version = appPackageVersion } };
-
-            // Create a StartTask for the pool that we use to install MS-MPI on the nodes
-            // as they join the pool.
-            StartTask startTask = new StartTask
-                                      {
-                                          // CommandLine = $"cmd /c %AZ_BATCH_APP_PACKAGE_{appPackageId.ToUpper()}#{appPackageVersion}%\\MSMpiSetup.exe -unattend -force",
-                                          CommandLine = @"cmd /c ""sc.exe config NetTcpPortSharing start= demand & reg ADD ^""HKLM\Software\Microsoft\StrongName\Verification\*,*^"" /f & reg ADD ^""HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^"" /f""",
-                                          UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin)),
-                                          WaitForSuccess = true
-                                      };
-            unboundPool.StartTask = startTask;
 
             // Commit the fully configured pool to the Batch service to actually create
             // the pool and its compute nodes.
@@ -109,8 +113,54 @@
         {
             // Create the job to which the multi-instance task will be added.
             Console.WriteLine($"Creating job [{jobId}]...");
-            CloudJob unboundJob = batchClient.JobOperations.CreateJob(jobId, new PoolInformation() { PoolId = poolId });
+            CloudJob unboundJob = batchClient.JobOperations.CreateJob(jobId, new PoolInformation() {PoolId = poolId});
+            unboundJob.JobPreparationTask = new JobPreparationTask(
+                OpenNetTcpPortSharingAndDisableStrongNameValidationCmdLine);
+            unboundJob.JobPreparationTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
             await unboundJob.CommitAsync();
+        }
+
+
+        static ResourceFile GetResourceFileReference(string cloudStorageConnectionString, string containerName, string blobPrefix)
+        {
+            var sasToken = ConstructContainerSas(cloudStorageConnectionString, containerName);
+            ResourceFile rf;
+            if (string.IsNullOrEmpty(blobPrefix))
+            {
+                rf = ResourceFile.FromStorageContainerUrl(sasToken);
+            }
+            else
+            {
+                rf = ResourceFile.FromStorageContainerUrl(sasToken, blobPrefix: blobPrefix);
+            }
+
+            return rf;
+        }
+
+        public static string ConstructContainerSas(string storageConnectionString, string containerName,
+            SharedAccessBlobPermissions permissions = SharedAccessBlobPermissions.List | SharedAccessBlobPermissions.Read)
+        {
+            var storageAccount = CloudStorageAccount.Parse(storageConnectionString);
+            return ConstructContainerSas(storageAccount, containerName, permissions);
+        }
+
+        public static string ConstructContainerSas(CloudStorageAccount cloudStorageAccount, string containerName,
+            SharedAccessBlobPermissions permissions = SharedAccessBlobPermissions.List | SharedAccessBlobPermissions.Read)
+        {
+            containerName = containerName.ToLower();
+
+            CloudBlobClient client = cloudStorageAccount.CreateCloudBlobClient();
+
+            CloudBlobContainer container = client.GetContainerReference(containerName);
+
+            DateTimeOffset sasStartTime = DateTime.UtcNow;
+            TimeSpan sasDuration = TimeSpan.FromHours(2);
+            DateTimeOffset sasEndTime = sasStartTime.Add(sasDuration);
+
+            SharedAccessBlobPolicy sasPolicy = new SharedAccessBlobPolicy() {Permissions = permissions, SharedAccessExpiryTime = sasEndTime};
+
+            string sasString = container.GetSharedAccessSignature(sasPolicy);
+            return string.Format("{0}{1}", container.Uri, sasString);
         }
     }
 }

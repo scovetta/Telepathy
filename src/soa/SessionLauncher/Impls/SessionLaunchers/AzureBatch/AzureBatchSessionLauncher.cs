@@ -14,6 +14,7 @@
     using Microsoft.Hpc.Scheduler.Session.Configuration;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Utils;
+    using Microsoft.Hpc.Telepathy;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -371,5 +372,7 @@
         {
             // No authentication on Azure Batch for now
         }
+
+        protected internal override ServiceRegistrationRepo CreateServiceRegistrationRepo(string regPath) => new ServiceRegistrationRepo(regPath, new AzureBlobServiceRegistrationStore(SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString));
     }
 }
