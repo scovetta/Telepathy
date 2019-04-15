@@ -1,25 +1,15 @@
-﻿using System;
-
-namespace AzureBatchAdminCli
+﻿namespace AzureBatchAdminCli
 {
+    using System.CommandLine.Invocation;
     using System.Threading.Tasks;
 
-    using Serilog;
-
-    class Program
+    internal class Program
     {
-        private const string ConnectionString = "";
-
-        static async Task Main(string[] args)
+        public static async Task<int> Main(string[] args)
         {
-            
-            var logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
-            Log.Logger = logger;
+            var rootCommand = new CommandBuilder().BuildRootCommand();
 
-            Console.WriteLine("Hello World!");
-
-            StorageCleaner cleaner = new StorageCleaner(ConnectionString);
-            await cleaner.CleanAsync();
+            return await rootCommand.InvokeAsync(args);
         }
     }
 }
