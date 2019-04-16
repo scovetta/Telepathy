@@ -7,7 +7,6 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
-
     using Microsoft.Azure.Batch;
     using Microsoft.Azure.Batch.Common;
     using Microsoft.Hpc.RuntimeTrace;
@@ -232,7 +231,7 @@
                     {
                         rf = ResourceFile.FromStorageContainerUrl(sasToken, blobPrefix: blobPrefix);
                     }
-                    
+
                     return rf;
                 }
 
@@ -240,11 +239,11 @@
                 {
                     string newJobId = AzureBatchSessionJobIdConverter.ConvertToAzureBatchJobId(AzureBatchSessionIdGenerator.GenerateSessionId());
                     Debug.Assert(batchClient != null, nameof(batchClient) + " != null");
-                    var job = batchClient.JobOperations.CreateJob(newJobId, new PoolInformation() { PoolId = AzureBatchConfiguration.BatchPoolName });
+                    var job = batchClient.JobOperations.CreateJob(newJobId, new PoolInformation() {PoolId = AzureBatchConfiguration.BatchPoolName});
                     job.JobPreparationTask = new JobPreparationTask(
                         OpenNetTcpPortSharingAndDisableStrongNameValidationCmdLine);
                     job.JobPreparationTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
-                    job.JobPreparationTask.ResourceFiles = new List<ResourceFile>() { GetResourceFileReference(ServiceRegistrationContainer, null) };
+                    job.JobPreparationTask.ResourceFiles = new List<ResourceFile>() {GetResourceFileReference(ServiceRegistrationContainer, null)};
 
                     // List<ResourceFile> resourceFiles = new List<ResourceFile>();
                     // resourceFiles.Add(GetResourceFileReference(RuntimeContainer, BrokerFolder));
@@ -308,7 +307,7 @@
 
 
                         CloudTask cloudTask = new CloudTask(
-                            "Broker",cmd);
+                            "Broker", cmd);
                         cloudTask.ResourceFiles = resourceFiles;
                         cloudTask.UserIdentity =
                             new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin,
@@ -379,6 +378,7 @@
             // No authentication on Azure Batch for now
         }
 
-        protected internal override ServiceRegistrationRepo CreateServiceRegistrationRepo(string regPath) => new ServiceRegistrationRepo(regPath, new AzureBlobServiceRegistrationStore(SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString));
+        protected internal override ServiceRegistrationRepo CreateServiceRegistrationRepo(string regPath) => new ServiceRegistrationRepo(regPath,
+            new AzureBlobServiceRegistrationStore(SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString));
     }
 }
