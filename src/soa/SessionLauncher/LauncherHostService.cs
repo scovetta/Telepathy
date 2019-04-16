@@ -299,7 +299,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                         sessionLauncherAddress);
 
                 }
-                else if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.AzureBatch)
+                else
                 {
                     this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher),
                         BindingHelper.HardCodedUnSecureNetTcpBinding, string.Empty);
@@ -318,8 +318,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                     this.launcherHost.Description.Behaviors.Find<ServiceAuthorizationBehavior>();
                 myServiceBehavior.PrincipalPermissionMode = PrincipalPermissionMode.None;
                 this.launcherHost.Open();
-                TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher service at {0}",
-                    sessionLauncherAddress);
+                TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher service");
             }
             catch (Exception ex)
             {
