@@ -39,6 +39,7 @@
         private const string OpenNetTcpPortSharingAndDisableStrongNameValidationCmdLine =
             @"cmd /c ""sc.exe config NetTcpPortSharing start= demand & reg ADD ^""HKLM\Software\Microsoft\StrongName\Verification\*,*^"" /f & reg ADD ^""HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^"" /f""";
 
+        private static TimeSpan SchedulingTimeout = TimeSpan.FromMinutes(5);
 
         // TODO: remove parameter less ctor and add specific parameters for the sake of test-ablity
         public AzureBatchSessionLauncher()
@@ -289,21 +290,37 @@
                         return cloudTask;
                     }
 
-                    CloudTask CreateBrokerTask()
+                    CloudTask CreateBrokerTask(bool direct)
                     {
                         List<ResourceFile> resourceFiles = new List<ResourceFile>();
                         resourceFiles.Add(GetResourceFileReference(RuntimeContainer, BrokerFolder));
 
+                        string cmd;
+                        if (direct)
+                        {
+                            cmd = "";
+                        }
+                        else
+                        {
+                            cmd =
+                                $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --ServiceRegistrationPath {AzureBatchJobPrepTaskWorkingDirEnvVar} --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
+                        }
+
+
                         CloudTask cloudTask = new CloudTask(
-                            "Broker",
-                            $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --ServiceRegistrationPath {AzureBatchJobPrepTaskWorkingDirEnvVar} --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}");
+                            "Broker",cmd);
                         cloudTask.ResourceFiles = resourceFiles;
-                        cloudTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
-                        cloudTask.EnvironmentSettings = cloudTask.EnvironmentSettings == null ? environment : environment.Union(cloudTask.EnvironmentSettings, comparer).ToList();
+                        cloudTask.UserIdentity =
+                            new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin,
+                                scope: AutoUserScope.Task));
+                        cloudTask.EnvironmentSettings = cloudTask.EnvironmentSettings == null
+                            ? environment
+                            : environment.Union(cloudTask.EnvironmentSettings, comparer).ToList();
                         return cloudTask;
                     }
 
-                    var tasks = Enumerable.Range(0, numTasks - 1).Select(_ => CreateTask(Guid.NewGuid().ToString())).Union(new[] { CreateBrokerTask() }).ToArray();
+                    var tasks = Enumerable.Range(0, numTasks - 1).Select(_ => CreateTask(Guid.NewGuid().ToString()))
+                        .Union(new[] {CreateBrokerTask(true)}).ToArray();
                     return batchClient.JobOperations.AddTaskAsync(jobId, tasks);
                 }
 
