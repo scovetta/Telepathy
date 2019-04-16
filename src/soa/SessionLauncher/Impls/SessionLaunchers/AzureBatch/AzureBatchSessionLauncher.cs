@@ -330,6 +330,16 @@
 
                 await AddTasksAsync();
 
+                var brokerTask = await batchClient.JobOperations.GetTaskAsync(jobId, "Broker");
+
+                TaskStateMonitor monitor = batchClient.Utilities.CreateTaskStateMonitor();
+                await monitor.WhenAll(new[] {brokerTask}, TaskState.Running, SchedulingTimeout);
+
+                await brokerTask.RefreshAsync();
+
+                var brokerNodeIp = nodes.First(n => n.AffinityId == brokerTask.ComputeNodeInformation.AffinityId)
+                    .IPAddress;
+                sessionAllocateInfo.BrokerLauncherEpr = new[] {SoaHelper.GetBrokerLauncherAddress(brokerNodeIp)};
                 return sessionAllocateInfo;
             }
         }
