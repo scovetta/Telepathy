@@ -97,7 +97,7 @@
             {
                 var pool = await batchClient.PoolOperations.GetPoolAsync(AzureBatchConfiguration.BatchPoolName);
                 ODATADetailLevel detailLevel = new ODATADetailLevel();
-                detailLevel.SelectClause = "ipAddress";
+                detailLevel.SelectClause = "affinityId, ipAddress";
                 detailLevel.FilterClause = @"state eq 'idle'";
                 var nodes = await pool.ListComputeNodes(detailLevel).ToListAsync();
                 if (nodes.Count < 1)
@@ -106,7 +106,7 @@
                 }
 
                 sessionAllocateInfo.Id = 0;
-                sessionAllocateInfo.BrokerLauncherEpr = new[] { SessionInternalConstants.BrokerConnectionStringToken };
+                // sessionAllocateInfo.BrokerLauncherEpr = new[] { SessionInternalConstants.BrokerConnectionStringToken };
 
                 IList<EnvironmentSetting> ConstructEnvironmentVariable()
                 {
