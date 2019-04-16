@@ -42,7 +42,8 @@ namespace Microsoft.Hpc.Scheduler.Session
             }
             else
             {
-                return BindingHelper.HardCodedSessionLauncherNetTcpBinding;
+                // return BindingHelper.HardCodedSessionLauncherNetTcpBinding;
+                return BindingHelper.HardCodedUnSecureNetTcpBinding;
             }
         }
 
