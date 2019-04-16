@@ -187,7 +187,12 @@ namespace Microsoft.Hpc.ServiceBroker.Common
                 }
                 else
                 {
-                    this.schedulerAdapterClient = new HpcSchedulerAdapterClient(headnodeMachine, certThrumbprint, new System.ServiceModel.InstanceContext(this.monitor));
+                    // this.schedulerAdapterClient = new HpcSchedulerAdapterClient(headnodeMachine, certThrumbprint, new System.ServiceModel.InstanceContext(this.monitor));
+                    this.schedulerAdapterClient = new SchedulerAdapterClient(
+                        BindingHelper.HardCodedUnSecureNetTcpBinding,
+                        new EndpointAddress(new Uri(SoaHelper.GetSchedulerDelegationAddress(headnodeMachine))),
+                        this.sharedData.StartInfo.IpAddress,
+                        this.dispatcherManager);
                 }
             }
         }
