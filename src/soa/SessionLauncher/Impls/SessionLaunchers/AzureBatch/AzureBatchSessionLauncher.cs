@@ -276,27 +276,6 @@
                     int numTasks = nodes.Count;
                     var comparer = new EnvironmentSettingComparer();
 
-                    CloudTask CreateMultiInstanceTask(string taskId)
-                    {
-                        List<ResourceFile> resourceFiles = new List<ResourceFile>();
-                        resourceFiles.Add(GetResourceFileReference(RuntimeContainer, CcpServiceHostFolder));
-                        resourceFiles.Add(GetResourceFileReference(ServiceAssemblyContainer, startInfo.ServiceName.ToLower()));
-                        resourceFiles.Add(GetResourceFileReference(RuntimeContainer, BrokerFolder));
-                        resourceFiles.Add(GetResourceFileReference(ServiceRegistrationContainer, null));
-
-                        CloudTask multiInstanceTask = new CloudTask(
-                            taskId,
-                            $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --ServiceRegistrationPath {AzureBatchTaskWorkingDirEnvVar} --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --ReadSvcHostFromEnv");
-                        multiInstanceTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
-                        multiInstanceTask.MultiInstanceSettings = new MultiInstanceSettings(
-                            $@"cmd /c start cmd /c {AzureBatchTaskWorkingDirEnvVar}\ccpservicehost\CcpServiceHost.exe -standalone",
-                            numTasks);
-                        multiInstanceTask.EnvironmentSettings =
-                            multiInstanceTask.EnvironmentSettings == null ? environment : environment.Union(multiInstanceTask.EnvironmentSettings, comparer).ToList();
-                        multiInstanceTask.ResourceFiles = resourceFiles;
-                        return multiInstanceTask;
-                    }
-
                     CloudTask CreateTask(string taskId)
                     {
                         List<ResourceFile> resourceFiles = new List<ResourceFile>();
