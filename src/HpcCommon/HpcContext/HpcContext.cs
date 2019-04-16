@@ -172,7 +172,14 @@
 
             return context;
 #endif
-            return SoaContext.SoaContext.Instance;
+            if (!connectionString.IsGateway)
+            {
+                return SoaContext.SoaContext.Default;
+            }
+            else
+            {
+                return new SoaContext.SoaContext(connectionString);
+            }
         }
 
         /// <summary>
@@ -214,7 +221,14 @@
             context.IgnoreCertNameMismatchValidation();
             return context;
 #endif
-            return SoaContext.SoaContext.Instance;
+            if (!connectionString.IsGateway)
+            {
+                return SoaContext.SoaContext.Default;
+            }
+            else
+            {
+                return new SoaContext.SoaContext(connectionString);
+            }
         }
 
         public static void ClearAll()

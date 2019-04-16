@@ -10,20 +10,34 @@
     // TODO: remove me
     public class SoaFabricContext : IFabricContext
     {
-        public static IFabricContext Instance = new SoaFabricContext();
+        public static readonly IFabricContext Default = new SoaFabricContext();
 
-        private static readonly string LocalHost = "localhost";
+        private const string LocalHost = "localhost";
 
         private static readonly string[] LocalHostArr = new[] { LocalHost };
 
+        public SoaFabricContext(string connectionString) : this(EndpointsConnectionString.ParseConnectionString(connectionString))
+        {
+        }
+
+        public SoaFabricContext()
+        {
+            this.ConnectionString = EndpointsConnectionString.ParseConnectionString(LocalHost);
+        }
+
+        public SoaFabricContext(EndpointsConnectionString connectionString)
+        {
+            this.ConnectionString = connectionString;
+        }
+
         public async Task<string> ResolveSingletonServicePrimaryAsync(string serviceName, CancellationToken token)
         {
-            return LocalHost;
+            return this.ConnectionString.ConnectionString;
         }
 
         public async Task<IEnumerable<string>> ResolveStatelessServiceNodesAsync(string serviceName, CancellationToken token)
         {
-            return LocalHostArr;
+            return new[] { this.ConnectionString.ConnectionString };
         }
 
         public async Task<IEnumerable<string>> GetNodesAsync(CancellationToken token)
@@ -33,7 +47,7 @@
 
         public IRegistry Registry => throw new NotImplementedException();
 
-        public EndpointsConnectionString ConnectionString => EndpointsConnectionString.ParseConnectionString(LocalHost);
+        public EndpointsConnectionString ConnectionString { get; }
 
         public HpcContextOwner Owner => HpcContextOwner.HpcServiceOutOfSFCluster;
     }
