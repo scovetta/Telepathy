@@ -189,7 +189,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.HpcPack)
                 {
                     this.brokerNodesManager = new BrokerNodesManager();
-                    this.sessionLauncher = SessionLauncherFactory.CreateHpcPackSessionLauncher(SoaHelper.GetSchedulerName(true), false, this.brokerNodesManager);
+                    this.sessionLauncher = SessionLauncherFactory.CreateHpcPackSessionLauncher(SoaHelper.GetSchedulerName(), false, this.brokerNodesManager);
                     this.schedulerDelegation = new HpcSchedulerDelegation(this.sessionLauncher, this.brokerNodesManager);
                 }
                 else if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.AzureBatch)

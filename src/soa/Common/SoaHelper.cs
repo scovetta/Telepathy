@@ -764,43 +764,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// It indicates if the invoker of this method is session launcher.
         /// </param>
         /// <returns></returns>
-        public static string GetSchedulerName(bool isSessionLauncher)
+        public static string GetSchedulerName()
         {
-            if (isSessionLauncher)
-            {
-                // SL is on the same node as scheduler.
-                // For service fabric internal, use null for the gateway.
-                return null;// LocalHost;
-            }
-            else
-            {
-                if (IsOnAzure())
-                {
-                    // Broker gets Azure scheduler virtual name from env var.
-                    return Environment.GetEnvironmentVariable(HpcConstants.SchedulerEnvironmentVariableName);
-                }
-                else
-                {
-                    // Broker gets on-premise scheduler name from regitry key.
-                    using (RegistryKey regKey = Registry.LocalMachine.OpenSubKey(CommonRegistryPath))
-                    {
-                        if (regKey != null)
-                        {
-                            string registryValue = regKey.GetValue(ClusterConnectionString) as string;
-                            if (String.IsNullOrEmpty(registryValue))
-                            {
-                                throw new InvalidOperationException("Headnode name in registry is null.");
-                            }
-
-                            return registryValue.ToUpper(CultureInfo.InvariantCulture);
-                        }
-                        else
-                        {
-                            throw new InvalidOperationException("Cannot find registry key of headnode.");
-                        }
-                    }
-                }
-            }
+            // Broker gets Azure scheduler virtual name from env var.
+            return Environment.GetEnvironmentVariable(HpcConstants.SchedulerEnvironmentVariableName);
         }
 
         /// <summary>

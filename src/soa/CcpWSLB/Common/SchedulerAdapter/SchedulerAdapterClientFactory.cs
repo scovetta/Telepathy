@@ -167,15 +167,12 @@ namespace Microsoft.Hpc.ServiceBroker.Common
             }
             else
             {
-                string headnodeMachine = System.Net.Dns.GetHostName();
-                string certThrumbprint = string.Empty;
-
+               
                 // TODO: implementing new authentication logic between brokerworker and sessionlauncher
-                if (false)
-                {
-                    headnodeMachine = await this.context.ResolveSessionLauncherNodeAsync();
-                    certThrumbprint = await this.context.GetSSLThumbprint();
-                }
+                
+                string headnodeMachine = await this.context.ResolveSessionLauncherNodeAsync();
+                // certThrumbprint = await this.context.GetSSLThumbprint();
+                
 
                 if (this.monitor.TransportScheme == TransportScheme.AzureStorage)
                 {

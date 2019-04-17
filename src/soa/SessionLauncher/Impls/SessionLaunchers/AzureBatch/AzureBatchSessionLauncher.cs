@@ -1,4 +1,6 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch
+﻿using System.Net;
+
+namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch
 {
     using System;
     using System.Collections.Generic;
@@ -214,6 +216,8 @@
                         BrokerSettingsConstants.TransportScheme,
                         startInfo.TransportScheme);
 
+                    env.Add(new EnvironmentSetting(HpcConstants.SchedulerEnvironmentVariableName, Dns.GetHostName()));
+
                     return env;
                 }
 
@@ -297,7 +301,7 @@
                         string cmd;
                         if (direct)
                         {
-                            cmd = "";
+                            cmd = $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --ServiceRegistrationPath {AzureBatchJobPrepTaskWorkingDirEnvVar} --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
                         }
                         else
                         {

@@ -643,7 +643,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
             /// </summary>
             public SoaDiagAuthenticator()
             {
-                this.headNode = SoaHelper.GetSchedulerName(false);
+                this.headNode = SoaHelper.GetSchedulerName();
                 //this.schedulerHelper = new SchedulerHelper(fabricClient, token);
             }
 

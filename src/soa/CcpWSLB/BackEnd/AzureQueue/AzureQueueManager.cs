@@ -147,7 +147,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
 
             try
             {
-                schedulerName = SoaHelper.GetSchedulerName(false);
+                schedulerName = SoaHelper.GetSchedulerName();
             }
             catch (InvalidOperationException e)
             {
