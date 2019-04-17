@@ -487,6 +487,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         internal const string ProcNumEnvVar = "CCP_NUMCPUS";
 
+        internal const string OverrideProcNumEnvVar = "CCP_OVERRIDENUMCPUS";
+
         /// <summary>
         /// Store core id list environment
         /// </summary>

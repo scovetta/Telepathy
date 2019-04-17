@@ -245,11 +245,20 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
             string procNumEnvVar = Environment.GetEnvironmentVariable(Constant.ProcNumEnvVar);
             Debug.WriteLine($"{Constant.ProcNumEnvVar}={procNumEnvVar}");
+            string overrideProcNumEnvVar = Environment.GetEnvironmentVariable(Constant.OverrideProcNumEnvVar);
+            Debug.WriteLine($"{Constant.OverrideProcNumEnvVar}={overrideProcNumEnvVar}");
 
-            if (string.IsNullOrEmpty(procNumEnvVar) || !int.TryParse(procNumEnvVar, out _procNum))
+            if (bool.TryParse(overrideProcNumEnvVar, out var ov) && ov)
             {
-                RuntimeTraceHelper.TraceEvent(this._jobId, TraceEventType.Error, StringTable.CantFindProcNum);
-                return ErrorCode.ServiceHost_UnexpectedException;
+                _procNum = Environment.ProcessorCount;
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(procNumEnvVar) || !int.TryParse(procNumEnvVar, out _procNum))
+                {
+                    RuntimeTraceHelper.TraceEvent(this._jobId, TraceEventType.Error, StringTable.CantFindProcNum);
+                    return ErrorCode.ServiceHost_UnexpectedException;
+                }
             }
 
             RuntimeTraceHelper.TraceEvent(

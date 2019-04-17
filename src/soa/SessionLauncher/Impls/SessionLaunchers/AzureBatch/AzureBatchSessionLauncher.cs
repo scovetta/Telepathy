@@ -217,6 +217,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                         startInfo.TransportScheme);
 
                     env.Add(new EnvironmentSetting(HpcConstants.SchedulerEnvironmentVariableName, Dns.GetHostName()));
+                    env.Add(new EnvironmentSetting(Constant.OverrideProcNumEnvVar, "TRUE"));
 
                     return env;
                 }
