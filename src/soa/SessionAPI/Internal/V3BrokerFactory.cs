@@ -79,15 +79,38 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                         brokerLauncher = client;
                     }
 
-                    BrokerInitializationResult result;
-                    if (this.durable)
+                    BrokerInitializationResult result = null;
+
+                    int retry = 20;
+                    while (retry > 0)
                     {
-                        result = brokerLauncher.CreateDurable(startInfo.Data, sessionId);
+                        try
+                        {
+                            if (this.durable)
+                            {
+                                result = brokerLauncher.CreateDurable(startInfo.Data, sessionId);
+                            }
+                            else
+                            {
+                                result = brokerLauncher.Create(startInfo.Data, sessionId);
+                            }
+
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            if (retry <= 0)
+                            {
+                                throw;
+                            }
+
+                            retry--;
+                            SessionBase.TraceSource.TraceInformation($"Waiting for Broker Launcher running. Detail: {ex.Message}");
+                            await Task.Delay(TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+                        }
                     }
-                    else
-                    {
-                        result = brokerLauncher.Create(startInfo.Data, sessionId);
-                    }
+
+                    Debug.Assert(result != null);
 
                     SessionBase.TraceSource.TraceInformation("[Session:{0}] Succesfully created broker.", sessionId);
                     SessionInfo info = SessionBase.BuildSessionInfo(result, this.durable, sessionId, epr, startInfo.Data.ServiceVersion, startInfo);
