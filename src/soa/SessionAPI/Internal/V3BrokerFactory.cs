@@ -68,16 +68,21 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 {
                     SessionBase.TraceSource.TraceInformation("[Session:{0}] Try to create broker... BrokerLauncherEpr = {1}", sessionId, epr);
 
-                    if (epr == SessionInternalConstants.BrokerConnectionStringToken)
+                    void RenewBrokerLauncherClient()
                     {
-                        brokerLauncher = new BrokerLauncherCloudQueueClient(startInfo.BrokerLauncherStorageConnectionString);
+                        if (epr == SessionInternalConstants.BrokerConnectionStringToken)
+                        {
+                            brokerLauncher = new BrokerLauncherCloudQueueClient(startInfo.BrokerLauncherStorageConnectionString);
+                        }
+                        else
+                        {
+                            var client = new BrokerLauncherClient(new Uri(epr), startInfo, binding);
+                            client.InnerChannel.OperationTimeout = timeout;
+                            brokerLauncher = client;
+                        }
                     }
-                    else
-                    {
-                        var client = new BrokerLauncherClient(new Uri(epr), startInfo, binding);
-                        client.InnerChannel.OperationTimeout = timeout;
-                        brokerLauncher = client;
-                    }
+
+                    RenewBrokerLauncherClient();
 
                     BrokerInitializationResult result = null;
 
@@ -105,8 +110,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                             }
 
                             retry--;
-                            SessionBase.TraceSource.TraceInformation($"Waiting for Broker Launcher running. Detail: {ex.Message}");
+                            Debug.WriteLine($"Waiting for Broker Launcher running. Detail: {ex.Message}");
                             await Task.Delay(TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+                            RenewBrokerLauncherClient();
                         }
                     }
 
