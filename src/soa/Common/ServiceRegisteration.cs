@@ -20,7 +20,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
         private string centrialPathList;
 
-        private IServiceRegistrationStore serviceRegistrationStore;
+        internal IServiceRegistrationStore ServiceRegistrationStore { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the ServiceRegistration class
@@ -38,7 +38,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 }
             }
 
-            this.serviceRegistrationStore = store;
+            this.ServiceRegistrationStore = store;
         }
 
         public ServiceRegistrationRepo(string centrialPathList) : this(centrialPathList, null)
@@ -104,9 +104,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                         {
                             Trace.TraceInformation($"[{nameof(ServiceRegistrationRepo)}] {nameof(GetServiceRegistrationPath)}: Get from reliable registry");
                             string path;
-                            if (this.serviceRegistrationStore != null)
+                            if (this.ServiceRegistrationStore != null)
                             {
-                                path = this.serviceRegistrationStore.ExportToTempFileAsync(filename, null).GetAwaiter()
+                                path = this.ServiceRegistrationStore.ExportToTempFileAsync(filename, null).GetAwaiter()
                                     .GetResult();
                             }
                             else

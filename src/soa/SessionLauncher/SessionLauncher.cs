@@ -215,11 +215,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 "[SessionLauncher] GetVersionFromRegistration identity {0},serviceRegistrationDir:{1}:",
                 Thread.CurrentPrincipal.Identity.Name,
                 serviceRegistrationDir ?? "null");
-#if HPCPACK
+
             if (string.IsNullOrEmpty(serviceRegistrationDir) || SoaRegistrationAuxModule.IsRegistrationStoreToken(serviceRegistrationDir))
             {
                 TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] GetVersionFromRegistration from reliable registry.");
-                List<string> services = HpcContext.Get().GetServiceRegistrationStore().EnumerateAsync().GetAwaiter().GetResult();
+                List<string> services = this.CreateServiceRegistrationRepo(string.Empty).ServiceRegistrationStore.EnumerateAsync().GetAwaiter().GetResult();
 
 
                 // If caller asked for unversioned service and it hasn't been found yet, check for it now
@@ -249,11 +249,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     }
                 }
             }
-#else
-            if (false)
-            {
-            }
-#endif
             else
             {
                 // If caller asked for unversioned service and it hasnt been found yet, check for it now
