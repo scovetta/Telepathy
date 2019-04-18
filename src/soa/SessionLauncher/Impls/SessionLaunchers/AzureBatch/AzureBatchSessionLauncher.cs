@@ -37,6 +37,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
 
         private const string AzureBatchJobPrepTaskWorkingDirEnvVar = "%AZ_BATCH_JOB_PREP_WORKING_DIR%";
 
+        private const string AzureBatchBrokerPerfEnvVar = "AZ_BATCH_BROKER_PERF";
+
+        private const string AzureBatchBrokerPerfExeEnvVar = "AZ_BATCH_BROKER_PERF_EXE";
+
         private const string OpenNetTcpPortSharingAndDisableStrongNameValidationCmdLine =
             @"cmd /c ""sc.exe config NetTcpPortSharing start= demand & reg ADD ^""HKLM\Software\Microsoft\StrongName\Verification\*,*^"" /f & reg ADD ^""HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^"" /f""";
 
@@ -94,6 +98,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
             BrokerConfigurations brokerConfigurations,
             string hostpath)
         {
+            bool brokerPerfMode = Environment.GetEnvironmentVariable(AzureBatchBrokerPerfEnvVar) == "1";
+            if (brokerPerfMode)
+            {
+                TraceHelper.TraceEvent(TraceEventType.Information, "[AzureBatchSessionLauncher] .CreateAndSubmitSessionJob: broker perf mode");
+            }
+
             TraceHelper.TraceEvent(TraceEventType.Information, "[AzureBatchSessionLauncher] .CreateAndSubmitSessionJob: callId={0}, endpointPrefix={1}, durable={2}.", callId, endpointPrefix, durable);
             using (var batchClient = AzureBatchConfiguration.GetBatchClient())
             {
@@ -244,11 +254,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                 {
                     string newJobId = AzureBatchSessionJobIdConverter.ConvertToAzureBatchJobId(AzureBatchSessionIdGenerator.GenerateSessionId());
                     Debug.Assert(batchClient != null, nameof(batchClient) + " != null");
-                    var job = batchClient.JobOperations.CreateJob(newJobId, new PoolInformation() {PoolId = AzureBatchConfiguration.BatchPoolName});
+                    var job = batchClient.JobOperations.CreateJob(newJobId, new PoolInformation() { PoolId = AzureBatchConfiguration.BatchPoolName });
                     job.JobPreparationTask = new JobPreparationTask(
                         OpenNetTcpPortSharingAndDisableStrongNameValidationCmdLine);
                     job.JobPreparationTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
-                    job.JobPreparationTask.ResourceFiles = new List<ResourceFile>() {GetResourceFileReference(ServiceRegistrationContainer, null)};
+                    job.JobPreparationTask.ResourceFiles = new List<ResourceFile>() { GetResourceFileReference(ServiceRegistrationContainer, null) };
 
                     // List<ResourceFile> resourceFiles = new List<ResourceFile>();
                     // resourceFiles.Add(GetResourceFileReference(RuntimeContainer, BrokerFolder));
@@ -323,23 +333,59 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                         return cloudTask;
                     }
 
-                    var tasks = Enumerable.Range(0, numTasks - 1).Select(_ => CreateTask(Guid.NewGuid().ToString()))
-                        .Union(new[] {CreateBrokerTask(true)}).ToArray();
+
+
+                    var tasks = Enumerable.Range(0, numTasks - 1).Select(_ => CreateTask(Guid.NewGuid().ToString())).ToArray();
+                    if (!brokerPerfMode)
+                    {
+                        tasks = tasks.Union(new[] { CreateBrokerTask(true) }).ToArray();
+                    }
+
                     return batchClient.JobOperations.AddTaskAsync(jobId, tasks);
                 }
 
                 await AddTasksAsync();
 
-                var brokerTask = await batchClient.JobOperations.GetTaskAsync(jobId, "Broker");
+                async Task StartAndWaitLocalBrokerLauncher()
+                {
+                    Console.WriteLine("Waiting");
+                    var svcHosts = await batchClient.JobOperations.ListTasks(jobId).ToListAsync();
+                    TaskStateMonitor monitor = batchClient.Utilities.CreateTaskStateMonitor();
+                    await monitor.WhenAll(svcHosts, TaskState.Running, SchedulingTimeout);
 
-                TaskStateMonitor monitor = batchClient.Utilities.CreateTaskStateMonitor();
-                await monitor.WhenAll(new[] {brokerTask}, TaskState.Running, SchedulingTimeout);
+                    Console.WriteLine("Waiting done");
 
-                await brokerTask.RefreshAsync();
+                    string cmd = $@"-d --ServiceRegistrationPath {AzureBatchJobPrepTaskWorkingDirEnvVar} --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
 
-                var brokerNodeIp = nodes.First(n => n.AffinityId == brokerTask.ComputeNodeInformation.AffinityId)
-                    .IPAddress;
-                sessionAllocateInfo.BrokerLauncherEpr = new[] {SoaHelper.GetBrokerLauncherAddress(brokerNodeIp)};
+                    string brokerPath = Environment.GetEnvironmentVariable(AzureBatchBrokerPerfExeEnvVar);
+
+                    var brokerLauncherProcess = Process.Start(brokerPath, cmd);
+
+                    await Task.Delay(TimeSpan.FromSeconds(60));
+                    sessionAllocateInfo.BrokerLauncherEpr = new[] { SoaHelper.GetBrokerLauncherAddress("localhost") };
+                }
+                async Task WaitBatchBrokerLauncher()
+                {
+                    var brokerTask = await batchClient.JobOperations.GetTaskAsync(jobId, "Broker");
+                    TaskStateMonitor monitor = batchClient.Utilities.CreateTaskStateMonitor();
+                    await monitor.WhenAll(new[] { brokerTask }, TaskState.Running, SchedulingTimeout);
+
+                    await brokerTask.RefreshAsync();
+
+                    var brokerNodeIp = nodes.First(n => n.AffinityId == brokerTask.ComputeNodeInformation.AffinityId)
+                        .IPAddress;
+                    sessionAllocateInfo.BrokerLauncherEpr = new[] { SoaHelper.GetBrokerLauncherAddress(brokerNodeIp) };
+                }
+
+                if (brokerPerfMode)
+                {
+                    await StartAndWaitLocalBrokerLauncher();
+                }
+                else
+                {
+                    await WaitBatchBrokerLauncher();
+                }
+
                 return sessionAllocateInfo;
             }
         }
