@@ -66,8 +66,8 @@ namespace TestClient
         private static bool createSessionOnly = false;
         private static int sessionId = -1;
 
-        private static bool inproc = true;
-        private static bool standalone = true;
+        private static bool inproc = false;
+        private static bool standalone = false;
 
         private static string commaSeparatedTargetList = "127.0.0.1";
 
@@ -172,6 +172,7 @@ namespace TestClient
             data.SessionStart = DateTime.Now;
             Log("Begin to create session.");
             SessionBase session;
+#if False
             if (durable)
             {
                 if (sessionId == -1)
@@ -195,6 +196,10 @@ namespace TestClient
                     session = Session.AttachSession(new SessionAttachInfo(headnode, sessionId));
                 }
             }
+#endif
+
+            session = Session.CreateSession(startInfo);
+
 
             Log("Session created: {0}.", session.Id);
             data.SessionCreated = DateTime.Now;
@@ -314,6 +319,7 @@ namespace TestClient
         private static int CreateSession(SessionStartInfo startInfo, bool isDurable)
         {
             int sessionId;
+#if False
             if (isDurable)
             {
                 DurableSession session = DurableSession.CreateSession(startInfo);
@@ -325,6 +331,10 @@ namespace TestClient
                 session.AutoClose = false;
                 sessionId = session.Id;
             }
+#endif
+            Session session = Session.CreateSession(startInfo);
+            sessionId = session.Id;
+
             Log("Session created.");
             Environment.ExitCode = sessionId;
             return sessionId;
