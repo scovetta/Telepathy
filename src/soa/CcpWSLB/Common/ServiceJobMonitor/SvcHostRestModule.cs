@@ -32,21 +32,25 @@
 
         public static async Task OpenSvcHostsAsync(int sessionId, SessionStartInfoContract startInfo, Func<List<TaskInfo>, Task> taskStateChangedCallBack)
         {
-            Task<TaskInfo>[] tl = new Task<TaskInfo>[startInfo.IpAddress.Length];
-
             for (int i = 0; i < startInfo.IpAddress.Length; i++)
             {
-                tl[i] = OpenSvcHostAsync(sessionId, i, startInfo.IpAddress[i], startInfo.RegPath, startInfo.ServiceName, startInfo.Environments, startInfo.DependFilesStorageInfo);
+                OpenSvcHostWithRetryAsync(sessionId, i, startInfo.IpAddress[i], startInfo.RegPath, startInfo.ServiceName, startInfo.Environments, startInfo.DependFilesStorageInfo)
+                    .ContinueWith(t => taskStateChangedCallBack(new List<TaskInfo> { t.Result }));
             }
+        }
 
-            await Task.WhenAll(tl);
-            List<TaskInfo> taskInfoList = tl.Select(t => t.Result).Where(ti => ti != null).ToList();
-
-            Debug.Assert(taskInfoList.Count != 0, "No available endpoint.");
-            if (taskStateChangedCallBack != null)
-            {
-                await taskStateChangedCallBack(taskInfoList);
-            }
+        private static async Task<TaskInfo> OpenSvcHostWithRetryAsync(
+            int sessionId,
+            int num,
+            string ipAddress,
+            string regPath,
+            string svcName,
+            Dictionary<string, string> environment,
+            Dictionary<string, string> dependFilesInfo)
+        {
+            BrokerTracing.TraceVerbose("[OpenSvcHostWithRetryAsync] Started open service host {0} for session {1}", ipAddress, sessionId);
+            RetryManager mgr = new RetryManager(new ExponentialRandomBackoffRetryTimer(1 * 1000, 10 * 1000));
+            return await mgr.InvokeWithRetryAsync(() => OpenSvcHostAsync(sessionId, num, ipAddress, regPath, svcName, environment, dependFilesInfo),  ex => true);
         }
 
         /// <summary>
@@ -76,21 +80,11 @@
 
             // HTTP POST
             var serviceInfo = new ServiceInfo(sessionId, ti.Id, ti.FirstCoreIndex, regPath + "\\", svcName + ".config", environment, dependFilesInfo);
-            try
-            {
-                var result = await SvcHostHttpClient.PostAsJsonAsync<ServiceInfo>(new Uri($"{Prefix}{ipAddress}:{Port}/{EndPointName}/api/{ApiName}"), serviceInfo);
-                BrokerTracing.TraceVerbose("[OpenSvcHost].result:{0}", result);
-                if (result.IsSuccessStatusCode)
-                    return ti;
-                else
-                    return null;
-            }
-            catch (Exception e)
-            {
-                // for the romote host closed 
-                BrokerTracing.TraceVerbose("[OpenSvcHost].post: Exception: {0}", e.ToString());
-                return null;
-            }
+
+            var result = await SvcHostHttpClient.PostAsJsonAsync<ServiceInfo>(new Uri($"{Prefix}{ipAddress}:{Port}/{EndPointName}/api/{ApiName}"), serviceInfo);
+            BrokerTracing.TraceVerbose("[OpenSvcHost].result:{0}", result);
+            result.EnsureSuccessStatusCode();
+            return ti;
         }
     }
 }

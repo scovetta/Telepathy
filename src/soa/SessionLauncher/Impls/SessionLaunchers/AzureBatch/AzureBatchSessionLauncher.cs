@@ -352,16 +352,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                     var svcHosts = await batchClient.JobOperations.ListTasks(jobId).ToListAsync();
                     TaskStateMonitor monitor = batchClient.Utilities.CreateTaskStateMonitor();
                     await monitor.WhenAll(svcHosts, TaskState.Running, SchedulingTimeout);
-
                     Console.WriteLine("Waiting done");
-
                     string cmd = $@"-d --ServiceRegistrationPath {AzureBatchJobPrepTaskWorkingDirEnvVar} --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
-
                     string brokerPath = Environment.GetEnvironmentVariable(AzureBatchBrokerPerfExeEnvVar);
-
                     var brokerLauncherProcess = Process.Start(brokerPath, cmd);
 
-                    await Task.Delay(TimeSpan.FromSeconds(60));
+                   //  await Task.Delay(TimeSpan.FromSeconds(60));
                     sessionAllocateInfo.BrokerLauncherEpr = new[] { SoaHelper.GetBrokerLauncherAddress("localhost") };
                 }
                 async Task WaitBatchBrokerLauncher()

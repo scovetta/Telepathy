@@ -150,6 +150,8 @@ namespace Microsoft.Hpc.ServiceBroker
         /// </summary>
         protected object lockRemoteBlacklistCopy = new object();
 
+        private object taskStateChangedLock = new object(); // TODO: use concurrent implementation to replace this lock
+
         /// <summary>
         /// Stores lock object to protect client proxy
         /// </summary>
@@ -1482,321 +1484,325 @@ namespace Microsoft.Hpc.ServiceBroker
 
         Task ISchedulerNotify.TaskStateChanged(List<TaskInfo> taskInfoList)
         {
-            if (taskInfoList == null)
+            lock (this.taskStateChangedLock)
             {
-                BrokerTracing.TraceInfo("[ServiceJobMonitor] Task event changed. the task info list is null. It means the session service encountered an error when query scheduler.");
-                return Task.CompletedTask;
-            }
-
-            BrokerTracing.TraceInfo("[ServiceJobMonitor] Task event changed. Raw count = {0}.", taskInfoList.Count);
-            if (this.gracefulPreemptionHandler == null)
-            {
-                Debug.Assert(false, "[ServiceJobMonitor] Task event changed before GracefulPreemptionHandler is created.");
-                BrokerTracing.TraceWarning("[ServiceJobMonitor] Task event changed before GracefulPreemptionHandler is created.");
-            }
-            else
-            {
-                this.gracefulPreemptionHandler.AddToRecognizedTaskIds(taskInfoList.Select(i => i.Id));
-            }
-
-            this.schedulerNotifyTimeoutManager.ResetTimeout();
-            if (!this.IncreaseCount())
-            {
-                BrokerTracing.TraceEvent(TraceEventType.Verbose, 0, "[ServiceJobMonitor] Ref object is 0, return immediately.");
-                return Task.CompletedTask;
-            }
-
-            try
-            {
-                List<ServiceTaskDispatcherInfo> validDispatcherInfoList = new List<ServiceTaskDispatcherInfo>();
-
-                List<int> removeIdList = new List<int>(taskInfoList.Count);
-
-                foreach (TaskInfo info in taskInfoList)
+                if (taskInfoList == null)
                 {
-                    if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Running || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Dispatching)
+                    BrokerTracing.TraceInfo("[ServiceJobMonitor] Task event changed. the task info list is null. It means the session service encountered an error when query scheduler.");
+                    return Task.CompletedTask;
+                }
+
+                BrokerTracing.TraceInfo("[ServiceJobMonitor] Task event changed. Raw count = {0}.", taskInfoList.Count);
+                if (this.gracefulPreemptionHandler == null)
+                {
+                    Debug.Assert(false, "[ServiceJobMonitor] Task event changed before GracefulPreemptionHandler is created.");
+                    BrokerTracing.TraceWarning("[ServiceJobMonitor] Task event changed before GracefulPreemptionHandler is created.");
+                }
+                else
+                {
+                    this.gracefulPreemptionHandler.AddToRecognizedTaskIds(taskInfoList.Select(i => i.Id));
+                }
+
+                this.schedulerNotifyTimeoutManager.ResetTimeout();
+                if (!this.IncreaseCount())
+                {
+                    BrokerTracing.TraceEvent(TraceEventType.Verbose, 0, "[ServiceJobMonitor] Ref object is 0, return immediately.");
+                    return Task.CompletedTask;
+                }
+
+                try
+                {
+                    List<ServiceTaskDispatcherInfo> validDispatcherInfoList = new List<ServiceTaskDispatcherInfo>();
+
+                    List<int> removeIdList = new List<int>(taskInfoList.Count);
+
+                    foreach (TaskInfo info in taskInfoList)
                     {
-                        if (this.IsRemovedDispatcher(info.Id))
+                        if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Running || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Dispatching)
                         {
-                            BrokerTracing.TraceInfo("[ServiceJobMonitor] Dispatcher {0} is removed once and won't be created again. Task state {1}.", info.Id, info.State);
-                        }
-                        else if (!this.dispatcherManager.ContainDispather(info.Id))
-                        {
-                            ServiceTaskDispatcherInfo serviceTaskDispatcherInfo = null;
-
-                            if (info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.OnPremise || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.Linux || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.NonDomainJoined)
+                            if (this.IsRemovedDispatcher(info.Id))
                             {
-                                //
-                                // the node is on-premise or Linux node
-                                //
-
-                                // if this node is in blacklist, remove it
-                                lock (this.lockRemoteBlacklistCopy)
-                                {
-                                    remoteBlacklistCopy.Remove(info.MachineName);
-                                }
-
-                                BrokerTracing.TraceInfo("[ServiceJobMonitor] Create new dispatcher for on-premise node {0} because task state is changed into {1}.", info.Id, info.State);
-
-                                // check if using backend-security (for java soa only)
-                                // check if env ENABLE_BACKEND_SECURITY == true
-                                bool isEnableBackendSecurity = false;
-                                var envEnableBackendSecurity = this.sharedData.ServiceConfig.EnvironmentVariables[Constant.IsEnableBackendSecurityEnvVar];
-                                if (envEnableBackendSecurity != null
-                                    && String.IsNullOrEmpty(envEnableBackendSecurity.Value) == false
-                                    && Boolean.TryParse(envEnableBackendSecurity.Value, out isEnableBackendSecurity) == true
-                                    && isEnableBackendSecurity == true
-                                    // has to be using http binding
-                                    && this.dispatcherManager.BackEndIsHttp == true)
-                                {
-                                    BrokerTracing.TraceInfo("[ServiceJobMonitor] Create new dispatcher info for Java Wss securint mode");
-
-                                    // use securint mode
-                                    serviceTaskDispatcherInfo = new WssDispatcherInfo(
-                                        this.sharedData.BrokerInfo.SessionId,
-                                        info.Id,
-                                        info.Capacity,
-                                        info.MachineName,
-                                        info.MachineVirtualName,
-                                        info.FirstCoreIndex,
-                                        this.networkPrefix,
-                                        info.Location);
-                                }
-                                else
-                                {
-                                    BrokerTracing.TraceInfo("[ServiceJobMonitor] Create new dispatcher info for normal mode");
-
-                                    // normal mode
-                                    serviceTaskDispatcherInfo = new ServiceTaskDispatcherInfo(
-                                        this.sharedData.BrokerInfo.SessionId,
-                                        info.Id,
-                                        info.Capacity,
-                                        info.MachineName,
-                                        info.MachineVirtualName,
-                                        info.FirstCoreIndex,
-                                        this.networkPrefix,
-                                        info.Location,
-                                        this.dispatcherManager.BackEndIsHttp);
-                                }
+                                BrokerTracing.TraceInfo("[ServiceJobMonitor] Dispatcher {0} is removed once and won't be created again. Task state {1}.", info.Id, info.State);
                             }
-                            else if (info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.AzureEmbedded || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.AzureEmbeddedVM)
+                            else if (!this.dispatcherManager.ContainDispather(info.Id))
                             {
-                                //
-                                // the cluster is on Azure
-                                //
+                                ServiceTaskDispatcherInfo serviceTaskDispatcherInfo = null;
 
-                                if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Running)
+                                if (info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.OnPremise || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.Linux
+                                                                                                                 || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.NonDomainJoined)
                                 {
-                                    lock (this.lockRemoteBlacklistCopy)
-                                    {
-                                        remoteBlacklistCopy.Remove(info.MachineVirtualName);
-                                    }
+                                    //
+                                    // the node is on-premise or Linux node
+                                    //
 
-                                    if (this.nodeMappingData != null)
-                                    {
-                                        this.nodeMappingData.Wait();
-
-                                        string ipaddress;
-
-                                        //TODO: on azure, update the mapping it if necessary
-                                        if (this.nodeMappingData.Dictionary != null && this.nodeMappingData.Dictionary.TryGetValue(info.MachineVirtualName, out ipaddress))
-                                        {
-                                            info.MachineName = ipaddress;
-                                        }
-                                    }
-
-                                    BrokerTracing.TraceInfo("[ServiceJobMonitor] Create new dispatcher for Azure cluster node {0} because task state is changed into {1}.", info.Id, info.State);
-
-                                    serviceTaskDispatcherInfo = new ServiceTaskDispatcherInfo(
-                                        this.sharedData.BrokerInfo.SessionId,
-                                        info.Id,
-                                        info.Capacity,
-                                        info.MachineName,
-                                        info.MachineVirtualName,
-                                        info.FirstCoreIndex,
-                                        this.networkPrefix,
-                                        this.dispatcherManager.BackEndIsHttp);
-                                }
-                                else
-                                {
-                                    BrokerTracing.TraceInfo(
-                                        "[ServiceJobMonitor] Skip to create new dispatcher for Azure cluster node {0} because task state is changed into {1}.",
-                                        info.Id,
-                                        info.State);
-                                }
-                            }
-                            else if (info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.Azure || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.AzureVM)
-                            {
-                                //
-                                // burst mode (the node is on Azure)
-                                //
-
-                                if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Running)
-                                {
+                                    // if this node is in blacklist, remove it
                                     lock (this.lockRemoteBlacklistCopy)
                                     {
                                         remoteBlacklistCopy.Remove(info.MachineName);
                                     }
 
-                                    BrokerTracing.TraceInfo(
-                                        "[ServiceJobMonitor] Create new dispatcher for Azure burst node {0} because task state is changed into {1}, job requeue count {2}, azureLoadBalancerAddress {3}",
-                                        info.Id,
-                                        info.State,
-                                        info.JobRequeueCount,
-                                        info.AzureLoadBalancerAddress);
+                                    BrokerTracing.TraceInfo("[ServiceJobMonitor] Create new dispatcher for on-premise node {0} because task state is changed into {1}.", info.Id, info.State);
 
-                                    serviceTaskDispatcherInfo = new AzureDispatcherInfo(
-                                        this.sharedData.BrokerInfo.SessionId,
-                                        info.JobRequeueCount,
-                                        info.Id,
-                                        info.Capacity,
-                                        info.MachineName,
-                                        info.FirstCoreIndex,
-                                        this.networkPrefix,
-                                        info.ProxyServiceName,
-                                        !this.sharedData.BrokerInfo.HttpsBurst,
-                                        info.AzureLoadBalancerAddress);
+                                    // check if using backend-security (for java soa only)
+                                    // check if env ENABLE_BACKEND_SECURITY == true
+                                    bool isEnableBackendSecurity = false;
+                                    var envEnableBackendSecurity = this.sharedData.ServiceConfig.EnvironmentVariables[Constant.IsEnableBackendSecurityEnvVar];
+                                    if (envEnableBackendSecurity != null && String.IsNullOrEmpty(envEnableBackendSecurity.Value) == false
+                                                                         && Boolean.TryParse(envEnableBackendSecurity.Value, out isEnableBackendSecurity) == true && isEnableBackendSecurity == true
+                                                                         // has to be using http binding
+                                                                         && this.dispatcherManager.BackEndIsHttp == true)
+                                    {
+                                        BrokerTracing.TraceInfo("[ServiceJobMonitor] Create new dispatcher info for Java Wss securint mode");
+
+                                        // use securint mode
+                                        serviceTaskDispatcherInfo = new WssDispatcherInfo(
+                                            this.sharedData.BrokerInfo.SessionId,
+                                            info.Id,
+                                            info.Capacity,
+                                            info.MachineName,
+                                            info.MachineVirtualName,
+                                            info.FirstCoreIndex,
+                                            this.networkPrefix,
+                                            info.Location);
+                                    }
+                                    else
+                                    {
+                                        BrokerTracing.TraceInfo("[ServiceJobMonitor] Create new dispatcher info for normal mode");
+
+                                        // normal mode
+                                        serviceTaskDispatcherInfo = new ServiceTaskDispatcherInfo(
+                                            this.sharedData.BrokerInfo.SessionId,
+                                            info.Id,
+                                            info.Capacity,
+                                            info.MachineName,
+                                            info.MachineVirtualName,
+                                            info.FirstCoreIndex,
+                                            this.networkPrefix,
+                                            info.Location,
+                                            this.dispatcherManager.BackEndIsHttp);
+                                    }
+                                }
+                                else if (info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.AzureEmbedded
+                                         || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.AzureEmbeddedVM)
+                                {
+                                    //
+                                    // the cluster is on Azure
+                                    //
+
+                                    if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Running)
+                                    {
+                                        lock (this.lockRemoteBlacklistCopy)
+                                        {
+                                            remoteBlacklistCopy.Remove(info.MachineVirtualName);
+                                        }
+
+                                        if (this.nodeMappingData != null)
+                                        {
+                                            this.nodeMappingData.Wait();
+
+                                            string ipaddress;
+
+                                            //TODO: on azure, update the mapping it if necessary
+                                            if (this.nodeMappingData.Dictionary != null && this.nodeMappingData.Dictionary.TryGetValue(info.MachineVirtualName, out ipaddress))
+                                            {
+                                                info.MachineName = ipaddress;
+                                            }
+                                        }
+
+                                        BrokerTracing.TraceInfo("[ServiceJobMonitor] Create new dispatcher for Azure cluster node {0} because task state is changed into {1}.", info.Id, info.State);
+
+                                        serviceTaskDispatcherInfo = new ServiceTaskDispatcherInfo(
+                                            this.sharedData.BrokerInfo.SessionId,
+                                            info.Id,
+                                            info.Capacity,
+                                            info.MachineName,
+                                            info.MachineVirtualName,
+                                            info.FirstCoreIndex,
+                                            this.networkPrefix,
+                                            this.dispatcherManager.BackEndIsHttp);
+                                    }
+                                    else
+                                    {
+                                        BrokerTracing.TraceInfo(
+                                            "[ServiceJobMonitor] Skip to create new dispatcher for Azure cluster node {0} because task state is changed into {1}.",
+                                            info.Id,
+                                            info.State);
+                                    }
+                                }
+                                else if (info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.Azure || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.AzureVM)
+                                {
+                                    //
+                                    // burst mode (the node is on Azure)
+                                    //
+
+                                    if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Running)
+                                    {
+                                        lock (this.lockRemoteBlacklistCopy)
+                                        {
+                                            remoteBlacklistCopy.Remove(info.MachineName);
+                                        }
+
+                                        BrokerTracing.TraceInfo(
+                                            "[ServiceJobMonitor] Create new dispatcher for Azure burst node {0} because task state is changed into {1}, job requeue count {2}, azureLoadBalancerAddress {3}",
+                                            info.Id,
+                                            info.State,
+                                            info.JobRequeueCount,
+                                            info.AzureLoadBalancerAddress);
+
+                                        serviceTaskDispatcherInfo = new AzureDispatcherInfo(
+                                            this.sharedData.BrokerInfo.SessionId,
+                                            info.JobRequeueCount,
+                                            info.Id,
+                                            info.Capacity,
+                                            info.MachineName,
+                                            info.FirstCoreIndex,
+                                            this.networkPrefix,
+                                            info.ProxyServiceName,
+                                            !this.sharedData.BrokerInfo.HttpsBurst,
+                                            info.AzureLoadBalancerAddress);
+                                    }
+                                    else
+                                    {
+                                        BrokerTracing.TraceInfo(
+                                            "[ServiceJobMonitor] Skip to create new dispatcher for Azure burst node {0} because task state is changed into {1}, job requeue count {2}",
+                                            info.Id,
+                                            info.State,
+                                            info.JobRequeueCount);
+                                    }
                                 }
                                 else
                                 {
-                                    BrokerTracing.TraceInfo(
-                                        "[ServiceJobMonitor] Skip to create new dispatcher for Azure burst node {0} because task state is changed into {1}, job requeue count {2}",
-                                        info.Id,
-                                        info.State,
-                                        info.JobRequeueCount);
+                                    BrokerTracing.TraceInfo("[ServiceJobMonitor] Un supported NodeLocation {0}", info.Location);
+                                }
+
+                                if (serviceTaskDispatcherInfo != null)
+                                {
+                                    validDispatcherInfoList.Add(serviceTaskDispatcherInfo);
                                 }
                             }
                             else
                             {
-                                BrokerTracing.TraceInfo("[ServiceJobMonitor] Un supported NodeLocation {0}", info.Location);
+                                BrokerTracing.TraceInfo("[ServiceJobMonitor] Dispatcher {0} is already created. Task state {1}.", info.Id, info.State);
                             }
+                        }
+                        else if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Canceled || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Failed
+                                                                                                       || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Finished
+                                                                                                       || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Finishing)
+                        {
+                            // remove (info.State == TaskState.Canceling) from the condition above.
+                            // when preemption happens to the task, it is in cancelling state. Should not remove the dispather,
+                            // because we need to wait for the responses of the processing requests. (graceful preemption at message level)
 
-                            if (serviceTaskDispatcherInfo != null)
+                            if (this.dispatcherManager.ContainDispather(info.Id))
                             {
-                                validDispatcherInfoList.Add(serviceTaskDispatcherInfo);
+                                BrokerTracing.TraceInfo("[ServiceJobMonitor] Remove dispatcher {0} because task state is changed into {1}.", info.Id, info.State);
+                                removeIdList.Add(info.Id);
                             }
                         }
-                        else
-                        {
-                            BrokerTracing.TraceInfo("[ServiceJobMonitor] Dispatcher {0} is already created. Task state {1}.", info.Id, info.State);
-                        }
                     }
-                    else if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Canceled || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Failed || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Finished || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Finishing)
-                    {
-                        // remove (info.State == TaskState.Canceling) from the condition above.
-                        // when preemption happens to the task, it is in cancelling state. Should not remove the dispather,
-                        // because we need to wait for the responses of the processing requests. (graceful preemption at message level)
 
-                        if (this.dispatcherManager.ContainDispather(info.Id))
+                    if (validDispatcherInfoList.Count != 0)
+                    {
+                        if (BrokerIdentity.IsHAMode)
                         {
-                            BrokerTracing.TraceInfo("[ServiceJobMonitor] Remove dispatcher {0} because task state is changed into {1}.", info.Id, info.State);
-                            removeIdList.Add(info.Id);
-                        }
-                    }
-                }
+                            // Use threadpool threads to call NewDispatcher method avoid blocking
+                            // the DecreaseCount method in the finally block below.
 
-                if (validDispatcherInfoList.Count != 0)
-                {
-                    if (BrokerIdentity.IsHAMode)
-                    {
-                        // Use threadpool threads to call NewDispatcher method avoid blocking
-                        // the DecreaseCount method in the finally block below.
+                            ParallelOptions options = new ParallelOptions();
 
-                        ParallelOptions options = new ParallelOptions();
+                            options.MaxDegreeOfParallelism = 32;
 
-                        options.MaxDegreeOfParallelism = 32;
+                            Parallel.ForEach<ServiceTaskDispatcherInfo>(
+                                validDispatcherInfoList,
+                                options,
+                                info =>
 
-                        Parallel.ForEach<ServiceTaskDispatcherInfo>(
-                            validDispatcherInfoList,
-                            options,
-                            info =>
-
-                                {
-                                    try
-                                    {
-                                        if (this.newDispatcherThreadCount.WaitOne())
-                                        {
-                                            // WCF BUG:
-                                            // We need a sync call Open on ClientBase<> to get the correct impersonation context
-                                            // this is a WCF bug, so we create the client on a dedicated thread.
-                                            // If we call it in thread pool thread, it will block the thread pool thread for a while
-                                            // and drops the performance.
-                                            Thread t = new Thread(
-                                                () =>
-                                                    {
-                                                        try
-                                                        {
-                                                            this.dispatcherManager.NewDispatcherAsync(info).GetAwaiter().GetResult();
-                                                        }
-                                                        catch (Exception e)
-                                                        {
-                                                            BrokerTracing.TraceError("[ServiceJobMonitor] Exception happened when create a dispatcher for task {0}, {1}", info.TaskId, e);
-                                                        }
-                                                    });
-
-                                            t.Start();
-                                        }
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        BrokerTracing.TraceError("[ServiceJobMonitor] Exception happened when create a thread to create a new dispatcher for task {0}, {1}", info.TaskId, e);
-                                    }
-                                    finally
                                     {
                                         try
                                         {
-                                            this.newDispatcherThreadCount.Release();
+                                            if (this.newDispatcherThreadCount.WaitOne())
+                                            {
+                                                // WCF BUG:
+                                                // We need a sync call Open on ClientBase<> to get the correct impersonation context
+                                                // this is a WCF bug, so we create the client on a dedicated thread.
+                                                // If we call it in thread pool thread, it will block the thread pool thread for a while
+                                                // and drops the performance.
+                                                Thread t = new Thread(
+                                                    () =>
+                                                        {
+                                                            try
+                                                            {
+                                                                this.dispatcherManager.NewDispatcherAsync(info).GetAwaiter().GetResult();
+                                                            }
+                                                            catch (Exception e)
+                                                            {
+                                                                BrokerTracing.TraceError("[ServiceJobMonitor] Exception happened when create a dispatcher for task {0}, {1}", info.TaskId, e);
+                                                            }
+                                                        });
+
+                                                t.Start();
+                                            }
                                         }
                                         catch (Exception e)
                                         {
-                                            BrokerTracing.TraceError("[ServiceJobMonitor] Exception happened when release the semaphore for task {0}, {1}", info.TaskId, e);
+                                            BrokerTracing.TraceError("[ServiceJobMonitor] Exception happened when create a thread to create a new dispatcher for task {0}, {1}", info.TaskId, e);
                                         }
-                                    }
-                                });
-                    }
-                    else
-                    {
-                        foreach (var info in validDispatcherInfoList)
+                                        finally
+                                        {
+                                            try
+                                            {
+                                                this.newDispatcherThreadCount.Release();
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                BrokerTracing.TraceError("[ServiceJobMonitor] Exception happened when release the semaphore for task {0}, {1}", info.TaskId, e);
+                                            }
+                                        }
+                                    });
+                        }
+                        else
                         {
-                            this.dispatcherManager.NewDispatcherAsync(info)
-                                .ContinueWith(
+                            foreach (var info in validDispatcherInfoList)
+                            {
+                                this.dispatcherManager.NewDispatcherAsync(info).ContinueWith(
                                     t => t.Exception.Handle(
                                         ex =>
-                                        {
-                                            BrokerTracing.TraceError("[ServiceJobMonitor] Exception happened when create a dispatcher for task {0}, {1}", info.TaskId, ex);
-                                            return true;
-                                        }),
+                                            {
+                                                BrokerTracing.TraceError("[ServiceJobMonitor] Exception happened when create a dispatcher for task {0}, {1}", info.TaskId, ex);
+                                                return true;
+                                            }),
                                     TaskContinuationOptions.OnlyOnFaulted);
+                            }
                         }
                     }
-                }
 
-                if (removeIdList.Count != 0)
-                {
-                    // Use a threadpool thread to call BatchRemoveDispatcher method avoid blocking
-                    // the DecreaseCount method in the finally block below.
-                    // BatchRemoveDispatcher may be blocked when it disposes a dispatcher because
-                    // of the non-zero ref count.
-                    ThreadPool.QueueUserWorkItem(new ThreadHelper<object>(new WaitCallback(delegate (object state) { this.dispatcherManager.BatchRemoveDispatcher(removeIdList); })).CallbackRoot);
+                    if (removeIdList.Count != 0)
+                    {
+                        // Use a threadpool thread to call BatchRemoveDispatcher method avoid blocking
+                        // the DecreaseCount method in the finally block below.
+                        // BatchRemoveDispatcher may be blocked when it disposes a dispatcher because
+                        // of the non-zero ref count.
+                        ThreadPool.QueueUserWorkItem(new ThreadHelper<object>(new WaitCallback(delegate(object state) { this.dispatcherManager.BatchRemoveDispatcher(removeIdList); })).CallbackRoot);
+                    }
                 }
-            }
-            finally
-            {
-                // Decrease the ref count in the finally block
-                // The decrease method may call the dispose method and catch and log the execptions here
-                try
+                finally
                 {
-                    this.DecreaseCount();
-                }
-                catch (ThreadAbortException)
-                {
-                }
-                catch (AppDomainUnloadedException)
-                {
-                }
-                catch (Exception e)
-                {
-                    BrokerTracing.TraceEvent(TraceEventType.Critical, 0, "[ServiceJobMonitor] Exception caught while disposing the object: {0}", e);
+                    // Decrease the ref count in the finally block
+                    // The decrease method may call the dispose method and catch and log the execptions here
+                    try
+                    {
+                        this.DecreaseCount();
+                    }
+                    catch (ThreadAbortException)
+                    {
+                    }
+                    catch (AppDomainUnloadedException)
+                    {
+                    }
+                    catch (Exception e)
+                    {
+                        BrokerTracing.TraceEvent(TraceEventType.Critical, 0, "[ServiceJobMonitor] Exception caught while disposing the object: {0}", e);
+                    }
                 }
             }
 
