@@ -29,6 +29,8 @@ namespace Microsoft.Hpc.RuntimeTrace
         /// </summary>
         private const string SoaListenerName = "SoaListener";
 
+        static TraceHelper() { }
+
         /// <summary>
         /// Etw trace source
         /// </summary>
