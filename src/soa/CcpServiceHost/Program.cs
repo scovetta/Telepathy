@@ -52,7 +52,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
         static int Main(string[] args)
         {
             TraceHelper.TraceEvent(
-                TraceEventType.Information, "HpcServiceHost entry point is called.");
+                TraceEventType.Information, "HpcServiceHost entry point is called. Time: {0}", DateTime.UtcNow.ToString());
             //
             //  Check if HpcServiceHost is being run to launch pre/post tasks
             //
