@@ -340,6 +340,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                     {
                         tasks = tasks.Union(new[] { CreateBrokerTask(true) }).ToArray();
                     }
+                    else
+                    {
+                        tasks = tasks.Union(new[] { CreateTask(Guid.NewGuid().ToString()) }).ToArray();
+                    }
 
                     return batchClient.JobOperations.AddTaskAsync(jobId, tasks);
                 }
