@@ -362,7 +362,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                     var brokerLauncherProcess = Process.Start(brokerPath, cmd);
 
                    //  await Task.Delay(TimeSpan.FromSeconds(60));
-                    sessionAllocateInfo.BrokerLauncherEpr = new[] { SoaHelper.GetBrokerLauncherAddress("localhost") };
+                    sessionAllocateInfo.BrokerLauncherEpr = new[] { SoaHelper.GetBrokerLauncherAddress(Environment.MachineName) };
                 }
                 async Task WaitBatchBrokerLauncher()
                 {
