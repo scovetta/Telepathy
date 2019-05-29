@@ -429,7 +429,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
             // No authentication on Azure Batch for now
         }
 
-        protected internal override ServiceRegistrationRepo CreateServiceRegistrationRepo(string regPath) => new ServiceRegistrationRepo(regPath,
-            new AzureBlobServiceRegistrationStore(SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString));
+        protected internal override ServiceRegistrationRepo CreateServiceRegistrationRepo(string regPath) =>
+            new ServiceRegistrationRepo(
+                regPath,
+                new AzureBlobServiceRegistrationStore(SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString),
+                SessionLauncherSettings.Default.ServiceRegistrationStoreFacadeFolder);
     }
 }

@@ -8,5 +8,8 @@
     <Setting Name="ServiceRegistrationPath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="ServiceRegistrationStoreFacadeFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>
