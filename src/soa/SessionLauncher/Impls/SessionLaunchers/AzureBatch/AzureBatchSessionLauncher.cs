@@ -6,6 +6,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
     using System.Collections.Generic;
     using System.Configuration;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
@@ -35,7 +36,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
 
         private const string AzureBatchTaskWorkingDirEnvVar = "%AZ_BATCH_TASK_WORKING_DIR%";
 
-        private const string AzureBatchJobPrepTaskWorkingDirEnvVar = "%AZ_BATCH_JOB_PREP_WORKING_DIR%";
+        private const string AzureBatchJobPrepTaskWorkingDirEnvVar = "AZ_BATCH_JOB_PREP_WORKING_DIR";
 
         private const string AzureBatchBrokerPerfEnvVar = "AZ_BATCH_BROKER_PERF";
 
@@ -45,6 +46,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
             @"cmd /c ""sc.exe config NetTcpPortSharing start= demand & reg ADD ^""HKLM\Software\Microsoft\StrongName\Verification\*,*^"" /f & reg ADD ^""HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^"" /f""";
 
         private static TimeSpan SchedulingTimeout = TimeSpan.FromMinutes(5);
+
+        private Process brokerLauncherProcess; // TODO: Design - change it to a process has same level with session launcher
 
         // TODO: remove parameter less ctor and add specific parameters for the sake of test-ablity
         public AzureBatchSessionLauncher()
@@ -312,12 +315,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                         string cmd;
                         if (direct)
                         {
-                            cmd = $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --ServiceRegistrationPath {AzureBatchJobPrepTaskWorkingDirEnvVar} --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
+                            cmd = $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --ServiceRegistrationPath %{AzureBatchJobPrepTaskWorkingDirEnvVar}% --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
                         }
                         else
                         {
                             cmd =
-                                $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --ServiceRegistrationPath {AzureBatchJobPrepTaskWorkingDirEnvVar} --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
+                                $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --ServiceRegistrationPath %{AzureBatchJobPrepTaskWorkingDirEnvVar}% --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
                         }
 
 
@@ -352,16 +355,32 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
 
                 async Task StartAndWaitLocalBrokerLauncher()
                 {
-                    Console.WriteLine("Waiting");
-                    var svcHosts = await batchClient.JobOperations.ListTasks(jobId).ToListAsync();
-                    TaskStateMonitor monitor = batchClient.Utilities.CreateTaskStateMonitor();
-                    await monitor.WhenAll(svcHosts, TaskState.Running, SchedulingTimeout);
-                    Console.WriteLine("Waiting done");
-                    string cmd = $@"-d --ServiceRegistrationPath {AzureBatchJobPrepTaskWorkingDirEnvVar} --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
-                    string brokerPath = Environment.GetEnvironmentVariable(AzureBatchBrokerPerfExeEnvVar);
-                    var brokerLauncherProcess = Process.Start(brokerPath, cmd);
+                    if (this.brokerLauncherProcess == null || this.brokerLauncherProcess.HasExited)
+                    {
 
-                   //  await Task.Delay(TimeSpan.FromSeconds(60));
+                        TraceHelper.TraceEvent(TraceEventType.Information, "[AzureBatchSessionLauncher] .StartAndWaitLocalBrokerLauncher: Waiting Batch Job Starting");
+                        var svcHosts = await batchClient.JobOperations.ListTasks(jobId).ToListAsync();
+                        TaskStateMonitor monitor = batchClient.Utilities.CreateTaskStateMonitor();
+                        await monitor.WhenAll(svcHosts, TaskState.Running, SchedulingTimeout);
+                        TraceHelper.TraceEvent(TraceEventType.Information, "[AzureBatchSessionLauncher] .StartAndWaitLocalBrokerLauncher: Batch Job Ready");
+                        string cmd = $@"-d --ServiceRegistrationPath %{AzureBatchJobPrepTaskWorkingDirEnvVar}% --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
+                        string brokerPath = AzureBatchConfiguration.BrokerLauncherPath;
+                        if (string.IsNullOrWhiteSpace(brokerPath) || !File.Exists(brokerPath))
+                        {
+                            throw new InvalidOperationException($"{brokerPath} doesn't exist.");
+                        }
+
+                        var brokerStartInfo = new ProcessStartInfo();
+                        brokerStartInfo.FileName = brokerPath;
+                        brokerStartInfo.Arguments = cmd;
+                        brokerStartInfo.EnvironmentVariables[AzureBatchJobPrepTaskWorkingDirEnvVar] = SessionLauncherSettings.Default.ServiceRegistrationStoreFacadeFolder;
+                        brokerStartInfo.UseShellExecute = false;
+
+                        //var brokerLauncherProcess = Process.Start(brokerPath, cmd);
+                        this.brokerLauncherProcess = Process.Start(brokerStartInfo);
+                    }
+
+                    //  await Task.Delay(TimeSpan.FromSeconds(60));
                     sessionAllocateInfo.BrokerLauncherEpr = new[] { SoaHelper.GetBrokerLauncherAddress(Environment.MachineName) };
                 }
                 async Task WaitBatchBrokerLauncher()

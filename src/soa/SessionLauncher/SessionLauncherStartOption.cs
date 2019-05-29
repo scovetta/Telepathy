@@ -25,7 +25,7 @@
         [Option('h', "HpcPackSchedulerAddress", SetName = "HpcPack")]
         public string HpcPackSchedulerAddress { get; set; }
 
-        [Option("BrokerLauncherExePath", SetName = "Local")]
+        [Option("BrokerLauncherExePath")]
         public string BrokerLauncherExePath { get; set; }
 
         [Option("ServiceHostExePath", SetName = "Local")]
