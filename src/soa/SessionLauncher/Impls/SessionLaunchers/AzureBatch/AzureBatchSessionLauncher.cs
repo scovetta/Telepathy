@@ -38,10 +38,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
 
         private const string AzureBatchJobPrepTaskWorkingDirEnvVar = "AZ_BATCH_JOB_PREP_WORKING_DIR";
 
-        private const string AzureBatchBrokerPerfEnvVar = "AZ_BATCH_BROKER_PERF";
-
-        private const string AzureBatchBrokerPerfExeEnvVar = "AZ_BATCH_BROKER_PERF_EXE";
-
         private const string OpenNetTcpPortSharingAndDisableStrongNameValidationCmdLine =
             @"cmd /c ""sc.exe config NetTcpPortSharing start= demand & reg ADD ^""HKLM\Software\Microsoft\StrongName\Verification\*,*^"" /f & reg ADD ^""HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^"" /f""";
 
@@ -101,7 +97,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
             BrokerConfigurations brokerConfigurations,
             string hostpath)
         {
-            bool brokerPerfMode = Environment.GetEnvironmentVariable(AzureBatchBrokerPerfEnvVar) == "1";
+            bool brokerPerfMode = true; // TODO: implement separated broker mode
             if (brokerPerfMode)
             {
                 TraceHelper.TraceEvent(TraceEventType.Information, "[AzureBatchSessionLauncher] .CreateAndSubmitSessionJob: broker perf mode");
