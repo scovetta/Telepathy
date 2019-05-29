@@ -299,7 +299,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
 
                         CloudTask cloudTask = new CloudTask(taskId, $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\ccpservicehost\CcpServiceHost.exe -standalone");
                         cloudTask.ResourceFiles = resourceFiles;
-                        cloudTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
+                        cloudTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Pool));
                         cloudTask.EnvironmentSettings = cloudTask.EnvironmentSettings == null ? environment : environment.Union(cloudTask.EnvironmentSettings, comparer).ToList();
                         return cloudTask;
                     }
@@ -326,7 +326,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                         cloudTask.ResourceFiles = resourceFiles;
                         cloudTask.UserIdentity =
                             new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin,
-                                scope: AutoUserScope.Task));
+                                scope: AutoUserScope.Pool));
                         cloudTask.EnvironmentSettings = cloudTask.EnvironmentSettings == null
                             ? environment
                             : environment.Union(cloudTask.EnvironmentSettings, comparer).ToList();
