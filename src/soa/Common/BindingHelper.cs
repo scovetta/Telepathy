@@ -363,12 +363,16 @@ namespace Microsoft.Hpc.ServiceBroker
             defaultUnsecureNetTcpBinding.CloseTimeout = defaultCloseTimeout;
             defaultUnsecureNetTcpBinding.MaxConnections = MaxConnections;
 
+            /*
             defaultBackEndBinding = new NetTcpBinding(SecurityMode.Transport);
             defaultBackEndBinding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Windows;
             defaultBackEndBinding.Security.Transport.ProtectionLevel = ProtectionLevel.None;
             defaultBackEndBinding.ReceiveTimeout = defaultOperationTimeout;
             defaultBackEndBinding.SendTimeout = defaultOperationTimeout;
             defaultBackEndBinding.MaxConnections = MaxConnections;
+            */
+
+            defaultBackEndBinding = defaultUnsecureNetTcpBinding;
 
 #if !net40
             defaultSecureNetHttpsBinding = new NetHttpsBinding(BasicHttpsSecurityMode.TransportWithMessageCredential);
