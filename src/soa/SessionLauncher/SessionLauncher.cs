@@ -618,11 +618,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 Configuration config = null;
 
                 RetryManager.RetryOnceAsync(
-                        () => config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None),
-                        TimeSpan.FromSeconds(1),
-                        ex => ex is ConfigurationErrorsException)
-                    .GetAwaiter()
-                    .GetResult();
+                    () => config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None),
+                    TimeSpan.FromSeconds(1),
+                    ex => ex is ConfigurationErrorsException).GetAwaiter().GetResult();
 
                 Debug.Assert(config != null, "Configuration is not opened properly.");
                 registration = ServiceRegistration.GetSectionGroup(config);
@@ -649,6 +647,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             catch (ConfigurationErrorsException e)
             {
                 ThrowHelper.ThrowSessionFault(SOAFaultCode.ConfigFile_Invalid, SR.SessionLauncher_ConfigFileInvalid, e.ToString());
+            }
+            catch (Exception ex)
+            {
+                TraceHelper.TraceEvent(TraceEventType.Error, ex.ToString());
+                throw;
             }
 
             // after figuring out the service and version, and the session pool size, we check if the service pool already has the instance.
