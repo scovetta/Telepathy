@@ -59,14 +59,29 @@
             string hostpath)
         {
             // int sessionId = LocalSessionConfiguration.GetNextSessionId();
+
+            string cmd;
+            if (true)
+            {
+                cmd = $"-d --ServiceRegistrationPath {LocalSessionConfiguration.ServiceRegistrationPath}";
+            }
+            else
+            {
+                cmd =
+                    $"-d --ServiceRegistrationPath {LocalSessionConfiguration.ServiceRegistrationPath} --AzureStorageConnectionString {LocalSessionConfiguration.BrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True";
+
+            }
+
             int sessionId = SessionStartInfo.StandaloneSessionId;
             this.brokerLauncherProcess = Process.Start(
                 LocalSessionConfiguration.BrokerLauncherExePath,
-                $"-d --ServiceRegistrationPath {LocalSessionConfiguration.ServiceRegistrationPath} --AzureStorageConnectionString {LocalSessionConfiguration.BrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True");
+                cmd);
             this.svcHostProcess = Process.Start(LocalSessionConfiguration.ServiceHostExePath, "-standalone");
 
             sessionAllocateInfo.Id = sessionId;
-            sessionAllocateInfo.BrokerLauncherEpr = new[] { SessionInternalConstants.BrokerConnectionStringToken };
+            // sessionAllocateInfo.BrokerLauncherEpr = new[] { SessionInternalConstants.BrokerConnectionStringToken };
+
+            sessionAllocateInfo.BrokerLauncherEpr = new[] { SoaHelper.GetBrokerLauncherAddress("localhost") };
 
             return sessionAllocateInfo;
         }

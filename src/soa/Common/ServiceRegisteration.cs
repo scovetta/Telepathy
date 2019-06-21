@@ -11,6 +11,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using System;
     using System.Diagnostics;
+    using System.IO;
 
     using static SoaRegistrationAuxModule;
 
@@ -20,12 +21,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
         private string centrialPathList;
 
-        private IServiceRegistrationStore serviceRegistrationStore;
+        internal IServiceRegistrationStore ServiceRegistrationStore { get; private set; }
+
+        internal string ServiceRegistrationStoreFacadeFolder { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the ServiceRegistration class
         /// </summary>
-        public ServiceRegistrationRepo(string centrialPathList, IServiceRegistrationStore store)
+        public ServiceRegistrationRepo(string centrialPathList, IServiceRegistrationStore store, string facade)
         {
             if (!string.IsNullOrEmpty(centrialPathList))
             {
@@ -38,8 +41,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 }
             }
 
-            this.serviceRegistrationStore = store;
+            this.ServiceRegistrationStore = store;
+            this.ServiceRegistrationStoreFacadeFolder = facade;
         }
+
+        public ServiceRegistrationRepo(string centrialPathList, IServiceRegistrationStore store) : this(centrialPathList, store, null) { }
+
 
         public ServiceRegistrationRepo(string centrialPathList) : this(centrialPathList, null)
         {
@@ -104,9 +111,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                         {
                             Trace.TraceInformation($"[{nameof(ServiceRegistrationRepo)}] {nameof(GetServiceRegistrationPath)}: Get from reliable registry");
                             string path;
-                            if (this.serviceRegistrationStore != null)
+                            if (this.ServiceRegistrationStore != null)
                             {
-                                path = this.serviceRegistrationStore.ExportToTempFileAsync(filename, null).GetAwaiter()
+                                path = this.ServiceRegistrationStore.ExportToTempFileAsync(filename, null).GetAwaiter()
                                     .GetResult();
                             }
                             else
@@ -118,6 +125,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                             if (!string.IsNullOrEmpty(path))
                             {
                                 Trace.TraceInformation($"[{nameof(ServiceRegistrationRepo)}] {nameof(GetServiceRegistrationPath)}: Found file {path}");
+                                path = this.MoveFileToFacadeFolder(path);
                                 return path;
                             }
                         }
@@ -139,6 +147,31 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             }
 
             return null;
+        }
+
+        private string MoveFileToFacadeFolder(string filePath)
+        {
+            Trace.TraceInformation(
+                $"[{nameof(ServiceRegistrationRepo)}] {nameof(this.MoveFileToFacadeFolder)}: Copy file {filePath} to {this.ServiceRegistrationStoreFacadeFolder}");
+
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(this.ServiceRegistrationStoreFacadeFolder))
+                {
+                    Directory.CreateDirectory(this.ServiceRegistrationStoreFacadeFolder);
+                }
+
+                var destination = Path.Combine(this.ServiceRegistrationStoreFacadeFolder, Path.GetFileName(filePath));
+                File.Copy(filePath, destination, true);
+                return destination;
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError(
+                    $"[{nameof(ServiceRegistrationRepo)}] {nameof(this.MoveFileToFacadeFolder)}: Exception happened when copy file {filePath} to {this.ServiceRegistrationStoreFacadeFolder}:{Environment.NewLine}{ex.ToString()}");
+
+                throw;
+            }
         }
     }
 }

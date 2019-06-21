@@ -51,16 +51,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
 
             // clusterconnectionstring could be a machine name (for single headnode) or a connection string
             IHpcContext context;
-
-            if (!BrokerLauncherEnvironment.Standalone)
-            {
-                string clusterConnectionString = SoaHelper.GetSchedulerName(false);
-                context = HpcContext.GetOrAdd(clusterConnectionString, CancellationToken.None, true);
-            }
-            else
-            {
-                context = new SoaContext();
-            }
+            string clusterConnectionString = SoaHelper.GetSchedulerName();
+            context = HpcContext.GetOrAdd(clusterConnectionString, CancellationToken.None, true);
 
             Trace.TraceInformation("Get diag trace enabled internal.");
             SoaDiagTraceHelper.IsDiagTraceEnabledInternal = (sessionId) =>

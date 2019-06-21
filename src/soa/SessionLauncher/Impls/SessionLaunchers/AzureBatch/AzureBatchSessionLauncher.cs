@@ -1,13 +1,15 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch
+﻿using System.Net;
+
+namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch
 {
     using System;
     using System.Collections.Generic;
     using System.Configuration;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
-
     using Microsoft.Azure.Batch;
     using Microsoft.Azure.Batch.Common;
     using Microsoft.Hpc.RuntimeTrace;
@@ -34,11 +36,14 @@
 
         private const string AzureBatchTaskWorkingDirEnvVar = "%AZ_BATCH_TASK_WORKING_DIR%";
 
-        private const string AzureBatchJobPrepTaskWorkingDirEnvVar = "%AZ_BATCH_JOB_PREP_WORKING_DIR%";
+        private const string AzureBatchJobPrepTaskWorkingDirEnvVar = "AZ_BATCH_JOB_PREP_WORKING_DIR";
 
         private const string OpenNetTcpPortSharingAndDisableStrongNameValidationCmdLine =
             @"cmd /c ""sc.exe config NetTcpPortSharing start= demand & reg ADD ^""HKLM\Software\Microsoft\StrongName\Verification\*,*^"" /f & reg ADD ^""HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^"" /f""";
 
+        private static TimeSpan SchedulingTimeout = TimeSpan.FromMinutes(5);
+
+        private Process brokerLauncherProcess; // TODO: Design - change it to a process has same level with session launcher
 
         // TODO: remove parameter less ctor and add specific parameters for the sake of test-ablity
         public AzureBatchSessionLauncher()
@@ -92,12 +97,18 @@
             BrokerConfigurations brokerConfigurations,
             string hostpath)
         {
+            bool brokerPerfMode = true; // TODO: implement separated broker mode
+            if (brokerPerfMode)
+            {
+                TraceHelper.TraceEvent(TraceEventType.Information, "[AzureBatchSessionLauncher] .CreateAndSubmitSessionJob: broker perf mode");
+            }
+
             TraceHelper.TraceEvent(TraceEventType.Information, "[AzureBatchSessionLauncher] .CreateAndSubmitSessionJob: callId={0}, endpointPrefix={1}, durable={2}.", callId, endpointPrefix, durable);
             using (var batchClient = AzureBatchConfiguration.GetBatchClient())
             {
                 var pool = await batchClient.PoolOperations.GetPoolAsync(AzureBatchConfiguration.BatchPoolName);
                 ODATADetailLevel detailLevel = new ODATADetailLevel();
-                detailLevel.SelectClause = "ipAddress";
+                detailLevel.SelectClause = "affinityId, ipAddress";
                 detailLevel.FilterClause = @"state eq 'idle'";
                 var nodes = await pool.ListComputeNodes(detailLevel).ToListAsync();
                 if (nodes.Count < 1)
@@ -106,7 +117,7 @@
                 }
 
                 sessionAllocateInfo.Id = 0;
-                sessionAllocateInfo.BrokerLauncherEpr = new[] { SessionInternalConstants.BrokerConnectionStringToken };
+                // sessionAllocateInfo.BrokerLauncherEpr = new[] { SessionInternalConstants.BrokerConnectionStringToken };
 
                 IList<EnvironmentSetting> ConstructEnvironmentVariable()
                 {
@@ -214,6 +225,9 @@
                         BrokerSettingsConstants.TransportScheme,
                         startInfo.TransportScheme);
 
+                    env.Add(new EnvironmentSetting(HpcConstants.SchedulerEnvironmentVariableName, Dns.GetHostName()));
+                    env.Add(new EnvironmentSetting(Constant.OverrideProcNumEnvVar, "TRUE"));
+
                     return env;
                 }
 
@@ -231,7 +245,7 @@
                     {
                         rf = ResourceFile.FromStorageContainerUrl(sasToken, blobPrefix: blobPrefix);
                     }
-                    
+
                     return rf;
                 }
 
@@ -276,27 +290,6 @@
                     int numTasks = nodes.Count;
                     var comparer = new EnvironmentSettingComparer();
 
-                    CloudTask CreateMultiInstanceTask(string taskId)
-                    {
-                        List<ResourceFile> resourceFiles = new List<ResourceFile>();
-                        resourceFiles.Add(GetResourceFileReference(RuntimeContainer, CcpServiceHostFolder));
-                        resourceFiles.Add(GetResourceFileReference(ServiceAssemblyContainer, startInfo.ServiceName.ToLower()));
-                        resourceFiles.Add(GetResourceFileReference(RuntimeContainer, BrokerFolder));
-                        resourceFiles.Add(GetResourceFileReference(ServiceRegistrationContainer, null));
-
-                        CloudTask multiInstanceTask = new CloudTask(
-                            taskId,
-                            $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --ServiceRegistrationPath {AzureBatchTaskWorkingDirEnvVar} --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --ReadSvcHostFromEnv");
-                        multiInstanceTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
-                        multiInstanceTask.MultiInstanceSettings = new MultiInstanceSettings(
-                            $@"cmd /c start cmd /c {AzureBatchTaskWorkingDirEnvVar}\ccpservicehost\CcpServiceHost.exe -standalone",
-                            numTasks);
-                        multiInstanceTask.EnvironmentSettings =
-                            multiInstanceTask.EnvironmentSettings == null ? environment : environment.Union(multiInstanceTask.EnvironmentSettings, comparer).ToList();
-                        multiInstanceTask.ResourceFiles = resourceFiles;
-                        return multiInstanceTask;
-                    }
-
                     CloudTask CreateTask(string taskId)
                     {
                         List<ResourceFile> resourceFiles = new List<ResourceFile>();
@@ -305,30 +298,108 @@
 
                         CloudTask cloudTask = new CloudTask(taskId, $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\ccpservicehost\CcpServiceHost.exe -standalone");
                         cloudTask.ResourceFiles = resourceFiles;
-                        cloudTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
+                        cloudTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Pool));
                         cloudTask.EnvironmentSettings = cloudTask.EnvironmentSettings == null ? environment : environment.Union(cloudTask.EnvironmentSettings, comparer).ToList();
                         return cloudTask;
                     }
 
-                    CloudTask CreateBrokerTask()
+                    CloudTask CreateBrokerTask(bool direct)
                     {
                         List<ResourceFile> resourceFiles = new List<ResourceFile>();
                         resourceFiles.Add(GetResourceFileReference(RuntimeContainer, BrokerFolder));
 
+                        string cmd;
+                        if (direct)
+                        {
+                            cmd = $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --ServiceRegistrationPath %{AzureBatchJobPrepTaskWorkingDirEnvVar}% --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
+                        }
+                        else
+                        {
+                            cmd =
+                                $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --ServiceRegistrationPath %{AzureBatchJobPrepTaskWorkingDirEnvVar}% --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
+                        }
+
+
                         CloudTask cloudTask = new CloudTask(
-                            "Broker",
-                            $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --ServiceRegistrationPath {AzureBatchJobPrepTaskWorkingDirEnvVar} --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}");
+                            "Broker", cmd);
                         cloudTask.ResourceFiles = resourceFiles;
-                        cloudTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
-                        cloudTask.EnvironmentSettings = cloudTask.EnvironmentSettings == null ? environment : environment.Union(cloudTask.EnvironmentSettings, comparer).ToList();
+                        cloudTask.UserIdentity =
+                            new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin,
+                                scope: AutoUserScope.Pool));
+                        cloudTask.EnvironmentSettings = cloudTask.EnvironmentSettings == null
+                            ? environment
+                            : environment.Union(cloudTask.EnvironmentSettings, comparer).ToList();
                         return cloudTask;
                     }
 
-                    var tasks = Enumerable.Range(0, numTasks - 1).Select(_ => CreateTask(Guid.NewGuid().ToString())).Union(new[] { CreateBrokerTask() }).ToArray();
+
+
+                    var tasks = Enumerable.Range(0, numTasks - 1).Select(_ => CreateTask(Guid.NewGuid().ToString())).ToArray();
+                    if (!brokerPerfMode)
+                    {
+                        tasks = tasks.Union(new[] { CreateBrokerTask(true) }).ToArray();
+                    }
+                    else
+                    {
+                        tasks = tasks.Union(new[] { CreateTask(Guid.NewGuid().ToString()) }).ToArray();
+                    }
+
                     return batchClient.JobOperations.AddTaskAsync(jobId, tasks);
                 }
 
                 await AddTasksAsync();
+
+                async Task StartAndWaitLocalBrokerLauncher()
+                {
+                    if (this.brokerLauncherProcess == null || this.brokerLauncherProcess.HasExited)
+                    {
+
+                        TraceHelper.TraceEvent(TraceEventType.Information, "[AzureBatchSessionLauncher] .StartAndWaitLocalBrokerLauncher: Waiting Batch Job Starting");
+                        var svcHosts = await batchClient.JobOperations.ListTasks(jobId).ToListAsync();
+                        TaskStateMonitor monitor = batchClient.Utilities.CreateTaskStateMonitor();
+                        await monitor.WhenAll(svcHosts, TaskState.Running, SchedulingTimeout);
+                        TraceHelper.TraceEvent(TraceEventType.Information, "[AzureBatchSessionLauncher] .StartAndWaitLocalBrokerLauncher: Batch Job Ready");
+                        string cmd = $@"-d --ServiceRegistrationPath %{AzureBatchJobPrepTaskWorkingDirEnvVar}% --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
+                        string brokerPath = AzureBatchConfiguration.BrokerLauncherPath;
+                        if (string.IsNullOrWhiteSpace(brokerPath) || !File.Exists(brokerPath))
+                        {
+                            throw new InvalidOperationException($"{brokerPath} doesn't exist.");
+                        }
+
+                        var brokerStartInfo = new ProcessStartInfo();
+                        brokerStartInfo.FileName = brokerPath;
+                        brokerStartInfo.Arguments = cmd;
+                        brokerStartInfo.EnvironmentVariables[AzureBatchJobPrepTaskWorkingDirEnvVar] = SessionLauncherSettings.Default.ServiceRegistrationStoreFacadeFolder;
+                        brokerStartInfo.UseShellExecute = false;
+
+                        //var brokerLauncherProcess = Process.Start(brokerPath, cmd);
+                        this.brokerLauncherProcess = Process.Start(brokerStartInfo);
+                    }
+
+                    //  await Task.Delay(TimeSpan.FromSeconds(60));
+                    sessionAllocateInfo.BrokerLauncherEpr = new[] { SoaHelper.GetBrokerLauncherAddress(Environment.MachineName) };
+                }
+                async Task WaitBatchBrokerLauncher()
+                {
+                    var brokerTask = await batchClient.JobOperations.GetTaskAsync(jobId, "Broker");
+                    TaskStateMonitor monitor = batchClient.Utilities.CreateTaskStateMonitor();
+                    await monitor.WhenAll(new[] { brokerTask }, TaskState.Running, SchedulingTimeout);
+
+                    await brokerTask.RefreshAsync();
+
+                    var brokerNodeIp = nodes.First(n => n.AffinityId == brokerTask.ComputeNodeInformation.AffinityId)
+                        .IPAddress;
+                    sessionAllocateInfo.BrokerLauncherEpr = new[] { SoaHelper.GetBrokerLauncherAddress(brokerNodeIp) };
+                }
+
+                if (brokerPerfMode)
+                {
+                    await StartAndWaitLocalBrokerLauncher();
+                }
+                else
+                {
+                    await WaitBatchBrokerLauncher();
+                }
 
                 return sessionAllocateInfo;
             }
@@ -373,6 +444,10 @@
             // No authentication on Azure Batch for now
         }
 
-        protected internal override ServiceRegistrationRepo CreateServiceRegistrationRepo(string regPath) => new ServiceRegistrationRepo(regPath, new AzureBlobServiceRegistrationStore(SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString));
+        protected internal override ServiceRegistrationRepo CreateServiceRegistrationRepo(string regPath) =>
+            new ServiceRegistrationRepo(
+                regPath,
+                new AzureBlobServiceRegistrationStore(SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString),
+                SessionLauncherSettings.Default.ServiceRegistrationStoreFacadeFolder);
     }
 }

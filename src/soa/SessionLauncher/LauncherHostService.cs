@@ -189,7 +189,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.HpcPack)
                 {
                     this.brokerNodesManager = new BrokerNodesManager();
-                    this.sessionLauncher = SessionLauncherFactory.CreateHpcPackSessionLauncher(SoaHelper.GetSchedulerName(true), false, this.brokerNodesManager);
+                    this.sessionLauncher = SessionLauncherFactory.CreateHpcPackSessionLauncher(SoaHelper.GetSchedulerName(), false, this.brokerNodesManager);
                     this.schedulerDelegation = new HpcSchedulerDelegation(this.sessionLauncher, this.brokerNodesManager);
                 }
                 else if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.AzureBatch)
@@ -278,6 +278,8 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                             TargetPartitionKey = "all"
                         },
                         TelepathyConstants.SessionLauncherAzureTableBindingAddress);
+                    TraceHelper.TraceEvent(TraceEventType.Information, "Add session launcher service endpoint {0}",
+                        TelepathyConstants.SessionLauncherAzureTableBindingAddress);
                 }
 
                 if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.HpcPack)
@@ -292,6 +294,20 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                     TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher find cert {0}",
                         HpcContext.Get().GetSSLThumbprint().GetAwaiter().GetResult());
                     this.launcherHost.Credentials.UseInternalAuthenticationAsync().GetAwaiter().GetResult();
+
+                    TraceHelper.TraceEvent(TraceEventType.Information, "Add session launcher service endpoint {0}",
+                        sessionLauncherAddress);
+
+                }
+                else
+                {
+                    this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher),
+                        BindingHelper.HardCodedUnSecureNetTcpBinding, string.Empty);
+                    this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher),
+                        BindingHelper.HardCodedUnSecureNetTcpBinding, "Internal");
+
+                    TraceHelper.TraceEvent(TraceEventType.Information, "Add session launcher service endpoint {0}",
+                        sessionLauncherAddress);
                 }
 
                 this.launcherHost.Faulted += this.SessionLauncherHostFaultHandler;
@@ -302,8 +318,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                     this.launcherHost.Description.Behaviors.Find<ServiceAuthorizationBehavior>();
                 myServiceBehavior.PrincipalPermissionMode = PrincipalPermissionMode.None;
                 this.launcherHost.Open();
-                TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher service at {0}",
-                    sessionLauncherAddress);
+                TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher service");
             }
             catch (Exception ex)
             {

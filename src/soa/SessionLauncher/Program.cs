@@ -124,12 +124,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                     AzureBatchConfiguration.BatchAccountName = option.AzureBatchAccountName;
                     AzureBatchConfiguration.BatchAccountKey = option.AzureBatchAccountKey;
                     AzureBatchConfiguration.SoaBrokerStorageConnectionString = option.AzureBatchBrokerStorageConnectionString;
+                    AzureBatchConfiguration.BrokerLauncherPath = option.BrokerLauncherExePath;
                 }
                 else if (!string.IsNullOrEmpty(option.HpcPackSchedulerAddress))
                 {
                     SessionLauncherRuntimeConfiguration.SchedulerType = SchedulerType.HpcPack;
                 }
-                else if (!string.IsNullOrEmpty(option.BrokerLauncherExePath))
+                else if (!string.IsNullOrEmpty(option.ServiceHostExePath))
                 {
                     SessionLauncherRuntimeConfiguration.SchedulerType = SchedulerType.Local;
                     LocalSessionConfiguration.BrokerLauncherExePath = option.BrokerLauncherExePath;

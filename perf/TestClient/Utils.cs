@@ -112,6 +112,7 @@ namespace TestClient
                                             string.Format("Used core: {0}", data.Used_cores),
                                             string.Format("Elapsed: {0} milliseconds.", (long)data.SessionEnd.Subtract(data.SessionStart).TotalMilliseconds),
                                             string.Format("Efficiency of CPU: {0}%.", data.EfficiencyTotal * 100),
+                                            string.Format("Overall message throughput: {0}.", data.OverallThroughput),
                                             string.Format("Repro command: {0}.", data.Command),
                                         };
         }

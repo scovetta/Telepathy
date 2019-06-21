@@ -156,6 +156,7 @@
     <Compile Include="Internal\SessionFactory\SessionFactory.cs" />
     <Compile Include="Internal\WSBrokerFrontendFactory.cs" />
     <Compile Include="PersistantSession.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueAdapter\Client\ResponsePool.cs" />
     <Compile Include="ServiceContainer\SessionServiceContainer.cs" />
     <Compile Include="Session.cs" />

@@ -150,9 +150,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         public BrokerManager(bool needRecover, IHpcContext context)
         {
             TraceHelper.TraceEvent(TraceEventType.Verbose, "[BrokerManager] Constructor: needRecover={0}", needRecover);
-#if HPCPACK
-            this.headnode = SoaHelper.GetSchedulerName(false);
-#endif
+            this.headnode = SoaHelper.GetSchedulerName();
 
             this.context = context;
 

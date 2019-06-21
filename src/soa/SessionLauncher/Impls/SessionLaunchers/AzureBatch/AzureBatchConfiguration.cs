@@ -19,6 +19,8 @@
 
         public static string SoaBrokerStorageConnectionString { get; set; }
 
+        public static string BrokerLauncherPath { get; set; }
+
         public static string GetBatchJobId()
         {
             if (!string.IsNullOrEmpty(BatchJobId))

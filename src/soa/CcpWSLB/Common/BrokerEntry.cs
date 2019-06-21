@@ -254,11 +254,8 @@ namespace Microsoft.Hpc.ServiceBroker
                 BrokerTracing.TraceVerbose("[BrokerEntry] Initialization: Step 4: Initialize broker state manager succeeded.");
 
                 // Step 5: Initialize service job monitor
-#if HPCPACK
                 var context = HpcContext.GetOrAdd(this.sharedData.BrokerInfo.Headnode, CancellationToken.None);
-#else
-                var context = new SoaContext();
-#endif
+
                 if (SoaCommonConfig.WithoutSessionLayer)
                 { 
                     this.monitor = new DummyServiceJobMonitor(this.sharedData, this.stateManager, this.nodeMappingData, context);

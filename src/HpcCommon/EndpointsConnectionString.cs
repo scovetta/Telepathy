@@ -6,6 +6,8 @@
     using System.Linq;
     using System.Text.RegularExpressions;
     using Win32;
+    using System.Diagnostics;
+
 
     /// <summary>
     /// Make this class for connection string format contract.
@@ -71,6 +73,11 @@ RegistryKey {CommonRegistryPath}\{HpcConstants.ClusterConnectionStringRegVal}={r
         public static bool TryParseConnectionString(string connectionString, out EndpointsConnectionString endpointsConnectionString)
         {
             connectionString = connectionString?.ToUpperInvariant();
+            if (connectionString == null)
+            {
+                Trace.TraceWarning($"{nameof(connectionString)} is null. Default to localhost.");
+                connectionString = "localhost";
+            }
             if (!ConnectionStringRegex.IsMatch(connectionString))
             {
                 endpointsConnectionString = new EndpointsConnectionString();

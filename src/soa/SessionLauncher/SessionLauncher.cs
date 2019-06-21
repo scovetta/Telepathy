@@ -215,11 +215,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 "[SessionLauncher] GetVersionFromRegistration identity {0},serviceRegistrationDir:{1}:",
                 Thread.CurrentPrincipal.Identity.Name,
                 serviceRegistrationDir ?? "null");
-#if HPCPACK
+
             if (string.IsNullOrEmpty(serviceRegistrationDir) || SoaRegistrationAuxModule.IsRegistrationStoreToken(serviceRegistrationDir))
             {
                 TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] GetVersionFromRegistration from reliable registry.");
-                List<string> services = HpcContext.Get().GetServiceRegistrationStore().EnumerateAsync().GetAwaiter().GetResult();
+                List<string> services = this.CreateServiceRegistrationRepo(string.Empty).ServiceRegistrationStore.EnumerateAsync().GetAwaiter().GetResult();
 
 
                 // If caller asked for unversioned service and it hasn't been found yet, check for it now
@@ -249,11 +249,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     }
                 }
             }
-#else
-            if (false)
-            {
-            }
-#endif
             else
             {
                 // If caller asked for unversioned service and it hasnt been found yet, check for it now
@@ -623,11 +618,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 Configuration config = null;
 
                 RetryManager.RetryOnceAsync(
-                        () => config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None),
-                        TimeSpan.FromSeconds(1),
-                        ex => ex is ConfigurationErrorsException)
-                    .GetAwaiter()
-                    .GetResult();
+                    () => config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None),
+                    TimeSpan.FromSeconds(1),
+                    ex => ex is ConfigurationErrorsException).GetAwaiter().GetResult();
 
                 Debug.Assert(config != null, "Configuration is not opened properly.");
                 registration = ServiceRegistration.GetSectionGroup(config);
@@ -654,6 +647,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             catch (ConfigurationErrorsException e)
             {
                 ThrowHelper.ThrowSessionFault(SOAFaultCode.ConfigFile_Invalid, SR.SessionLauncher_ConfigFileInvalid, e.ToString());
+            }
+            catch (Exception ex)
+            {
+                TraceHelper.TraceEvent(TraceEventType.Error, ex.ToString());
+                throw;
             }
 
             // after figuring out the service and version, and the session pool size, we check if the service pool already has the instance.

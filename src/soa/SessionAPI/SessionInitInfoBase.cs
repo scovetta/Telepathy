@@ -95,11 +95,8 @@
 
             this.headnode = headnode;
 
-#if HPCPACK
+
             this.Context = HpcContext.GetOrAdd(this.headnode, CancellationToken.None);
-#else
-            this.Context = new SoaContext();
-#endif
         }
 
         protected SessionInitInfoBase()
