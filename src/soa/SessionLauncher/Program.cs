@@ -144,9 +144,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                     AzureBatchConfiguration.BatchPoolName = option.AzureBatchPoolName;
                 }
 
-                if (!string.IsNullOrEmpty(option.SessionLauncherStorageConnectionString))
+                if (!string.IsNullOrEmpty(option.AzureBatchBrokerStorageConnectionString))
                 {
-                    SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString = option.SessionLauncherStorageConnectionString;
+                    SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString = option.AzureBatchBrokerStorageConnectionString;
                 }
             }
 
