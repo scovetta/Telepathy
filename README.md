@@ -14,3 +14,12 @@ Home repo of Project Telepathy. Currently in **prototyping** stage.
 ## Engineering Practice
 
 This project uses git flow. All new features will go into dev branch.
+
+
+## Targeting Azure Batch as Back End
+
+When starting Session Launcher, using parameter
+
+```cmd
+-d --AzureBatchServiceUrl <AzureBatchAddress> --AzureBatchAccountName <BatchAccountName> --AzureBatchAccountKey <BatchAccountKey> --AzureBatchPoolName <BatchPoolName>  -c <AzureStorageConnectionString>
+```
