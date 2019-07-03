@@ -37,9 +37,6 @@
         [Option("LocalBrokerStorageConnectionString", SetName = "Local")]
         public string LocalBrokerStorageConnectionString { get; set; }
 
-        [Option("SessionLauncherStorageConnectionString")]
-        public string SessionLauncherStorageConnectionString { get; set; }
-
         [Option('d', HelpText = "Start as console application")]
         public bool AsConsole { get; set; }
     }
