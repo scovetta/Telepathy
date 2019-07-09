@@ -122,31 +122,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 }
                 if (!string.IsNullOrEmpty(option.JsonFilePath))
                 {
+                    SessionLauncherStartOption jc;
                     try
                     {
-                        //var configuration = new ConfigurationBuilder().AddJsonFile(option.JsonFilePath).Build();
-
                         using (StreamReader sr = new StreamReader(option.JsonFilePath))
                         {
                             string json = sr.ReadToEnd();
-                            JsonConfig jc = JsonConvert.DeserializeObject<JsonConfig>(json);
-                            SessionLauncherRuntimeConfiguration.SchedulerType = SchedulerType.AzureBatch;
-                            AzureBatchConfiguration.BatchServiceUrl = jc.AzureBatchServiceUrl;
-                            AzureBatchConfiguration.BatchAccountName = jc.AzureBatchAccountName;
-                            AzureBatchConfiguration.BatchAccountKey = jc.AzureBatchAccountKey;
-                            AzureBatchConfiguration.SoaBrokerStorageConnectionString = jc.AzureStorageConnectionString;
-                            AzureBatchConfiguration.BrokerLauncherPath = jc.BrokerLauncherExePath;
-                            AzureBatchConfiguration.BatchPoolName = jc.AzureBatchPoolName;
-                            SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString = jc.SessionLauncherStorageConnectionString;
+                            jc = JsonConvert.DeserializeObject<SessionLauncherStartOption>(json);
                         }
-                        /*SessionLauncherRuntimeConfiguration.SchedulerType = SchedulerType.AzureBatch;
-                        AzureBatchConfiguration.BatchServiceUrl = configuration["AzureBatch:ServiceUrl"];
-                        AzureBatchConfiguration.BatchAccountName = configuration["AzureBatch:AccountName"];
-                        AzureBatchConfiguration.BatchAccountKey = configuration["AzureBatch:AccountKey"];
-                        AzureBatchConfiguration.SoaBrokerStorageConnectionString = configuration["AzureStorageConnectionString"];
-                        AzureBatchConfiguration.BrokerLauncherPath = configuration["BrokerLauncherExePath"];
-                        AzureBatchConfiguration.BatchPoolName = configuration["AzureBatch:PoolName"];
-                        SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString = configuration["SessionLauncherStorageConnectionString"];*/
                     }
                     catch (Exception e)
                     {
@@ -154,7 +137,20 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                         Log.CloseAndFlush();
                         throw;
                     }
-
+                    if (!jc.CheckForSet())
+                    {
+                        TraceHelper.TraceEvent(TraceEventType.Critical, "[SessionLauncher] Json file is invaild.");
+                        Log.CloseAndFlush();
+                        throw new Exception();
+                    }
+                    SessionLauncherRuntimeConfiguration.SchedulerType = SchedulerType.AzureBatch;
+                    AzureBatchConfiguration.BatchServiceUrl = jc.AzureBatchServiceUrl;
+                    AzureBatchConfiguration.BatchAccountName = jc.AzureBatchAccountName;
+                    AzureBatchConfiguration.BatchAccountKey = jc.AzureBatchAccountKey;
+                    AzureBatchConfiguration.SoaBrokerStorageConnectionString = jc.AzureBatchBrokerStorageConnectionString;
+                    AzureBatchConfiguration.BrokerLauncherPath = jc.BrokerLauncherExePath;
+                    AzureBatchConfiguration.BatchPoolName = jc.AzureBatchPoolName;
+                    SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString = jc.SessionLauncherStorageConnectionString;
                 }
                 else
                 {
