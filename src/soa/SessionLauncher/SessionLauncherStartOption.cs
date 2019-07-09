@@ -40,6 +40,9 @@
         [Option("SessionLauncherStorageConnectionString")]
         public string SessionLauncherStorageConnectionString { get; set; }
 
+        [Option('f', "JsonFilePath", SetName = "JsonFile")]
+        public string JsonFilePath { get; set; }
+
         [Option('d', HelpText = "Start as console application")]
         public bool AsConsole { get; set; }
     }

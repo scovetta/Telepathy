@@ -10,18 +10,18 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
 {
     using System;
     using System.Diagnostics;
+    using System.IO;
     using System.ServiceProcess;
     using System.Threading;
 
     using CommandLine;
-
     using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Local;
     using Microsoft.Hpc.Scheduler.Session.LauncherHostService;
-
+    using Newtonsoft.Json;
     using Serilog;
 
     /// <summary>
@@ -39,12 +39,16 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
             Serilog.Debugging.SelfLog.Enable(Console.Error);
 
             Log.Logger = log;
-
-            if (!ParseAndSetGlobalConfiguration(args))
+            try
             {
-                // Parsing error
-                return;
+                if (!ParseAndSetGlobalConfiguration(args))
+                {
+                    // Parsing error
+                    return;
+                }
             }
+            catch { return; }
+
 
             if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.HpcPack)
             {
@@ -116,46 +120,88 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 {
                     SessionLauncherRuntimeConfiguration.AsConsole = true;
                 }
+                if (!string.IsNullOrEmpty(option.JsonFilePath))
+                {
+                    try
+                    {
+                        //var configuration = new ConfigurationBuilder().AddJsonFile(option.JsonFilePath).Build();
 
-                if (!string.IsNullOrEmpty(option.AzureBatchServiceUrl))
-                {
-                    SessionLauncherRuntimeConfiguration.SchedulerType = SchedulerType.AzureBatch;
-                    AzureBatchConfiguration.BatchServiceUrl = option.AzureBatchServiceUrl;
-                    AzureBatchConfiguration.BatchAccountName = option.AzureBatchAccountName;
-                    AzureBatchConfiguration.BatchAccountKey = option.AzureBatchAccountKey;
-                    AzureBatchConfiguration.SoaBrokerStorageConnectionString = option.AzureBatchBrokerStorageConnectionString;
-                    AzureBatchConfiguration.BrokerLauncherPath = option.BrokerLauncherExePath;
-                }
-                else if (!string.IsNullOrEmpty(option.HpcPackSchedulerAddress))
-                {
-                    SessionLauncherRuntimeConfiguration.SchedulerType = SchedulerType.HpcPack;
-                }
-                else if (!string.IsNullOrEmpty(option.ServiceHostExePath))
-                {
-                    SessionLauncherRuntimeConfiguration.SchedulerType = SchedulerType.Local;
-                    LocalSessionConfiguration.BrokerLauncherExePath = option.BrokerLauncherExePath;
-                    LocalSessionConfiguration.ServiceHostExePath = option.ServiceHostExePath;
-                    LocalSessionConfiguration.ServiceRegistrationPath = option.ServiceRegistrationPath;
-                    LocalSessionConfiguration.BrokerStorageConnectionString = option.LocalBrokerStorageConnectionString;
-                }
+                        using (StreamReader sr = new StreamReader(option.JsonFilePath))
+                        {
+                            string json = sr.ReadToEnd();
+                            JsonConfig jc = JsonConvert.DeserializeObject<JsonConfig>(json);
+                            SessionLauncherRuntimeConfiguration.SchedulerType = SchedulerType.AzureBatch;
+                            AzureBatchConfiguration.BatchServiceUrl = jc.AzureBatchServiceUrl;
+                            AzureBatchConfiguration.BatchAccountName = jc.AzureBatchAccountName;
+                            AzureBatchConfiguration.BatchAccountKey = jc.AzureBatchAccountKey;
+                            AzureBatchConfiguration.SoaBrokerStorageConnectionString = jc.AzureStorageConnectionString;
+                            AzureBatchConfiguration.BrokerLauncherPath = jc.BrokerLauncherExePath;
+                            AzureBatchConfiguration.BatchPoolName = jc.AzureBatchPoolName;
+                            SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString = jc.SessionLauncherStorageConnectionString;
+                        }
+                        /*SessionLauncherRuntimeConfiguration.SchedulerType = SchedulerType.AzureBatch;
+                        AzureBatchConfiguration.BatchServiceUrl = configuration["AzureBatch:ServiceUrl"];
+                        AzureBatchConfiguration.BatchAccountName = configuration["AzureBatch:AccountName"];
+                        AzureBatchConfiguration.BatchAccountKey = configuration["AzureBatch:AccountKey"];
+                        AzureBatchConfiguration.SoaBrokerStorageConnectionString = configuration["AzureStorageConnectionString"];
+                        AzureBatchConfiguration.BrokerLauncherPath = configuration["BrokerLauncherExePath"];
+                        AzureBatchConfiguration.BatchPoolName = configuration["AzureBatch:PoolName"];
+                        SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString = configuration["SessionLauncherStorageConnectionString"];*/
+                    }
+                    catch (Exception e)
+                    {
+                        TraceHelper.TraceEvent(TraceEventType.Critical, "[SessionLauncher] Json file cannot open.");
+                        Log.CloseAndFlush();
+                        throw;
+                    }
 
-                if (!string.IsNullOrEmpty(option.AzureBatchPoolName))
-                {
-                    AzureBatchConfiguration.BatchPoolName = option.AzureBatchPoolName;
                 }
-
-                if (!string.IsNullOrEmpty(option.SessionLauncherStorageConnectionString))
+                else
                 {
-                    SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString = option.SessionLauncherStorageConnectionString;
+                    if (!string.IsNullOrEmpty(option.AzureBatchServiceUrl))
+                    {
+                        SessionLauncherRuntimeConfiguration.SchedulerType = SchedulerType.AzureBatch;
+                        AzureBatchConfiguration.BatchServiceUrl = option.AzureBatchServiceUrl;
+                        AzureBatchConfiguration.BatchAccountName = option.AzureBatchAccountName;
+                        AzureBatchConfiguration.BatchAccountKey = option.AzureBatchAccountKey;
+                        AzureBatchConfiguration.SoaBrokerStorageConnectionString = option.AzureBatchBrokerStorageConnectionString;
+                        AzureBatchConfiguration.BrokerLauncherPath = option.BrokerLauncherExePath;
+                    }
+                    else if (!string.IsNullOrEmpty(option.HpcPackSchedulerAddress))
+                    {
+                        SessionLauncherRuntimeConfiguration.SchedulerType = SchedulerType.HpcPack;
+                    }
+                    else if (!string.IsNullOrEmpty(option.ServiceHostExePath))
+                    {
+                        SessionLauncherRuntimeConfiguration.SchedulerType = SchedulerType.Local;
+                        LocalSessionConfiguration.BrokerLauncherExePath = option.BrokerLauncherExePath;
+                        LocalSessionConfiguration.ServiceHostExePath = option.ServiceHostExePath;
+                        LocalSessionConfiguration.ServiceRegistrationPath = option.ServiceRegistrationPath;
+                        LocalSessionConfiguration.BrokerStorageConnectionString = option.LocalBrokerStorageConnectionString;
+                    }
+
+                    if (!string.IsNullOrEmpty(option.AzureBatchPoolName))
+                    {
+                        AzureBatchConfiguration.BatchPoolName = option.AzureBatchPoolName;
+                    }
+
+                    if (!string.IsNullOrEmpty(option.SessionLauncherStorageConnectionString))
+                    {
+                        SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString = option.SessionLauncherStorageConnectionString;
+                    }
                 }
             }
 
-            var result = new Parser(s =>
-                {
-                    s.CaseSensitive = false;
-                    s.HelpWriter = Console.Error;
-                }).ParseArguments<SessionLauncherStartOption>(args).WithParsed(SetGlobalConfiguration);
-            return result.Tag == ParserResultType.Parsed;
+            try
+            {
+                var result = new Parser(s =>
+                    {
+                        s.CaseSensitive = false;
+                        s.HelpWriter = Console.Error;
+                    }).ParseArguments<SessionLauncherStartOption>(args).WithParsed(SetGlobalConfiguration);
+                return result.Tag == ParserResultType.Parsed;
+            }
+            catch { throw; }
         }
     }
 }
