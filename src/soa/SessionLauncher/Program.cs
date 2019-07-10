@@ -9,6 +9,7 @@
 namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.ServiceProcess;
@@ -122,13 +123,20 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 }
                 if (!string.IsNullOrEmpty(option.JsonFilePath))
                 {
-                    SessionLauncherStartOption jc;
+                    Dictionary<string,string> items;
+                    List<string> cmd = new List<string>();
                     try
                     {
                         using (StreamReader sr = new StreamReader(option.JsonFilePath))
                         {
                             string json = sr.ReadToEnd();
-                            jc = JsonConvert.DeserializeObject<SessionLauncherStartOption>(json);
+                            items = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                            
+                            foreach (KeyValuePair<string, string> item in items)
+                            {
+                                cmd.Add("--" + item.Key);
+                                cmd.Add(item.Value);
+                            }
                         }
                     }
                     catch (Exception e)
@@ -137,20 +145,18 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                         Log.CloseAndFlush();
                         throw;
                     }
-                    if (!jc.CheckForSet())
+                    string[] strings = cmd.ToArray();
+                    var temp = new Parser(s =>
+                    {
+                        s.CaseSensitive = false;
+                        s.HelpWriter = Console.Error;
+                    }).ParseArguments<SessionLauncherStartOption>(strings).WithParsed(SetGlobalConfiguration);
+                    if (temp.Tag != ParserResultType.Parsed)
                     {
                         TraceHelper.TraceEvent(TraceEventType.Critical, "[SessionLauncher] Json file is invaild.");
                         Log.CloseAndFlush();
                         throw new Exception();
                     }
-                    SessionLauncherRuntimeConfiguration.SchedulerType = SchedulerType.AzureBatch;
-                    AzureBatchConfiguration.BatchServiceUrl = jc.AzureBatchServiceUrl;
-                    AzureBatchConfiguration.BatchAccountName = jc.AzureBatchAccountName;
-                    AzureBatchConfiguration.BatchAccountKey = jc.AzureBatchAccountKey;
-                    AzureBatchConfiguration.SoaBrokerStorageConnectionString = jc.AzureBatchBrokerStorageConnectionString;
-                    AzureBatchConfiguration.BrokerLauncherPath = jc.BrokerLauncherExePath;
-                    AzureBatchConfiguration.BatchPoolName = jc.AzureBatchPoolName;
-                    SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString = jc.SessionLauncherStorageConnectionString;
                 }
                 else
                 {

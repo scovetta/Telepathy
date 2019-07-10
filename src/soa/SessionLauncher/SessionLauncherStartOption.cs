@@ -46,23 +46,5 @@
         [Option('d', HelpText = "Start as console application")]
         public bool AsConsole { get; set; }
 
-        public bool CheckForSet()
-        {
-            int flag = 0;
-            if (!(string.IsNullOrEmpty(AzureBatchServiceUrl) && string.IsNullOrEmpty(AzureBatchAccountName) && string.IsNullOrEmpty(AzureBatchAccountKey)
-                && string.IsNullOrEmpty(AzureBatchJobId) && string.IsNullOrEmpty(AzureBatchPoolName) && string.IsNullOrEmpty(AzureBatchBrokerStorageConnectionString)))
-                flag++;
-            if (!string.IsNullOrEmpty(HpcPackSchedulerAddress))
-                flag++;
-            if (!(string.IsNullOrEmpty(ServiceHostExePath) && string.IsNullOrEmpty(ServiceRegistrationPath) && string.IsNullOrEmpty(LocalBrokerStorageConnectionString)))
-                flag++;
-            if (!string.IsNullOrEmpty(JsonFilePath))
-                flag++;
-            if (flag < 2)
-                return true;
-            else
-                return false;
-        }
-
     }
 }
