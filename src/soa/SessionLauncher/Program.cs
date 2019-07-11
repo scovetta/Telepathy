@@ -48,7 +48,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                     return;
                 }
             }
-            catch { return; }
+            catch (Exception e)
+            {
+                Trace.TraceError("Excepetion parsing and setting configuration - " + e);
+                Log.CloseAndFlush();
+                return;
+            }
 
 
             if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.HpcPack)
@@ -141,21 +146,19 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                     }
                     catch (Exception e)
                     {
-                        TraceHelper.TraceEvent(TraceEventType.Critical, "[SessionLauncher] Json file cannot open.");
-                        Log.CloseAndFlush();
+                        TraceHelper.TraceEvent(TraceEventType.Critical, "[SessionLauncher] Json file err: {0}.", e);
                         throw;
                     }
-                    string[] strings = cmd.ToArray();
-                    var temp = new Parser(s =>
+                    string[] argsInJson = cmd.ToArray();
+                    var parserResult = new Parser(s =>
                     {
                         s.CaseSensitive = false;
                         s.HelpWriter = Console.Error;
-                    }).ParseArguments<SessionLauncherStartOption>(strings).WithParsed(SetGlobalConfiguration);
-                    if (temp.Tag != ParserResultType.Parsed)
+                    }).ParseArguments<SessionLauncherStartOption>(argsInJson).WithParsed(SetGlobalConfiguration);
+                    if (parserResult.Tag != ParserResultType.Parsed)
                     {
-                        TraceHelper.TraceEvent(TraceEventType.Critical, "[SessionLauncher] Json file is invaild.");
-                        Log.CloseAndFlush();
-                        throw new Exception();
+                        TraceHelper.TraceEvent(TraceEventType.Critical, "[SessionLauncher] Parse arguments error.");
+                        throw new ArgumentException("Parse arguments error.");                       
                     }
                 }
                 else
@@ -194,16 +197,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 }
             }
 
-            try
-            {
-                var result = new Parser(s =>
-                    {
-                        s.CaseSensitive = false;
-                        s.HelpWriter = Console.Error;
-                    }).ParseArguments<SessionLauncherStartOption>(args).WithParsed(SetGlobalConfiguration);
-                return result.Tag == ParserResultType.Parsed;
-            }
-            catch { throw; }
+
+            var result = new Parser(s =>
+                {
+                    s.CaseSensitive = false;
+                    s.HelpWriter = Console.Error;
+                }).ParseArguments<SessionLauncherStartOption>(args).WithParsed(SetGlobalConfiguration);
+            return result.Tag == ParserResultType.Parsed;
+
         }
     }
 }

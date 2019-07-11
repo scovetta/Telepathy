@@ -40,7 +40,7 @@
         [Option("SessionLauncherStorageConnectionString")]
         public string SessionLauncherStorageConnectionString { get; set; }
 
-        [Option('f', "JsonFilePath", SetName = "JsonFile")]
+        [Option('f', "JsonFilePath", SetName = "ConfigurationFile")]
         public string JsonFilePath { get; set; }
 
         [Option('d', HelpText = "Start as console application")]
