@@ -37,9 +37,6 @@
         [Option("LocalBrokerStorageConnectionString", SetName = "Local")]
         public string LocalBrokerStorageConnectionString { get; set; }
 
-        [Option("SessionLauncherStorageConnectionString")]
-        public string SessionLauncherStorageConnectionString { get; set; }
-
         [Option('f', "JsonFilePath", SetName = "ConfigurationFile")]
         public string JsonFilePath { get; set; }
 

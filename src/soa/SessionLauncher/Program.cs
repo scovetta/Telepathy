@@ -128,7 +128,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 }
                 if (!string.IsNullOrEmpty(option.JsonFilePath))
                 {
-                    Dictionary<string,string> items;
+                    Dictionary<string, string> items;
                     List<string> cmd = new List<string>();
                     try
                     {
@@ -136,7 +136,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                         {
                             string json = sr.ReadToEnd();
                             items = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-                            
+
                             foreach (KeyValuePair<string, string> item in items)
                             {
                                 cmd.Add("--" + item.Key);
@@ -158,7 +158,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                     if (parserResult.Tag != ParserResultType.Parsed)
                     {
                         TraceHelper.TraceEvent(TraceEventType.Critical, "[SessionLauncher] Parse arguments error.");
-                        throw new ArgumentException("Parse arguments error.");                       
+                        throw new ArgumentException("Parse arguments error.");
                     }
                 }
                 else
@@ -190,9 +190,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                         AzureBatchConfiguration.BatchPoolName = option.AzureBatchPoolName;
                     }
 
-                    if (!string.IsNullOrEmpty(option.SessionLauncherStorageConnectionString))
+
+                    if (!string.IsNullOrEmpty(option.AzureBatchBrokerStorageConnectionString))
                     {
-                        SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString = option.SessionLauncherStorageConnectionString;
+                        SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString = option.AzureBatchBrokerStorageConnectionString;
                     }
                 }
             }
