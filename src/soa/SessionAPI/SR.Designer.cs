@@ -131,7 +131,51 @@ namespace Microsoft.Hpc.Scheduler.Session {
                 return ResourceManager.GetString("ArgumentEmptyString", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Argument must be alpha, numeric or punctuation.
+        /// </summary>
+        public static string ArgumentMustBeAlphaNumeric
+        {
+            get
+            {
+                return ResourceManager.GetString("ArgumentMustBeAlphaNumeric", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get cluster property: {0}..
+        /// </summary>
+        public static string FailToGetClusterProperty
+        {
+            get
+            {
+                return ResourceManager.GetString("FailToGetClusterProperty", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No service registration directories are specified in CCP_SERVICEREGISTRATION_PATH.
+        /// </summary>
+        public static string NoServiceRegistrationDirs
+        {
+            get
+            {
+                return ResourceManager.GetString("NoServiceRegistrationDirs", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to enumerate service versions.
+        /// </summary>
+        public static string FailToEnumerateServicVersions
+        {
+            get
+            {
+                return ResourceManager.GetString("FailToEnumerateServicVersions", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Cannot find the related broker node for session {0}. One possible cause is that the session is still in the configuring stage. Retry later..
         /// </summary>

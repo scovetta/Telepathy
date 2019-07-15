@@ -34,7 +34,7 @@
         {
             for (int i = 0; i < startInfo.IpAddress.Length; i++)
             {
-                OpenSvcHostWithRetryAsync(sessionId, i, startInfo.IpAddress[i], startInfo.RegPath, startInfo.ServiceName, startInfo.Environments, startInfo.DependFilesStorageInfo)
+                OpenSvcHostWithRetryAsync(sessionId, i, startInfo.IpAddress[i], startInfo.RegPath, startInfo.ServiceName, startInfo.ServiceVersion, startInfo.Environments, startInfo.DependFilesStorageInfo)
                     .ContinueWith(t => taskStateChangedCallBack(new List<TaskInfo> { t.Result }));
             }
         }
@@ -45,12 +45,13 @@
             string ipAddress,
             string regPath,
             string svcName,
+            Version svcVersion,
             Dictionary<string, string> environment,
             Dictionary<string, string> dependFilesInfo)
         {
             BrokerTracing.TraceVerbose("[OpenSvcHostWithRetryAsync] Started open service host {0} for session {1}", ipAddress, sessionId);
             RetryManager mgr = new RetryManager(new ExponentialRandomBackoffRetryTimer(1 * 1000, 10 * 1000));
-            return await mgr.InvokeWithRetryAsync(() => OpenSvcHostAsync(sessionId, num, ipAddress, regPath, svcName, environment, dependFilesInfo),  ex => true);
+            return await mgr.InvokeWithRetryAsync(() => OpenSvcHostAsync(sessionId, num, ipAddress, regPath, svcName, svcVersion, environment, dependFilesInfo),  ex => true);
         }
 
         /// <summary>
@@ -67,6 +68,7 @@
             string ipAddress,
             string regPath,
             string svcName,
+            Version svcVersion,
             Dictionary<string, string> environment,
             Dictionary<string, string> dependFilesInfo)
         {
@@ -77,10 +79,9 @@
             ti.Location = Scheduler.Session.Data.NodeLocation.OnPremise;
             ti.MachineName = ipAddress;
             ti.State = Scheduler.Session.Data.TaskState.Dispatching;
-
+            string fileName = SoaRegistrationAuxModule.GetRegistrationFileName(svcName, svcVersion);
             // HTTP POST
-            var serviceInfo = new ServiceInfo(sessionId, ti.Id, ti.FirstCoreIndex, regPath + "\\", svcName + ".config", environment, dependFilesInfo);
-
+            var serviceInfo = new ServiceInfo(sessionId, ti.Id, ti.FirstCoreIndex, regPath + "\\", fileName, environment, dependFilesInfo);
             var result = await SvcHostHttpClient.PostAsJsonAsync<ServiceInfo>(new Uri($"{Prefix}{ipAddress}:{Port}/{EndPointName}/api/{ApiName}"), serviceInfo);
             BrokerTracing.TraceVerbose("[OpenSvcHost].result:{0}", result);
             result.EnsureSuccessStatusCode();

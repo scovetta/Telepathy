@@ -147,14 +147,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
         #region sync interface
 
-        /// <summary>
-        /// Gets server version
-        /// </summary>
-        /// <returns>returns server version</returns>
-        //Version ISessionLauncher.GetServerVersion()
-        //{
-        //    return SessionLauncher.ServerVersion;
-        //}
 
         /// <summary>
         /// Attach to an exisiting session (create a session info by the specified service job)
@@ -178,153 +170,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             ((ISessionLauncher)this).TerminateV5Async(sessionId).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Gets SOA configuration
-        /// </summary>
-        /// <param name="key">indicating the key</param>
-        /// <returns>returns the value</returns>
-        /// <remarks>
-        /// This operation could be called by both client (with user's credential) and broker/broker worker
-        /// (with broker node's machine account).
-        /// If it is called by client (user), we need to impersonate the caller and let scheduler API to
-        /// authenticate it.
-        /// If it is called by broker/broker worker (broker node's machine account), we do not impersonate
-        /// the caller since broker node's machine account is not HpcUser or HpcAdmin.
-        /// </remarks>
-        //string ISessionLauncher.GetSOAConfiguration(string key)
-        //{
-        //    return ((ISessionLauncher)this).GetSOAConfigurationAsync(key).Result;
-        //}
-
         #endregion
 
         #endregion
 
-        /// <summary>
-        /// Get service version from specified service registration folder.
-        /// </summary>
-        /// <param name="serviceRegistrationDir">service registration folder</param>
-        /// <param name="serviceName">service name</param>
-        /// <param name="addUnversionedService">add un-versioned service or not</param>
-        /// <param name="versions">service versions</param>
-        /// <param name="unversionedServiceAdded">is un-versioned service added or not</param>
-        protected void GetVersionFromRegistrationDir(string serviceRegistrationDir, string serviceName, bool addUnversionedService, List<Version> versions, ref bool unversionedServiceAdded)
-        {
-            TraceHelper.TraceEvent(
-                TraceEventType.Information,
-                "[SessionLauncher] GetVersionFromRegistration identity {0},serviceRegistrationDir:{1}:",
-                Thread.CurrentPrincipal.Identity.Name,
-                serviceRegistrationDir ?? "null");
-
-            if (string.IsNullOrEmpty(serviceRegistrationDir) || SoaRegistrationAuxModule.IsRegistrationStoreToken(serviceRegistrationDir))
-            {
-                TraceHelper.TraceEvent(TraceEventType.Information, "[SessionLauncher] GetVersionFromRegistration from reliable registry.");
-                List<string> services = this.CreateServiceRegistrationRepo(string.Empty).ServiceRegistrationStore.EnumerateAsync().GetAwaiter().GetResult();
-
-
-                // If caller asked for unversioned service and it hasn't been found yet, check for it now
-                if (addUnversionedService && !unversionedServiceAdded)
-                {
-                    if (services.Contains(serviceName))
-                    {
-                        this.AddSortedVersion(versions, Constant.VersionlessServiceVersion);
-                        unversionedServiceAdded = true;
-                    }
-                }
-
-                foreach (string service in services)
-                {
-                    try
-                    {
-                        Version version = ParseVersion(service, serviceName);
-                        if (version != null)
-                        {
-                            this.AddSortedVersion(versions, version);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] GetVersionFromRegistrationDir: Failed to parse service name {0}. Exception:{1}", service, e);
-                        continue;
-                    }
-                }
-            }
-            else
-            {
-                // If caller asked for unversioned service and it hasnt been found yet, check for it now
-                if (addUnversionedService && !unversionedServiceAdded)
-                {
-                    string configFilePath = Path.Combine(serviceRegistrationDir, Path.ChangeExtension(serviceName, ".config"));
-
-                    if (File.Exists(configFilePath))
-                    {
-                        this.AddSortedVersion(versions, Constant.VersionlessServiceVersion);
-                        unversionedServiceAdded = true;
-                    }
-                }
-
-                string[] files = Directory.GetFiles(serviceRegistrationDir, string.Format(Constant.ServiceConfigFileNameFormat, serviceName, '*'));
-
-                foreach (string file in files)
-                {
-                    try
-                    {
-                        Version version = ParseVersion(Path.GetFileNameWithoutExtension(file), serviceName);
-                        if (version != null)
-                        {
-                            this.AddSortedVersion(versions, version);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] GetVersionFromRegistrationDir: Failed to parse file name {0}. Exception:{1}", file, e);
-
-                        continue;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Get the version from specified name
-        /// </summary>
-        /// <param name="name">it can be a file name (without extension) or folder name</param>
-        /// <param name="serviceName">service name</param>
-        /// <returns>service version</returns>
-        protected static Version ParseVersion(string name, string serviceName)
-        {
-            string[] fileParts = name.Split('_');
-
-            // Validate there are 2 parts {filename_version}
-            if (fileParts.Length != 2)
-            {
-                return null;
-            }
-
-            // Validate the servicename
-            if (!string.Equals(fileParts[0], serviceName, StringComparison.OrdinalIgnoreCase))
-            {
-                return null;
-            }
-
-            try
-            {
-                // TODO: In .Net 4 move to Parse
-                Version version = new Version(fileParts[1]);
-
-                // Validate version, ensure Major and Minor are set and Revision and Build are not
-                if (ParamCheckUtility.IsServiceVersionValid(version))
-                {
-                    return version;
-                }
-            }
-            catch (Exception ex)
-            {
-                TraceHelper.TraceEvent(TraceEventType.Warning, "[SessionLauncher].ParseVersion: Exception {0}", ex);
-            }
-
-            return null;
-        }
 
         /// <summary>
         /// Addes a Version to a sorted list of Versions (decending)
@@ -558,32 +407,26 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             {
                 TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternalAsync: Try to find out versioned service.");
 
-                Version[] versions = this.GetServiceVersionsInternal(startInfo.ServiceName, false);
+                // Get service version in ServiceRegistrationRepo
+                Version dynamicServiceVersion = serviceRegistration.GetServiceVersionInternal(startInfo.ServiceName, false);
 
-                if (versions != null && versions.Length != 0)
+                if (dynamicServiceVersion != null)
                 {
-                    TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternalAsync: {0} versioned services are found.", versions.Length);
+                    TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternalAsync: Selected dynamicServiceVersion is {0}.", dynamicServiceVersion.ToString());
+                }
 
-                    Version dynamicServiceVersion = versions[0];
+                serviceConfigFile = serviceRegistration.GetServiceRegistrationPath(startInfo.ServiceName, dynamicServiceVersion);
+
+                // If a config file is found, update the serviceVersion that is returned to client and stored in recovery info
+                if (!string.IsNullOrEmpty(serviceConfigFile))
+                {
+                    TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternalAsync: serviceConfigFile is {0}.", serviceConfigFile);
+
+                    startInfo.ServiceVersion = dynamicServiceVersion;
 
                     if (dynamicServiceVersion != null)
                     {
-                        TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternalAsync: Selected dynamicServiceVersion is {0}.", dynamicServiceVersion.ToString());
-                    }
-
-                    serviceConfigFile = serviceRegistration.GetServiceRegistrationPath(startInfo.ServiceName, dynamicServiceVersion);
-
-                    // If a config file is found, update the serviceVersion that is returned to client and stored in recovery info
-                    if (!string.IsNullOrEmpty(serviceConfigFile))
-                    {
-                        TraceHelper.TraceEvent(TraceEventType.Verbose, "[SessionLauncher] .AllocateInternalAsync: serviceConfigFile is {0}.", serviceConfigFile);
-
-                        startInfo.ServiceVersion = dynamicServiceVersion;
-
-                        if (dynamicServiceVersion != null)
-                        {
-                            sessionAllocateInfo.ServiceVersion = dynamicServiceVersion;
-                        }
+                        sessionAllocateInfo.ServiceVersion = dynamicServiceVersion;
                     }
                 }
             }
@@ -725,7 +568,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         protected abstract void CheckAccess();
 
-        protected virtual ServiceRegistrationRepo GetRegistrationRepo(string callId)
+       protected virtual ServiceRegistrationRepo GetRegistrationRepo(string callId)
         {
             ServiceRegistrationRepo repo = null;
             string regPath = string.Empty;
@@ -791,50 +634,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
         }
 
-        /// <summary>
-        /// Get specified service's versions in the on-premise cluster.
-        /// </summary>
-        /// <param name="serviceName">specified service name</param>
-        /// <param name="addUnversionedService">include un-versioned service or not</param>
-        /// <returns>service versions</returns>
-        protected virtual Version[] GetServiceVersionsInternal(string serviceName, bool addUnversionedService)
-        {
+        protected virtual Version[] GetServiceVersionsInternal(string serviceName, bool addUnversionedService) {
             string callId = Guid.NewGuid().ToString();
-
-            // Ensure the caller only supplies alpha-numeric characters
-            for (int i = 0; i < serviceName.Length; i++)
-            {
-                if (!char.IsLetterOrDigit(serviceName[i]) && !char.IsPunctuation(serviceName[i]))
-                {
-                    throw new ArgumentException(SR.SessionLauncher_ArgumentMustBeAlphaNumeric, "serviceName");
-                }
-            }
-
-            ServiceRegistrationRepo serviceRegistration = this.GetRegistrationRepo(callId);
-
-            // TODO: What if there a huge number of files? Unlikely for the same service
-            try
-            {
-                List<Version> versions = new List<Version>();
-                bool unversionedServiceAdded = false;
-
-                string[] directories = serviceRegistration.GetServiceRegistrationDirectories();
-                if (directories != null)
-                {
-                    foreach (string serviceRegistrationDir in directories)
-                    {
-                        this.GetVersionFromRegistrationDir(serviceRegistrationDir, serviceName, addUnversionedService, versions, ref unversionedServiceAdded);
-                    }
-                }
-
-                return versions.ToArray();
-            }
-            catch (Exception e)
-            {
-                TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] .GetServiceVersionsInternalOnPremise: Get service versions. exception = {0}", e);
-
-                throw new SessionException(SR.SessionLauncher_FailToEnumerateServicVersions, e);
-            }
+            return this.GetRegistrationRepo(callId).GetServiceVersionsInternal(serviceName, addUnversionedService);
         }
     }
 }

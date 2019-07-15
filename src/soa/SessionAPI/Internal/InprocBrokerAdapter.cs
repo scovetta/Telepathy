@@ -600,9 +600,20 @@ namespace Microsoft.Hpc.Scheduler.Session
             string regPath = this.startInfo.RegPath;
             ServiceRegistrationRepo serviceRegistration = new ServiceRegistrationRepo(regPath, null);
             this.brokerInfo.ConfigurationFile = serviceRegistration.GetServiceRegistrationPath(serviceName, serviceVersion);
+            if (string.IsNullOrEmpty(this.brokerInfo.ConfigurationFile) && serviceVersion == null)
+            {
+                Version version = serviceRegistration.GetServiceVersionInternal(serviceName, false);
+                if (version != null)
+                {
+                    string serviceConfigFile = serviceRegistration.GetServiceRegistrationPath(serviceName, version);
+                    if (!string.IsNullOrEmpty(serviceConfigFile))
+                    {
+                        this.brokerInfo.ConfigurationFile = serviceConfigFile;
+                        this.startInfoContract.ServiceVersion = version;
+                    }
+                }
+            }
         }
-
-
 
         /// <summary>
         /// Fetch service registration path

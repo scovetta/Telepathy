@@ -10,8 +10,11 @@
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Reflection;
+    using Microsoft.Hpc.Scheduler.Session;
 
     using static SoaRegistrationAuxModule;
 
@@ -173,5 +176,214 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 throw;
             }
         }
+
+        /// <summary>
+        /// Returns the versions for a specific service
+        /// </summary>
+        /// <param name="serviceName">name of service whose versions are to be returned</param>
+        /// <param name="addUnversionedService">add the un-versioned service or not</param>
+        /// <returns>Available service versions</returns>
+        public Version[] GetServiceVersionsInternal(string serviceName, bool addUnversionedService)
+        {
+            string callId = Guid.NewGuid().ToString();
+
+            // Ensure the caller only supplies alpha-numeric characters
+            for (int i = 0; i < serviceName.Length; i++)
+            {
+                if (!char.IsLetterOrDigit(serviceName[i]) && !char.IsPunctuation(serviceName[i]))
+                {
+                    throw new ArgumentException(SR.ArgumentMustBeAlphaNumeric, "serviceName");
+                }
+            }
+
+            // TODO: What if there a huge number of files? Unlikely for the same service
+            try
+            {
+                List<Version> versions = new List<Version>();
+                bool unversionedServiceAdded = false;
+                string[] directories = this.GetServiceRegistrationDirectories();
+                if (directories != null)
+                {
+                    foreach (string serviceRegistrationDir in directories)
+                    { 
+                        try
+                        {
+                            this.GetVersionFromRegistrationDir(serviceRegistrationDir, serviceName, addUnversionedService, versions, ref unversionedServiceAdded);
+                        }
+                        catch (Exception e)
+                        {
+                            Trace.TraceError($"[SessionLauncher] .GetServiceVersionsInternalOnPremise: Get service versions. exception = {e}");
+                        }
+                    }
+                }
+
+                return versions.ToArray();
+            }
+            catch (Exception e)
+            {
+                Trace.TraceError($"[SessionLauncher] .GetServiceVersionsInternalOnPremise: Get service versions. exception = {e}");
+                throw new SessionException(SR.FailToEnumerateServicVersions, e);
+            }
+        }
+
+        public Version GetServiceVersionInternal(string serviceName, bool addUnversionedService)
+        {
+            Version[] versions = this.GetServiceVersionsInternal(serviceName, addUnversionedService);
+            if (versions != null && versions.Length != 0)
+            {
+                Version dynamicServiceVersion = versions[0];
+
+                if (dynamicServiceVersion != null)
+                {
+                    return dynamicServiceVersion;
+                }
+            }
+            return null;
+        }
+
+
+        /// <summary>
+        /// Get service version from specified service registration folder.
+        /// </summary>
+        /// <param name="serviceRegistrationDir">service registration folder</param>
+        /// <param name="serviceName">service name</param>
+        /// <param name="addUnversionedService">add un-versioned service or not</param>
+        /// <param name="versions">service versions</param>
+        /// <param name="unversionedServiceAdded">is un-versioned service added or not</param>
+        private void GetVersionFromRegistrationDir(string serviceRegistrationDir, string serviceName, bool addUnversionedService, List<Version> versions, ref bool unversionedServiceAdded)
+        {
+            if (string.IsNullOrEmpty(serviceRegistrationDir) || SoaRegistrationAuxModule.IsRegistrationStoreToken(serviceRegistrationDir))
+            {
+                List<string> services = ServiceRegistrationStore.EnumerateAsync().GetAwaiter().GetResult();
+                Trace.TraceInformation("[SessionLauncher] GetVersionFromRegistration from reliable registry.");
+
+                // If caller asked for unversioned service and it hasn't been found yet, check for it now
+                if (addUnversionedService && !unversionedServiceAdded)
+                {
+                    if (services.Contains(serviceName))
+                    {
+                        this.AddSortedVersion(versions, Constant.VersionlessServiceVersion);
+                        unversionedServiceAdded = true;
+                    }
+                }
+
+                foreach (string service in services)
+                {
+                    try
+                    {
+                        Version version = ParseVersion(service, serviceName);
+                        if (version != null)
+                        {
+                            this.AddSortedVersion(versions, version);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Trace.TraceError($"[SessionLauncher] GetVersionFromRegistrationDir: Failed to parse service name {service}. Exception:{e}");
+                        continue;
+                    }
+                }
+            }
+            else
+            {
+                // If caller asked for unversioned service and it hasnt been found yet, check for it now
+                if (addUnversionedService && !unversionedServiceAdded)
+                {
+                    string configFilePath = Path.Combine(serviceRegistrationDir, Path.ChangeExtension(serviceName, ".config"));
+
+                    if (File.Exists(configFilePath))
+                    {
+                        this.AddSortedVersion(versions, Constant.VersionlessServiceVersion);
+                        unversionedServiceAdded = true;
+                    }
+                }
+
+                string[] files = Directory.GetFiles(serviceRegistrationDir, string.Format(Constant.ServiceConfigFileNameFormat, serviceName, '*'));
+
+                foreach (string file in files)
+                {
+                    try
+                    {
+                        Version version = ParseVersion(Path.GetFileNameWithoutExtension(file), serviceName);
+                        if (version != null)
+                        {
+                            this.AddSortedVersion(versions, version);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Trace.TraceError($"[SessionLauncher] GetVersionFromRegistrationDir: Failed to parse file name {file}. Exception:{e}");
+                        continue;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Addes a Version to a sorted list of Versions (decending)
+        /// </summary>
+        /// <param name="versions"></param>
+        /// <param name="version"></param>
+        private void AddSortedVersion(IList<Version> versions, Version version)
+        {
+            bool added = false;
+
+            for (int i = 0; i < versions.Count; i++)
+            {
+                if (0 < version.CompareTo(versions[i]))
+                {
+                    versions.Insert(i, version);
+                    added = true;
+                    break;
+                }
+            }
+
+            if (!added)
+            {
+                versions.Add(version);
+            }
+        }
+
+        /// <summary>
+        /// Get the version from specified name
+        /// </summary>
+        /// <param name="name">it can be a file name (without extension) or folder name</param>
+        /// <param name="serviceName">service name</param>
+        /// <returns>service version</returns>
+        private static Version ParseVersion(string name, string serviceName)
+        {
+            string[] fileParts = name.Split('_');
+
+            // Validate there are 2 parts {filename_version}
+            if (fileParts.Length != 2)
+            {
+                return null;
+            }
+
+            // Validate the servicename
+            if (!string.Equals(fileParts[0], serviceName, StringComparison.OrdinalIgnoreCase))
+            {
+                return null;
+            }
+
+            try
+            {
+                // TODO: In .Net 4 move to Parse
+                Version version = new Version(fileParts[1]);
+
+                // Validate version, ensure Major and Minor are set and Revision and Build are not
+                if (!(version.Major == 0 && version.Minor == 0))
+                {
+                    return version;
+                }
+            }
+            catch (Exception ex)
+            {
+               
+            }
+
+            return null;
+        }
+
     }
 }

@@ -965,22 +965,6 @@
             }
         }
 
-        /// <summary>
-        /// Returns the versions for a specific service
-        /// </summary>
-        /// <param name="serviceName">name of service whose versions are to be returned</param>
-        /// <param name="addUnversionedService">add the un-versioned service or not</param>
-        /// <returns>Available service versions</returns>
-        protected override Version[] GetServiceVersionsInternal(string serviceName, bool addUnversionedService)
-        {
-            if (SoaHelper.IsOnAzure())
-            {
-                return this.GetServiceVersionsInternalAzure(serviceName, addUnversionedService);
-            }
-
-            return base.GetServiceVersionsInternal(serviceName, addUnversionedService);
-        }
-
         protected override bool TryGetSessionAllocateInfoFromPooled(
             string endpointPrefix,
             bool durable,
@@ -1938,69 +1922,6 @@
             return null;
         }
 
-        /// <summary>
-        /// Get specified service's versions in the Azure cluster.
-        /// </summary>
-        /// <param name="serviceName">specified service name</param>
-        /// <param name="addUnversionedService">include un-versioned service or not</param>
-        /// <returns>service versions</returns>
-        private Version[] GetServiceVersionsInternalAzure(string serviceName, bool addUnversionedService)
-        {
-            List<Version> versions = new List<Version>();
-            try
-            {
-                // (1) Get the service version from ccp package root folder.
-                List<string> names = new List<string>();
-
-                string pattern = string.Format("{0}*", serviceName);
-
-                foreach (string path in Directory.GetDirectories(SoaHelper.GetCcpPackageRoot(), pattern, SearchOption.TopDirectoryOnly))
-                {
-                    // Following method returns the deepest folder name of the specified directory.
-                    names.Add(Path.GetFileName(path));
-                }
-
-                bool addedFlag = false;
-                foreach (string name in names)
-                {
-                    if (string.Equals(name, serviceName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        if (addUnversionedService && !addedFlag)
-                        {
-                            this.AddSortedVersion(versions, Constant.VersionlessServiceVersion);
-                            addedFlag = true;
-                        }
-                    }
-                    else
-                    {
-                        try
-                        {
-                            Version version = ParseVersion(name, serviceName);
-                            if (version != null)
-                            {
-                                this.AddSortedVersion(versions, version);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            TraceHelper.TraceEvent(TraceEventType.Error, "[SessionLauncher] GetServiceVersionsInternalAzure: Failed to parse name {0}. Exception:{1}", name, e);
-                        }
-                    }
-                }
-
-                // (2) Get the service version from ccp home folder.
-                string ccphome = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                this.GetVersionFromRegistrationDir(ccphome, serviceName, addUnversionedService, versions, ref addedFlag);
-            }
-            catch (Exception e)
-            {
-                TraceHelper.TraceEvent(TraceEventType.Error, $"[SessionLauncher] .GetServiceVersionsInternalAzure: Get service versions. exception = {0}", e);
-
-                throw new SessionException(SR.SessionLauncher_FailToEnumerateServicVersions, e);
-            }
-
-            return versions.ToArray();
-        }
 
         /// <summary>
         /// Ensure the caller is a valid cluster user
