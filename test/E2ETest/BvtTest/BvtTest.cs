@@ -25,19 +25,19 @@
 
         private static string NetTcpEndpointPattern = "net.tcp://{0}:9091/{1}/NetTcp";
 
-        private static void Info(string msg)
+        private static void Info(string msg, params object[] args)
         {
-            Trace.TraceInformation(msg);
+            Trace.TraceInformation(msg, args);
         }
 
-        private static void TraceEvent(string msg)
+        private static void TraceEvent(string msg, params object[] args)
         {
-            Trace.TraceInformation(msg);
+            Trace.TraceInformation(msg, args);
         }
 
-        private static void Error(string msg)
+        private static void Error(string msg, params object[] args)
         {
-            Trace.TraceError(msg);
+            Trace.TraceError(msg, args);
         }
 
         private static SessionStartInfo BuildSessionStartInfo(
@@ -97,15 +97,16 @@
         {
             Type serviceClientType = typeof(T);
             object client = Activator.CreateInstance(serviceClientType, binding, epr);
-            // set a relatively long timeout since sometimes opening connection to Azure nodes is slow
-            //((ClientBase<TChannel>)client).InnerChannel.OperationTimeout = TimeSpan.FromMinutes(3);
             ((ClientBase<TChannel>)client).Endpoint.Behaviors.Add(new V2WCFClientEndpointBehavior(sessionId));
 
             return (T)client;
         }
 
+        /// <summary>
+        /// This case matches with AI_BVT_2 (Interactive Mode Basic Functional (BVT) - non-secure net.tcp)
+        /// </summary>
         [TestMethod]
-        public void TestMethod1()
+        public void BvtCase1()
         {
             Info("Start BVT");
             List<string> results = new List<string>();
@@ -119,12 +120,11 @@
             using (Session session = Session.CreateSession(sessionStartInfo))
             {
                 serviceJobId = session.Id;
+                var epr = new EndpointAddress(string.Format(NetTcpEndpointPattern, Server, serviceJobId));
+                Info("EPR: {0}", epr);
+                EchoSvcClient client = CreateV2WCFTestServiceClient<EchoSvcClient, IEchoSvc>(serviceJobId, epr, new NetTcpBinding(SecurityMode.None));
 
-                // Info("EPR: {0}", session.EndpointReference);
-                EchoSvcClient client = CreateV2WCFTestServiceClient<EchoSvcClient, IEchoSvc>(serviceJobId, new EndpointAddress(string.Format(NetTcpEndpointPattern, Server, serviceJobId)), new NetTcpBinding(SecurityMode.None));
-                //BrokerClient<IEchoSvc> client = new BrokerClient<IEchoSvc>(brokerClientGuid.ToString(), session);
-
-                    AutoResetEvent evt = new AutoResetEvent(false);
+                AutoResetEvent evt = new AutoResetEvent(false);
                 int count = NumberOfCalls, outbound = NumberOfCalls;
                 Info("Begin to send requests");
                 DateTime firstrequest = DateTime.Now;
@@ -137,7 +137,11 @@
                                 try
                                 {
                                     int idx = (int)result.AsyncState;
-                                    if (firstresponse == null) firstresponse = DateTime.Now;
+                                    if (firstresponse == null)
+                                    {
+                                        firstresponse = DateTime.Now;
+                                    }
+
                                     string rtn = client.EndEcho(result);
                                     rtn = string.Format("{0}: {1}", idx, rtn);
                                     lock (results)
@@ -150,7 +154,10 @@
                                     Error(string.Format("Unexpected error:{0}", e.Message));
                                 }
 
-                                if (Interlocked.Decrement(ref outbound) <= 0) evt.Set();
+                                if (Interlocked.Decrement(ref outbound) <= 0)
+                                {
+                                    evt.Set();
+                                }
                             },
                         i);
                 }
@@ -158,19 +165,23 @@
                 evt.WaitOne();
 
                 // step 3.4 print out result
-                foreach (string res in results) TraceEvent(res);
+                foreach (string res in results)
+                {
+                    TraceEvent(res);
+                }
+
                 Info(string.Format("Total {0} calls returned.", results.Count));
 
-                // PropertyRow rows = session.ServiceRouterJob.GetPropsByName("NumberOfCalls", "NumberOfOutstandingCalls", "CallDuration", "CallsPerSecond");
                 if (firstresponse != null)
                 {
                     Info(string.Format("First response come back in {0} milliseconds for {1} requests.", ((DateTime)firstresponse - firstrequest).TotalMilliseconds, count));
                 }
 
-                Info( string.Format("Total {0} calls returned.", count));
+                Info(string.Format("Total {0} calls returned.", count));
                 client.Close();
             }
 
+            // TODO: implement below methods
             // TraceLogger.LogSessionClosed(serviceJobId);
             // VerifyJobStatus(serviceJobId);
         }
