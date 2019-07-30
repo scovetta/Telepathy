@@ -84,7 +84,7 @@
         /// Specify if use secure session
         /// </summary>
         [DataMember]
-        public bool Secure = true;
+        public bool Secure = false;
 
         /// <summary>
         /// Specify if use preempt
