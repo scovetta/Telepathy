@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using System.ServiceModel;
     using System.Threading;
+    using System.Threading.Tasks;
 
     using AITestLib.Helper;
 
@@ -12,7 +13,7 @@
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    using EchoSvcClient = Microsoft.ComputeCluster.Test.AppIntegration.EchoService.EchoSvcClient;
+ 
 
     [TestClass]
     public class BvtTest
@@ -132,7 +133,7 @@
                 serviceJobId = session.Id;
                 var epr = new EndpointAddress(string.Format(NetTcpEndpointPattern, Server, serviceJobId));
                 Info("EPR: {0}", epr);
-                EchoSvcClient client = CreateV2WCFTestServiceClient<EchoSvcClient, IEchoSvc>(serviceJobId, epr, new NetTcpBinding(SecurityMode.None));
+                Microsoft.ComputeCluster.Test.AppIntegration.EchoService.EchoSvcClient client = CreateV2WCFTestServiceClient<Microsoft.ComputeCluster.Test.AppIntegration.EchoService.EchoSvcClient, Microsoft.ComputeCluster.Test.AppIntegration.EchoService.IEchoSvc>(serviceJobId, epr, new NetTcpBinding(SecurityMode.None));
 
                 AutoResetEvent evt = new AutoResetEvent(false);
                 int count = NumberOfCalls, outbound = NumberOfCalls;
@@ -220,10 +221,12 @@
                 serviceJobId = session.Id;
                 var epr = new EndpointAddress(string.Format(NetTcpEndpointPattern, Server, serviceJobId));
                 Info("EPR: {0}", epr);
+                Task[] tasks = new Task[2];
                 for (int i = 0; i < 2; i++)
                 {
-                    ThreadPool.QueueUserWorkItem(
-                        (state) =>
+                    var idx = i;
+                    tasks[i] = Task.Run(
+                        () =>
                             {
                                 string guid = Guid.NewGuid().ToString();
                                 try
@@ -240,7 +243,7 @@
                                         client.EndRequests();
                                         Info("Client {0}: Begin to get responses.", guid);
                                         int count = 0;
-                                        if ((int)state == 0)
+                                        if (idx == 0)
                                         {
                                             foreach (BrokerResponse<EchoResponse> response in client.GetResponses<EchoResponse>())
                                             {
@@ -284,11 +287,11 @@
                                 {
                                     if (Interlocked.Decrement(ref clients) <= 0) evt.Set();
                                 }
-                            },
-                        i);
+                            });
                 }
 
                 evt.WaitOne();
+                Task.WaitAll(tasks);
             }
 
             // VerifyJobStatus(serviceJobId);
