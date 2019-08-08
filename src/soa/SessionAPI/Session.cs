@@ -7,16 +7,15 @@
 // </summary>
 //------------------------------------------------------------------------------
 
-
 namespace Microsoft.Hpc.Scheduler.Session
 {
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using System;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionFactory;
 
     // TODO: remove the "V3" prefix
@@ -38,8 +37,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="headnode">headnode name</param>
         /// <param name="sharedSession">if this is a shared session</param>
         /// <param name="binding">indicating the binding</param>
-        public V3Session(SessionInfoBase info, string headnode, bool autoClose, Binding binding)
-            : base(info, headnode, binding)
+        public V3Session(SessionInfoBase info, string headnode, bool autoClose, Binding binding) : base(info, headnode, binding)
         {
             this.autoCloseJob = !autoClose;
 
@@ -51,7 +49,11 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         public bool AutoClose
         {
-            get { return this.autoCloseJob; }
+            get
+            {
+                return this.autoCloseJob;
+            }
+
             set
             {
                 // we don't protect here since this is simple type assignment.
@@ -139,17 +141,20 @@ namespace Microsoft.Hpc.Scheduler.Session
             {
                 client = new SessionLauncherClient(headNodeMachine, binding, isAadUser);
                 client.InnerChannel.OperationTimeout = GetTimeout(DateTime.MaxValue);
-                //TODO: need to change the endpoint prefix for https
+
+                // TODO: need to change the endpoint prefix for https
                 SessionInfo info = null;
                 if (binding is NetTcpBinding)
                 {
                     info = Utility.BuildSessionInfoFromDataContract(await client.GetInfoV5Async(SessionLauncherClient.EndpointPrefix, sessionId).ConfigureAwait(false));
                 }
+
 #if !net40
                 else if (binding is BasicHttpBinding || binding is NetHttpBinding || binding is NetHttpsBinding)
                 {
                     info = Utility.BuildSessionInfoFromDataContract(await client.GetInfoV5Async(SessionLauncherClient.HttpsEndpointPrefix, sessionId).ConfigureAwait(false));
                 }
+
 #endif
                 broker = new BrokerLauncherClient(info, binding, new Uri(info.BrokerLauncherEpr));
                 broker.InnerChannel.OperationTimeout = GetTimeout(DateTime.MaxValue);
@@ -227,6 +232,21 @@ namespace Microsoft.Hpc.Scheduler.Session
             Utility.ThrowIfEmpty(startInfo.Headnode, "headNode");
 
             return (V3Session)await new SessionFactory().CreateSession(startInfo, false, Constant.DefaultCreateSessionTimeout, binding).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Attach to a existing session async with the session attach info and binding
+        /// </summary>
+        /// <param name="attachInfo">The attach info</param>
+        /// <param name="binding">indicting the binding</param>
+        /// <returns>A persistant session</returns>
+        public static async Task<V3Session> AttachSessionAsync(SessionAttachInfo attachInfo, Binding binding)
+        {
+            Utility.ThrowIfNull(attachInfo, "attachInfo");
+
+            Utility.ThrowIfEmpty(attachInfo.Headnode, "headNode");
+
+            return (V3Session)await new SessionFactory().AttachSession(attachInfo, false, Timeout.Infinite, binding).ConfigureAwait(false);
         }
     }
 }

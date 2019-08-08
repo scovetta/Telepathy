@@ -16,7 +16,32 @@
 
         private Binding binding;
 
+        // TODO: consolidate ctors
         public GeneralResourceProvider(SessionStartInfo info, Binding binding)
+        {
+            this.sessionNode = info.Headnode;
+            this.binding = binding;
+            if ((info.TransportScheme & TransportScheme.NetTcp) == TransportScheme.NetTcp)
+            {
+                this.endpointPrefix = SessionLauncherClient.EndpointPrefix;
+            }
+            else if ((info.TransportScheme & TransportScheme.Http) == TransportScheme.Http || (info.TransportScheme & TransportScheme.NetHttp) == TransportScheme.NetHttp)
+            {
+                this.endpointPrefix = SessionLauncherClient.HttpsEndpointPrefix;
+            }
+            else if ((info.TransportScheme & TransportScheme.Custom) == TransportScheme.Custom)
+            {
+                this.endpointPrefix = SessionLauncherClient.EndpointPrefix;
+            }
+            else if ((info.TransportScheme & TransportScheme.AzureStorage) == TransportScheme.AzureStorage)
+            {
+                this.endpointPrefix = "az.table";
+            }
+
+            this.client = new SessionLauncherClient(info, binding);
+        }
+
+        public GeneralResourceProvider(SessionAttachInfo info, Binding binding)
         {
             this.sessionNode = info.Headnode;
             this.binding = binding;
@@ -120,9 +145,64 @@
             return remainingTime;
         }
 
-        public async Task<SessionInfo> GetResourceInfo(SessionAttachInfo attachInto, TimeSpan timeout)
+        public async Task<SessionInfo> GetResourceInfo(SessionAttachInfo attachInfo, TimeSpan timeout)
         {
-            throw new NotImplementedException();
+            this.client.InnerChannel.OperationTimeout = timeout;
+            RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
+
+            SessionInfo info;
+            DateTime startTime = DateTime.Now;
+            if (attachInfo.TransportScheme == TransportScheme.Http)
+            {
+                info = Utility.BuildSessionInfoFromDataContract(
+                    await RetryHelper<SessionInfoContract>.InvokeOperationAsync(
+                            async () => await this.client.GetInfoV5Sp1Async(SessionLauncherClient.HttpsEndpointPrefix, attachInfo.SessionId, attachInfo.UseAad).ConfigureAwait(false),
+                            (e, r) =>
+                                {
+                                    var remainingTime = GetRemainingTime(timeout, startTime);
+                                    if ((e is EndpointNotFoundException || (e is CommunicationException && !(e is FaultException<SessionFault>))) && remainingTime > TimeSpan.Zero)
+                                    {
+                                        Utility.SafeCloseCommunicateObject(this.client);
+                                        this.client = new SessionLauncherClient(attachInfo, this.binding);
+                                        this.client.InnerChannel.OperationTimeout = remainingTime;
+                                    }
+                                    else
+                                    {
+                                        r.MaxRetryCount = 0;
+                                    }
+
+                                    return Task.CompletedTask;
+                                },
+                            retry)
+                        .ConfigureAwait(false));
+            }
+            else
+            {
+                info = Utility.BuildSessionInfoFromDataContract(
+                    await RetryHelper<SessionInfoContract>.InvokeOperationAsync(
+                            async () => await this.client.GetInfoV5Sp1Async(SessionLauncherClient.EndpointPrefix, attachInfo.SessionId, attachInfo.UseAad).ConfigureAwait(false),
+                            (e, r) =>
+                                {
+                                    var remainingTime = GetRemainingTime(timeout, startTime);
+
+                                    if ((e is EndpointNotFoundException || (e is CommunicationException && !(e is FaultException<SessionFault>))) && remainingTime > TimeSpan.Zero)
+                                    {
+                                        Utility.SafeCloseCommunicateObject(this.client);
+                                        this.client = new SessionLauncherClient(attachInfo, this.binding);
+                                        this.client.InnerChannel.OperationTimeout = remainingTime;
+                                    }
+                                    else
+                                    {
+                                        r.MaxRetryCount = 0;
+                                    }
+
+                                    return Task.CompletedTask;
+                                },
+                            retry)
+                        .ConfigureAwait(false));
+            }
+
+            return info;
         }
 
         public async Task FreeResource(SessionStartInfo startInfo, int sessionId)
