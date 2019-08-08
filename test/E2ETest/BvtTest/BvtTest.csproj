@@ -38,7 +38,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup>   
+  <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -53,6 +53,7 @@
     <Compile Include="Helper\Trace\TracingTestEnum.cs" />
     <Compile Include="Helper\V2WCFClientEndpointBehavior.cs" />
     <Compile Include="Helper\V2WCFClientMessageInspector.cs" />
+    <Compile Include="ServiceClientProxy.MessageContract\EchoClientProxy.cs" />
     <Compile Include="ServiceClientProxy\EchoClientProxy.cs" />
     <Compile Include="BvtTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
