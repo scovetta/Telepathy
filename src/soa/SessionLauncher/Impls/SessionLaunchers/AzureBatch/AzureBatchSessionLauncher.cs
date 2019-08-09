@@ -1,7 +1,15 @@
-﻿using System.Net;
-
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch
+﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Security;
+    using System.Threading.Tasks;
+
     using Microsoft.Azure.Batch;
     using Microsoft.Azure.Batch.Common;
     using Microsoft.Hpc.RuntimeTrace;
@@ -11,14 +19,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
     using Microsoft.Hpc.Telepathy;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
-    using System;
-    using System.Collections.Generic;
-    using System.Configuration;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
 
     internal class AzureBatchSessionLauncher : SessionLauncher
     {
@@ -57,7 +57,187 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
 
         public override async Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, int sessionId, bool useAad)
         {
-            throw new NotImplementedException();
+            SessionInfoContract sessionInfo = null;
+            CheckAccess();
+
+            ParamCheckUtility.ThrowIfNullOrEmpty(endpointPrefix, "endpointPrefix");
+            ParamCheckUtility.ThrowIfOutofRange(sessionId <= 0, "sessionId");
+
+            TraceHelper.TraceEvent(
+                sessionId,
+                TraceEventType.Information,
+                "[SessionLauncher] .GetInfo: headnode={0}, endpointPrefix={1}, sessionId={2}",
+                Environment.MachineName,
+                endpointPrefix,
+                sessionId);
+
+            if (!IsEndpointPrefixSupported(endpointPrefix))
+            {
+                TraceHelper.TraceEvent(sessionId, TraceEventType.Error, "[SessionLauncher] .GetInfo: {0} is not a supported endpoint prefix.", endpointPrefix);
+
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.InvalidArgument, SR.SessionLauncher_EndpointNotSupported, endpointPrefix);
+            }
+
+            try
+            {
+                using (var batchClient = AzureBatchConfiguration.GetBatchClient())
+                {
+                    var jobId = AzureBatchSessionJobIdConverter.ConvertToAzureBatchJobId(sessionId);
+
+                    var sessionJob = await batchClient.JobOperations.GetJobAsync(jobId).ConfigureAwait(false);
+                    if (sessionJob == null)
+                    {
+                        throw new InvalidOperationException($"[{nameof(AzureBatchSessionLauncher)}] .{nameof(this.GetInfoV5Sp1Async)} Failed to get batch job for session {sessionId}");
+                    }
+
+                    TraceHelper.TraceEvent(
+                        sessionId,
+                        TraceEventType.Information,
+                        $"[{nameof(AzureBatchSessionLauncher)}] .{nameof(this.GetInfoV5Sp1Async)}: try to get the job properties(Secure, TransportScheme, BrokerEpr, BrokerNode, ControllerEpr, ResponseEpr) for the job, jobid={sessionId}.");
+
+                    sessionInfo = new SessionInfoContract();
+                    sessionInfo.Id = AzureBatchSessionJobIdConverter.ConvertToSessionId(sessionJob.Id);
+
+                    // TODO: sessionInfo.JobState
+                    var metadata = sessionJob.Metadata;
+                    if (metadata != null)
+                    {
+                        string brokerNodeString = null;
+
+                        foreach (var pair in metadata)
+                        {
+                            if (pair.Name.Equals(BrokerSettingsConstants.Secure, StringComparison.OrdinalIgnoreCase))
+                            {
+                                string secureString = pair.Value;
+                                Debug.Assert(secureString != null, "BrokerSettingsConstants.Secure value should be a string.");
+                                bool secure;
+                                if (bool.TryParse(secureString, out secure))
+                                {
+                                    sessionInfo.Secure = secure;
+                                    TraceHelper.TraceEvent(sessionId, TraceEventType.Information, "[SessionLauncher] .GetInfo: get the job secure property, Secure={0}.", secure);
+                                }
+                                else
+                                {
+                                    TraceHelper.TraceEvent(sessionId, TraceEventType.Error, "Illegal secure value[{0}] for job's " + BrokerSettingsConstants.Secure + " property", secureString);
+                                }
+                            }
+                            else if (pair.Name.Equals(BrokerSettingsConstants.TransportScheme, StringComparison.OrdinalIgnoreCase))
+                            {
+                                string schemeString = pair.Value;
+                                Debug.Assert(schemeString != null, "BrokerSettingsConstants.TransportScheme value should be a string.");
+
+                                int scheme;
+                                if (int.TryParse(schemeString, out scheme))
+                                {
+                                    sessionInfo.TransportScheme = (TransportScheme)scheme;
+                                    TraceHelper.TraceEvent(
+                                        sessionId,
+                                        TraceEventType.Information,
+                                        "[SessionLauncher] .GetInfo: get the job TransportScheme property, TransportScheme={0}.",
+                                        sessionInfo.TransportScheme);
+                                }
+                                else
+                                {
+                                    TraceHelper.TraceEvent(
+                                        sessionId,
+                                        TraceEventType.Error,
+                                        "Illegal transport scheme value[{0}] for job's " + BrokerSettingsConstants.TransportScheme + " property",
+                                        schemeString);
+                                }
+                            }
+                            else if (pair.Name.Equals(BrokerSettingsConstants.BrokerNode, StringComparison.OrdinalIgnoreCase))
+                            {
+                                brokerNodeString = pair.Value;
+                                Debug.Assert(brokerNodeString != null, "BrokerSettingsConstants.BrokerNode value should be a string.");
+
+                                TraceHelper.TraceEvent(
+                                    sessionId,
+                                    TraceEventType.Information,
+                                    "[SessionLauncher] .GetInfo: get the job BrokerLauncherEpr property, BrokerLauncherEpr={0}.",
+                                    sessionInfo.BrokerLauncherEpr);
+                            }
+                            else if (pair.Name.Equals(BrokerSettingsConstants.Durable, StringComparison.OrdinalIgnoreCase))
+                            {
+                                string durableString = pair.Value;
+                                Debug.Assert(durableString != null, "BrokerSettingsConstants.Durable value should be a string.");
+
+                                bool durable;
+                                if (bool.TryParse(durableString, out durable))
+                                {
+                                    sessionInfo.Durable = durable;
+                                    TraceHelper.TraceEvent(sessionId, TraceEventType.Information, "[SessionLauncher] .GetInfo: get the job Durable property, Durable={0}.", sessionInfo.Durable);
+                                }
+                                else
+                                {
+                                    TraceHelper.TraceEvent(sessionId, TraceEventType.Error, "Illegal secure value[{0}] for job's " + BrokerSettingsConstants.Durable + " property", durableString);
+                                }
+                            }
+                            else if (pair.Name.Equals(BrokerSettingsConstants.ServiceVersion, StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (pair.Value != null)
+                                {
+                                    try
+                                    {
+                                        sessionInfo.ServiceVersion = new Version(pair.Value);
+                                        TraceHelper.TraceEvent(
+                                            sessionId,
+                                            TraceEventType.Information,
+                                            "[SessionLauncher] .GetInfo: get the job ServiceVersion property, ServiceVersion={0}.",
+                                            (sessionInfo.ServiceVersion != null) ? sessionInfo.ServiceVersion.ToString() : string.Empty);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        TraceHelper.TraceEvent(
+                                            sessionId,
+                                            TraceEventType.Error,
+                                            "Illegal secure value[{0}] for job's " + BrokerSettingsConstants.ServiceVersion + " property. Exception = {1}",
+                                            pair.Value,
+                                            e);
+                                    }
+                                }
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(brokerNodeString))
+                        {
+                            if (brokerNodeString != Constant.InprocessBrokerNode)
+                            {
+                                sessionInfo.BrokerLauncherEpr = BrokerNodesManager.GenerateBrokerLauncherEpr(endpointPrefix, brokerNodeString, sessionInfo.TransportScheme);
+                            }
+                        }
+                        else
+                        {
+                            sessionInfo.UseInprocessBroker = true;
+                        }
+
+                        TraceHelper.TraceEvent(
+                            sessionId,
+                            TraceEventType.Information,
+                            "[SessionLauncher] .GetInfo: get the job BrokerLauncherEpr property, BrokerLauncherEpr={0}.",
+                            sessionInfo.BrokerLauncherEpr);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                TraceHelper.TraceEvent(sessionId, TraceEventType.Error, "[SessionLauncher] .GetInfo: Failed to get all properties from job[{0}], Exception:{1}", sessionId, e);
+
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.GetJobPropertyFailure, SR.SessionLauncher_FailToGetJobProperty, e.ToString());
+            }
+
+            TraceHelper.TraceEvent(
+                sessionId,
+                TraceEventType.Information,
+                "[SessionLauncher] .GetInfo: return the sessionInfo, BrokerEpr={0}, BrokerLauncherEpr={1}, ControllerEpr={2}, Id={3}, JobState={4}, ResponseEpr={5}, Secure={6}, TransportScheme={7}.",
+                sessionInfo.BrokerEpr,
+                sessionInfo.BrokerLauncherEpr,
+                sessionInfo.ControllerEpr,
+                sessionInfo.Id,
+                sessionInfo.JobState,
+                sessionInfo.ResponseEpr,
+                sessionInfo.Secure,
+                sessionInfo.TransportScheme);
+            return sessionInfo;
         }
 
         public override async Task TerminateV5Async(int sessionId)
@@ -124,8 +304,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                     }
 
                     sessionAllocateInfo.Id = 0;
-                    // sessionAllocateInfo.BrokerLauncherEpr = new[] { SessionInternalConstants.BrokerConnectionStringToken };
 
+                    // sessionAllocateInfo.BrokerLauncherEpr = new[] { SessionInternalConstants.BrokerConnectionStringToken };
                     IList<EnvironmentSetting> ConstructEnvironmentVariable()
                     {
                         List<EnvironmentSetting> env = new List<EnvironmentSetting>(); // Can change to set to ensure no unintended overwrite
@@ -269,11 +449,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                         // resourceFiles.Add(GetResourceFileReference(RuntimeContainer, BrokerFolder));
                         // resourceFiles.Add(GetResourceFileReference(ServiceRegistrationContainer, null));
 
-
                         // // job.JobManagerTask = new JobManagerTask("Broker",
                         // // $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --ServiceRegistrationPath {AzureBatchTaskWorkingDirEnvVar} --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}");
                         // job.JobManagerTask = new JobManagerTask("List",
-                        //     $@"cmd /c dir & set");
+                        // $@"cmd /c dir & set");
                         // job.JobManagerTask.ResourceFiles = resourceFiles;
                         // job.JobManagerTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
 
@@ -307,13 +486,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                                                                                { BrokerSettingsConstants.DispatcherCapacityInGrowShrink, startInfo.DispatcherCapacityInGrowShrink }
                                                                            };
 
-                        job.Metadata = job.Metadata
-                            .Concat(jobMetadata
-                                .Select(p => new MetadataItem(p.Key, p.Value)))
-                            .Concat(jobOptionalMetadata
-                                .Where(p => p.Value.HasValue)
-                                .Select(p => new MetadataItem(p.Key, p.Value.ToString())))
-                            .ToList();
+                        job.Metadata = job.Metadata.Concat(jobMetadata.Select(p => new MetadataItem(p.Key, p.Value)))
+                            .Concat(jobOptionalMetadata.Where(p => p.Value.HasValue).Select(p => new MetadataItem(p.Key, p.Value.ToString()))).ToList();
 
                         job.DisplayName = $"{job.Id} - {startInfo.ServiceName} - WCF Service";
                         await job.CommitAsync();
@@ -366,15 +540,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                                     $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --ServiceRegistrationPath %{AzureBatchJobPrepTaskWorkingDirEnvVar}% --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
                             }
 
-
                             CloudTask cloudTask = new CloudTask("Broker", cmd);
                             cloudTask.ResourceFiles = resourceFiles;
                             cloudTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Pool));
                             cloudTask.EnvironmentSettings = cloudTask.EnvironmentSettings == null ? environment : environment.Union(cloudTask.EnvironmentSettings, comparer).ToList();
                             return cloudTask;
                         }
-
-
 
                         var tasks = Enumerable.Range(0, numTasks - 1).Select(_ => CreateTask(Guid.NewGuid().ToString())).ToArray();
                         if (!brokerPerfMode)
@@ -413,11 +584,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                             brokerStartInfo.EnvironmentVariables[AzureBatchJobPrepTaskWorkingDirEnvVar] = SessionLauncherSettings.Default.ServiceRegistrationStoreFacadeFolder;
                             brokerStartInfo.UseShellExecute = false;
 
-                            //var brokerLauncherProcess = Process.Start(brokerPath, cmd);
+                            // var brokerLauncherProcess = Process.Start(brokerPath, cmd);
                             this.brokerLauncherProcess = Process.Start(brokerStartInfo);
                         }
 
-                        //  await Task.Delay(TimeSpan.FromSeconds(60));
+                        // await Task.Delay(TimeSpan.FromSeconds(60));
                         sessionAllocateInfo.BrokerLauncherEpr = new[] { SoaHelper.GetBrokerLauncherAddress(Environment.MachineName) };
                     }
 
@@ -496,5 +667,27 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                 regPath,
                 new AzureBlobServiceRegistrationStore(SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString),
                 SessionLauncherSettings.Default.ServiceRegistrationStoreFacadeFolder);
+
+        /// <summary>
+        /// the helper function to check whether the endpoint prefix is supported.
+        /// </summary>
+        /// <param name="endpointPrefix"></param>
+        /// <returns>a value indicating if the endpoint is supported.</returns>
+        private static bool IsEndpointPrefixSupported(string endpointPrefix)
+        {
+            if (string.IsNullOrEmpty(endpointPrefix))
+            {
+                return false;
+            }
+
+            switch (endpointPrefix.ToLowerInvariant().Trim())
+            {
+                case BrokerNodesManager.NettcpPrefix:
+                case BrokerNodesManager.HttpsPrefix:
+                    return true;
+            }
+
+            return false;
+        }
     }
 }
