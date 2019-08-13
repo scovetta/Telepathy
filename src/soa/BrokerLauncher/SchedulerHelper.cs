@@ -7,26 +7,33 @@
 // </summary>
 //------------------------------------------------------------------------------
 
+// TODO: remove not supported interfaces
+// TODO: change signature to reveal async nature
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 {
-    using Microsoft.Hpc.RuntimeTrace;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using Microsoft.Hpc.ServiceBroker.Common;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.ServiceModel;
     using System.Threading;
     using System.Threading.Tasks;
+
+    using Microsoft.Hpc.RuntimeTrace;
+    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
+    using Microsoft.Hpc.ServiceBroker;
+    using Microsoft.Hpc.ServiceBroker.Common;
+    using Microsoft.Hpc.ServiceBroker.Common.SchedulerAdapter;
 
     /// <summary>
     /// Helper class for operation to scheduler
     /// </summary>
-    internal class SchedulerHelper : IDisposable, ISchedulerHelper
+    internal class SchedulerHelper : ISchedulerHelper
     {
         /// <summary>
         /// The client for the scheduler proxy in HN
         /// </summary>
-        private Lazy<SchedulerAdapterInternalClient> schedulerClient;
+        private Lazy<SchedulerAdapterClient> schedulerClient;
 
         /// <summary>
         /// Stores the client proxy for SessionLauncher service
@@ -66,8 +73,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             this.context = context;
             this.sessionNode = new Lazy<string>(() => ResolveSessionNodeWithRetries().GetAwaiter().GetResult(), LazyThreadSafetyMode.ExecutionAndPublication);
             this.certThumbprint = new Lazy<string>(() => this.context.GetSSLThumbprint().GetAwaiter().GetResult(), LazyThreadSafetyMode.ExecutionAndPublication);
-            this.schedulerClient = new Lazy<SchedulerAdapterInternalClient>(
-                () => new SchedulerAdapterInternalClient(this.sessionNode.Value, this.certThumbprint.Value),
+            this.schedulerClient = new Lazy<SchedulerAdapterClient>(
+                () => new SchedulerAdapterClient(BindingHelper.HardCodedUnSecureNetTcpBinding, new EndpointAddress(SoaHelper.GetSchedulerDelegationAddress(this.sessionNode.Value))),
                 LazyThreadSafetyMode.ExecutionAndPublication);
             this.sessionLauncherClient = new Lazy<SessionLauncherClient>(
                 () => new SessionLauncherClient(this.sessionNode.Value, this.certThumbprint.Value),
@@ -89,7 +96,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// </summary>
         public string HeadNode
         {
-            get { return this.sessionNode.Value; }
+            get
+            {
+                return this.sessionNode.Value;
+            }
         }
 
         /// <summary>
@@ -99,6 +109,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <returns>a value indicating whether the specified job purged or not.</returns>
         public async Task<bool> IsJobPurged(int jobId)
         {
+            /*
             RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
 
             return await RetryHelper<bool>.InvokeOperationAsync(
@@ -114,8 +125,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                     await this.RenewSchedulerAdapterClientAsync();
                 },
                 retry);
-
-
+                */
+            return false;
         }
 
         /// <summary>
@@ -125,19 +136,17 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         public async Task UpdateBrokerInfo(BrokerInfo info)
         {
             Dictionary<string, object> properties = new Dictionary<string, object>();
-            properties.Add("EndpointReference", String.Join(";", info.InitializationResult.BrokerEpr));
+            properties.Add("EndpointReference", string.Join(";", info.InitializationResult.BrokerEpr));
 
             // use the broker role IP address for the broker node on Azure
-            properties.Add(BrokerSettingsConstants.BrokerNode,
-                SoaHelper.IsOnAzure() ? AzureRoleHelper.GetLocalMachineAddress() : Environment.MachineName);
+            properties.Add(BrokerSettingsConstants.BrokerNode, SoaHelper.IsOnAzure() ? AzureRoleHelper.GetLocalMachineAddress() : Environment.MachineName);
 
             properties.Add(BrokerSettingsConstants.Suspended, info.Durable);
             properties.Add(BrokerSettingsConstants.Durable, info.Durable);
             properties.Add(BrokerSettingsConstants.PersistVersion, info.PersistVersion);
-            properties.Add(BrokerSettingsConstants.MessageDetailsAvailable,
-                info.InitializationResult.SupportsMessageDetails);
+            properties.Add(BrokerSettingsConstants.MessageDetailsAvailable, info.InitializationResult.SupportsMessageDetails);
 
-            await this.UpdateBrokerInfoInternal(info.SessionId, properties);
+            await this.UpdateBrokerInfoInternalAsync(info.SessionId, properties);
         }
 
         /// <summary>
@@ -149,7 +158,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         {
             Dictionary<string, object> p = new Dictionary<string, object>();
             p.Add(BrokerSettingsConstants.Suspended, suspended);
-            await this.UpdateBrokerInfoInternal(sessionId, p);
+            await this.UpdateBrokerInfoInternalAsync(sessionId, p);
         }
 
         /// <summary>
@@ -158,16 +167,16 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <returns>list of broker recover info</returns>
         public async Task<BrokerRecoverInfo[]> LoadBrokerRecoverInfo()
         {
-            RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
-
-            return await RetryHelper<BrokerRecoverInfo[]>.InvokeOperationAsync(
-                async () => await this.schedulerClient.Value.GetRecoverInfoFromJobs(Environment.MachineName),
-                async (e, r) =>
-                {
-                    TraceHelper.TraceError(0,
-                        "[SchedulerHelper] Failed to load broker recover info: {0}\nRetryCount = {1}", e, r.RetryCount);
-                    await this.RenewSchedulerAdapterClientAsync();
-                }, retry);
+            // RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
+            // return await RetryHelper<BrokerRecoverInfo[]>.InvokeOperationAsync(
+            // async () => await this.schedulerClient.Value.GetRecoverInfoFromJobs(Environment.MachineName),
+            // async (e, r) =>
+            // {
+            // TraceHelper.TraceError(0,
+            // "[SchedulerHelper] Failed to load broker recover info: {0}\nRetryCount = {1}", e, r.RetryCount);
+            // await this.RenewSchedulerAdapterClientAsync();
+            // }, retry);
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -177,6 +186,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <returns>session start info</returns>
         public async Task<BrokerRecoverInfo> TryGetSessionStartInfoFromFininshedJobs(int sessionId)
         {
+            /*
             RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
             return await RetryHelper<BrokerRecoverInfo>.InvokeOperationAsync(
                 async () => await this.schedulerClient.Value.GetRecoverInfoFromJob(sessionId),
@@ -186,6 +196,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                         "[SchedulerHelper] Failed to load broker recover info: {0}\nRetryCount = {1}", e, r.RetryCount);
                     await this.RenewSchedulerAdapterClientAsync();
                 }, retry);
+                */
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -195,6 +207,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <returns>returns ACL string</returns>
         public async Task<string> GetJobTemplateACL(string jobTemplate)
         {
+            /*
             RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
 
             string acl = null;
@@ -224,6 +237,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             }
 
             return acl;
+            */
+            throw new NotSupportedException();
         }
 
         // /// <summary>
@@ -233,15 +248,15 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         // /// <returns>requeue count</returns>
         // private async Task<int> GetJobRequeueCount(int jobid)
         // {
-        //     RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
-        //     return await RetryHelper<int>.InvokeOperationAsync(
-        //         async () => await this.schedulerClient.Value.GetJobRequeueCount(jobid),
-        //         async (e, r) =>
-        //         {
-        //             TraceHelper.TraceError(0, "[SchedulerHelper] Failed to get job requeue count: {0}\nRetryCount = {1}",
-        //                 e, r.RetryCount);
-        //             await this.RenewSchedulerAdapterClientAsync();
-        //         }, retry);
+        // RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
+        // return await RetryHelper<int>.InvokeOperationAsync(
+        // async () => await this.schedulerClient.Value.GetJobRequeueCount(jobid),
+        // async (e, r) =>
+        // {
+        // TraceHelper.TraceError(0, "[SchedulerHelper] Failed to get job requeue count: {0}\nRetryCount = {1}",
+        // e, r.RetryCount);
+        // await this.RenewSchedulerAdapterClientAsync();
+        // }, retry);
         // }
 
         /// <summary>
@@ -251,7 +266,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <returns>returns job owner's sid</returns>
         public async Task<string> GetJobOwnerSID(int jobId)
         {
-
+            /*
             RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
 
             string sid = null;
@@ -279,6 +294,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             }
 
             return sid;
+            */
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -292,16 +309,16 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 
             await RetryHelper<object>.InvokeOperationAsync(
                 async () =>
-                {
-                    await this.schedulerClient.Value.FailJob(jobid, reason);
-                    return null;
-                },
+                    {
+                        await this.schedulerClient.Value.FailJobAsync(jobid, reason);
+                        return null;
+                    },
                 async (e, r) =>
-                {
-                    TraceHelper.TraceEvent(jobid, System.Diagnostics.TraceEventType.Error,
-                        "[SchedulerHelper] Exception throwed while failing job: {0}\nRetryCount = {1}", e, r.RetryCount);
-                    await this.RenewSchedulerAdapterClientAsync();
-                }, retry);
+                    {
+                        TraceHelper.TraceEvent(jobid, System.Diagnostics.TraceEventType.Error, "[SchedulerHelper] Exception throwed while failing job: {0}\nRetryCount = {1}", e, r.RetryCount);
+                        await this.RenewSchedulerAdapterClientAsync();
+                    },
+                retry);
         }
 
         /// <summary>
@@ -311,6 +328,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <returns>soa diag trace is enabled or disabled </returns>
         public async Task<bool> IsDiagTraceEnabled(int jobId)
         {
+            /*
             RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
 
             return await RetryHelper<bool>.InvokeOperationAsync(
@@ -327,6 +345,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                         r.RetryCount);
                     await this.RenewSchedulerAdapterClientAsync();
                 }, retry);
+                */
+            return false;
         }
 
         /// <summary>
@@ -349,21 +369,25 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
 
             return await RetryHelper<Dictionary<string, string>>.InvokeOperationAsync(
-                async () =>
-                {
-                    using (BrokerIdentity identity = new BrokerIdentity())
-                    {
-                        identity.Impersonate();
-                        return await this.sessionLauncherClient.Value.GetSOAConfigurationsAsync(keys);
-                    }
-                },
-                async (e, r) =>
-                {
-                    TraceHelper.TraceEvent(TraceEventType.Warning,
-                        "[SchedulerHelper] Failed to get SOA configuration, Key:{0}, Retry:{1}, Error:{2}",
-                        string.Join(",", keys), r.RetryCount, e);
-                    await this.RenewSessionLauncherClientAsync();
-                }, retry);
+                       async () =>
+                           {
+                               using (BrokerIdentity identity = new BrokerIdentity())
+                               {
+                                   identity.Impersonate();
+                                   return await this.sessionLauncherClient.Value.GetSOAConfigurationsAsync(keys);
+                               }
+                           },
+                       async (e, r) =>
+                           {
+                               TraceHelper.TraceEvent(
+                                   TraceEventType.Warning,
+                                   "[SchedulerHelper] Failed to get SOA configuration, Key:{0}, Retry:{1}, Error:{2}",
+                                   string.Join(",", keys),
+                                   r.RetryCount,
+                                   e);
+                               await this.RenewSessionLauncherClientAsync();
+                           },
+                       retry);
         }
 
         /// <summary>
@@ -372,6 +396,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <returns>non terminated session dic</returns>
         public async Task<Dictionary<int, int>> GetNonTerminatedSession()
         {
+            /*
             RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
             return await RetryHelper<Dictionary<int, int>>.InvokeOperationAsync(
                 async () => await this.schedulerClient.Value.GetNonTerminatedSession(),
@@ -381,6 +406,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                         "[SchedulerHelper] Failed to get non terminated session: {0}\nRetryCount = {1}", e, r.RetryCount);
                     await this.RenewSchedulerAdapterClientAsync();
                 }, retry);
+                */
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -393,20 +420,20 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
 
             return await RetryHelper<ClusterInfoContract>.InvokeOperationAsync(
-                async () =>
-                    {
-                        using (BrokerIdentity identity = new BrokerIdentity())
-                        {
-                            identity.Impersonate();
-                            return await this.sessionLauncherClient.Value.GetClusterInfoAsync();
-                        }
-                    },
-                async (e, r) =>
-                    {
-                        TraceHelper.TraceEvent(TraceEventType.Warning, "[SchedulerHelper] Failed to get cluster info, Retry:{0}, Error:{1}", r.RetryCount, e);
-                        await this.RenewSessionLauncherClientAsync();
-                    },
-                retry);
+                       async () =>
+                           {
+                               using (BrokerIdentity identity = new BrokerIdentity())
+                               {
+                                   identity.Impersonate();
+                                   return await this.sessionLauncherClient.Value.GetClusterInfoAsync();
+                               }
+                           },
+                       async (e, r) =>
+                           {
+                               TraceHelper.TraceEvent(TraceEventType.Warning, "[SchedulerHelper] Failed to get cluster info, Retry:{0}, Error:{1}", r.RetryCount, e);
+                               await this.RenewSessionLauncherClientAsync();
+                           },
+                       retry);
         }
 
         /// <summary>
@@ -414,17 +441,17 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// </summary>
         /// <param name="disposing">indicating if it's disposing</param>
         [method:
-            System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed",
+            System.Diagnostics.CodeAnalysis.SuppressMessage(
+                "Microsoft.Usage",
+                "CA2213:DisposableFieldsShouldBeDisposed",
                 Target = "SchedulerHelper.client",
-                Justification =
-                    "It's closed in Microsoft.Hpc.ServiceBroker.Common.Utility.AsyncCloseICommunicationObject(this.client)."
-            )]
+                Justification = "It's closed in Microsoft.Hpc.ServiceBroker.Common.Utility.AsyncCloseICommunicationObject(this.client).")]
         [method:
-            System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed",
+            System.Diagnostics.CodeAnalysis.SuppressMessage(
+                "Microsoft.Usage",
+                "CA2213:DisposableFieldsShouldBeDisposed",
                 Target = "SchedulerHelper.sessionLauncherClient",
-                Justification =
-                    "It's closed in Microsoft.Hpc.ServiceBroker.Common.Utility.AsyncCloseICommunicationObject(this.sessionLauncherClient)."
-            )]
+                Justification = "It's closed in Microsoft.Hpc.ServiceBroker.Common.Utility.AsyncCloseICommunicationObject(this.sessionLauncherClient).")]
         private void Dispose(bool disposing)
         {
             if (disposing)
@@ -433,6 +460,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 {
                     Utility.AsyncCloseICommunicationObject(this.schedulerClient.Value);
                 }
+
                 if (this.sessionLauncherClient.IsValueCreated)
                 {
                     Utility.AsyncCloseICommunicationObject(this.sessionLauncherClient.Value);
@@ -458,10 +486,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                         {
                             Utility.AsyncCloseICommunicationObject(this.schedulerClient.Value);
                         }
+
                         this.sessionNode = new Lazy<string>(() => this.ResolveSessionNodeWithRetries().GetAwaiter().GetResult(), LazyThreadSafetyMode.ExecutionAndPublication);
                         this.certThumbprint = new Lazy<string>(() => this.context.GetSSLThumbprint().GetAwaiter().GetResult(), LazyThreadSafetyMode.ExecutionAndPublication);
-                        this.schedulerClient = new Lazy<SchedulerAdapterInternalClient>(
-                            () => new SchedulerAdapterInternalClient(this.sessionNode.Value, this.certThumbprint.Value),
+                        this.schedulerClient = new Lazy<SchedulerAdapterClient>(
+                            () => new SchedulerAdapterClient(BindingHelper.HardCodedUnSecureNetTcpBinding, new EndpointAddress(SoaHelper.GetSchedulerDelegationAddress(this.sessionNode.Value))),
                             LazyThreadSafetyMode.ExecutionAndPublication);
                     }
                 }
@@ -488,6 +517,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                         {
                             Utility.AsyncCloseICommunicationObject(this.sessionLauncherClient.Value);
                         }
+
                         this.sessionNode = new Lazy<string>(() => ResolveSessionNodeWithRetries().GetAwaiter().GetResult(), LazyThreadSafetyMode.ExecutionAndPublication);
                         this.certThumbprint = new Lazy<string>(() => this.context.GetSSLThumbprint().GetAwaiter().GetResult(), LazyThreadSafetyMode.ExecutionAndPublication);
                         this.sessionLauncherClient = new Lazy<SessionLauncherClient>(
@@ -507,29 +537,28 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// </summary>
         /// <param name="sessionId">indicating the session id</param>
         /// <param name="properties">indicating the key value pairs to be updated</param>
-        private async Task UpdateBrokerInfoInternal(int sessionId, Dictionary<string, object> properties)
+        private async Task UpdateBrokerInfoInternalAsync(int sessionId, Dictionary<string, object> properties)
         {
             RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
 
             await RetryHelper<object>.InvokeOperationAsync(
                 async () =>
-                {
-                    if (await this.schedulerClient.Value.UpdateBrokerInfo(sessionId, properties))
                     {
-                        return null;
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException(
-                            "Can not update the properties in the scheduler database for EPRs");
-                    }
-                },
+                        if (await this.schedulerClient.Value.UpdateBrokerInfoAsync(sessionId, properties).ConfigureAwait(false))
+                        {
+                            return null;
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("Can not update the properties in the scheduler database for EPRs");
+                        }
+                    },
                 async (e, r) =>
                     {
                         TraceHelper.TraceEvent(sessionId, TraceEventType.Error, "[BrokerLauncher.SchedulerHelper] UpdateBrokerInfo failed: Exception = {0}\nRetryCount = {1}", e, r.RetryCount);
-                        await this.RenewSchedulerAdapterClientAsync();
+                        await this.RenewSchedulerAdapterClientAsync().ConfigureAwait(false);
                     },
-                retry);
+                retry).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -540,13 +569,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         {
             RetryManager retry = SoaHelper.GetDefaultInfinitePeriodRertyManager();
             return await RetryHelper<string>.InvokeOperationAsync(
-                async () => await this.context.ResolveSessionLauncherNodeAsync(),
-                async (e, r) =>
-                    {
-                        TraceHelper.TraceWarning(0, "[SchedulerHelper] Failed to ResolveSessionLauncherNodeAsync: {0}\nRetryCount = {1}", e, r.RetryCount);
-                        await Task.CompletedTask;
-                    },
-                retry);
+                       async () => await this.context.ResolveSessionLauncherNodeAsync(),
+                       async (e, r) =>
+                           {
+                               TraceHelper.TraceWarning(0, "[SchedulerHelper] Failed to ResolveSessionLauncherNodeAsync: {0}\nRetryCount = {1}", e, r.RetryCount);
+                               await Task.CompletedTask;
+                           },
+                       retry);
         }
 
         // /// <summary>
@@ -555,32 +584,31 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         // /// <returns>The SchedulerAdapterInternalClient, null if exception happens</returns>
         // private SchedulerAdapterInternalClient CreateSchedulerAdapterInternalClient()
         // {
-        //     try
-        //     {
-        //         return new SchedulerAdapterInternalClient(this.sessionNode.Value, this.certThumbprint.Value);
-        //     }
-        //     catch (Exception e)
-        //     {
-        //         TraceHelper.TraceError(0, "[SchedulerHelper] Failed to CreateSchedulerAdapterInternalClient: {0}", e);
-        //         return null;
-        //     }
+        // try
+        // {
+        // return new SchedulerAdapterInternalClient(this.sessionNode.Value, this.certThumbprint.Value);
         // }
-        // 
+        // catch (Exception e)
+        // {
+        // TraceHelper.TraceError(0, "[SchedulerHelper] Failed to CreateSchedulerAdapterInternalClient: {0}", e);
+        // return null;
+        // }
+        // }
         // /// <summary>
         // /// Create the SessionLauncherClient with the session node
         // /// </summary>
         // /// <returns>The SessionLauncherClient, null if exception happens</returns>
         // private SessionLauncherClient CreateSessionLauncherClient()
         // {
-        //     try
-        //     {
-        //         return new SessionLauncherClient(this.sessionNode.Value, this.certThumbprint.Value);
-        //     }
-        //     catch (Exception e)
-        //     {
-        //         TraceHelper.TraceError(0, "[SchedulerHelper] Failed to CreateSessionLauncherClient: {0}", e);
-        //         return null;
-        //     }
+        // try
+        // {
+        // return new SessionLauncherClient(this.sessionNode.Value, this.certThumbprint.Value);
+        // }
+        // catch (Exception e)
+        // {
+        // TraceHelper.TraceError(0, "[SchedulerHelper] Failed to CreateSessionLauncherClient: {0}", e);
+        // return null;
+        // }
         // }
     }
 }

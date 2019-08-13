@@ -12,7 +12,7 @@
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker.BackEnd;
 
-    internal class SchedulerAdapterClient : ClientBase<ISchedulerAdapter>, ISchedulerAdapter
+    public class SchedulerAdapterClient : ClientBase<ISchedulerAdapter>, ISchedulerAdapter
     {
         /// <summary>
         /// Stores the unique id
@@ -23,7 +23,11 @@
 
         private DispatcherManager dispatcherManager = null;
 
-        public SchedulerAdapterClient(Binding binding, EndpointAddress address, string[] predefinedSvcHost, DispatcherManager dispatcherManager) : base(binding, address)
+        public SchedulerAdapterClient(Binding binding, EndpointAddress address) : this(binding, address, null, null)
+        {
+        }
+
+        internal SchedulerAdapterClient(Binding binding, EndpointAddress address, string[] predefinedSvcHost, DispatcherManager dispatcherManager) : base(binding, address)
         {
             this.predefinedSvcHost = predefinedSvcHost;
             this.dispatcherManager = dispatcherManager;

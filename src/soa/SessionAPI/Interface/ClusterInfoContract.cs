@@ -7,16 +7,11 @@
 // </summary>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace Microsoft.Hpc.Scheduler.Session
 {
+    using System;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// The structure contains the information about a cluster
     /// </summary>
@@ -24,7 +19,6 @@ namespace Microsoft.Hpc.Scheduler.Session
     [DataContract(Name = "ClusterInfoContract", Namespace = "http://hpc.microsoft.com/SessionLauncher")]
     public class ClusterInfoContract
     {
-
         /// <summary>
         /// Gets or sets the cluster name
         /// </summary>

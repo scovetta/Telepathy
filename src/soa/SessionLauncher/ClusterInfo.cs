@@ -21,6 +21,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
         public ClusterInfo()
         {
+            this.Contract = new ClusterInfoContract();
+        } 
+
+#if HPCPACK
+        public ClusterInfo()
+        {
             Contract = new ClusterInfoContract();
             Contract.ClusterName = HpcContext.Get().GetClusterNameAsync().GetAwaiter().GetResult();
             Guid id = HpcContext.Get().GetClusterIdAsync().GetAwaiter().GetResult();
@@ -75,5 +81,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 },
                 HpcContext.Get().CancellationToken);
         }
+#endif
     }
 }

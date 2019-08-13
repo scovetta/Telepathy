@@ -674,7 +674,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             // Build the broker start info
             BrokerStartInfo brokerInfo = new BrokerStartInfo();
             brokerInfo.SessionId = recoverInfo.SessionId;
+#if HPCPACK
             brokerInfo.JobOwnerSID = await this.schedulerHelper.GetJobOwnerSID(brokerInfo.SessionId);
+#endif
+
             brokerInfo.Durable = recoverInfo.Durable;
             brokerInfo.Attached = attached;
             //this is scheduler node or cluster connection string

@@ -45,9 +45,21 @@
 
         private Process brokerLauncherProcess; // TODO: Design - change it to a process has same level with session launcher
 
+        private readonly Dictionary<string, string> defaultSoaConfigurations = new Dictionary<string, string>()
+                                                                                   {
+                                                                                       { Constant.RegistryPathEnv, $"%{AzureBatchJobPrepTaskWorkingDirEnvVar}%" },
+                                                                                       { Constant.AutomaticShrinkEnabled, "False" },
+                                                                                       { Constant.NettcpOver443, "True" },
+                                                                                       { Constant.NetworkPrefixEnv, string.Empty },
+                                                                                       { Constant.EnableFqdnEnv, string.Empty }
+                                                                                   };
+
         // TODO: remove parameter less ctor and add specific parameters for the sake of test-ablity
         public AzureBatchSessionLauncher()
         {
+            this.clusterInfo = new ClusterInfo();
+            this.clusterInfo.Contract.ClusterName = AzureBatchConfiguration.BatchPoolName;
+            this.clusterInfo.Contract.NetworkTopology = "Public";
         }
 
         public override async Task<SessionAllocateInfoContract> AllocateDurableV5Async(SessionStartInfoContract info, string endpointPrefix)
@@ -256,12 +268,30 @@
 
         public override async Task<string> GetSOAConfigurationAsync(string key)
         {
-            throw new NotImplementedException();
+            // TODO: Retrieve configuration from env vars
+            if (this.defaultSoaConfigurations.TryGetValue(key, out var res))
+            {
+                return res;
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
 
         public override async Task<Dictionary<string, string>> GetSOAConfigurationsAsync(List<string> keys)
         {
-            throw new NotImplementedException();
+            // TODO: Retrieve configuration from env vars
+            var res = new Dictionary<string, string>();
+            foreach (var key in keys)
+            {
+                if (this.defaultSoaConfigurations.ContainsKey(key))
+                {
+                    res[key] = this.defaultSoaConfigurations[key];
+                }
+            }
+
+            return res;
         }
 
         protected override async Task<SessionAllocateInfoContract> CreateAndSubmitSessionJob(

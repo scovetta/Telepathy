@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="SchedulerAdapterInternalClient.cs" company="Microsoft">
+// <copyright file="HpcSchedulerAdapterInternalClient.cs" company="Microsoft">
 //      Copyright (c) Microsoft Corporation.  All rights reserved.
 // </copyright>
 // <summary>
@@ -19,7 +19,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     /// <summary>
     /// The client implementation for the scheduler adapter
     /// </summary>
-    internal class SchedulerAdapterInternalClient : ClientBase<IHpcSchedulerAdapterInternal>, IHpcSchedulerAdapterInternal
+    internal class HpcSchedulerAdapterInternalClient : ClientBase<IHpcSchedulerAdapterInternal>, IHpcSchedulerAdapterInternal
     {
         /// <summary>
         /// Stores the operation timeout
@@ -27,16 +27,16 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         private static readonly TimeSpan OperationTimeout = TimeSpan.FromMinutes(10);
 
         /// <summary>
-        /// Initializes a new instance of the SchedulerAdapterInternalClient class
+        /// Initializes a new instance of the HpcSchedulerAdapterInternalClient class
         /// </summary>
         /// <param name="headNodeMachine">indicating the headnode</param>
-        public SchedulerAdapterInternalClient(string headNodeMachine, string certThumbprint)
+        public HpcSchedulerAdapterInternalClient(string headNodeMachine, string certThumbprint)
             : base(
                 BindingHelper.HardCodedInternalSchedulerDelegationBinding,
                 SoaHelper.CreateInternalCertEndpointAddress(new Uri(SoaHelper.GetSchedulerDelegationInternalAddress(headNodeMachine)), certThumbprint))
         {
 #if BrokerLauncher
-            BrokerTracing.TraceVerbose("[SchedulerAdapterInternalClient] In constructor");
+            BrokerTracing.TraceVerbose("[HpcSchedulerAdapterInternalClient] In constructor");
 #endif
             // use certificate for cluster internal authentication
             this.ClientCredentials.UseInternalAuthentication(certThumbprint);
