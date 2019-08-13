@@ -114,11 +114,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             this.customBroker = customBroker;
             this.pool = pool;
 
-            if (BrokerLauncherEnvironment.Standalone)
-            {
-                this.sessionStartInfo.IpAddress = BrokerLauncherSettings.Default.SvcHostList.Cast<string>().ToArray();
-                this.sessionStartInfo.RegPath = BrokerLauncherSettings.Default.CCP_SERVICEREGISTRATION_PATH;
-            }
+            this.sessionStartInfo.IpAddress = BrokerLauncherSettings.Default.SvcHostList.Cast<string>().ToArray();
+            this.sessionStartInfo.RegPath = BrokerLauncherSettings.Default.CCP_SERVICEREGISTRATION_PATH;
         }
 
         /// <summary>

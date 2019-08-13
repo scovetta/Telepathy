@@ -20,9 +20,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
 
     using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Diagnostics;
     using Microsoft.Hpc.ServiceBroker;
-    using Microsoft.Hpc.SoaContext;
 
     using Serilog;
 
@@ -180,6 +178,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 {
                     settings.AzureStorageConnectionString = option.AzureStorageConnectionString;
                     Trace.TraceInformation($"{nameof(settings.AzureStorageConnectionString)} changed by cmd args.");
+                }
+
+                if (!string.IsNullOrEmpty(option.SessionAddress))
+                {
+                    settings.SessionAddress = option.SessionAddress;
+                    Trace.TraceInformation($"{nameof(settings.SessionAddress)} set to {option.SessionAddress}.");
                 }
             }
 

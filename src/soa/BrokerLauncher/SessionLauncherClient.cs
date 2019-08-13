@@ -78,7 +78,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         private static Binding GetBinding()
         {
             // This file is only used by BrokerLauncher
-            return BindingHelper.HardCodedInternalSessionLauncherNetTcpBinding;
+            return BindingHelper.HardCodedUnSecureNetTcpBinding;
         }
 
         /// <summary>

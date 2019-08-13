@@ -23,5 +23,8 @@
 
         [Option('d', HelpText = "Start as console application")]
         public bool AsConsole { get; set; }
+
+        [Option("SessionAddress", HelpText = "The address of session launcher instance. Broker Launcher will start in standalone mode if SessionAddress is not set.")]
+        public string SessionAddress { get; set; }
     }
 }

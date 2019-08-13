@@ -571,8 +571,9 @@
                             TaskStateMonitor monitor = batchClient.Utilities.CreateTaskStateMonitor();
                             await monitor.WhenAll(svcHosts, TaskState.Running, SchedulingTimeout);
                             TraceHelper.TraceEvent(TraceEventType.Information, "[AzureBatchSessionLauncher] .StartAndWaitLocalBrokerLauncher: Batch Job Ready");
-                            string cmd = $@"-d --ServiceRegistrationPath %{AzureBatchJobPrepTaskWorkingDirEnvVar}% --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
+                            string cmd = $@"-d --ServiceRegistrationPath %{AzureBatchJobPrepTaskWorkingDirEnvVar}% --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))} --SessionAddress {Environment.MachineName}";
                             string brokerPath = AzureBatchConfiguration.BrokerLauncherPath;
+
                             if (string.IsNullOrWhiteSpace(brokerPath) || !File.Exists(brokerPath))
                             {
                                 throw new InvalidOperationException($"{brokerPath} doesn't exist.");

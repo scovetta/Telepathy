@@ -379,38 +379,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// </summary>
         private void CheckAccess(int sessionId)
         {
-            if (BrokerLauncherEnvironment.Standalone)
-            {
-                return;
-            }
-
-            if (Thread.CurrentPrincipal.IsHpcAadPrincipal(this.context))
-            {
-                return;
-            }
-
-            if (SoaHelper.CheckX509Identity(OperationContext.Current))
-            {
-                return;
-            }
-
-            WindowsIdentity identity = null;
-            if (SoaHelper.CheckWindowsIdentity(OperationContext.Current, out identity))
-            {
-                if (identity == null)
-                {
-                    return;
-                }
-                else
-                {
-                    if (this.brokerManager.AuthenticateUser(sessionId, identity))
-                    {
-                        return;
-                    }
-                }
-            }
-
-            ThrowHelper.ThrowSessionFault(SOAFaultCode.AccessDenied_BrokerLauncher, SR.AccessDenied_BrokerLauncher);
+            // TODO: implement authentication logic
         }
 
         /// <summary>
