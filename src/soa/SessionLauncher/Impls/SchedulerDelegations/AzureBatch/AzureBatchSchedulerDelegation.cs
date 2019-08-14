@@ -4,14 +4,17 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Net;
     using System.ServiceModel;
     using System.Text;
     using System.Threading.Tasks;
 
     using Microsoft.Azure.Batch;
+    using Microsoft.Azure.Batch.Common;
     using Microsoft.Hpc.RuntimeTrace;
-    using Microsoft.Hpc.Scheduler.Session.Data;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch;
+
+    using JobState = Microsoft.Hpc.Scheduler.Session.Data.JobState;
 
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple, IncludeExceptionDetailInFaults = true, MaxItemsInObjectGraph = int.MaxValue)]
     internal class AzureBatchSchedulerDelegation : ISchedulerAdapter
@@ -134,6 +137,21 @@
                     {
                         await sessionJob.CommitChangesAsync().ConfigureAwait(false);
                         TraceHelper.TraceEvent(TraceEventType.Information, "[AzureBatchSchedulerDelegation] .UpdateSoaRelatedProperties: Commit service job.");
+                    }
+                    catch (BatchException e)
+                    {
+                        var reqInfo = e.RequestInformation;
+
+                        if (reqInfo != null && reqInfo.HttpStatusCode == HttpStatusCode.Conflict)
+                        {
+                            TraceHelper.TraceEvent(TraceEventType.Warning, "[AzureBatchSchedulerDelegation] Conflict when commit service job property change: {0}", reqInfo.HttpStatusMessage);
+                            return;
+                        }
+                        else
+                        {
+                            TraceHelper.TraceEvent(TraceEventType.Warning, "[AzureBatchSchedulerDelegation] Conflict when commit service job property change: {0}", e.ToString());
+                            throw;
+                        }
                     }
                     catch (Exception e)
                     {
