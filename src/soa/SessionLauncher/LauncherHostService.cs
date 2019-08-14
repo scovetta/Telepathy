@@ -266,48 +266,33 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 string sessionLauncherAddress = SoaHelper.GetSessionLauncherAddress("localhost");
                 this.launcherHost = new ServiceHost(this.sessionLauncher, new Uri(sessionLauncherAddress));
                 BindingHelper.ApplyDefaultThrottlingBehavior(this.launcherHost);
-                
+
                 if (SessionLauncherRuntimeConfiguration.OpenAzureStorageListener)
                 {
                     this.launcherHost.AddServiceEndpoint(
                         typeof(ISessionLauncher),
-                        new TableTransportBinding()
-                        {
-                            ConnectionString = SessionLauncherRuntimeConfiguration
-                                .SessionLauncherStorageConnectionString,
-                            TargetPartitionKey = "all"
-                        },
+                        new TableTransportBinding() { ConnectionString = SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString, TargetPartitionKey = "all" },
                         TelepathyConstants.SessionLauncherAzureTableBindingAddress);
-                    TraceHelper.TraceEvent(TraceEventType.Information, "Add session launcher service endpoint {0}",
-                        TelepathyConstants.SessionLauncherAzureTableBindingAddress);
+                    TraceHelper.TraceEvent(TraceEventType.Information, "Add session launcher service endpoint {0}", TelepathyConstants.SessionLauncherAzureTableBindingAddress);
                 }
 
                 if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.HpcPack)
                 {
-                    this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher),
-                        BindingHelper.HardCodedSessionLauncherNetTcpBinding, string.Empty);
-                    this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher),
-                        BindingHelper.HardCodedNoAuthSessionLauncherNetTcpBinding, "AAD");
-                    this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher),
-                        BindingHelper.HardCodedInternalSessionLauncherNetTcpBinding, "Internal");
+                    this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher), BindingHelper.HardCodedSessionLauncherNetTcpBinding, string.Empty);
+                    this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher), BindingHelper.HardCodedNoAuthSessionLauncherNetTcpBinding, "AAD");
+                    this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher), BindingHelper.HardCodedInternalSessionLauncherNetTcpBinding, "Internal");
 
-                    TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher find cert {0}",
-                        HpcContext.Get().GetSSLThumbprint().GetAwaiter().GetResult());
+                    TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher find cert {0}", HpcContext.Get().GetSSLThumbprint().GetAwaiter().GetResult());
                     this.launcherHost.Credentials.UseInternalAuthenticationAsync().GetAwaiter().GetResult();
 
-                    TraceHelper.TraceEvent(TraceEventType.Information, "Add session launcher service endpoint {0}",
-                        sessionLauncherAddress);
-
+                    TraceHelper.TraceEvent(TraceEventType.Information, "Add session launcher service endpoint {0}", sessionLauncherAddress);
                 }
                 else
                 {
-                    this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher),
-                        BindingHelper.HardCodedUnSecureNetTcpBinding, string.Empty);
-                    this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher),
-                        BindingHelper.HardCodedUnSecureNetTcpBinding, "Internal");
+                    this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher), BindingHelper.HardCodedUnSecureNetTcpBinding, string.Empty);
+                    this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher), BindingHelper.HardCodedUnSecureNetTcpBinding, "Internal");
 
-                    TraceHelper.TraceEvent(TraceEventType.Information, "Add session launcher service endpoint {0}",
-                        sessionLauncherAddress);
+                    TraceHelper.TraceEvent(TraceEventType.Information, "Add session launcher service endpoint {0}", sessionLauncherAddress);
                 }
 
                 this.launcherHost.Faulted += this.SessionLauncherHostFaultHandler;

@@ -474,6 +474,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                             });
 #endif
 
+#if HPCPACK
                     ThreadPool.QueueUserWorkItem((object state) =>
                     {
                         try
@@ -512,6 +513,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                                 "Failed to open Azure storage cleanup service after all retry: {0}", e);
                         }
                     });
+#endif
                 }
             }
             catch (Exception e)

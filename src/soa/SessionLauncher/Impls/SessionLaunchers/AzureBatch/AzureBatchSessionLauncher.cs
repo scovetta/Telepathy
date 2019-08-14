@@ -20,6 +20,8 @@
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
 
+    using JobState = Microsoft.Hpc.Scheduler.Session.Data.JobState;
+
     internal class AzureBatchSessionLauncher : SessionLauncher
     {
         private CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString);
@@ -237,10 +239,26 @@
                 ThrowHelper.ThrowSessionFault(SOAFaultCode.GetJobPropertyFailure, SR.SessionLauncher_FailToGetJobProperty, e.ToString());
             }
 
+            if (sessionInfo.SessionOwner == null)
+            {
+                sessionInfo.SessionOwner = "Everyone";
+            }
+
+            if (sessionInfo.SessionACL == null)
+            {
+                sessionInfo.SessionACL = new string[0];
+            }
+
+            if (sessionInfo.JobState == 0)
+            {
+                // TODO: apply job state converting
+                sessionInfo.JobState = JobState.Running;
+            }
+
             TraceHelper.TraceEvent(
                 sessionId,
                 TraceEventType.Information,
-                "[SessionLauncher] .GetInfo: return the sessionInfo, BrokerEpr={0}, BrokerLauncherEpr={1}, ControllerEpr={2}, Id={3}, JobState={4}, ResponseEpr={5}, Secure={6}, TransportScheme={7}.",
+                "[SessionLauncher] .GetInfo: return the sessionInfo, BrokerEpr={0}, BrokerLauncherEpr={1}, ControllerEpr={2}, Id={3}, JobState={4}, ResponseEpr={5}, Secure={6}, TransportScheme={7}, sessionOwner={8}, sessionACL={9}",
                 sessionInfo.BrokerEpr,
                 sessionInfo.BrokerLauncherEpr,
                 sessionInfo.ControllerEpr,
@@ -248,7 +266,9 @@
                 sessionInfo.JobState,
                 sessionInfo.ResponseEpr,
                 sessionInfo.Secure,
-                sessionInfo.TransportScheme);
+                sessionInfo.TransportScheme,
+                sessionInfo.SessionOwner ?? "null",
+                sessionInfo.SessionACL?.Length.ToString() ?? "null");
             return sessionInfo;
         }
 
