@@ -2,10 +2,10 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
   <PropertyGroup>
-    <AssemblyName>HpcCommon</AssemblyName>
+    <AssemblyName>TelepathyCommon</AssemblyName>
     <OutputType>Library</OutputType>
-    <RootNamespace>Microsoft.Hpc</RootNamespace>
-    <ProjectGuid>{2C3936C7-4850-41D7-9497-9040BE302328}</ProjectGuid>
+    <RootNamespace>TelepathyCommon</RootNamespace>
+    <ProjectGuid>{1F7D53E1-7C00-4DE4-AD73-B0BB17BC1BFB}</ProjectGuid>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <SignAssembly>true</SignAssembly>
     <DelaySign>true</DelaySign>
@@ -48,10 +48,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.Management.Automation">
-      <HintPath>..\packages\Powershell.Corext.2.0.0\System.Management.Automation.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.DirectoryServices.AccountManagement" />
@@ -146,6 +142,9 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>6.0.8</Version>
+    </PackageReference>
+    <PackageReference Include="System.Management.Automation.dll">
+      <Version>10.0.10586</Version>
     </PackageReference>
     <PackageReference Include="WindowsAzure.Storage">
       <Version>8.4.0</Version>
