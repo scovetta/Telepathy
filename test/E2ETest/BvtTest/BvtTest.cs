@@ -13,7 +13,7 @@
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
- 
+    using EchoSvcClient = Microsoft.ComputeCluster.Test.AppIntegration.EchoService.EchoSvcClient;
 
     [TestClass]
     public class BvtTest
@@ -133,7 +133,11 @@
                 serviceJobId = session.Id;
                 var epr = new EndpointAddress(string.Format(NetTcpEndpointPattern, Server, serviceJobId));
                 Info("EPR: {0}", epr);
-                Microsoft.ComputeCluster.Test.AppIntegration.EchoService.EchoSvcClient client = CreateV2WCFTestServiceClient<Microsoft.ComputeCluster.Test.AppIntegration.EchoService.EchoSvcClient, Microsoft.ComputeCluster.Test.AppIntegration.EchoService.IEchoSvc>(serviceJobId, epr, new NetTcpBinding(SecurityMode.None));
+                EchoSvcClient client =
+                    CreateV2WCFTestServiceClient<EchoSvcClient, Microsoft.ComputeCluster.Test.AppIntegration.EchoService.IEchoSvc>(
+                        serviceJobId,
+                        epr,
+                        new NetTcpBinding(SecurityMode.None));
 
                 AutoResetEvent evt = new AutoResetEvent(false);
                 int count = NumberOfCalls, outbound = NumberOfCalls;
@@ -293,6 +297,107 @@
                 evt.WaitOne();
                 Task.WaitAll(tasks);
             }
+
+            // VerifyJobStatus(serviceJobId);
+        }
+
+        /// <summary>
+        /// Interactive Mode Basic Functional (BVT) - non-secure net.tcp - re-attached broker client
+        /// </summary>
+        [TestMethod]
+        public void BvtCase3()
+        {
+            Info("Start BVT");
+            List<string> results = new List<string>();
+            SessionStartInfo sessionStartInfo;
+
+            sessionStartInfo = BuildSessionStartInfo(Server, EchoSvcName, null, null, null, null, SessionUnitType.Node, null, null, null);
+
+            sessionStartInfo.Secure = false;
+            sessionStartInfo.BrokerSettings.SessionIdleTimeout = 60 * 10 * 1000;
+            Info("Begin to create session");
+            int serviceJobId = -1;
+            int clients = 2;
+            AutoResetEvent evt = new AutoResetEvent(false);
+            Session session = Session.CreateSession(sessionStartInfo);
+            SessionAttachInfo sessionAttachInfo = new SessionAttachInfo(sessionStartInfo.Headnode, session.Id);
+            session = Session.AttachSession(sessionAttachInfo);
+
+            serviceJobId = session.Id;
+            var epr = new EndpointAddress(string.Format(NetTcpEndpointPattern, Server, serviceJobId));
+            Info("EPR: {0}", epr);
+            Task[] tasks = new Task[2];
+            for (int i = 0; i < 2; i++)
+            {
+                var idx = i;
+                tasks[i] = Task.Run(
+                    () =>
+                        {
+                            string guid = Guid.NewGuid().ToString();
+                            try
+                            {
+                                Info("Client {0}: Begin to send requests.", guid);
+                                using (BrokerClient<IEchoSvc> client = new BrokerClient<IEchoSvc>(guid, session))
+                                {
+                                    for (int j = 0; j < NumberOfCalls; j++)
+                                    {
+                                        client.SendRequest<EchoRequest>(new EchoRequest(j.ToString()), j + ":" + guid);
+                                    }
+
+                                    Info("Client {0}: Begin to call EndOfMessage.", guid);
+                                    client.EndRequests();
+                                    Info("Client {0}: Begin to get responses.", guid);
+                                    int count = 0;
+                                    if (idx == 0)
+                                    {
+                                        foreach (BrokerResponse<EchoResponse> response in client.GetResponses<EchoResponse>())
+                                        {
+                                            count++;
+                                            Info(response.Result.EchoResult);
+                                            string[] rtn = response.Result.EchoResult.Split(new[] { ':' });
+                                            Assert(
+                                                rtn[rtn.Length - 1] == response.GetUserData<string>().Split(new[] { ':' })[0] && response.GetUserData<string>().Split(new[] { ':' })[1] == guid,
+                                                "Result is corrupt: expected:computername:{0}, actual:{1}",
+                                                response.GetUserData<string>().Split(new[] { ':' })[0],
+                                                response.Result.EchoResult);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var response in client.GetResponses())
+                                        {
+                                            count++;
+                                            EchoResponse result = (EchoResponse)response.Result;
+                                            Info(result.EchoResult);
+                                            string[] rtn = result.EchoResult.Split(new[] { ':' });
+                                            Assert(
+                                                rtn[rtn.Length - 1] == response.GetUserData<string>().Split(new[] { ':' })[0] && response.GetUserData<string>().Split(new[] { ':' })[1] == guid,
+                                                "Result is corrupt: expected:computername:{0}, actual:{1}",
+                                                response.GetUserData<string>(),
+                                                result.EchoResult);
+                                        }
+                                    }
+
+                                    if (count == NumberOfCalls) Info("Client {0}: Total {1} calls returned.", guid, count);
+                                    else
+                                        Error("Client {0}: Total {1} calls returned, but losing {2} results.", guid, count, NumberOfCalls - count);
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Error("Unexpected exception of Client {0}", e.ToString());
+                                throw;
+                            }
+                            finally
+                            {
+                                if (Interlocked.Decrement(ref clients) <= 0) evt.Set();
+                            }
+                        });
+            }
+            evt.WaitOne();
+            Task.WaitAll(tasks);
+            session.Close(true);
+            session.Dispose();
 
             // VerifyJobStatus(serviceJobId);
         }
