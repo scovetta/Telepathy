@@ -9,7 +9,7 @@
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <AssemblyDescription>Broker Base Assembly</AssemblyDescription>
     <OutputPath>bin\$(Configuration)\</OutputPath>
-	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,9 +49,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Hpc.Trace">
-      <HintPath>..\..\..\ref\Microsoft.Hpc.Trace.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>

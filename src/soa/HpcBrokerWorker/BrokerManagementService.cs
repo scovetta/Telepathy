@@ -15,7 +15,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.ServiceBroker;
     using System.Diagnostics;
-    using Microsoft.Hpc.Trace;
     using System.IO;
     
 
@@ -88,6 +87,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim
 
             Environment.SetEnvironmentVariable(SessionIdEnv, brokerInfo.SessionId.ToString(), EnvironmentVariableTarget.Process);
 
+#if HPCPACK
             // create the session id mapping file
             foreach (TraceListener listener in TraceHelper.RuntimeTrace.CosmosTrace.Listeners)
             {
@@ -114,6 +114,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim
                     }
                 }
             }
+#endif
 
             this.entry = new BrokerEntry(brokerInfo.SessionId);
             this.entry.BrokerFinished += new EventHandler(this.Entry_BrokerFinished);
