@@ -77,12 +77,12 @@
     <Compile Include="..\..\common\SecurityDescriptor.cs">
       <Link>SecurityDescriptor.cs</Link>
     </Compile>
-    <Compile Include="..\BrokerLauncher\SchedulerAdapterInternalClient.cs">
-      <Link>Common\SchedulerAdapter\SchedulerAdapterInternalClient.cs</Link>
-    </Compile>
     <None Include="..\Common\AzureRoleHelper.cs">
       <Link>Common\AzureRoleHelper.cs</Link>
     </None>
+    <Compile Include="..\BrokerLauncher\HpcSchedulerAdapterInternalClient.cs">
+      <Link>Common\SchedulerAdapter\HpcSchedulerAdapterInternalClient.cs</Link>
+    </Compile>
     <Compile Include="..\Common\BindingData.cs">
       <Link>BackEnd\BindingData.cs</Link>
     </Compile>

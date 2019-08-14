@@ -109,10 +109,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
                 this.requestListener = new DataRequestListener(clusterInfo, this);
                 this.requestListener.Start();
             }
-#endif
 
             // register azure storage connection string updated event to reload data service
             this.clusterInfo.OnAzureStorageConnectionStringOrClusterIdUpdated += ClusterInfo_OnAzureStorageConnectionStringOrClusterIdUpdated;
+#endif
         }
 
         /// <summary>
@@ -642,7 +642,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
         {
             if (disposing)
             {
+#if HPCPACK
                 this.clusterInfo.OnAzureStorageConnectionStringOrClusterIdUpdated -= ClusterInfo_OnAzureStorageConnectionStringOrClusterIdUpdated;
+#endif
 
                 if (this.dataManagement != null)
                 {

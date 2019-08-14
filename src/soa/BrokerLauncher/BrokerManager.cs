@@ -167,12 +167,15 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 
             this.pool = new BrokerProcessPool();
 
+            // TODO: enable recovery in Telepathy
+#if HPCPACK
             if (needRecover && !BrokerLauncherEnvironment.Standalone)
             {
                 this.ts = new CancellationTokenSource();
                 CancellationToken ct = ts.Token;
                 this.RecoverTask = Task.Run(async () => await this.RecoverThreadProc(ct), ct);
             }
+#endif
         }
 
         /// <summary>
@@ -671,7 +674,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             // Build the broker start info
             BrokerStartInfo brokerInfo = new BrokerStartInfo();
             brokerInfo.SessionId = recoverInfo.SessionId;
+#if HPCPACK
             brokerInfo.JobOwnerSID = await this.schedulerHelper.GetJobOwnerSID(brokerInfo.SessionId);
+#endif
+
             brokerInfo.Durable = recoverInfo.Durable;
             brokerInfo.Attached = attached;
             //this is scheduler node or cluster connection string
@@ -859,10 +865,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             }
 
             ServiceRegistrationRestClient client = null;
+#if HPCPACK
             if (!BrokerLauncherEnvironment.Standalone)
             {
                 client = this.context.GetServiceRegistrationRestClient();
             }
+#endif
 
             return Task.FromResult(new ServiceRegistrationRepo(centrialPath, client));
         }
@@ -923,7 +931,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             BrokerRecoverInfo[] recoverInfoList;
             this.schedulerHelper = null;
 
-            // TODO: on azure, perf counter
+            // TODO: Read Azure Storage Queue instead
             if (!SoaHelper.IsOnAzure())
             {
                 while (!ct.IsCancellationRequested)

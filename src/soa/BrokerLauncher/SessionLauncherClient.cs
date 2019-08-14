@@ -39,10 +39,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         public SessionLauncherClient(Uri uri, string certThumbprint)
             : base(GetBinding(), GetEndpoint(uri, certThumbprint))
         {
+#if HPCPACK
             // use certificate for cluster internal authentication
             this.ClientCredentials.ServiceCertificate.Authentication.CertificateValidationMode = X509CertificateValidationMode.PeerOrChainTrust;
             this.ClientCredentials.ServiceCertificate.Authentication.RevocationMode = X509RevocationMode.NoCheck;
             this.ClientCredentials.ClientCertificate.SetCertificate(StoreLocation.LocalMachine, StoreName.My, X509FindType.FindByThumbprint, certThumbprint);
+#endif
 
             if (!SoaHelper.IsOnAzure())
             {
@@ -78,7 +80,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         private static Binding GetBinding()
         {
             // This file is only used by BrokerLauncher
-            return BindingHelper.HardCodedInternalSessionLauncherNetTcpBinding;
+            return BindingHelper.HardCodedUnSecureNetTcpBinding;
         }
 
         /// <summary>
@@ -89,7 +91,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         private static EndpointAddress GetEndpoint(Uri uri, string certThumbprint)
         {
             // This file is only used by BrokerLauncher
-            return SoaHelper.CreateInternalCertEndpointAddress(uri, certThumbprint);
+            //return SoaHelper.CreateInternalCertEndpointAddress(uri, certThumbprint);
+            return new EndpointAddress(uri);
         }
     }
 }

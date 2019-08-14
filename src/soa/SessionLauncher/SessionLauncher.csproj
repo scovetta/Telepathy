@@ -225,6 +225,7 @@
     <Compile Include="DataService\REST\DataServiceRestServer.cs" />
     <Compile Include="Impls\SchedulerDelegations\AzureBatch\AzureBatchSchedulerDelegation.cs" />
     <Compile Include="Impls\SchedulerDelegations\Local\LocalSchedulerDelegation.cs" />
+    <Compile Include="Impls\SchedulerDelegations\SchedulerDelegationCommon.cs" />
     <Compile Include="Impls\SessionLaunchers\AzureBatch\AzureBatchConfiguration.cs" />
     <Compile Include="Impls\SessionLaunchers\AzureBatch\AzureBatchConstants.cs" />
     <Compile Include="Impls\SessionLaunchers\AzureBatch\AzureBatchEnvVarReader.cs" />

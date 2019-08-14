@@ -30,6 +30,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session.HpcPack;
+    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.SchedulerDelegations;
 
     /// <summary>
     /// Scheduler adapter for both broker and broker launcher
@@ -96,17 +97,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// Stores the time period
         /// </summary>
         private readonly static TimeSpan MonitorJobStateTimePeriod = TimeSpan.FromMinutes(5);
-
-        /// <summary>
-        /// SOA related customized property names
-        /// </summary>
-        private readonly List<string> CustomizedPropertyNames = new List<string>();
-
-        /// <summary>
-        /// customized property name maps to the env variable name
-        /// </summary>
-        private readonly Dictionary<string, string> PropToEnvMapping = new Dictionary<string, string>();
-
+       
         /// <summary>
         /// Scheduler
         /// </summary>
@@ -188,8 +179,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
                 throw;
             }
-
-            this.InitPropertyIds();
 
             // Set maxRequeueCount from cluster parameter
             this.maxRequeueCount = 3;   // By default, max requeue count is 3.
@@ -330,7 +319,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 }
 
                 // only happpens in debug build
-                CheckSoaRelatedProperties(schedulerJob, properties, CustomizedPropertyNames, PropToEnvMapping);
+                CheckSoaRelatedProperties(schedulerJob, properties, SchedulerDelegationCommon.CustomizedPropertyNames, SchedulerDelegationCommon.PropToEnvMapping);
 
                 return await Task.FromResult(true);
             }
@@ -461,7 +450,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     ThrowHelper.ThrowSessionFault(SOAFaultCode.Session_ValidateJobFailed_NotServiceJob, SR.SessionLauncher_ValidateJobFailed_NotServiceJob, jobid.ToString());
                 }
 
-                Dictionary<string, string> dic = JobHelper.GetCustomizedProperties(schedulerJob, this.CustomizedPropertyNames.ToArray());
+                Dictionary<string, string> dic = JobHelper.GetCustomizedProperties(schedulerJob, SchedulerDelegationCommon.CustomizedPropertyNames.ToArray());
 
                 bool durable = Convert.ToBoolean(dic[BrokerSettingsConstants.Durable], CultureInfo.InvariantCulture);
                 if (!durable)
@@ -2028,7 +2017,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                         pair.Key,
                         pair.Value);
 
-                    if (this.CustomizedPropertyNames.Contains(pair.Key))
+                    if (SchedulerDelegationCommon.CustomizedPropertyNames.Contains(pair.Key))
                     {
                         if (pair.Value != null)
                         {
@@ -2066,7 +2055,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                             default:
                                 // update job environment variable
                                 string envName;
-                                if (this.PropToEnvMapping.TryGetValue(pair.Key, out envName))
+                                if (SchedulerDelegationCommon.PropToEnvMapping.TryGetValue(pair.Key, out envName))
                                 {
                                     if (pair.Value != null)
                                     {
@@ -2398,55 +2387,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
             string sid = this.GetJobOwnerSIDInternal(jobId);
             return new SecurityIdentifier(sid).Equals(identity.User);
-        }
-
-        /// <summary>
-        /// Initializes custom job property ids
-        /// </summary>
-        private void InitPropertyIds()
-        {
-            this.CustomizedPropertyNames.AddRange(new string[]
-            {
-                BrokerSettingsConstants.BrokerNode,
-                BrokerSettingsConstants.Suspended,
-                BrokerSettingsConstants.Durable,
-                BrokerSettingsConstants.ShareSession,
-                BrokerSettingsConstants.UseAad,
-                BrokerSettingsConstants.AadUserIdentity,
-                BrokerSettingsConstants.Secure,
-                BrokerSettingsConstants.TransportScheme,
-                BrokerSettingsConstants.UseAzureQueue,
-                BrokerSettingsConstants.LocalUser,
-                BrokerSettingsConstants.AllocationGrowLoadRatioThreshold,
-                BrokerSettingsConstants.AllocationShrinkLoadRatioThreshold,
-                BrokerSettingsConstants.ClientIdleTimeout,
-                BrokerSettingsConstants.SessionIdleTimeout,
-                BrokerSettingsConstants.MessagesThrottleStartThreshold,
-                BrokerSettingsConstants.MessagesThrottleStopThreshold,
-                BrokerSettingsConstants.ClientConnectionTimeout,
-                BrokerSettingsConstants.Faulted,
-                BrokerSettingsConstants.Calculated,
-                BrokerSettingsConstants.Calculating,
-                BrokerSettingsConstants.PurgedTotal,
-                BrokerSettingsConstants.PurgedProcessed,
-                BrokerSettingsConstants.PurgedFaulted,
-                BrokerSettingsConstants.ServiceVersion,
-                BrokerSettingsConstants.PersistVersion,
-                BrokerSettingsConstants.ServiceConfigMaxMessageSize,
-                BrokerSettingsConstants.ServiceConfigOperationTimeout,
-                BrokerSettingsConstants.SoaDiagTraceLevel,
-                BrokerSettingsConstants.SoaDiagTraceCleanup,
-                BrokerSettingsConstants.MessageDetailsAvailable,
-                BrokerSettingsConstants.Reemitted,
-                BrokerSettingsConstants.DispatcherCapacityInGrowShrink
-            });
-
-            this.PropToEnvMapping.Add("EndpointReference", "HPC_EndpointReference");
-            this.PropToEnvMapping.Add("NumberOfCalls", "HPC_NumberOfCalls");
-            this.PropToEnvMapping.Add("NumberOfOutstandingCalls", "HPC_NumberOfOutstandingCalls");
-            this.PropToEnvMapping.Add("CallDuration", "HPC_CallDuration");
-            this.PropToEnvMapping.Add("CallsPerSecond", "HPC_CallsPerSecond");
-            this.PropToEnvMapping.Add(BrokerSettingsConstants.SoaDiagTraceLevel, Constant.TraceSwitchValue);
         }
 
         /// <summary>

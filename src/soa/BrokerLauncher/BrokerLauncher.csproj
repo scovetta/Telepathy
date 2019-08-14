@@ -225,7 +225,7 @@
     </Compile>
     <Compile Include="NodeMappingCache.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="SchedulerAdapterInternalClient.cs" />
+    <Compile Include="HpcSchedulerAdapterInternalClient.cs" />
     <Compile Include="SchedulerHelper.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -329,5 +329,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -33,6 +33,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using System.Net.Http;
     using SoaAmbientConfig;
 
+    using HpcSchedulerAdapterInternalClient = Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.HpcSchedulerAdapterInternalClient;
     using SR = Microsoft.Hpc.SvcBroker.SR;
 
     /// <summary>
@@ -734,7 +735,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                     "[DispatcherManager].ValidateConnectionString: Azure storage connection string is missed.");
 
                 // set job's progress message if Azure connection string is missed
-                using (SchedulerAdapterInternalClient client = new SchedulerAdapterInternalClient(sessionNode, certThrumbprint))
+                using (HpcSchedulerAdapterInternalClient client = new HpcSchedulerAdapterInternalClient(sessionNode, certThrumbprint))
                 {
                     await client.SetJobProgressMessage(sessionId, SR.MissAzureStorageConnectionString);
                 }
@@ -765,7 +766,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                             "[DispatcherManager].ValidateConnectionString: Access key in Azure storage connection string is invalid.");
 
                         // set job's progress message if Azure connection string is invalid
-                        using (SchedulerAdapterInternalClient client = new SchedulerAdapterInternalClient(sessionNode, certThrumbprint))
+                        using (HpcSchedulerAdapterInternalClient client = new HpcSchedulerAdapterInternalClient(sessionNode, certThrumbprint))
                         {
                             await client.SetJobProgressMessage(sessionId, SR.InvalidAzureStorageConnectionString);
                         }
@@ -778,7 +779,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                             "[DispatcherManager].ValidateConnectionString: Account name in Azure storage connection string is invalid.");
 
                         // set job's progress message if Azure connection string is invalid
-                        using (SchedulerAdapterInternalClient client = new SchedulerAdapterInternalClient(sessionNode, certThrumbprint))
+                        using (HpcSchedulerAdapterInternalClient client = new HpcSchedulerAdapterInternalClient(sessionNode, certThrumbprint))
                         {
                             await client.SetJobProgressMessage(sessionId, SR.InvalidAzureStorageConnectionString);
                         }

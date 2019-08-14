@@ -32,10 +32,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <summary>
         /// Get resource information
         /// </summary>
-        /// <param name="attachInto">indicating session attach information</param>
+        /// <param name="attachInfo">indicating session attach information</param>
         /// <param name="timeout">indicating the timeout</param>
         /// <returns>returns session information</returns>
-        Task<SessionInfo> GetResourceInfo(SessionAttachInfo attachInto, TimeSpan timeout);
+        Task<SessionInfo> GetResourceInfo(SessionAttachInfo attachInfo, TimeSpan timeout);
 
         /// <summary>
         /// Free resource

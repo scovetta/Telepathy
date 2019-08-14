@@ -148,7 +148,6 @@
         {
             IBrokerFactory brokerFactory = new V3BrokerFactory(false);
             DateTime targetTimeout = DateTime.Now.AddMilliseconds(Constant.DefaultCreateSessionTimeout);
-            //in HPC sessionId cannot be negative (out of range)   
             return new Session((V3Session)await brokerFactory.CreateBroker(startInfo, SessionStartInfo.StandaloneSessionId, targetTimeout, startInfo.BrokerLauncherEprs, null).ConfigureAwait(false));
         }
 
@@ -219,6 +218,49 @@
             Utility.ThrowIfNull(startInfo, "startInfo");
 
             return new Session(await V3Session.CreateSessionAsync(startInfo, binding).ConfigureAwait(false));
+        }
+
+        /// <summary>
+        /// <para>
+        /// Attaches an SOA client to an existing session by using the specified information about the session.
+        /// </para>
+        /// </summary>
+        /// <param name="attachInfo">
+        /// <para>
+        /// A
+        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionAttachInfo"/> object that specifies information about the session to which you want to attach the SOA client, including the name of the head node for the cluster that hosts the session and the identifier of the session.
+        /// </para>
+        /// </param>
+        /// <param name="binding">
+        /// indicting the binding
+        /// </param>
+        /// <returns>
+        /// <para>
+        /// A <see cref="Microsoft.Hpc.Scheduler.Session.Session"/> that represents the session to which the client attached.
+        /// </para>
+        /// </returns>
+        public static async Task<Session> AttachSessionAsync(SessionAttachInfo attachInfo, Binding binding)
+        {
+            Utility.ThrowIfNull(attachInfo, "attachInfo");
+
+            return new Session(await V3Session.AttachSessionAsync(attachInfo, binding).ConfigureAwait(false));
+        }
+
+        public static async Task<Session> AttachSessionAsync(SessionAttachInfo attachInfo)
+        {
+            Utility.ThrowIfNull(attachInfo, "attachInfo");
+
+            return new Session(await V3Session.AttachSessionAsync(attachInfo, null).ConfigureAwait(false));
+        }
+
+        public static Session AttachSession(SessionAttachInfo attachInfo, Binding binding)
+        {
+            return AttachSessionAsync(attachInfo, binding).GetAwaiter().GetResult();
+        }
+
+        public static Session AttachSession(SessionAttachInfo attachInfo)
+        {
+            return AttachSessionAsync(attachInfo).GetAwaiter().GetResult();
         }
     }
 }
