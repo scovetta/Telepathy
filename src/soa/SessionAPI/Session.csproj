@@ -159,6 +159,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueAdapter\Client\ResponsePool.cs" />
     <Compile Include="ServiceContainer\SessionServiceContainer.cs" />
+    <Compile Include="ServiceContext.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="IConnectionInfoExtension.cs" />
     <Compile Include="Interface\ClusterInfoContract.cs" />

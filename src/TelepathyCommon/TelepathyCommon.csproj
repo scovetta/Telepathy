@@ -77,6 +77,7 @@
     <Compile Include="CommonEventSource.cs" />
     <Compile Include="DomainUtil.cs" />
     <Compile Include="EndpointsConnectionString.cs" />
+    <Compile Include="ErrorCode.cs" />
     <Compile Include="HpcContext\Extensions\HpcContextExtension.cs" />
     <Compile Include="HpcContext\Extensions\RegistryExtension\AzureEndpointRegistryExtension.cs" />
     <Compile Include="HpcContext\Extensions\RegistryExtension\BatchRegistryExtension.cs" />
@@ -128,6 +129,11 @@
     <Compile Include="Service\WcfServiceConstants.cs" />
     <Compile Include="GlobalMutex.cs" />
     <Compile Include="SoaRegistrationAuxModule.cs" />
+	<Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
     <Compile Include="SslCertBindingHelper.cs" />
     <Compile Include="TaskCompletionSource.cs" />
     <Compile Include="TaskExtensions.cs" />
@@ -150,6 +156,11 @@
       <Version>8.4.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

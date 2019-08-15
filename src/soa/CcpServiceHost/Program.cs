@@ -28,15 +28,17 @@ namespace Microsoft.Hpc.CcpServiceHosting
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.RESTServiceModel;
-    using Microsoft.Hpc.Rest;
     using Microsoft.Hpc.RuntimeTrace;
-    using Microsoft.Hpc.Scheduler.Properties;
     using Microsoft.Hpc.Scheduler.Session.Configuration;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
     using Microsoft.Win32.SafeHandles;
 
     using SoaService.DataClient;
+
+    using TelepathyCommon;
+    using TelepathyCommon.HpcContext;
+    using TelepathyCommon.Rest;
 
     class Program
     {
@@ -405,7 +407,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 ServiceRegistrationRepo serviceRegistration = new ServiceRegistrationRepo(
                         Environment.GetEnvironmentVariable(Constant.RegistryPathEnv),
                         ServiceHostRuntimeConfiguration.Standalone ? null:
-                        HpcContext.GetOrAdd(headnode, CancellationToken.None).GetServiceRegistrationRestClient());
+                        TelepathyContext.GetOrAdd(headnode, CancellationToken.None).GetServiceRegistrationRestClient());
 
                 // Get the path to the service config file name
                 serviceConfigFile = serviceRegistration.GetServiceRegistrationPath(serviceConfigFileName);

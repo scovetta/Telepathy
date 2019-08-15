@@ -29,6 +29,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
 
         private static object brokerNodeIdentityCacheLock = new object();
 
+#if HPCPACK
         /// <summary>
         /// Set the broker nodes for the session
         /// </summary>
@@ -47,6 +48,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
 
             schedulerJob.SetEnvironmentVariable(BrokerCountEnvVarName, nodeSSDLs.Count.ToString());
         }
+#endif
 
 
         /// <summary>

@@ -13,9 +13,12 @@ namespace Microsoft.Hpc.CcpServiceHosting
     using System.Globalization;
     using System.Reflection;
     using System.ServiceModel;
-    using Microsoft.Hpc.Scheduler.Properties;
+
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Interface;
+
+    using TelepathyCommon;
+
     using RuntimeTraceHelper = Microsoft.Hpc.RuntimeTrace.TraceHelper;
 
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]

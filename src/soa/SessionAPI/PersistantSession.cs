@@ -9,12 +9,8 @@
 
 namespace Microsoft.Hpc.Scheduler.Session
 {
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using System;
-    using System.Diagnostics;
     using System.ServiceModel.Channels;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     /// <summary>
     ///   <para>Represents a durable session that binds a client application 
@@ -41,6 +37,11 @@ namespace Microsoft.Hpc.Scheduler.Session
         public DurableSession(SessionInfoBase info, string headnode, Binding binding)
             : base(info, headnode, binding)
         {
+        }
+
+        public static DurableSession CreateSession(SessionStartInfo info)
+        {
+            throw new NotImplementedException();
         }
     }
 }
