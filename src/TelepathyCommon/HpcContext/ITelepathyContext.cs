@@ -1,8 +1,9 @@
-﻿using System.Threading;
-using TelepathyCommon.Registry;
-
-namespace TelepathyCommon.HpcContext
+﻿namespace TelepathyCommon.HpcContext
 {
+    using System.Threading;
+
+    using TelepathyCommon.Registry;
+
     public interface ITelepathyContext
     {
         CancellationToken CancellationToken { get; }

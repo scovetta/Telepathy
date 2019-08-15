@@ -32,7 +32,6 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using System.Net.Http;
     using SoaAmbientConfig;
 
-    using HpcSchedulerAdapterInternalClient = Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.HpcSchedulerAdapterInternalClient;
     using SR = Microsoft.Hpc.SvcBroker.SR;
 
     /// <summary>
@@ -606,6 +605,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                             this.monitor.NeedAdjustAllocation);
                     }
                 }
+#if HPCPACK
                 else if (dispatcherInfo.AllocatedNodeLocation == Scheduler.Session.Data.NodeLocation.AzureVM
                     || dispatcherInfo.AllocatedNodeLocation == Scheduler.Session.Data.NodeLocation.Azure)
                 {
@@ -650,6 +650,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                             this.monitor.NeedAdjustAllocation);
                     }
                 }
+#endif
                 else
                 {
                     BrokerTracing.TraceError("Not supported NodeLocation {0} for dispatcher", dispatcherInfo.AllocatedNodeLocation);
@@ -713,6 +714,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
             }
         }
 
+#if HPCPACK
         /// <summary>
         /// Check if the Azure storage connection string is valid.
         /// </summary>
@@ -793,6 +795,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                 }
             }
         }
+#endif
 
         /// <summary>
         /// Remove a dispatcher from active dispatcher list

@@ -238,15 +238,10 @@ namespace Microsoft.Hpc.EchoClient
                 watch.Start();
                 if (config.Durable)
                 {
-                    session = HpcDurableSession.CreateSession(info);
-                }
-                // TODO: consolidate this
-                else if (info.IsNoSession)
-                {
-                    session = info.UseInprocessBroker ? Session.CreateCoreLayerSession(info) : Session.CreateBrokerLayerSession(info); // TODO: Usability fix
+                    session = DurableSession.CreateSession(info);
                 }
                 else
-                {
+                { 
                     session = Session.CreateSession(info);
                 }
                 

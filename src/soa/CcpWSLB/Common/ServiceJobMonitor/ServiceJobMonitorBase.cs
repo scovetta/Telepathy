@@ -27,7 +27,6 @@ namespace Microsoft.Hpc.ServiceBroker
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
     using Microsoft.Hpc.ServiceBroker.BackEnd;
     using Microsoft.Hpc.ServiceBroker.Common;
-    using Microsoft.Hpc.Scheduler.Session.HpcPack.DataMapping;
 
     using SoaAmbientConfig;
     using Microsoft.Hpc.ServiceBroker.Common.ThreadHelper;
