@@ -13,7 +13,6 @@ namespace Microsoft.Hpc.EchoSvcLib
     using System.IO;
     using System.ServiceModel;
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Data;
     using Microsoft.Hpc.Scheduler.Session.GenericService;
 
     /// <summary>
@@ -72,6 +71,7 @@ namespace Microsoft.Hpc.EchoSvcLib
         /// <returns>the echo string</returns>
         public int EchoData(string dataClientId)
         {
+#if HPCPACK
             Console.WriteLine("DataClient Id: {0}", dataClientId);
             ServiceContext.Logger.TraceInformation("EchoData: Data client Id = {0}", dataClientId);
 
@@ -80,6 +80,9 @@ namespace Microsoft.Hpc.EchoSvcLib
 
             ServiceContext.Logger.TraceInformation("EchoData: Data client Id = {0}, length = {1}", dataClientId, data.Length);
             return data.Length;
+#endif
+            // TODO: implement EchoData
+            throw new NotImplementedException("Data service is not enabled in Telepathy yet.");
         }
 
         /// <summary>
