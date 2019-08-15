@@ -6,6 +6,7 @@
 //      An Azure blob based data provider implementation
 // </summary>
 //------------------------------------------------------------------------------
+#if HPCPACK
 
 namespace Microsoft.Hpc.Scheduler.Session.Data.DataProvider
 {
@@ -690,3 +691,4 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.DataProvider
         }
     }
 }
+#endif

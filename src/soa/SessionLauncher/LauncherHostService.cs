@@ -18,23 +18,23 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
     using System.Diagnostics;
     using System.Security.Cryptography.X509Certificates;
     using System.ServiceModel;
-    using System.ServiceModel.Channels;
     using System.ServiceModel.Description;
     using System.ServiceModel.Security;
     using System.ServiceProcess;
-    using System.Threading;
     using System.Threading.Tasks;
 
     using AzureStorageBinding.Table.Binding;
 
     using Microsoft.Hpc.AADAuthUtil;
-    using Microsoft.Hpc.Scheduler.Session.Data.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.DataService.REST;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls;
-    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch;
+#if HPCPACK
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack;
+#endif
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.SchedulerDelegations.AzureBatch;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.SchedulerDelegations.Local;
+
+    using TelepathyCommon.HpcContext;
+    using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
 
     using ISessionLauncher = Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.ISessionLauncher;
 
@@ -74,6 +74,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
         /// </summary>
         private ISchedulerAdapter schedulerDelegation;
 
+#if HPCPACK
         /// <summary>
         /// Store the data service instance
         /// </summary>
@@ -83,6 +84,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
         /// REST Server of Data Service
         /// </summary>
         private DataServiceRestServer dataServiceRestServer;
+#endif
 
         /// <summary>
         /// Initializes a new instance of the LauncherHostService class
@@ -129,6 +131,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 this.delegationHost = null;
                 TraceHelper.TraceEvent(TraceEventType.Verbose, "Scheduler delegation service closed");
 
+#if HPCPACK
                 // session launcher host has been closed, remember to close the data service instance
                 if (this.dataService != null)
                 {
@@ -136,6 +139,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                     this.dataService = null;
                     TraceHelper.TraceEvent(TraceEventType.Verbose, "Data service instance closed");
                 }
+#endif
 
                 if (!isNtService)
                 {
@@ -157,11 +161,11 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                     TraceHelper.IsDiagTraceEnabled = null;
                     SoaDiagTraceHelper.IsDiagTraceEnabledInternal = null;
 
-                    if (this.brokerNodesManager != null)
+                    if (this.brokerNodesManager is IDisposable d)
                     {
-                        this.brokerNodesManager.Dispose();
-                        this.brokerNodesManager = null;
+                       d.Dispose();
                     }
+                    this.brokerNodesManager = null;
                 }
             }
             catch (Exception e)
@@ -188,9 +192,11 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
 
                 if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.HpcPack)
                 {
+#if HPCPACK
                     this.brokerNodesManager = new BrokerNodesManager();
                     this.sessionLauncher = SessionLauncherFactory.CreateHpcPackSessionLauncher(SoaHelper.GetSchedulerName(), false, this.brokerNodesManager);
                     this.schedulerDelegation = new HpcSchedulerDelegation(this.sessionLauncher, this.brokerNodesManager);
+#endif
                 }
                 else if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.AzureBatch)
                 {
@@ -206,18 +212,14 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                     this.schedulerDelegation = new LocalSchedulerDelegation(instance);
                 }
 
-#if AZURE
-                TraceHelper.IsDiagTraceEnabled = x => true;
-#else
+                TraceHelper.IsDiagTraceEnabled = _ => true;
+#if HPCPACK
+
                 // Bug 18448: Need to enable traces only for those who have enabled trace
                 if (this.schedulerDelegation is IHpcSchedulerAdapterInternal hpcAdapterInternal)
                 {
                     SoaDiagTraceHelper.IsDiagTraceEnabledInternal = hpcAdapterInternal.IsDiagTraceEnabled;
                     TraceHelper.IsDiagTraceEnabled = SoaDiagTraceHelper.IsDiagTraceEnabled;
-                }
-                else
-                {
-                    TraceHelper.IsDiagTraceEnabled = _ => true;
                 }
 #endif
 
@@ -232,6 +234,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                     this.StartSchedulerDelegationService();
                 }
 
+#if HPCPACK
                 // start data service
                 if (!SoaHelper.IsOnAzure() && this.sessionLauncher is HpcPackSessionLauncher hpcSessionLauncher)
                 {
@@ -239,6 +242,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                     this.StartDataWcfService();
                     this.StartDataRestService(this.dataService);
                 }
+#endif
             }
             catch (Exception e)
             {
@@ -249,12 +253,15 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
             await Task.CompletedTask;
         }
 
+#if HPCPACK
+
         private void StartDataRestService(DataService serviceInstance)
         {
             var server = new DataServiceRestServer(serviceInstance);
             server.Start();
             this.dataServiceRestServer = server;
         }
+#endif
 
         /// <summary>
         /// Start session launcher service
@@ -282,7 +289,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                     this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher), BindingHelper.HardCodedNoAuthSessionLauncherNetTcpBinding, "AAD");
                     this.launcherHost.AddServiceEndpoint(typeof(ISessionLauncher), BindingHelper.HardCodedInternalSessionLauncherNetTcpBinding, "Internal");
 
-                    TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher find cert {0}", HpcContext.Get().GetSSLThumbprint().GetAwaiter().GetResult());
+                    TraceHelper.TraceEvent(TraceEventType.Information, "Open session launcher find cert {0}", TelepathyContext.Get().GetSSLThumbprint().GetAwaiter().GetResult());
                     this.launcherHost.Credentials.UseInternalAuthenticationAsync().GetAwaiter().GetResult();
 
                     TraceHelper.TraceEvent(TraceEventType.Information, "Add session launcher service endpoint {0}", sessionLauncherAddress);
@@ -349,6 +356,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
             string schedulerDelegationAddress = SoaHelper.GetSchedulerDelegationAddress("localhost");
             this.delegationHost = new ServiceHost(this.schedulerDelegation, new Uri(schedulerDelegationAddress));
             BindingHelper.ApplyDefaultThrottlingBehavior(this.delegationHost);
+#if HPCPACK
             if (this.schedulerDelegation is IHpcSchedulerAdapterInternal)
             {
                 this.delegationHost.AddServiceEndpoint(typeof(IHpcSchedulerAdapterInternal), BindingHelper.HardCodedInternalSchedulerDelegationBinding, "Internal");
@@ -359,9 +367,10 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                     StoreLocation.LocalMachine,
                     StoreName.My,
                     X509FindType.FindByThumbprint,
-                    HpcContext.Get().GetSSLThumbprint().GetAwaiter().GetResult());
+                    TelepathyContext.Get().GetSSLThumbprint().GetAwaiter().GetResult());
             }
             else
+#endif
             {
                 // Use insecure binding until unified authentication logic is implemented
                 this.delegationHost.AddServiceEndpoint(typeof(ISchedulerAdapter), BindingHelper.HardCodedUnSecureNetTcpBinding, string.Empty);
@@ -408,6 +417,8 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
             }
         }
 
+#if HPCPACK
+
         /// <summary>
         /// Start data service
         /// </summary>
@@ -430,6 +441,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
 
             TraceHelper.TraceEvent(TraceEventType.Information, "Open SOA data service at {0}", dataServiceAddress);
         }
+#endif
 
         /// <summary>
         /// Faulted event handler for dataServiceHost
@@ -449,6 +461,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 TraceHelper.TraceEvent(TraceEventType.Critical, "Exception encountered while aborting data service host: {0}", ex);
             }
 
+#if HPCPACK
             // and create/restart a new one
             try
             {
@@ -458,6 +471,8 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
             {
                 TraceHelper.TraceEvent(TraceEventType.Critical, "Exception encountered while restarting data service: {0}", ex);
             }
+
+#endif
         }
 
         protected override void OnStart(string[] args)

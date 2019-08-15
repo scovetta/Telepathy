@@ -13,10 +13,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.Security.Principal;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
+
     using Microsoft.Hpc.ServiceBroker;
-    using System.ServiceModel.Security;
-    using System.Security.Cryptography.X509Certificates;
+
+    using TelepathyCommon.HpcContext;
+    using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
 
     /// <summary>
     /// The Broker Launcher Client
@@ -31,7 +32,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         public BrokerLauncherClient(Uri uri, string certThrumbprint)
             : base(GetBinding(uri), GetEndpoint(uri, certThrumbprint))
         {
-            string thumbpint = HpcContext.Get().GetSSLThumbprint().GetAwaiter().GetResult();
+            string thumbpint = TelepathyContext.Get().GetSSLThumbprint().GetAwaiter().GetResult();
             this.ClientCredentials.UseInternalAuthentication(thumbpint);
 
             if (!SoaHelper.IsOnAzure())

@@ -6,6 +6,7 @@
 //      File share data provider implementation
 // </summary>
 //------------------------------------------------------------------------------
+#if HPCPACK
 
 namespace Microsoft.Hpc.Scheduler.Session.Data.DataProvider
 {
@@ -22,6 +23,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.DataProvider
     using System.Security.Principal;
     using Microsoft.Hpc.Scheduler.Session.Data.Internal;
     using Microsoft.Win32.SafeHandles;
+
+    using TelepathyCommon.HpcContext;
+    using TelepathyCommon.HpcContext.Extensions;
+
     using TraceHelper = Microsoft.Hpc.Scheduler.Session.Data.Internal.DataServiceTraceHelper;
 
     /// <summary>
@@ -29,7 +34,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.DataProvider
     /// </summary>
     internal class FileShareDataProvider : IDataProvider
     {
-        #region private fields
+#region private fields
 
         /// <summary>
         /// Maximum number of subdirectories under file server
@@ -71,7 +76,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.DataProvider
         /// </summary>
         private string containerRootDirPath;
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Initializes a new instance of the FileShareDataProvider class
@@ -641,7 +646,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.DataProvider
         {
             try
             {
-                IEnumerable<string> hnAccounts = HpcContext.Get().GetNodesAsync().GetAwaiter().GetResult().Select(h => string.Format(@"{0}\{1}$", Environment.UserDomainName, h));
+                IEnumerable<string> hnAccounts = TelepathyContext.Get().GetNodesAsync().GetAwaiter().GetResult().Select(h => string.Format(@"{0}\{1}$", Environment.UserDomainName, h));
                 // prepare ACL setting for the directory
                 DirectorySecurity ds = new DirectorySecurity();
                 ds.SetAccessRuleProtection(true, false);
@@ -980,3 +985,4 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.DataProvider
         }
     }
 }
+#endif

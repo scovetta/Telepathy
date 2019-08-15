@@ -1,6 +1,9 @@
 ﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.DataService.REST
 {
+#if HPCPACK
     using Microsoft.Hpc.Scheduler.Session.Data.Internal;
+
+    using TelepathyCommon;
 
     internal class DataServiceRestServer : InternalRestServer
     {
@@ -11,4 +14,5 @@
             DataServiceInstance = serviceInstance;
         }
     }
+#endif
 }

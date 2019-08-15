@@ -9,8 +9,6 @@
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 {
-    using Microsoft.Hpc.Scheduler.Properties;
-
     /// <summary>
     /// the broker node item.
     /// It is immutable.
@@ -27,16 +25,19 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         private string domainNameField;
 
+#if HPCPACK
         /// <summary>
         /// the node state.
         /// </summary>
         private NodeState stateField;
+#endif
 
         /// <summary>
         /// a valud indicating whether the node is reachable.
         /// </summary>
         private bool isReachableField;
 
+#if HPCPACK
         /// <summary>
         /// Initializes a new instance of the BrokerNodeItem class.
         /// </summary>
@@ -59,6 +60,40 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             this.stateField = state;
             this.isReachableField = reachable;
         }
+        
+        /// <summary>
+        /// Gets or sets the node property.
+        /// </summary>
+        public NodeState State
+        {
+            get
+            {
+                return this.stateField;
+            }
+        }
+#endif
+
+        /// <summary>
+        /// Initializes a new instance of the BrokerNodeItem class.
+        /// </summary>
+        /// <param name="name">the node name.</param>
+        /// <param name="domainName">the node domain name.</param>
+        /// <param name="state">the node state.</param>
+        /// <param name="reachable">a value indicating whether the node is reachable.</param>
+        public BrokerNodeItem(string name, string domainName, bool reachable)
+        {
+            ParamCheckUtility.ThrowIfNullOrEmpty(name, "name");
+
+            // Make sure the name is saved in upper case so it can be easily looked up later
+            this.nameField = name.ToUpper();
+
+            if (!string.IsNullOrEmpty(domainName))
+            {
+                this.domainNameField = domainName.ToUpper();
+            }
+
+            this.isReachableField = reachable;
+        }
 
         /// <summary>
         /// Gets the node name.
@@ -79,17 +114,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             get
             {
                 return this.domainNameField;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the node property.
-        /// </summary>
-        public NodeState State
-        {
-            get
-            {
-                return this.stateField;
             }
         }
 

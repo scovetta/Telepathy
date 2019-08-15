@@ -6,6 +6,7 @@
 //      Async version of the data service interface
 // </summary>
 //------------------------------------------------------------------------------
+#if HPCPACK
 namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
 {
     using System;
@@ -164,3 +165,4 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
         void EndWriteDone(IAsyncResult result);
     }
 }
+#endif

@@ -6,6 +6,7 @@
 //      Stores job informations
 // </summary>
 //------------------------------------------------------------------------------
+#if HPCPACK
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 {
     using System;
@@ -128,3 +129,4 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         }
     }
 }
+#endif

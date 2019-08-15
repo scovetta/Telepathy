@@ -4,6 +4,8 @@
 // </copyright>
 // <summary>the helper class for job.</summary>
 //-----------------------------------------------------------------------------------------------------------------------------------------
+#if HPCPACK
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 {
     using System;
@@ -350,3 +352,4 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         }
     }
 }
+#endif

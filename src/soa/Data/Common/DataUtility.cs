@@ -4,6 +4,7 @@
 // </copyright>
 // <summary>It is a helper class.</summary>
 //-----------------------------------------------------------------------------------------------------------------------------------------
+#if HPCPACK
 
 namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
 {
@@ -81,3 +82,4 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
         }
     }
 }
+#endif

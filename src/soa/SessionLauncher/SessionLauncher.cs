@@ -26,6 +26,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
     using Microsoft.Hpc.Scheduler.Session.Configuration;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
 
+    using TelepathyCommon;
+
     /// <summary>
     /// the session launcher service.
     /// </summary>
@@ -206,8 +208,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// Update the session pool by checking an active job list
         /// </summary>
         /// <param name="jobInfoList">active job list</param>
-        internal void UpdateSessionPool(List<JobInfo> jobInfoList)
+        internal void UpdateSessionPool(IList<object> jobInfoList)//(List<JobInfo> jobInfoList)
         {
+#if HPCPACK
+
             SortedList<int, int> jobIds = new SortedList<int, int>();
             foreach (JobInfo info in jobInfoList)
             {
@@ -235,6 +239,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     }
                 }
             }
+#endif
+            // TODO: support session pool
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -246,7 +253,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             return Task.FromResult(this.clusterInfo.Contract);
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// the class holds session pool info of a service

@@ -6,29 +6,20 @@
 //      the broker nodes manager.
 // </summary>
 //------------------------------------------------------------------------------
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Configuration;
-    using System.Diagnostics;
-    using System.Runtime.InteropServices;
-    using System.Security.Principal;
-    using System.Text;
-    using System.Threading;
-    using Microsoft.Hpc.RuntimeTrace;
-    using Microsoft.Hpc.Scheduler;
-    using Microsoft.Hpc.Scheduler.Properties;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// the broker nodes manager class.
     /// </summary>
-    internal class BrokerNodesManager : IDisposable
+    internal class BrokerNodesManager
+#if HPCPACK
+        : IDisposable
+#endif
     {
-        #region private fields
+
         /// <summary>
         /// the endpoint prefix for https binding.
         /// </summary>
@@ -48,7 +39,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// How often to check BN status
         /// </summary>
         private const int CheckNodesPerClusterInterval = 10000;
-
+#if HPCPACK
         /// <summary>
         /// the broker nodes filter used to pull the broker nodes from the scheduler.
         /// </summary>
@@ -141,15 +132,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         private PerformanceCounter activeBrokerResourceGroupCount = null;
 
-        #endregion
-
         /// <summary>
         /// Initializes a new instance of the BrokerNodesManager class with the specified head node. 
         /// </summary>
         /// <param name="headNode">the head node name.</param>
         public BrokerNodesManager()
         {
-            this.schedulerField = CommonSchedulerHelper.GetScheduler(HpcContext.Get().CancellationToken).GetAwaiter().GetResult();
+            this.schedulerField = CommonSchedulerHelper.GetScheduler(TelepathyContext.Get().CancellationToken).GetAwaiter().GetResult();
             
             // Initialize performance counters
             this.totalFailoverBrokerNodeCount = SessionPerformanceCounterHelper.GetPerfCounter(SessionPerformanceCounterKey.TotalFailoverBrokerNodeCount);
@@ -470,25 +459,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         }
 
         /// <summary>
-        /// Generate broker launcher epr
-        /// </summary>
-        /// <param name="machineName">machine name</param>
-        /// <returns>broker launcher epr</returns>
-        internal static string GenerateBrokerLauncherEpr(string endpointPrefix, string machineName, TransportScheme scheme)
-        {
-            if (endpointPrefix.Equals(HttpsPrefix, StringComparison.InvariantCultureIgnoreCase))
-            {
-                return SoaHelper.GetBrokerLauncherAddress(machineName, scheme);
-            }
-            else if (endpointPrefix.Equals(NettcpPrefix, StringComparison.InvariantCultureIgnoreCase))
-            {
-                return SoaHelper.GetBrokerLauncherAddress(machineName);
-            }
-
-            throw new ArgumentException();
-        }
-
-        /// <summary>
         /// Generate broker launcher internal epr
         /// </summary>
         /// <param name="machineName">machine name</param>
@@ -630,6 +600,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             List<NodeInfo> offlineBrokers = new List<NodeInfo>();
             String brokerListInfoMessage = String.Empty;
 
+#if HPCPACK
             // Loop through the broker nodes
             foreach (BrokerNodeItem brokerNode in brokerNodesInCluster)
             {
@@ -651,6 +622,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     }
                 }
             }
+#endif
 
             // Loop through the broker launcher resource groups hosted on failover BNs
             foreach (ResourceGroupInfo resourceGroupInfo in resourceGroups.Values)
@@ -1016,6 +988,25 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     }
                 }
             }
+        }
+#endif
+        /// <summary>
+        /// Generate broker launcher epr
+        /// </summary>
+        /// <param name="machineName">machine name</param>
+        /// <returns>broker launcher epr</returns>
+        internal static string GenerateBrokerLauncherEpr(string endpointPrefix, string machineName, TransportScheme scheme)
+        {
+            if (endpointPrefix.Equals(HttpsPrefix, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return SoaHelper.GetBrokerLauncherAddress(machineName, scheme);
+            }
+            else if (endpointPrefix.Equals(NettcpPrefix, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return SoaHelper.GetBrokerLauncherAddress(machineName);
+            }
+
+            throw new ArgumentException();
         }
     }
 }

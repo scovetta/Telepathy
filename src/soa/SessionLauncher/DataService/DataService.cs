@@ -4,6 +4,7 @@
 // </copyright>
 // <summary>the data serivce.</summary>
 //-----------------------------------------------------------------------------------------------------------------------------------------
+#if HPCPACK
 namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
 {
     using System;
@@ -1007,3 +1008,4 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
         }
     }
 }
+#endif

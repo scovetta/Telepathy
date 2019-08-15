@@ -6,6 +6,8 @@
 //      Data provider interface definition
 // </summary>
 //------------------------------------------------------------------------------
+#if HPCPACK
+
 namespace Microsoft.Hpc.Scheduler.Session.Data.DataProvider
 {
     using System.Collections.Generic;
@@ -77,3 +79,4 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.DataProvider
         void CheckDataContainerPermissions(string name, WindowsIdentity userIdentity, DataPermissions permissions);
     }
 }
+#endif
