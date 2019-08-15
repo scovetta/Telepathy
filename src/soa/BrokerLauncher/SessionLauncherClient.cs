@@ -13,10 +13,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.Security.Principal;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using Microsoft.Hpc.Scheduler.Session.Data.Internal;
+
     using Microsoft.Hpc.ServiceBroker;
-    using System.ServiceModel.Security;
-    using System.Security.Cryptography.X509Certificates;    
 
     /// <summary>
     /// Service client to connect the session launcher in headnode

@@ -7,12 +7,13 @@
 // </summary>
 //------------------------------------------------------------------------------
 
-using TelepathyCommon;
-
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using System;
     using System.Threading.Tasks;
+
+    using TelepathyCommon;
+
     /// <summary>
     /// Helper class to retry operation if exception occured
     /// </summary>

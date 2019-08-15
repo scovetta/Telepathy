@@ -25,6 +25,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using Microsoft.Hpc.ServiceBroker.Common;
     using Microsoft.Hpc.ServiceBroker.Common.SchedulerAdapter;
 
+    using TelepathyCommon;
+    using TelepathyCommon.HpcContext;
+    using TelepathyCommon.HpcContext.Extensions;
+    using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
+
     /// <summary>
     /// Helper class for operation to scheduler
     /// </summary>
@@ -63,12 +68,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <summary>
         /// Stores the fabric cluster context
         /// </summary>
-        private IHpcContext context;
+        private ITelepathyContext context;
 
         /// <summary>
         /// Initializes a new instance of the SchedulerHelper class
         /// </summary>
-        public SchedulerHelper(IHpcContext context)
+        public SchedulerHelper(ITelepathyContext context)
         {
             this.context = context;
             this.sessionNode = new Lazy<string>(() => ResolveSessionNodeWithRetries().GetAwaiter().GetResult(), LazyThreadSafetyMode.ExecutionAndPublication);

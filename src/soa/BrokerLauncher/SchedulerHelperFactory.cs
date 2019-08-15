@@ -1,8 +1,10 @@
 ﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 {
+    using TelepathyCommon.HpcContext;
+
     internal static class SchedulerHelperFactory
     {
-        public static ISchedulerHelper GetSchedulerHelper(IHpcContext context)
+        public static ISchedulerHelper GetSchedulerHelper(ITelepathyContext context)
         {
             if (BrokerLauncherEnvironment.Standalone)
             {

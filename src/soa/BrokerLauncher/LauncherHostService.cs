@@ -10,11 +10,9 @@
 namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
 {
     using Microsoft.Hpc.RuntimeTrace;
-    using Microsoft.Hpc.Scheduler.Properties;
     using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Diagnostics;
     using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Hpc.ServiceBroker.Common;
     using System;
@@ -24,13 +22,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using System.ServiceModel;
     using System.ServiceProcess;
     using System.Threading;
-
-    using System.ServiceModel.Security;
-    using System.Security.Cryptography.X509Certificates;
     using System.ServiceModel.Description;
 
     using Microsoft.Hpc.AADAuthUtil;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter;
+
+    using TelepathyCommon.HpcContext;
 
     using IBrokerLauncher = Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.IBrokerLauncher;
 
@@ -167,12 +164,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
         /// <summary>
         /// Stores the service fabric context;
         /// </summary>
-        private IHpcContext context;
+        private ITelepathyContext context;
 
         /// <summary>
         /// Initializes a new instance of the LauncherHostService class
         /// </summary>
-        public LauncherHostService(IHpcContext context)
+        public LauncherHostService(ITelepathyContext context)
         {
             Trace.TraceInformation("LauncherHostService init.");
             this.context = context;
@@ -184,7 +181,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
         /// This will be called when run in debug mode
         /// </summary>
         /// <param name="launcherChoose">launcher choose</param>
-        internal LauncherHostService(bool console, IHpcContext context)
+        internal LauncherHostService(bool console, ITelepathyContext context)
         {
             this.context = context;
             isConsoleApplication = console;

@@ -10,12 +10,6 @@
 namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
 {
     using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.Hpc.Scheduler;
-    using Microsoft.Hpc.Scheduler.Properties;
 
     /// <summary>
     /// Wrapper class
@@ -102,6 +96,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
         }
     }
 
+#if HPCPACK
     /// <summary>
     /// Thread-safe wrapper of Scheduler object. Currently only implement IScheduler interface
     /// </summary>
@@ -113,7 +108,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
         {
         }
 
-        #region IScheduler Members
+#region IScheduler Members
 
         /// <summary>
         /// Connect to the scheduler
@@ -533,7 +528,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
             lock (SyncRoot) { Instance.DeleteJob(jobId); }
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Converts a ISchedulerCollection of ISchedulerJob into corresponding wrappers
@@ -560,7 +555,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
         {
         }
 
-        #region ISchedulerJob Members
+#region ISchedulerJob Members
 
         public IAsyncResult BeginFinishTask(int taskSystemId, string message, bool isForced, AsyncCallback callback, object state)
         {
@@ -1202,8 +1197,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
             }
         }
 
-        #endregion
+#endregion
     }
-
+#endif
 }
 
