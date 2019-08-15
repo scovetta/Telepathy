@@ -1,12 +1,12 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Runtime.Caching;
-    using System.Threading.Tasks;
-    using Rest;
+﻿using System;
+using System.Linq;
+using System.Runtime.Caching;
+using System.Threading.Tasks;
+using TelepathyCommon.Azure;
+using TelepathyCommon.Rest;
 
+namespace TelepathyCommon.HpcContext.Extensions.RegistryExtension
+{
     public static class AzureEndpointRegistryExtension
     {
         private static readonly MemoryCache CacheInstance = new MemoryCache("AzureEndpointRegistry");
@@ -17,7 +17,7 @@
         /// <summary>
         /// Gets the domain for the Azure management API.
         /// </summary>
-        public static async Task<string> GetAzureManagementDomainAsync(this IHpcContext context, string headNode = null)
+        public static async Task<string> GetAzureManagementDomainAsync(this ITelepathyContext context, string headNode = null)
         {
             return await context.GetAzureEndpointStringAsync(LegacyAzureEndpointName.AzureManagementDomain, headNode).ConfigureAwait(false);
         }
@@ -25,7 +25,7 @@
         /// <summary>
         /// Gets the domain for the Azure sql management API.
         /// </summary>
-        public static async Task<string> GetAzureSQLManagementDomainAsync(this IHpcContext context, string headNode = null)
+        public static async Task<string> GetAzureSQLManagementDomainAsync(this ITelepathyContext context, string headNode = null)
         {
             return await context.GetAzureEndpointStringAsync(LegacyAzureEndpointName.AzureSqlManagementDomain, headNode).ConfigureAwait(false);
         }
@@ -33,7 +33,7 @@
         /// <summary>
         /// Gets the domain for the Azure Blob Storage.
         /// </summary>
-        public static async Task<string> GetAzureBlobStorageDomainAsync(this IHpcContext context, string headNode = null)
+        public static async Task<string> GetAzureBlobStorageDomainAsync(this ITelepathyContext context, string headNode = null)
         {
             return await context.GetAzureEndpointStringAsync(LegacyAzureEndpointName.AzureBlobStorageDomain, headNode).ConfigureAwait(false);
         }
@@ -41,7 +41,7 @@
         /// <summary>
         /// Gets the domain for the Azure Table Storage.
         /// </summary>
-        public static async Task<string> GetAzureTableStorageDomainAsync(this IHpcContext context, string headNode = null)
+        public static async Task<string> GetAzureTableStorageDomainAsync(this ITelepathyContext context, string headNode = null)
         {
             return await context.GetAzureEndpointStringAsync(LegacyAzureEndpointName.AzureTableStorageDomain, headNode).ConfigureAwait(false);
         }
@@ -49,7 +49,7 @@
         /// <summary>
         /// Gets the domain for the Azure Queue Storage.
         /// </summary>
-        public static async Task<string> GetAzureQueueStorageDomainAsync(this IHpcContext context, string headNode = null)
+        public static async Task<string> GetAzureQueueStorageDomainAsync(this ITelepathyContext context, string headNode = null)
         {
             return await context.GetAzureEndpointStringAsync(LegacyAzureEndpointName.AzureQueueStorageDomain, headNode).ConfigureAwait(false);
         }
@@ -57,7 +57,7 @@
         /// <summary>
         /// Gets the domain for the Azure Table Storage.
         /// </summary>
-        public static async Task<string> GetAzureFileStorageDomainAsync(this IHpcContext context, string headNode = null)
+        public static async Task<string> GetAzureFileStorageDomainAsync(this ITelepathyContext context, string headNode = null)
         {
             return await context.GetAzureEndpointStringAsync(LegacyAzureEndpointName.AzureFileStorageDomain, headNode).ConfigureAwait(false);
         }
@@ -65,7 +65,7 @@
         /// <summary>
         /// Gets the domain for the Azure Cloud Service.
         /// </summary>
-        public static async Task<string> GetAzureServiceDomainAsync(this IHpcContext context, string headNode = null)
+        public static async Task<string> GetAzureServiceDomainAsync(this ITelepathyContext context, string headNode = null)
         {
             return await context.GetAzureEndpointStringAsync(LegacyAzureEndpointName.AzureServiceDomain, headNode).ConfigureAwait(false);
         }
@@ -73,7 +73,7 @@
         /// <summary>
         /// Gets the batch resource uri
         /// </summary>
-        public static async Task<string> GetAzureBatchResourceUri(this IHpcContext context, string headNode = null)
+        public static async Task<string> GetAzureBatchResourceUri(this ITelepathyContext context, string headNode = null)
         {
             return await context.GetAzureEndpointStringAsync(LegacyAzureEndpointName.AzureBatchResourceUri, headNode).ConfigureAwait(false);
         }
@@ -81,7 +81,7 @@
         /// <summary>
         /// Gets the batch resource uri
         /// </summary>
-        public static async Task<string> GetAzureADAuthorityUriAsync(this IHpcContext context, string headNode = null)
+        public static async Task<string> GetAzureADAuthorityUriAsync(this ITelepathyContext context, string headNode = null)
         {
             return await context.GetAzureEndpointStringAsync(LegacyAzureEndpointName.AzureADAuthority, headNode).ConfigureAwait(false);
         }
@@ -89,7 +89,7 @@
         /// <summary>
         /// Gets the batch resource uri
         /// </summary>
-        public static async Task<string> GetAzureADResourceUriAsync(this IHpcContext context, string headNode = null)
+        public static async Task<string> GetAzureADResourceUriAsync(this ITelepathyContext context, string headNode = null)
         {
             return await context.GetAzureEndpointStringAsync(LegacyAzureEndpointName.AzureADResource, headNode).ConfigureAwait(false);
         }
@@ -97,12 +97,12 @@
         /// <summary>
         /// Gets the batch resource uri
         /// </summary>
-        public static async Task<string> GetAzureStorageEndpointSuffixAsync(this IHpcContext context, string headNode = null)
+        public static async Task<string> GetAzureStorageEndpointSuffixAsync(this ITelepathyContext context, string headNode = null)
         {
             return await context.GetAzureEndpointStringAsync(AzureEnvironment.Endpoint.StorageEndpointSuffix, headNode).ConfigureAwait(false);
         }
 
-        public static async Task<string> GetAzureEnvironmentAsync(this IHpcContext context, string headNode = null)
+        public static async Task<string> GetAzureEnvironmentAsync(this ITelepathyContext context, string headNode = null)
         {
             var cacheValue = CacheInstance.Get(HpcConstants.AzureEnvironmentRegVal);
             if (cacheValue == null)
@@ -137,7 +137,7 @@
 
         }
 
-        public static async Task<string> GetAzureEndpointStringAsync(this IHpcContext context, string endpoint, string headNode = null)
+        public static async Task<string> GetAzureEndpointStringAsync(this ITelepathyContext context, string endpoint, string headNode = null)
         {
             var cacheValue = CacheInstance.Get(endpoint);
             if (cacheValue == null)

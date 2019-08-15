@@ -1,10 +1,10 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Runtime.Caching;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Caching;
+using System.Threading.Tasks;
 
+namespace TelepathyCommon.Telepathy
+{
     public abstract class ServiceRegistrationStore : IServiceRegistrationStore
     {
         private static readonly MemoryCache CacheInstance = new MemoryCache("ServiceRegistration");

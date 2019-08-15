@@ -10,7 +10,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker.BrokerStorage;
     using Microsoft.Hpc.ServiceBroker.Common;
-    using Microsoft.Hpc.SvcBroker;
+
     using System;
     using System.Diagnostics;
     using System.ServiceModel;

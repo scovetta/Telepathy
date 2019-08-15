@@ -1,9 +1,9 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.Linq;
-    using System.Threading;
+﻿using System;
+using System.Linq;
+using System.Threading;
 
+namespace TelepathyCommon.Plugin
+{
     public class SqlConnectionStringProvider
     {
         private const string ConnectionStringProviderName = "SqlConnectionStringProvider.dll";

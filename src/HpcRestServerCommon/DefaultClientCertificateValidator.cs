@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc
+﻿using TelepathyCommon.HpcContext;
+using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
+
+namespace Microsoft.Hpc
 {
     using System;
     using System.Collections.Concurrent;
@@ -10,7 +13,7 @@
     public class DefaultClientCertificateValidator : IClientCertificateValidator
     {
         private static readonly Lazy<string> HeadNodeCertThumbprint =
-            new Lazy<string>(() => HpcContext.GetOrAdd(CancellationToken.None).GetSSLThumbprint().GetAwaiter().GetResult());
+            new Lazy<string>(() => TelepathyContext.GetOrAdd(CancellationToken.None).GetSSLThumbprint().GetAwaiter().GetResult());
 
         private static readonly ConcurrentDictionary<string, bool> ValidCertificateCache = new ConcurrentDictionary<string, bool>();
 

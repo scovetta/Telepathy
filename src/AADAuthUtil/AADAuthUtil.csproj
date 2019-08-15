@@ -80,18 +80,18 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HpcCommon\HpcCommon.csproj">
-      <Project>{2c3936c7-4850-41d7-9497-9040be302328}</Project>
-      <Name>HpcCommon</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory">
       <Version>3.19.8</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.IdentityModel.Protocol.Extensions">
       <Version>1.0.4.403061554</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TelepathyCommon\TelepathyCommon.csproj">
+      <Project>{1F7D53E1-7C00-4DE4-AD73-B0BB17BC1BFB}</Project>
+      <Name>TelepathyCommon</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

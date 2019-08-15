@@ -1,12 +1,13 @@
-﻿namespace Microsoft.Hpc.Rest
-{
-    using System.Net.Http;
-    using System.Threading;
-    using System.Threading.Tasks;
+﻿using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using TelepathyCommon.HpcContext;
 
+namespace TelepathyCommon.Rest
+{
     public class HpcBatchRestClient : HpcRestClient
     {
-        public HpcBatchRestClient(IHpcContext context) : base(context)
+        public HpcBatchRestClient(ITelepathyContext context) : base(context)
         {
         }
 

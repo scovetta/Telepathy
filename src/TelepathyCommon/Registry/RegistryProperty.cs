@@ -1,12 +1,13 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using TelepathyCommon.HpcContext;
 
+namespace TelepathyCommon.Registry
+{
     public abstract class RegistryProperty : IRegistry
     {
         public abstract Task DeleteValueAsync(string key, string name, CancellationToken token);
@@ -33,7 +34,7 @@
                     if (propertyName != null && HpcConstants.ReliableProperties.ContainsKey(propertyName))
                     {
                         var reliableProp = HpcConstants.ReliableProperties[propertyName];
-                        object propertyValue = await this.GetValueAsync(reliableProp.ParentName, propertyName, HpcContext.Get().CancellationToken, null).ConfigureAwait(false);
+                        object propertyValue = await this.GetValueAsync(reliableProp.ParentName, propertyName, TelepathyContext.Get().CancellationToken, null).ConfigureAwait(false);
                         properties.Add(propertyName, this.GetStringValue(propertyValue));
                     }
                 }
@@ -43,7 +44,7 @@
             // return all properties
             foreach (var rp in HpcConstants.ReliableProperties)
             {
-                object propertyValue = await GetValueAsync(rp.Value.ParentName, rp.Key, HpcContext.Get().CancellationToken, null).ConfigureAwait(false);
+                object propertyValue = await GetValueAsync(rp.Value.ParentName, rp.Key, TelepathyContext.Get().CancellationToken, null).ConfigureAwait(false);
                 properties.Add(rp.Key, propertyValue?.ToString());
             }
 
@@ -102,9 +103,9 @@
                     continue;
                 }
 
-                IRegistry registry = HpcContext.Get().Registry;
+                IRegistry registry = TelepathyContext.Get().Registry;
                 MethodInfo method = typeof(IRegistry).GetMethod("SetValueAsync");
-                await ((Task)method.MakeGenericMethod(propertyType).Invoke(registry, new[] { reliableProp.ParentName, propertyName, propertyValue, HpcContext.Get().CancellationToken })).ConfigureAwait(false);
+                await ((Task)method.MakeGenericMethod(propertyType).Invoke(registry, new[] { reliableProp.ParentName, propertyName, propertyValue, TelepathyContext.Get().CancellationToken })).ConfigureAwait(false);
             }
 
             if (exceptionMessages.Length > 0)

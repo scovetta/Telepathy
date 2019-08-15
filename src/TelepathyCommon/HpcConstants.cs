@@ -1,8 +1,9 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using TelepathyCommon.Registry;
 
+namespace TelepathyCommon
+{
     /// <summary>
     /// Please only put the constants that need to be accessed by more than one services, setup or client here.
     /// Service specific constants should be moved into service local constants files.

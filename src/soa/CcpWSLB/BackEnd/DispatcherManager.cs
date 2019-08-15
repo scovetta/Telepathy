@@ -6,6 +6,9 @@
 //-----------------------------------------------------------------------
 
 
+using TelepathyCommon.HpcContext;
+using TelepathyCommon.HpcContext.Extensions;
+using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
 
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
@@ -20,13 +23,9 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Hpc.BrokerBurst;
-    using Microsoft.Hpc.Scheduler.Properties;
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
     using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using Microsoft.Hpc.SvcBroker;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Queue;
     using Microsoft.WindowsAzure.Storage.Shared.Protocol;
@@ -160,7 +159,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <summary>
         /// Stores the fabric cluster context;
         /// </summary>
-        private IHpcContext context;
+        private ITelepathyContext context;
 
         /// <summary>
         /// Initializes a new instance of the DispatcherManager class
@@ -170,7 +169,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="queueFactory">indicating the queue factory</param>
         /// <param name="sharedData">indicating the shared data</param>
         /// <param name="frontendResult">indicating the frontend result</param>
-        public DispatcherManager(BindingsSection bindings, SharedData sharedData, BrokerObserver observer, ServiceJobMonitorBase monitor, BrokerQueueFactory queueFactory, IHpcContext context)
+        public DispatcherManager(BindingsSection bindings, SharedData sharedData, BrokerObserver observer, ServiceJobMonitorBase monitor, BrokerQueueFactory queueFactory, ITelepathyContext context)
         {
             this.dispatcherDic = new Dictionary<int, Dispatcher>();
             this.failedDispatcherList = new List<int>();

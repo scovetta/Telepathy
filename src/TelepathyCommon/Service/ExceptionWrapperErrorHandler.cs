@@ -1,11 +1,11 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.Diagnostics;
-    using System.ServiceModel;
-    using System.ServiceModel.Channels;
-    using System.ServiceModel.Dispatcher;
+﻿using System;
+using System.Diagnostics;
+using System.ServiceModel;
+using System.ServiceModel.Channels;
+using System.ServiceModel.Dispatcher;
 
+namespace TelepathyCommon.Service
+{
     public class ExceptionWrapperErrorHandler : IErrorHandler
     {
         /// <summary>

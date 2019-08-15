@@ -7,11 +7,13 @@
 //     Get the Azure Meta Data.
 // </summary>
 //-------------------------------------------------------------------------------------------------
-namespace Microsoft.Hpc
+
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+namespace TelepathyCommon.Azure
 {
-    using System;
-    using System.Net.Http;
-    using System.Threading.Tasks;
     public class AzureMetaData
     {
         private const string IMDSServer = "169.254.169.254";

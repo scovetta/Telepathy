@@ -7,9 +7,7 @@
 namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 {
     using System;
-    using System.Collections.Generic;
     using System.ServiceModel.Channels;
-    using System.Text;
 
     /// <summary>
     /// Request context for request/reply channels (BasicHttp and WSHttp)

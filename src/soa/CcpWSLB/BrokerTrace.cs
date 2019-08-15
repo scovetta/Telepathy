@@ -12,7 +12,6 @@ namespace Microsoft.Hpc.ServiceBroker
     using System.Diagnostics;
     using System.Reflection;
     using System.Text;
-    using Microsoft.Hpc.RuntimeTrace;
 
     /// <summary>
     /// Broker tracing helper class

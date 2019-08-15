@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Hpc
+﻿namespace TelepathyCommon.HpcContext
 {
     public enum HpcContextOwner
     {

@@ -1,10 +1,10 @@
-﻿namespace Microsoft.Hpc
-{
-    using System.ServiceModel.Channels;
-    using System.ServiceModel.Description;
-    using System.ServiceModel.Dispatcher;
-    using System.Text;
+﻿using System.ServiceModel.Channels;
+using System.ServiceModel.Description;
+using System.ServiceModel.Dispatcher;
+using System.Text;
 
+namespace TelepathyCommon.Service
+{
     public abstract class EndpointBehaviorBase : IEndpointBehavior
     {
         protected ServiceAsClientIdentityProvider IdentityProvider { get; private set; }

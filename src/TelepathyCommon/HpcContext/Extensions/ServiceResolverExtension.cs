@@ -1,10 +1,10 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
+namespace TelepathyCommon.HpcContext.Extensions
+{
     /// <summary>
     /// This extends the QueryClient for service resolving.
     /// These extension methods need the QueryClient as a parameter, so avoids the implicit new FabricClient() call.
@@ -32,32 +32,32 @@
         // For additional properties of the Node, use the methods in Common region.
         #region Hpc Services Resolver methods
 
-        public static async Task<string> ResolveSchedulerNodeAsync(this IHpcContext context)
+        public static async Task<string> ResolveSchedulerNodeAsync(this ITelepathyContext context)
         {
             return await context.FabricContext.ResolveSingletonServicePrimaryAsync(SchedulerStatefulService, context.CancellationToken).ConfigureAwait(false);
         }
 
-        public static async Task<string> ResolveSessionLauncherNodeAsync(this IHpcContext context)
+        public static async Task<string> ResolveSessionLauncherNodeAsync(this ITelepathyContext context)
         {
             return await context.FabricContext.ResolveSingletonServicePrimaryAsync(SessionLauncherStatefulService, context.CancellationToken).ConfigureAwait(false);
         }
 
-        public static async Task<string> ResolveBrokerLauncherNodeAsync(this IHpcContext context)
+        public static async Task<string> ResolveBrokerLauncherNodeAsync(this ITelepathyContext context)
         {
             return await context.FabricContext.ResolveSingletonServicePrimaryAsync(BrokerLauncherStatefulService, context.CancellationToken).ConfigureAwait(false);
         }
 
-        public static async Task<string> ResolveManagementNodeAsync(this IHpcContext context)
+        public static async Task<string> ResolveManagementNodeAsync(this ITelepathyContext context)
         {
             return await context.ResolveStatelessServiceNodeAsync(ManagementStatelessService).ConfigureAwait(false);
         }
 
-        public static async Task<string> ResolveFrontendNodeAsync(this IHpcContext context)
+        public static async Task<string> ResolveFrontendNodeAsync(this ITelepathyContext context)
         {
             return await context.ResolveStatelessServiceNodeAsync(FrontendStatelessService).ConfigureAwait(false);
         }
 
-        private static async Task<string> ResolveStatelessServiceNodeAsync(this IHpcContext context, string serviceName)
+        private static async Task<string> ResolveStatelessServiceNodeAsync(this ITelepathyContext context, string serviceName)
         {
             IEnumerable<string> nodes = await context.FabricContext.ResolveStatelessServiceNodesAsync(serviceName, context.CancellationToken).ConfigureAwait(false);
             if (nodes.Count() == 0)
@@ -69,22 +69,22 @@
             return nodes.ElementAt(rand.Next(nodes.Count()));
         }
 
-        public static async Task<string> ResolveManagementStatefulNodeAsync(this IHpcContext context)
+        public static async Task<string> ResolveManagementStatefulNodeAsync(this ITelepathyContext context)
         {
             return await context.FabricContext.ResolveSingletonServicePrimaryAsync(ManagementStatefulService, context.CancellationToken).ConfigureAwait(false);
         }
 
-        public static async Task<string> ResolveSdmNodeAsync(this IHpcContext context)
+        public static async Task<string> ResolveSdmNodeAsync(this ITelepathyContext context)
         {
             return await context.FabricContext.ResolveSingletonServicePrimaryAsync(SdmStatefulService, context.CancellationToken).ConfigureAwait(false);
         }
 
-        public static async Task<string> ResolveMonitoringNodeAsync(this IHpcContext context)
+        public static async Task<string> ResolveMonitoringNodeAsync(this ITelepathyContext context)
         {
             return await context.FabricContext.ResolveSingletonServicePrimaryAsync(MonitoringStatefulService, context.CancellationToken).ConfigureAwait(false);
         }
 
-        public static async Task<string> ResolveDiagnosticsNodeAsync(this IHpcContext context)
+        public static async Task<string> ResolveDiagnosticsNodeAsync(this ITelepathyContext context)
         {
             return await context.FabricContext.ResolveSingletonServicePrimaryAsync(DiagnosticsStatefulService, context.CancellationToken).ConfigureAwait(false);
         }

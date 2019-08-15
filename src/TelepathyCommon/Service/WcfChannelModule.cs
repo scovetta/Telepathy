@@ -1,18 +1,21 @@
-﻿namespace Microsoft.Hpc
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Principal;
+using System.ServiceModel;
+using System.ServiceModel.Channels;
+using System.ServiceModel.Description;
+using System.ServiceModel.Security;
+using System.Threading;
+using System.Threading.Tasks;
+using TelepathyCommon.HpcContext;
+using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
+
+namespace TelepathyCommon.Service
 {
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Security.Cryptography.X509Certificates;
-    using System.Security.Principal;
-    using System.ServiceModel;
-    using System.ServiceModel.Channels;
-    using System.ServiceModel.Description;
-    using System.ServiceModel.Security;
-    using System.Threading;
-    using System.Threading.Tasks;
 #if !net40
     using System.Security.Claims;
 #endif
@@ -34,11 +37,11 @@
 
 #if !net40
         // HeadNode only
-        private static string AadClientAppId => HpcContext.GetOrAdd(CancellationToken.None).GetAADClientAppIdAsync().GetAwaiter().GetResult();
+        private static string AadClientAppId => TelepathyContext.GetOrAdd(CancellationToken.None).GetAADClientAppIdAsync().GetAwaiter().GetResult();
 
         private const string AppIdType = "appid";
 
-        public static bool IsHpcAadPrincipal(this IPrincipal principal, IHpcContext context = null, string aadInfoNode = null)
+        public static bool IsHpcAadPrincipal(this IPrincipal principal, ITelepathyContext context = null, string aadInfoNode = null)
         {
             var cp = principal as ClaimsPrincipal;
             if (cp == null)
@@ -49,7 +52,7 @@
             return cp.Identity.IsHpcAadIdentity(context, aadInfoNode);
         }
 
-        public static bool IsHpcAadIdentity(this IIdentity identity, IHpcContext context = null, string aadInfoNode = null)
+        public static bool IsHpcAadIdentity(this IIdentity identity, ITelepathyContext context = null, string aadInfoNode = null)
         {
             var ci = identity as ClaimsIdentity;
             if (ci == null)
@@ -179,7 +182,7 @@
             return host;
         }
 
-        public static async Task<ServiceHost> SetupInternalWcfChannelAsync<T>(IHpcContext context, object singletonInstance, string serviceUri, ServiceAuthorizationManager manager = null)
+        public static async Task<ServiceHost> SetupInternalWcfChannelAsync<T>(ITelepathyContext context, object singletonInstance, string serviceUri, ServiceAuthorizationManager manager = null)
         {
             string thumbPrint = await context.GetSSLThumbprint().ConfigureAwait(false);
             Trace.TraceInformation("[WcfHost] Begin to setup WCF channel on {0}, thumbprint is {1}", serviceUri, thumbPrint);
@@ -193,7 +196,7 @@
             return internalWcfHost;
         }
 
-        public static async Task<ServiceHost> SetupInternalWcfChannelAsync<T>(IHpcContext context, object singletonInstance, int servicePort, string serviceName, ServiceAuthorizationManager manager = null)
+        public static async Task<ServiceHost> SetupInternalWcfChannelAsync<T>(ITelepathyContext context, object singletonInstance, int servicePort, string serviceName, ServiceAuthorizationManager manager = null)
         {
             string tcpAddr = String.Format(WcfServiceConstants.NetTcpUriFormat, "localhost", servicePort, serviceName);
             return await SetupInternalWcfChannelAsync<T>(context, singletonInstance, tcpAddr, manager).ConfigureAwait(false);
@@ -210,12 +213,12 @@
             return await SetupWcfChannelAsync<T>(singletonInstance, WcfServiceConstants.ManagementWcfChannelPort, serviceName).ConfigureAwait(false);
         }
 
-        public static async Task<T> CreateInternalWcfProxyAsync<T>(string endPointStr, IHpcContext context, EndpointBehaviorBase behavior = null) where T : class
+        public static async Task<T> CreateInternalWcfProxyAsync<T>(string endPointStr, ITelepathyContext context, EndpointBehaviorBase behavior = null) where T : class
         {
             return await CreateInternalWcfProxyAsync<T>(new Uri(endPointStr), context, behavior).ConfigureAwait(false);
         }
 
-        public static async Task<T> CreateInternalWcfProxyAsync<T>(Uri uri, IHpcContext context, EndpointBehaviorBase behavior = null) where T : class
+        public static async Task<T> CreateInternalWcfProxyAsync<T>(Uri uri, ITelepathyContext context, EndpointBehaviorBase behavior = null) where T : class
         {
             NetTcpBinding tcpBinding = NetTcpBindingWithCertFactory();
             string thumbPrint = await context.GetSSLThumbprint().ConfigureAwait(false);

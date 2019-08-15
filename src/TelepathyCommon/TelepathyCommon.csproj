@@ -85,13 +85,13 @@
     <Compile Include="HpcContext\FabricRestContext.cs" />
     <Compile Include="HpcConstants.cs" />
     <Compile Include="ExceptionHelper.cs" />
-    <Compile Include="HpcContext\HpcContext.cs" />
+    <Compile Include="HpcContext\TelepathyContext.cs" />
     <Compile Include="HpcContext\Extensions\RegistryExtension\RegistryExtension.cs" />
     <Compile Include="HpcContext\HpcContextOwner.cs" />
     <Compile Include="HpcContext\Extensions\HttpClientExtension.cs" />
     <Compile Include="HpcContext\HpcServerContextType.cs" />
     <Compile Include="HpcContext\IFabricContext.cs" />
-    <Compile Include="HpcContext\IHpcContext.cs" />
+    <Compile Include="HpcContext\ITelepathyContext.cs" />
     <Compile Include="HpcContext\SoaContext\SoaContext.cs" />
     <Compile Include="HpcContext\SoaContext\SoaFabricContext.cs" />
     <Compile Include="HpcNodeRoleAbbreviation.cs" />

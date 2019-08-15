@@ -1,4 +1,6 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.Internal
+﻿using TelepathyCommon;
+
+namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using System;
     using System.Diagnostics;

@@ -8,11 +8,12 @@
 //     A helper class to set/update/remove the http sslcert binding.
 // </summary>
 //-------------------------------------------------------------------------------------------------
-namespace Microsoft.Hpc
-{
-    using System.Management.Automation;
-    using System.Threading.Tasks;
 
+using System.Management.Automation;
+using System.Threading.Tasks;
+
+namespace TelepathyCommon
+{
     public static class SslCertBindingHelper
     {
         public static string PublicSslPort => HpcConstants.DefaultHttpsPort.ToString();

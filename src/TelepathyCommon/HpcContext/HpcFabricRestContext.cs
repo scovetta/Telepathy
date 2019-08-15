@@ -1,12 +1,14 @@
-﻿namespace Microsoft.Hpc
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using TelepathyCommon.HpcContext.Extensions;
+using TelepathyCommon.Registry;
+
+namespace TelepathyCommon.HpcContext
 {
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Net.Http;
-    using System.Threading;
-    using System.Threading.Tasks;
-    
     internal class HpcFabricRestContext : IFabricContext
     {
         internal HpcFabricRestContext(EndpointsConnectionString gatewayString, HpcContextOwner hpcContextOwner)

@@ -9,14 +9,10 @@
 //-----------------------------------------------------------------------
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker.Common;
-    using System;
-    using System.Diagnostics;
-    using System.Security.Cryptography.X509Certificates;
+
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>

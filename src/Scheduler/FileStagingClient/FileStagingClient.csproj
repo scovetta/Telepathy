@@ -90,10 +90,6 @@
       <Project>{f0a3e1b7-6c6f-4357-99ee-49210440fffd}</Project>
       <Name>DataMovement</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\HpcCommon\HpcCommon.csproj">
-      <Project>{2c3936c7-4850-41d7-9497-9040be302328}</Project>
-      <Name>HpcCommon</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="WindowsAzure.Storage">

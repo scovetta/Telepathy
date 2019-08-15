@@ -9,23 +9,16 @@
 // </summary>
 //-------------------------------------------------------------------------------------------------
 
-namespace Microsoft.Hpc.WindowsRegistry
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading;
+using Microsoft.Win32;
+using Microsoft.Win32.SafeHandles;
+
+namespace TelepathyCommon.Registry
 {
-    using System;
-    using Microsoft.Win32;
-    using System.Threading;
-
-    using System.Runtime.InteropServices;
-    using System.Runtime.ConstrainedExecution;
-    using Microsoft.Win32.SafeHandles;
-    using System.Collections.Generic;
-
-
-    using BOOL = System.Int32;
-    using DWORD = System.UInt32;
-    using ULONG = System.UInt32;
-    using System.Linq;
-
     /// <summary>
     /// Simple registry watcher class that can be used to trigger discovery 
     /// if a reg key is updated.
@@ -108,27 +101,27 @@ namespace Microsoft.Hpc.WindowsRegistry
             {
                 case RegistryHiveString.LocalMachine:
                     this.regKeyRoot = NativeMethods.HKEY_ROOT.HKEY_LOCAL_MACHINE;
-                    this.regKey = Registry.LocalMachine;
+                    this.regKey = Microsoft.Win32.Registry.LocalMachine;
                     break;
                 case RegistryHiveString.ClassesRoot:
                     this.regKeyRoot = NativeMethods.HKEY_ROOT.HKEY_CLASSES_ROOT;
-                    this.regKey = Registry.ClassesRoot;
+                    this.regKey = Microsoft.Win32.Registry.ClassesRoot;
                     break;
                 case RegistryHiveString.CurrentConfig:
                     this.regKeyRoot = NativeMethods.HKEY_ROOT.HKEY_CURRENT_CONFIG;
-                    this.regKey = Registry.CurrentConfig;
+                    this.regKey = Microsoft.Win32.Registry.CurrentConfig;
                     break;
                 case RegistryHiveString.PerformanceData:
                     this.regKeyRoot = NativeMethods.HKEY_ROOT.HKEY_PERFORMANCE_DATA;
-                    this.regKey = Registry.PerformanceData;
+                    this.regKey = Microsoft.Win32.Registry.PerformanceData;
                     break;
                 case RegistryHiveString.Users:
                     this.regKeyRoot = NativeMethods.HKEY_ROOT.HKEY_USERS;
-                    this.regKey = Registry.Users;
+                    this.regKey = Microsoft.Win32.Registry.Users;
                     break;
                 case RegistryHiveString.CurrentUser:
                     this.regKeyRoot = NativeMethods.HKEY_ROOT.HKEY_CURRENT_USER;
-                    this.regKey = Registry.CurrentUser;
+                    this.regKey = Microsoft.Win32.Registry.CurrentUser;
                     break;
                 default:
                     break;

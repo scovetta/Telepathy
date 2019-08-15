@@ -1,13 +1,12 @@
-namespace Microsoft.Hpc
+using System;
+using System.Threading.Tasks;
+using TelepathyCommon.Rest;
+
+namespace TelepathyCommon.HpcContext.Extensions.RegistryExtension
 {
-    using System;
-    using System.Threading.Tasks;
-
-    using Microsoft.Hpc.Rest;
-
     public static class AadRegistryExtension
     {
-        public static async Task<bool> IsSupportAAD(this IHpcContext context)
+        public static async Task<bool> IsSupportAAD(this ITelepathyContext context)
         {
             bool supportAAD;
             if (bool.TryParse(await context.Registry.GetValueAsync<string>(HpcConstants.HpcFullKeyName, HpcConstants.SupportAad, context.CancellationToken).ConfigureAwait(false), out supportAAD))
@@ -18,7 +17,7 @@ namespace Microsoft.Hpc
             return false;
         }
 
-        public static async Task<string> GetAADTenantAsync(this IHpcContext context, string aadInfoNode = null)
+        public static async Task<string> GetAADTenantAsync(this ITelepathyContext context, string aadInfoNode = null)
             =>
                 await
                     context.GetAADInfoAux(
@@ -26,7 +25,7 @@ namespace Microsoft.Hpc
                         c => c.GetAadTenantAsync(context.CancellationToken),
                         aadInfoNode).ConfigureAwait(false);
 
-        public static async Task<string> GetAADTenantIdAsync(this IHpcContext context, string aadInfoNode = null)
+        public static async Task<string> GetAADTenantIdAsync(this ITelepathyContext context, string aadInfoNode = null)
             =>
                 await
                     context.GetAADInfoAux(
@@ -34,7 +33,7 @@ namespace Microsoft.Hpc
                         c => c.GetAadTenantIdAsync(context.CancellationToken),
                         aadInfoNode).ConfigureAwait(false);
 
-        public static async Task<string> GetAADInstanceAsync(this IHpcContext context, string aadInfoNode = null)
+        public static async Task<string> GetAADInstanceAsync(this ITelepathyContext context, string aadInfoNode = null)
             =>
                 await
                     context.GetAADInfoAux(
@@ -42,7 +41,7 @@ namespace Microsoft.Hpc
                         c => c.GetAadInstanceAsync(context.CancellationToken),
                         aadInfoNode).ConfigureAwait(false);
 
-        public static async Task<string> GetAADAppNameAsync(this IHpcContext context, string aadInfoNode = null)
+        public static async Task<string> GetAADAppNameAsync(this ITelepathyContext context, string aadInfoNode = null)
             =>
                 await
                     context.GetAADInfoAux(
@@ -50,7 +49,7 @@ namespace Microsoft.Hpc
                         c => c.GetAadAppNameAsync(context.CancellationToken),
                         aadInfoNode).ConfigureAwait(false);
 
-        public static async Task<string> GetAADClientAppIdAsync(this IHpcContext context, string aadInfoNode = null)
+        public static async Task<string> GetAADClientAppIdAsync(this ITelepathyContext context, string aadInfoNode = null)
             =>
                 await
                     context.GetAADInfoAux(
@@ -58,7 +57,7 @@ namespace Microsoft.Hpc
                         c => c.GetAadClientAppIdAsync(context.CancellationToken),
                         aadInfoNode).ConfigureAwait(false);
 
-        public static async Task<string> GetAADClientAppKeyAsync(this IHpcContext context, string aadInfoNode = null)
+        public static async Task<string> GetAADClientAppKeyAsync(this ITelepathyContext context, string aadInfoNode = null)
             =>
                 await
                     context.GetAADInfoAux(
@@ -66,7 +65,7 @@ namespace Microsoft.Hpc
                         c => c.GetAadClientAppKeyAsync(context.CancellationToken),
                         aadInfoNode).ConfigureAwait(false);
 
-        public static async Task<string> GetAADClientAppRedirectUriAsync(this IHpcContext context, string aadInfoNode = null)
+        public static async Task<string> GetAADClientAppRedirectUriAsync(this ITelepathyContext context, string aadInfoNode = null)
             =>
                 await
                     context.GetAADInfoAux(
@@ -74,7 +73,7 @@ namespace Microsoft.Hpc
                         c => c.GetAadClientRedirectUrlAsync(context.CancellationToken),
                         aadInfoNode).ConfigureAwait(false);
 
-        private static async Task<T> GetAADInfoAux<T>(this IHpcContext context, Func<Task<T>> funcRegistry, Func<HpcAadInfoRestClient, Task<T>> funcRest, string aadInfoNode)
+        private static async Task<T> GetAADInfoAux<T>(this ITelepathyContext context, Func<Task<T>> funcRegistry, Func<HpcAadInfoRestClient, Task<T>> funcRest, string aadInfoNode)
         {
             if (context.FabricContext.IsHpcHeadNodeService())
             {

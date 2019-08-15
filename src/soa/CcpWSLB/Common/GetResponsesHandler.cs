@@ -19,7 +19,6 @@ namespace Microsoft.Hpc.ServiceBroker
     using Microsoft.Hpc.ServiceBroker.BrokerStorage;
     using Microsoft.Hpc.ServiceBroker.Common;
     using Microsoft.Hpc.ServiceBroker.FrontEnd;
-    using Microsoft.Hpc.SvcBroker;
 
     using SR = Microsoft.Hpc.SvcBroker.SR;
 

@@ -1,13 +1,13 @@
-namespace Microsoft.Hpc
-{
-    using System;
-    using System.Threading.Tasks;
-    using Microsoft.Hpc.Rest;
+using System;
+using System.Threading.Tasks;
+using TelepathyCommon.Rest;
 
+namespace TelepathyCommon.HpcContext.Extensions.RegistryExtension
+{
     public static class BatchRegistryExtension
     {
         
-        public static async Task<string> GetBatchAADInstanceAsync(this IHpcContext context, string batchNode = null)
+        public static async Task<string> GetBatchAADInstanceAsync(this ITelepathyContext context, string batchNode = null)
             =>
                 await
                     context.GetBatchAux(
@@ -15,7 +15,7 @@ namespace Microsoft.Hpc
                         c => c.GetAadInstanceAsync(context.CancellationToken),
                         batchNode).ConfigureAwait(false);
 
-        public static async Task<string> GetBatchAADTenantIdAsync(this IHpcContext context, string batchNode = null)
+        public static async Task<string> GetBatchAADTenantIdAsync(this ITelepathyContext context, string batchNode = null)
             =>
                 await
                     context.GetBatchAux(
@@ -23,7 +23,7 @@ namespace Microsoft.Hpc
                         c => c.GetAadTenantIdAsync(context.CancellationToken),
                         batchNode).ConfigureAwait(false);
 
-        public static async Task<string> GetBatchAADClientAppIdAsync(this IHpcContext context, string batchNode = null)
+        public static async Task<string> GetBatchAADClientAppIdAsync(this ITelepathyContext context, string batchNode = null)
             =>
                 await
                     context.GetBatchAux(
@@ -31,7 +31,7 @@ namespace Microsoft.Hpc
                         c => c.GetAadClientAppIdAsync(context.CancellationToken),
                         batchNode).ConfigureAwait(false);
 
-        public static async Task<string> GetBatchAADClientAppKeyAsync(this IHpcContext context, string batchNode = null)
+        public static async Task<string> GetBatchAADClientAppKeyAsync(this ITelepathyContext context, string batchNode = null)
             =>
                 await
                     context.GetBatchAux(
@@ -39,7 +39,7 @@ namespace Microsoft.Hpc
                         c => c.GetAadClientAppKeyAsync(context.CancellationToken),
                         batchNode).ConfigureAwait(false);
 
-        private static async Task<T> GetBatchAux<T>(this IHpcContext context, Func<Task<T>> funcRegistry, Func<HpcBatchRestClient, Task<T>> funcRest, string batchNode)
+        private static async Task<T> GetBatchAux<T>(this ITelepathyContext context, Func<Task<T>> funcRegistry, Func<HpcBatchRestClient, Task<T>> funcRest, string batchNode)
         {
             if (context.FabricContext.IsHpcHeadNodeService())
             {

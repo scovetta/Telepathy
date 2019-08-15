@@ -6,6 +6,9 @@
 //      Broker Authroization
 // </summary>
 //------------------------------------------------------------------------------
+
+using TelepathyCommon.Service;
+
 namespace Microsoft.Hpc.Scheduler.Session
 {
     using System;

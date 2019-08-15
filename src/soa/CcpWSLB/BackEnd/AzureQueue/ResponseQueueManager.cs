@@ -19,7 +19,6 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using System.Xml;
     using Microsoft.Hpc.BrokerBurst;
     using Microsoft.Hpc.Scheduler.Session.Common;
-    using Microsoft.WindowsAzure;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
     using Microsoft.WindowsAzure.Storage.Queue;

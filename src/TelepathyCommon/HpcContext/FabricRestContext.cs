@@ -1,12 +1,14 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net.Http;
-    using System.Threading;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using TelepathyCommon.HpcContext.Extensions;
+using TelepathyCommon.Registry;
 
+namespace TelepathyCommon.HpcContext
+{
     internal class FabricRestContext : IFabricContext
     {
         #region Extracted data structure from Service Fabric libraries.

@@ -1,12 +1,11 @@
-﻿namespace Microsoft.Hpc
-{
-    using Microsoft.Win32;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using WindowsRegistry;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Win32;
 
+namespace TelepathyCommon.Registry
+{
     public abstract class WindowsRegistryBase : RegistryProperty, IDisposable
     {
         private List<IDisposable> watchers = new List<IDisposable>();
@@ -24,7 +23,7 @@
             T res;
             if (typeof(T) == typeof(Guid))
             {
-                var guidStr = (string)Registry.GetValue(key, name, string.Empty);
+                var guidStr = (string)Microsoft.Win32.Registry.GetValue(key, name, string.Empty);
                 if (string.IsNullOrEmpty(guidStr))
                 {
                     res = (T)(object)Guid.Empty;
@@ -36,7 +35,7 @@
             }
             else
             {
-                var value = Registry.GetValue(key, name, defaultValue);
+                var value = Microsoft.Win32.Registry.GetValue(key, name, defaultValue);
                 if (value == null)
                 {
                     res = defaultValue;
@@ -114,25 +113,25 @@
             switch (rootKeyName)
             {
                 case "HKEY_CURRENT_USER":
-                    return Registry.CurrentUser;
+                    return Microsoft.Win32.Registry.CurrentUser;
 
                 case "HKEY_LOCAL_MACHINE":
-                    return Registry.LocalMachine;
+                    return Microsoft.Win32.Registry.LocalMachine;
 
                 case "HKEY_CLASSES_ROOT":
-                    return Registry.ClassesRoot;
+                    return Microsoft.Win32.Registry.ClassesRoot;
 
                 case "HKEY_USERS":
-                    return Registry.Users;
+                    return Microsoft.Win32.Registry.Users;
 
                 case "HKEY_PERFORMANCE_DATA":
-                    return Registry.PerformanceData;
+                    return Microsoft.Win32.Registry.PerformanceData;
 
                 case "HKEY_CURRENT_CONFIG":
-                    return Registry.CurrentConfig;
+                    return Microsoft.Win32.Registry.CurrentConfig;
 
                 case "HKEY_DYN_DATA":
-                    return Registry.CurrentConfig;
+                    return Microsoft.Win32.Registry.CurrentConfig;
             }
 
             return null;

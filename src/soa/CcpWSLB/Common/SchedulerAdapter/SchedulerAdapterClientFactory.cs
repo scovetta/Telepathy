@@ -7,10 +7,11 @@
 // </summary>
 //------------------------------------------------------------------------------
 
+using TelepathyCommon.HpcContext;
+using TelepathyCommon.HpcContext.Extensions;
+
 namespace Microsoft.Hpc.ServiceBroker.Common
 {
-    using Microsoft.Hpc.Scheduler.Properties;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.ServiceBroker.BackEnd;
     using System;
     using System.ServiceModel;
@@ -59,7 +60,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
         /// <summary>
         /// Stores the fabric cluster context;
         /// </summary>
-        private IHpcContext context;
+        private ITelepathyContext context;
 
         /// <summary>
         /// Initializes a new instance of the SchedulerAdapterClientFactory class
@@ -67,7 +68,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
         /// <param name="sharedData">indicating the shared data</param>
         /// <param name="monitor">indicating the monitor</param>
         /// <param name="dispatcherManager">indicating the dispatcher manager</param>
-        public SchedulerAdapterClientFactory(SharedData sharedData, ServiceJobMonitorBase monitor, DispatcherManager dispatcherManager, IHpcContext context)
+        public SchedulerAdapterClientFactory(SharedData sharedData, ServiceJobMonitorBase monitor, DispatcherManager dispatcherManager, ITelepathyContext context)
         {
             this.sharedData = sharedData;
             this.monitor = monitor;
@@ -199,7 +200,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
         /// </summary>
         private void CheckClient()
         {
-            HpcSchedulerAdapterClient client = this.schedulerAdapterClient as HpcSchedulerAdapterClient;
+            SchedulerAdapterClient client = this.schedulerAdapterClient as SchedulerAdapterClient;
             if (client != null)
             {
                 if (client.State == CommunicationState.Faulted || client.InnerChannel.State == CommunicationState.Faulted)

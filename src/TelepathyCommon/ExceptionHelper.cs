@@ -9,17 +9,13 @@
 #region Using directives
 
 using System;
-using System.Text;
 using System.Diagnostics;
-using System.Globalization;
-using System.Runtime.Serialization;
-using System.Security.Permissions;
 using System.Threading;
 using System.Threading.Tasks;
 
 #endregion
 
-namespace Microsoft.Hpc
+namespace TelepathyCommon
 {
 
     public static class ExceptionHelper

@@ -4,6 +4,10 @@
 // </copyright>
 // <summary>FrontEnd for duplex MEP</summary>
 //-----------------------------------------------------------------------
+
+using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
+using TelepathyCommon.Registry;
+
 namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 {
     using System;
@@ -13,13 +17,11 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using System.ServiceModel.Channels;
     using System.ServiceModel.Description;
 
-    using Microsoft.Hpc.AADAuthUtil;
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker.BrokerStorage;
     using Microsoft.Hpc.ServiceBroker.Common;
     using Microsoft.Hpc.ServiceBroker.Common.ThreadHelper;
-    using Microsoft.Hpc.SvcBroker;
 
     using SR = Microsoft.Hpc.SvcBroker.SR;
 

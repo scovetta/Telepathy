@@ -7,6 +7,9 @@
 // </summary>
 //------------------------------------------------------------------------------
 
+using TelepathyCommon.HpcContext;
+using TelepathyCommon.HpcContext.Extensions;
+
 namespace Microsoft.Hpc.Scheduler.Session
 {
     using System;
@@ -135,7 +138,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             SessionLauncherClient client = null;
             BrokerLauncherClient broker = null;
 
-            string headNodeMachine = await HpcContext.GetOrAdd(headNode, token).ResolveSessionLauncherNodeAsync().ConfigureAwait(false);
+            string headNodeMachine = await TelepathyContext.GetOrAdd(headNode, token).ResolveSessionLauncherNodeAsync().ConfigureAwait(false);
 
             try
             {

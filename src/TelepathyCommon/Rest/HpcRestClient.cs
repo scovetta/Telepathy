@@ -1,18 +1,19 @@
-﻿namespace Microsoft.Hpc.Rest
-{
-    using System;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Net.Http;
-    using System.Security.Cryptography.X509Certificates;
-    using System.Threading;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using TelepathyCommon.HpcContext;
+using TelepathyCommon.HpcContext.Extensions;
 
+namespace TelepathyCommon.Rest
+{
     public abstract class HpcRestClient
     {
         protected abstract HttpClient RestClient { get; }
 
-        protected HpcRestClient(IHpcContext context)
+        protected HpcRestClient(ITelepathyContext context)
         {
             this.Context = context;
         }
@@ -24,7 +25,7 @@
 
         protected string RestNode { get; }
 
-        protected IHpcContext Context { get; set; }
+        protected ITelepathyContext Context { get; set; }
 
         protected abstract string RestClientName { get; }
 

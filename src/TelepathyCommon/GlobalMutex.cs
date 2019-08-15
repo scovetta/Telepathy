@@ -1,11 +1,11 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.Diagnostics;
-    using System.Security.AccessControl;
-    using System.Security.Principal;
-    using System.Threading;
+﻿using System;
+using System.Diagnostics;
+using System.Security.AccessControl;
+using System.Security.Principal;
+using System.Threading;
 
+namespace TelepathyCommon
+{
     public class GlobalMutex : IDisposable
     {
         private static readonly MutexSecurity MutexSecuritySetting;

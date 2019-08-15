@@ -1,11 +1,13 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Threading;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using TelepathyCommon.Plugin;
+using TelepathyCommon.Registry;
 
+namespace TelepathyCommon.HpcContext.Extensions.RegistryExtension
+{
     public static class RegistryExtension
     {
         #region RegistryExtensions
@@ -14,7 +16,7 @@
         private static Guid clusterIdCache;
         private static string thumbPrintCache;
         
-        public static async Task<Guid> GetClusterIdAsync(this IHpcContext context)
+        public static async Task<Guid> GetClusterIdAsync(this ITelepathyContext context)
         {
             if (clusterIdCache == Guid.Empty)
             {
@@ -24,13 +26,13 @@
             return clusterIdCache;
         }
 
-        public static async Task SetClusterIdAsync(this IHpcContext context, Guid clusterId)
+        public static async Task SetClusterIdAsync(this ITelepathyContext context, Guid clusterId)
         {
             await context.Registry.SetValueAsync<Guid>(HpcConstants.HpcFullKeyName, HpcConstants.ClusterIdRegVal, clusterId, context.CancellationToken).ConfigureAwait(false);
             clusterIdCache = clusterId;
         }
 
-        public static async Task<string> GetClusterNameAsync(this IHpcContext context)
+        public static async Task<string> GetClusterNameAsync(this ITelepathyContext context)
         {
             if (string.IsNullOrEmpty(clusterNameCache))
             {
@@ -40,13 +42,13 @@
             return clusterNameCache;
         }
 
-        public static async Task SetClusterNameAsync(this IHpcContext context, string clusterName)
+        public static async Task SetClusterNameAsync(this ITelepathyContext context, string clusterName)
         {
             await context.Registry.SetValueAsync<string>(HpcConstants.HpcFullKeyName, HpcConstants.ClusterNameRegVal, clusterName, context.CancellationToken).ConfigureAwait(false);
             clusterNameCache = clusterName;
         }
 
-        public static async Task<string> GetDatabaseConnectionStringAsync(this IHpcContext context, string stringKey)
+        public static async Task<string> GetDatabaseConnectionStringAsync(this ITelepathyContext context, string stringKey)
         {
             if (context.FabricContext.IsHpcService() && SqlConnectionStringProvider.Provider != null)
             {
@@ -88,7 +90,7 @@
         /// <summary>
         /// Gets the scheduler connection string
         /// </summary>
-        public static async Task<string> GetSchedulerDatabaseConnectionStringAsync(this IHpcContext context)
+        public static async Task<string> GetSchedulerDatabaseConnectionStringAsync(this ITelepathyContext context)
         {
             return await context.GetDatabaseConnectionStringAsync(HpcConstants.SchedulerDbStringRegVal).ConfigureAwait(false);
         }
@@ -96,7 +98,7 @@
         /// <summary>
         /// Gets the monitoring connection string
         /// </summary>
-        public static async Task<string> GetMonitoringDatabaseConnectionStringAsync(this IHpcContext context)
+        public static async Task<string> GetMonitoringDatabaseConnectionStringAsync(this ITelepathyContext context)
         {
             return await context.GetDatabaseConnectionStringAsync(HpcConstants.MonitoringDbStringRegVal).ConfigureAwait(false);
         }
@@ -104,7 +106,7 @@
         /// <summary>
         /// Gets the reporting connection string
         /// </summary>
-        public static async Task<string> GetReportingDatabaseConnectionStringAsync(this IHpcContext context)
+        public static async Task<string> GetReportingDatabaseConnectionStringAsync(this ITelepathyContext context)
         {
             return await context.GetDatabaseConnectionStringAsync(HpcConstants.ReportingDbStringRegVal).ConfigureAwait(false);
         }
@@ -112,7 +114,7 @@
         /// <summary>
         /// Gets the diagnostics connection string
         /// </summary>
-        public static async Task<string> GetDiagnosticsDatabaseConnectionStringAsync(this IHpcContext context)
+        public static async Task<string> GetDiagnosticsDatabaseConnectionStringAsync(this ITelepathyContext context)
         {
             return await context.GetDatabaseConnectionStringAsync(HpcConstants.DiagnosticsDbStringRegVal).ConfigureAwait(false);
         }
@@ -120,7 +122,7 @@
         /// <summary>
         /// Gets the management connection string
         /// </summary>
-        public static async Task<string> GetManagementDatabaseConnectionStringAsync(this IHpcContext context)
+        public static async Task<string> GetManagementDatabaseConnectionStringAsync(this ITelepathyContext context)
         {
             return await context.GetDatabaseConnectionStringAsync(HpcConstants.ManagementDbStringRegVal).ConfigureAwait(false);
         }
@@ -128,17 +130,17 @@
         /// <summary>
         /// Gets the is linux https setting
         /// </summary>
-        public static async Task<int> GetIsLinuxHttpsAsync(this IHpcContext context)
+        public static async Task<int> GetIsLinuxHttpsAsync(this ITelepathyContext context)
         {
             return await context.Registry.GetValueAsync<int>(HpcConstants.HpcFullKeyName, HpcConstants.LinuxHttpsRegVal, context.CancellationToken, 0).ConfigureAwait(false);
         }
 
-        public static async Task<string> GetAzureStorageConnectionStringAsync(this IHpcContext context)
+        public static async Task<string> GetAzureStorageConnectionStringAsync(this ITelepathyContext context)
         {
             return await context.Registry.GetValueAsync<string>(HpcConstants.HpcSecurityRegKey, HpcConstants.AzureStorageConnectionString, context.CancellationToken, null).ConfigureAwait(false);
         }
 
-        public static async Task<string> GetSSLThumbprint(this IHpcContext context)
+        public static async Task<string> GetSSLThumbprint(this ITelepathyContext context)
         {
             return await context.Registry.GetSSLThumbprint(context.CancellationToken).ConfigureAwait(false);
         }
@@ -169,27 +171,27 @@
         }
 
         #region network share
-        public static async Task<string> GetClusterRuntimeDataShareAsync(this IHpcContext context)
+        public static async Task<string> GetClusterRuntimeDataShareAsync(this ITelepathyContext context)
         {
             return await context.Registry.GetValueAsync<string>(HpcConstants.HpcFullKeyName, HpcConstants.RuntimeDataSharePropertyName, context.CancellationToken, null).ConfigureAwait(false);
         }
 
-        public static async Task<string> GetClusterSpoolDirShareAsync(this IHpcContext context)
+        public static async Task<string> GetClusterSpoolDirShareAsync(this ITelepathyContext context)
         {
             return await context.Registry.GetValueAsync<string>(HpcConstants.HpcFullKeyName, HpcConstants.SpoolDirSharePropertyName, context.CancellationToken, null).ConfigureAwait(false);
         }
 
-        public static async Task<string> GetClusterServiceRegistrationShareAsync(this IHpcContext context)
+        public static async Task<string> GetClusterServiceRegistrationShareAsync(this ITelepathyContext context)
         {
             return await context.Registry.GetValueAsync<string>(HpcConstants.HpcFullKeyName, HpcConstants.ServiceRegistrationSharePropertyName, context.CancellationToken, null).ConfigureAwait(false);
         }
 
-        public static async Task<string> GetClusterInstallShareAsync(this IHpcContext context)
+        public static async Task<string> GetClusterInstallShareAsync(this ITelepathyContext context)
         {
             return await context.Registry.GetValueAsync<string>(HpcConstants.HpcFullKeyName, HpcConstants.InstallSharePropertyName, context.CancellationToken, null).ConfigureAwait(false);
         }
 
-        public static async Task<string> GetClusterDiagnosticsShareAsync(this IHpcContext context)
+        public static async Task<string> GetClusterDiagnosticsShareAsync(this ITelepathyContext context)
         {
             return await context.Registry.GetValueAsync<string>(HpcConstants.HpcFullKeyName, HpcConstants.DiagnosticsSharePropertyName, context.CancellationToken, null).ConfigureAwait(false);
         }

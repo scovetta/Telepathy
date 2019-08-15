@@ -136,9 +136,9 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
         MSMQMessageFetcher responseFetcher;
 
         /// <summary>
-        /// BrokerWorker HpcContext
+        /// BrokerWorker TelepathyContext
         /// </summary>
-        private static IHpcContext HpcContext => WinServiceHpcContextModule.GetOrAddWinServiceHpcContextFromEnv();
+        private static ITelepathyContext TelepathyContext => WinServiceHpcContextModule.GetOrAddWinServiceHpcContextFromEnv();
 
         /// <summary>
         /// Cache SID name mapping of AAD identity
@@ -217,7 +217,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
                     if (!string.IsNullOrEmpty(userName))
                     {
                         var principal = Thread.CurrentPrincipal;
-                        if (principal.IsHpcAadPrincipal(HpcContext))
+                        if (principal.IsHpcAadPrincipal(TelepathyContext))
                         {
                             this.userNameField = this.SetUserName(principal);
                         }
@@ -1193,7 +1193,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
 
         private string SetUserName(IPrincipal principal)
         {
-            var sid = principal.GenerateSecurityIdentifierFromAadPrincipal(HpcContext);
+            var sid = principal.GenerateSecurityIdentifierFromAadPrincipal(TelepathyContext);
             SetAadSidEntry(sid.Value, principal.Identity.Name);
             Trace.TraceInformation("SetUserName: TrySetAADUserIdentity. SID:{0}, Identity:{1}", sid.Value, principal.Identity.Name);
             this.nativeResponsesQueueField.SetOwner(sid.Value, true);
@@ -1212,7 +1212,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
             var principal = Thread.CurrentPrincipal;
 
             // If AAD SID Dictionary is not empty, it has big chance that this MSMQ is authenticated by AAd identity.
-            if (principal.IsHpcAadPrincipal(HpcContext) || AadSidDict.Any())
+            if (principal.IsHpcAadPrincipal(TelepathyContext) || AadSidDict.Any())
             {
                 string strSid = this.nativeResponsesQueueField.GetOwner(true);
                 string userName;
@@ -1227,7 +1227,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
                         "GetUserName: Get AAD user name from SID failed. SID: {0}, current identity: {1}, current SID: {2}",
                         strSid,
                         principal.Identity.Name,
-                        principal.GenerateSecurityIdentifierFromAadPrincipal(HpcContext));
+                        principal.GenerateSecurityIdentifierFromAadPrincipal(TelepathyContext));
                 }
             }
             string ownerName = this.nativeResponsesQueueField.GetOwner(false);
@@ -1244,7 +1244,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
         {
             MessageQueueNative nativeResponseQueue = new MessageQueueNative(responseQueueName);
             var principal = Thread.CurrentPrincipal;
-            if (principal.IsHpcAadPrincipal(HpcContext) || useAad)
+            if (principal.IsHpcAadPrincipal(TelepathyContext) || useAad)
             {
                 string strSid = nativeResponseQueue.GetOwner(true);
                 string userName;
@@ -1264,7 +1264,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
                         "GetUserName: Get AAD user name from SID failed. SID: {0}, current identity: {1}, current SID: {2}, responseQueueName: {3}",
                         strSid,
                         principal.Identity.Name,
-                        principal.GenerateSecurityIdentifierFromAadPrincipal(HpcContext),
+                        principal.GenerateSecurityIdentifierFromAadPrincipal(TelepathyContext),
                         responseQueueName);
                 }
             }

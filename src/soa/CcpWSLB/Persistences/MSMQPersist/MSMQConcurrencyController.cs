@@ -7,7 +7,6 @@
 
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
 {
-    using System;
     using System.Collections.Generic;
     using System.Threading;
 

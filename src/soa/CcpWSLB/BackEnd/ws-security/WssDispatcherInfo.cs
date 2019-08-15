@@ -12,8 +12,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using System;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using Microsoft.Hpc.Azure.Common;
-    using Microsoft.Hpc.Scheduler.Properties;
+
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using System.Globalization;
 

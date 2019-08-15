@@ -1,22 +1,24 @@
-﻿namespace Microsoft.Hpc.Rest
-{
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Net.Http;
-    using System.Security.Cryptography.X509Certificates;
-    using System.Threading;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading;
+using System.Threading.Tasks;
+using TelepathyCommon.HpcContext;
+using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
 
+namespace TelepathyCommon.Rest
+{
     using static SoaRegistrationAuxModule;
 
     public class ServiceRegistrationRestClient : HpcRestClient, IServiceRegistrationStore
     {
         private const string EmptyThumbPrint = "Empty";
 
-        public ServiceRegistrationRestClient(IHpcContext context) : base(context)
+        public ServiceRegistrationRestClient(ITelepathyContext context) : base(context)
         {
             this.thumbprint = this.Context.GetSSLThumbprint().GetAwaiter().GetResult();
 
@@ -195,6 +197,6 @@
 
     public static class ServiceRegistrationRestClientHpcContextExtension
     {
-        public static ServiceRegistrationRestClient GetServiceRegistrationRestClient(this IHpcContext context) => new ServiceRegistrationRestClient(context);
+        public static ServiceRegistrationRestClient GetServiceRegistrationRestClient(this ITelepathyContext context) => new ServiceRegistrationRestClient(context);
     }
 }

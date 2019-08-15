@@ -18,7 +18,6 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Queue;
-    using Microsoft.WindowsAzure.Storage.RetryPolicies;
 
     /// <summary>
     /// Delegate of the message handler.

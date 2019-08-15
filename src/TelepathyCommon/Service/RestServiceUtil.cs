@@ -1,13 +1,13 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.Diagnostics;
-    using System.Net;
-    using System.Net.Http;
-    using System.Net.Security;
-    using System.Security.Cryptography.X509Certificates;
-    using System.Threading;
+﻿using System.Diagnostics;
+using System.Net;
+using System.Net.Security;
+using System.Threading;
+using TelepathyCommon.HpcContext;
+using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
+using TelepathyCommon.Registry;
 
+namespace TelepathyCommon.Service
+{
     public static class RestServiceUtil
     {
         public const int InternalRestHttpPort = 80;
@@ -44,7 +44,7 @@
 #if !NETCORE
         public static void IgnoreCertNameMismatchValidation() => IgnoreCertNameMismatchValidation(null);
 
-        public static void IgnoreCertNameMismatchValidation(this IHpcContext context)
+        public static void IgnoreCertNameMismatchValidation(this ITelepathyContext context)
         {
             if (isCertificateValidationCallbackSet)
             {
@@ -69,7 +69,7 @@
             }
         }
 
-        public static RemoteCertificateValidationCallback GetCertificateValidationCallback(this IHpcContext context)
+        public static RemoteCertificateValidationCallback GetCertificateValidationCallback(this ITelepathyContext context)
         {
             var validationType = new NonHARegistry().GetCertificateValidationTypeAsync().GetAwaiter().GetResult();
 

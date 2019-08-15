@@ -7,9 +7,8 @@
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     using System;
-    using System.Collections.Generic;
     using System.ServiceModel.Channels;
-    using System.Text;
+
     using Microsoft.Hpc.Scheduler.Session.Internal;
 
     /// <summary>

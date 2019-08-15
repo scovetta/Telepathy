@@ -8,8 +8,6 @@
 //-----------------------------------------------------------------------
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
-    using System.ServiceModel.Channels;
-
     /// <summary>
     /// This is a class for receiving response from Java WSS4J service host.
     /// </summary>

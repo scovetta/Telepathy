@@ -1,8 +1,9 @@
-﻿namespace Microsoft.Hpc
-{
-    using System.Threading;
+﻿using System.Threading;
+using TelepathyCommon.Registry;
 
-    public interface IHpcContext
+namespace TelepathyCommon.HpcContext
+{
+    public interface ITelepathyContext
     {
         CancellationToken CancellationToken { get; }
 

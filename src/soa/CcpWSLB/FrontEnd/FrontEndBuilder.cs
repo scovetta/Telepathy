@@ -18,14 +18,11 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using System.ServiceModel.Configuration;
     using System.ServiceModel.Description;
     using System.Text;
-    using System.Threading;
     using System.Xml;
 
     using Microsoft.Hpc.AADAuthUtil;
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker.FrontEnd.AzureQueue;
-    using Microsoft.Hpc.SvcBroker;
 
     using SR = Microsoft.Hpc.SvcBroker.SR;
 

@@ -8,23 +8,20 @@
 //------------------------------------------------------------------------------
 
 
+using TelepathyCommon.HpcContext;
+
 namespace Microsoft.Hpc.ServiceBroker
 {
-    using Microsoft.Hpc.Scheduler.Properties;
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Configuration;
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
     using Microsoft.Hpc.ServiceBroker.BackEnd;
     using Microsoft.Hpc.ServiceBroker.BrokerStorage;
     using Microsoft.Hpc.ServiceBroker.FrontEnd;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Net;
-    using System.Net.Security;
-    using System.Security.Cryptography.X509Certificates;
     using System.Security.Principal;
     using System.ServiceModel.Configuration;
     using System.Threading;
@@ -33,8 +30,6 @@ namespace Microsoft.Hpc.ServiceBroker
 
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter;
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Module;
-    using Microsoft.Hpc.SoaContext;
-
     using SoaAmbientConfig;
     /// <summary>
     /// Remoting entry for broker
@@ -254,7 +249,7 @@ namespace Microsoft.Hpc.ServiceBroker
                 BrokerTracing.TraceVerbose("[BrokerEntry] Initialization: Step 4: Initialize broker state manager succeeded.");
 
                 // Step 5: Initialize service job monitor
-                var context = HpcContext.GetOrAdd(this.sharedData.BrokerInfo.Headnode, CancellationToken.None);
+                var context = TelepathyContext.GetOrAdd(this.sharedData.BrokerInfo.Headnode, CancellationToken.None);
 
                 if (SoaCommonConfig.WithoutSessionLayer)
                 { 
@@ -734,7 +729,9 @@ namespace Microsoft.Hpc.ServiceBroker
 
                 if (sharedData.StartInfo.ShareSession)
                 {
-                    return new BrokerAuthorization(sharedData.BrokerInfo.JobTemplateACL, (int)JobTemplateRights.SubmitJob, (int)JobTemplateRights.Generic_Read, (int)JobTemplateRights.Generic_Write, (int)JobTemplateRights.Generic_Execute, (int)JobTemplateRights.Generic_All);
+                    // TODO: Feature: share session
+                    throw new NotImplementedException();
+                    // return new BrokerAuthorization(sharedData.BrokerInfo.JobTemplateACL, (int)JobTemplateRights.SubmitJob, (int)JobTemplateRights.Generic_Read, (int)JobTemplateRights.Generic_Write, (int)JobTemplateRights.Generic_Execute, (int)JobTemplateRights.Generic_All);
                 }
                 else
                 {

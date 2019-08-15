@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Hpc
+﻿namespace TelepathyCommon.Azure
 {
     internal static class AzureEnvironmentConstants
     {

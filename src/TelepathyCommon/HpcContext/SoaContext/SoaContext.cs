@@ -1,11 +1,12 @@
-﻿namespace Microsoft.Hpc.SoaContext
-{
-    using System.Threading;
+﻿using System.Threading;
+using TelepathyCommon.Registry;
 
+namespace TelepathyCommon.HpcContext.SoaContext
+{
     // TODO: Remove me
-    public class SoaContext : IHpcContext
+    public class SoaContext : ITelepathyContext
     {
-        public static readonly IHpcContext Default = new SoaContext();
+        public static readonly ITelepathyContext Default = new SoaContext();
 
         public SoaContext()
         {

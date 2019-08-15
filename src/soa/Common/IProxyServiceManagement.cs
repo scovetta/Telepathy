@@ -6,7 +6,6 @@
 //-----------------------------------------------------------------------
 
 using System.ServiceModel;
-using Microsoft.Hpc.ServiceBroker;
 
 namespace Microsoft.Hpc.BrokerProxy
 {

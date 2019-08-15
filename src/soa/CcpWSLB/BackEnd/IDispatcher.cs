@@ -8,7 +8,6 @@
 //-----------------------------------------------------------------------
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker.BrokerStorage;
     using Microsoft.WindowsAzure.Storage;
     using System;
@@ -17,7 +16,6 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.ServiceBroker.Common.ThreadHelper;
 
     /// <summary>
     /// It is interface of dispatcher.

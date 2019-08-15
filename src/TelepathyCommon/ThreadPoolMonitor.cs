@@ -1,9 +1,9 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.Diagnostics;
-    using System.Threading;
+﻿using System;
+using System.Diagnostics;
+using System.Threading;
 
+namespace TelepathyCommon
+{
     public class ThreadPoolMonitor
     {
         private int lastWorker = 0;

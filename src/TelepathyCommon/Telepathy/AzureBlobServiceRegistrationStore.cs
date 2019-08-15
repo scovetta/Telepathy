@@ -1,15 +1,14 @@
-﻿namespace Microsoft.Hpc.Telepathy
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+
+namespace TelepathyCommon.Telepathy
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using System.Threading.Tasks;
-
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Blob;
-
     // TODO: azure storage client side retry
     // TODO: TEST CASE 1 - mixed cases in service name
     public class AzureBlobServiceRegistrationStore : IServiceRegistrationStore

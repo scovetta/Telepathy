@@ -7,15 +7,15 @@
 // </summary>
 //------------------------------------------------------------------------------
 using System.Collections.Generic;
-using Microsoft.Hpc.Scheduler.Properties;
+
 using Microsoft.Hpc.Scheduler.Session.Interface;
-using Microsoft.Hpc.Scheduler.Session.Internal;
 
 namespace Microsoft.Hpc.ServiceBroker
 {
     using System;
 
     using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Hpc.Scheduler.Session.Data;
 
     /// <summary>
     /// Async version of ISchedulerAdapter

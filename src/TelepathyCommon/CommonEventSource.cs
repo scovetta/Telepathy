@@ -1,10 +1,8 @@
-﻿namespace Microsoft.Hpc
+﻿using System;
+using System.Threading.Tasks;
+
+namespace TelepathyCommon
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 #if net40
     using Microsoft.Diagnostics.Tracing;
 #else

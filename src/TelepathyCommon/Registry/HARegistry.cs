@@ -1,13 +1,8 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Microsoft.Win32;
-    using System.Security.AccessControl;
+﻿using System.Security.AccessControl;
+using Microsoft.Win32;
 
+namespace TelepathyCommon.Registry
+{
     public class HARegistry : WindowsRegistryBase
     {
         protected override RegistryKey CreateOrOpenSubKey(string key)

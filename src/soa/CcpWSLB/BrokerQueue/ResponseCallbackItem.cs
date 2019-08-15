@@ -7,8 +7,6 @@
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
     using System.Threading;
     using System.ServiceModel.Channels;
 

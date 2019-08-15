@@ -1,4 +1,6 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session
+﻿using TelepathyCommon.HpcContext;
+
+namespace Microsoft.Hpc.Scheduler.Session
 {
     using System;
     using System.Threading;
@@ -8,7 +10,8 @@
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker;
-    using Microsoft.Hpc.SoaContext;
+
+    using TelepathyCommon;
 
     /// <summary>
     /// Base class implements <see cref="IConnectionInfo"/>
@@ -74,7 +77,7 @@
         /// <summary>
         /// Stores the fabric cluster context
         /// </summary>
-        internal IHpcContext Context { get; set; }
+        internal ITelepathyContext Context { get; set; }
 
         protected SessionInitInfoBase(string headnode)
         {
@@ -96,14 +99,14 @@
             this.headnode = headnode;
 
 
-            this.Context = HpcContext.GetOrAdd(this.headnode, CancellationToken.None);
+            this.Context = TelepathyContext.GetOrAdd(this.headnode, CancellationToken.None);
         }
 
         protected SessionInitInfoBase()
         {
             //this.headnode is the hostname of local machine.
             this.headnode= System.Net.Dns.GetHostName();
-            this.Context = HpcContext.GetOrAdd(this.headnode, CancellationToken.None);
+            this.Context = TelepathyContext.GetOrAdd(this.headnode, CancellationToken.None);
         }
 
         /// <summary>

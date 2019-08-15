@@ -1,14 +1,12 @@
-﻿namespace Microsoft.Hpc
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text.RegularExpressions;
+using Microsoft.Win32;
+
+namespace TelepathyCommon
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-    using Win32;
-    using System.Diagnostics;
-
-
     /// <summary>
     /// Make this class for connection string format contract.
     /// Use this class for standard connection string processing.
@@ -52,7 +50,7 @@
 
             string registryValue = null;
 
-            using (RegistryKey regKey = Registry.LocalMachine.OpenSubKey(CommonRegistryPath))
+            using (RegistryKey regKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(CommonRegistryPath))
             {
                 registryValue = regKey?.GetValue(HpcConstants.ClusterConnectionStringRegVal) as string;
             }

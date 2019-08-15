@@ -1,15 +1,15 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.Collections.Concurrent;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Reflection;
-    using System.Threading;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Reflection;
+using System.Threading;
+using TelepathyCommon.Registry;
 
-    public class HpcContext : IHpcContext, IDisposable
+namespace TelepathyCommon.HpcContext
+{
+    public class TelepathyContext : ITelepathyContext, IDisposable
     {
-        private HpcContext(EndpointsConnectionString connectionString, CancellationToken token, HpcContextOwner hpcContextOwner)
+        private TelepathyContext(EndpointsConnectionString connectionString, CancellationToken token, HpcContextOwner hpcContextOwner)
         {
             this.connectionString = connectionString;
             this.CancellationToken = token;
@@ -116,13 +116,13 @@
             }
         }
 
-        private static ConcurrentDictionary<string, HpcContext> contexts = new ConcurrentDictionary<string, HpcContext>();
+        private static ConcurrentDictionary<string, TelepathyContext> contexts = new ConcurrentDictionary<string, TelepathyContext>();
 
         /// <summary>
         /// Get the local fabric client context. This method should be called after the GetHpcContext(CancellationToken) overload.
         /// </summary>
         /// <returns>the hpc context instance.</returns>
-        public static IHpcContext Get()
+        public static ITelepathyContext Get()
         {
             return Get(string.Empty);
         }
@@ -131,7 +131,7 @@
         /// Get the context connecting to local SF cluster.
         /// </summary>
         /// <returns>the hpc context instance.</returns>
-        public static IHpcContext GetOrAdd(CancellationToken token)
+        public static ITelepathyContext GetOrAdd(CancellationToken token)
         {
             return GetOrAdd(string.Empty, token);
         }
@@ -148,7 +148,7 @@
         /// </summary>
         /// <param name="connectionString">the connection string</param>
         /// <returns></returns>
-        public static IHpcContext Get(string connectionString)
+        public static ITelepathyContext Get(string connectionString)
         {
             return Get(EndpointsConnectionString.ParseConnectionString(connectionString));
         }
@@ -158,16 +158,16 @@
         /// </summary>
         /// <param name="connectionString">the connection string instance</param>
         /// <returns></returns>
-        public static IHpcContext Get(EndpointsConnectionString connectionString)
+        public static ITelepathyContext Get(EndpointsConnectionString connectionString)
         {
 #if HPCPACK
-            HpcContext context;
+            TelepathyContext context;
             if (!contexts.TryGetValue(connectionString.ConnectionString, out context))
             {
                 throw new InvalidOperationException(
                     @"Two reasons you got this exception:
 1, There is no cached context, you should call GetOrAdd first.
-2, The cancellation token associated with the HpcContext is cancelled, so no further access to the context and please cleanup as soon as possible.");
+2, The cancellation token associated with the TelepathyContext is cancelled, so no further access to the context and please cleanup as soon as possible.");
             }
 
             return context;
@@ -193,9 +193,9 @@
         /// </summary>
         /// <param name="connectionString">the connection string</param>
         /// <param name="token">the cancellation token</param>
-        /// <param name="isHpcService">Indicate if the HpcContext is inside an HpcService when instantiated outside of Service Fabric cluster.</param>
+        /// <param name="isHpcService">Indicate if the TelepathyContext is inside an HpcService when instantiated outside of Service Fabric cluster.</param>
         /// <returns></returns>
-        public static IHpcContext GetOrAdd(string connectionString, CancellationToken token, bool isHpcService = false)
+        public static ITelepathyContext GetOrAdd(string connectionString, CancellationToken token, bool isHpcService = false)
         {
             return GetOrAdd(EndpointsConnectionString.ParseConnectionString(connectionString), token, isHpcService);
         }
@@ -205,13 +205,13 @@
         /// </summary>
         /// <param name="connectionString">the connection string instance</param>
         /// <param name="token">the cancellation token</param>
-        /// <param name="isHpcService">Indicate if the HpcContext is inside an HpcService when instantiated outside of Service Fabric cluster.</param>
+        /// <param name="isHpcService">Indicate if the TelepathyContext is inside an HpcService when instantiated outside of Service Fabric cluster.</param>
         /// <returns></returns>
-        public static IHpcContext GetOrAdd(EndpointsConnectionString connectionString, CancellationToken token, bool isHpcService = false)
+        public static ITelepathyContext GetOrAdd(EndpointsConnectionString connectionString, CancellationToken token, bool isHpcService = false)
         {
 #if HPCPACK
             HpcContextOwner hpcContextOwner = isHpcService ? HpcContextOwner.HpcServiceOutOfSFCluster : HpcContextOwner.Client;
-            HpcContext context = contexts.GetOrAdd(connectionString.ConnectionString, s => new HpcContext(connectionString, token, hpcContextOwner));
+            TelepathyContext context = contexts.GetOrAdd(connectionString.ConnectionString, s => new TelepathyContext(connectionString, token, hpcContextOwner));
 
             if (context.connectionString.IsGateway != connectionString.IsGateway)
             {

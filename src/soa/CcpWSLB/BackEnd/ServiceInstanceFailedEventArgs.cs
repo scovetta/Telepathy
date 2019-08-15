@@ -10,11 +10,8 @@
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
 
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
 
     /// <summary>
     /// service instance failed event args

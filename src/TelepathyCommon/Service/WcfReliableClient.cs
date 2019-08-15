@@ -1,11 +1,11 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.Diagnostics;
-    using System.ServiceModel;
-    using System.Threading;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Diagnostics;
+using System.ServiceModel;
+using System.Threading;
+using System.Threading.Tasks;
 
+namespace TelepathyCommon.Service
+{
     public class WcfReliableClient<T> : IDisposable
     {
         private Func<Task<T>> createWcfProxy;

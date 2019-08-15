@@ -7,6 +7,8 @@
 // </summary>
 //------------------------------------------------------------------------------
 
+using TelepathyCommon;
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using System;

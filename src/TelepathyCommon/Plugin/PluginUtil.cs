@@ -1,12 +1,12 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.IO;
-    using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
+namespace TelepathyCommon.Plugin
+{
     public static class PluginUtil
     {
         public static IEnumerable<T> CreateInstances<T>(string name) where T : class

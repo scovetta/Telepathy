@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Hpc
+﻿namespace TelepathyCommon.HpcContext
 {
     internal enum HpcServerContextType
     {
@@ -11,6 +11,6 @@
     {
         public static bool IsHpcHeadNodeService(this IFabricContext fabricContext) 
             => fabricContext.Owner == HpcContextOwner.HpcServiceInSFCluster
-               || (fabricContext.Owner == HpcContextOwner.HpcServiceOutOfSFCluster && HpcContext.ServerContextType == HpcServerContextType.NtService);
+               || (fabricContext.Owner == HpcContextOwner.HpcServiceOutOfSFCluster && TelepathyContext.ServerContextType == HpcServerContextType.NtService);
     }
 }

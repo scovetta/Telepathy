@@ -6,7 +6,7 @@
 //      Cluster properties definition file
 // </summary>
 //------------------------------------------------------------------------------
-namespace Microsoft.Hpc
+namespace TelepathyCommon
 {
     /// <summary>
     /// Cluster properties definition file

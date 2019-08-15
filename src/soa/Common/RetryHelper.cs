@@ -6,9 +6,11 @@
 //      Helper class to retry operation if exception occured
 // </summary>
 //------------------------------------------------------------------------------
+
+using TelepathyCommon;
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
-    using Microsoft.Hpc;
     using System;
     using System.Threading.Tasks;
     /// <summary>

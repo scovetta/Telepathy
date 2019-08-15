@@ -1,10 +1,8 @@
 ﻿namespace Microsoft.Hpc.ServiceBroker.Common.SchedulerAdapter
 {
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using System.Threading;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session;
@@ -65,6 +63,12 @@
             int autoMin = 0;
             return (Scheduler.Session.Data.JobState.Running, autoMax, autoMin);
             return await this.Channel.RegisterJobAsync(jobid);
+        }
+
+        // TODO: remove globalTaskId
+        public async Task<int?> GetTaskErrorCode(int jobId, int globalTaskId)
+        {
+            return await this.Channel.GetTaskErrorCode(jobId, globalTaskId);
         }
     }
 }

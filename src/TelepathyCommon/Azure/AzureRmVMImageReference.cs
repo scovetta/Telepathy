@@ -1,7 +1,7 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
+﻿using System;
 
+namespace TelepathyCommon.Azure
+{
     [Serializable]
     public class AzureRmVMImageReference
     {

@@ -1,8 +1,8 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
+namespace TelepathyCommon.Azure
+{
     public class AzureEnvironment
     {
         private static Dictionary<string, AzureEnvironment> BuiltInEnvironments { get; }

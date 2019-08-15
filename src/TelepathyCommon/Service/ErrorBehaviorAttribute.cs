@@ -1,12 +1,12 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.Collections.ObjectModel;
-    using System.ServiceModel;
-    using System.ServiceModel.Channels;
-    using System.ServiceModel.Description;
-    using System.ServiceModel.Dispatcher;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.ServiceModel;
+using System.ServiceModel.Channels;
+using System.ServiceModel.Description;
+using System.ServiceModel.Dispatcher;
 
+namespace TelepathyCommon.Service
+{
     public class ErrorBehaviorAttribute : Attribute, IServiceBehavior
     {
         /// <summary>

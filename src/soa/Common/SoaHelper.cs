@@ -4,32 +4,35 @@
 // </copyright>
 // <summary>Utilities for both on-premise and azure environment.</summary>
 //-----------------------------------------------------------------------
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
-    using Microsoft.Hpc.Azure.Common;
-    using Microsoft.Win32;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
-    using System.IO;
     using System.Linq;
     using System.Net;
-    using System.Reflection;
     using System.Security.AccessControl;
     using System.Security.Authentication;
     using System.Security.Cryptography;
+    using System.Security.Cryptography.X509Certificates;
     using System.Security.Principal;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Text;
     using System.Text.RegularExpressions;
-    using System.Xml;
-    using Microsoft.Hpc;
     using System.Threading;
-    using System.Security.Cryptography.X509Certificates;
-    using System.ServiceModel.Description;
-    using System.ServiceModel.Security;
+    using System.Xml;
+
+    using Microsoft.Hpc.Azure.Common;
+    using Microsoft.Win32;
+
+    using TelepathyCommon;
+    using TelepathyCommon.HpcContext;
+    using TelepathyCommon.HpcContext.Extensions;
+    using TelepathyCommon.Registry;
+    using TelepathyCommon.Service;
 
     /// <summary>
     /// It is a helper class, shared by broker and proxy.
@@ -686,7 +689,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>data service address</returns>
         public static string GetDataServiceAddress(string clusterConnectionString, TransportScheme scheme)
         {
-            string hostname = HpcContext.GetOrAdd(clusterConnectionString, CancellationToken.None).ResolveSessionLauncherNodeAsync().GetAwaiter().GetResult();
+            string hostname = TelepathyContext.GetOrAdd(clusterConnectionString, CancellationToken.None).ResolveSessionLauncherNodeAsync().GetAwaiter().GetResult();
             hostname += TryGetIaaSSuffix(clusterConnectionString);
 
             if ((scheme & TransportScheme.NetTcp) == TransportScheme.NetTcp)

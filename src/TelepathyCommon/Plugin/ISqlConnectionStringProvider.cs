@@ -7,11 +7,11 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Microsoft.Hpc
-{
-    using System.Threading;
-    using System.Threading.Tasks;
+using System.Threading;
+using System.Threading.Tasks;
 
+namespace TelepathyCommon.Plugin
+{
     /// <summary>
     /// The ConnectionString interface.
     /// </summary>

@@ -7,11 +7,9 @@
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     using System;
-    using System.Collections.Generic;
     using System.Runtime.Serialization;
     using System.Security;
     using System.Security.Permissions;
-    using System.Text;
 
     /// <summary>
     /// the error code definition for the broker queue exception.

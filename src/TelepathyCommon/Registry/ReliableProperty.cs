@@ -1,7 +1,7 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
+﻿using System;
 
+namespace TelepathyCommon.Registry
+{
     public class ReliableProperty
     {
         public ReliableProperty(string name, Type valueType, bool readOnly = false)

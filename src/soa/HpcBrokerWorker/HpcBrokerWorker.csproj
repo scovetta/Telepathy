@@ -57,9 +57,6 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Hpc.Trace">
-      <HintPath>..\..\..\ref\Microsoft.Hpc.Trace.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
@@ -104,17 +101,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\HpcCommon\HpcCommon.csproj">
-      <Project>{2c3936c7-4850-41d7-9497-9040be302328}</Project>
-      <Name>HpcCommon</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\StoreAPI\Property\Properties.csproj">
-      <Project>{61844849-3d26-4003-8146-5ae86985db3a}</Project>
-      <Name>Properties</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\StoreAPI\Scheduler\Scheduler.csproj">
-      <Project>{78e5e61b-dd12-475a-845b-7da3f6b0f987}</Project>
-      <Name>Scheduler</Name>
+    <ProjectReference Include="..\..\TelepathyCommon\TelepathyCommon.csproj">
+      <Project>{1f7d53e1-7c00-4de4-ad73-b0bb17bc1bfb}</Project>
+      <Name>TelepathyCommon</Name>
     </ProjectReference>
     <ProjectReference Include="..\base\BrokerBase.csproj">
       <Project>{3f01d480-4cde-4f46-99ea-95ceda05063e}</Project>

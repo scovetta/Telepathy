@@ -5,14 +5,16 @@
 // <owner current="true" primary="true">nzeng</owner>
 // Security review: nzeng 01-11-06
 //------------------------------------------------------------------------------
-namespace Microsoft.Hpc
-{
-    using System;
-    using System.Diagnostics;
-    using System.Runtime.CompilerServices;
-    using System.Threading;
-    using System.Threading.Tasks;
 
+using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
+using TelepathyCommon.HpcContext;
+
+namespace TelepathyCommon
+{
     public class RetryManager
     {
         public const int InfiniteRetries = -1;
@@ -256,7 +258,7 @@ namespace Microsoft.Hpc
                             sourceLineNumber,
                             ex.ToString());
 #if !NETCORE
-                        if (HpcContext.NotRetryPreviousRetryFailure)
+                        if (TelepathyContext.NotRetryPreviousRetryFailure)
                         {
                             throw new RetryCountExhaustException(ex);
                         }

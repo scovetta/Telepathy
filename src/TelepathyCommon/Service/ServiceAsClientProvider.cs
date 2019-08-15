@@ -1,9 +1,10 @@
-﻿namespace Microsoft.Hpc
+﻿using System.Security.Principal;
+
+namespace TelepathyCommon.Service
 {
 #if !net40
     using System.Security.Claims;
 #endif
-    using System.Security.Principal;
 
     public delegate string ServiceAsClientIdentityProvider();
 

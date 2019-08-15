@@ -1,11 +1,10 @@
-﻿namespace Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor
+﻿using TelepathyCommon;
+
+namespace Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
     using System.Net.Http;
-    using System.Text;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.RESTServiceModel;

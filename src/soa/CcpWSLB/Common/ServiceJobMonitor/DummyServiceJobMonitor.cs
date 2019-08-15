@@ -5,6 +5,8 @@
 // <summary>Dummy Monitor service job</summary>
 //-----------------------------------------------------------------------
 
+using TelepathyCommon.HpcContext;
+
 namespace Microsoft.Hpc.ServiceBroker
 {
     using System.Threading;
@@ -23,7 +25,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// </summary>
         /// <param name="sharedData">indicating the shared data</param>
         /// <param name="stateManager">indicating the state manager</param>
-        public DummyServiceJobMonitor(SharedData sharedData, BrokerStateManager stateManager, NodeMappingData nodeMappingData, IHpcContext context) : base(
+        public DummyServiceJobMonitor(SharedData sharedData, BrokerStateManager stateManager, NodeMappingData nodeMappingData, ITelepathyContext context) : base(
             sharedData,
             stateManager,
             nodeMappingData,

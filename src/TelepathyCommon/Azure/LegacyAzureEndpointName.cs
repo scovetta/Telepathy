@@ -1,6 +1,7 @@
-﻿namespace Microsoft.Hpc
+﻿using System.Collections.Generic;
+
+namespace TelepathyCommon.Azure
 {
-    using System.Collections.Generic;
     public static class LegacyAzureEndpointName
     {
         public const string AzureManagementDomain = "AzureManagementDomain",

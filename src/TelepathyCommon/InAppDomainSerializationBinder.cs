@@ -1,12 +1,12 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.Diagnostics;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters;
-    using System.Runtime.Serialization.Formatters.Binary;
+﻿using System;
+using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters;
+using System.Runtime.Serialization.Formatters.Binary;
 
+namespace TelepathyCommon
+{
     internal class InAppDomainSerializationBinder : SerializationBinder
     {
         public override Type BindToType(string assemblyName, string typeName)

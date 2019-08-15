@@ -1,10 +1,10 @@
-namespace Microsoft.Hpc
-{
-    using System;
-    using System.Net.Http;
-    using System.Threading;
-    using System.Threading.Tasks;
+using System;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
+namespace TelepathyCommon.HpcContext.Extensions
+{
     internal static class HttpClientExtension
     {
         private const string ApiUriPattern = "https://{0}/{1}";

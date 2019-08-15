@@ -1,12 +1,13 @@
-﻿namespace Microsoft.Hpc.Rest
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Net.Http;
-    using System.Threading;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using TelepathyCommon.HpcContext;
 
+namespace TelepathyCommon.Rest
+{
     public class HpcAadInfoRestClient : HpcRestClient
     {
         private const string ClientAppIdRoute = "client-appid";
@@ -22,7 +23,7 @@
         private static readonly Dictionary<string, Dictionary<string, Lazy<Task<string>>>> RequestCacheMatrix = new Dictionary<string, Dictionary<string, Lazy<Task<string>>>>();
         private Dictionary<string, Lazy<Task<string>>> instanceRequestCacheTable;
 
-        public HpcAadInfoRestClient(IHpcContext context) : base(context)
+        public HpcAadInfoRestClient(ITelepathyContext context) : base(context)
         {
             this.Init(context.FabricContext.ConnectionString.ConnectionString);
         }

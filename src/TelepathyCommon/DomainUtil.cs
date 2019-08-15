@@ -1,11 +1,11 @@
-﻿namespace Microsoft.Hpc
-{
-    using System;
-    using System.ComponentModel;
-    using System.Runtime.InteropServices;
-    using System.Security.Principal;
-    using System.Text;
+﻿using System;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+using System.Text;
 
+namespace TelepathyCommon
+{
     public static class DomainUtil
     {
         public const int ErrorSuccess = 0;
