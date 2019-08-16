@@ -1,8 +1,8 @@
-﻿using System.Collections.Specialized;
-using System.Text.RegularExpressions;
-
-namespace TestClient
+﻿namespace TestClient
 {
+    using System.Collections.Specialized;
+    using System.Text.RegularExpressions;
+
     /// <summary>
     /// Test Framework Related Functions
     /// </summary>

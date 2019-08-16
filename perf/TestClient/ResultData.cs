@@ -1,8 +1,8 @@
-﻿using System;
-using System.Globalization;
-
-namespace TestClient
+﻿namespace TestClient
 {
+    using System;
+    using System.Globalization;
+
     internal class ResultData
     {
         private DateTime start = DateTime.MinValue;

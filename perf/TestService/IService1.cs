@@ -1,9 +1,10 @@
-﻿using System;
-using System.ServiceModel;
-using Microsoft.Hpc.Scheduler.Session;
-
-namespace TestService
+﻿namespace TestService
 {
+    using System;
+    using System.ServiceModel;
+
+    using Microsoft.Hpc.Scheduler.Session;
+
     // NOTE: If you change the interface name "IService1" here, you must also update the reference to "IService1" in App.config.
     [ServiceContract]
     public interface IService1

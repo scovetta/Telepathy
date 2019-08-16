@@ -161,7 +161,7 @@ namespace TestClient
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/ComputeWithInputData", ReplyAction="http://tempuri.org/IService1/ComputeWithInputDataResponse")]
         [System.ServiceModel.FaultContractAttribute(typeof(System.ArgumentException), Action="http://tempuri.org/IService1/ComputeWithInputDataArgumentExceptionFault", Name="ArgumentException", Namespace="http://schemas.datacontract.org/2004/07/System")]
-        TestClient.ComputeWithInputDataResponse ComputeWithInputData(TestClient.ComputeWithInputDataRequest request);
+        TestClient.ComputeWithInputDataResponse ComputeWithInputData(ComputeWithInputDataRequest request);
         
         [System.ServiceModel.OperationContractAttribute(AsyncPattern=true, Action="http://tempuri.org/IService1/ComputeWithInputData", ReplyAction="http://tempuri.org/IService1/ComputeWithInputDataResponse")]
         System.IAsyncResult BeginComputeWithInputData(TestClient.ComputeWithInputDataRequest request, System.AsyncCallback callback, object asyncState);

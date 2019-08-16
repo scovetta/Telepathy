@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Hpc.Scheduler.Session;
-
-namespace TestClient
+﻿namespace TestClient
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using Microsoft.Hpc.Scheduler.Session;
+
     internal class StatisticData
     {
         private List<KeyValuePair<string, object>> outputLogs = new List<KeyValuePair<string, object>>();

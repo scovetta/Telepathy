@@ -296,10 +296,6 @@
       <Project>{3f01d480-4cde-4f46-99ea-95ceda05063e}</Project>
       <Name>BrokerBase</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HpcDeploy\DataMovement\DataMovement.csproj">
-      <Project>{f0a3e1b7-6c6f-4357-99ee-49210440fffd}</Project>
-      <Name>DataMovement</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SessionAPI.Data\SessionAPI.Data.csproj">
       <Project>{40FC3EBB-D692-4D69-B6A9-6CBD46F19025}</Project>
       <Name>SessionAPI.Data</Name>

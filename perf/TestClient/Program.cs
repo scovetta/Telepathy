@@ -1,19 +1,18 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.ServiceModel;
-using System.ServiceModel.Channels;
-using System.Threading;
-using Microsoft.Hpc.Scheduler.Session;
-using Microsoft.Hpc.Scheduler.Session.Data;
-using System.Net;
-using System.Threading.Tasks;
-
-namespace TestClient
+﻿namespace TestClient
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Net;
+    using System.ServiceModel;
+    using System.ServiceModel.Channels;
+    using System.Threading;
+
+    using Microsoft.Hpc.Scheduler.Session;
+
+    using TestService;
+
     /// <summary>
     /// Usage:
     /// Interactive Session's Usage: TestClient.exe [-h headnode] [-m max_cores] [-min min_cores] [-n req_count] [-r millisec_fo
@@ -344,6 +343,7 @@ namespace TestClient
         {
             if (common_data_size > 0)
             {
+#if HPCPACK
                 byte[] common_data = new byte[common_data_size];
                 Random r = new Random();
                 r.NextBytes(common_data);
@@ -360,6 +360,9 @@ namespace TestClient
                     dataClient.Close();
                 }
                 Log("Common data written done.");
+#else
+                throw new NotSupportedException("No common data support yet.");
+#endif
             }
             else
             {

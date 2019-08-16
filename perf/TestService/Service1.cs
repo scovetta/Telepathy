@@ -1,15 +1,12 @@
-﻿using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading;
-using System.ServiceModel;
-using Microsoft.Hpc.Scheduler.Session.Data;
-using Microsoft.Hpc.Scheduler.Session;
-using System.Diagnostics;
-using System.Text;
-
-namespace TestService
+﻿namespace TestService
 {
+    using System;
+    using System.ServiceModel;
+    using System.Text;
+    using System.Threading;
+
+    using Microsoft.Hpc.Scheduler.Session;
+
     // NOTE: If you change the class name "Service1" here, you must also update the reference to "Service1" in App.config.
     public class Service1 : IService1
     {
@@ -23,6 +20,7 @@ namespace TestService
 
             if (!string.IsNullOrEmpty(commonData_dataClientId))
             {
+#if HPCPACK
                 try
                 {
                     if (data == null)
@@ -62,6 +60,8 @@ namespace TestService
                 {
                     System.Console.WriteLine("dataclient exception: {0}", e.ToString());
                 }
+#endif
+                throw new NotSupportedException("No common data support yet.");
             }
 
             int userTraceCount = 0;
