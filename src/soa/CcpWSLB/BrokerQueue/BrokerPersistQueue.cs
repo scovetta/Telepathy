@@ -11,9 +11,8 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Utility;
     using Microsoft.Hpc.ServiceBroker.FrontEnd;
-    using Microsoft.Hpc.SvcBroker;
+
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;

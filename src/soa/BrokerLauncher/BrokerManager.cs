@@ -18,15 +18,17 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Rest;
     using Microsoft.Hpc.RuntimeTrace;
-    using Microsoft.Hpc.Scheduler.Properties;
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Configuration;
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
     using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Hpc.ServiceBroker.Common;
+
+    using TelepathyCommon;
+    using TelepathyCommon.HpcContext;
+    using TelepathyCommon.Rest;
 
     /// <summary>
     /// Manager for all broker app domains
@@ -142,12 +144,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <summary>
         /// Stores the fabric cluster context;
         /// </summary>
-        private IHpcContext context;
+        private ITelepathyContext context;
 
         /// <summary>
         /// Initializes a new instance of the BrokerManager class
         /// </summary>
-        public BrokerManager(bool needRecover, IHpcContext context)
+        public BrokerManager(bool needRecover, ITelepathyContext context)
         {
             TraceHelper.TraceEvent(TraceEventType.Verbose, "[BrokerManager] Constructor: needRecover={0}", needRecover);
             this.headnode = SoaHelper.GetSchedulerName();
@@ -798,8 +800,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             {
                 if (recoverInfo.StartInfo.ShareSession)
                 {
+#if HPCPACK
                     brokerInfo.JobTemplateACL = await this.schedulerHelper.GetJobTemplateACL(recoverInfo.StartInfo.JobTemplate);
                     auth = new BrokerAuthorization(brokerInfo.JobTemplateACL, (int)JobTemplateRights.SubmitJob, (int)JobTemplateRights.Generic_Read, (int)JobTemplateRights.Generic_Write, (int)JobTemplateRights.Generic_Execute, (int)JobTemplateRights.Generic_All);
+#endif
+                    // TODO: support share session
+                    throw new NotImplementedException();
+                    
                 }
                 else
                 {

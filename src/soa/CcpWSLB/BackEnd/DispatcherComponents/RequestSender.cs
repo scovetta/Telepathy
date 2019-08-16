@@ -12,7 +12,6 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using System.Diagnostics;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using System.Threading;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session.Internal;

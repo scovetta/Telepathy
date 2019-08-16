@@ -6,6 +6,7 @@
 //      The interface for data service
 // </summary>
 //------------------------------------------------------------------------------
+#if HPCPACK
 namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
 {
     using System.ServiceModel;
@@ -88,3 +89,4 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
         DataClientInfo OpenDataClientBySecret(string dataClientId, int jobId, string jobSecret);
     }
 }
+#endif

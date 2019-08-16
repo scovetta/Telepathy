@@ -13,10 +13,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using System.Reflection;
-    using Microsoft.Hpc.Scheduler.Session;
 
-    using static SoaRegistrationAuxModule;
+    using Microsoft.Hpc.Scheduler.Session;
+    
+    using TelepathyCommon;
+    using static TelepathyCommon.SoaRegistrationAuxModule;
 
     internal class ServiceRegistrationRepo
     {

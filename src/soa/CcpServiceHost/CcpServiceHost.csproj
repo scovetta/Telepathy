@@ -166,25 +166,17 @@
       <Project>{8F4412AA-A6E0-49E5-A331-1B1047E2159D}</Project>
       <Name>StandaloneDataClient</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\StoreAPI\Property\Properties.csproj">
-      <Project>{61844849-3d26-4003-8146-5ae86985db3a}</Project>
-      <Name>Properties</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\StoreAPI\Scheduler\Scheduler.csproj">
-      <Project>{78e5e61b-dd12-475a-845b-7da3f6b0f987}</Project>
-      <Name>Scheduler</Name>
+    <ProjectReference Include="..\..\TelepathyCommon\TelepathyCommon.csproj">
+      <Project>{1F7D53E1-7C00-4DE4-AD73-B0BB17BC1BFB}</Project>
+      <Name>TelepathyCommon</Name>
     </ProjectReference>
     <ProjectReference Include="..\base\BrokerBase.csproj">
       <Project>{3f01d480-4cde-4f46-99ea-95ceda05063e}</Project>
       <Name>BrokerBase</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SessionAPI.HpcPack\SessionAPI.HpcPack.csproj">
-      <Project>{23638265-a3f6-4dee-8fd0-65c75a52bff6}</Project>
-      <Name>SessionAPI.HpcPack</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SvcHostRestServer\SvcHostRestServer.csproj">
       <Project>{602b999e-6203-432c-af7c-2c31dddde60a}</Project>
-      <Name>RESTServiceModel</Name>
+      <Name>SvcHostRestServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\SessionAPI\Session.csproj">
       <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>

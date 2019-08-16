@@ -90,6 +90,11 @@
             return (JobState.Running, int.MaxValue, 0);
         }
 
+        public Task<int?> GetTaskErrorCode(int jobId, int globalTaskId)
+        {
+            throw new NotImplementedException();
+        }
+
         private async Task UpdateSoaRelatedPropertiesAsync(CloudJob sessionJob, Dictionary<string, object> properties)
         {
             try

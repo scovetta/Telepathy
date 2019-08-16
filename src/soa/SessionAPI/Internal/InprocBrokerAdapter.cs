@@ -6,6 +6,10 @@
 //      Broker launcher adapter for inproc broker
 // </summary>
 //------------------------------------------------------------------------------
+
+using TelepathyCommon.HpcContext;
+using TelepathyCommon.Rest;
+
 namespace Microsoft.Hpc.Scheduler.Session
 {
     using Microsoft.Hpc.Scheduler.Session.Interface;
@@ -20,7 +24,6 @@ namespace Microsoft.Hpc.Scheduler.Session
     using System.ServiceModel.Channels;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.Hpc.Rest;
     using Microsoft.Hpc.Scheduler.Session.ServiceContainer;
 
     /// <summary>
@@ -654,7 +657,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             }
 
             // setup the service registery helper
-            ServiceRegistrationRepo serviceRegistration = new ServiceRegistrationRepo(centralPath, HpcContext.GetOrAdd(this.startInfo.Headnode, CancellationToken.None).GetServiceRegistrationRestClient());
+            ServiceRegistrationRepo serviceRegistration = new ServiceRegistrationRepo(centralPath, TelepathyContext.GetOrAdd(this.startInfo.Headnode, CancellationToken.None).GetServiceRegistrationRestClient());
             string serviceRegistrationPath = serviceRegistration.GetServiceRegistrationPath(serviceName, serviceVersion);
             if (serviceRegistrationPath == null)
             {

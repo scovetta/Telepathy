@@ -5,20 +5,17 @@
 // <summary>Monitor service job</summary>
 //-----------------------------------------------------------------------
 
+using TelepathyCommon.HpcContext;
+
 namespace Microsoft.Hpc.ServiceBroker
 {
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Net.Http;
     using System.ServiceModel;
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.RESTServiceModel;
     using Microsoft.Hpc.ServiceBroker.BackEnd;
     using Microsoft.Hpc.ServiceBroker.Common;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor;
@@ -34,7 +31,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// </summary>
         /// <param name="sharedData">indicating the shared data</param>
         /// <param name="stateManager">indicating the state manager</param>
-        public ServiceJobMonitor(SharedData sharedData, BrokerStateManager stateManager, NodeMappingData nodeMappingData, IHpcContext context)
+        public ServiceJobMonitor(SharedData sharedData, BrokerStateManager stateManager, NodeMappingData nodeMappingData, ITelepathyContext context)
             :base(sharedData, stateManager, nodeMappingData, context)
         {       
         }

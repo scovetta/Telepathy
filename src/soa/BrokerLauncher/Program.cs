@@ -24,6 +24,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
 
     using Serilog;
 
+    using TelepathyCommon.HpcContext;
+
     /// <summary>
     /// Main entry point
     /// </summary>
@@ -48,9 +50,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
             }
 
             // clusterconnectionstring could be a machine name (for single headnode) or a connection string
-            IHpcContext context;
+            ITelepathyContext context;
             string clusterConnectionString = SoaHelper.GetSchedulerName();
-            context = HpcContext.GetOrAdd(clusterConnectionString, CancellationToken.None, true);
+            context = TelepathyContext.GetOrAdd(clusterConnectionString, CancellationToken.None, true);
 
             Trace.TraceInformation("Get diag trace enabled internal.");
             SoaDiagTraceHelper.IsDiagTraceEnabledInternal = (sessionId) =>

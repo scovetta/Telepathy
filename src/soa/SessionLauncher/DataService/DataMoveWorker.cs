@@ -6,6 +6,7 @@
 //     Data move worker
 // </summary>
 //-----------------------------------------------------------------------------------------------------------------------------------------
+#if HPCPACK
 namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
 {
     using System.Threading;
@@ -74,3 +75,4 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
         }
     }
 }
+#endif

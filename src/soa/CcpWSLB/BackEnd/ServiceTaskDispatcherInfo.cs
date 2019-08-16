@@ -9,7 +9,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using System;
     using System.ServiceModel;
     using System.Globalization;
-    using Microsoft.Hpc.Scheduler.Properties;
+
     using Microsoft.Hpc.Scheduler.Session.Internal;
 
     /// <summary>

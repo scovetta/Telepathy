@@ -8,7 +8,6 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
     using System;
     using System.ServiceModel;
-    using Microsoft.Hpc.Scheduler.Properties;
 
     /// <summary>
     /// Stores the info of a dispatcher

@@ -7,6 +7,9 @@
 // </summary>
 //------------------------------------------------------------------------------
 
+using TelepathyCommon.HpcContext;
+using TelepathyCommon.HpcContext.Extensions;
+
 namespace Microsoft.Hpc.Scheduler.Session
 {
     using System;
@@ -888,7 +891,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <returns>Available service versions</returns>
         public static async Task<Version[]> GetServiceVersionsAsync(string headNode, string serviceName, Binding binding, bool useWindowsAuthentication, CancellationToken token)
         {
-            string headNodeMachine = await HpcContext.GetOrAdd(headNode, token).ResolveSessionLauncherNodeAsync().ConfigureAwait(false);
+            string headNodeMachine = await TelepathyContext.GetOrAdd(headNode, token).ResolveSessionLauncherNodeAsync().ConfigureAwait(false);
             SessionLauncherClient client = new SessionLauncherClient(headNodeMachine, binding, !useWindowsAuthentication);
             try
             {

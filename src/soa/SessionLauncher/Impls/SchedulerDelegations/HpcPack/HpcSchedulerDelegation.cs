@@ -6,6 +6,7 @@
 //      Scheduler adapter for both broker and broker launcher
 // </summary>
 //------------------------------------------------------------------------------
+#if HPCPACK
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 {
@@ -198,7 +199,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             this.jobStateMonitorTimer = new Timer(this.JobStateMonitorCallback, null, MonitorJobStateTimePeriod, MonitorJobStateTimePeriod);
         }
 
-        #region IHpcSchedulerAdapter and ISchedulerAdapterInternal operations
+#region IHpcSchedulerAdapter and ISchedulerAdapterInternal operations
         /// <summary>
         /// Start to subscribe the job and task event
         /// </summary>
@@ -1766,7 +1767,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             return (succeed, balanceInfo, taskIds, runningTaskIds);
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Gets job owner sid
@@ -2917,3 +2918,4 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
     }
 }
 
+#endif

@@ -19,7 +19,6 @@ namespace Microsoft.Hpc.ServiceBroker
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker.BrokerStorage;
     using Microsoft.Hpc.ServiceBroker.FrontEnd;
 

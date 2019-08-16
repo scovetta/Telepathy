@@ -159,6 +159,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueAdapter\Client\ResponsePool.cs" />
     <Compile Include="ServiceContainer\SessionServiceContainer.cs" />
+    <Compile Include="ServiceContext.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="IConnectionInfoExtension.cs" />
     <Compile Include="Interface\ClusterInfoContract.cs" />
@@ -298,13 +299,13 @@
       <Project>{895fcbfb-73b4-46f3-8a89-76c236f01bf4}</Project>
       <Name>AADAuthUtil</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\HpcCommon\HpcCommon.csproj">
-      <Project>{2c3936c7-4850-41d7-9497-9040be302328}</Project>
-      <Name>HpcCommon</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\StandaloneDataClient\StandaloneDataClient.csproj">
       <Project>{8f4412aa-a6e0-49e5-a331-1b1047e2159d}</Project>
       <Name>StandaloneDataClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TelepathyCommon\TelepathyCommon.csproj">
+      <Project>{1f7d53e1-7c00-4de4-ad73-b0bb17bc1bfb}</Project>
+      <Name>TelepathyCommon</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\WcfUtil\AzureStorageBinding\AzureStorageBinding.csproj">
       <Project>{5FDAE262-06FD-49C6-B44F-EC1AF1F326E5}</Project>

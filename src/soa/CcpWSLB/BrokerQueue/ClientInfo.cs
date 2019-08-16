@@ -8,10 +8,6 @@
 //------------------------------------------------------------------------------
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-
     /// <summary>
     /// define the client info.
     /// </summary>

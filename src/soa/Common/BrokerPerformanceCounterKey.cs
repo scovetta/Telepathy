@@ -9,8 +9,6 @@
 namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
 
     /// <summary>
     /// Represents broker's performance counter key

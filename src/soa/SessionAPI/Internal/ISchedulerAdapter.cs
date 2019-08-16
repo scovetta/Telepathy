@@ -44,5 +44,9 @@
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
         Task<(JobState jobState, int autoMax, int autoMin)> RegisterJobAsync(int jobid);
+
+        [OperationContract]
+        [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
+        Task<int?> GetTaskErrorCode(int jobId, int globalTaskId);
     }
 }

@@ -6,9 +6,9 @@
 //      The client implementation for the scheduler adapter
 // </summary>
 //------------------------------------------------------------------------------
+#if HPCPACK
 namespace Microsoft.Hpc.ServiceBroker
 {
-    using Microsoft.Hpc.Scheduler.Properties;
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
@@ -20,8 +20,6 @@ namespace Microsoft.Hpc.ServiceBroker
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session.HpcPack.DataMapping;
-
-    using SoaAmbientConfig;
 
     /// <summary>
     /// The client implementation for the scheduler adapter
@@ -247,3 +245,4 @@ namespace Microsoft.Hpc.ServiceBroker
         }
     }
 }
+#endif

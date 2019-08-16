@@ -10,7 +10,6 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 {
     using System;
     using System.Diagnostics;
-    using System.Security.Principal;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading;
@@ -19,7 +18,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using Microsoft.Hpc.SvcBroker;
+
     using SoaAmbientConfig;
     using System.IO;
 

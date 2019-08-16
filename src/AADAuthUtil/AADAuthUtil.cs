@@ -13,6 +13,10 @@
     using System.Threading.Tasks;
     using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
+    using TelepathyCommon.HpcContext;
+    using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
+    using TelepathyCommon.Service;
+
     public static class AADAuthUtil
     {
         private const string TokenCachedFile = "HpcTokenCache.dat";
@@ -106,9 +110,9 @@
         /// </summary>
         /// <param name="principal"></param>
         /// <returns><see langword="null"/> if <paramref name="principal"/> is not HPC AAD principal</returns>
-        public static SecurityIdentifier GenerateSecurityIdentifierFromAadPrincipal(this IPrincipal principal, IHpcContext hpcContext = null, string aadInfoNode = null)
+        public static SecurityIdentifier GenerateSecurityIdentifierFromAadPrincipal(this IPrincipal principal, ITelepathyContext telepathyContext = null, string aadInfoNode = null)
         {
-            if (!principal.IsHpcAadPrincipal(hpcContext, aadInfoNode))
+            if (!principal.IsHpcAadPrincipal(telepathyContext, aadInfoNode))
             {
                 return null;
             }
@@ -151,7 +155,7 @@
         }
 
         [Pure]
-        public static async Task<string> GetAADJwtTokenAsync(this IHpcContext context, string userName, string password, string aadInfoNode = null) 
+        public static async Task<string> GetAADJwtTokenAsync(this ITelepathyContext context, string userName, string password, string aadInfoNode = null) 
         {
             string clientId = await context.GetAADClientAppIdAsync(aadInfoNode).ConfigureAwait(false);
             string redirectUrl = await context.GetAADClientAppRedirectUriAsync(aadInfoNode).ConfigureAwait(false);

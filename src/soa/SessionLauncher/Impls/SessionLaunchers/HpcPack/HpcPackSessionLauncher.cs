@@ -1,4 +1,5 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack
+﻿#if HPCPACK
+namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack
 {
     using System;
     using System.Collections.Generic;
@@ -2145,3 +2146,4 @@
         }
     }
 }
+#endif

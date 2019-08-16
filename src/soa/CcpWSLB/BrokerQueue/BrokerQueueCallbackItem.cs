@@ -6,7 +6,6 @@
 //-----------------------------------------------------------------------------------
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
-    using System.ServiceModel.Channels;
     using Microsoft.Hpc.Scheduler.Session.Internal;
 
     /// <summary>

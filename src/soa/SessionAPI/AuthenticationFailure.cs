@@ -7,9 +7,7 @@
 namespace Microsoft.Hpc.Scheduler.Session
 {
     using System;
-    using System.Collections.Generic;
     using System.Runtime.Serialization;
-    using System.Text;
 
     /// <summary>
     ///   <para>Indicates that the credentials that were specified for the session did not have sufficient privileges for an operation.</para>

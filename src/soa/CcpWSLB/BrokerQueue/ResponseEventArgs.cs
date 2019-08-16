@@ -6,10 +6,6 @@
 //------------------------------------------------------------------------------
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-
     /// <summary>
     /// response event args.
     /// </summary>

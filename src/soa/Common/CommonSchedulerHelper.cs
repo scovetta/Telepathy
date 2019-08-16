@@ -20,11 +20,15 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
     using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler;
 
+    using TelepathyCommon;
+    using TelepathyCommon.Service;
+
     /// <summary>
     /// Helper class for operation to scheduler
     /// </summary>
     internal static class CommonSchedulerHelper
     {
+#if HPCPACK
         /// <summary>
         /// Initializes a new connection to the scheduler and return the Scheduler object
         /// </summary>
@@ -79,6 +83,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
 
             throw exp;
         }
+#endif
 
         /// <summary>
         /// Caller for Scheduler.ConnectAsService

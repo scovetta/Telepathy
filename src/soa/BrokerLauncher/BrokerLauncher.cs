@@ -22,6 +22,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 
     using Microsoft.Hpc.AADAuthUtil;
 
+    using TelepathyCommon.HpcContext;
+
     /// <summary>
     /// Implementation of broker launcher
     /// </summary>
@@ -57,13 +59,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <summary>
         /// Stores the fabric client;
         /// </summary>
-        private IHpcContext context;
+        private ITelepathyContext context;
 
         /// <summary>
         /// Initializes a new instance of the BrokerLauncher class
         /// </summary>
         [SecurityPermission(SecurityAction.Demand)]
-        public BrokerLauncher(bool managementOperationsOnly, IHpcContext context)
+        public BrokerLauncher(bool managementOperationsOnly, ITelepathyContext context)
         {
             this.context = context;
 

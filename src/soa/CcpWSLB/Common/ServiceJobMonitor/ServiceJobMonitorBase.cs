@@ -4,25 +4,29 @@
 // </copyright>
 // <summary>Internal Monitor service job</summary>
 //-----------------------------------------------------------------------
+
+using TelepathyCommon;
+using TelepathyCommon.HpcContext;
+
 namespace Microsoft.Hpc.ServiceBroker
 {
     using System;
     using System.Collections.Generic;
     using System.Collections.Concurrent;
+    using System.Collections.Specialized;
     using System.Diagnostics;
     using System.Linq;
     using System.ServiceModel;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.Hpc.Scheduler;
-    using Microsoft.Hpc.Scheduler.Properties;
+
     using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Hpc.Scheduler.Session.Data;
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
     using Microsoft.Hpc.ServiceBroker.BackEnd;
     using Microsoft.Hpc.ServiceBroker.Common;
-    using Microsoft.Hpc.Scheduler.Session.HpcPack.DataMapping;
 
     using SoaAmbientConfig;
     using Microsoft.Hpc.ServiceBroker.Common.ThreadHelper;
@@ -215,7 +219,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// <summary>
         /// Stores the fabric cluster context
         /// </summary>
-        protected IHpcContext context;
+        protected ITelepathyContext context;
 
         public TransportScheme TransportScheme => this.sharedData.StartInfo.TransportScheme;
 
@@ -226,7 +230,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// </summary>
         /// <param name="sharedData">indicating the shared data</param>
         /// <param name="stateManager">indicating the state manager</param>
-        public ServiceJobMonitorBase(SharedData sharedData, BrokerStateManager stateManager, NodeMappingData nodeMappingData, IHpcContext context)
+        public ServiceJobMonitorBase(SharedData sharedData, BrokerStateManager stateManager, NodeMappingData nodeMappingData, ITelepathyContext context)
         {
             this.context = context;
             this.sharedData = sharedData;
@@ -1429,7 +1433,7 @@ namespace Microsoft.Hpc.ServiceBroker
 
         Task ISchedulerNotify.JobStateChanged(Microsoft.Hpc.Scheduler.Session.Data.JobState jobState)
         {
-            return JobStateChangedInternal(JobStateConverter.FromSoaJobState(jobState));
+            return JobStateChangedInternal(jobState);
         }
 
 

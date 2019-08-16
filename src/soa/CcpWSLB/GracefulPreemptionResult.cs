@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
 
-    using Microsoft.Hpc.Scheduler.Properties;
     using Microsoft.Hpc.ServiceBroker.BackEnd;
 
     internal class GracefulPreemptionResult

@@ -1,9 +1,6 @@
 ﻿namespace Microsoft.Hpc.ServiceBroker
 {
     using System.Collections.Generic;
-    using System.Linq;
-
-    using Microsoft.Hpc.ServiceBroker.BackEnd;
 
     internal class BalanceResultInfo
     {

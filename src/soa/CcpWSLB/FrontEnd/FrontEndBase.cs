@@ -13,9 +13,8 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker.Common;
     using Microsoft.Hpc.ServiceBroker.Common.ThreadHelper;
-    using Microsoft.Hpc.SvcBroker;
+
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.ServiceModel;

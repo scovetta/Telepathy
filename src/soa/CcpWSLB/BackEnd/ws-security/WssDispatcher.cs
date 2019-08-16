@@ -7,18 +7,12 @@
 
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading;
-    using Microsoft.Hpc.BrokerProxy;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
+
     using Microsoft.Hpc.ServiceBroker.BrokerStorage;
     using Microsoft.Hpc.ServiceBroker.Common;
-    using System.Text;
-    using System.Net;
 
     /// <summary>
     /// Dispatch messages to Java WSS4J node in Windows Azure

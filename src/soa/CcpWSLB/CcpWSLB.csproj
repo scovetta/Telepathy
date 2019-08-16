@@ -324,17 +324,9 @@
       <Project>{895FCBFB-73B4-46F3-8A89-76C236F01BF4}</Project>
       <Name>AADAuthUtil</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\HpcCommon\HpcCommon.csproj">
-      <Project>{2c3936c7-4850-41d7-9497-9040be302328}</Project>
-      <Name>HpcCommon</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\StoreAPI\Property\Properties.csproj">
-      <Project>{61844849-3d26-4003-8146-5ae86985db3a}</Project>
-      <Name>Properties</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\StoreAPI\Scheduler\Scheduler.csproj">
-      <Project>{78e5e61b-dd12-475a-845b-7da3f6b0f987}</Project>
-      <Name>Scheduler</Name>
+    <ProjectReference Include="..\..\TelepathyCommon\TelepathyCommon.csproj">
+      <Project>{1F7D53E1-7C00-4DE4-AD73-B0BB17BC1BFB}</Project>
+      <Name>TelepathyCommon</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\WcfUtil\AzureStorageBinding\AzureStorageBinding.csproj">
       <Project>{5fdae262-06fd-49c6-b44f-ec1af1f326e5}</Project>
@@ -347,10 +339,6 @@
     <ProjectReference Include="..\SessionAPI.Data\SessionAPI.Data.csproj">
       <Project>{40fc3ebb-d692-4d69-b6a9-6cbd46f19025}</Project>
       <Name>SessionAPI.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SessionAPI.HpcPack\SessionAPI.HpcPack.csproj">
-      <Project>{23638265-a3f6-4dee-8fd0-65c75a52bff6}</Project>
-      <Name>SessionAPI.HpcPack</Name>
     </ProjectReference>
     <ProjectReference Include="..\SessionAPI\Session.csproj">
       <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>

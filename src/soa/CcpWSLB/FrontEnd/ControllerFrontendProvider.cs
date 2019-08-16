@@ -16,7 +16,6 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Common;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker.FrontEnd.AzureQueue;
 
     /// <summary>

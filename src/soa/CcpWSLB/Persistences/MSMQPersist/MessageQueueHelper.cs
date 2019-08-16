@@ -9,7 +9,6 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
     using System;
     using System.Globalization;
     using System.Messaging;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
 
     /// <summary>
     /// the delegate for the retriable operations.

@@ -1,4 +1,5 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.DataService.REST
+﻿#if HPCPACK
+namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.DataService.REST
 {
     using System;
     using System.Net;
@@ -49,3 +50,4 @@
         }
     }
 }
+#endif

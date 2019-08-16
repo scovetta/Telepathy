@@ -58,5 +58,10 @@
             Trace.TraceWarning($"Ignored call to {nameof(RegisterJobAsync)}");
             return (JobState.Running, int.MaxValue, 0);
         }
+
+        public Task<int?> GetTaskErrorCode(int jobId, int globalTaskId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

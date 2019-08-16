@@ -6,6 +6,12 @@
 //      WCF credential extensions
 // </summary>
 //------------------------------------------------------------------------------
+
+using TelepathyCommon.HpcContext;
+using TelepathyCommon.HpcContext.Extensions;
+using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
+using TelepathyCommon.Registry;
+
 namespace Microsoft.Hpc.Scheduler.Session
 {
     using System;
@@ -91,7 +97,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             bool winService = false,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            IRegistry registry = winService ? Registry : HpcContext.GetOrAdd(cancellationToken).Registry;
+            IRegistry registry = winService ? Registry : TelepathyContext.GetOrAdd(cancellationToken).Registry;
             serviceCredentials.ClientCertificate.Authentication.CertificateValidationMode = X509CertificateValidationMode.PeerOrChainTrust;
             serviceCredentials.ClientCertificate.Authentication.RevocationMode = X509RevocationMode.NoCheck;
             serviceCredentials.ServiceCertificate.SetCertificate(
@@ -116,7 +122,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             bool winService = false,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            IRegistry registry = winService ? Registry : HpcContext.GetOrAdd(cancellationToken).Registry;
+            IRegistry registry = winService ? Registry : TelepathyContext.GetOrAdd(cancellationToken).Registry;
             serviceHost.Credentials.ServiceCertificate.SetCertificate(
                 StoreLocation.LocalMachine,
                 StoreName.My,
@@ -157,7 +163,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="context"></param>
         /// <param name="headnode"></param>
         /// <returns></returns>
-        public static async Task<string> ResolveSessionLauncherNodeOnIaasAsync(this IHpcContext context, string headnode)
+        public static async Task<string> ResolveSessionLauncherNodeOnIaasAsync(this ITelepathyContext context, string headnode)
         {
             string sessionLauncher = await context.ResolveSessionLauncherNodeAsync().ConfigureAwait(false);
 
@@ -209,7 +215,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <returns></returns>
         public static async Task<string> GetSoaAadJwtToken(string headnode, string username, string password)
         {
-            IHpcContext context = HpcContext.GetOrAdd(headnode, CancellationToken.None);
+            ITelepathyContext context = TelepathyContext.GetOrAdd(headnode, CancellationToken.None);
 
             string node = null;
             if (SoaHelper.IsSchedulerOnIaaS(headnode))

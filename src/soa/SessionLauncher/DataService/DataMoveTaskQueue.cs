@@ -24,6 +24,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
     /// </summary>
     internal class DataMoveTaskQueue : DisposableObject
     {
+#if HPCPACK
         /// <summary>
         /// waiting tasks queue
         /// </summary>
@@ -199,5 +200,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.Internal
 
             base.Dispose(disposing);
         }
+#endif
+
     }
 }

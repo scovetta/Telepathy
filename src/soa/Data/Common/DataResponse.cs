@@ -6,6 +6,8 @@
 //      DataResponse class defines the data contract from DataService to DataProxy
 // </summary>
 //------------------------------------------------------------------------------
+#if HPCPACK
+
 namespace Microsoft.Hpc.Scheduler.Session.Data
 {
     using System;
@@ -88,3 +90,4 @@ namespace Microsoft.Hpc.Scheduler.Session.Data
         }
     }
 }
+#endif

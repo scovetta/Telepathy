@@ -67,6 +67,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             return false;
         }
 
+#if HPCPACK
         /// <summary>
         /// Check the caller if it is a node in the cluster.
         /// </summary>
@@ -91,6 +92,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
             return false;
         }
+#endif
 
         /// <summary>
         /// Extract machine name from machine account

@@ -7,9 +7,7 @@
 namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 {
     using System;
-    using System.Collections.Generic;
     using System.ServiceModel.Channels;
-    using System.Text;
 
     /// <summary>
     /// Base class for all request context

@@ -18,12 +18,15 @@ namespace Microsoft.Hpc.CcpServiceHosting
     using System.ServiceModel.Channels;
     using System.ServiceModel.Description;
     using System.Threading;
-    using Microsoft.Hpc.Scheduler.Properties;
+
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Configuration;
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker;
+
+    using TelepathyCommon;
+
     using RuntimeTraceHelper = Microsoft.Hpc.RuntimeTrace.TraceHelper;
 
     /// <summary>

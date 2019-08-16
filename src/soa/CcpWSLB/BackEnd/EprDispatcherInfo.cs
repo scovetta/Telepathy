@@ -1,7 +1,6 @@
 ﻿namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
     using System.ServiceModel;
-    using Microsoft.Hpc.Scheduler.Properties;
 
     /// <summary>
     /// Dispatcher info contains only epr

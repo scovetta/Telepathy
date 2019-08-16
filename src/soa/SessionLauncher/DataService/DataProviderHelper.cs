@@ -6,6 +6,8 @@
 //      DataProviderHelper
 // </summary>
 //------------------------------------------------------------------------------
+#if HPCPACK
+
 namespace Microsoft.Hpc.Scheduler.Session.Data.DataProvider
 {
     using System.Diagnostics;
@@ -57,3 +59,4 @@ namespace Microsoft.Hpc.Scheduler.Session.Data.DataProvider
         }
     }
 }
+#endif

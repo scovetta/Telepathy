@@ -8,7 +8,6 @@
 //------------------------------------------------------------------------------
 namespace Microsoft.Hpc.CcpServiceHosting
 {
-    using Microsoft.Hpc.Scheduler.Properties;
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Configuration;
     using Microsoft.Hpc.Scheduler.Session.Internal;
@@ -18,6 +17,9 @@ namespace Microsoft.Hpc.CcpServiceHosting
     using System.Globalization;
     using System.IO;
     using System.Reflection;
+
+    using TelepathyCommon;
+
     using RuntimeTraceHelper = Microsoft.Hpc.RuntimeTrace.TraceHelper;
     /// <summary>
     /// Utility for service host

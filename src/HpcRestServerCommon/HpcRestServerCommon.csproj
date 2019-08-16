@@ -73,12 +73,6 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HpcCommon\HpcCommon.csproj">
-      <Project>{2C3936C7-4850-41D7-9497-9040BE302328}</Project>
-      <Name>HpcCommon</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Owin">
       <Version>5.2.3</Version>
     </PackageReference>
@@ -94,6 +88,12 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>6.0.8</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TelepathyCommon\TelepathyCommon.csproj">
+      <Project>{1F7D53E1-7C00-4DE4-AD73-B0BB17BC1BFB}</Project>
+      <Name>TelepathyCommon</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -6,6 +6,7 @@
 //      The main entry point for the application.
 // </summary>
 //------------------------------------------------------------------------------
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
 {
     using System;
@@ -16,14 +17,19 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using System.Threading;
 
     using CommandLine;
+
     using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Local;
     using Microsoft.Hpc.Scheduler.Session.LauncherHostService;
+
     using Newtonsoft.Json;
+
     using Serilog;
+
+    using TelepathyCommon.HpcContext;
 
     /// <summary>
     /// Main entry point
@@ -55,18 +61,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 return;
             }
 
-
-            if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.HpcPack)
-            {
-                HpcContext.AsNtServiceContext();
-                HpcContext.GetOrAdd(CancellationToken.None);
-            }
-            else
-            {
-                // TODO: these lines will be different after a domain specific context is added to the project
-                HpcContext.AsNtServiceContext();
-                HpcContext.GetOrAdd(CancellationToken.None);
-            }
+            TelepathyContext.AsNtServiceContext();
+            TelepathyContext.GetOrAdd(CancellationToken.None);
 
             LauncherHostService host = null;
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
@@ -80,7 +76,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                     Console.WriteLine("Press any key to exit...");
                     Thread.Sleep(-1);
                 }
-
                 finally
                 {
                     if (host != null)
@@ -89,7 +84,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                         {
                             host.StopService();
                         }
-
                         catch (Exception e)
                         {
                             Trace.TraceError("Exception stopping service - " + e);
@@ -114,7 +108,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
         /// <param name="e">the exception arguments.</param>
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            TraceHelper.TraceEvent(TraceEventType.Critical, "[SessionLauncher] Unhandled {2} exception found in {0}: \n{1}", sender, e.ExceptionObject, e.IsTerminating ? "fatal" : String.Empty);
+            TraceHelper.TraceEvent(TraceEventType.Critical, "[SessionLauncher] Unhandled {2} exception found in {0}: \n{1}", sender, e.ExceptionObject, e.IsTerminating ? "fatal" : string.Empty);
             Log.CloseAndFlush();
         }
 
@@ -126,6 +120,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 {
                     SessionLauncherRuntimeConfiguration.AsConsole = true;
                 }
+
                 if (!string.IsNullOrEmpty(option.JsonFilePath))
                 {
                     Dictionary<string, string> items;
@@ -149,12 +144,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                         TraceHelper.TraceEvent(TraceEventType.Critical, "[SessionLauncher] Json file err: {0}.", e);
                         throw;
                     }
+
                     string[] argsInJson = cmd.ToArray();
-                    var parserResult = new Parser(s =>
-                    {
-                        s.CaseSensitive = false;
-                        s.HelpWriter = Console.Error;
-                    }).ParseArguments<SessionLauncherStartOption>(argsInJson).WithParsed(SetGlobalConfiguration);
+                    var parserResult = new Parser(
+                        s =>
+                            {
+                                s.CaseSensitive = false;
+                                s.HelpWriter = Console.Error;
+                            }).ParseArguments<SessionLauncherStartOption>(argsInJson).WithParsed(SetGlobalConfiguration);
                     if (parserResult.Tag != ParserResultType.Parsed)
                     {
                         TraceHelper.TraceEvent(TraceEventType.Critical, "[SessionLauncher] Parse arguments error.");
@@ -190,7 +187,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                         AzureBatchConfiguration.BatchPoolName = option.AzureBatchPoolName;
                     }
 
-
                     if (!string.IsNullOrEmpty(option.AzureBatchBrokerStorageConnectionString))
                     {
                         SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString = option.AzureBatchBrokerStorageConnectionString;
@@ -198,14 +194,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 }
             }
 
-
-            var result = new Parser(s =>
-                {
-                    s.CaseSensitive = false;
-                    s.HelpWriter = Console.Error;
-                }).ParseArguments<SessionLauncherStartOption>(args).WithParsed(SetGlobalConfiguration);
+            var result = new Parser(
+                s =>
+                    {
+                        s.CaseSensitive = false;
+                        s.HelpWriter = Console.Error;
+                    }).ParseArguments<SessionLauncherStartOption>(args).WithParsed(SetGlobalConfiguration);
             return result.Tag == ParserResultType.Parsed;
-
         }
     }
 }

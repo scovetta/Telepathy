@@ -15,7 +15,6 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using System.ServiceModel.Channels;
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.SvcBroker;
 
     using SR = Microsoft.Hpc.SvcBroker.SR;
 

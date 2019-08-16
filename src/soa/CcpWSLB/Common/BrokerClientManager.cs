@@ -11,7 +11,7 @@ namespace Microsoft.Hpc.ServiceBroker
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Text;
+
     using Microsoft.Hpc.ServiceBroker.BrokerStorage;
     using System.Threading.Tasks;
     /// <summary>

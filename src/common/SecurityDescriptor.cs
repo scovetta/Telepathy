@@ -2,7 +2,6 @@ using System;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 using System.ComponentModel;
-using System.Security.Principal;
 
 namespace Microsoft.Hpc
 {

@@ -1,6 +1,5 @@
 ﻿namespace Microsoft.Hpc.ServiceBroker.FrontEnd.AzureQueue
 {
-    using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
 

@@ -10,8 +10,8 @@
 
 namespace Microsoft.Hpc.ServiceBroker
 {
-    using System;
     using System.Diagnostics;
+
     using Microsoft.Hpc.Scheduler.Session.Internal;
 
     /// <summary>

@@ -6,6 +6,7 @@
 //      Common/shared utilities for authentication.
 // </summary>
 //------------------------------------------------------------------------------
+#if HPCPACK
 namespace Microsoft.Hpc
 {
     using System;
@@ -318,3 +319,4 @@ namespace Microsoft.Hpc
         }
     }
 }
+#endif

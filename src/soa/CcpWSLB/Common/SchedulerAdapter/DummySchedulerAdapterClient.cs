@@ -1,7 +1,6 @@
 ﻿namespace Microsoft.Hpc.ServiceBroker.Common
 {
     using System.Collections.Generic;
-    using System.Threading;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session;
@@ -185,6 +184,11 @@
                 // }
                 // 
                 return (Scheduler.Session.Data.JobState.Running, autoMax, autoMin);
+            }
+
+            public Task<int?> GetTaskErrorCode(int jobId, int globalTaskId)
+            {
+                return null;
             }
 
             async Task ISchedulerAdapter.FinishJobAsync(int jobid, string reason)

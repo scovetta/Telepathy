@@ -10,7 +10,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using System;
     using System.Globalization;
-    using System.Runtime.Remoting;
     using System.ServiceModel;
 
     /// <summary>

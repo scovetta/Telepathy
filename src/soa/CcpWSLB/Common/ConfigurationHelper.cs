@@ -6,6 +6,9 @@
 //      Helper class to load the configuration
 // </summary>
 //------------------------------------------------------------------------------
+
+using TelepathyCommon;
+
 namespace Microsoft.Hpc.ServiceBroker
 {
     using System;

@@ -14,7 +14,6 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
-    using System.Runtime.CompilerServices;
     using System.ServiceModel.Channels;
     using System.Threading;
     using System.Threading.Tasks;
@@ -24,7 +23,6 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
     using Microsoft.WindowsAzure.Storage.Queue;

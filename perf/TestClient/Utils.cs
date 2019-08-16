@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.ServiceModel;
-using System.Globalization;
-using Microsoft.Hpc.Scheduler.Session;
-using System.Threading;
-using System.Text;
-using System.Net;
-
-namespace TestClient
+﻿namespace TestClient
 {
-    
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.ServiceModel;
+    using System.Text;
+    using System.Threading;
+
+    using Microsoft.Hpc.Scheduler.Session;
+
     internal static class Utils
     {
         

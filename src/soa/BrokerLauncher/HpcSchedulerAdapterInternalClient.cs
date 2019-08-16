@@ -6,15 +6,14 @@
 //      The client implementation for the scheduler adapter
 // </summary>
 //------------------------------------------------------------------------------
+#if HPCPACK
 namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 {
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
     using Microsoft.Hpc.ServiceBroker;
     using System;
     using System.Collections.Generic;
-    using System.Security.Cryptography.X509Certificates;
     using System.ServiceModel;
-    using System.ServiceModel.Security;
     using System.Threading.Tasks;
     /// <summary>
     /// The client implementation for the scheduler adapter
@@ -337,3 +336,4 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         }
     }
 }
+#endif

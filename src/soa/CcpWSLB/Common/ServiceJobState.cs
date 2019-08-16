@@ -6,10 +6,6 @@
 //-----------------------------------------------------------------------
 namespace Microsoft.Hpc.ServiceBroker
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-
     /// <summary>
     /// Service job state
     /// </summary>

@@ -8,10 +8,6 @@
 //------------------------------------------------------------------------------
 namespace Microsoft.Hpc.ServiceBroker
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-
     /// <summary>
     /// Broker client state
     /// </summary>

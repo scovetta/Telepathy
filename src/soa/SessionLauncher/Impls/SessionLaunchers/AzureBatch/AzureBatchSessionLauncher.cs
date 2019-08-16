@@ -16,9 +16,11 @@
     using Microsoft.Hpc.Scheduler.Session.Configuration;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Utils;
-    using Microsoft.Hpc.Telepathy;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
+
+    using TelepathyCommon;
+    using TelepathyCommon.Telepathy;
 
     using JobState = Microsoft.Hpc.Scheduler.Session.Data.JobState;
 

@@ -2,7 +2,6 @@
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using Microsoft.Hpc.BrokerProxy;
-using Microsoft.Hpc.ServiceBroker;
 
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {

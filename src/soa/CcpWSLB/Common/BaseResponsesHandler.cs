@@ -9,12 +9,9 @@
 namespace Microsoft.Hpc.ServiceBroker
 {
     using System;
-    using System.Collections.Generic;
-    using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using System.Text;
     using System.Threading;
-    using Microsoft.Hpc.Scheduler.Session;
+
     using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker.BrokerStorage;

@@ -13,6 +13,9 @@
     using System.Threading.Tasks;
     using IdentityModel.Protocols;
 
+    using TelepathyCommon.HpcContext;
+    using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
+
     public class AADServiceAuthorizationManager : ServiceAuthorizationManager
     {
         private const int SigningTokenRefreshInterval = 24;
@@ -29,9 +32,9 @@
         private object refreshTokenLock = new object();
         private TokenValidationParameters validationParameters = new TokenValidationParameters() { CertificateValidator = X509CertificateValidator.None };
         private string targetPath = null;
-        private IHpcContext context;
+        private ITelepathyContext context;
 
-        private IHpcContext Context => this.context ?? HpcContext.Get();
+        private ITelepathyContext Context => this.context ?? TelepathyContext.Get();
 
         public AADServiceAuthorizationManager()
         {
@@ -41,11 +44,11 @@
         {
         }
 
-        public AADServiceAuthorizationManager(IHpcContext context) : this(null, context)
+        public AADServiceAuthorizationManager(ITelepathyContext context) : this(null, context)
         {
         }
 
-        public AADServiceAuthorizationManager(string targetPath, IHpcContext context)
+        public AADServiceAuthorizationManager(string targetPath, ITelepathyContext context)
         {
             if (!string.IsNullOrEmpty(targetPath))
             {

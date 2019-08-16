@@ -10,13 +10,10 @@
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
     using Microsoft.Hpc.BrokerBurst;
-    using Microsoft.Hpc.Scheduler.Properties;
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Hpc.ServiceBroker.BrokerStorage;
     using Microsoft.Hpc.ServiceBroker.Common;
-    using Microsoft.Hpc.SvcBroker;
     using Microsoft.WindowsAzure.Storage;
     using System;
     using System.Collections;
@@ -29,6 +26,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Microsoft.Hpc.ServiceBroker.Common.SchedulerAdapter;
     using Microsoft.Hpc.ServiceBroker.Common.ThreadHelper;
 
     using SR = Microsoft.Hpc.SvcBroker.SR;
@@ -1010,8 +1008,8 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                     client.ToString(),
                     messageId,
                     "(Preemption) Attempt to get the SchedulerAdapterClient to retrieve the task error code."));
-            HpcSchedulerAdapterClient adapterClient =
-                await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync().ConfigureAwait(false) as HpcSchedulerAdapterClient;
+            SchedulerAdapterClient adapterClient =
+                await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync().ConfigureAwait(false) as SchedulerAdapterClient;
 
             if (adapterClient == null)
             {
@@ -1096,8 +1094,10 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                         this.DecreaseProcessingCount();
                         */
 
-                        // Call the callback method directly if BeginGetTaskErrorCode fails.
+// Call the callback method directly if BeginGetTaskErrorCode fails.
+#if HPCPACK
                         this.taskErrorCode = ErrorCode.UnknownError;
+#endif
                         DummyAsyncResult aresult = new DummyAsyncResult();
                         aresult.AsyncState = state;
                         await this.HandleTaskErrorCodeAsync(aresult).ConfigureAwait(false);
@@ -1260,7 +1260,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
             TaskErrorCodeState state = asyncResult.AsyncState as TaskErrorCodeState;
             Debug.Assert(state != null, "TaskErrorCodeReceived: asyncResult.AsyncState must be TaskErrorCodeState");
 
-            HpcSchedulerAdapterClient adapterClient = state.AdapterClient;
+            SchedulerAdapterClient adapterClient = state.AdapterClient;
             int clientIndex = state.ClientIndex;
             IService client = state.ServiceClient;
             BrokerQueueItem item = state.QueueItem;
@@ -1305,7 +1305,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
             TaskErrorCodeState state = asyncResult.AsyncState as TaskErrorCodeState;
             Debug.Assert(state != null, "HandleTaskErrorCode: asyncResult.AsyncState must be TaskErrorCodeState");
 
-            HpcSchedulerAdapterClient adapterClient = state.AdapterClient;
+            SchedulerAdapterClient adapterClient = state.AdapterClient;
             Exception exception = state.Exception;
             bool exceptionIndirect = this.IsExceptionIndirect(exception);
             int clientIndex = state.ClientIndex;
@@ -1319,6 +1319,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
             bool taskPreempted = false;
             if (this.taskErrorCode.HasValue)
             {
+#if HPCPACK
                 if (this.taskErrorCode.Value == ErrorCode.Execution_TasksPreempted ||
                     this.taskErrorCode.Value == ErrorCode.Execution_TaskCanceledBeforeAssignment ||
                     this.taskErrorCode.Value == ErrorCode.Execution_TaskCanceledDuringExecution ||
@@ -1328,6 +1329,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                 {
                     taskPreempted = true;
                 }
+#endif
 
                 BrokerTracing.TraceVerbose(
                     BrokerTracing.GenerateTraceString(
@@ -1534,9 +1536,9 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                 else
                 {
 
-                    #region Debug Failure Test
+#region Debug Failure Test
                     Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(2);
-                    #endregion
+#endregion
 
                     // Currently since data instance is not widely used here (inside the
                     // exception handler logic), we will need to build the instance where
@@ -1834,9 +1836,9 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                     timeToWait = this.serviceInitializationTimeout - elapsedTimeSinceTaskStart;
                 }
 
-                #region Debug Failure Test
+#region Debug Failure Test
                 Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
-                #endregion
+#endregion
 
                 BrokerTracing.TraceEvent(
                     TraceEventType.Information,
@@ -1921,7 +1923,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// </summary>
         private class TaskErrorCodeState
         {
-            public HpcSchedulerAdapterClient AdapterClient
+            public SchedulerAdapterClient AdapterClient
             {
                 get;
                 set;

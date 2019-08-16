@@ -9,9 +9,7 @@
 namespace Microsoft.Hpc.Scheduler.Session
 {
     using System;
-    using System.Collections.Generic;
     using System.Runtime.Serialization;
-    using System.Text;
 
     /// <summary>
     ///   <para>Indicates that an error connected to the retrying requests by the broker occurred, when the 

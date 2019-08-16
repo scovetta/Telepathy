@@ -73,12 +73,6 @@
     <Message Text="$(SDK_VERSION)" />
   </Target>
   <ItemGroup>
-    <ProjectReference Include="..\..\HpcCommon\HpcCommon.csproj">
-      <Project>{2c3936c7-4850-41d7-9497-9040be302328}</Project>
-      <Name>HpcCommon</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="RuntimeEvents.rc" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

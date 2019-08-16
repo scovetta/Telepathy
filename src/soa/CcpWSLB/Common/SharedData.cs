@@ -12,7 +12,6 @@ namespace Microsoft.Hpc.ServiceBroker
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Hpc.Scheduler.Session.Configuration;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
 
     /// <summary>
     /// Wrap the shared data amoung components
