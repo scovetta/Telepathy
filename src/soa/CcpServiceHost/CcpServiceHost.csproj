@@ -176,7 +176,7 @@
     </ProjectReference>
     <ProjectReference Include="..\SvcHostRestServer\SvcHostRestServer.csproj">
       <Project>{602b999e-6203-432c-af7c-2c31dddde60a}</Project>
-      <Name>RESTServiceModel</Name>
+      <Name>SvcHostRestServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\SessionAPI\Session.csproj">
       <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>
