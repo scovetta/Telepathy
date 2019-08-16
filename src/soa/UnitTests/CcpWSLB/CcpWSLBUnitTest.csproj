@@ -74,7 +74,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Common\TimeoutManagerTest.cs" />
+    <None Include="Common\TimeoutManagerTest.cs" />
     <Compile Include="Common\ThreadHelperTest.cs" />
   </ItemGroup>
   <ItemGroup>

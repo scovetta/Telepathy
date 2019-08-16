@@ -87,6 +87,7 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest.FrontEnd
             SessionStartInfoContract info = new SessionStartInfoContract();
             info.ServiceName = "CcpEchoSvc";
             info.TransportScheme = TransportScheme.Http;
+            info.Secure = true;
             BrokerStartInfo startInfo = new BrokerStartInfo();
             MockBrokerAuthorization auth = new MockBrokerAuthorization();
 
