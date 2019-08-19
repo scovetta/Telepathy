@@ -41,3 +41,21 @@ steps:
     configuration: '$(buildConfiguration)'
     codeCoverageEnabled: true
 
+- task: PowerShell@2
+  inputs:
+    filePath: 'create-artifacts.ps1'
+    errorActionPreference: 'continue'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: 'artifacts'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    OverWrite: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
