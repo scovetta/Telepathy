@@ -79,7 +79,24 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
             if (durable)
             {
-                throw new InvalidOperationException($"{nameof(GeneralResourceProvider)} doesn't support durable session.");
+                sessionAllocateInfo = await RetryHelper<SessionAllocateInfoContract>.InvokeOperationAsync(
+                    async () => await this.client.AllocateDurableV5Async(startInfo.Data, this.endpointPrefix).ConfigureAwait(false),
+                    (e, r) =>
+                    {
+                        var remainingTime = GetRemainingTime(timeout, startTime);
+                        if ((e is EndpointNotFoundException || (e is CommunicationException && !(e is FaultException<SessionFault>))) && remainingTime > TimeSpan.Zero)
+                        {
+                            Utility.SafeCloseCommunicateObject(this.client);
+                            this.client = new SessionLauncherClient(startInfo, this.binding);
+                            this.client.InnerChannel.OperationTimeout = remainingTime;
+                        }
+                        else
+                        {
+                            r.MaxRetryCount = 0;
+                        }
+                        return Task.CompletedTask;
+                    },
+                    retry).ConfigureAwait(false);
             }
             else
             {

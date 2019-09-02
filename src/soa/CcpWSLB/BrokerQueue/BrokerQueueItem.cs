@@ -4,6 +4,9 @@
 // </copyright>
 // <summary>the broker queue item that is the itomic item of the broker queue.</summary>
 //-----------------------------------------------------------------------------------
+
+using System.Runtime.CompilerServices;
+[assembly: InternalsVisibleTo("CcpWSLB.UnitTest")]
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     using System;

@@ -37,54 +37,6 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
     public delegate void PutResponseCallback(Exception exception, int responseCount, int faultResponseCount, bool isLastResponse, List<BrokerQueueItem> failedItems, object state);
 
     /// <summary>
-    /// Specifies the state of a persistence transaction.
-    /// </summary>
-    public enum PersistTransactionStatus
-    {
-        /// <summary>
-        /// The transaction has been aborted and all participants have been notified.
-        /// </summary>
-        Aborted = 0,
-
-        /// <summary>
-        /// The transaction has been committed and all participants have been notified.
-        /// </summary>
-        Committed = 1,
-
-        /// <summary>
-        /// The transaction has been initialized. It has not yet been started.
-        /// </summary>
-        Initialized = 2,
-
-        /// <summary>
-        /// The transaction has been started. It has not yet been either committed or
-        /// rolled back.
-        /// </summary>
-        Pending = 3,
-    }
-
-    /// <summary>
-    /// interface for the persist transaction
-    /// </summary>
-    public interface IPersistTransaction : IDisposable
-    {
-        /// <summary>
-        /// Gets the state of the persist transaction.
-        /// </summary>
-        PersistTransactionStatus Status { get; }
-
-        /// <summary>
-        /// commit the persist transaction
-        /// </summary>
-        void Commit();
-
-        /// <summary>
-        /// Abort the persist transaction
-        /// </summary>
-        void Abort();
-    }
-
-    /// <summary>
     /// The main interface to communicate between broker and the storage system
     /// </summary>
     public interface ISessionPersist : IDisposable
@@ -123,12 +75,6 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
         /// Gets a value indicating whether EOM is received.
         /// </summary>
         bool EOMReceived { get; set; }
-
-        /// <summary>
-        /// create a put request transaction
-        /// </summary>
-        /// <returns>return the persist transaction object.</returns>
-        IPersistTransaction GetPutRequestTransaction();
 
         /// <summary>
         /// Put the request item objects into the storage.
@@ -201,6 +147,12 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
         /// remove the storage.
         /// </summary>
         SessionPersistCounter Close();
+
+        bool IsInMemory();
+
+        void CommitRequest();
+
+        void AbortRequest();
     }
 
 

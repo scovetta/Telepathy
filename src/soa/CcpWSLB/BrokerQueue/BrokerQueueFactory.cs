@@ -69,7 +69,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
                 persistName = string.Empty;
             }
 
-            ParamCheckUtility.ThrowIfOutofRange(!string.IsNullOrEmpty(persistName) && !string.Equals("MSMQ", persistName, StringComparison.OrdinalIgnoreCase), "persistName");
+            ParamCheckUtility.ThrowIfOutofRange(!string.IsNullOrEmpty(persistName) && !string.Equals("AzureQueue", persistName, StringComparison.OrdinalIgnoreCase), "persistName");
             this.thisLockObj = new object();
             this.sessionId = sharedData.BrokerInfo.SessionId;
             this.persistName = persistName;
@@ -108,12 +108,10 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
                 }
                 else
                 {
-#if MSMQ
+
                     // for the durable session, the broker maybe restart, need enumerate all the physical queues to get the client ids for the session.
-                    allClients = Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ.MSMQPersist.GetSessionClients(this.sessionId, this.sharedData.StartInfo.UseAad);
-#else
-                    throw new NotSupportedException();
-#endif
+                    //allClients = Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ.MSMQPersist.GetSessionClients(this.sessionId, this.sharedData.StartInfo.UseAad);
+                    allClients = AzureQueuePersist.AzureQueuePersist.GetSessionClients(this.sharedData.BrokerInfo.AzureStorageConnectionString, this.sessionId, false);
                 }
 
                 return allClients;
@@ -152,25 +150,26 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
         /// </summary>
         /// <param name="persistName">the persist name.</param>
         /// <param name="isStaleSessionCallback">the calback function to judge whether a session is stale.</param>
-        public static async Task CleanupStalePersistedData(string persistName, IsStaleSessionCallback isStaleSessionCallback)
+        public static async Task CleanupStalePersistedData(string persistName, IsStaleSessionCallback isStaleSessionCallback, string connectString)
         {
-#if MSMQ
+
             ParamCheckUtility.ThrowIfNull(isStaleSessionCallback, "isStaleSessionCallback");
             if (!string.IsNullOrEmpty(persistName))
             {
-                if (persistName.Trim().Equals("msmq", StringComparison.OrdinalIgnoreCase))
+                if (persistName.Trim().Equals("AzureQueue", StringComparison.OrdinalIgnoreCase))
                 {
-                    BrokerTracing.TraceInfo("[BrokerQueueFactory] .CleanupStalePersistedData: cleaning up stale data in MSMQ");
-                    await Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ.MSMQPersist.CleanupStaleMessageQueue(isStaleSessionCallback);
+                    BrokerTracing.TraceInfo(
+                        "[BrokerQueueFactory] .CleanupStalePersistedData: cleaning up stale data in AzureQueue");
+                    await Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist.AzureQueuePersist
+                        .CleanupStaleMessageQueue(isStaleSessionCallback, connectString);
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException("persistName", persistName + ", which persistence is not supported.");
+                    throw new ArgumentOutOfRangeException("persistName",
+                        persistName + ", which persistence is not supported.");
                 }
             }
-#else
-            throw new NotSupportedException();
-#endif
+
         }
 
         /// <summary>
@@ -236,8 +235,9 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
                         }
                         else
                         {
-#if MSMQ
-                            sessionPersist = new MSMQ.MSMQPersist(userName, this.sessionId, clientId);
+                            ParamCheckUtility.ThrowIfNull(this.sharedData.BrokerInfo.AzureStorageConnectionString, "StorageConnectString");
+
+                            sessionPersist = new AzureQueuePersist.AzureQueuePersist(userName, this.sessionId, clientId, this.sharedData.BrokerInfo.AzureStorageConnectionString);
                             isNewCreate = sessionPersist.IsNewCreated;
                             brokerQueue = new BrokerPersistQueue(
                                 this.brokerQueueDispatcher,
@@ -263,9 +263,6 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
                             {
                                 this.brokerQueueDispatcher.AddBrokerQueue(brokerQueue, null);
                             }
-#else
-                            throw new NotSupportedException();
-#endif
                         }
 
                         lock (this.clientBrokerQueueDic)

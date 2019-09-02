@@ -166,12 +166,12 @@ namespace Microsoft.Hpc.ServiceBroker
         /// cleanup the stake session data.
         /// </summary>
         /// <param name="isStaleSessionCallback">the callback to judge whether </param>
-        public static async Task CleanupStaleSessionData(IsStaleSessionCallback isStaleSessionCallback)
+        public static async Task CleanupStaleSessionData(IsStaleSessionCallback isStaleSessionCallback, string connectString)
         {
             if (!SoaHelper.IsOnAzure())
             {
                 // TODO: on azure, about MSMQ
-                await BrokerQueueFactory.CleanupStalePersistedData("MSMQ", isStaleSessionCallback);
+                await BrokerQueueFactory.CleanupStalePersistedData("azurequeue", isStaleSessionCallback, connectString);
             }
         }
 
@@ -478,7 +478,6 @@ namespace Microsoft.Hpc.ServiceBroker
                 activeClientIdList = new List<string>();
             }
 
-            
             //Check the StrategyConfig.WithoutSessionLayer for the close progress.
             //Step 3: Finish the service job if it is needed.
             // We only finish the service job if clean data is required, in other cases, the service job monitor will finish the service job according to the service job life cycle before we enter this stage
@@ -758,7 +757,7 @@ namespace Microsoft.Hpc.ServiceBroker
             // Create a durable broker queue if durable is required
             if (sharedData.BrokerInfo.Durable)
             {
-                result = new BrokerQueueFactory("MSMQ", sharedData);
+                result = new BrokerQueueFactory("AzureQueue", sharedData);
             }
             else
             {

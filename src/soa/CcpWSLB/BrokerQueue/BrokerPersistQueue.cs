@@ -792,8 +792,6 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 
                 this.PersistRequests(requests);
 
-                IPersistTransaction persistTransaction = this.sessionPersistField.GetPutRequestTransaction();
-
                 // wait for all the requests persisted to the storage.
                 while (Interlocked.Read(ref this.persistedRequestsCount) != msgCount)
                 {
@@ -822,10 +820,10 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
                 // Reset in case Flush is called again
                 long newRequestsCount = Interlocked.Exchange(ref this.persistedRequestsCount, 0);
 
-                if (persistTransaction != null)
+                if (!this.sessionPersistField.IsInMemory())
                 {
                     BrokerTracing.TraceVerbose("[BrokerPersistQueue] .Flush (perf): Begin to commit persist transaction.");
-                    persistTransaction.Commit();
+                    this.sessionPersistField.CommitRequest();
                     BrokerTracing.TraceVerbose("[BrokerPersistQueue] .Flush (perf): End of committing persist transaction.");
 
                     Interlocked.Add(ref this.availableRequestsCountField, newRequestsCount);
@@ -1282,7 +1280,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
                 return;
             }
 
-            // if all responses have been feteched, wait here            
+            // if all responses have been fetched, wait here            
             if (Interlocked.Read(ref this.fetchedResponsesCountField) >= this.sessionPersistField.ResponsesCount)
             {
                 // reset outstandingGetResponseCount
@@ -1753,11 +1751,10 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
         /// </summary>
         private void AbortPendingTransaction()
         {
-            IPersistTransaction persistTransaction = this.sessionPersistField.GetPutRequestTransaction();
-            if (persistTransaction != null)
+            if (!this.sessionPersistField.IsInMemory())
             {
                 // abort the transaction
-                persistTransaction.Abort();
+                this.sessionPersistField.AbortRequest();
 
                 BrokerTracing.TraceEvent(System.Diagnostics.TraceEventType.Warning, 0, "[BrokerPersistQueue] .AbortPendingTransaction: clientId={0}, {1} requests discarded.", this.clientIdField, this.persistedRequestsCount);
 
