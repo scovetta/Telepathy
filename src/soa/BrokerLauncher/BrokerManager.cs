@@ -1096,10 +1096,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             try
             {
                 await BrokerEntry.CleanupStaleSessionData(
-                    async delegate (int jobId)
+                    async delegate(int jobId)
                     {
                         return await this.schedulerHelper.IsJobPurged(jobId);
-                    });
+                    },
+                    (await this.schedulerHelper.GetClusterInfoAsync()).AzureStorageConnectionString);
             }
             catch (Exception e)
             {

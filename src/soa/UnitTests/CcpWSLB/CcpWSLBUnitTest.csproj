@@ -102,10 +102,6 @@
       <Project>{78e5e61b-dd12-475a-845b-7da3f6b0f987}</Project>
       <Name>Scheduler</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\StoreAPI\Store\Store.csproj">
-      <Project>{82f72b8b-372e-4a1c-8139-714ae932ebcb}</Project>
-      <Name>Store</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SourceCode\" />

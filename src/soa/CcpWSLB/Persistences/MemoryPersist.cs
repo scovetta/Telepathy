@@ -160,15 +160,6 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
         }
 
         /// <summary>
-        /// create a put request transaction
-        /// </summary>
-        /// <returns>return null. </returns>
-        public IPersistTransaction GetPutRequestTransaction()
-        {
-            return null;
-        }
-
-        /// <summary>
         /// Put the request item objects into the storage.
         /// </summary>
         /// <param name="requests">A list of request objects</param>
@@ -422,6 +413,19 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
             counter.ResponsesCountField = Interlocked.Read(ref this.responseCountField);
             counter.FailedRequestsCountField = Interlocked.Read(ref this.failedRequestCountField);
             return counter;
+        }
+
+        public bool IsInMemory()
+        {
+            return true;
+        }
+
+        public void CommitRequest()
+        {
+        }
+
+        public void AbortRequest()
+        {
         }
 
         /// <summary>

@@ -667,5 +667,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// MSMQ max message chunk size < 4MB
         /// </summary>
         internal const int MSMQChunkSize = 4192000;
+
+        /// <summary>
+        /// AzureQueue max message chunk size < 64KB and body <48KB
+        /// </summary>
+        internal const int AzureQueueMsgChunkSize = 49152;
     }
 }

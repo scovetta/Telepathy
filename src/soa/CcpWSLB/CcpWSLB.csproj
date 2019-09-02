@@ -297,6 +297,11 @@
     <Compile Include="Common\ServiceJobMonitor\ServiceJobMonitor.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="GracefulPreemptionResult.cs" />
+    <Compile Include="Persistences\AzureQueuePersist\AzureQueueMessageFetcher.cs" />
+    <Compile Include="Persistences\AzureQueuePersist\AzureQueuePersist.cs" />
+    <Compile Include="Persistences\AzureQueuePersist\AzureQueueRequestFetcher.cs" />
+    <Compile Include="Persistences\AzureQueuePersist\AzureQueueResponseFetcher.cs" />
+    <Compile Include="Persistences\AzureQueuePersist\AzureStorageTool.cs" />
     <Compile Include="Persistences\MemoryPersist.cs" />
     <Compile Include="Persistences\MSMQPersist\MSMQMessageFetcher.cs" />
     <Compile Include="Persistences\MSMQPersist\MessageQueueHelper.cs" />

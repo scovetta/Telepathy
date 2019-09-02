@@ -64,11 +64,13 @@
             this.clusterInfo = new ClusterInfo();
             this.clusterInfo.Contract.ClusterName = AzureBatchConfiguration.BatchPoolName;
             this.clusterInfo.Contract.NetworkTopology = "Public";
+            this.clusterInfo.Contract.AzureStorageConnectionString =
+                AzureBatchConfiguration.SoaBrokerStorageConnectionString;
         }
 
         public override async Task<SessionAllocateInfoContract> AllocateDurableV5Async(SessionStartInfoContract info, string endpointPrefix)
         {
-            throw new NotSupportedException("Currently Session Launcher does not support durable session on Azure Batch.");
+            return await base.AllocateDurableV5Async(info, endpointPrefix);
         }
 
         public override async Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, int sessionId, bool useAad)
@@ -623,7 +625,7 @@
                             TaskStateMonitor monitor = batchClient.Utilities.CreateTaskStateMonitor();
                             await monitor.WhenAll(svcHosts, TaskState.Running, SchedulingTimeout);
                             TraceHelper.TraceEvent(TraceEventType.Information, "[AzureBatchSessionLauncher] .StartAndWaitLocalBrokerLauncher: Batch Job Ready");
-                            string cmd = $@"-d --ServiceRegistrationPath %{AzureBatchJobPrepTaskWorkingDirEnvVar}% --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))} --SessionAddress {Environment.MachineName}";
+                            string cmd = $@"-d --ServiceRegistrationPath %{AzureBatchJobPrepTaskWorkingDirEnvVar}% --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))} --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --SessionAddress {Environment.MachineName}";
                             string brokerPath = AzureBatchConfiguration.BrokerLauncherPath;
 
                             if (string.IsNullOrWhiteSpace(brokerPath) || !File.Exists(brokerPath))
