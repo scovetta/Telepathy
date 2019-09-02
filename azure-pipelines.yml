@@ -29,6 +29,15 @@ steps:
     maximumCpuCount: true
     msbuildArchitecture: 'x64'
 
+- task: CmdLine@2
+  inputs:
+    script: |
+      sqllocaldb create MSSQLLocalDB
+      sqllocaldb start MSSQLLocalDB
+      sqllocaldb info MSSQLLocalDB
+      
+      "C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe" start
+
 - task: VSTest@2
   inputs:
     testSelector: 'testAssemblies'
