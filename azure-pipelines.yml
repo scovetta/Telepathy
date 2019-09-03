@@ -29,6 +29,15 @@ steps:
     maximumCpuCount: true
     msbuildArchitecture: 'x64'
 
+- task: CmdLine@2
+  inputs:
+    script: |
+      sqllocaldb create MSSQLLocalDB
+      sqllocaldb start MSSQLLocalDB
+      sqllocaldb info MSSQLLocalDB
+      
+      "C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe" start
+
 - task: VSTest@2
   inputs:
     testSelector: 'testAssemblies'
@@ -58,4 +67,12 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+
+- task: AzureFileCopy@3
+  inputs:
+    SourcePath: 'artifacts'
+    azureSubscription: 'BigCompS-Int1(d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
+    Destination: 'AzureBlob'
+    storage: 'soaserviceartifactci'
+    ContainerName: 'telepathy/$(Build.BuildNumber)'
 
