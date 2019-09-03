@@ -32,6 +32,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
     using Microsoft.Hpc.Scheduler.Session.HpcPack;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.SchedulerDelegations;
+    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack;
 
     /// <summary>
     /// Scheduler adapter for both broker and broker launcher
@@ -107,7 +108,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <summary>
         /// The dictionary to store the monitors: (JobId, JobMonitorEntry)
         /// </summary>
-        private Dictionary<int, JobMonitorEntry> JobMonitors = new Dictionary<int, JobMonitorEntry>();
+        private Dictionary<int, HpcPackJobMonitorEntry> JobMonitors = new Dictionary<int, HpcPackJobMonitorEntry>();
 
         /// <summary>
         /// Max number of times that a job can be requeued on error
@@ -216,12 +217,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             JobState state;
             try
             {
-                JobMonitorEntry data;
+                HpcPackJobMonitorEntry data;
                 lock (this.JobMonitors)
                 {
                     if (!this.JobMonitors.TryGetValue(jobid, out data))
                     {
-                        data = new JobMonitorEntry(jobid, this.scheduler);
+                        data = new HpcPackJobMonitorEntry(jobid, this.scheduler);
                         data.Exit += new EventHandler(JobMonitorEntry_Exit);
                     }
                 }
@@ -285,7 +286,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 int maxUnits = int.MaxValue;
                 lock (this.JobMonitors)
                 {
-                    JobMonitorEntry entry = null;
+                    HpcPackJobMonitorEntry entry = null;
                     if (this.JobMonitors.TryGetValue(jobid, out entry))
                     {
                         schedulerJob = entry.SchedulerJob;
@@ -1037,7 +1038,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
             try
             {
-                JobMonitorEntry entry = null;
+                HpcPackJobMonitorEntry entry = null;
 
                 lock (this.JobMonitors)
                 {
@@ -1109,7 +1110,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
             try
             {
-                JobMonitorEntry entry = null;
+                HpcPackJobMonitorEntry entry = null;
 
                 lock (this.JobMonitors)
                 {
@@ -1164,7 +1165,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
             try
             {
-                JobMonitorEntry entry = null;
+                HpcPackJobMonitorEntry entry = null;
 
                 lock (this.JobMonitors)
                 {
@@ -1230,7 +1231,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                                     // must have at least entered "queued" state.
                                     try
                                     {
-                                        JobMonitorEntry ent = null;
+                                        HpcPackJobMonitorEntry ent = null;
                                         lock (this.JobMonitors)
                                         {
                                             this.JobMonitors.TryGetValue(jobid, out ent);
@@ -1286,7 +1287,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
             try
             {
-                JobMonitorEntry entry = null;
+                HpcPackJobMonitorEntry entry = null;
 
                 lock (this.JobMonitors)
                 {
@@ -1395,7 +1396,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
             try
             {
-                JobMonitorEntry entry = null;
+                HpcPackJobMonitorEntry entry = null;
 
                 lock (this.JobMonitors)
                 {
@@ -2397,7 +2398,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <param name="e">indicating the event args</param>
         private void JobMonitorEntry_Exit(object sender, EventArgs e)
         {
-            JobMonitorEntry entry = (JobMonitorEntry)sender;
+            HpcPackJobMonitorEntry entry = (HpcPackJobMonitorEntry)sender;
             Debug.Assert(entry != null, "[HpcSchedulerDelegation] Sender should be an instance of JobMonitorEntry class.");
 
             // if a JobMonitorEntry is exited because of job state changed into Finished/Canceled/Failed
@@ -2454,7 +2455,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 List<int> activeBrokerIdList = new List<int>();
                 lock (this.JobMonitors)
                 {
-                    foreach (JobMonitorEntry entry in this.JobMonitors.Values)
+                    foreach (HpcPackJobMonitorEntry entry in this.JobMonitors.Values)
                     {
                         if (!entry.CheckIfBrokerIsUnavailable())
                         {
@@ -2465,10 +2466,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
                 TraceActiveBrokerIdList(activeBrokerIdList);
 
-                List<JobMonitorEntry> activeJobMonitorEntryList;
+                List<HpcPackJobMonitorEntry> activeJobMonitorEntryList;
                 lock (this.JobMonitors)
                 {
-                    activeJobMonitorEntryList = new List<JobMonitorEntry>(this.JobMonitors.Values);
+                    activeJobMonitorEntryList = new List<HpcPackJobMonitorEntry>(this.JobMonitors.Values);
                 }
 
                 TraceActiveJobMonitorEntryList(activeJobMonitorEntryList);
@@ -2478,7 +2479,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
                 // Find for sessions that has entry but no active broker
                 // Remove the entry and cancel the job if needed
-                foreach (JobMonitorEntry activeEntry in activeJobMonitorEntryList)
+                foreach (HpcPackJobMonitorEntry activeEntry in activeJobMonitorEntryList)
                 {
                     try
                     {
@@ -2520,7 +2521,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                         if (activeBrokerIdList.Contains(sessionId))
                         {
                             // Active broker, running service job, check if task state changed and GetTaskInfo if needed
-                            JobMonitorEntry entry;
+                            HpcPackJobMonitorEntry entry;
                             bool flag = false;
                             lock (this.JobMonitors)
                             {
@@ -2645,7 +2646,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         /// <param name="activeJobMonitorEntryList">indicating the instance of activeJobMonitorEntryList</param>
         [Conditional("TRACE")]
-        private static void TraceActiveJobMonitorEntryList(List<JobMonitorEntry> activeJobMonitorEntryList)
+        private static void TraceActiveJobMonitorEntryList(List<HpcPackJobMonitorEntry> activeJobMonitorEntryList)
         {
             string[] stringArray = new string[activeJobMonitorEntryList.Count];
             for (int i = 0; i < activeJobMonitorEntryList.Count; i++)
@@ -2762,7 +2763,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     {
                         int sessionId = (int)row[JobPropertyIds.Id].Value;
                         bool flag;
-                        JobMonitorEntry entry;
+                        HpcPackJobMonitorEntry entry;
                         lock (this.JobMonitors)
                         {
                             flag = this.JobMonitors.TryGetValue(sessionId, out entry);
@@ -2844,7 +2845,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
         }
 
-        private void RemoveAndCloseJobEntry(JobMonitorEntry activeEntry)
+        private void RemoveAndCloseJobEntry(HpcPackJobMonitorEntry activeEntry)
         {
             lock (this.JobMonitors)
             {
@@ -2880,10 +2881,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
                 if (this.JobMonitors != null)
                 {
-                    List<JobMonitorEntry> jobMonitorEntryList;
+                    List<HpcPackJobMonitorEntry> jobMonitorEntryList;
                     lock (this.JobMonitors)
                     {
-                        jobMonitorEntryList = new List<JobMonitorEntry>(this.JobMonitors.Values);
+                        jobMonitorEntryList = new List<HpcPackJobMonitorEntry>(this.JobMonitors.Values);
                         this.JobMonitors.Clear();
                     }
 
@@ -2894,7 +2895,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                     }
 
                     //clear up the static node info cache
-                    JobMonitorEntry.ClearNodeCache();
+                    HpcPackJobMonitorEntry.ClearNodeCache();
                 }
 
                 if (this.scheduler != null)

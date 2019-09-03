@@ -32,6 +32,7 @@ namespace Microsoft.Hpc.ServiceBroker
     using Microsoft.Hpc.ServiceBroker.Common.ThreadHelper;
 
     using SR = Microsoft.Hpc.SvcBroker.SR;
+    using Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor;
 
     /// <summary>
     /// Internal Monitor the service job
@@ -1344,11 +1345,10 @@ namespace Microsoft.Hpc.ServiceBroker
                 //lock (this.lockClient)
                 //{
                 RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
-                (jobState, autoMax, autoMin) = await RetryHelper< (Hpc.Scheduler.Session.Data.JobState, int, int)>.InvokeOperationAsync(
+                (jobState, autoMax, autoMin) = await RetryHelper<(Hpc.Scheduler.Session.Data.JobState, int, int)>.InvokeOperationAsync(
                         async () => await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).RegisterJobAsync(this.sharedData.BrokerInfo.SessionId),
                         async (e, r) => await Task.FromResult<object>(new Func<object>(() => { BrokerTracing.TraceEvent(System.Diagnostics.TraceEventType.Error, 0, "[ServiceJobMonitor] SessionFault throws when registering job: {0} with retry {1}", e, r.RetryCount); return null; }).Invoke()),
                         retry);
-                
                 //}
             }
             catch (FaultException<SessionFault> e)
@@ -1513,7 +1513,6 @@ namespace Microsoft.Hpc.ServiceBroker
                     BrokerTracing.TraceEvent(TraceEventType.Verbose, 0, "[ServiceJobMonitor] Ref object is 0, return immediately.");
                     return Task.CompletedTask;
                 }
-
                 try
                 {
                     List<ServiceTaskDispatcherInfo> validDispatcherInfoList = new List<ServiceTaskDispatcherInfo>();
@@ -1766,15 +1765,25 @@ namespace Microsoft.Hpc.ServiceBroker
                         }
                         else
                         {
+                            BrokerTracing.TraceInfo("[ServiceJobMonitor] Open Svc host in {0} nodes", validDispatcherInfoList.Count);
                             foreach (var info in validDispatcherInfoList)
                             {
-                                this.dispatcherManager.NewDispatcherAsync(info).ContinueWith(
+                                SvcHostRestModule.OpenSvcHostsAsync(this.sharedData.BrokerInfo.SessionId, this.sharedData.StartInfo, info).ContinueWith(
+                                    async dispatcherInfo =>
+                                    {
+                                        if (dispatcherInfo.Result == null)
+                                        {
+                                            return;
+                                        }
+                                        await this.dispatcherManager.NewDispatcherAsync(dispatcherInfo.Result);
+                                    }
+                                ).ContinueWith(
                                     t => t.Exception.Handle(
                                         ex =>
-                                            {
-                                                BrokerTracing.TraceError("[ServiceJobMonitor] Exception happened when create a dispatcher for task {0}, {1}", info.TaskId, ex);
-                                                return true;
-                                            }),
+                                        {
+                                            BrokerTracing.TraceError("[ServiceJobMonitor] Exception happened when create a dispatcher for task {0}, {1}", info.TaskId, ex);
+                                            return true;
+                                        }),
                                     TaskContinuationOptions.OnlyOnFaulted);
                             }
                         }
@@ -1786,7 +1795,9 @@ namespace Microsoft.Hpc.ServiceBroker
                         // the DecreaseCount method in the finally block below.
                         // BatchRemoveDispatcher may be blocked when it disposes a dispatcher because
                         // of the non-zero ref count.
-                        ThreadPool.QueueUserWorkItem(new ThreadHelper<object>(new WaitCallback(delegate(object state) { this.dispatcherManager.BatchRemoveDispatcher(removeIdList); })).CallbackRoot);
+                        ThreadPool.QueueUserWorkItem(new ThreadHelper<object>(new WaitCallback(delegate (object state) { this.dispatcherManager.BatchRemoveDispatcher(removeIdList); })).CallbackRoot);
+                        //If still fail to open svc host, then stop retry
+                        SvcHostRestModule.StopOpenSvcHostAsync(removeIdList);
                     }
                 }
                 finally

@@ -13,7 +13,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-
     using Microsoft.Hpc.Scheduler.Session;
     
     using TelepathyCommon;
@@ -166,7 +165,27 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 }
 
                 var destination = Path.Combine(this.ServiceRegistrationStoreFacadeFolder, Path.GetFileName(filePath));
-                File.Copy(filePath, destination, true);
+               
+                if (File.Exists(destination))
+                {
+                    return destination;
+                }
+
+                string mutexName = destination;
+                using (new GlobalMutex(mutexName, 5000))
+                {
+                    if (!File.Exists(destination))
+                    {
+                        using (var fs = new FileStream(destination, FileMode.Create, FileAccess.Write, FileShare.None))
+                        {
+                            using (var writer = new StreamWriter(fs))
+                            {
+                                writer.WriteAsync(filePath).GetAwaiter().GetResult();
+                            }
+                        }
+                    }
+                }
+
                 return destination;
             }
             catch (Exception ex)

@@ -147,7 +147,7 @@
                 {
                     client.BeginEcho(
                         i.ToString(),
-                        delegate(IAsyncResult result)
+                        delegate (IAsyncResult result)
                             {
                                 try
                                 {
@@ -400,6 +400,302 @@
             session.Dispose();
 
             // VerifyJobStatus(serviceJobId);
+        }
+
+        /// <summary>
+        /// Start a new session using for testing multiple sessions and maxunit parameters
+        /// </summary>
+        public Session StartNewSession(SessionStartInfo sessionStartInfo, int max)
+        {
+            Session session = Session.CreateSession(sessionStartInfo);
+            var epr = new EndpointAddress(string.Format(NetTcpEndpointPattern, Server, session.Id));
+            Info("EPR: {0}", epr);
+            Info("Begin to send requests");
+
+            string guid = Guid.NewGuid().ToString();
+
+            try
+            {
+                Info("Client {0}: Begin to send requests.", guid);
+                using (BrokerClient<IEchoSvc> client = new BrokerClient<IEchoSvc>(guid, session))
+                {
+                    for (int j = 0; j < NumberOfCalls; j++)
+                    {
+                        client.SendRequest<EchoRequest>(new EchoRequest(j.ToString()), j + ":" + guid);
+                    }
+
+                    Info("Client {0}: Begin to call EndOfMessage.", guid);
+                    client.EndRequests();
+                    Info("Client {0}: Begin to get responses.", guid);
+                    int count = 0;
+
+                    foreach (BrokerResponse<EchoResponse> response in client.GetResponses<EchoResponse>())
+                    {
+                        count++;
+                        Info(response.Result.EchoResult);
+                        string[] rtn = response.Result.EchoResult.Split(new[] { ':' });
+                        Assert(
+                            rtn[rtn.Length - 1] == response.GetUserData<string>().Split(new[] { ':' })[0] && response.GetUserData<string>().Split(new[] { ':' })[1] == guid,
+                            "Result is corrupt: expected:computername:{0}, actual:{1}",
+                            response.GetUserData<string>().Split(new[] { ':' })[0],
+                            response.Result.EchoResult);
+                    }
+
+                    if (count == NumberOfCalls) Info("Client {0}: Total {1} calls returned.", guid, count);
+                    else
+                        Error("Client {0}: Total {1} calls returned, but losing {2} results.", guid, count, NumberOfCalls - count);
+                }
+            }
+            catch (Exception e)
+            {
+                Error("Unexpected exception of Client {0}", e.ToString());
+                throw;
+            }
+            return session;
+
+        }
+
+        /// <summary>
+        /// Interactive Mode Basic Functional (BVT) - non-secure net.tcp - single Session, max parameter is 0
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(FaultException), AllowDerivedTypes = true)]
+        public void BvtCase4()
+        {
+            Info("Start BVT");
+            SessionStartInfo sessionStartInfo = null;
+            int maxUnit = 0;
+            sessionStartInfo = BuildSessionStartInfo(Server, EchoSvcName, null, null, null, null, SessionUnitType.Node, null, maxUnit, null);
+
+            Info("Begin to create session");
+            Session session = this.StartNewSession(sessionStartInfo, maxUnit);
+            session.Close(true);
+            session.Dispose();
+        }
+
+
+        /// <summary>
+        /// Interactive Mode Basic Functional (BVT) - non-secure net.tcp - single Session, max parameter is 3
+        /// </summary>
+        [TestMethod]
+        public void BvtCase5()
+        {
+            Info("Start BVT");
+            SessionStartInfo sessionStartInfo = null;
+            int maxUnit = 3;
+            sessionStartInfo = BuildSessionStartInfo(Server, EchoSvcName, null, null, null, null, SessionUnitType.Node, null, maxUnit, null);
+
+            Info("Begin to create session");
+            try
+            {
+                Session session = this.StartNewSession(sessionStartInfo, maxUnit);
+                session.Close(true);
+                session.Dispose();
+            }
+            catch (Exception e)
+            {
+                Error("start mew session with maxunit 3", e.ToString());
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Interactive Mode Basic Functional (BVT) - non-secure net.tcp - single Session, max parameter is 15
+        /// </summary>
+        [TestMethod]
+        public void BvtCase6()
+        {
+            Info("Start BVT");
+            SessionStartInfo sessionStartInfo = null;
+            int maxUnit = 15;
+            sessionStartInfo = BuildSessionStartInfo(Server, EchoSvcName, null, null, null, null, SessionUnitType.Node, null, maxUnit, null);
+
+            Info("Begin to create session");
+            try
+            {
+                Session session = this.StartNewSession(sessionStartInfo, maxUnit);
+                session.Close(true);
+                session.Dispose();
+            }
+            catch (Exception e)
+            {
+                Error("Invalid maxunit parameter value", e.ToString());
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Interactive Mode Basic Functional (BVT) - non-secure net.tcp - single Session, max parameter is 30
+        /// </summary>
+        [TestMethod]
+        public void BvtCase7()
+        {
+            Info("Start BVT");
+            SessionStartInfo sessionStartInfo = null;
+            int maxUnit = 30;
+            sessionStartInfo = BuildSessionStartInfo(Server, EchoSvcName, null, null, null, null, SessionUnitType.Node, null, maxUnit, null);
+
+            Info("Begin to create session");
+            try
+            {
+                Session session = this.StartNewSession(sessionStartInfo, maxUnit);
+                session.Close(true);
+                session.Dispose();
+            }
+            catch (Exception e)
+            {
+                Error("Invalid parameter value", e.ToString());
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Interactive Mode Basic Functional (BVT) - non-secure net.tcp - multiple Sessions, maxunit is 0, session number is 16
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(AggregateException), AllowDerivedTypes = true)]
+        public void BvtCase8()
+        {
+            Info("Start BVT");
+            SessionStartInfo sessionStartInfo = null;
+            int maxUnit = 0;
+            sessionStartInfo = BuildSessionStartInfo(Server, EchoSvcName, null, null, null, null, SessionUnitType.Node, null, maxUnit, null);
+
+            int sessionNum = 16;
+            List<Session> sessions = new List<Session>(sessionNum);
+            Info("Begin to create session");
+            Task[] tasks = new Task[sessionNum];
+
+            for (int s = 0; s < sessionNum; s++)
+            {
+                tasks[s] = Task.Run(() =>
+                {
+                    Session session = this.StartNewSession(sessionStartInfo, maxUnit);
+                    session.Close(true);
+                    session.Dispose();
+                });
+
+                //TODO: should be removed when job id type change to string
+                Thread.Sleep(1000);
+            }
+            Task.WaitAll(tasks);
+        }
+
+        /// <summary>
+        /// Interactive Mode Basic Functional (BVT) - non-secure net.tcp - multiple Sessions, maxunit is 3, session number is 16
+        /// </summary>
+        [TestMethod]
+        public void BvtCase9()
+        {
+            Info("Start BVT");
+            SessionStartInfo sessionStartInfo = null;
+            int maxUnit = 3;
+            sessionStartInfo = BuildSessionStartInfo(Server, EchoSvcName, null, null, null, null, SessionUnitType.Node, null, maxUnit, null);
+
+            int sessionNum = 16;
+            List<Session> sessions = new List<Session>(sessionNum);
+            Info("Begin to create session");
+            Task[] tasks = new Task[sessionNum];
+
+            for (int s = 0; s < sessionNum; s++)
+            {
+                tasks[s] = Task.Run(() =>
+                {
+                    try
+                    {
+                        Session session = this.StartNewSession(sessionStartInfo, maxUnit);
+                        session.Close(true);
+                        session.Dispose();
+                    }
+                    catch (Exception e)
+                    {
+                        Error("Invalid maxunit parameter value", e.ToString());
+                        throw;
+                    }
+                });
+
+                //TODO: should be removed when job id type change to string
+                Thread.Sleep(1000);
+            }
+            Task.WaitAll(tasks);
+        }
+
+        /// <summary>
+        /// Interactive Mode Basic Functional (BVT) - non-secure net.tcp - multiple Sessions, maxunit is 15, session number is 2
+        /// </summary>
+        [TestMethod]
+        public void BvtCase10()
+        {
+            Info("Start BVT");
+            SessionStartInfo sessionStartInfo = null;
+            int maxUnit = 15;
+            sessionStartInfo = BuildSessionStartInfo(Server, EchoSvcName, null, null, null, null, SessionUnitType.Node, null, maxUnit, null);
+
+            int sessionNum = 2;
+            List<Session> sessions = new List<Session>(sessionNum);
+            Info("Begin to create session");
+            Task[] tasks = new Task[sessionNum];
+
+            for (int s = 0; s < sessionNum; s++)
+            {
+                tasks[s] = Task.Run(() =>
+                {
+                    try
+                    {
+                        Session session = this.StartNewSession(sessionStartInfo, maxUnit);
+                        session.Close(true);
+                        session.Dispose();
+                    }
+                    catch (Exception e)
+                    {
+                        Error("Invalid maxunit parameter value", e.ToString());
+                        throw;
+                    }
+                });
+
+                //TODO: should be removed when job id type change to string
+                Thread.Sleep(1000);
+            }
+            Task.WaitAll(tasks);
+        }
+
+        /// <summary>
+        /// Interactive Mode Basic Functional (BVT) - non-secure net.tcp - multiple Sessions, maxunit is 30, session number is 2
+        /// </summary>
+        [TestMethod]
+        public void BvtCase11()
+        {
+            Info("Start BVT");
+            SessionStartInfo sessionStartInfo = null;
+            int maxUnit = 30;
+            sessionStartInfo = BuildSessionStartInfo(Server, EchoSvcName, null, null, null, null, SessionUnitType.Node, null, maxUnit, null);
+
+            int sessionNum = 2;
+            List<Session> sessions = new List<Session>(sessionNum);
+            Info("Begin to create session");
+            Task[] tasks = new Task[sessionNum];
+
+            for (int s = 0; s < sessionNum; s++)
+            {
+                tasks[s] = Task.Run(() =>
+                {
+                    try
+                    {
+                        Session session = this.StartNewSession(sessionStartInfo, maxUnit);
+                        session.Close(true);
+                        session.Dispose();
+                    }
+                    catch (Exception e)
+                    {
+                        Error("Invalid maxunit parameter value", e.ToString());
+                        throw;
+                    }
+                });
+
+                //TODO: should be removed when job id type change to string
+                Thread.Sleep(1000);
+            }
+            Task.WaitAll(tasks);
         }
     }
 }

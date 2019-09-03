@@ -258,6 +258,7 @@
     <Compile Include="Common\ObserverItem.cs" />
     <Compile Include="Common\PullResponsesHandler.cs" />
     <Compile Include="Common\ServiceJobMonitor\SvcHostRestModule.cs" />
+    <Compile Include="Common\ServiceJobMonitor\TraceOnlyServiceJobMonitor.cs" />
     <Compile Include="Common\ThreadHelper\AsyncCallbackReferencedThreadHelper.cs" />
     <Compile Include="Common\ThreadHelper\BasicCallbackReferencedThreadHelper.cs" />
     <Compile Include="Common\ThreadHelper\BrokerQueueCallbackReferencedThreadHelper.cs" />

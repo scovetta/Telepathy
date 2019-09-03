@@ -19,7 +19,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Interface
     /// <summary>
     /// Service contract of scheduler adapter
     /// </summary>
-    [ServiceContract(CallbackContract = typeof(ISchedulerNotify), Namespace = "http://hpc.microsoft.com")]
     public interface IHpcSchedulerAdapter : ISchedulerAdapter
     {
         /// <summary>
