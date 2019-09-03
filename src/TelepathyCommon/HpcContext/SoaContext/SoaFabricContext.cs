@@ -47,7 +47,5 @@ namespace TelepathyCommon.HpcContext.SoaContext
         public IRegistry Registry => throw new NotImplementedException();
 
         public EndpointsConnectionString ConnectionString { get; }
-
-        public HpcContextOwner Owner => HpcContextOwner.HpcServiceOutOfSFCluster;
     }
 }

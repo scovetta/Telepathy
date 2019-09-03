@@ -79,18 +79,13 @@
     <Compile Include="EndpointsConnectionString.cs" />
     <Compile Include="ErrorCode.cs" />
     <Compile Include="HpcContext\Extensions\HpcContextExtension.cs" />
-    <Compile Include="HpcContext\Extensions\RegistryExtension\AzureEndpointRegistryExtension.cs" />
-    <Compile Include="HpcContext\Extensions\RegistryExtension\BatchRegistryExtension.cs" />
-    <Compile Include="HpcContext\Extensions\RegistryExtension\AadRegistryExtension.cs" />
     <Compile Include="HpcContext\HpcFabricRestContext.cs" />
     <Compile Include="HpcContext\FabricRestContext.cs" />
     <Compile Include="HpcConstants.cs" />
     <Compile Include="ExceptionHelper.cs" />
     <Compile Include="HpcContext\TelepathyContext.cs" />
     <Compile Include="HpcContext\Extensions\RegistryExtension\RegistryExtension.cs" />
-    <Compile Include="HpcContext\HpcContextOwner.cs" />
     <Compile Include="HpcContext\Extensions\HttpClientExtension.cs" />
-    <Compile Include="HpcContext\HpcServerContextType.cs" />
     <Compile Include="HpcContext\IFabricContext.cs" />
     <Compile Include="HpcContext\ITelepathyContext.cs" />
     <Compile Include="HpcContext\SoaContext\SoaContext.cs" />
@@ -108,12 +103,9 @@
     <Compile Include="Plugin\SqlConnectionStringProvider.cs" />
     <Compile Include="Rest\HpcRestClient.cs" />
     <Compile Include="Rest\ServiceRegistrationRestClient.cs" />
-    <Compile Include="Service\EndpointBehaviorBase.cs" />
     <Compile Include="Service\ErrorBehaviorAttribute.cs" />
     <Compile Include="Service\ExceptionWrapper.cs" />
     <Compile Include="Service\ExceptionWrapperErrorHandler.cs" />
-    <Compile Include="Service\RestServiceUtil.cs" />
-    <Compile Include="Service\ServiceAsClientProvider.cs" />
     <Compile Include="Service\WcfChannelModule.cs" />
     <Compile Include="Refactor\Refactor.cs" />
     <Compile Include="Registry\HARegistry.cs" />
@@ -129,7 +121,7 @@
     <Compile Include="Service\WcfServiceConstants.cs" />
     <Compile Include="GlobalMutex.cs" />
     <Compile Include="SoaRegistrationAuxModule.cs" />
-	<Compile Include="SR.Designer.cs">
+    <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.resx</DependentUpon>

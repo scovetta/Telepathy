@@ -11,10 +11,9 @@ namespace TelepathyCommon.HpcContext
 {
     internal class HpcFabricRestContext : IFabricContext
     {
-        internal HpcFabricRestContext(EndpointsConnectionString gatewayString, HpcContextOwner hpcContextOwner)
+        internal HpcFabricRestContext(EndpointsConnectionString gatewayString)
         {
             this.ConnectionString = gatewayString;
-            this.Owner = hpcContextOwner;
         }
 
         private readonly HttpClient restClient = new HttpClient(new HttpClientHandler { Proxy = null, UseProxy = false });
@@ -23,7 +22,6 @@ namespace TelepathyCommon.HpcContext
 
         public EndpointsConnectionString ConnectionString { get; }
 
-        public HpcContextOwner Owner { get; }
 
         public async Task<string> ResolveSingletonServicePrimaryAsync(string serviceName, CancellationToken token) =>
             await this.GetFirstHttpApiCallResponseAsync<string>(token, "resolve/singleton", serviceName).ConfigureAwait(false);

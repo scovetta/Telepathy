@@ -280,10 +280,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AADAuthUtil\AADAuthUtil.csproj">
-      <Project>{895FCBFB-73B4-46F3-8A89-76C236F01BF4}</Project>
-      <Name>AADAuthUtil</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\HpcRestServerCommon\HpcRestServerCommon.csproj">
       <Project>{8720315f-7ba8-4923-bd1e-dc2af7690a72}</Project>
       <Name>HpcRestServerCommon</Name>

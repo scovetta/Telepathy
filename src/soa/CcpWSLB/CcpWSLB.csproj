@@ -326,10 +326,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AADAuthUtil\AADAuthUtil.csproj">
-      <Project>{895FCBFB-73B4-46F3-8A89-76C236F01BF4}</Project>
-      <Name>AADAuthUtil</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\TelepathyCommon\TelepathyCommon.csproj">
       <Project>{1F7D53E1-7C00-4DE4-AD73-B0BB17BC1BFB}</Project>
       <Name>TelepathyCommon</Name>

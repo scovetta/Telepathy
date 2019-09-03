@@ -18,9 +18,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Client;
-#if !net40
-    using Microsoft.Hpc.AADAuthUtil;
-#endif
 
     /// <summary>
     /// Broker factory for v3
@@ -142,13 +139,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     }
 
                 }
-#if !net40
-                catch (FaultException e) when (e.IsAADAuthenticationException())
-                {
-                    SessionBase.TraceSource.TraceEvent(TraceEventType.Warning, 0, "[Session:{0}] AAD authentication exception occured while creating broker: {1}", sessionId, e.ToString());
-                    throw;
-                }
-#endif
                 catch (FaultException<SessionFault> e)
                 {
                     SessionBase.TraceSource.TraceEvent(TraceEventType.Warning, 0, "[Session:{0}] Fault exception occured while creating broker: {1}. FaultCode = {2}", sessionId, e, e.Detail.Code);

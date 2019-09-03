@@ -16,7 +16,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.AADAuthUtil;
     using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler;
 

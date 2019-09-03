@@ -8,7 +8,6 @@
 //------------------------------------------------------------------------------
 namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 {
-    using Microsoft.Hpc.AADAuthUtil;
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker.Common;
@@ -93,9 +92,6 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// Stores the shared data
         /// </summary>
         private SharedData sharedData;
-
-        private Lazy<AADServiceAuthorizationManager> aadAuthorizationManager =
-            new Lazy<AADServiceAuthorizationManager>(() => new AADServiceAuthorizationManager(WinServiceHpcContextModule.GetOrAddWinServiceHpcContextFromEnv()));
 
         /// <summary>
         /// Initializes a new instance of the FrontEndBase class
@@ -202,10 +198,6 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         protected string GetUserName(Message message, out string callerSID)
         {
             callerSID = string.Empty;
-            if (this.CheckAadMessageHeaderAndSetPrincpal(message))
-            {
-                return Thread.CurrentPrincipal.Identity.Name;
-            }
 
             if (message.Properties.Security == null ||
                 message.Properties.Security.ServiceSecurityContext == null || 
@@ -297,11 +289,6 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// <returns>the message passes the check or not</returns>
         protected bool CheckAuth(RequestContextBase request, Message message)
         {
-            if (this.CheckAadMessageHeaderAndSetPrincpal(message))
-            {
-                return true;
-            }
-
             ServiceSecurityContext context = GetSecurityContextFromRequest(message);
             if (this.brokerAuth != null && !this.brokerAuth.CheckAccess(context))
             {
@@ -312,20 +299,6 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             }
 
             return true;
-        }
-
-        protected bool CheckAadMessageHeaderAndSetPrincpal(Message message)
-        {
-            var aadHeader = AADAuthMessageHeader.ReadHeader(message);
-            if (aadHeader != null)
-            {
-                if (this.aadAuthorizationManager.Value.CheckHeaderAccess(aadHeader))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         /// <summary>

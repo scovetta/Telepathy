@@ -17,7 +17,5 @@
         IRegistry Registry { get; }
 
         EndpointsConnectionString ConnectionString { get; }
-
-        HpcContextOwner Owner { get; }
     }
 }

@@ -35,41 +35,6 @@ namespace TelepathyCommon.Service
             return identity != null && String.Equals(identity.AuthenticationType, "X509", StringComparison.OrdinalIgnoreCase);
         }
 
-#if !net40
-        // HeadNode only
-        private static string AadClientAppId => TelepathyContext.GetOrAdd(CancellationToken.None).GetAADClientAppIdAsync().GetAwaiter().GetResult();
-
-        private const string AppIdType = "appid";
-
-        public static bool IsHpcAadPrincipal(this IPrincipal principal, ITelepathyContext context = null, string aadInfoNode = null)
-        {
-            var cp = principal as ClaimsPrincipal;
-            if (cp == null)
-            {
-                return false;
-            }
-
-            return cp.Identity.IsHpcAadIdentity(context, aadInfoNode);
-        }
-
-        public static bool IsHpcAadIdentity(this IIdentity identity, ITelepathyContext context = null, string aadInfoNode = null)
-        {
-            var ci = identity as ClaimsIdentity;
-            if (ci == null)
-            {
-                return false;
-            }
-
-            if (context == null)
-            {
-                return ci.Claims.Any(c => c.Type == AppIdType && c.Value == AadClientAppId);
-            }
-
-            var aadClientAppId = context.GetAADClientAppIdAsync(aadInfoNode).GetAwaiter().GetResult();
-            return ci.Claims.Any(c => c.Type == AppIdType && c.Value == aadClientAppId);
-        }
-#endif
-
         public static NetTcpBinding DefaultNetTcpBindingFactory()
         {
             return new NetTcpBinding
@@ -212,66 +177,7 @@ namespace TelepathyCommon.Service
         {
             return await SetupWcfChannelAsync<T>(singletonInstance, WcfServiceConstants.ManagementWcfChannelPort, serviceName).ConfigureAwait(false);
         }
-
-        public static async Task<T> CreateInternalWcfProxyAsync<T>(string endPointStr, ITelepathyContext context, EndpointBehaviorBase behavior = null) where T : class
-        {
-            return await CreateInternalWcfProxyAsync<T>(new Uri(endPointStr), context, behavior).ConfigureAwait(false);
-        }
-
-        public static async Task<T> CreateInternalWcfProxyAsync<T>(Uri uri, ITelepathyContext context, EndpointBehaviorBase behavior = null) where T : class
-        {
-            NetTcpBinding tcpBinding = NetTcpBindingWithCertFactory();
-            string thumbPrint = await context.GetSSLThumbprint().ConfigureAwait(false);
-            ChannelFactory<T> channelFactory = GetWcfChannelFactory<T>(tcpBinding, uri, behavior, thumbPrint);
-            string dnsIdentityName = GetCertDnsIdentityName(thumbPrint, StoreName.My, StoreLocation.LocalMachine);
-            Trace.TraceInformation("[WcfProxy] Begin connect to endpointStr {0}, dnsIdentityName {1}", uri, dnsIdentityName);
-            EndpointAddress endpointAddress = new EndpointAddress(uri, EndpointIdentity.CreateDnsIdentity(dnsIdentityName));
-
-            foreach (OperationDescription op in channelFactory.Endpoint.Contract.Operations)
-            {
-                DataContractSerializerOperationBehavior dataContractBehavior = op.Behaviors[typeof(DataContractSerializerOperationBehavior)] as DataContractSerializerOperationBehavior;
-
-                if (dataContractBehavior != null)
-                {
-                    dataContractBehavior.MaxItemsInObjectGraph = 10 * 1024 * 1024;
-                }
-            }
-
-            T proxy = channelFactory.CreateChannel(endpointAddress);
-            ((ICommunicationObject)proxy).Faulted += (sender, args) =>
-                {
-                    Trace.TraceWarning($"[WcfProxy] Channel to {endpointAddress.Uri} faulted.");
-                    ((ICommunicationObject)sender).Abort();
-                };
-            Trace.TraceInformation("[WcfProxy] End to create internal wcf proxy");
-            return proxy;
-        }
-
-        public static T CreateWcfProxy<T>(string endPointStr) where T : class
-        {
-            return CreateWcfProxy<T>(new EndpointAddress(new Uri(endPointStr)));
-        }
-
-        public static T CreateWcfProxy<T>(Uri uri) where T : class
-        {
-            return CreateWcfProxy<T>(new EndpointAddress(uri));
-        }
-
-        public static T CreateWcfProxy<T>(EndpointAddress endpointAddress, EndpointBehaviorBase behavior = null) where T : class
-        {
-            Binding binding = DefaultNetTcpBindingFactory();
-            Trace.TraceInformation("[WcfProxy] Begin to create wcf proxy to {0}", endpointAddress.Uri);
-            ChannelFactory<T> channelFactory = GetWcfChannelFactory<T>(binding, endpointAddress.Uri, behavior);
-            T proxy = channelFactory.CreateChannel(endpointAddress);
-            ((ICommunicationObject)proxy).Faulted += (sender, args) =>
-                {
-                    Trace.TraceWarning($"[WcfProxy] Channel to {endpointAddress.Uri} faulted.");
-                    ((ICommunicationObject)sender).Abort();
-                };
-            Trace.TraceInformation("[WcfProxy] End to create wcf proxy");
-            return proxy;
-        }
-
+     
         public static void DisposeWcfProxy(object wcfProxyObj)
         {
             var wcfProxy = wcfProxyObj as ICommunicationObject;
@@ -329,41 +235,6 @@ namespace TelepathyCommon.Service
                 DisposeWcfChannelFactory(channelFactoryPair.Value);
                 ChannelFactoryCache.TryRemove(channelFactoryPair.Key, out _);
             }
-        }
-
-        private static ChannelFactory<T> GetWcfChannelFactory<T>(Binding binding, Uri serviceUri, EndpointBehaviorBase behavior, string thumbPrint = null)
-        {
-            ChannelFactory ret;
-            string key = $"{binding.GetType().Name}-{serviceUri.LocalPath}-{behavior?.Name}";
-            if (ChannelFactoryCache.TryGetValue(key, out ret))
-            {
-                if (ret.State == CommunicationState.Faulted || ret.State == CommunicationState.Closing || ret.State == CommunicationState.Closed)
-                {
-                    ChannelFactoryCache.TryRemove(key, out ret);
-                    ret.Abort();
-                }
-                else
-                {
-                    return (ChannelFactory<T>)ret;
-                }
-            }
-
-            return (ChannelFactory<T>)ChannelFactoryCache.GetOrAdd(key, k => {
-                ret = new ChannelFactory<T>(binding);
-                if (!string.IsNullOrEmpty(thumbPrint))
-                {
-                    ret.Credentials.ServiceCertificate.Authentication.CertificateValidationMode = X509CertificateValidationMode.PeerOrChainTrust;
-                    ret.Credentials.ServiceCertificate.Authentication.RevocationMode = X509RevocationMode.NoCheck;
-                    ret.Credentials.ClientCertificate.SetCertificate(StoreLocation.LocalMachine, StoreName.My, X509FindType.FindByThumbprint, thumbPrint);
-                }
-
-                if (behavior != null)
-                {
-                    ret.Endpoint.Behaviors.Add(behavior);
-                }
-
-                return ret;
-            });
         }
 
         public static string GetWcfServiceUriString(string host, int port, string serviceName)

@@ -20,7 +20,6 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using System.Text;
     using System.Xml;
 
-    using Microsoft.Hpc.AADAuthUtil;
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
 
@@ -281,12 +280,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                 result.GetResponseUri = getResponseEndpoint.ListenUri.AbsoluteUri;
                 if (sharedData.StartInfo.UseAad)
                 {
-                    BrokerTracing.TraceVerbose("[FrontEndBuilder] Building net.tcp frontend with AAD authentication.");
-                    result.ControllerFrontend.UseServiceAuthorizationManagerAsync(
-                        new AADServiceAuthorizationManager(WinServiceHpcContextModule.GetOrAddWinServiceHpcContextFromEnv()),
-                        true).GetAwaiter().GetResult();
-                    ServiceAuthorizationBehavior myServiceBehavior = result.ControllerFrontend.Description.Behaviors.Find<ServiceAuthorizationBehavior>();
-                    myServiceBehavior.PrincipalPermissionMode = PrincipalPermissionMode.None;
+                   throw new NotSupportedException();
                 }
                 else if (sharedData.StartInfo.LocalUser.GetValueOrDefault())
                 {

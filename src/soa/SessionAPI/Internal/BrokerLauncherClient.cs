@@ -12,10 +12,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-
-#if !net40
-    using Microsoft.Hpc.AADAuthUtil;
-#endif
     using Microsoft.Hpc.Scheduler.Session.Interface;
 
     /// <summary>

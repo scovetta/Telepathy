@@ -61,7 +61,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 return;
             }
 
-            TelepathyContext.AsNtServiceContext();
             TelepathyContext.GetOrAdd(CancellationToken.None);
 
             LauncherHostService host = null;

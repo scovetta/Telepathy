@@ -9,94 +9,15 @@ namespace TelepathyCommon.HpcContext
 {
     public class TelepathyContext : ITelepathyContext, IDisposable
     {
-        private TelepathyContext(EndpointsConnectionString connectionString, CancellationToken token, HpcContextOwner hpcContextOwner)
+        private TelepathyContext(EndpointsConnectionString connectionString, CancellationToken token)
         {
             this.connectionString = connectionString;
             this.CancellationToken = token;
-
-            if (!connectionString.IsGateway)
-            {
-                switch (ServerContextType)
-                {
-                    case HpcServerContextType.ServiceFabric:
-                        {
-                            var clientContextType = Assembly.Load("HpcCommonServer").GetType("Microsoft.Hpc.FabricClientContext");
-                            this.FabricContext = (IFabricContext)Activator.CreateInstance(clientContextType, connectionString);
-                            break;
-                        }
-
-                    case HpcServerContextType.NtService:
-                        {
-                            var clientContextType = Assembly.Load("HpcCommonServer").GetType("Microsoft.Hpc.NtServiceContext");
-                            this.FabricContext = (IFabricContext)Activator.CreateInstance(clientContextType);
-                            break;
-                        }
-
-                    case HpcServerContextType.Undefined:
-                    default:
-                        {
-                            throw new InvalidOperationException($"{nameof(HpcServerContextType)} is not in a valid state. Current: {ServerContextType.ToString()}");
-                        }
-                }
-            }
-            else
-            {
-                this.FabricContext = new HpcFabricRestContext(connectionString, hpcContextOwner);
-            }
         }
 
         private EndpointsConnectionString connectionString;
 
         private const string UriPathBaseString = @"/";
-
-        public static bool CheckIfHttps(string oldMultiFormatName, out string serverName, out int port)
-        {
-            bool overHttp = false;
-
-            serverName = null;
-            port = 0;
-
-            Uri serverUri;
-
-            if (!oldMultiFormatName.Contains("://"))
-            {
-                return false;
-            }
-
-            if (!Uri.TryCreate(oldMultiFormatName, UriKind.Absolute, out serverUri))
-            {
-                return false;
-            }
-
-            if (string.Equals(serverUri.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase))
-            {
-                overHttp = true;
-
-                //v3 bug 17539: If the user provided string has an additional path 
-                //after the host name, we want that to be part of the servername.
-
-                if (string.Equals(serverUri.AbsolutePath, UriPathBaseString))
-                {
-                    //If the server uri contains no additonal path, the URI class 
-                    //still shows "/" as the absolute path. We do not want to add the trailing /
-                    //if the user does not provide a path.
-                    serverName = serverUri.Host;
-                }
-                else
-                {
-                    // Change to disallow the uri with path.
-                    throw new ArgumentException("The uri specified shouldn't contain a path.", nameof(oldMultiFormatName));
-                }
-
-                port = serverUri.Port;
-            }
-            else
-            {
-                throw new ArgumentException("The uri's scheme should be https.", nameof(oldMultiFormatName));
-            }
-
-            return overHttp;
-        }
 
         public void Dispose()
         {
@@ -228,44 +149,6 @@ namespace TelepathyCommon.HpcContext
             else
             {
                 return new SoaContext.SoaContext(connectionString);
-            }
-        }
-
-        public static void ClearAll()
-        {
-            lock (contexts)
-            {
-                foreach (var context in contexts.Values)
-                {
-                    context.Dispose();
-                }
-
-                contexts.Clear();
-            }
-        }
-
-        public static bool IsNtService => ServerContextType == HpcServerContextType.NtService;
-
-        internal static HpcServerContextType ServerContextType { get; private set; } = HpcServerContextType.Undefined;
-
-        public static void AsServiceFabricContext() => SetServerContextType(HpcServerContextType.ServiceFabric);
-
-        public static void AsNtServiceContext() => SetServerContextType(HpcServerContextType.NtService);
-
-        private static void SetServerContextType(HpcServerContextType expected)
-        {
-            Debug.Assert(expected != HpcServerContextType.Undefined);
-            if (ServerContextType == HpcServerContextType.Undefined)
-            {
-                ServerContextType = expected;
-            }
-            else if (ServerContextType == expected)
-            {
-                return;
-            }
-            else
-            {
-                throw new InvalidOperationException($"ServerContextType can only be set once. Expected: {expected}, Current: {ServerContextType}.");
             }
         }
 

@@ -535,16 +535,13 @@ namespace TelepathyCommon.HpcContext
         private const string GetNodesUri = "{0}/Nodes?api-version=2.0";
         private const string GetNodesUriWithContinueToken = "{0}/Nodes?api-version=2.0&ContinuationToken={1}";
 
-        internal FabricRestContext(EndpointsConnectionString gatewayString, HpcContextOwner hpcContextOwner)
+        internal FabricRestContext(EndpointsConnectionString gatewayString)
         {
             this.ConnectionString = gatewayString;
-            this.Owner = hpcContextOwner;
         }
 
         public EndpointsConnectionString ConnectionString { get; private set; }
-
-        public HpcContextOwner Owner { get; }
-
+        
         public IRegistry Registry
         {
             get
