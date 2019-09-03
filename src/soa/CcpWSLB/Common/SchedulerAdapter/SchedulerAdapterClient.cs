@@ -10,7 +10,7 @@
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker.BackEnd;
 
-    public class SchedulerAdapterClient : ClientBase<ISchedulerAdapter>, ISchedulerAdapter
+    public class SchedulerAdapterClient : DuplexClientBase<ISchedulerAdapter>, ISchedulerAdapter
     {
         /// <summary>
         /// Stores the unique id
@@ -21,11 +21,11 @@
 
         private DispatcherManager dispatcherManager = null;
 
-        public SchedulerAdapterClient(Binding binding, EndpointAddress address) : this(binding, address, null, null)
+        public SchedulerAdapterClient(Binding binding, EndpointAddress address, InstanceContext context) : this(binding, address, null, null, context)
         {
         }
 
-        internal SchedulerAdapterClient(Binding binding, EndpointAddress address, string[] predefinedSvcHost, DispatcherManager dispatcherManager) : base(binding, address)
+        internal SchedulerAdapterClient(Binding binding, EndpointAddress address, string[] predefinedSvcHost, DispatcherManager dispatcherManager, InstanceContext instanceContext) : base(instanceContext, binding, address)
         {
             this.predefinedSvcHost = predefinedSvcHost;
             this.dispatcherManager = dispatcherManager;
@@ -58,10 +58,6 @@
         public async Task<(JobState jobState, int autoMax, int autoMin)> RegisterJobAsync(int jobid)
         {
             // TODO: this is not proper place to put dispatcher creating logic. Remove this.
-
-            int autoMax = int.MaxValue;
-            int autoMin = 0;
-            return (Scheduler.Session.Data.JobState.Running, autoMax, autoMin);
             return await this.Channel.RegisterJobAsync(jobid);
         }
 

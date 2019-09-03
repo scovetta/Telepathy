@@ -223,6 +223,11 @@
     <Compile Include="DataService\IDataServiceAsync.cs" />
     <Compile Include="DataService\REST\DataClientController.cs" />
     <Compile Include="DataService\REST\DataServiceRestServer.cs" />
+    <Compile Include="Impls\DataMapping\AzureBatch\JobStateConverter.cs" />
+    <Compile Include="Impls\DataMapping\AzureBatch\TaskStateConverter.cs" />
+    <Compile Include="Impls\JobMonitorEntry\AzureBatch\AzureBatchJobMonitor.cs" />
+    <Compile Include="Impls\JobMonitorEntry\AzureBatch\AzureBatchJobMonitorEntry.cs" />
+    <Compile Include="Impls\JobMonitorEntry\HpcPack\HpcPackJobMonitorEntry.cs" />
     <Compile Include="Impls\SchedulerDelegations\AzureBatch\AzureBatchSchedulerDelegation.cs" />
     <Compile Include="Impls\SchedulerDelegations\Local\LocalSchedulerDelegation.cs" />
     <Compile Include="Impls\SchedulerDelegations\SchedulerDelegationCommon.cs" />
@@ -239,7 +244,6 @@
     <Compile Include="Impls\SessionLaunchers\SessionLauncherFactory.cs" />
     <Compile Include="Impls\SessionLaunchers\SessionLauncherRuntimeConfiguration.cs" />
     <Compile Include="JobInfo.cs" />
-    <Compile Include="JobMonitorEntry.cs" />
     <Compile Include="LauncherHostService.cs">
       <SubType>Component</SubType>
     </Compile>

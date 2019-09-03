@@ -3,11 +3,12 @@
 //      Copyright (c) Microsoft Corporation.  All rights reserved.
 // </copyright>
 // <summary>
-//      Entry class for job monitor
+//      Entry class for HpcPack job monitor
 // </summary>
 //------------------------------------------------------------------------------
+
 #if HPCPACK
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
+namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack
 {
     using System;
     using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
     /// <summary>
     /// Entry class for job monitor
     /// </summary>
-    internal class JobMonitorEntry : IDisposable
+    internal class HpcPackJobMonitorEntry : IDisposable
     {
         /// <summary>
         /// Stores the retry limit
@@ -149,7 +150,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         /// <param name="sessionid">indicating the session id</param>
         /// <param name="store">indicating the store object</param>
-        public JobMonitorEntry(int sessionid, IScheduler scheduler)
+        public HpcPackJobMonitorEntry(int sessionid, IScheduler scheduler)
         {
             this.sessionid = sessionid;
             this.scheduler = scheduler;
@@ -159,7 +160,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <summary>
         /// Finalizes an instance of the JobMonitorEntry class
         /// </summary>
-        ~JobMonitorEntry()
+        ~HpcPackJobMonitorEntry()
         {
             this.Dispose(false);
         }

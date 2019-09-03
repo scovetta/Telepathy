@@ -25,15 +25,15 @@ namespace Microsoft.Hpc.ServiceBroker
     /// </summary>
     [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Multiple)]
     class ServiceJobMonitor : ServiceJobMonitorBase
-    {      
+    {
         /// <summary>
         /// Initializes a new instance of the ServiceJobMonitor class
         /// </summary>
         /// <param name="sharedData">indicating the shared data</param>
         /// <param name="stateManager">indicating the state manager</param>
         public ServiceJobMonitor(SharedData sharedData, BrokerStateManager stateManager, NodeMappingData nodeMappingData, ITelepathyContext context)
-            :base(sharedData, stateManager, nodeMappingData, context)
-        {       
+            : base(sharedData, stateManager, nodeMappingData, context)
+        {
         }
 
         /// <summary>
@@ -114,7 +114,10 @@ namespace Microsoft.Hpc.ServiceBroker
 
             this.schedulerNotifyTimeoutManager.RegisterTimeout(TimeoutPeriodFromSchedulerDelegationEvent, schedulerDelegationTimeoutCallback, null);
 
-            await this.OpenPreDefinedServiceHosts();
+            if (this.sharedData.StartInfo.IsNoSession)
+            {
+                await this.OpenPreDefinedServiceHosts(); 
+            }
 
             BrokerTracing.TraceVerbose("[ServiceJobMonitor].Start: Exit");
         }

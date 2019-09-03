@@ -374,13 +374,13 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
             {
                 // Use insecure binding until unified authentication logic is implemented
                 this.delegationHost.AddServiceEndpoint(typeof(ISchedulerAdapter), BindingHelper.HardCodedUnSecureNetTcpBinding, string.Empty);
-                if (SessionLauncherRuntimeConfiguration.OpenAzureStorageListener)
-                {
-                    this.delegationHost.AddServiceEndpoint(
-                        typeof(ISchedulerAdapter),
-                        new TableTransportBinding() { ConnectionString = SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString, TargetPartitionKey = "all" },
-                        TelepathyConstants.SessionSchedulerDelegationAzureTableBindingAddress);
-                }
+                // if (SessionLauncherRuntimeConfiguration.OpenAzureStorageListener)
+                // {
+                //     this.delegationHost.AddServiceEndpoint(
+                //         typeof(ISchedulerAdapter),
+                //         new TableTransportBinding() { ConnectionString = SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString, TargetPartitionKey = "all" },
+                //         TelepathyConstants.SessionSchedulerDelegationAzureTableBindingAddress);
+                // }
             }
 
             this.delegationHost.Faulted += SchedulerDelegationHostFaultHandler;

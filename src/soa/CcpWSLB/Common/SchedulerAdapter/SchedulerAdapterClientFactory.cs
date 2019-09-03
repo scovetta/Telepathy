@@ -175,23 +175,24 @@ namespace Microsoft.Hpc.ServiceBroker.Common
                 // certThrumbprint = await this.context.GetSSLThumbprint();
                 
 
-                if (this.monitor.TransportScheme == TransportScheme.AzureStorage)
-                {
-                    this.schedulerAdapterClient = new SchedulerAdapterClient(
-                        new TableTransportBinding() { ConnectionString = this.monitor.SharedData.BrokerInfo.AzureStorageConnectionString, TargetPartitionKey = Guid.NewGuid().ToString() },
-                        new EndpointAddress(new Uri(TelepathyConstants.SessionSchedulerDelegationAzureTableBindingAddress)),
-                        this.sharedData.StartInfo.IpAddress,
-                        this.dispatcherManager);
-                }
-                else
-                {
+                // if (this.monitor.TransportScheme == TransportScheme.AzureStorage)
+                // {
+                //     this.schedulerAdapterClient = new SchedulerAdapterClient(
+                //         new TableTransportBinding() { ConnectionString = this.monitor.SharedData.BrokerInfo.AzureStorageConnectionString, TargetPartitionKey = Guid.NewGuid().ToString() },
+                //         new EndpointAddress(new Uri(TelepathyConstants.SessionSchedulerDelegationAzureTableBindingAddress)),
+                //         this.sharedData.StartInfo.IpAddress,
+                //         this.dispatcherManager);
+                // }
+                // else
+                // {
                     // this.schedulerAdapterClient = new HpcSchedulerAdapterClient(headnodeMachine, certThrumbprint, new System.ServiceModel.InstanceContext(this.monitor));
                     this.schedulerAdapterClient = new SchedulerAdapterClient(
                         BindingHelper.HardCodedUnSecureNetTcpBinding,
                         new EndpointAddress(new Uri(SoaHelper.GetSchedulerDelegationAddress(headnodeMachine))),
                         this.sharedData.StartInfo.IpAddress,
-                        this.dispatcherManager);
-                }
+                        this.dispatcherManager,
+                        new System.ServiceModel.InstanceContext(this.monitor));
+                // }
             }
         }
 

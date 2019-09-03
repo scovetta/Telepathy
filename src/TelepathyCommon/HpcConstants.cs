@@ -249,7 +249,13 @@
         /// </summary>
         public const string PackageWellknownContainer = "hpcpackages-36a153ea-f6f6-4df2-924c-4262851cf440";
 
-        public static string SingleHeadNodeToken => "SINGLE_HEAD_NODE_TOKEN"; 
+        public static string SingleHeadNodeToken => "SINGLE_HEAD_NODE_TOKEN";
+
+        //TODO: consider to get real capacity
+        public static string NodeCapacity => "1";
+
+        //TODO: investigate why set the value later
+        public static string FirstCoreIndex => "3";
 
 #endregion
 

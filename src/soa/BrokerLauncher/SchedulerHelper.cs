@@ -24,6 +24,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Hpc.ServiceBroker.Common;
     using Microsoft.Hpc.ServiceBroker.Common.SchedulerAdapter;
+    using Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor;
 
     using TelepathyCommon;
     using TelepathyCommon.HpcContext;
@@ -79,7 +80,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             this.sessionNode = new Lazy<string>(() => ResolveSessionNodeWithRetries().GetAwaiter().GetResult(), LazyThreadSafetyMode.ExecutionAndPublication);
             this.certThumbprint = new Lazy<string>(() => this.context.GetSSLThumbprint().GetAwaiter().GetResult(), LazyThreadSafetyMode.ExecutionAndPublication);
             this.schedulerClient = new Lazy<SchedulerAdapterClient>(
-                () => new SchedulerAdapterClient(BindingHelper.HardCodedUnSecureNetTcpBinding, new EndpointAddress(SoaHelper.GetSchedulerDelegationAddress(this.sessionNode.Value))),
+                () => new SchedulerAdapterClient(BindingHelper.HardCodedUnSecureNetTcpBinding, new EndpointAddress(SoaHelper.GetSchedulerDelegationAddress(this.sessionNode.Value)), new InstanceContext(new TraceOnlyServiceJobMonitor())),
                 LazyThreadSafetyMode.ExecutionAndPublication);
             this.sessionLauncherClient = new Lazy<SessionLauncherClient>(
                 () => new SessionLauncherClient(this.sessionNode.Value, this.certThumbprint.Value),
@@ -495,7 +496,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                         this.sessionNode = new Lazy<string>(() => this.ResolveSessionNodeWithRetries().GetAwaiter().GetResult(), LazyThreadSafetyMode.ExecutionAndPublication);
                         this.certThumbprint = new Lazy<string>(() => this.context.GetSSLThumbprint().GetAwaiter().GetResult(), LazyThreadSafetyMode.ExecutionAndPublication);
                         this.schedulerClient = new Lazy<SchedulerAdapterClient>(
-                            () => new SchedulerAdapterClient(BindingHelper.HardCodedUnSecureNetTcpBinding, new EndpointAddress(SoaHelper.GetSchedulerDelegationAddress(this.sessionNode.Value))),
+                            () => new SchedulerAdapterClient(BindingHelper.HardCodedUnSecureNetTcpBinding, new EndpointAddress(SoaHelper.GetSchedulerDelegationAddress(this.sessionNode.Value)), new InstanceContext(new TraceOnlyServiceJobMonitor())),
                             LazyThreadSafetyMode.ExecutionAndPublication);
                     }
                 }

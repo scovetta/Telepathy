@@ -8,8 +8,7 @@
     using Microsoft.Hpc.Scheduler.Session.Interface;
 
     // TODO: this class is subject to change
-    // [ServiceContract(CallbackContract = typeof(ISchedulerNotify), Namespace = "http://hpc.microsoft.com")]
-    [ServiceContract(Namespace = "http://hpc.microsoft.com")]
+    [ServiceContract(CallbackContract = typeof(ISchedulerNotify), Namespace = "http://hpc.microsoft.com")]
     public interface ISchedulerAdapter
     {
         [OperationContract]

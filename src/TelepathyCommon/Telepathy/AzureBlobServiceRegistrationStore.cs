@@ -105,6 +105,11 @@ namespace TelepathyCommon.Telepathy
             var blob = this.GetServiceRegistrationBlockBlobReference(serviceName, serviceVersion);
             var filePath = SoaRegistrationAuxModule.GetServiceRegistrationTempFilePath(Path.GetFileNameWithoutExtension(blob.Uri.ToString()));
             Trace.TraceInformation($"Will write Service Registration file to {filePath}");
+            //assume filename is exclusive, only need download once
+            if (File.Exists(filePath))
+            {
+                return filePath;
+            }
             if (await blob.ExistsAsync())
             {
                 await blob.DownloadToFileAsync(filePath, FileMode.Create);

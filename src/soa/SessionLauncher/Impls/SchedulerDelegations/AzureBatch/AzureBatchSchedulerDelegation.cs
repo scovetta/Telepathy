@@ -14,7 +14,6 @@
     using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch;
 
-    using JobState = Microsoft.Hpc.Scheduler.Session.Data.JobState;
 
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple, IncludeExceptionDetailInFaults = true, MaxItemsInObjectGraph = int.MaxValue)]
     internal class AzureBatchSchedulerDelegation : ISchedulerAdapter
@@ -22,9 +21,15 @@
         internal AzureBatchSchedulerDelegation(AzureBatchSessionLauncher instance)
         {
             this.sessionLauncher = instance;
+            Trace.TraceInformation("[AzureBatchSchedulerDelegation] Successfully initialized scheduler adapter.");
         }
 
         private AzureBatchSessionLauncher sessionLauncher;
+
+        /// <summary>
+        /// The dictionary to store the monitors: (JobId, JobMonitorEntry)
+        /// </summary>
+        private Dictionary<int, AzureBatchJobMonitorEntry> JobMonitors = new Dictionary<int, AzureBatchJobMonitorEntry>();
 
         public async Task<bool> UpdateBrokerInfoAsync(int sessionId, Dictionary<string, object> properties)
         {
@@ -84,10 +89,112 @@
 
         public async Task FinishJobAsync(int sessionId, string reason) => await this.sessionLauncher.TerminateV5Async(sessionId);
 
-        public async Task<(JobState jobState, int autoMax, int autoMin)> RegisterJobAsync(int jobid)
+        /// <summary>
+        /// Start to subscribe the job and task event
+        /// </summary>
+        /// <param name="jobid">indicating the job id</param>
+        /// <param name="autoMax">indicating the auto max property of the job</param>
+        /// <param name="autoMin">indicating the auto min property of the job</param>
+        public async Task<(Data.JobState jobState, int autoMax, int autoMin)> RegisterJobAsync(int jobid)
         {
-            Trace.TraceWarning($"Ignored call to {nameof(RegisterJobAsync)}");
-            return (JobState.Running, int.MaxValue, 0);
+            Trace.TraceInformation($"[AzureBatchSchedulerDelegation] Begin: RegisterJob, job id is {jobid}...");
+            //CheckBrokerAccess(jobid);
+
+            int autoMax = 0, autoMin = 0;
+            CloudJob batchJob;
+            try
+            {
+                AzureBatchJobMonitorEntry jobMonitorEntry;
+                lock (this.JobMonitors)
+                {
+                    if (!this.JobMonitors.TryGetValue(jobid, out jobMonitorEntry))
+                    {
+                        jobMonitorEntry = new AzureBatchJobMonitorEntry(jobid);
+                        jobMonitorEntry.Exit += new EventHandler(JobMonitorEntry_Exit);
+                    }
+                }
+
+                batchJob = await jobMonitorEntry.StartAsync(System.ServiceModel.OperationContext.Current);
+
+                // Bug 18050: Only add/update the instance if it succeeded to
+                // open the job.
+                lock (this.JobMonitors)
+                {
+                    this.JobMonitors[jobid] = jobMonitorEntry;
+                }
+
+                autoMin = jobMonitorEntry.MinUnits;
+                autoMax = jobMonitorEntry.MaxUnits;
+            }
+            catch (Exception e)
+            {
+                Trace.TraceError($"[AzureBatchSchedulerDelegation] Exception thrown while registering job: {jobid}", e);
+                throw;
+            }
+
+            Trace.TraceInformation($"[AzureBatchSchedulerDelegation] End: RegisterJob. Current job state = {batchJob.State}.");
+            return (await AzureBatchJobStateConverter.FromAzureBatchJobAsync(batchJob), autoMax, autoMin);
+        }
+
+        /// <summary>
+        /// Job finished event handler
+        /// </summary>
+        public static event EventHandler OnJobFinished;
+
+        /// <summary>
+        /// Job failed/canceled event handler
+        /// </summary>
+        public static event EventHandler OnJobFailedOrCanceled;
+
+        /// <summary>
+        /// Notify that a session job is finished
+        /// </summary>
+        static private void NotifyJobFinished(CloudJob schedulerJob)
+        {
+            if (OnJobFinished != null)
+            {
+                OnJobFinished(schedulerJob, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// Notify that a session job is failed or canceled
+        /// </summary>
+        static private void NotifyJobFailedOrCanceled(CloudJob schedulerJob)
+        {
+            if (OnJobFailedOrCanceled != null)
+            {
+                OnJobFailedOrCanceled(schedulerJob, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// Event triggered when job monitor entry's instance is exited
+        /// </summary>
+        /// <param name="sender">indicating the sender</param>
+        /// <param name="e">indicating the event args</param>
+        private void JobMonitorEntry_Exit(object sender, EventArgs e)
+        {
+            AzureBatchJobMonitorEntry entry = (AzureBatchJobMonitorEntry)sender;
+            Debug.Assert(entry != null, "[AzureBatchSchedulerDelegation] Sender should be an instance of JobMonitorEntry class.");
+
+            // if a JobMonitorEntry is exited because of job state changed into Finished/Canceled/Failed
+            if (entry.CurrentState == Data.JobState.Finished)
+            {
+                NotifyJobFinished(entry.CloudJob);
+            }
+            else if (entry.CurrentState == Data.JobState.Failed || entry.CurrentState == Data.JobState.Canceled)
+            {
+                NotifyJobFailedOrCanceled(entry.CloudJob);
+            }
+
+            lock (this.JobMonitors)
+            {
+                this.JobMonitors.Remove(entry.SessionId);
+            }
+
+            entry.Exit -= new EventHandler(JobMonitorEntry_Exit);
+            entry.Close();
         }
 
         public Task<int?> GetTaskErrorCode(int jobId, int globalTaskId)
