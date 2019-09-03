@@ -68,3 +68,11 @@ steps:
     ArtifactName: 'drop'
     publishLocation: 'Container'
 
+- task: AzureFileCopy@3
+  inputs:
+    SourcePath: 'artifacts'
+    azureSubscription: 'BigCompS-Int1(d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
+    Destination: 'AzureBlob'
+    storage: 'soaserviceartifactci'
+    ContainerName: 'telepathy/$(Build.BuildNumber)'
+
