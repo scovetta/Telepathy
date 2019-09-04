@@ -176,13 +176,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 {
                     if (!File.Exists(destination))
                     {
-                        using (var fs = new FileStream(destination, FileMode.Create, FileAccess.Write, FileShare.None))
-                        {
-                            using (var writer = new StreamWriter(fs))
-                            {
-                                writer.WriteAsync(filePath).GetAwaiter().GetResult();
-                            }
-                        }
+                        File.Copy(filePath, destination, true);
                     }
                 }
 

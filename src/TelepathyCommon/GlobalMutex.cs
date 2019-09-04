@@ -22,6 +22,7 @@ namespace TelepathyCommon
 
         public GlobalMutex(string mutexName, int timeOut)
         {
+            mutexName = mutexName.Replace('\\', '_');
             this.InitMutex(mutexName);
             try
             {
