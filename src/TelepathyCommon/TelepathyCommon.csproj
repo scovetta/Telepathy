@@ -67,23 +67,13 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Azure\AzureEnvironmentConstants.cs" />
-    <Compile Include="Azure\AzureMetaData.cs" />
-    <Compile Include="Azure\AzureRmVMImageReference.cs" />
-    <Compile Include="Azure\AzureEnvironment.cs" />
-    <Compile Include="Azure\LegacyAzureEndpointName.cs" />
-    <Compile Include="ClusterProperty.cs" />
     <Compile Include="CertificateValidationType.cs" />
     <Compile Include="CommonEventSource.cs" />
-    <Compile Include="DomainUtil.cs" />
     <Compile Include="EndpointsConnectionString.cs" />
     <Compile Include="ErrorCode.cs" />
-    <Compile Include="HpcContext\HpcFabricRestContext.cs" />
     <Compile Include="HpcConstants.cs" />
-    <Compile Include="ExceptionHelper.cs" />
     <Compile Include="HpcContext\TelepathyContext.cs" />
     <Compile Include="HpcContext\Extensions\RegistryExtension\RegistryExtension.cs" />
-    <Compile Include="HpcContext\Extensions\HttpClientExtension.cs" />
     <Compile Include="HpcContext\IFabricContext.cs" />
     <Compile Include="HpcContext\ITelepathyContext.cs" />
     <Compile Include="HpcContext\SoaContext\SoaContext.cs" />
@@ -93,9 +83,6 @@
     <Compile Include="IServiceRegistrationStore.cs" />
     <Compile Include="Registry\RegistryProperty.cs" />
     <Compile Include="Registry\WindowsRegistryWatcher.cs" />
-    <Compile Include="Plugin\ISqlConnectionStringProvider.cs" />
-    <Compile Include="Plugin\PluginUtil.cs" />
-    <Compile Include="Plugin\SqlConnectionStringProvider.cs" />
     <Compile Include="Service\ErrorBehaviorAttribute.cs" />
     <Compile Include="Service\ExceptionWrapper.cs" />
     <Compile Include="Service\ExceptionWrapperErrorHandler.cs" />
