@@ -10,10 +10,6 @@
     {
         Task<string> ResolveSingletonServicePrimaryAsync(string serviceName, CancellationToken token);
 
-        Task<IEnumerable<string>> ResolveStatelessServiceNodesAsync(string serviceName, CancellationToken token);
-
-        Task<IEnumerable<string>> GetNodesAsync(CancellationToken token);
-
         IRegistry Registry { get; }
 
         EndpointsConnectionString ConnectionString { get; }

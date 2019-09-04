@@ -28,7 +28,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 
     using TelepathyCommon;
     using TelepathyCommon.HpcContext;
-    using TelepathyCommon.Rest;
 
     /// <summary>
     /// Manager for all broker app domains
@@ -870,8 +869,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                     ThrowHelper.ThrowSessionFault(SOAFaultCode.ServiceRegistrationPathEnvironmentMissing, SR.ServiceRegistrationPathEnvironmentMissing);
                 }
             }
-
-            ServiceRegistrationRestClient client = null;
 #if HPCPACK
             if (!BrokerLauncherEnvironment.Standalone)
             {
@@ -879,7 +876,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             }
 #endif
 
-            return Task.FromResult(new ServiceRegistrationRepo(centrialPath, client));
+            return Task.FromResult(new ServiceRegistrationRepo(centrialPath, null));
         }
 
         /// <summary>

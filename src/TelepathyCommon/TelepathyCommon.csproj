@@ -78,9 +78,7 @@
     <Compile Include="DomainUtil.cs" />
     <Compile Include="EndpointsConnectionString.cs" />
     <Compile Include="ErrorCode.cs" />
-    <Compile Include="HpcContext\Extensions\HpcContextExtension.cs" />
     <Compile Include="HpcContext\HpcFabricRestContext.cs" />
-    <Compile Include="HpcContext\FabricRestContext.cs" />
     <Compile Include="HpcConstants.cs" />
     <Compile Include="ExceptionHelper.cs" />
     <Compile Include="HpcContext\TelepathyContext.cs" />
@@ -95,14 +93,9 @@
     <Compile Include="IServiceRegistrationStore.cs" />
     <Compile Include="Registry\RegistryProperty.cs" />
     <Compile Include="Registry\WindowsRegistryWatcher.cs" />
-    <Compile Include="Rest\HpcAzureEndpointRestClient.cs" />
-    <Compile Include="Rest\HpcBatchRestClient.cs" />
-    <Compile Include="Rest\HpcAadInfoRestClient.cs" />
     <Compile Include="Plugin\ISqlConnectionStringProvider.cs" />
     <Compile Include="Plugin\PluginUtil.cs" />
     <Compile Include="Plugin\SqlConnectionStringProvider.cs" />
-    <Compile Include="Rest\HpcRestClient.cs" />
-    <Compile Include="Rest\ServiceRegistrationRestClient.cs" />
     <Compile Include="Service\ErrorBehaviorAttribute.cs" />
     <Compile Include="Service\ExceptionWrapper.cs" />
     <Compile Include="Service\ExceptionWrapperErrorHandler.cs" />

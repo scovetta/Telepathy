@@ -23,15 +23,5 @@
 
             return thumbPrintCache;
         }
-
-        public static async Task<CertificateValidationType> GetCertificateValidationTypeAsync(this NonHARegistry registry)
-        {
-            return (CertificateValidationType)await registry.GetValueAsync<int>(
-                                                      HpcConstants.HpcFullKeyName,
-                                                      HpcConstants.CertificateValidationType,
-                                                      CancellationToken.None,
-                                                      0) // Default value is CertificateValidationType.None
-                                                  .ConfigureAwait(false);
-        }
     }
 }
