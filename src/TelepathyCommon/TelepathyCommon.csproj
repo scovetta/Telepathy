@@ -67,8 +67,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CertificateValidationType.cs" />
-    <Compile Include="CommonEventSource.cs" />
     <Compile Include="EndpointsConnectionString.cs" />
     <Compile Include="ErrorCode.cs" />
     <Compile Include="HpcConstants.cs" />
@@ -78,7 +76,6 @@
     <Compile Include="HpcContext\ITelepathyContext.cs" />
     <Compile Include="HpcContext\SoaContext\SoaContext.cs" />
     <Compile Include="HpcContext\SoaContext\SoaFabricContext.cs" />
-    <Compile Include="HpcNodeRoleAbbreviation.cs" />
     <Compile Include="InAppDomainSerializationBinder.cs" />
     <Compile Include="IServiceRegistrationStore.cs" />
     <Compile Include="Registry\RegistryProperty.cs" />
@@ -87,7 +84,6 @@
     <Compile Include="Service\ExceptionWrapper.cs" />
     <Compile Include="Service\ExceptionWrapperErrorHandler.cs" />
     <Compile Include="Service\WcfChannelModule.cs" />
-    <Compile Include="Refactor\Refactor.cs" />
     <Compile Include="Registry\HARegistry.cs" />
     <Compile Include="Registry\IRegistry.cs" />
     <Compile Include="Registry\NonHARegistry.cs" />
@@ -106,9 +102,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
-    <Compile Include="SslCertBindingHelper.cs" />
-    <Compile Include="TaskCompletionSource.cs" />
-    <Compile Include="TaskExtensions.cs" />
     <Compile Include="Telepathy\AzureBlobServiceRegistrationStore.cs" />
     <Compile Include="Telepathy\ServiceRegistrationInfo.cs" />
     <Compile Include="Telepathy\ServiceRegistrationStore.cs" />

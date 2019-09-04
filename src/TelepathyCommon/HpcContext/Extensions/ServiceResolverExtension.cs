@@ -12,13 +12,7 @@ namespace TelepathyCommon.HpcContext.Extensions
     /// </summary>
     public static class ServiceResolverExtension
     {
-        #region Service Uris
-
         private static readonly string SessionLauncherStatefulService = "SessionLauncherStatefulService";
-
-        private static readonly string FrontendStatelessService = "FrontendStatelessService";
-
-        #endregion
 
         // We only return IpAddressOrFQDN for the service nodes which is the high frequency usage.
         // For additional properties of the Node, use the methods in Common region.

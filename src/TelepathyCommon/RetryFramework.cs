@@ -6,15 +6,16 @@
 // Security review: nzeng 01-11-06
 //------------------------------------------------------------------------------
 
-using System;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Threading.Tasks;
-using TelepathyCommon.HpcContext;
-
 namespace TelepathyCommon
 {
+    using System;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    using TelepathyCommon.HpcContext;
+
     public class RetryManager
     {
         public const int InfiniteRetries = -1;

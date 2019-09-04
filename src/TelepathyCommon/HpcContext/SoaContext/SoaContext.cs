@@ -1,8 +1,9 @@
-﻿using System.Threading;
-using TelepathyCommon.Registry;
-
-namespace TelepathyCommon.HpcContext.SoaContext
+﻿namespace TelepathyCommon.HpcContext.SoaContext
 {
+    using System.Threading;
+
+    using TelepathyCommon.Registry;
+
     // TODO: Remove me
     public class SoaContext : ITelepathyContext
     {

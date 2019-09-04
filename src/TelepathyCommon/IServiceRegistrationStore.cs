@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace TelepathyCommon
+﻿namespace TelepathyCommon
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
     public interface IServiceRegistrationStore
     {
         Task<string> GetMd5Async(string serviceName, Version serviceVersion);
