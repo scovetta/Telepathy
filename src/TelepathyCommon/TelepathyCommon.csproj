@@ -84,12 +84,9 @@
     <Compile Include="Service\ExceptionWrapper.cs" />
     <Compile Include="Service\ExceptionWrapperErrorHandler.cs" />
     <Compile Include="Service\WcfChannelModule.cs" />
-    <Compile Include="Registry\HARegistry.cs" />
     <Compile Include="Registry\IRegistry.cs" />
     <Compile Include="Registry\NonHARegistry.cs" />
-    <Compile Include="Registry\RegistryMode.cs" />
     <Compile Include="Registry\RegistryValueChangedArgs.cs" />
-    <Compile Include="Registry\ReliableProperty.cs" />
     <Compile Include="RetryFramework.cs" />
     <Compile Include="Registry\WindowsRegistryBase.cs" />
     <Compile Include="HpcContext\Extensions\ServiceResolverExtension.cs" />
