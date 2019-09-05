@@ -18,7 +18,7 @@
         {
             if (string.IsNullOrEmpty(thumbPrintCache))
             {
-                thumbPrintCache = await registry.GetValueAsync<string>(HpcConstants.HpcFullKeyName, HpcConstants.SslThumbprint, cancellationToken, null).ConfigureAwait(false);
+                thumbPrintCache = await registry.GetValueAsync<string>(TelepathyConstants.HpcFullKeyName, TelepathyConstants.SslThumbprint, cancellationToken, null).ConfigureAwait(false);
             }
 
             return thumbPrintCache;

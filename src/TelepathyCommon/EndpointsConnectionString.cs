@@ -28,7 +28,7 @@ namespace TelepathyCommon
         public static EndpointsConnectionString LoadFromEnvVarsOrWindowsRegistry()
         {
             EndpointsConnectionString endpointsConnectionString;
-            string connectionString = Environment.GetEnvironmentVariable(HpcConstants.ConnectionStringEnvironmentVariableName);
+            string connectionString = Environment.GetEnvironmentVariable(TelepathyConstants.ConnectionStringEnvironmentVariableName);
 
             if (!string.IsNullOrEmpty(connectionString))
             {
@@ -38,7 +38,7 @@ namespace TelepathyCommon
                 }
             }
 
-            var schedulerVar = Environment.GetEnvironmentVariable(HpcConstants.SchedulerEnvironmentVariableName);
+            var schedulerVar = Environment.GetEnvironmentVariable(TelepathyConstants.SchedulerEnvironmentVariableName);
 
             if (!string.IsNullOrEmpty(schedulerVar))
             {
@@ -52,7 +52,7 @@ namespace TelepathyCommon
 
             using (RegistryKey regKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(CommonRegistryPath))
             {
-                registryValue = regKey?.GetValue(HpcConstants.ClusterConnectionStringRegVal) as string;
+                registryValue = regKey?.GetValue(TelepathyConstants.ClusterConnectionStringRegVal) as string;
             }
 
             if (!string.IsNullOrEmpty(registryValue) && TryParseConnectionString(registryValue, out endpointsConnectionString))
@@ -63,8 +63,8 @@ namespace TelepathyCommon
             {
                 throw new InvalidOperationException(
                     $@"None of the following values contains a valid cluster connection string. 
-Environment variable {HpcConstants.ConnectionStringEnvironmentVariableName}={connectionString},{HpcConstants.SchedulerEnvironmentVariableName}={schedulerVar},
-RegistryKey {CommonRegistryPath}\{HpcConstants.ClusterConnectionStringRegVal}={registryValue}");
+Environment variable {TelepathyConstants.ConnectionStringEnvironmentVariableName}={connectionString},{TelepathyConstants.SchedulerEnvironmentVariableName}={schedulerVar},
+RegistryKey {CommonRegistryPath}\{TelepathyConstants.ClusterConnectionStringRegVal}={registryValue}");
             }
         }
 

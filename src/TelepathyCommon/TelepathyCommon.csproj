@@ -69,7 +69,7 @@
   <ItemGroup>
     <Compile Include="EndpointsConnectionString.cs" />
     <Compile Include="ErrorCode.cs" />
-    <Compile Include="HpcConstants.cs" />
+    <Compile Include="TelepathyConstants.cs" />
     <Compile Include="HpcContext\TelepathyContext.cs" />
     <Compile Include="HpcContext\Extensions\RegistryExtension\RegistryExtension.cs" />
     <Compile Include="HpcContext\IFabricContext.cs" />
@@ -80,18 +80,18 @@
     <Compile Include="IServiceRegistrationStore.cs" />
     <Compile Include="Registry\RegistryProperty.cs" />
     <Compile Include="Registry\WindowsRegistryWatcher.cs" />
-    <Compile Include="Service\ErrorBehaviorAttribute.cs" />
-    <Compile Include="Service\ExceptionWrapper.cs" />
-    <Compile Include="Service\ExceptionWrapperErrorHandler.cs" />
-    <Compile Include="Service\WcfChannelModule.cs" />
+    <Compile Include="WCF\ErrorBehaviorAttribute.cs" />
+    <Compile Include="WCF\ExceptionWrapper.cs" />
+    <Compile Include="WCF\ExceptionWrapperErrorHandler.cs" />
+    <Compile Include="WCF\WcfChannelModule.cs" />
     <Compile Include="Registry\IRegistry.cs" />
     <Compile Include="Registry\NonHARegistry.cs" />
     <Compile Include="Registry\RegistryValueChangedArgs.cs" />
     <Compile Include="RetryFramework.cs" />
     <Compile Include="Registry\WindowsRegistryBase.cs" />
     <Compile Include="HpcContext\Extensions\ServiceResolverExtension.cs" />
-    <Compile Include="Service\WcfReliableClient.cs" />
-    <Compile Include="Service\WcfServiceConstants.cs" />
+    <Compile Include="WCF\WcfReliableClient.cs" />
+    <Compile Include="WCF\WcfServiceConstants.cs" />
     <Compile Include="GlobalMutex.cs" />
     <Compile Include="SoaRegistrationAuxModule.cs" />
     <Compile Include="SR.Designer.cs">

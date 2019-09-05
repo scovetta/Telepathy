@@ -84,7 +84,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             if (string.IsNullOrEmpty(headnode))
             {
                 // retrieve the head node name from the %ccp_scheduler% environment if it is empty
-                headnode = Environment.GetEnvironmentVariable(HpcConstants.SchedulerEnvironmentVariableName);
+                headnode = Environment.GetEnvironmentVariable(TelepathyCommon.TelepathyConstants.SchedulerEnvironmentVariableName);
                 if (string.IsNullOrEmpty(headnode))
                 {
                     throw new ArgumentNullException(SR.HeadnodeCantBeNull);

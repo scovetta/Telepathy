@@ -68,11 +68,6 @@
                 AzureBatchConfiguration.SoaBrokerStorageConnectionString;
         }
 
-        public override async Task<SessionAllocateInfoContract> AllocateDurableV5Async(SessionStartInfoContract info, string endpointPrefix)
-        {
-            return await base.AllocateDurableV5Async(info, endpointPrefix);
-        }
-
         public override async Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, int sessionId, bool useAad)
         {
             SessionInfoContract sessionInfo = null;
@@ -466,7 +461,7 @@
                             BrokerSettingsConstants.TransportScheme,
                             startInfo.TransportScheme);
 
-                        env.Add(new EnvironmentSetting(HpcConstants.SchedulerEnvironmentVariableName, Dns.GetHostName()));
+                        env.Add(new EnvironmentSetting(TelepathyConstants.SchedulerEnvironmentVariableName, Dns.GetHostName()));
                         env.Add(new EnvironmentSetting(Constant.OverrideProcNumEnvVar, "TRUE"));
                         return env;
                     }

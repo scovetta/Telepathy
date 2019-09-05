@@ -13,8 +13,6 @@ namespace TelepathyCommon.HpcContext.SoaContext
 
         private const string LocalHost = "localhost";
 
-        private static readonly string[] LocalHostArr = new[] { LocalHost };
-
         public SoaFabricContext(string connectionString) : this(EndpointsConnectionString.ParseConnectionString(connectionString))
         {
         }
@@ -32,16 +30,6 @@ namespace TelepathyCommon.HpcContext.SoaContext
         public async Task<string> ResolveSingletonServicePrimaryAsync(string serviceName, CancellationToken token)
         {
             return this.ConnectionString.ConnectionString;
-        }
-
-        public async Task<IEnumerable<string>> ResolveStatelessServiceNodesAsync(string serviceName, CancellationToken token)
-        {
-            return new[] { this.ConnectionString.ConnectionString };
-        }
-
-        public async Task<IEnumerable<string>> GetNodesAsync(CancellationToken token)
-        {
-            throw new NotImplementedException();
         }
 
         public IRegistry Registry => throw new NotImplementedException();

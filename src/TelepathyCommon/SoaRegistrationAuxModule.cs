@@ -156,7 +156,7 @@ namespace TelepathyCommon
 
         public static string GetRegistrationFileName(string serviceName, Version serviceVersion) => GetRegistrationName(serviceName, serviceVersion) + ConfigExtensionName;
 
-        public static bool IsRegistrationStoreToken(string str) => string.Equals(str, HpcConstants.RegistrationStoreToken, StringComparison.OrdinalIgnoreCase);
+        public static bool IsRegistrationStoreToken(string str) => string.Equals(str, TelepathyConstants.RegistrationStoreToken, StringComparison.OrdinalIgnoreCase);
 
         public static string CalculateMd5Hash(string input)
         {

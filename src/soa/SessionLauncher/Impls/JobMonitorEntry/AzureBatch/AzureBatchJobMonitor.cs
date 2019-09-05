@@ -14,6 +14,8 @@ using TelepathyCommon;
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch
 {
+    using TelepathyConstants = TelepathyCommon.TelepathyConstants;
+
     internal class AzureBatchJobMonitor : IDisposable
     {
         /// <summary>
@@ -202,8 +204,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                         info.State = TaskStateConverter.FromAzureBatchTaskState(task.State.Value);
                         info.MachineName = nodes.First(n => n.AffinityId == task.ComputeNodeInformation.AffinityId)
                             .IPAddress;
-                        info.Capacity = Int32.Parse(HpcConstants.NodeCapacity);
-                        info.FirstCoreIndex = Int32.Parse(HpcConstants.FirstCoreIndex);
+                        info.Capacity = Int32.Parse(TelepathyConstants.NodeCapacity);
+                        info.FirstCoreIndex = Int32.Parse(TelepathyConstants.FirstCoreIndex);
                         results.Add(info);
                     }
                     else if (state == TaskState.Completed)

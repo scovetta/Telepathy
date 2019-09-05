@@ -139,7 +139,6 @@
     <Compile Include="BrokerClient.cs" />
     <Compile Include="BrokerClientBase.cs" />
     <Compile Include="ChannelTypes.cs" />
-    <Compile Include="Constants.cs" />
     <Compile Include="CredExtension.cs" />
     <Compile Include="Internal\DummyResourceProvider.cs" />
     <Compile Include="Internal\AsyncResponseCallback.cs" />

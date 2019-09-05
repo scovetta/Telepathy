@@ -17,6 +17,6 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <returns></returns>
         public static ITelepathyContext GetOrAddWinServiceHpcContextFromEnv()
-            => TelepathyContext.GetOrAdd(Environment.GetEnvironmentVariable(HpcConstants.SchedulerEnvironmentVariableName), CancellationToken.None, true);
+            => TelepathyContext.GetOrAdd(Environment.GetEnvironmentVariable(TelepathyCommon.TelepathyConstants.SchedulerEnvironmentVariableName), CancellationToken.None, true);
     }
 }
