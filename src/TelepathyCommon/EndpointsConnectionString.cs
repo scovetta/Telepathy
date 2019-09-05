@@ -112,23 +112,5 @@ RegistryKey {CommonRegistryPath}\{HpcConstants.ClusterConnectionStringRegVal}={r
         public string ConnectionString { get; private set; }
 
         public bool IsGateway => !string.IsNullOrEmpty(this.ConnectionString);
-
-        public IEnumerable<string> EndPoints
-        {
-            get
-            {
-                var nodes = this.ConnectionString?.Split(Delimiter.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-                if (nodes == null || nodes.Length == 0)
-                {
-                    return null;
-                }
-                else
-                {
-                    var localThis = this;
-                    return nodes.Select(s => $"{s}:{(localThis.IsGateway ? HpcConstants.HpcNamingServicePort : HpcConstants.FabricClientConnectionPort)}");
-                }
-            }
-        }
     }
 }

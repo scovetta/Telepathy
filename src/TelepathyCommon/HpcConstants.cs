@@ -8,13 +8,6 @@
     {
         internal const int DefaultHttpsPort = 443;
 
-        /// <summary>
-        /// The default client connection port, in single node setup, this port should be incremented by 2 for logical node, 10100, 10101 ...
-        /// </summary>
-        public const int FabricClientConnectionPort = 10100;
-
-        public static int HpcNamingServicePort => DefaultHttpsPort;
-
         public const string HpcKeyName = @"SOFTWARE\Microsoft\HPC";
 
         public const string HpcFullKeyName = @"HKEY_LOCAL_MACHINE\" + HpcKeyName;
