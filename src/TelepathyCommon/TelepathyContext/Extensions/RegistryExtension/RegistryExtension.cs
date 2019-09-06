@@ -14,11 +14,11 @@
             return await context.Registry.GetSSLThumbprint(context.CancellationToken).ConfigureAwait(false);
         }
 
-        public static async Task<string> GetSSLThumbprint(this IRegistry registry, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<string> GetSSLThumbprint(this IRegistry registry, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(thumbPrintCache))
             {
-                thumbPrintCache = await registry.GetValueAsync<string>(TelepathyConstants.HpcFullKeyName, TelepathyConstants.SslThumbprint, cancellationToken, null).ConfigureAwait(false);
+                thumbPrintCache = await registry.GetValueAsync<string>(TelepathyConstants.HpcFullKeyName, TelepathyConstants.SslThumbprint, cancellationToken).ConfigureAwait(false);
             }
 
             return thumbPrintCache;

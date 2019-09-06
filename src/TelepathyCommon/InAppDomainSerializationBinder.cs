@@ -2,7 +2,6 @@
 {
     using System;
     using System.Diagnostics;
-    using System.Reflection;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters;
     using System.Runtime.Serialization.Formatters.Binary;
@@ -14,9 +13,9 @@
             Type ttd = null;
             try
             {
-                string toassname = assemblyName.Split(',')[0];
-                Assembly[] asmblies = AppDomain.CurrentDomain.GetAssemblies();
-                foreach (Assembly ass in asmblies)
+                var toassname = assemblyName.Split(',')[0];
+                var asmblies = AppDomain.CurrentDomain.GetAssemblies();
+                foreach (var ass in asmblies)
                 {
                     if (ass.FullName.Split(',')[0] == toassname)
                     {
@@ -25,10 +24,11 @@
                     }
                 }
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Trace.TraceError(e.ToString());
             }
+
             return ttd;
         }
     }

@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Win32;
-
-namespace TelepathyCommon.Registry
+﻿namespace TelepathyCommon.Registry
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    using Microsoft.Win32;
+
     public abstract class WindowsRegistryBase : RegistryProperty, IDisposable
     {
-        private List<IDisposable> watchers = new List<IDisposable>();
-        protected abstract RegistryKey CreateOrOpenSubKey(string key);
-
         private static readonly Task CompletedTask =
 #if net40
             TaskEx.FromResult(0);
@@ -18,12 +16,69 @@ namespace TelepathyCommon.Registry
             Task.FromResult(0);
 #endif
 
-        public override Task<T> GetValueAsync<T>(string key, string name, CancellationToken token, T defaultValue = default(T))
+        private readonly List<IDisposable> watchers = new List<IDisposable>();
+
+        private bool disposedValue; // To detect redundant calls
+
+        public override Task DeleteValueAsync(string key, string name, CancellationToken token)
+        {
+            using (var regKey = this.CreateOrOpenSubKey(key))
+            {
+                if (regKey == null)
+                {
+                    // error handling
+                    throw new InvalidOperationException(string.Format("The registry key {0} under {1} is null", name, key));
+                }
+
+                regKey.DeleteValue(name);
+            }
+
+            return CompletedTask;
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+
+            // Suppress finalization of this disposed instance.
+            GC.SuppressFinalize(this);
+        }
+
+        public RegistryKey GetRootKey(string rootKeyName)
+        {
+            switch (rootKeyName)
+            {
+                case "HKEY_CURRENT_USER":
+                    return Registry.CurrentUser;
+
+                case "HKEY_LOCAL_MACHINE":
+                    return Registry.LocalMachine;
+
+                case "HKEY_CLASSES_ROOT":
+                    return Registry.ClassesRoot;
+
+                case "HKEY_USERS":
+                    return Registry.Users;
+
+                case "HKEY_PERFORMANCE_DATA":
+                    return Registry.PerformanceData;
+
+                case "HKEY_CURRENT_CONFIG":
+                    return Registry.CurrentConfig;
+
+                case "HKEY_DYN_DATA":
+                    return Registry.CurrentConfig;
+            }
+
+            return null;
+        }
+
+        public override Task<T> GetValueAsync<T>(string key, string name, CancellationToken token, T defaultValue = default)
         {
             T res;
             if (typeof(T) == typeof(Guid))
             {
-                var guidStr = (string)Microsoft.Win32.Registry.GetValue(key, name, string.Empty);
+                var guidStr = (string)Registry.GetValue(key, name, string.Empty);
                 if (string.IsNullOrEmpty(guidStr))
                 {
                     res = (T)(object)Guid.Empty;
@@ -35,7 +90,7 @@ namespace TelepathyCommon.Registry
             }
             else
             {
-                var value = Microsoft.Win32.Registry.GetValue(key, name, defaultValue);
+                var value = Registry.GetValue(key, name, defaultValue);
                 if (value == null)
                 {
                     res = defaultValue;
@@ -53,45 +108,9 @@ namespace TelepathyCommon.Registry
 #endif
         }
 
-        public override Task SetValueAsync<T>(string key, string name, T value, CancellationToken token)
-        {
-            using (var regKey = this.CreateOrOpenSubKey(key))
-            {
-                if (regKey == null)
-                {
-                    //error handling
-                    throw new InvalidOperationException(string.Format("The registry key {0} under {1} is null", name, key));
-                }
-                else
-                {
-                    regKey.SetValue(name, value);
-                }
-            }
-
-            return CompletedTask;
-        }
-
-        public override Task DeleteValueAsync(string key, string name, CancellationToken token)
-        {
-            using (var regKey = this.CreateOrOpenSubKey(key))
-            {
-                if (regKey == null)
-                {
-                    //error handling
-                    throw new InvalidOperationException(string.Format("The registry key {0} under {1} is null", name, key));
-                }
-                else
-                {
-                    regKey.DeleteValue(name);
-                }
-            }
-
-            return CompletedTask;
-        }
-
         /// <summary>
-        /// Register a callback when the value identified by the key and name is created, changed or deleted.
-        /// The first time you register, you will get a value created event always.
+        ///     Register a callback when the value identified by the key and name is created, changed or deleted.
+        ///     The first time you register, you will get a value created event always.
         /// </summary>
         /// <typeparam name="T">The value type</typeparam>
         /// <param name="key">the key</param>
@@ -99,51 +118,39 @@ namespace TelepathyCommon.Registry
         /// <param name="checkPeriod">the check period.</param>
         /// <param name="callback">the callback.</param>
         /// <param name="token">cancel this token to cancel the registration.</param>
-        /// <returns>The task which is running during the whole monitoring process. Exceptions happened during this process is carried back by the task.</returns>
+        /// <returns>
+        ///     The task which is running during the whole monitoring process. Exceptions happened during this process is
+        ///     carried back by the task.
+        /// </returns>
         public override Task MonitorRegistryKeyAsync<T>(string key, string name, TimeSpan checkPeriod, EventHandler<RegistryValueChangedArgs<T>> callback, CancellationToken token)
         {
-            WindowsRegistryWatcher<T> watcher = new WindowsRegistryWatcher<T>(key, name);
+            var watcher = new WindowsRegistryWatcher<T>(key, name);
             watcher.InstanceUpdated += callback;
-            watchers.Add(watcher);
+            this.watchers.Add(watcher);
             return CompletedTask;
         }
-        
-        public RegistryKey GetRootKey(string rootKeyName)
+
+        public override Task SetValueAsync<T>(string key, string name, T value, CancellationToken token)
         {
-            switch (rootKeyName)
+            using (var regKey = this.CreateOrOpenSubKey(key))
             {
-                case "HKEY_CURRENT_USER":
-                    return Microsoft.Win32.Registry.CurrentUser;
+                if (regKey == null)
+                {
+                    // error handling
+                    throw new InvalidOperationException(string.Format("The registry key {0} under {1} is null", name, key));
+                }
 
-                case "HKEY_LOCAL_MACHINE":
-                    return Microsoft.Win32.Registry.LocalMachine;
-
-                case "HKEY_CLASSES_ROOT":
-                    return Microsoft.Win32.Registry.ClassesRoot;
-
-                case "HKEY_USERS":
-                    return Microsoft.Win32.Registry.Users;
-
-                case "HKEY_PERFORMANCE_DATA":
-                    return Microsoft.Win32.Registry.PerformanceData;
-
-                case "HKEY_CURRENT_CONFIG":
-                    return Microsoft.Win32.Registry.CurrentConfig;
-
-                case "HKEY_DYN_DATA":
-                    return Microsoft.Win32.Registry.CurrentConfig;
+                regKey.SetValue(name, value);
             }
 
-            return null;
+            return CompletedTask;
         }
 
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
+        protected abstract RegistryKey CreateOrOpenSubKey(string key);
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
@@ -153,17 +160,8 @@ namespace TelepathyCommon.Registry
                     }
                 }
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
-
-        public void Dispose()
-        {
-            Dispose(true);
-
-            // Suppress finalization of this disposed instance.
-            GC.SuppressFinalize(this);
-        }
-        #endregion
     }
 }

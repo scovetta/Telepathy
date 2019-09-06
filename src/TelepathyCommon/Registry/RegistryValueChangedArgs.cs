@@ -1,16 +1,9 @@
-﻿using System;
-
-namespace TelepathyCommon.Registry
+﻿namespace TelepathyCommon.Registry
 {
+    using System;
+
     public class RegistryValueChangedArgs<T> : EventArgs
     {
-        public enum ChangeType
-        {
-            Created = 0,
-            Modified = 1,
-            Deleted = 2,
-        }
-
         public RegistryValueChangedArgs(ChangeType type, T oldValue, T newValue)
         {
             this.ValueChangeType = type;
@@ -18,13 +11,19 @@ namespace TelepathyCommon.Registry
             this.NewValue = newValue;
         }
 
-        public ChangeType ValueChangeType
+        public enum ChangeType
         {
-            get; private set;
+            Created = 0,
+
+            Modified = 1,
+
+            Deleted = 2
         }
 
-        public T OldValue { get; private set; }
+        public T NewValue { get; }
 
-        public T NewValue { get; private set; }
+        public T OldValue { get; }
+
+        public ChangeType ValueChangeType { get; }
     }
 }

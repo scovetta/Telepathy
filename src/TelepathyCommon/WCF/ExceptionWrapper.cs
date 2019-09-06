@@ -1,36 +1,35 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Security;
-
-namespace TelepathyCommon.Service
+﻿namespace TelepathyCommon.Service
 {
+    using System;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Runtime.Serialization;
+    using System.Runtime.Serialization.Formatters.Binary;
+    using System.Security;
+
     [Serializable]
     public class ExceptionWrapper
     {
-        private readonly string message = string.Empty;
         private readonly byte[] exceptions;
+
+        private readonly string message = string.Empty;
 
         public ExceptionWrapper(Exception e)
         {
             try
             {
-                BinaryFormatter bf = new BinaryFormatter();
-                using (MemoryStream ms = new MemoryStream())
+                var bf = new BinaryFormatter();
+                using (var ms = new MemoryStream())
                 {
                     bf.Serialize(ms, e);
                     ms.Seek(0, 0);
-                    exceptions = ms.GetBuffer();
+                    this.exceptions = ms.GetBuffer();
                 }
             }
-            catch (Exception ex) when (ex is ArgumentNullException ||
-                                        ex is SerializationException ||
-                                        ex is SecurityException)
+            catch (Exception ex) when (ex is ArgumentNullException || ex is SerializationException || ex is SecurityException)
             {
                 Trace.TraceError("Exception during serialize: {0}", ex);
-                message = ex.ToString();
+                this.message = ex.ToString();
             }
         }
 
@@ -41,8 +40,8 @@ namespace TelepathyCommon.Service
                 return new Exception(this.message);
             }
 
-            BinaryFormatter bf = new BinaryFormatter();
-            using (MemoryStream ms = new MemoryStream(exceptions))
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream(this.exceptions))
             {
                 return (Exception)bf.Deserialize(ms);
             }

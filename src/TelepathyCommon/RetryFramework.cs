@@ -14,29 +14,25 @@ namespace TelepathyCommon
     using System.Threading;
     using System.Threading.Tasks;
 
-    using TelepathyCommon.HpcContext;
-
     public class RetryManager
     {
         public const int InfiniteRetries = -1;
 
-        private RetryWaitTimer waitTimer;
+        private readonly RetryWaitTimer waitTimer;
+
+        private int currentWaitTime;
 
         private int maxRetries;
 
         private int totalTimeLimit = Timeout.Infinite;
 
-        private int retryCount = 0;
-
-        private int totalWaitTime = 0;
-
-        private int currentWaitTime = 0;
-
-        public RetryManager(RetryWaitTimer waitTimer) : this(waitTimer, InfiniteRetries)
+        public RetryManager(RetryWaitTimer waitTimer)
+            : this(waitTimer, InfiniteRetries)
         {
         }
 
-        public RetryManager(RetryWaitTimer waitTimer, int maxRetries) : this(waitTimer, maxRetries, Timeout.Infinite)
+        public RetryManager(RetryWaitTimer waitTimer, int maxRetries)
+            : this(waitTimer, maxRetries, Timeout.Infinite)
         {
         }
 
@@ -54,88 +50,36 @@ namespace TelepathyCommon
         }
 
         /// <summary>
-        /// Gets the number of retries attempted thus far
+        ///     Get the total spent waiting between retries
         /// </summary>
-        public int RetryCount => this.retryCount;
+        public int ElaspsedWaitTime { get; private set; }
 
         /// <summary>
-        /// Get the total spent waiting between retries
+        ///     Returns true if there are more retries left
         /// </summary>
-        public int ElaspsedWaitTime => this.totalWaitTime;
+        public bool HasAttemptsLeft =>
+            (this.maxRetries == InfiniteRetries || this.RetryCount < this.maxRetries) && (this.totalTimeLimit == Timeout.Infinite || this.ElaspsedWaitTime < this.totalTimeLimit);
 
         /// <summary>
-        /// Gets or sets the maximum number of retries
+        ///     Gets or sets the maximum number of retries
         /// </summary>
         public int MaxRetryCount
         {
-            get
-            {
-                return this.maxRetries;
-            }
-            set
-            {
-                this.SetMaxRetries(value);
-            }
+            get => this.maxRetries;
+            set => this.SetMaxRetries(value);
         }
 
         /// <summary>
-        /// Gets or sets the total amount of time that may be spend waiting for retries.        
-        /// </summary>
-        public int TotalTimeLimit
-        {
-            get
-            {
-                return this.totalTimeLimit;
-            }
-            set
-            {
-                this.SetTotalTimeLimit(value);
-            }
-        }
-
-        void SetMaxRetries(int n)
-        {
-            if (n < 0 && n != InfiniteRetries)
-            {
-                throw new ArgumentException("The maximum number of retries must be no less than zero, or InfiniteRetries");
-            }
-
-            this.maxRetries = n;
-        }
-
-        void SetTotalTimeLimit(int t)
-        {
-            if (t <= 0 && t != Timeout.Infinite)
-            {
-                throw new ArgumentException("The specified time must be greater than zero, or Timeout.Infinite");
-            }
-
-            this.totalTimeLimit = t;
-        }
-
-        /// <summary>
-        /// Returns true if there are more retries left
-        /// </summary>
-        public bool HasAttemptsLeft
-        {
-            get
-            {
-                return (this.maxRetries == InfiniteRetries || this.retryCount < this.maxRetries)
-                       && (this.totalTimeLimit == Timeout.Infinite || this.totalWaitTime < this.totalTimeLimit);
-            }
-        }
-
-        /// <summary>
-        /// Get the next wait time
+        ///     Get the next wait time
         /// </summary>
         public int NextWaitTime
         {
             get
             {
-                int waitTime = this.waitTimer.GetNextWaitTime(this.retryCount, this.currentWaitTime);
-                if (this.totalTimeLimit != Timeout.Infinite && (this.totalWaitTime + waitTime > this.totalTimeLimit))
+                var waitTime = this.waitTimer.GetNextWaitTime(this.RetryCount, this.currentWaitTime);
+                if (this.totalTimeLimit != Timeout.Infinite && this.ElaspsedWaitTime + waitTime > this.totalTimeLimit)
                 {
-                    waitTime = this.totalTimeLimit - this.totalWaitTime;
+                    waitTime = this.totalTimeLimit - this.ElaspsedWaitTime;
                 }
 
                 return waitTime;
@@ -143,33 +87,44 @@ namespace TelepathyCommon
         }
 
         /// <summary>
-        /// Increment the retry count and advance the total wait time without actually waiting
+        ///     Gets the number of retries attempted thus far
         /// </summary>
-        public void SimulateNextAttempt()
+        public int RetryCount { get; private set; }
+
+        /// <summary>
+        ///     Gets or sets the total amount of time that may be spend waiting for retries.
+        /// </summary>
+        public int TotalTimeLimit
         {
-            this.WaitForNextAttempt(false, CancellationToken.None).GetAwaiter().GetResult();
+            get => this.totalTimeLimit;
+            set => this.SetTotalTimeLimit(value);
+        }
+
+        public static async Task RetryOnceAsync(Action action, TimeSpan waitSpan, Func<Exception, bool> retryPredicate)
+        {
+            var firstTry = true;
+            while (true)
+            {
+                try
+                {
+                    action();
+                    return;
+                }
+                catch (Exception ex) when (retryPredicate(ex) && firstTry)
+                {
+                    firstTry = false;
+#if net40
+                    await TaskEx.Delay(waitSpan).ConfigureAwait(false);
+#else
+                    await Task.Delay(waitSpan).ConfigureAwait(false);
+#endif
+                }
+            }
         }
 
         /// <summary>
-        /// Wait until the next retry by making the current thread sleep for the appropriate amount of time.
-        /// May return immediately if the wait is zero.
-        /// </summary>
-        public void WaitForNextAttempt()
-        {
-            this.WaitForNextAttempt(true, CancellationToken.None).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// Increment the retry count and advance the total wait time without actually waiting
-        /// </summary>
-        public async Task AwaitSimulateNextAttempt()
-        {
-            await this.WaitForNextAttempt(false, CancellationToken.None).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Wait until the next retry by making the current thread sleep for the appropriate amount of time.
-        /// May return immediately if the wait is zero.
+        ///     Wait until the next retry by making the current thread sleep for the appropriate amount of time.
+        ///     May return immediately if the wait is zero.
         /// </summary>
         public async Task AwaitForNextAttempt()
         {
@@ -179,49 +134,20 @@ namespace TelepathyCommon
         public async Task AwaitForNextAttempt(CancellationToken cancellationToken)
         {
             await this.WaitForNextAttempt(true, cancellationToken).ConfigureAwait(false);
-
-        }
-
-        async Task WaitForNextAttempt(bool doSleep, CancellationToken cancellationToken)
-        {
-            if (!this.HasAttemptsLeft)
-            {
-                throw new InvalidOperationException("There are no more retry attempts remaining");
-            }
-
-            this.currentWaitTime = this.NextWaitTime;
-            this.retryCount++;
-
-            Debug.Assert(this.currentWaitTime >= 0);
-            if (this.currentWaitTime > 0)
-            {
-                if (doSleep)
-                {
-#if net40
-                    await TaskEx.Delay(this.currentWaitTime, cancellationToken);
-#else
-                    await Task.Delay(this.currentWaitTime, cancellationToken).ConfigureAwait(false);
-#endif
-                }
-
-                this.totalWaitTime += this.currentWaitTime;
-            }
         }
 
         /// <summary>
-        /// Resets the retry manager's retry count
+        ///     Increment the retry count and advance the total wait time without actually waiting
         /// </summary>
-        public void Reset()
+        public async Task AwaitSimulateNextAttempt()
         {
-            this.retryCount = 0;
-            this.totalWaitTime = 0;
-            this.currentWaitTime = 0;
+            await this.WaitForNextAttempt(false, CancellationToken.None).ConfigureAwait(false);
         }
 
         public async Task<T> InvokeWithRetryAsync<T>(
             Func<Task<T>> function,
             Func<Exception, bool> exPredicate,
-            CancellationToken cancellationToken = default(CancellationToken),
+            CancellationToken cancellationToken = default,
             [CallerMemberName] string menberName = "",
             [CallerFilePath] string sourceFilePath = "",
             [CallerLineNumber] int sourceLineNumber = 0)
@@ -245,7 +171,7 @@ namespace TelepathyCommon
                             sourceFilePath,
                             sourceLineNumber);
 #if DEBUG
-                        Trace.TraceInformation("[RetryManager] Exception: {0}", ex.ToString());
+                        Trace.TraceInformation("[RetryManager] Exception: {0}", ex);
 #endif
                         await this.AwaitForNextAttempt(cancellationToken).ConfigureAwait(false);
                     }
@@ -257,7 +183,7 @@ namespace TelepathyCommon
                             menberName,
                             sourceFilePath,
                             sourceLineNumber,
-                            ex.ToString());
+                            ex);
 
                         throw;
                     }
@@ -268,50 +194,100 @@ namespace TelepathyCommon
         public async Task InvokeWithRetryAsync(
             Func<Task> action,
             Func<Exception, bool> exPredicate,
-            CancellationToken cancellationToken = default(CancellationToken),
+            CancellationToken cancellationToken = default,
             [CallerMemberName] string menberName = "",
             [CallerFilePath] string sourceFilePath = "",
             [CallerLineNumber] int sourceLineNumber = 0)
         {
             await this.InvokeWithRetryAsync<object>(
-                    async () =>
-                        {
-                            await action().ConfigureAwait(false);
-                            return null;
-                        },
-                    exPredicate,
-                    cancellationToken,
-                    menberName,
-                    sourceFilePath,
-                    sourceLineNumber)
-                .ConfigureAwait(false);
+                async () =>
+                    {
+                        await action().ConfigureAwait(false);
+                        return null;
+                    },
+                exPredicate,
+                cancellationToken,
+                menberName,
+                sourceFilePath,
+                sourceLineNumber).ConfigureAwait(false);
         }
 
-        public static async Task RetryOnceAsync(Action action, TimeSpan waitSpan, Func<Exception, bool> retryPredicate)
+        /// <summary>
+        ///     Resets the retry manager's retry count
+        /// </summary>
+        public void Reset()
         {
-            bool firstTry = true;
-            while (true)
+            this.RetryCount = 0;
+            this.ElaspsedWaitTime = 0;
+            this.currentWaitTime = 0;
+        }
+
+        /// <summary>
+        ///     Increment the retry count and advance the total wait time without actually waiting
+        /// </summary>
+        public void SimulateNextAttempt()
+        {
+            this.WaitForNextAttempt(false, CancellationToken.None).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        ///     Wait until the next retry by making the current thread sleep for the appropriate amount of time.
+        ///     May return immediately if the wait is zero.
+        /// </summary>
+        public void WaitForNextAttempt()
+        {
+            this.WaitForNextAttempt(true, CancellationToken.None).GetAwaiter().GetResult();
+        }
+
+        private void SetMaxRetries(int n)
+        {
+            if (n < 0 && n != InfiniteRetries)
             {
-                try
+                throw new ArgumentException("The maximum number of retries must be no less than zero, or InfiniteRetries");
+            }
+
+            this.maxRetries = n;
+        }
+
+        private void SetTotalTimeLimit(int t)
+        {
+            if (t <= 0 && t != Timeout.Infinite)
+            {
+                throw new ArgumentException("The specified time must be greater than zero, or Timeout.Infinite");
+            }
+
+            this.totalTimeLimit = t;
+        }
+
+        private async Task WaitForNextAttempt(bool doSleep, CancellationToken cancellationToken)
+        {
+            if (!this.HasAttemptsLeft)
+            {
+                throw new InvalidOperationException("There are no more retry attempts remaining");
+            }
+
+            this.currentWaitTime = this.NextWaitTime;
+            this.RetryCount++;
+
+            Debug.Assert(this.currentWaitTime >= 0);
+            if (this.currentWaitTime > 0)
+            {
+                if (doSleep)
                 {
-                    action();
-                    return;
-                }
-                catch (Exception ex) when (retryPredicate(ex) && firstTry)
-                {
-                    firstTry = false;
 #if net40
-                    await TaskEx.Delay(waitSpan).ConfigureAwait(false);
+                    await TaskEx.Delay(this.currentWaitTime, cancellationToken);
 #else
-                    await Task.Delay(waitSpan).ConfigureAwait(false);
+                    await Task.Delay(this.currentWaitTime, cancellationToken).ConfigureAwait(false);
 #endif
                 }
+
+                this.ElaspsedWaitTime += this.currentWaitTime;
             }
         }
     }
 
     /// <summary>
-    /// Defines how long a retry manager will wait between sub-sequent retries
+    ///     Defines how long a retry manager will wait between sub-sequent retries
     /// </summary>
     public abstract class RetryWaitTimer
     {
@@ -319,31 +295,29 @@ namespace TelepathyCommon
     }
 
     /// <summary>
-    /// Instantly returns without waiting
+    ///     Instantly returns without waiting
     /// </summary>
     public class InstantRetryTimer : RetryWaitTimer
     {
+        // This class should be a singleton
+        private InstantRetryTimer()
+        {
+        }
+
+        public static InstantRetryTimer Instance { get; } = new InstantRetryTimer();
+
         internal override int GetNextWaitTime(int retryCount, int currentWaitTime)
         {
             return 0;
         }
-
-        // This class should be a singleton
-        private InstantRetryTimer() { }
-
-        private static InstantRetryTimer instance = new InstantRetryTimer();
-        public static InstantRetryTimer Instance
-        {
-            get { return instance; }
-        }
     }
 
     /// <summary>
-    /// Waits a constant time between subsequent retries
+    ///     Waits a constant time between subsequent retries
     /// </summary>
     public class PeriodicRetryTimer : RetryWaitTimer
     {
-        private int period;
+        private readonly int period;
 
         public PeriodicRetryTimer(int period)
         {
@@ -362,12 +336,13 @@ namespace TelepathyCommon
     }
 
     /// <summary>
-    /// A retry timer where wait time at retry n depends on the wait at retry n-1.
+    ///     A retry timer where wait time at retry n depends on the wait at retry n-1.
     /// </summary>
     public abstract class BoundedBackoffRetryTimer : RetryWaitTimer
     {
-        private int initialWait;
-        private int waitUpperBound;
+        private readonly int initialWait;
+
+        private readonly int waitUpperBound;
 
         protected BoundedBackoffRetryTimer(int initialWait, int waitUpperBound)
         {
@@ -392,7 +367,7 @@ namespace TelepathyCommon
                 return this.initialWait;
             }
 
-            int nextWaitTime = this.GetBackOffValue(currentWaitTime);
+            var nextWaitTime = this.GetBackOffValue(currentWaitTime);
             if (nextWaitTime < 0)
             {
                 return 0;
@@ -410,14 +385,21 @@ namespace TelepathyCommon
     }
 
     /// <summary>
-    /// Wait times will increase exponentially
+    ///     Wait times will increase exponentially
     /// </summary>
     public class ExponentialBackoffRetryTimer : BoundedBackoffRetryTimer
     {
-        private double growthFactor;
+        private readonly double growthFactor;
 
-        public ExponentialBackoffRetryTimer(int initialWait) : this(initialWait, Timeout.Infinite, 2) { }
-        public ExponentialBackoffRetryTimer(int initialWait, int waitUpperBound) : this(initialWait, waitUpperBound, 2) { }
+        public ExponentialBackoffRetryTimer(int initialWait)
+            : this(initialWait, Timeout.Infinite, 2)
+        {
+        }
+
+        public ExponentialBackoffRetryTimer(int initialWait, int waitUpperBound)
+            : this(initialWait, waitUpperBound, 2)
+        {
+        }
 
         public ExponentialBackoffRetryTimer(int initialWait, int waitUpperBound, double growthFactor)
             : base(initialWait, waitUpperBound)
@@ -437,13 +419,21 @@ namespace TelepathyCommon
     }
 
     /// <summary>
-    /// Wait times will increase exponentially and also vary a bit randomly
+    ///     Wait times will increase exponentially and also vary a bit randomly
     /// </summary>
     public class ExponentialRandomBackoffRetryTimer : ExponentialBackoffRetryTimer
     {
-        private Random rand = null;
-        public ExponentialRandomBackoffRetryTimer(int initialWait) : this(initialWait, Timeout.Infinite, 2) { }
-        public ExponentialRandomBackoffRetryTimer(int initialWait, int waitUpperBound) : this(initialWait, waitUpperBound, 2) { }
+        private readonly Random rand;
+
+        public ExponentialRandomBackoffRetryTimer(int initialWait)
+            : this(initialWait, Timeout.Infinite, 2)
+        {
+        }
+
+        public ExponentialRandomBackoffRetryTimer(int initialWait, int waitUpperBound)
+            : this(initialWait, waitUpperBound, 2)
+        {
+        }
 
         public ExponentialRandomBackoffRetryTimer(int initialWait, int waitUpperBound, double growthFactor)
             : base(initialWait, waitUpperBound, growthFactor)
@@ -453,19 +443,26 @@ namespace TelepathyCommon
 
         protected override int GetBackOffValue(int currentValue)
         {
-            return ((int)base.GetBackOffValue(currentValue)) + this.rand.Next(0, currentValue);
+            return base.GetBackOffValue(currentValue) + this.rand.Next(0, currentValue);
         }
     }
 
     /// <summary>
-    /// Wait times will increase linearly
+    ///     Wait times will increase linearly
     /// </summary>
     public class LinearBackoffRetryTimer : BoundedBackoffRetryTimer
     {
-        private int increment;
+        private readonly int increment;
 
-        public LinearBackoffRetryTimer(int initialWait) : this(initialWait, Timeout.Infinite, initialWait) { }
-        public LinearBackoffRetryTimer(int initialWait, int waitUpperBound) : this(initialWait, waitUpperBound, initialWait) { }
+        public LinearBackoffRetryTimer(int initialWait)
+            : this(initialWait, Timeout.Infinite, initialWait)
+        {
+        }
+
+        public LinearBackoffRetryTimer(int initialWait, int waitUpperBound)
+            : this(initialWait, waitUpperBound, initialWait)
+        {
+        }
 
         public LinearBackoffRetryTimer(int initialWait, int waitUpperBound, int increment)
             : base(initialWait, waitUpperBound)
@@ -483,15 +480,17 @@ namespace TelepathyCommon
     {
         private const string RetryCountExhaustMessage = "Retry Count of RetryManager is exhausted.";
 
-        public RetryCountExhaustException() : base()
+        public RetryCountExhaustException()
         {
         }
 
-        public RetryCountExhaustException(string message) : base(message)
+        public RetryCountExhaustException(string message)
+            : base(message)
         {
         }
 
-        public RetryCountExhaustException(Exception ex) : base(RetryCountExhaustMessage, ex)
+        public RetryCountExhaustException(Exception ex)
+            : base(RetryCountExhaustMessage, ex)
         {
         }
     }

@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using TelepathyCommon.Registry;
-
-namespace TelepathyCommon.HpcContext.SoaContext
+﻿namespace TelepathyCommon.HpcContext.SoaContext
 {
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    using TelepathyCommon.Registry;
+
     // TODO: remove me
     public class SoaFabricContext : IFabricContext
     {
-        public static readonly IFabricContext Default = new SoaFabricContext();
-
         private const string LocalHost = "localhost";
 
-        public SoaFabricContext(string connectionString) : this(EndpointsConnectionString.ParseConnectionString(connectionString))
+        public static readonly IFabricContext Default = new SoaFabricContext();
+
+        public SoaFabricContext(string connectionString)
+            : this(EndpointsConnectionString.ParseConnectionString(connectionString))
         {
         }
 
@@ -27,13 +28,13 @@ namespace TelepathyCommon.HpcContext.SoaContext
             this.ConnectionString = connectionString;
         }
 
+        public EndpointsConnectionString ConnectionString { get; }
+
+        public IRegistry Registry => throw new NotImplementedException();
+
         public async Task<string> ResolveSingletonServicePrimaryAsync(string serviceName, CancellationToken token)
         {
             return this.ConnectionString.ConnectionString;
         }
-
-        public IRegistry Registry => throw new NotImplementedException();
-
-        public EndpointsConnectionString ConnectionString { get; }
     }
 }

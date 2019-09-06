@@ -9,7 +9,12 @@
     {
         public abstract Task DeleteValueAsync(string key, string name, CancellationToken token);
 
-        public abstract Task<T> GetValueAsync<T>(string key, string name, CancellationToken token, T defaultValue = default(T));
+        public async Task<IDictionary<string, string>> GetRegistryProperties(IList<string> propertyNames, CancellationToken token)
+        {
+            throw new NotSupportedException();
+        }
+
+        public abstract Task<T> GetValueAsync<T>(string key, string name, CancellationToken token, T defaultValue = default);
 
         public virtual async Task<object> GetValueAsync(string key, string name, CancellationToken token, object defaultValue = null)
         {
@@ -18,16 +23,11 @@
 
         public abstract Task MonitorRegistryKeyAsync<T>(string key, string name, TimeSpan checkPeriod, EventHandler<RegistryValueChangedArgs<T>> callback, CancellationToken token);
 
-        public abstract Task SetValueAsync<T>(string key, string name, T value, CancellationToken token);
-
-        public async Task<IDictionary<string, string>> GetRegistryProperties(IList<string> propertyNames, CancellationToken token)
-        {
-            throw new NotSupportedException();
-        }
-
         public async Task SetRegistryProperties(IDictionary<string, object> properties, CancellationToken token)
         {
             throw new NotSupportedException();
         }
+
+        public abstract Task SetValueAsync<T>(string key, string name, T value, CancellationToken token);
     }
 }
