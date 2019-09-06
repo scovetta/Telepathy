@@ -32,6 +32,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.SchedulerDelegations.AzureBatch;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.SchedulerDelegations.Local;
 
+    using TelepathyCommon;
     using TelepathyCommon.HpcContext;
     using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
 

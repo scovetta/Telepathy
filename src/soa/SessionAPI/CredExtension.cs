@@ -92,7 +92,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             bool winService = false,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            IRegistry registry = winService ? Registry : TelepathyContext.GetOrAdd(cancellationToken).Registry;
+            IRegistry registry = winService ? Registry : TelepathyContext.GetOrAdd().Registry;
             serviceCredentials.ClientCertificate.Authentication.CertificateValidationMode = X509CertificateValidationMode.PeerOrChainTrust;
             serviceCredentials.ClientCertificate.Authentication.RevocationMode = X509RevocationMode.NoCheck;
             serviceCredentials.ServiceCertificate.SetCertificate(
@@ -117,7 +117,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             bool winService = false,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            IRegistry registry = winService ? Registry : TelepathyContext.GetOrAdd(cancellationToken).Registry;
+            IRegistry registry = winService ? Registry : TelepathyContext.GetOrAdd().Registry;
             serviceHost.Credentials.ServiceCertificate.SetCertificate(
                 StoreLocation.LocalMachine,
                 StoreName.My,

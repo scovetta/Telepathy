@@ -61,7 +61,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 return;
             }
 
-            TelepathyContext.GetOrAdd(CancellationToken.None);
+            TelepathyContext.GetOrAdd();
 
             LauncherHostService host = null;
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);

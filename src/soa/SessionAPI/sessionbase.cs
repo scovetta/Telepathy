@@ -891,7 +891,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <returns>Available service versions</returns>
         public static async Task<Version[]> GetServiceVersionsAsync(string headNode, string serviceName, Binding binding, bool useWindowsAuthentication, CancellationToken token)
         {
-            string headNodeMachine = await TelepathyContext.GetOrAdd(headNode, token).ResolveSessionLauncherNodeAsync().ConfigureAwait(false);
+            string headNodeMachine = await TelepathyContext.GetOrAdd(headNode).ResolveSessionLauncherNodeAsync().ConfigureAwait(false);
             SessionLauncherClient client = new SessionLauncherClient(headNodeMachine, binding, !useWindowsAuthentication);
             try
             {

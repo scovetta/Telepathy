@@ -99,14 +99,14 @@ namespace Microsoft.Hpc.Scheduler.Session
             this.headnode = headnode;
 
 
-            this.Context = TelepathyContext.GetOrAdd(this.headnode, CancellationToken.None);
+            this.Context = TelepathyContext.GetOrAdd(this.headnode);
         }
 
         protected SessionInitInfoBase()
         {
             //this.headnode is the hostname of local machine.
             this.headnode= System.Net.Dns.GetHostName();
-            this.Context = TelepathyContext.GetOrAdd(this.headnode, CancellationToken.None);
+            this.Context = TelepathyContext.GetOrAdd(this.headnode);
         }
 
         /// <summary>

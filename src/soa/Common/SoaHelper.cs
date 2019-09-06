@@ -34,8 +34,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using TelepathyCommon.Registry;
     using TelepathyCommon.Service;
 
-    using TelepathyConstants = Microsoft.Hpc.Scheduler.Session.TelepathyConstants;
-
     /// <summary>
     /// It is a helper class, shared by broker and proxy.
     /// </summary>
@@ -691,7 +689,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>data service address</returns>
         public static string GetDataServiceAddress(string clusterConnectionString, TransportScheme scheme)
         {
-            string hostname = TelepathyContext.GetOrAdd(clusterConnectionString, CancellationToken.None).ResolveSessionLauncherNodeAsync().GetAwaiter().GetResult();
+            string hostname = TelepathyContext.GetOrAdd(clusterConnectionString).ResolveSessionLauncherNodeAsync().GetAwaiter().GetResult();
             hostname += TryGetIaaSSuffix(clusterConnectionString);
 
             if ((scheme & TransportScheme.NetTcp) == TransportScheme.NetTcp)

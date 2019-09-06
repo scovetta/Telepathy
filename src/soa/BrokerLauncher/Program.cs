@@ -52,7 +52,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
             // clusterconnectionstring could be a machine name (for single headnode) or a connection string
             ITelepathyContext context;
             string clusterConnectionString = SoaHelper.GetSchedulerName();
-            context = TelepathyContext.GetOrAdd(clusterConnectionString, CancellationToken.None, true);
+            context = TelepathyContext.GetOrAdd(clusterConnectionString);
 
             Trace.TraceInformation("Get diag trace enabled internal.");
             SoaDiagTraceHelper.IsDiagTraceEnabledInternal = (sessionId) =>

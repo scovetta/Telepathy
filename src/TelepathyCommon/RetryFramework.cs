@@ -258,18 +258,8 @@ namespace TelepathyCommon
                             sourceFilePath,
                             sourceLineNumber,
                             ex.ToString());
-#if !NETCORE
-                        if (TelepathyContext.NotRetryPreviousRetryFailure)
-                        {
-                            throw new RetryCountExhaustException(ex);
-                        }
-                        else
-                        {
-                            throw;
-                        }
-#else
+
                         throw;
-#endif
                     }
                 }
             }

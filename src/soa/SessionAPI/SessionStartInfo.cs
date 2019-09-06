@@ -18,6 +18,8 @@ namespace Microsoft.Hpc.Scheduler.Session
 
     using Microsoft.Hpc.Scheduler.Session.Internal;
 
+    using TelepathyCommon;
+
     /// <summary>
     ///   <para>Defines a set of values used to create a session.</para>
     /// </summary>

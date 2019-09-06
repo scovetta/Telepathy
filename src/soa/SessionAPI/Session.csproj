@@ -245,7 +245,6 @@
     <Compile Include="SessionShim.cs" />
     <Compile Include="SessionStartInfo.cs" />
     <Compile Include="TaskInInterestUtil.cs" />
-    <Compile Include="WinServiceHpcContextModule.cs" />
     <None Include="Internal\AzureRestSessionFactory.cs" />
     <Compile Include="Internal\SessionInfoBase.cs" />
     <Compile Include="Internal\SOAWebServiceRequestBuilder.cs" />
