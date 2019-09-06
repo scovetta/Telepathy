@@ -7,22 +7,18 @@
 // </summary>
 //------------------------------------------------------------------------------
 
-using TelepathyCommon.Service;
-
 namespace Microsoft.Hpc.Scheduler.Session
 {
     using System;
     using System.Runtime.Serialization;
     using System.Security;
-    using System.Security.Permissions;
     using System.Security.Principal;
     using System.ServiceModel;
     using System.Threading;
 
     using Microsoft.Hpc.Scheduler.Session.Internal;
-#if !net40
-    using Microsoft.Hpc.AADAuthUtil;
-#endif
+
+    using TelepathyCommon.Service;
 
     /// <summary>
     /// Broker Authroization
@@ -131,20 +127,6 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <returns>whether the access is allowed</returns>
         public virtual bool CheckAccess(ServiceSecurityContext context)
         {
-
-#if !net40
-            // Although checking AAD Identity does not need ServiceSecurityContext,
-            // we put this logic here for centralization.
-            SecurityIdentifier sid = Thread.CurrentPrincipal.GenerateSecurityIdentifierFromAadPrincipal(WinServiceHpcContextModule.GetOrAddWinServiceHpcContextFromEnv());
-            if (sid != null)
-            {
-                if (sid == this.allowedUser)
-                {
-                    return true;
-                }
-            }
-#endif
-
             if (SoaHelper.IsOnAzure())
             {
                 // Skip this check on Azure.

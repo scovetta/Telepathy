@@ -38,7 +38,6 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
     using TelepathyCommon;
     using TelepathyCommon.HpcContext;
-    using TelepathyCommon.Rest;
 
     class Program
     {
@@ -404,10 +403,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 }
                 Debug.WriteLine($"[{nameof(GetServiceInfo)}](Debug) headnode: {headnode}.");
                 Debug.Assert(!string.IsNullOrEmpty(headnode), "Head node connection string is null or empty.");
-                ServiceRegistrationRepo serviceRegistration = new ServiceRegistrationRepo(
-                        Environment.GetEnvironmentVariable(Constant.RegistryPathEnv),
-                        ServiceHostRuntimeConfiguration.Standalone ? null:
-                        TelepathyContext.GetOrAdd(headnode, CancellationToken.None).GetServiceRegistrationRestClient());
+                ServiceRegistrationRepo serviceRegistration = new ServiceRegistrationRepo(Environment.GetEnvironmentVariable(Constant.RegistryPathEnv), null);
 
                 // Get the path to the service config file name
                 serviceConfigFile = serviceRegistration.GetServiceRegistrationPath(serviceConfigFileName);

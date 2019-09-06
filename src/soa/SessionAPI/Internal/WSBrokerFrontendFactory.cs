@@ -20,10 +20,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.ServiceModel.Description;
     using System.Threading;
 
-#if !net40
-    using Microsoft.Hpc.AADAuthUtil;
-#endif
-
     /// <summary>
     /// Broker frontend factory to build proxy to communicate to broker
     /// frontend using WS contract
@@ -859,13 +855,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                             this.binding,
                             GenerateEndpointAddress(this.info.ResponseEpr, this.scheme, this.info.Secure, this.info.IsAadOrLocalUser),
                             new InstanceContext(this.ResponseCallback));
-#if !net40
-                        if (this.info.UseAad)
-                        {
-                            responseClient.Endpoint.Behaviors.UseAadClientBehaviors(this.info.Headnode, this.info.Username, this.info.InternalPassword).GetAwaiter().GetResult();
-                        }
-                        else
-#endif
                             this.SetClientCredential(responseClient);
 
 
@@ -877,13 +866,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                         BrokerControllerClient controllerClient = new BrokerControllerClient(
                             this.binding,
                             GenerateEndpointAddress(this.info.ControllerEpr, this.scheme, this.info.Secure, this.info.IsAadOrLocalUser));
-#if !net40
-                        if (this.info.UseAad)
-                        {
-                            controllerClient.Endpoint.Behaviors.UseAadClientBehaviors(this.info.Headnode, this.info.Username, this.info.InternalPassword).GetAwaiter().GetResult();
-                        }
-                        else
-#endif
                             this.SetClientCredential(controllerClient);
 
                         client = controllerClient;

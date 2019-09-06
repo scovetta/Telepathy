@@ -481,7 +481,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             {
                 string dnsIdentityName =
                     WcfChannelModule.GetCertDnsIdentityName(
-                        new NonHARegistry().GetValueAsync<string>(HpcConstants.HpcFullKeyName, HpcConstants.SslThumbprint, CancellationToken.None, null).GetAwaiter().GetResult(),
+                        new NonHARegistry().GetValueAsync<string>(TelepathyConstants.HpcFullKeyName, TelepathyConstants.SslThumbprint, CancellationToken.None, null).GetAwaiter().GetResult(),
                         StoreName.My,
                         StoreLocation.LocalMachine);
                 return new EndpointAddress(uri, EndpointIdentity.CreateDnsIdentity(dnsIdentityName));
@@ -689,7 +689,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>data service address</returns>
         public static string GetDataServiceAddress(string clusterConnectionString, TransportScheme scheme)
         {
-            string hostname = TelepathyContext.GetOrAdd(clusterConnectionString, CancellationToken.None).ResolveSessionLauncherNodeAsync().GetAwaiter().GetResult();
+            string hostname = TelepathyContext.GetOrAdd(clusterConnectionString).ResolveSessionLauncherNodeAsync().GetAwaiter().GetResult();
             hostname += TryGetIaaSSuffix(clusterConnectionString);
 
             if ((scheme & TransportScheme.NetTcp) == TransportScheme.NetTcp)
@@ -770,7 +770,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         public static string GetSchedulerName()
         {
             // Broker gets Azure scheduler virtual name from env var.
-            return Environment.GetEnvironmentVariable(HpcConstants.SchedulerEnvironmentVariableName);
+            return Environment.GetEnvironmentVariable(TelepathyConstants.SchedulerEnvironmentVariableName);
         }
 
         /// <summary>
@@ -810,7 +810,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             if (IsHeadnode())
             {
                 //TODO: SF:
-                return Environment.GetEnvironmentVariable(HpcConstants.SchedulerEnvironmentVariableName);
+                return Environment.GetEnvironmentVariable(TelepathyConstants.SchedulerEnvironmentVariableName);
             }
             else if (IsBrokernode())
             {

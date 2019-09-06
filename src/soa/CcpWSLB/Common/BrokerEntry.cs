@@ -249,7 +249,7 @@ namespace Microsoft.Hpc.ServiceBroker
                 BrokerTracing.TraceVerbose("[BrokerEntry] Initialization: Step 4: Initialize broker state manager succeeded.");
 
                 // Step 5: Initialize service job monitor
-                var context = TelepathyContext.GetOrAdd(this.sharedData.BrokerInfo.Headnode, CancellationToken.None);
+                var context = TelepathyContext.GetOrAdd(this.sharedData.BrokerInfo.Headnode);
 
                 if (SoaCommonConfig.WithoutSessionLayer)
                 { 

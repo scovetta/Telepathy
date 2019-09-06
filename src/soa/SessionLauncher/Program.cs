@@ -43,7 +43,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
         private static void Main(string[] args)
         {
             var log = new LoggerConfiguration().ReadFrom.AppSettings().Enrich.WithMachineName().CreateLogger();
-            Serilog.Debugging.SelfLog.Enable(Console.Error);
 
             Log.Logger = log;
             try
@@ -61,8 +60,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                 return;
             }
 
-            TelepathyContext.AsNtServiceContext();
-            TelepathyContext.GetOrAdd(CancellationToken.None);
+            TelepathyContext.GetOrAdd();
 
             LauncherHostService host = null;
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);

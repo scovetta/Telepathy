@@ -13,7 +13,7 @@ namespace Microsoft.Hpc
     public class DefaultClientCertificateValidator : IClientCertificateValidator
     {
         private static readonly Lazy<string> HeadNodeCertThumbprint =
-            new Lazy<string>(() => TelepathyContext.GetOrAdd(CancellationToken.None).GetSSLThumbprint().GetAwaiter().GetResult());
+            new Lazy<string>(() => TelepathyContext.GetOrAdd().GetSSLThumbprint().GetAwaiter().GetResult());
 
         private static readonly ConcurrentDictionary<string, bool> ValidCertificateCache = new ConcurrentDictionary<string, bool>();
 

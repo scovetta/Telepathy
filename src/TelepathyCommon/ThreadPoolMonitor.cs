@@ -1,31 +1,28 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading;
-
-namespace TelepathyCommon
+﻿namespace TelepathyCommon
 {
+    using System;
+    using System.Diagnostics;
+    using System.Threading;
+
+    using Timer = System.Timers.Timer;
+
     public class ThreadPoolMonitor
     {
-        private int lastWorker = 0;
-
-        private int lastIo = 0;
-
-        private int lastThread = 0;
-
-        private System.Timers.Timer timer;
-
         private static readonly Lazy<ThreadPoolMonitor> Instance = new Lazy<ThreadPoolMonitor>(() => new ThreadPoolMonitor());
+
+        private readonly Timer timer;
+
+        private int lastIo;
+
+        private int lastThread;
+
+        private int lastWorker;
 
         private ThreadPoolMonitor()
         {
-            this.timer = new System.Timers.Timer();
+            this.timer = new Timer();
             this.timer.Interval = 100;
             this.timer.Elapsed += (sender, args) => this.WriteThreadPoolStatus();
-        }
-
-        private void StartInternal()
-        {
-            this.timer.Enabled = true;
         }
 
         public static void Start()
@@ -54,7 +51,7 @@ namespace TelepathyCommon
             ThreadPool.GetMaxThreads(out workerMax, out ioMax);
             ThreadPool.GetAvailableThreads(out worker, out io);
 
-            int threadNumber = Process.GetCurrentProcess().Threads.Count;
+            var threadNumber = Process.GetCurrentProcess().Threads.Count;
 
             if (worker == this.lastWorker && io == this.lastIo && threadNumber == this.lastThread)
             {
@@ -70,6 +67,11 @@ namespace TelepathyCommon
             this.lastWorker = worker;
             this.lastIo = io;
             this.lastThread = threadNumber;
+        }
+
+        private void StartInternal()
+        {
+            this.timer.Enabled = true;
         }
     }
 }

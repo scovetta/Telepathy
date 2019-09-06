@@ -25,7 +25,6 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
 
     using AzureStorageBinding.Table.Binding;
 
-    using Microsoft.Hpc.AADAuthUtil;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls;
 #if HPCPACK
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack;
@@ -33,6 +32,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.SchedulerDelegations.AzureBatch;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.SchedulerDelegations.Local;
 
+    using TelepathyCommon;
     using TelepathyCommon.HpcContext;
     using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
 
@@ -303,9 +303,6 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 }
 
                 this.launcherHost.Faulted += this.SessionLauncherHostFaultHandler;
-                string addFormat = SoaHelper.SessionLauncherAadAddressFormat;
-                this.launcherHost.Authorization.ServiceAuthorizationManager =
-                    new AADServiceAuthorizationManager(addFormat.Substring(addFormat.IndexOf('/')));
                 ServiceAuthorizationBehavior myServiceBehavior =
                     this.launcherHost.Description.Behaviors.Find<ServiceAuthorizationBehavior>();
                 myServiceBehavior.PrincipalPermissionMode = PrincipalPermissionMode.None;

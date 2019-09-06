@@ -84,7 +84,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             if (string.IsNullOrEmpty(headnode))
             {
                 // retrieve the head node name from the %ccp_scheduler% environment if it is empty
-                headnode = Environment.GetEnvironmentVariable(HpcConstants.SchedulerEnvironmentVariableName);
+                headnode = Environment.GetEnvironmentVariable(TelepathyCommon.TelepathyConstants.SchedulerEnvironmentVariableName);
                 if (string.IsNullOrEmpty(headnode))
                 {
                     throw new ArgumentNullException(SR.HeadnodeCantBeNull);
@@ -99,14 +99,14 @@ namespace Microsoft.Hpc.Scheduler.Session
             this.headnode = headnode;
 
 
-            this.Context = TelepathyContext.GetOrAdd(this.headnode, CancellationToken.None);
+            this.Context = TelepathyContext.GetOrAdd(this.headnode);
         }
 
         protected SessionInitInfoBase()
         {
             //this.headnode is the hostname of local machine.
             this.headnode= System.Net.Dns.GetHostName();
-            this.Context = TelepathyContext.GetOrAdd(this.headnode, CancellationToken.None);
+            this.Context = TelepathyContext.GetOrAdd(this.headnode);
         }
 
         /// <summary>

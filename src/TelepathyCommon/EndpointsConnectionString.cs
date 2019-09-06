@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text.RegularExpressions;
-using Microsoft.Win32;
-
-namespace TelepathyCommon
+﻿namespace TelepathyCommon
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+
     /// <summary>
-    /// Make this class for connection string format contract.
-    /// Use this class for standard connection string processing.
-    /// This is a struct, so we don't need handle null.
+    ///     Make this class for connection string format contract.
+    ///     Use this class for standard connection string processing.
+    ///     This is a struct, so we don't need handle null.
     /// </summary>
     public struct EndpointsConnectionString
     {
         /// <summary>
-        /// indicate the hpc connection string.
+        ///     indicate the hpc connection string.
         /// </summary>
         private const string ConnectionStringRegexString = @"^([A-Za-z0-9\-\.]+,)*([A-Za-z0-9\-\.]+)$|^$";
 
@@ -28,7 +27,7 @@ namespace TelepathyCommon
         public static EndpointsConnectionString LoadFromEnvVarsOrWindowsRegistry()
         {
             EndpointsConnectionString endpointsConnectionString;
-            string connectionString = Environment.GetEnvironmentVariable(HpcConstants.ConnectionStringEnvironmentVariableName);
+            var connectionString = Environment.GetEnvironmentVariable(TelepathyConstants.ConnectionStringEnvironmentVariableName);
 
             if (!string.IsNullOrEmpty(connectionString))
             {
@@ -38,7 +37,7 @@ namespace TelepathyCommon
                 }
             }
 
-            var schedulerVar = Environment.GetEnvironmentVariable(HpcConstants.SchedulerEnvironmentVariableName);
+            var schedulerVar = Environment.GetEnvironmentVariable(TelepathyConstants.SchedulerEnvironmentVariableName);
 
             if (!string.IsNullOrEmpty(schedulerVar))
             {
@@ -50,22 +49,20 @@ namespace TelepathyCommon
 
             string registryValue = null;
 
-            using (RegistryKey regKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(CommonRegistryPath))
+            using (var regKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(CommonRegistryPath))
             {
-                registryValue = regKey?.GetValue(HpcConstants.ClusterConnectionStringRegVal) as string;
+                registryValue = regKey?.GetValue(TelepathyConstants.ClusterConnectionStringRegVal) as string;
             }
 
             if (!string.IsNullOrEmpty(registryValue) && TryParseConnectionString(registryValue, out endpointsConnectionString))
             {
                 return endpointsConnectionString;
             }
-            else
-            {
-                throw new InvalidOperationException(
-                    $@"None of the following values contains a valid cluster connection string. 
-Environment variable {HpcConstants.ConnectionStringEnvironmentVariableName}={connectionString},{HpcConstants.SchedulerEnvironmentVariableName}={schedulerVar},
-RegistryKey {CommonRegistryPath}\{HpcConstants.ClusterConnectionStringRegVal}={registryValue}");
-            }
+
+            throw new InvalidOperationException(
+                $@"None of the following values contains a valid cluster connection string. 
+Environment variable {TelepathyConstants.ConnectionStringEnvironmentVariableName}={connectionString},{TelepathyConstants.SchedulerEnvironmentVariableName}={schedulerVar},
+RegistryKey {CommonRegistryPath}\{TelepathyConstants.ClusterConnectionStringRegVal}={registryValue}");
         }
 
         public static bool TryParseConnectionString(string connectionString, out EndpointsConnectionString endpointsConnectionString)
@@ -76,16 +73,15 @@ RegistryKey {CommonRegistryPath}\{HpcConstants.ClusterConnectionStringRegVal}={r
                 Trace.TraceWarning($"{nameof(connectionString)} is null. Default to localhost.");
                 connectionString = "localhost";
             }
+
             if (!ConnectionStringRegex.IsMatch(connectionString))
             {
                 endpointsConnectionString = new EndpointsConnectionString();
                 return false;
             }
-            else
-            {
-                endpointsConnectionString = new EndpointsConnectionString(connectionString);
-                return true;
-            }
+
+            endpointsConnectionString = new EndpointsConnectionString(connectionString);
+            return true;
         }
 
         public static EndpointsConnectionString ParseConnectionString(string connectionString)
@@ -109,26 +105,8 @@ RegistryKey {CommonRegistryPath}\{HpcConstants.ClusterConnectionStringRegVal}={r
             this.ConnectionString = connectionString;
         }
 
-        public string ConnectionString { get; private set; }
+        public string ConnectionString { get; }
 
         public bool IsGateway => !string.IsNullOrEmpty(this.ConnectionString);
-
-        public IEnumerable<string> EndPoints
-        {
-            get
-            {
-                var nodes = this.ConnectionString?.Split(Delimiter.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-                if (nodes == null || nodes.Length == 0)
-                {
-                    return null;
-                }
-                else
-                {
-                    var localThis = this;
-                    return nodes.Select(s => $"{s}:{(localThis.IsGateway ? HpcConstants.HpcNamingServicePort : HpcConstants.FabricClientConnectionPort)}");
-                }
-            }
-        }
     }
 }

@@ -245,10 +245,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AADAuthUtil\AADAuthUtil.csproj">
-      <Project>{895FCBFB-73B4-46F3-8A89-76C236F01BF4}</Project>
-      <Name>AADAuthUtil</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\HpcCommon\HpcCommon.csproj">
       <Project>{2c3936c7-4850-41d7-9497-9040be302328}</Project>
       <Name>HpcCommon</Name>

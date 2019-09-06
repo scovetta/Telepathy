@@ -11,15 +11,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using Microsoft.Hpc.ServiceBroker;
     using System;
-    using System.Collections.Generic;
     using System.Security.Principal;
     using System.ServiceModel;
-    using System.ServiceModel.Security;
     using System.ServiceModel.Channels;
-    using System.Security.Cryptography.X509Certificates;
-    using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session.Interface;
+    using TelepathyCommon;
 
     /// <summary>
     /// Service client to connect the session launcher in headnode

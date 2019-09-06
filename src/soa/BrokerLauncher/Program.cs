@@ -40,7 +40,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
         private static void Main(string[] args)
         {
             var log = new LoggerConfiguration().ReadFrom.AppSettings().Enrich.WithMachineName().CreateLogger();
-            Serilog.Debugging.SelfLog.Enable(Console.Error);
             Log.Logger = log;
 
             if (!ParseAndSetBrokerLauncherSettings(args, BrokerLauncherSettings.Default))
@@ -52,7 +51,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
             // clusterconnectionstring could be a machine name (for single headnode) or a connection string
             ITelepathyContext context;
             string clusterConnectionString = SoaHelper.GetSchedulerName();
-            context = TelepathyContext.GetOrAdd(clusterConnectionString, CancellationToken.None, true);
+            context = TelepathyContext.GetOrAdd(clusterConnectionString);
 
             Trace.TraceInformation("Get diag trace enabled internal.");
             SoaDiagTraceHelper.IsDiagTraceEnabledInternal = (sessionId) =>

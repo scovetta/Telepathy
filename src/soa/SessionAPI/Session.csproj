@@ -139,7 +139,6 @@
     <Compile Include="BrokerClient.cs" />
     <Compile Include="BrokerClientBase.cs" />
     <Compile Include="ChannelTypes.cs" />
-    <Compile Include="Constants.cs" />
     <Compile Include="CredExtension.cs" />
     <Compile Include="Internal\DummyResourceProvider.cs" />
     <Compile Include="Internal\AsyncResponseCallback.cs" />
@@ -246,7 +245,6 @@
     <Compile Include="SessionShim.cs" />
     <Compile Include="SessionStartInfo.cs" />
     <Compile Include="TaskInInterestUtil.cs" />
-    <Compile Include="WinServiceHpcContextModule.cs" />
     <None Include="Internal\AzureRestSessionFactory.cs" />
     <Compile Include="Internal\SessionInfoBase.cs" />
     <Compile Include="Internal\SOAWebServiceRequestBuilder.cs" />
@@ -295,10 +293,6 @@
     <Compile Include="TransportScheme.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AADAuthUtil\AADAuthUtil.csproj">
-      <Project>{895fcbfb-73b4-46f3-8a89-76c236f01bf4}</Project>
-      <Name>AADAuthUtil</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\StandaloneDataClient\StandaloneDataClient.csproj">
       <Project>{8f4412aa-a6e0-49e5-a331-1b1047e2159d}</Project>
       <Name>StandaloneDataClient</Name>

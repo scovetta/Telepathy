@@ -27,11 +27,6 @@ namespace Microsoft.Hpc.Scheduler.Session
 
     using Internal;
 
-#if !net40
-    using Microsoft.Hpc.AADAuthUtil;
-
-#endif
-
     /// <summary>
     /// WCF credential extensions
     /// </summary>
@@ -97,7 +92,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             bool winService = false,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            IRegistry registry = winService ? Registry : TelepathyContext.GetOrAdd(cancellationToken).Registry;
+            IRegistry registry = winService ? Registry : TelepathyContext.GetOrAdd().Registry;
             serviceCredentials.ClientCertificate.Authentication.CertificateValidationMode = X509CertificateValidationMode.PeerOrChainTrust;
             serviceCredentials.ClientCertificate.Authentication.RevocationMode = X509RevocationMode.NoCheck;
             serviceCredentials.ServiceCertificate.SetCertificate(
@@ -122,7 +117,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             bool winService = false,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            IRegistry registry = winService ? Registry : TelepathyContext.GetOrAdd(cancellationToken).Registry;
+            IRegistry registry = winService ? Registry : TelepathyContext.GetOrAdd().Registry;
             serviceHost.Credentials.ServiceCertificate.SetCertificate(
                 StoreLocation.LocalMachine,
                 StoreName.My,
@@ -175,57 +170,5 @@ namespace Microsoft.Hpc.Scheduler.Session
 
             return sessionLauncher;
         }
-
-#if !net40
-        /// <summary>
-        /// Add <see cref="AADClientEndpointBehavior"/> to behavior list
-        /// </summary>
-        /// <param name="behaviors"></param>
-        /// <param name="headnode"></param>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
-        public static async Task<KeyedByTypeCollection<IEndpointBehavior>> UseAadClientBehaviors(
-            this KeyedByTypeCollection<IEndpointBehavior> behaviors,
-            string headnode,
-            string username = null,
-            string password = null)
-        {
-            // If this headnode is an Azure IaaS cluster, we use AadIntegrationService on headnode instead of resolving it again
-            var token = await GetSoaAadJwtToken(headnode, username, password).ConfigureAwait(false);
-            behaviors.Add(new AADClientEndpointBehavior(token));
-            return behaviors;
-        }
-
-        /// <summary>
-        /// Add <see cref="AADClientEndpointBehavior"/> to behavior list
-        /// </summary>
-        /// <param name="behaviors"></param>
-        /// <param name="sessionInitInfo"></param>
-        /// <returns></returns>
-        public static Task<KeyedByTypeCollection<IEndpointBehavior>> UseAadClientBehaviors(this KeyedByTypeCollection<IEndpointBehavior> behaviors, SessionInitInfoBase sessionInitInfo) =>
-            behaviors.UseAadClientBehaviors(sessionInitInfo.Headnode, sessionInitInfo.Username, sessionInitInfo.InternalPassword);
-        
-        /// <summary>
-        /// This method will query head node for cluster AAD info if cluster is an Azure IaaS cluster. 
-        /// </summary>
-        /// <param name="headnode">Headnode address of cluster headnode</param>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
-        public static async Task<string> GetSoaAadJwtToken(string headnode, string username, string password)
-        {
-            ITelepathyContext context = TelepathyContext.GetOrAdd(headnode, CancellationToken.None);
-
-            string node = null;
-            if (SoaHelper.IsSchedulerOnIaaS(headnode))
-            {
-                node = await context.ResolveSessionLauncherNodeOnIaasAsync(headnode).ConfigureAwait(false);
-            }
-
-            string token = await context.GetAADJwtTokenAsync(username, password, node).ConfigureAwait(false);
-            return token;
-        }
-#endif
     }
 }

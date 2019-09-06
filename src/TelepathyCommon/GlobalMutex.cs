@@ -1,16 +1,17 @@
-﻿using System;
-using System.Diagnostics;
-using System.Security.AccessControl;
-using System.Security.Principal;
-using System.Threading;
-
-namespace TelepathyCommon
+﻿namespace TelepathyCommon
 {
+    using System;
+    using System.Diagnostics;
+    using System.Security.AccessControl;
+    using System.Security.Principal;
+    using System.Threading;
+
     public class GlobalMutex : IDisposable
     {
         private static readonly MutexSecurity MutexSecuritySetting;
 
-        private bool hasHandle = false;
+        private readonly bool hasHandle;
+
         private Mutex mutex;
 
         static GlobalMutex()
@@ -22,6 +23,7 @@ namespace TelepathyCommon
 
         public GlobalMutex(string mutexName, int timeOut)
         {
+            mutexName = mutexName.Replace('\\', '_');
             this.InitMutex(mutexName);
             try
             {
@@ -46,13 +48,6 @@ namespace TelepathyCommon
                 this.hasHandle = true;
             }
         }
-        
-        private void InitMutex(string mutexName)
-        {
-            string mutexId = $"Global\\{{{mutexName}}}";
-            this.mutex = new Mutex(false, mutexId);
-            this.mutex.SetAccessControl(MutexSecuritySetting);
-        }
 
         public void Dispose()
         {
@@ -68,6 +63,13 @@ namespace TelepathyCommon
 
             // Suppress finalization of this disposed instance.
             GC.SuppressFinalize(this);
+        }
+
+        private void InitMutex(string mutexName)
+        {
+            var mutexId = $"Global\\{{{mutexName}}}";
+            this.mutex = new Mutex(false, mutexId);
+            this.mutex.SetAccessControl(MutexSecuritySetting);
         }
     }
 }

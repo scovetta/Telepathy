@@ -20,9 +20,6 @@ namespace Microsoft.Hpc.Scheduler.Session
     using System.Threading;
     using System.Xml;
 
-#if !net40
-    using Microsoft.Hpc.AADAuthUtil;
-#endif
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker;
@@ -926,13 +923,6 @@ namespace Microsoft.Hpc.Scheduler.Session
             {
                 message.Headers.Add(GenerateUserDataHeader(userData));
                 message.Headers.Add(this.clientIdHeader);
-
-#if !net40
-                if (this.session.Info.UseAad)
-                {
-                    message.Headers.Add(new AADAuthMessageHeader(this.jwtTokenCache));
-                }
-#endif
 
                 if (IsDurableSession(this.session))
                 {

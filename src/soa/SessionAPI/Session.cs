@@ -138,7 +138,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             SessionLauncherClient client = null;
             BrokerLauncherClient broker = null;
 
-            string headNodeMachine = await TelepathyContext.GetOrAdd(headNode, token).ResolveSessionLauncherNodeAsync().ConfigureAwait(false);
+            string headNodeMachine = await TelepathyContext.GetOrAdd(headNode).ResolveSessionLauncherNodeAsync().ConfigureAwait(false);
 
             try
             {

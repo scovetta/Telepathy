@@ -9,23 +9,22 @@
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
 {
-    using Microsoft.Hpc.RuntimeTrace;
-    using Microsoft.Hpc.Scheduler.Session.Common;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
-    using Microsoft.Hpc.ServiceBroker;
-    using Microsoft.Hpc.ServiceBroker.Common;
     using System;
     using System.Diagnostics;
     using System.Net;
     using System.Security.Principal;
     using System.ServiceModel;
+    using System.ServiceModel.Description;
     using System.ServiceProcess;
     using System.Threading;
-    using System.ServiceModel.Description;
 
-    using Microsoft.Hpc.AADAuthUtil;
+    using Microsoft.Hpc.RuntimeTrace;
+    using Microsoft.Hpc.Scheduler.Session.Common;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter;
+    using Microsoft.Hpc.ServiceBroker;
+    using Microsoft.Hpc.ServiceBroker.Common;
 
     using TelepathyCommon.HpcContext;
 
@@ -396,7 +395,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
                     this.launcherHost.AddServiceEndpoint(typeof(IBrokerLauncher), BindingHelper.HardCodedUnSecureNetTcpBinding, "AAD");
                     // this.launcherHost.Credentials.UseInternalAuthenticationAsync(true).GetAwaiter().GetResult();
                     string addFormat = SoaHelper.BrokerLauncherAadAddressFormat;
-                    this.launcherHost.Authorization.ServiceAuthorizationManager = new AADServiceAuthorizationManager(addFormat.Substring(addFormat.IndexOf('/')), this.context);
                     ServiceAuthorizationBehavior myServiceBehavior = this.launcherHost.Description.Behaviors.Find<ServiceAuthorizationBehavior>();
                     myServiceBehavior.PrincipalPermissionMode = PrincipalPermissionMode.None;
                     this.launcherHost.Open();
