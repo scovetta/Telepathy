@@ -70,12 +70,12 @@
     <Compile Include="EndpointsConnectionString.cs" />
     <Compile Include="ErrorCode.cs" />
     <Compile Include="TelepathyConstants.cs" />
-    <Compile Include="HpcContext\TelepathyContext.cs" />
-    <Compile Include="HpcContext\Extensions\RegistryExtension\RegistryExtension.cs" />
-    <Compile Include="HpcContext\IFabricContext.cs" />
-    <Compile Include="HpcContext\ITelepathyContext.cs" />
-    <Compile Include="HpcContext\SoaContext\SoaContext.cs" />
-    <Compile Include="HpcContext\SoaContext\SoaFabricContext.cs" />
+    <Compile Include="TelepathyContext\TelepathyContext.cs" />
+    <Compile Include="TelepathyContext\Extensions\RegistryExtension\RegistryExtension.cs" />
+    <Compile Include="TelepathyContext\IFabricContext.cs" />
+    <Compile Include="TelepathyContext\ITelepathyContext.cs" />
+    <Compile Include="TelepathyContext\ContextImpl\TelepathyContextImpl.cs" />
+    <Compile Include="TelepathyContext\ContextImpl\TelepathyFabricContextImpl.cs" />
     <Compile Include="InAppDomainSerializationBinder.cs" />
     <Compile Include="IServiceRegistrationStore.cs" />
     <Compile Include="Registry\RegistryProperty.cs" />
@@ -89,7 +89,7 @@
     <Compile Include="Registry\RegistryValueChangedArgs.cs" />
     <Compile Include="RetryFramework.cs" />
     <Compile Include="Registry\WindowsRegistryBase.cs" />
-    <Compile Include="HpcContext\Extensions\ServiceResolverExtension.cs" />
+    <Compile Include="TelepathyContext\Extensions\ServiceResolverExtension.cs" />
     <Compile Include="WCF\WcfReliableClient.cs" />
     <Compile Include="WCF\WcfServiceConstants.cs" />
     <Compile Include="GlobalMutex.cs" />
