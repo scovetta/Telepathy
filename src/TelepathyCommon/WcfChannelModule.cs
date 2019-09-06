@@ -164,11 +164,6 @@
             throw new InvalidOperationException($"Can not find cert with thumbprint {thumbPrint} in store {storeName}, {storeLocation}");
         }
 
-        public static string GetWcfServiceUriString(string host, int port, string serviceName)
-        {
-            return string.Format(WcfServiceConstants.NetTcpUriFormat, host, port, serviceName);
-        }
-
         public static bool IsX509Identity(IIdentity identity)
         {
             return identity != null && string.Equals(identity.AuthenticationType, "X509", StringComparison.OrdinalIgnoreCase);
@@ -193,22 +188,6 @@
             return internalWcfHost;
         }
 
-        public static async Task<ServiceHost> SetupInternalWcfChannelAsync<T>(
-            ITelepathyContext context,
-            object singletonInstance,
-            int servicePort,
-            string serviceName,
-            ServiceAuthorizationManager manager = null)
-        {
-            var tcpAddr = string.Format(WcfServiceConstants.NetTcpUriFormat, "localhost", servicePort, serviceName);
-            return await SetupInternalWcfChannelAsync<T>(context, singletonInstance, tcpAddr, manager).ConfigureAwait(false);
-        }
-
-        public static async Task<ServiceHost> SetupManagementWcfChannelAsync<T>(object singletonInstance, string serviceName)
-        {
-            return await SetupWcfChannelAsync<T>(singletonInstance, WcfServiceConstants.ManagementWcfChannelPort, serviceName).ConfigureAwait(false);
-        }
-
         public static async Task<ServiceHost> SetupWcfChannelAsync<T>(
             object singletonInstance,
             Binding binding,
@@ -222,12 +201,6 @@
             await Task.Factory.FromAsync(host.BeginOpen(null, null), host.EndOpen).ConfigureAwait(false);
             Trace.TraceInformation("[WcfHost] End to setup WCF channel");
             return host;
-        }
-
-        public static async Task<ServiceHost> SetupWcfChannelAsync<T>(object singletonInstance, int servicePort, string serviceName)
-        {
-            var tcpAddr = string.Format(WcfServiceConstants.NetTcpUriFormat, "localhost", servicePort, serviceName);
-            return await SetupWcfChannelAsync<T>(singletonInstance, DefaultNetTcpBindingFactory(), null, PrincipalPermissionMode.UseWindowsGroups, null, tcpAddr).ConfigureAwait(false);
         }
 
         private static void DisposeCommunicationObject(ICommunicationObject communicationObj)

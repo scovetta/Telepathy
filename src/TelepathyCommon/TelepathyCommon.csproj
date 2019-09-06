@@ -77,31 +77,26 @@
     <Compile Include="TelepathyContext\ContextImpl\TelepathyContextImpl.cs" />
     <Compile Include="TelepathyContext\ContextImpl\TelepathyFabricContextImpl.cs" />
     <Compile Include="InAppDomainSerializationBinder.cs" />
-    <Compile Include="IServiceRegistrationStore.cs" />
+    <Compile Include="ServiceRegistrationStore\IServiceRegistrationStore.cs" />
     <Compile Include="Registry\RegistryProperty.cs" />
     <Compile Include="Registry\WindowsRegistryWatcher.cs" />
-    <Compile Include="WCF\ErrorBehaviorAttribute.cs" />
-    <Compile Include="WCF\ExceptionWrapper.cs" />
-    <Compile Include="WCF\ExceptionWrapperErrorHandler.cs" />
-    <Compile Include="WCF\WcfChannelModule.cs" />
+    <Compile Include="WcfChannelModule.cs" />
     <Compile Include="Registry\IRegistry.cs" />
     <Compile Include="Registry\NonHARegistry.cs" />
     <Compile Include="Registry\RegistryValueChangedArgs.cs" />
     <Compile Include="RetryFramework.cs" />
     <Compile Include="Registry\WindowsRegistryBase.cs" />
     <Compile Include="TelepathyContext\Extensions\ServiceResolverExtension.cs" />
-    <Compile Include="WCF\WcfReliableClient.cs" />
-    <Compile Include="WCF\WcfServiceConstants.cs" />
     <Compile Include="GlobalMutex.cs" />
-    <Compile Include="SoaRegistrationAuxModule.cs" />
+    <Compile Include="ServiceRegistrationStore\SoaRegistrationAuxModule.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
-    <Compile Include="Telepathy\AzureBlobServiceRegistrationStore.cs" />
-    <Compile Include="Telepathy\ServiceRegistrationInfo.cs" />
-    <Compile Include="Telepathy\ServiceRegistrationStore.cs" />
+    <Compile Include="ServiceRegistrationStore\AzureBlobServiceRegistrationStore.cs" />
+    <Compile Include="ServiceRegistrationStore\ServiceRegistrationInfo.cs" />
+    <Compile Include="ServiceRegistrationStore\ServiceRegistrationStore.cs" />
     <Compile Include="ThreadPoolMonitor.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -124,5 +119,6 @@
       <LastGenOutput>SR.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
