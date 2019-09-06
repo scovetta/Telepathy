@@ -40,7 +40,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
         private static void Main(string[] args)
         {
             var log = new LoggerConfiguration().ReadFrom.AppSettings().Enrich.WithMachineName().CreateLogger();
-            Serilog.Debugging.SelfLog.Enable(Console.Error);
             Log.Logger = log;
 
             if (!ParseAndSetBrokerLauncherSettings(args, BrokerLauncherSettings.Default))
