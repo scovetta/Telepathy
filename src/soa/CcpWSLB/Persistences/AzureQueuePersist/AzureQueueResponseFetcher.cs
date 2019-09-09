@@ -75,7 +75,7 @@
                                                this.lastIndex);
                             index = 0;
                             BrokerTracing.TraceVerbose(
-                                "[AzureQueueResponseFetch] .PeekMessage: get batch entity count={0}",
+                                "[AzureQueueResponseFetch] .PeekMessageAsync: get batch entity count={0}",
                                 responseList.Count);
                         }
 
@@ -94,7 +94,7 @@
                     catch (Exception e)
                     {
                         BrokerTracing.TraceError(
-                            "[AzureQueueResponseFetch] .PeekMessageAsync: dequeue message failed, Exception:{0}",
+                            "[AzureQueueResponseFetch] .PeekMessageAsync: peek batch messages failed, Exception:{0}",
                             e.ToString());
                         exceptions.Add(e);
                     }

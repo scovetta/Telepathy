@@ -57,7 +57,7 @@
         /// <summary> Credit for prefetching. It indicates if there is space available in prefetchCache for keeping prefetching result.</summary>
         private int prefetchCredit;
 
-        private CloudQueue privateQueueField;
+        protected object fetchTimerLock = new object();
 
         public AzureQueueMessageFetcher(
             long messageCount,
@@ -201,7 +201,10 @@
             // 2. wait for all outstanding BeginPeek operations back, and then dispose the cursor.
             if (!this.isDisposedField)
             {
-                this.isDisposedField = true;
+                lock (this.fetchTimerLock)
+                {
+                    this.isDisposedField = true;                    
+                }
 
                 // dispose prefetched messages
                 this.lockPrefetchCache.EnterWriteLock();

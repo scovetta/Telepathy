@@ -385,6 +385,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             string connectString)
         {
             ParamCheckUtility.ThrowIfNull(isStaleSessionCallback, "isStaleSessionCallback");
+            ParamCheckUtility.ThrowIfNull(connectString, "connectString");
             List<QueueInfo> queueinfos = AzureStorageTool.GetAllQueues(connectString).GetAwaiter().GetResult();
             List<QueueInfo> staleQueueNameList = new List<QueueInfo>();
             Dictionary<int, bool> sessionIdStaleDic = new Dictionary<int, bool>();

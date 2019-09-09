@@ -36,11 +36,14 @@
             this.waitQueue = waitQueue;
             this.prefetchTimer.Elapsed += (sender, args) =>
                 {
-                    Debug.WriteLine("[AzureQueueRequestFetcher] .prefetchTimer raised.");
-                    this.DequeueMessageAsync().GetAwaiter().GetResult();
-                    if (!this.isDisposedField)
+                    lock (fetchTimerLock)
                     {
-                        this.prefetchTimer.Enabled = true;
+                        if (!this.isDisposedField)
+                        {
+                            Debug.WriteLine("[AzureQueueRequestFetcher] .prefetchTimer raised.");
+                            this.DequeueMessageAsync().GetAwaiter().GetResult();
+                            this.prefetchTimer.Enabled = true;
+                        }
                     }
                 };
             this.prefetchTimer.Enabled = true;
@@ -77,7 +80,7 @@
                     catch (Exception e)
                     {
                         BrokerTracing.TraceError(
-                            "[AzureQueueRequestFetcher] .PeekMessageAsync: dequeue message failed, Exception:{0}",
+                            "[AzureQueueRequestFetcher] .DequeueMessageAsync: dequeue message failed, Exception:{0}",
                             e.ToString());
                         exceptions.Add(e);
                     }
