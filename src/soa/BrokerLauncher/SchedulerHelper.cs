@@ -155,6 +155,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             await this.UpdateBrokerInfoInternalAsync(info.SessionId, properties);
         }
 
+
         /// <summary>
         /// Update the broker's suspended property
         /// </summary>

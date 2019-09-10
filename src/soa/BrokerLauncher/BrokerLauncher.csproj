@@ -88,9 +88,6 @@
     <Compile Include="..\CcpWSLB\Common\Utility.cs">
       <Link>Utility.cs</Link>
     </Compile>
-    <Compile Include="..\Common\AzureRoleHelper.cs">
-      <Link>AzureRoleHelper.cs</Link>
-    </Compile>
     <Compile Include="..\Common\BindingHelper.cs">
       <Link>BindingHelper.cs</Link>
     </Compile>
@@ -175,6 +172,7 @@
     <Compile Include="AzureNaming.cs" />
     <Compile Include="AzureNodeMapping.cs" />
     <Compile Include="AzureNodeMappingUtil.cs" />
+    <Compile Include="AzureRoleHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueAdapter\BrokerLauncherCloudQueueWatcher.cs" />
     <Compile Include="BrokerLauncherEnvironment.cs" />

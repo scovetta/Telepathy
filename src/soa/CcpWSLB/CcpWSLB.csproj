@@ -68,9 +68,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Common\AzureRoleHelper.cs">
-      <Link>Common\AzureRoleHelper.cs</Link>
-    </None>
     <Compile Include="..\BrokerLauncher\HpcSchedulerAdapterInternalClient.cs">
       <Link>Common\SchedulerAdapter\HpcSchedulerAdapterInternalClient.cs</Link>
     </Compile>
