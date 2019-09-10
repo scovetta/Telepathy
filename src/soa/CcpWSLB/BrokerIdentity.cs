@@ -23,7 +23,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
     /// Maintains broker's identity when calling user services. BN computer account for non-
     /// failover clusters. Resource group's network name computer account failover clusters
     /// </summary>
-    internal class BrokerIdentity : DisposableObjectSlim
+    public class BrokerIdentity : DisposableObjectSlim
     {
         static WindowsIdentity brokerIdentity;
         static bool isSystem = WindowsIdentity.GetCurrent().IsSystem;

@@ -15,7 +15,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Common
     /// Provides the common base class for Disposable objects which
     /// don't need a finalizer
     /// </summary>
-    internal abstract class DisposableObjectSlim : IDisposable
+    public abstract class DisposableObjectSlim : IDisposable
     {
         /// <summary>
         /// Stores the disposed flag

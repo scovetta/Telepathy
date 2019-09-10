@@ -88,9 +88,6 @@
     <Compile Include="..\CcpWSLB\Common\Utility.cs">
       <Link>Utility.cs</Link>
     </Compile>
-    <Compile Include="..\Common\BrokerIdentity.cs">
-      <Link>BrokerIdentity.cs</Link>
-    </Compile>
     <Compile Include="..\Common\BrokerPerformanceCounterHelper.cs">
       <Link>BrokerPerformanceCounterHelper.cs</Link>
     </Compile>

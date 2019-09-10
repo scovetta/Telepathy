@@ -71,9 +71,6 @@
     <Compile Include="..\BrokerLauncher\HpcSchedulerAdapterInternalClient.cs">
       <Link>Common\SchedulerAdapter\HpcSchedulerAdapterInternalClient.cs</Link>
     </Compile>
-    <Compile Include="..\Common\BrokerIdentity.cs">
-      <Link>BrokerIdentity.cs</Link>
-    </Compile>
     <Compile Include="..\Common\BrokerPerformanceCounterHelper.cs">
       <Link>BrokerPerformanceCounterHelper.cs</Link>
     </Compile>
@@ -193,6 +190,7 @@
     </Compile>
     <Compile Include="BackEnd\ServiceTaskDispatcherInfo.cs" />
     <Compile Include="BalanceResultInfo.cs" />
+    <Compile Include="BrokerIdentity.cs" />
     <Compile Include="BrokerQueue\BrokerQueueAsyncToken.cs" />
     <Compile Include="BrokerQueue\BrokerQueueCallbackItem.cs" />
     <Compile Include="BrokerQueue\BrokerQueueConstants.cs" />
