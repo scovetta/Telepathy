@@ -78,9 +78,6 @@
     <Compile Include="..\..\common\CredentialNativeMethods.cs">
       <Link>CredentialNativeMethods.cs</Link>
     </Compile>
-    <Compile Include="..\..\common\Credentials.cs">
-      <Link>Credentials.cs</Link>
-    </Compile>
     <Compile Include="..\CcpWSLB\BackEnd\AzureQueue\MessageRetriever.cs">
       <Link>DataService\MessageRetriever.cs</Link>
     </Compile>
