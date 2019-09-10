@@ -115,6 +115,7 @@
       <Link>Interface\ISOAWebService.cs</Link>
     </None>
     <Compile Include="BalanceInfo.cs" />
+    <Compile Include="BindingHelper.cs" />
     <Compile Include="BrokerClient.cs" />
     <Compile Include="BrokerClientBase.cs" />
     <Compile Include="ChannelTypes.cs" />
@@ -249,9 +250,6 @@
     <Compile Include="Interface\EndOfResponsesReason.cs" />
     <Compile Include="Interface\IBrokerManagementService.cs" />
     <Compile Include="Interface\IHpcServiceHost.cs" />
-    <Compile Include="..\Common\BindingHelper.cs">
-      <Link>BindingHelper.cs</Link>
-    </Compile>
     <Compile Include="Configuration\BrokerConfigurations.cs" />
     <Compile Include="Configuration\BrokerMonitorConfiguration.cs" />
     <Compile Include="Configuration\BrokerServicesConfiguration.cs" />

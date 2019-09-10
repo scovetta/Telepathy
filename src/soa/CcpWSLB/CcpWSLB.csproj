@@ -71,9 +71,6 @@
     <Compile Include="..\BrokerLauncher\HpcSchedulerAdapterInternalClient.cs">
       <Link>Common\SchedulerAdapter\HpcSchedulerAdapterInternalClient.cs</Link>
     </Compile>
-    <Compile Include="..\Common\BindingHelper.cs">
-      <Link>Common\BindingHelper.cs</Link>
-    </Compile>
     <Compile Include="..\Common\BrokerIdentity.cs">
       <Link>BrokerIdentity.cs</Link>
     </Compile>

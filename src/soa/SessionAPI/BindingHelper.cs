@@ -23,7 +23,7 @@ namespace Microsoft.Hpc.ServiceBroker
     /// <summary>
     /// Helper class to build binding from configuration file
     /// </summary>
-    internal static class BindingHelper
+    public static class BindingHelper
     {
         /// <summary>
         /// Stores the max connections for scheduler delegation binding, backend binding and service host throttling behavior

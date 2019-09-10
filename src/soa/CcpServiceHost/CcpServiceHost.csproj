@@ -82,9 +82,6 @@
     <None Include="..\..\common\AzureTracing.cs">
       <Link>AzureTracing.cs</Link>
     </None>
-    <Compile Include="..\Common\BindingHelper.cs">
-      <Link>BindingHelper.cs</Link>
-    </Compile>
     <Compile Include="..\Common\Constant.cs">
       <Link>Constant.cs</Link>
     </Compile>
