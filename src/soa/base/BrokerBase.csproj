@@ -52,6 +52,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DiagTraceHelper.cs" />
     <Compile Include="RuntimeEvents.cs" />
     <Compile Include="TemplateFormatter.cs" />
     <Compile Include="TemplateFormatterProvider.cs" />

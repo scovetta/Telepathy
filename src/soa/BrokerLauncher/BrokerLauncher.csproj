@@ -88,9 +88,6 @@
     <Compile Include="..\CcpWSLB\Common\Utility.cs">
       <Link>Utility.cs</Link>
     </Compile>
-    <Compile Include="..\Common\DiagTraceHelper.cs">
-      <Link>DiagTraceHelper.cs</Link>
-    </Compile>
     <Compile Include="..\Common\DisposableObject.cs">
       <Link>DisposableObject.cs</Link>
     </Compile>

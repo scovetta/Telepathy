@@ -85,9 +85,6 @@
     <None Include="..\Common\DiagAzureTraceHelper.cs">
       <Link>DiagAzureTraceHelper.cs</Link>
     </None>
-    <Compile Include="..\Common\DiagTraceHelper.cs">
-      <Link>DiagTraceHelper.cs</Link>
-    </Compile>
     <Compile Include="..\Common\NativeMethods.cs">
       <Link>NativeMethods.cs</Link>
     </Compile>
@@ -141,10 +138,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\HpcCommon\HpcCommon.csproj">
-      <Project>{2c3936c7-4850-41d7-9497-9040be302328}</Project>
-      <Name>HpcCommon</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\HpcRestServerCommon\HpcRestServerCommon.csproj">
       <Project>{8720315f-7ba8-4923-bd1e-dc2af7690a72}</Project>
       <Name>HpcRestServerCommon</Name>

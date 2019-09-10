@@ -17,7 +17,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Diagnostics
     /// <summary>
     /// Provider util methods to write trace for SOA diag system
     /// </summary>
-    internal static class DiagTraceHelper
+    public static class DiagTraceHelper
     {
         /// <summary>
         /// Stores the diag trace instance
