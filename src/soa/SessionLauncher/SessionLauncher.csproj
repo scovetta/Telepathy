@@ -84,15 +84,6 @@
     <Compile Include="..\..\common\Credentials.cs">
       <Link>Credentials.cs</Link>
     </Compile>
-    <Compile Include="..\..\common\FilePermission.cs">
-      <Link>FilePermission.cs</Link>
-    </Compile>
-    <Compile Include="..\..\common\HpcServiceNames.cs">
-      <Link>HpcServiceNames.cs</Link>
-    </Compile>
-    <Compile Include="..\..\common\ServiceControllerHelpers.cs">
-      <Link>ServiceControllerHelpers.cs</Link>
-    </Compile>
     <Compile Include="..\CcpWSLB\BackEnd\AzureQueue\MessageRetriever.cs">
       <Link>DataService\MessageRetriever.cs</Link>
     </Compile>
@@ -267,6 +258,9 @@
     <Compile Include="Utils\AuthenticationHelper.cs" />
     <Compile Include="Utils\AuthenticationUtil.cs" />
     <Compile Include="Utils\AzureStorageUtil.cs" />
+    <Compile Include="Utils\FilePermission.cs" />
+    <Compile Include="Utils\HpcServiceNames.cs" />
+    <Compile Include="Utils\ServiceControllerHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SR.resx">

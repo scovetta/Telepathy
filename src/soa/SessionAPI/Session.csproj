@@ -72,17 +72,11 @@
     <Compile Include="..\..\common\AzureNaming.cs">
       <Link>AzureNaming.cs</Link>
     </Compile>
-    <Compile Include="..\..\common\CredentialHelper.cs">
-      <Link>CredentialHelper.cs</Link>
-    </Compile>
     <Compile Include="..\..\common\CredentialNativeMethods.cs">
       <Link>CredentialNativeMethods.cs</Link>
     </Compile>
     <Compile Include="..\..\common\Credentials.cs">
       <Link>Credentials.cs</Link>
-    </Compile>
-    <Compile Include="..\..\common\SchedulerCredentialCache.cs">
-      <Link>SchedulerCredentialCache.cs</Link>
     </Compile>
     <Compile Include="..\..\common\SecurityDescriptor.cs">
       <Link>SecurityDescriptor.cs</Link>
@@ -139,6 +133,7 @@
     <Compile Include="BrokerClient.cs" />
     <Compile Include="BrokerClientBase.cs" />
     <Compile Include="ChannelTypes.cs" />
+    <Compile Include="CredentialHelper.cs" />
     <Compile Include="CredExtension.cs" />
     <Compile Include="Internal\DummyResourceProvider.cs" />
     <Compile Include="Internal\AsyncResponseCallback.cs" />
@@ -157,6 +152,7 @@
     <Compile Include="PersistantSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueAdapter\Client\ResponsePool.cs" />
+    <Compile Include="SchedulerCredentialCache.cs" />
     <Compile Include="ServiceContainer\SessionServiceContainer.cs" />
     <Compile Include="ServiceContext.cs" />
     <Compile Include="Session.cs" />

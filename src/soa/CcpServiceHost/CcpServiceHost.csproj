@@ -85,9 +85,6 @@
     <None Include="..\..\common\AzureTracing.cs">
       <Link>AzureTracing.cs</Link>
     </None>
-    <Compile Include="..\..\common\ProductConstants.cs">
-      <Link>ProductConstants.cs</Link>
-    </Compile>
     <Compile Include="..\Common\AuthManager.cs">
       <Link>AuthManager.cs</Link>
     </Compile>
@@ -134,6 +131,7 @@
     <Compile Include="Parameter.cs" />
     <Compile Include="ParameterContainer.cs" />
     <Compile Include="ParameterException.cs" />
+    <Compile Include="ProductConstants.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ServiceHostRuntimeConfiguration.cs" />
     <Compile Include="SoaDiagTraceListener.cs" />

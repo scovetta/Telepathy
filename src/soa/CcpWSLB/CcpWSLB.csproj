@@ -71,9 +71,6 @@
     <Compile Include="..\..\common\AzureNaming.cs">
       <Link>Azure\AzureNaming.cs</Link>
     </Compile>
-    <Compile Include="..\..\common\BrokerProxyEndpointNames.cs">
-      <Link>Azure\BrokerProxyEndpointNames.cs</Link>
-    </Compile>
     <Compile Include="..\..\common\SecurityDescriptor.cs">
       <Link>SecurityDescriptor.cs</Link>
     </Compile>
@@ -167,6 +164,7 @@
     <Compile Include="..\SessionAPI\RetryOperationError.cs">
       <Link>BackEnd\RetryOperationError.cs</Link>
     </Compile>
+    <Compile Include="Azure\BrokerProxyEndpointNames.cs" />
     <Compile Include="BackEnd\AzureDispatcherInfo.cs" />
     <Compile Include="BackEnd\AzureQueue\IAzureQueueManager.cs" />
     <Compile Include="BackEnd\AzureQueue\AzureHttpsDispatcher.cs" />

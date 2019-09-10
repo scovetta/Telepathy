@@ -88,12 +88,6 @@
     <Compile Include="..\..\common\AzureNaming.cs">
       <Link>AzureNaming.cs</Link>
     </Compile>
-    <Compile Include="..\..\common\AzureNodeMapping.cs">
-      <Link>AzureNodeMapping.cs</Link>
-    </Compile>
-    <Compile Include="..\..\common\AzureNodeMappingUtil.cs">
-      <Link>AzureNodeMappingUtil.cs</Link>
-    </Compile>
     <Compile Include="..\CcpWSLB\Common\Utility.cs">
       <Link>Utility.cs</Link>
     </Compile>
@@ -166,9 +160,6 @@
     <Compile Include="..\Common\SoaHelper.cs">
       <Link>SoaHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\common\ServiceHelpers.cs">
-      <Link>ServiceHelpers.cs</Link>
-    </Compile>
     <Compile Include="..\Common\ThreadSafeSchedulerAPI.cs">
       <Link>ThreadSafeSchedulerAPI.cs</Link>
     </Compile>
@@ -184,6 +175,8 @@
     <Compile Include="..\SessionAPI\Internal\SessionLauncherClientBase.cs">
       <Link>SessionLauncherClientBase.cs</Link>
     </Compile>
+    <Compile Include="AzureNodeMapping.cs" />
+    <Compile Include="AzureNodeMappingUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueAdapter\BrokerLauncherCloudQueueWatcher.cs" />
     <Compile Include="BrokerLauncherEnvironment.cs" />
@@ -192,6 +185,7 @@
     <Compile Include="NetTcpPortSharingService.cs" />
     <Compile Include="QueueAdapter\JsonInt32Converter.cs" />
     <Compile Include="SchedulerHelperFactory.cs" />
+    <Compile Include="ServiceHelpers.cs" />
     <Compile Include="SessionLauncherClient.cs" />
     <Compile Include="AzureStorageCleaner.cs" />
     <Compile Include="BrokerInfo.cs" />
