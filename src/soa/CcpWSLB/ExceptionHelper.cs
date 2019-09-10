@@ -11,16 +11,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
     using System.Globalization;
     using System.ServiceModel;
     using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-#if BrokerLauncher
-    using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
-#else
     using Microsoft.Hpc.SvcBroker;
-#endif
 
     /// <summary>
     /// the exception helper class.
     /// </summary>
-    internal static class ExceptionHelper
+    public static class ExceptionHelper
     {
         /// <summary>
         /// convert the exception to the fault exception that can be send back to the client.

@@ -71,9 +71,6 @@
     <Compile Include="..\BrokerLauncher\HpcSchedulerAdapterInternalClient.cs">
       <Link>Common\SchedulerAdapter\HpcSchedulerAdapterInternalClient.cs</Link>
     </Compile>
-    <Compile Include="..\Common\ExceptionHelper.cs">
-      <Link>ExceptionHelper.cs</Link>
-    </Compile>
     <Compile Include="..\Common\HeartbeatHelper.cs">
       <Link>Azure\HeartbeatHelper.cs</Link>
     </Compile>
@@ -225,6 +222,7 @@
     <Compile Include="Common\TimeoutManager.cs" />
     <Compile Include="Common\TraceUtils.cs" />
     <Compile Include="Common\Utility.cs" />
+    <Compile Include="ExceptionHelper.cs" />
     <Compile Include="FrontEnd\AzureQueueFrontEnd.cs" />
     <Compile Include="FrontEnd\AzureQueue\AzureQueueProxy.cs" />
     <Compile Include="FrontEnd\AzureQueue\AzureStorageClient.cs" />
