@@ -69,9 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\BurstUtility.cs">
-      <Link>BurstUtility.cs</Link>
-    </Compile>
     <Compile Include="..\Common\Constant.cs">
       <Link>Internal\Constant.cs</Link>
     </Compile>
@@ -112,6 +109,7 @@
     <Compile Include="BindingHelper.cs" />
     <Compile Include="BrokerClient.cs" />
     <Compile Include="BrokerClientBase.cs" />
+    <Compile Include="BurstUtility.cs" />
     <Compile Include="ChannelTypes.cs" />
     <Compile Include="CredentialHelper.cs" />
     <Compile Include="CredExtension.cs" />

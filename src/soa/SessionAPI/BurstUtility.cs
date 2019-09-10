@@ -15,7 +15,7 @@ namespace Microsoft.Hpc.BrokerBurst
     /// <summary>
     /// It is an utility class for burst.
     /// </summary>
-    internal static class BurstUtility
+    public static class BurstUtility
     {
         /// <summary>
         /// Check if the queue is not found.

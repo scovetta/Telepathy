@@ -87,9 +87,6 @@
     <Compile Include="..\CcpWSLB\SoaDiagTraceHelper.cs">
       <Link>SoaDiagTraceHelper.cs</Link>
     </Compile>
-    <Compile Include="..\Common\BurstUtility.cs">
-      <Link>DataService\BurstUtility.cs</Link>
-    </Compile>
     <Compile Include="..\Common\CommonClusterManagerHelper.cs">
       <Link>CommonClusterManagerHelper.cs</Link>
     </Compile>
