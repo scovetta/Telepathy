@@ -25,7 +25,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.Threading;
     using System.Xml;
 
-    using Microsoft.Hpc.Azure.Common;
     using Microsoft.Win32;
 
     using TelepathyCommon;
@@ -33,7 +32,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using TelepathyCommon.HpcContext.Extensions;
     using TelepathyCommon.Registry;
     using TelepathyCommon.Service;
-
     /// <summary>
     /// It is a helper class, shared by broker and proxy.
     /// </summary>
@@ -425,13 +423,43 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             return (new Regex(GetIaaSHeadnodeRegex(), RegexOptions.IgnoreCase)).IsMatch(schedulerName);
         }
 
+        private static string GetAzureDomain(string name, string defaultValue)
+        {
+            string result = defaultValue;
+
+            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\HPC"))
+            {
+                if (key != null)
+                {
+                    result = (string)key.GetValue(name, result);
+                }
+            }
+
+            return result;
+        }
+
+        private class AzureDnsSuffixes
+        {
+            public const string ServiceDomain = "cloudapp.net";
+            public const string QueuePostfix = "queue.core.windows.net";
+            public const string TablePostfix = "table.core.windows.net";
+            public const string FilePostfix = "file.core.windows.net";
+            public const string BlobPostfix = "blob.core.windows.net";
+            public const string ManagementPostfix = "management.core.windows.net";
+            public const string SQLAzurePostfix = "database.windows.net";
+            public const string SQLAzureManagementPostfix = "management.database.windows.net";
+            public const string AzureIaaSDomains = "cloudapp.net|cloudapp.azure.com|chinacloudapp.cn";
+            public const string AzureADAuthority = "https://login.windows.net/";
+            public const string AzureADResource = "https://management.azure.com/";
+        }
+
         /// <summary>
         /// Get IaaS head node regular expression
         /// </summary>
         /// <returns>IaaS head node regular expression</returns>
         public static string GetIaaSHeadnodeRegex()
         {
-            string[] domainNames = AzureNaming.GetAzureDomain("IaaSDomainNames", AzureDnsSuffixes.AzureIaaSDomains).Replace(".", @"\.").Split(new char[] { '|', ',', ';' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
+            string[] domainNames = GetAzureDomain("IaaSDomainNames", AzureDnsSuffixes.AzureIaaSDomains).Replace(".", @"\.").Split(new char[] { '|', ',', ';' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
             return string.Format(@"^.+\.({0})$", string.Join("|", domainNames));
         }
 

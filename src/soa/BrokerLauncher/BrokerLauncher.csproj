@@ -85,9 +85,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\common\AzureNaming.cs">
-      <Link>AzureNaming.cs</Link>
-    </Compile>
     <Compile Include="..\CcpWSLB\Common\Utility.cs">
       <Link>Utility.cs</Link>
     </Compile>
@@ -175,6 +172,7 @@
     <Compile Include="..\SessionAPI\Internal\SessionLauncherClientBase.cs">
       <Link>SessionLauncherClientBase.cs</Link>
     </Compile>
+    <Compile Include="AzureNaming.cs" />
     <Compile Include="AzureNodeMapping.cs" />
     <Compile Include="AzureNodeMappingUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

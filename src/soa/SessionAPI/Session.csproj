@@ -69,9 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\common\AzureNaming.cs">
-      <Link>AzureNaming.cs</Link>
-    </Compile>
     <Compile Include="..\..\common\CredentialNativeMethods.cs">
       <Link>CredentialNativeMethods.cs</Link>
     </Compile>

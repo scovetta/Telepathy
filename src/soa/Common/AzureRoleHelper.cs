@@ -26,44 +26,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         }
 
         /// <summary>
-        /// Get the IP addresses of all the broker roles in current Azure deployment.
-        /// </summary>
-        /// <returns>all the broker node addresses</returns>
-        internal static List<string> GetAllBrokerAddress()
-        {
-            List<string> brokerNodes = new List<string>();
-
-            string brokerRoleConfigName = SchedulerConfigNames.BrokerRoles;
-
-            string rolenames = RoleEnvironment.GetConfigurationSettingValue(brokerRoleConfigName);
-
-            if (!string.IsNullOrEmpty(rolenames))
-            {
-                string[] roles = rolenames.ToLowerInvariant().Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-                List<string> list = new List<string>(roles);
-
-                foreach (Role role in RoleEnvironment.Roles.Values)
-                {
-                    if (list.Contains(role.Name.ToLowerInvariant()))
-                    {
-                        foreach (RoleInstance instance in role.Instances)
-                        {
-                            string address = GetRoleInstanceAddress(instance);
-
-                            if (!string.IsNullOrEmpty(address))
-                            {
-                                brokerNodes.Add(address);
-                            }
-                        }
-                    }
-                }
-            }
-
-            return brokerNodes;
-        }
-
-        /// <summary>
         /// Get IP address of specified role instance.
         /// </summary>
         /// <param name="instance">role instance</param>
@@ -82,6 +44,37 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             {
                 return string.Empty;
             }
+        }
+
+        private class SchedulerEndpointNames
+        {
+            public const string NodeManagerService = "Microsoft.Hpc.Azure.Endpoint.Manager";
+            public const string ApplicationI = "Microsoft.Hpc.Azure.Endpoint.ApplicationI";
+            public const string ApplicationII = "Microsoft.Hpc.Azure.Endpoint.ApplicationII";
+            public const string SOADataService = "Microsoft.Hpc.Azure.Endpoint.ApplicationI";  // SOA reuses the application ports
+            public const string SOAControlService = "Microsoft.Hpc.Azure.Endpoint.ApplicationII";
+            public const string NodeMappingService = "Microsoft.Hpc.Azure.Endpoint.NodeMapping";
+
+            ////public const string SchedulerListenerService = "SchedulerListener";
+            // Temporarily all ports hack for Scheduler On Azure
+            public const string SchedulerListenerService = "Microsoft.Hpc.Azure.Endpoint.AllPorts";
+
+            public const int NumApplicationPorts = 8; // Change this value also have to change the gap between SOAData and SOAControl in the Module enum in NodeMapping.cs
+
+            public const string HostsDistribution = "Microsoft.Hpc.Azure.Endpoint.HostsDistribution";
+            public const string FileTransfer = "Microsoft.Hpc.Azure.Endpoint.FileTransfer";
+
+            public const string HPCWebServiceHttps = "Microsoft.Hpc.Azure.Endpoint.HPCWebServiceHttps";
+
+            public const string AllPorts = "Microsoft.Hpc.Azure.Endpoint.AllPorts";
+
+            public const string ProxyService = "Microsoft.Hpc.Azure.Endpoint.JobManager";
+
+            public const string FileStagingService = "Microsoft.Hpc.Azure.Endpoint.FileStaging";
+
+            public static string ProxyServiceEndpoint = "Microsoft.Hpc.Azure.Endpoint.HpcComponents";
+
+            public static string FileStagingServiceEndpoint = "Microsoft.Hpc.Azure.Endpoint.HpcComponents";
         }
     }
 }

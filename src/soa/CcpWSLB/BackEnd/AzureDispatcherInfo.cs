@@ -109,4 +109,16 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
             }
         }
     }
+
+    internal class BrokerProxyPorts
+    {
+        private const string _ProxyPortSettingV3SP2 = "5901";
+        private const string _ProxyPortSettingV3SP3 = "443";
+
+        private const string _ManagementPortSettingV3SP2 = "5902";
+        private const string _ManagementPortSettingV3SP3 = "443";
+
+        public const string ProxyPortV4RTM = "443";
+        public const string ManagementPortV4RTM = "443";
+    }
 }

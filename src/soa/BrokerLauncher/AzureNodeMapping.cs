@@ -14,6 +14,7 @@ namespace Microsoft.Hpc.Azure.Common
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
 
     /// <summary>
     /// This is the interface for proxy modules to access the logical node name -> physial endpoint mapping.

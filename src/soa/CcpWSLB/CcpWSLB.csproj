@@ -68,9 +68,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\common\AzureNaming.cs">
-      <Link>Azure\AzureNaming.cs</Link>
-    </Compile>
     <Compile Include="..\..\common\SecurityDescriptor.cs">
       <Link>SecurityDescriptor.cs</Link>
     </Compile>
