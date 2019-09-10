@@ -69,9 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\BrokerSettingsConstants.cs">
-      <Link>Internal\BrokerSettingsConstants.cs</Link>
-    </Compile>
     <Compile Include="..\Common\BrokerVersion.cs">
       <Link>Internal\BrokerVersion.cs</Link>
     </Compile>
@@ -121,6 +118,7 @@
     <Compile Include="ChannelTypes.cs" />
     <Compile Include="CredentialHelper.cs" />
     <Compile Include="CredExtension.cs" />
+    <Compile Include="Internal\BrokerSettingsConstants.cs" />
     <Compile Include="Internal\DummyResourceProvider.cs" />
     <Compile Include="Internal\AsyncResponseCallback.cs" />
     <Compile Include="Internal\BrokerFrontendFactory.cs" />

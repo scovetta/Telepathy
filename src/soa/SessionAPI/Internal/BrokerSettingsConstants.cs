@@ -9,7 +9,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
     /// <summary>
     /// the constants definition for the broker settings.
     /// </summary>
-    internal static class BrokerSettingsConstants
+    public static class BrokerSettingsConstants
     {
         /// <summary>
         /// the durable
