@@ -75,9 +75,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\common\AuthenticationUtil.cs">
-      <Link>AuthenticationUtil.cs</Link>
-    </Compile>
     <Compile Include="..\..\common\AzureNaming.cs">
       <Link>AzureNaming.cs</Link>
     </Compile>
@@ -107,9 +104,6 @@
     </Compile>
     <Compile Include="..\CcpWSLB\SoaDiagTraceHelper.cs">
       <Link>SoaDiagTraceHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\AuthenticationHelper.cs">
-      <Link>AuthenticationHelper.cs</Link>
     </Compile>
     <Compile Include="..\Common\AzureRoleHelper.cs">
       <Link>AzureRoleHelper.cs</Link>
@@ -270,6 +264,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utils\AuthenticationHelper.cs" />
+    <Compile Include="Utils\AuthenticationUtil.cs" />
     <Compile Include="Utils\AzureStorageUtil.cs" />
   </ItemGroup>
   <ItemGroup>
