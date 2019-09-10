@@ -71,9 +71,6 @@
     <Compile Include="..\BrokerLauncher\HpcSchedulerAdapterInternalClient.cs">
       <Link>Common\SchedulerAdapter\HpcSchedulerAdapterInternalClient.cs</Link>
     </Compile>
-    <Compile Include="..\Common\BrokerVersion.cs">
-      <Link>BrokerVersion.cs</Link>
-    </Compile>
     <Compile Include="..\Common\BurstUtility.cs">
       <Link>BackEnd\AzureQueue\BurstUtility.cs</Link>
     </Compile>

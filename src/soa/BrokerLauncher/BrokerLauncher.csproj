@@ -88,9 +88,6 @@
     <Compile Include="..\CcpWSLB\Common\Utility.cs">
       <Link>Utility.cs</Link>
     </Compile>
-    <Compile Include="..\Common\BrokerVersion.cs">
-      <Link>BrokerVersion.cs</Link>
-    </Compile>
     <Compile Include="..\Common\CommonClusterManagerHelper.cs">
       <Link>CommonClusterManagerHelper.cs</Link>
     </Compile>

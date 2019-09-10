@@ -11,7 +11,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
     /// <summary>
     /// Maintains broker's versioning information
     /// </summary>
-    internal class BrokerVersion
+    public class BrokerVersion
     {
         /// <summary>broker persist version number</summary>
         //Note: DO NOT change this version number unless:

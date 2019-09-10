@@ -69,9 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\BrokerVersion.cs">
-      <Link>Internal\BrokerVersion.cs</Link>
-    </Compile>
     <Compile Include="..\Common\BurstUtility.cs">
       <Link>BurstUtility.cs</Link>
     </Compile>
@@ -119,6 +116,7 @@
     <Compile Include="CredentialHelper.cs" />
     <Compile Include="CredExtension.cs" />
     <Compile Include="Internal\BrokerSettingsConstants.cs" />
+    <Compile Include="Internal\BrokerVersion.cs" />
     <Compile Include="Internal\DummyResourceProvider.cs" />
     <Compile Include="Internal\AsyncResponseCallback.cs" />
     <Compile Include="Internal\BrokerFrontendFactory.cs" />
