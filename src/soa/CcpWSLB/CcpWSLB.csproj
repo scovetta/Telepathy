@@ -71,9 +71,6 @@
     <Compile Include="..\BrokerLauncher\HpcSchedulerAdapterInternalClient.cs">
       <Link>Common\SchedulerAdapter\HpcSchedulerAdapterInternalClient.cs</Link>
     </Compile>
-    <Compile Include="..\Common\Constant.cs">
-      <Link>Constant.cs</Link>
-    </Compile>
     <Compile Include="..\Common\DisposableObject.cs">
       <Link>Common\DisposableObject.cs</Link>
     </Compile>

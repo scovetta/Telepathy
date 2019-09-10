@@ -65,9 +65,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\Constant.cs">
-      <Link>Constant.cs</Link>
-    </Compile>
     <Compile Include="..\Common\ParamCheckUtility.cs">
       <Link>ParamCheckUtility.cs</Link>
     </Compile>

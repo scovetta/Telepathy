@@ -69,9 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\Constant.cs">
-      <Link>Internal\Constant.cs</Link>
-    </Compile>
     <Compile Include="..\Common\DisposableObject.cs">
       <Link>Internal\DisposableObject.cs</Link>
     </Compile>
@@ -115,6 +112,7 @@
     <Compile Include="CredExtension.cs" />
     <Compile Include="Internal\BrokerSettingsConstants.cs" />
     <Compile Include="Internal\BrokerVersion.cs" />
+    <Compile Include="Internal\Constant.cs" />
     <Compile Include="Internal\DummyResourceProvider.cs" />
     <Compile Include="Internal\AsyncResponseCallback.cs" />
     <Compile Include="Internal\BrokerFrontendFactory.cs" />
