@@ -69,9 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\DisposableObject.cs">
-      <Link>Internal\DisposableObject.cs</Link>
-    </Compile>
     <Compile Include="..\Common\HeartbeatHelper.cs">
       <Link>HeartbeatHelper.cs</Link>
     </Compile>
@@ -113,6 +110,8 @@
     <Compile Include="Internal\BrokerSettingsConstants.cs" />
     <Compile Include="Internal\BrokerVersion.cs" />
     <Compile Include="Internal\Constant.cs" />
+    <Compile Include="Internal\DisposableObject.cs" />
+    <Compile Include="Internal\DisposableObjectSlim.cs" />
     <Compile Include="Internal\DummyResourceProvider.cs" />
     <Compile Include="Internal\AsyncResponseCallback.cs" />
     <Compile Include="Internal\BrokerFrontendFactory.cs" />
