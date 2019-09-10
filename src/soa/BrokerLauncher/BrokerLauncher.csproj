@@ -88,9 +88,6 @@
     <Compile Include="..\CcpWSLB\Common\Utility.cs">
       <Link>Utility.cs</Link>
     </Compile>
-    <Compile Include="..\Common\CommonSchedulerHelper.cs">
-      <Link>CommonSchedulerHelper.cs</Link>
-    </Compile>
     <Compile Include="..\Common\Constant.cs">
       <Link>Constant.cs</Link>
     </Compile>
