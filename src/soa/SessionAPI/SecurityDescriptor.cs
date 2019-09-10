@@ -1,11 +1,12 @@
-using System;
-using System.Runtime.InteropServices;
-using Microsoft.Win32.SafeHandles;
-using System.ComponentModel;
-
 namespace Microsoft.Hpc
 {
-    internal sealed class SecurityDescriptor : SafeHandleZeroOrMinusOneIsInvalid
+    using System;
+    using System.ComponentModel;
+    using System.Runtime.InteropServices;
+
+    using Microsoft.Win32.SafeHandles;
+
+    public sealed class SecurityDescriptor : SafeHandleZeroOrMinusOneIsInvalid
     {
         const int SDDL_REVISION_1 = 1;
 

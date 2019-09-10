@@ -69,9 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\common\SecurityDescriptor.cs">
-      <Link>SecurityDescriptor.cs</Link>
-    </Compile>
     <Compile Include="..\Common\BrokerSettingsConstants.cs">
       <Link>Internal\BrokerSettingsConstants.cs</Link>
     </Compile>
@@ -141,6 +138,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueAdapter\Client\ResponsePool.cs" />
     <Compile Include="SchedulerCredentialCache.cs" />
+    <Compile Include="SecurityDescriptor.cs" />
     <Compile Include="ServiceContainer\SessionServiceContainer.cs" />
     <Compile Include="ServiceContext.cs" />
     <Compile Include="Session.cs" />
