@@ -111,9 +111,6 @@
     <Compile Include="..\Common\ServiceRegisteration.cs">
       <Link>Internal\ServiceRegisteration.cs</Link>
     </Compile>
-    <Compile Include="..\Common\SessionStartInfoContract.cs">
-      <Link>SessionStartInfoContract.cs</Link>
-    </Compile>
     <Compile Include="..\Common\SoaHelper.cs">
       <Link>SoaHelper.cs</Link>
     </Compile>
@@ -240,6 +237,7 @@
     <Compile Include="SessionException.cs" />
     <Compile Include="SessionShim.cs" />
     <Compile Include="SessionStartInfo.cs" />
+    <Compile Include="SessionStartInfoContract.cs" />
     <Compile Include="TaskInInterestUtil.cs" />
     <None Include="Internal\AzureRestSessionFactory.cs" />
     <Compile Include="Internal\SessionInfoBase.cs" />

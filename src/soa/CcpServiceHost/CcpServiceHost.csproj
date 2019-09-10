@@ -85,9 +85,6 @@
     <None Include="..\..\common\AzureTracing.cs">
       <Link>AzureTracing.cs</Link>
     </None>
-    <Compile Include="..\Common\AuthManager.cs">
-      <Link>AuthManager.cs</Link>
-    </Compile>
     <Compile Include="..\Common\BindingHelper.cs">
       <Link>BindingHelper.cs</Link>
     </Compile>
@@ -121,6 +118,7 @@
     <Compile Include="..\Common\ThrowHelper.cs">
       <Link>ThrowHelper.cs</Link>
     </Compile>
+    <Compile Include="AuthManager.cs" />
     <Compile Include="BrokerNodeAuthManager.cs" />
     <Compile Include="CcpServiceHostWrapper.cs" />
     <Compile Include="DummyService.cs" />

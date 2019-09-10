@@ -52,16 +52,10 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\TemplateFormatter.cs">
-      <Link>TemplateFormatter.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\TemplateFormatterProvider.cs">
-      <Link>TemplateFormatterProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\TraceEventRawReaders.cs">
-      <Link>TraceEventRawReaders.cs</Link>
-    </Compile>
     <Compile Include="RuntimeEvents.cs" />
+    <Compile Include="TemplateFormatter.cs" />
+    <Compile Include="TemplateFormatterProvider.cs" />
+    <Compile Include="TraceEventRawReaders.cs" />
     <Compile Include="_generated_manifest_RuntimeEvents.cs" />
     <None Include="RuntimeEvents.man">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

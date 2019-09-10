@@ -138,12 +138,6 @@
     <Compile Include="..\Common\SessionBrokerNodes.cs">
       <Link>SessionBrokerNodes.cs</Link>
     </Compile>
-    <Compile Include="..\Common\SessionPerformanceCounterHelper.cs">
-      <Link>SessionPerformanceCounterHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\SessionPerformanceCounterKey.cs">
-      <Link>SessionPerformanceCounterKey.cs</Link>
-    </Compile>
     <Compile Include="..\Common\SimulateFailure.cs">
       <Link>SimulateFailure.cs</Link>
     </Compile>
@@ -250,6 +244,8 @@
       <DependentUpon>SessionLauncherSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="SessionLauncherStartOption.cs" />
+    <Compile Include="SessionPerformanceCounterHelper.cs" />
+    <Compile Include="SessionPerformanceCounterKey.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

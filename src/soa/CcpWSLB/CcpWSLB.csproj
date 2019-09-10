@@ -80,9 +80,6 @@
     <Compile Include="..\BrokerLauncher\HpcSchedulerAdapterInternalClient.cs">
       <Link>Common\SchedulerAdapter\HpcSchedulerAdapterInternalClient.cs</Link>
     </Compile>
-    <Compile Include="..\Common\BindingData.cs">
-      <Link>BackEnd\BindingData.cs</Link>
-    </Compile>
     <Compile Include="..\Common\BindingHelper.cs">
       <Link>Common\BindingHelper.cs</Link>
     </Compile>
@@ -122,9 +119,6 @@
     <Compile Include="..\Common\HeartbeatHelper.cs">
       <Link>Azure\HeartbeatHelper.cs</Link>
     </Compile>
-    <Compile Include="..\Common\IProxyServiceManagement.cs">
-      <Link>BackEnd\IProxyServiceManagement.cs</Link>
-    </Compile>
     <Compile Include="..\Common\ISchedulerAdapterInternalAsync.cs">
       <Link>Common\ISchedulerAdapterInternalAsync.cs</Link>
     </Compile>
@@ -133,12 +127,6 @@
     </Compile>
     <Compile Include="..\Common\PortHelper.cs">
       <Link>PortHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ProxyBinding.cs">
-      <Link>BackEnd\ProxyBinding.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ProxyFault.cs">
-      <Link>ProxyFault.cs</Link>
     </Compile>
     <Compile Include="..\Common\RetryHelper.cs">
       <Link>Common\RetryHelper.cs</Link>
@@ -178,6 +166,9 @@
     <Compile Include="BackEnd\AzureQueue\ResponseQueueManager.cs" />
     <Compile Include="BackEnd\AzureQueue\ResponseStorageException.cs" />
     <Compile Include="BackEnd\AzureServiceHostController.cs" />
+    <Compile Include="BackEnd\BindingData.cs" />
+    <Compile Include="BackEnd\IProxyServiceManagement.cs" />
+    <Compile Include="BackEnd\ProxyBinding.cs" />
     <Compile Include="BackEnd\ws-security\WssRequestSender.cs" />
     <Compile Include="BackEnd\ws-security\WssResponseReceiver.cs" />
     <Compile Include="BackEnd\ws-security\WssDispatcherInfo.cs" />
@@ -309,6 +300,7 @@
     <Compile Include="Persistences\MSMQPersist\MSMQPersistTransaction.cs" />
     <Compile Include="BrokerTrace.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProxyFault.cs" />
     <Compile Include="SoaDiagTraceHelper.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
