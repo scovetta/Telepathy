@@ -14,7 +14,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
     /// Represents broker's performance counter key
     /// </summary>
     [Serializable]
-    internal enum BrokerPerformanceCounterKey
+    public enum BrokerPerformanceCounterKey
     {
         /// <summary>
         /// Inidcate this should not be included in perf counter

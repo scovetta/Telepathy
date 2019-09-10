@@ -14,7 +14,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
     /// <summary>
     /// Helper class for performance counter
     /// </summary>
-    internal static class BrokerPerformanceCounterHelper
+    public static class BrokerPerformanceCounterHelper
     {
         /// <summary>
         /// Stores the node category name

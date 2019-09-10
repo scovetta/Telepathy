@@ -88,12 +88,6 @@
     <Compile Include="..\CcpWSLB\Common\Utility.cs">
       <Link>Utility.cs</Link>
     </Compile>
-    <Compile Include="..\Common\BrokerPerformanceCounterHelper.cs">
-      <Link>BrokerPerformanceCounterHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\BrokerPerformanceCounterKey.cs">
-      <Link>BrokerPerformanceCounterKey.cs</Link>
-    </Compile>
     <Compile Include="..\Common\BrokerSettingsConstants.cs">
       <Link>BrokerSettingsConstants.cs</Link>
     </Compile>
