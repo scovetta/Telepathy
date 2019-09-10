@@ -71,9 +71,6 @@
     <Compile Include="..\BrokerLauncher\HpcSchedulerAdapterInternalClient.cs">
       <Link>Common\SchedulerAdapter\HpcSchedulerAdapterInternalClient.cs</Link>
     </Compile>
-    <None Include="..\Common\CommonClusterManagerHelper.cs">
-      <Link>CommonClusterManagerHelper.cs</Link>
-    </None>
     <Compile Include="..\Common\Constant.cs">
       <Link>Constant.cs</Link>
     </Compile>
