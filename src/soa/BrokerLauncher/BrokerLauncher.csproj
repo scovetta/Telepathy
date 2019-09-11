@@ -88,12 +88,6 @@
     <Compile Include="..\CcpWSLB\Common\Utility.cs">
       <Link>Utility.cs</Link>
     </Compile>
-    <Compile Include="..\SessionAPI\Interface\ISessionLauncher.cs">
-      <Link>ISessionLauncher.cs</Link>
-    </Compile>
-    <Compile Include="..\SessionAPI\Internal\SessionLauncherClientBase.cs">
-      <Link>SessionLauncherClientBase.cs</Link>
-    </Compile>
     <Compile Include="AzureNaming.cs" />
     <Compile Include="AzureNodeMapping.cs" />
     <Compile Include="AzureNodeMappingUtil.cs" />
