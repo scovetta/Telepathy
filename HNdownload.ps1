@@ -1,7 +1,5 @@
 param([string] $version, [string] $connectString)
 
-$RGName = "soa-service-artifact"
-$SAName = "soaserviceartifactci"
 $ConName = "telepathy"
 
 $Ctx = New-AzStorageContext -ConnectionString $connectString
@@ -13,8 +11,8 @@ $List = Get-AzStorageBlob -prefix $SessionPrefix -Container $ConName -Context $C
 
 $List = $List.name
 foreach ( $l in $list ){
-Write-Output "Downloading $l!"
-Get-AzStorageBlobContent -Blob $l -Container $conname -Context $ctx -Destination "C:\"
+    Write-Output "Downloading $l!"
+    Get-AzStorageBlobContent -Blob $l -Container $conname -Context $ctx -Destination "C:\"
 }
 
   
