@@ -68,15 +68,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\BrokerLauncher\HpcSchedulerAdapterInternalClient.cs">
-      <Link>Common\SchedulerAdapter\HpcSchedulerAdapterInternalClient.cs</Link>
-    </Compile>
-    <Compile Include="..\SessionAPI\AuthenticationFailure.cs">
-      <Link>BackEnd\AuthenticationFailure.cs</Link>
-    </Compile>
-    <Compile Include="..\SessionAPI\RetryOperationError.cs">
-      <Link>BackEnd\RetryOperationError.cs</Link>
-    </Compile>
     <Compile Include="Azure\BrokerProxyEndpointNames.cs" />
     <Compile Include="BackEnd\AzureDispatcherInfo.cs" />
     <Compile Include="BackEnd\AzureQueue\IAzureQueueManager.cs" />

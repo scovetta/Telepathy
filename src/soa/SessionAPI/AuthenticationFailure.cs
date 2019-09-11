@@ -26,11 +26,6 @@ namespace Microsoft.Hpc.Scheduler.Session
     /// <seealso cref="System.ServiceModel.FaultException{T}" />
     [DataContract(Namespace = "http://hpc.microsoft.com/session/")]
     [Serializable]
-#if API
-    public
-#elif BROKER
-    internal 
-#endif
     public sealed class AuthenticationFailure
     {
         /// <summary>
@@ -57,7 +52,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// Initializes a new instance of the AuthenticationFailure class
         /// </summary>
         /// <param name="userName">indicating the user name</param>
-        internal AuthenticationFailure(string userName)
+        public AuthenticationFailure(string userName)
         {
             this.userName = userName;
         }

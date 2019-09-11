@@ -125,7 +125,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             get { return this.lastFailedServiceId; }
 
             // Broker will set this parameter if it is thrown by user
-            internal set { this.lastFailedServiceId = value; }
+            set { this.lastFailedServiceId = value; }
         }
     }
 }
