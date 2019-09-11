@@ -69,9 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\Utility.cs">
-      <Link>Internal\Utility.cs</Link>
-    </Compile>
     <Compile Include="..\Common\Win32API.cs">
       <Link>Win32API.cs</Link>
     </Compile>
@@ -111,6 +108,7 @@
     <Compile Include="Internal\ISchedulerAdapter.cs" />
     <Compile Include="Internal\ServiceRegisteration.cs" />
     <Compile Include="Internal\SessionFactory\SessionFactory.cs" />
+    <Compile Include="Internal\Utility.cs" />
     <Compile Include="Internal\WSBrokerFrontendFactory.cs" />
     <Compile Include="PersistantSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
