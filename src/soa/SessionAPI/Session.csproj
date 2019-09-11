@@ -69,12 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\RetryHelper.cs">
-      <Link>RetryHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\RetryPolicy.cs">
-      <Link>RetryPolicy.cs</Link>
-    </Compile>
     <Compile Include="..\Common\ServiceRegisteration.cs">
       <Link>Internal\ServiceRegisteration.cs</Link>
     </Compile>
@@ -100,6 +94,8 @@
     <Compile Include="BurstUtility.cs" />
     <Compile Include="ChannelTypes.cs" />
     <Compile Include="Common\ParamCheckUtility.cs" />
+    <Compile Include="Common\RetryHelper.cs" />
+    <Compile Include="Common\RetryPolicy.cs" />
     <Compile Include="CredentialHelper.cs" />
     <Compile Include="CredExtension.cs" />
     <Compile Include="HeartbeatHelper.cs" />
