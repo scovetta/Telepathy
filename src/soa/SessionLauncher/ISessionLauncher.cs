@@ -12,7 +12,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
     using System;
     using System.ServiceModel;
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Data.Internal;
     using System.Threading.Tasks;
     using System.Collections.Generic;
     

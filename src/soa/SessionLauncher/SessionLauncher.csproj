@@ -75,59 +75,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CcpWSLB\BackEnd\AzureQueue\MessageRetriever.cs">
-      <Link>DataService\MessageRetriever.cs</Link>
-    </Compile>
-    <Compile Include="..\CcpWSLB\Common\TraceUtils.cs">
-      <Link>DataService\TraceUtils.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\AzureBlobHelper.cs">
-      <Link>DataService\AzureBlobHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\AzureQueueListener.cs">
-      <Link>DataService\AzureQueueListener.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\Constants.cs">
-      <Link>DataService\Constants.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\DataRequest.cs">
-      <Link>DataService\DataRequest.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\DataRequestType.cs">
-      <Link>DataService\DataRequestType.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\DataResponse.cs">
-      <Link>DataService\DataResponse.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\DataUtility.cs">
-      <Link>DataService\DataUtility.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\FileNativeMethods.cs">
-      <Link>DataService\FileNativeMethods.cs</Link>
-    </Compile>
     <Compile Include="BrokerLauncherClient.cs" />
     <Compile Include="BrokerNodeItem.cs" />
     <Compile Include="BrokerNodesManager.cs" />
     <Compile Include="ClusterInfo.cs" />
     <Compile Include="ConfigurationHelper.cs" />
-    <Compile Include="DataService\BlobDataProvider.cs" />
-    <Compile Include="DataService\DataLifeCycleStore.cs" />
-    <Compile Include="DataService\DataManagement.cs" />
-    <Compile Include="DataService\DataMoveTask.cs" />
-    <Compile Include="DataService\DataMoveTaskQueue.cs" />
-    <Compile Include="DataService\DataMoveWorker.cs" />
-    <Compile Include="DataService\DataPermission.cs" />
-    <Compile Include="DataService\DataProviderHelper.cs" />
-    <Compile Include="DataService\DataRequestListener.cs" />
-    <Compile Include="DataService\DataService.cs" />
-    <Compile Include="DataService\DataServiceTraceHelper.cs" />
-    <Compile Include="DataService\FileShareAndBlobDataProvider.cs" />
-    <Compile Include="DataService\FileShareDataProvider.cs" />
-    <Compile Include="DataService\IDataProvider.cs" />
-    <Compile Include="DataService\IDataService.cs" />
-    <Compile Include="DataService\IDataServiceAsync.cs" />
-    <Compile Include="DataService\REST\DataClientController.cs" />
-    <Compile Include="DataService\REST\DataServiceRestServer.cs" />
     <Compile Include="Impls\DataMapping\AzureBatch\JobStateConverter.cs" />
     <Compile Include="Impls\DataMapping\AzureBatch\TaskStateConverter.cs" />
     <Compile Include="Impls\JobMonitorEntry\AzureBatch\AzureBatchJobMonitor.cs" />
