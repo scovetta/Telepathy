@@ -15,7 +15,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// Helper class to throw exceptions
     /// </summary>
-    internal static class ParamCheckUtility
+    public static class ParamCheckUtility
     {
         /// <summary>
         /// Stores the regex checking client id

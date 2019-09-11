@@ -87,9 +87,6 @@
     <Compile Include="..\CcpWSLB\SoaDiagTraceHelper.cs">
       <Link>SoaDiagTraceHelper.cs</Link>
     </Compile>
-    <Compile Include="..\Common\ParamCheckUtility.cs">
-      <Link>ParamCheckUtility.cs</Link>
-    </Compile>
     <Compile Include="..\Common\RetryHelper.cs">
       <Link>RetryHelper.cs</Link>
     </Compile>

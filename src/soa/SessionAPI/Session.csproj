@@ -69,9 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\ParamCheckUtility.cs">
-      <Link>ParamCheckUtility.cs</Link>
-    </Compile>
     <Compile Include="..\Common\RetryHelper.cs">
       <Link>RetryHelper.cs</Link>
     </Compile>
@@ -102,6 +99,7 @@
     <Compile Include="BrokerClientBase.cs" />
     <Compile Include="BurstUtility.cs" />
     <Compile Include="ChannelTypes.cs" />
+    <Compile Include="Common\ParamCheckUtility.cs" />
     <Compile Include="CredentialHelper.cs" />
     <Compile Include="CredExtension.cs" />
     <Compile Include="HeartbeatHelper.cs" />
