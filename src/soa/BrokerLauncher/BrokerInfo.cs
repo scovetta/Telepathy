@@ -20,6 +20,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using Microsoft.Hpc.RuntimeTrace;
     using System.Threading;
 
+    using Utility = Microsoft.Hpc.ServiceBroker.Common.Utility;
+
     /// <summary>
     /// Stores broker info for broker manager
     /// </summary>

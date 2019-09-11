@@ -65,27 +65,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\BindingHelper.cs">
-      <Link>BindingHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Constant.cs">
-      <Link>Constant.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ParamCheckUtility.cs">
-      <Link>ParamCheckUtility.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\SoaHelper.cs">
-      <Link>SoaHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\AzureNaming.cs">
-      <Link>AzureNaming.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ThrowHelper.cs">
-      <Link>ThrowHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\SessionAPI\Interface\IBrokerManagementService.cs">
-      <Link>IBrokerManagementService.cs</Link>
-    </Compile>
     <Compile Include="BrokerManagementService.cs" />
     <Compile Include="BrokerWorkerSetting.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -112,6 +91,10 @@
     <ProjectReference Include="..\CcpWSLB\CcpWSLB.csproj">
       <Project>{2629dc89-f12c-489d-8cf6-e0a6046b6863}</Project>
       <Name>CcpWSLB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SessionAPI.Internal\SessionAPI.Internal.csproj">
+      <Project>{22B73DAB-28F8-489B-99B4-076955E669FC}</Project>
+      <Name>SessionAPI.Internal</Name>
     </ProjectReference>
     <ProjectReference Include="..\SessionAPI\Session.csproj">
       <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>

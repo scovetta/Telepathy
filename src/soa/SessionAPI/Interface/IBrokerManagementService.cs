@@ -15,7 +15,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Interface
     /// Interface for Broker Management Service
     /// </summary>
     [ServiceContract(Name = "IBrokerManagementService", Namespace = "http://hpc.microsoft.com/brokermanagement/")]
-    internal interface IBrokerManagementService
+    public interface IBrokerManagementService
     {
         /// <summary>
         /// Ask broker to initialize

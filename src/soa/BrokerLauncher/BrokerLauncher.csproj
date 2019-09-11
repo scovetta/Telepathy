@@ -85,105 +85,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\common\AzureNaming.cs">
-      <Link>AzureNaming.cs</Link>
-    </Compile>
-    <Compile Include="..\..\common\AzureNodeMapping.cs">
-      <Link>AzureNodeMapping.cs</Link>
-    </Compile>
-    <Compile Include="..\..\common\AzureNodeMappingUtil.cs">
-      <Link>AzureNodeMappingUtil.cs</Link>
-    </Compile>
-    <Compile Include="..\CcpWSLB\Common\Utility.cs">
-      <Link>Utility.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\AzureRoleHelper.cs">
-      <Link>AzureRoleHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\BindingHelper.cs">
-      <Link>BindingHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\BrokerIdentity.cs">
-      <Link>BrokerIdentity.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\BrokerPerformanceCounterHelper.cs">
-      <Link>BrokerPerformanceCounterHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\BrokerPerformanceCounterKey.cs">
-      <Link>BrokerPerformanceCounterKey.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\BrokerSettingsConstants.cs">
-      <Link>BrokerSettingsConstants.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\BrokerVersion.cs">
-      <Link>BrokerVersion.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\CommonClusterManagerHelper.cs">
-      <Link>CommonClusterManagerHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\CommonSchedulerHelper.cs">
-      <Link>CommonSchedulerHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Constant.cs">
-      <Link>Constant.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\DiagTraceHelper.cs">
-      <Link>DiagTraceHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\DisposableObject.cs">
-      <Link>DisposableObject.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\DisposableObjectSlim.cs">
-      <Link>DisposableObjectSlim.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ExceptionHelper.cs">
-      <Link>ExceptionHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ISchedulerAdapterInternalAsync.cs">
-      <Link>ISchedulerAdapterInternalAsync.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\NativeMethods.cs">
-      <Link>Interop\NativeMethods.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ParamCheckUtility.cs">
-      <Link>ParamCheckUtility.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\RetryHelper.cs">
-      <Link>RetryHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\RetryPolicy.cs">
-      <Link>RetryPolicy.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\SafeThreadHandle.cs">
-      <Link>Interop\SafeThreadHandle.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ServiceRegisteration.cs">
-      <Link>ServiceRegisteration.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\SimulateFailure.cs">
-      <Link>SimulateFailure.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\SoaHelper.cs">
-      <Link>SoaHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\common\ServiceHelpers.cs">
-      <Link>ServiceHelpers.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ThreadSafeSchedulerAPI.cs">
-      <Link>ThreadSafeSchedulerAPI.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ThrowHelper.cs">
-      <Link>ThrowHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Win32API.cs">
-      <Link>Win32API.cs</Link>
-    </Compile>
-    <Compile Include="..\SessionAPI\Interface\ISessionLauncher.cs">
-      <Link>ISessionLauncher.cs</Link>
-    </Compile>
-    <Compile Include="..\SessionAPI\Internal\SessionLauncherClientBase.cs">
-      <Link>SessionLauncherClientBase.cs</Link>
-    </Compile>
+    <Compile Include="AzureNaming.cs" />
+    <Compile Include="AzureNodeMapping.cs" />
+    <Compile Include="AzureNodeMappingUtil.cs" />
+    <Compile Include="AzureRoleHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueAdapter\BrokerLauncherCloudQueueWatcher.cs" />
     <Compile Include="BrokerLauncherEnvironment.cs" />
@@ -192,6 +97,7 @@
     <Compile Include="NetTcpPortSharingService.cs" />
     <Compile Include="QueueAdapter\JsonInt32Converter.cs" />
     <Compile Include="SchedulerHelperFactory.cs" />
+    <Compile Include="ServiceHelpers.cs" />
     <Compile Include="SessionLauncherClient.cs" />
     <Compile Include="AzureStorageCleaner.cs" />
     <Compile Include="BrokerInfo.cs" />
@@ -245,10 +151,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\HpcCommon\HpcCommon.csproj">
-      <Project>{2c3936c7-4850-41d7-9497-9040be302328}</Project>
-      <Name>HpcCommon</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\TelepathyCommon\TelepathyCommon.csproj">
       <Project>{1F7D53E1-7C00-4DE4-AD73-B0BB17BC1BFB}</Project>
       <Name>TelepathyCommon</Name>
@@ -260,6 +162,10 @@
     <ProjectReference Include="..\CcpWSLB\CcpWSLB.csproj">
       <Project>{2629dc89-f12c-489d-8cf6-e0a6046b6863}</Project>
       <Name>CcpWSLB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SessionAPI.Internal\SessionAPI.Internal.csproj">
+      <Project>{22b73dab-28f8-489b-99b4-076955e669fc}</Project>
+      <Name>SessionAPI.Internal</Name>
     </ProjectReference>
     <ProjectReference Include="..\SessionAPI\Session.csproj">
       <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>

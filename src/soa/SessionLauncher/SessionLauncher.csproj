@@ -75,154 +75,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\common\AuthenticationUtil.cs">
-      <Link>AuthenticationUtil.cs</Link>
-    </Compile>
-    <Compile Include="..\..\common\AzureNaming.cs">
-      <Link>AzureNaming.cs</Link>
-    </Compile>
-    <Compile Include="..\..\common\CredentialNativeMethods.cs">
-      <Link>CredentialNativeMethods.cs</Link>
-    </Compile>
-    <Compile Include="..\..\common\Credentials.cs">
-      <Link>Credentials.cs</Link>
-    </Compile>
-    <Compile Include="..\..\common\FilePermission.cs">
-      <Link>FilePermission.cs</Link>
-    </Compile>
-    <Compile Include="..\..\common\HpcServiceNames.cs">
-      <Link>HpcServiceNames.cs</Link>
-    </Compile>
-    <Compile Include="..\..\common\ServiceControllerHelpers.cs">
-      <Link>ServiceControllerHelpers.cs</Link>
-    </Compile>
-    <Compile Include="..\CcpWSLB\BackEnd\AzureQueue\MessageRetriever.cs">
-      <Link>DataService\MessageRetriever.cs</Link>
-    </Compile>
-    <Compile Include="..\CcpWSLB\Common\TraceUtils.cs">
-      <Link>DataService\TraceUtils.cs</Link>
-    </Compile>
-    <Compile Include="..\CcpWSLB\Common\Utility.cs">
-      <Link>Utility.cs</Link>
-    </Compile>
-    <Compile Include="..\CcpWSLB\SoaDiagTraceHelper.cs">
-      <Link>SoaDiagTraceHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\AuthenticationHelper.cs">
-      <Link>AuthenticationHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\AzureRoleHelper.cs">
-      <Link>AzureRoleHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\BindingHelper.cs">
-      <Link>BindingHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\BrokerSettingsConstants.cs">
-      <Link>BrokerSettingsConstants.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\BurstUtility.cs">
-      <Link>DataService\BurstUtility.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\CommonClusterManagerHelper.cs">
-      <Link>CommonClusterManagerHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\CommonSchedulerHelper.cs">
-      <Link>CommonSchedulerHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ConfigurationHelper.cs">
-      <Link>ConfigurationHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Constant.cs">
-      <Link>Constant.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\DisposableObject.cs">
-      <Link>DataService\DisposableObject.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ParamCheckUtility.cs">
-      <Link>ParamCheckUtility.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\RetryHelper.cs">
-      <Link>RetryHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\RetryPolicy.cs">
-      <Link>RetryPolicy.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ServiceRegisteration.cs">
-      <Link>ServiceRegisteration.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\SessionBrokerNodes.cs">
-      <Link>SessionBrokerNodes.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\SessionPerformanceCounterHelper.cs">
-      <Link>SessionPerformanceCounterHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\SessionPerformanceCounterKey.cs">
-      <Link>SessionPerformanceCounterKey.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\SimulateFailure.cs">
-      <Link>SimulateFailure.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\SoaHelper.cs">
-      <Link>SoaHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ThrowHelper.cs">
-      <Link>ThrowHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Win32API.cs">
-      <Link>Win32API.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\AzureBlobHelper.cs">
-      <Link>DataService\AzureBlobHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\AzureQueueListener.cs">
-      <Link>DataService\AzureQueueListener.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\Constants.cs">
-      <Link>DataService\Constants.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\DataRequest.cs">
-      <Link>DataService\DataRequest.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\DataRequestType.cs">
-      <Link>DataService\DataRequestType.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\DataResponse.cs">
-      <Link>DataService\DataResponse.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\DataUtility.cs">
-      <Link>DataService\DataUtility.cs</Link>
-    </Compile>
-    <Compile Include="..\Data\Common\FileNativeMethods.cs">
-      <Link>DataService\FileNativeMethods.cs</Link>
-    </Compile>
-    <Compile Include="..\SessionAPI\Interface\IBrokerLauncher.cs">
-      <Link>IBrokerLauncher.cs</Link>
-    </Compile>
-    <Compile Include="..\SessionAPI\Internal\BrokerLauncherClientBase.cs">
-      <Link>BrokerLauncherClientBase.cs</Link>
-    </Compile>
     <Compile Include="BrokerLauncherClient.cs" />
     <Compile Include="BrokerNodeItem.cs" />
     <Compile Include="BrokerNodesManager.cs" />
     <Compile Include="ClusterInfo.cs" />
-    <Compile Include="DataService\BlobDataProvider.cs" />
-    <Compile Include="DataService\DataLifeCycleStore.cs" />
-    <Compile Include="DataService\DataManagement.cs" />
-    <Compile Include="DataService\DataMoveTask.cs" />
-    <Compile Include="DataService\DataMoveTaskQueue.cs" />
-    <Compile Include="DataService\DataMoveWorker.cs" />
-    <Compile Include="DataService\DataPermission.cs" />
-    <Compile Include="DataService\DataProviderHelper.cs" />
-    <Compile Include="DataService\DataRequestListener.cs" />
-    <Compile Include="DataService\DataService.cs" />
-    <Compile Include="DataService\DataServiceTraceHelper.cs" />
-    <Compile Include="DataService\FileShareAndBlobDataProvider.cs" />
-    <Compile Include="DataService\FileShareDataProvider.cs" />
-    <Compile Include="DataService\IDataProvider.cs" />
-    <Compile Include="DataService\IDataService.cs" />
-    <Compile Include="DataService\IDataServiceAsync.cs" />
-    <Compile Include="DataService\REST\DataClientController.cs" />
-    <Compile Include="DataService\REST\DataServiceRestServer.cs" />
+    <Compile Include="ConfigurationHelper.cs" />
     <Compile Include="Impls\DataMapping\AzureBatch\JobStateConverter.cs" />
     <Compile Include="Impls\DataMapping\AzureBatch\TaskStateConverter.cs" />
     <Compile Include="Impls\JobMonitorEntry\AzureBatch\AzureBatchJobMonitor.cs" />
@@ -257,7 +114,6 @@
     <Compile Include="ISessionLauncher.cs" />
     <Compile Include="JobHelper.cs" />
     <Compile Include="SessionLauncher.cs" />
-    <Compile Include="..\Common\ThreadSafeSchedulerAPI.cs" />
     <Compile Include="Impls\SessionLaunchers\HpcPack\SchedulerConnectState.cs" />
     <Compile Include="SessionLauncherSettings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -265,12 +121,19 @@
       <DependentUpon>SessionLauncherSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="SessionLauncherStartOption.cs" />
+    <Compile Include="SessionPerformanceCounterHelper.cs" />
+    <Compile Include="SessionPerformanceCounterKey.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utils\AuthenticationHelper.cs" />
+    <Compile Include="Utils\AuthenticationUtil.cs" />
     <Compile Include="Utils\AzureStorageUtil.cs" />
+    <Compile Include="Utils\FilePermission.cs" />
+    <Compile Include="Utils\HpcServiceNames.cs" />
+    <Compile Include="Utils\ServiceControllerHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SR.resx">
@@ -299,6 +162,10 @@
     <ProjectReference Include="..\SessionAPI.Data\SessionAPI.Data.csproj">
       <Project>{40FC3EBB-D692-4D69-B6A9-6CBD46F19025}</Project>
       <Name>SessionAPI.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SessionAPI.Internal\SessionAPI.Internal.csproj">
+      <Project>{22B73DAB-28F8-489B-99B4-076955E669FC}</Project>
+      <Name>SessionAPI.Internal</Name>
     </ProjectReference>
     <ProjectReference Include="..\SessionAPI\Session.csproj">
       <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>

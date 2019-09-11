@@ -21,7 +21,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
     /// <summary>
     /// Broker helper class
     /// </summary>
-    internal static class Utility
+    public static class Utility
     {
         // TODO: Refactor so that session launcher doesn't rely on this utility class (in ServiceBroker)
 #if Broker

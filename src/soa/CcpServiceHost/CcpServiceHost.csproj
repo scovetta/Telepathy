@@ -79,51 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\common\AzureNaming.cs">
-      <Link>AzureNaming.cs</Link>
-    </Compile>
-    <None Include="..\..\common\AzureTracing.cs">
-      <Link>AzureTracing.cs</Link>
-    </None>
-    <Compile Include="..\..\common\ProductConstants.cs">
-      <Link>ProductConstants.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\AuthManager.cs">
-      <Link>AuthManager.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\BindingHelper.cs">
-      <Link>BindingHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Constant.cs">
-      <Link>Constant.cs</Link>
-    </Compile>
-    <None Include="..\Common\DiagAzureTraceHelper.cs">
-      <Link>DiagAzureTraceHelper.cs</Link>
-    </None>
-    <Compile Include="..\Common\DiagTraceHelper.cs">
-      <Link>DiagTraceHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\NativeMethods.cs">
-      <Link>NativeMethods.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\PortHelper.cs">
-      <Link>PortHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\SafeThreadHandle.cs">
-      <Link>SafeThreadHandle.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ServiceRegisteration.cs">
-      <Link>ServiceRegisteration.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\SessionBrokerNodes.cs">
-      <Link>SessionBrokerNodes.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\SoaHelper.cs">
-      <Link>SoaHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ThrowHelper.cs">
-      <Link>ThrowHelper.cs</Link>
-    </Compile>
+    <Compile Include="AuthManager.cs" />
     <Compile Include="BrokerNodeAuthManager.cs" />
     <Compile Include="CcpServiceHostWrapper.cs" />
     <Compile Include="DummyService.cs" />
@@ -134,6 +90,7 @@
     <Compile Include="Parameter.cs" />
     <Compile Include="ParameterContainer.cs" />
     <Compile Include="ParameterException.cs" />
+    <Compile Include="ProductConstants.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ServiceHostRuntimeConfiguration.cs" />
     <Compile Include="SoaDiagTraceListener.cs" />
@@ -154,10 +111,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\HpcCommon\HpcCommon.csproj">
-      <Project>{2c3936c7-4850-41d7-9497-9040be302328}</Project>
-      <Name>HpcCommon</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\HpcRestServerCommon\HpcRestServerCommon.csproj">
       <Project>{8720315f-7ba8-4923-bd1e-dc2af7690a72}</Project>
       <Name>HpcRestServerCommon</Name>
@@ -173,6 +126,10 @@
     <ProjectReference Include="..\base\BrokerBase.csproj">
       <Project>{3f01d480-4cde-4f46-99ea-95ceda05063e}</Project>
       <Name>BrokerBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SessionAPI.Internal\SessionAPI.Internal.csproj">
+      <Project>{22B73DAB-28F8-489B-99B4-076955E669FC}</Project>
+      <Name>SessionAPI.Internal</Name>
     </ProjectReference>
     <ProjectReference Include="..\SvcHostRestServer\SvcHostRestServer.csproj">
       <Project>{602b999e-6203-432c-af7c-2c31dddde60a}</Project>

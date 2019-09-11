@@ -68,105 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\common\AzureNaming.cs">
-      <Link>Azure\AzureNaming.cs</Link>
-    </Compile>
-    <Compile Include="..\..\common\BrokerProxyEndpointNames.cs">
-      <Link>Azure\BrokerProxyEndpointNames.cs</Link>
-    </Compile>
-    <Compile Include="..\..\common\SecurityDescriptor.cs">
-      <Link>SecurityDescriptor.cs</Link>
-    </Compile>
-    <None Include="..\Common\AzureRoleHelper.cs">
-      <Link>Common\AzureRoleHelper.cs</Link>
-    </None>
-    <Compile Include="..\BrokerLauncher\HpcSchedulerAdapterInternalClient.cs">
-      <Link>Common\SchedulerAdapter\HpcSchedulerAdapterInternalClient.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\BindingData.cs">
-      <Link>BackEnd\BindingData.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\BindingHelper.cs">
-      <Link>Common\BindingHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\BrokerIdentity.cs">
-      <Link>BrokerIdentity.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\BrokerPerformanceCounterHelper.cs">
-      <Link>BrokerPerformanceCounterHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\BrokerPerformanceCounterKey.cs">
-      <Link>BrokerPerformanceCounterKey.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\BrokerSettingsConstants.cs">
-      <Link>BrokerSettingsConstants.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\BrokerVersion.cs">
-      <Link>BrokerVersion.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\BurstUtility.cs">
-      <Link>BackEnd\AzureQueue\BurstUtility.cs</Link>
-    </Compile>
-    <None Include="..\Common\CommonClusterManagerHelper.cs">
-      <Link>CommonClusterManagerHelper.cs</Link>
-    </None>
-    <Compile Include="..\Common\Constant.cs">
-      <Link>Constant.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\DisposableObject.cs">
-      <Link>Common\DisposableObject.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\DisposableObjectSlim.cs">
-      <Link>Common\DisposableObjectSlim.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ExceptionHelper.cs">
-      <Link>ExceptionHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\HeartbeatHelper.cs">
-      <Link>Azure\HeartbeatHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\IProxyServiceManagement.cs">
-      <Link>BackEnd\IProxyServiceManagement.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ISchedulerAdapterInternalAsync.cs">
-      <Link>Common\ISchedulerAdapterInternalAsync.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ParamCheckUtility.cs">
-      <Link>ParamCheckUtility.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\PortHelper.cs">
-      <Link>PortHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ProxyBinding.cs">
-      <Link>BackEnd\ProxyBinding.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ProxyFault.cs">
-      <Link>ProxyFault.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\RetryHelper.cs">
-      <Link>Common\RetryHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\RetryPolicy.cs">
-      <Link>Common\RetryPolicy.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\SimulateFailure.cs">
-      <Link>SimulateFailure.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\SoaHelper.cs">
-      <Link>SoaHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ThrowHelper.cs">
-      <Link>ThrowHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Win32API.cs">
-      <Link>Win32API.cs</Link>
-    </Compile>
-    <Compile Include="..\SessionAPI\AuthenticationFailure.cs">
-      <Link>BackEnd\AuthenticationFailure.cs</Link>
-    </Compile>
-    <Compile Include="..\SessionAPI\RetryOperationError.cs">
-      <Link>BackEnd\RetryOperationError.cs</Link>
-    </Compile>
+    <Compile Include="Azure\BrokerProxyEndpointNames.cs" />
     <Compile Include="BackEnd\AzureDispatcherInfo.cs" />
     <Compile Include="BackEnd\AzureQueue\IAzureQueueManager.cs" />
     <Compile Include="BackEnd\AzureQueue\AzureHttpsDispatcher.cs" />
@@ -180,6 +82,9 @@
     <Compile Include="BackEnd\AzureQueue\ResponseQueueManager.cs" />
     <Compile Include="BackEnd\AzureQueue\ResponseStorageException.cs" />
     <Compile Include="BackEnd\AzureServiceHostController.cs" />
+    <Compile Include="BackEnd\BindingData.cs" />
+    <Compile Include="BackEnd\IProxyServiceManagement.cs" />
+    <Compile Include="BackEnd\ProxyBinding.cs" />
     <Compile Include="BackEnd\ws-security\WssRequestSender.cs" />
     <Compile Include="BackEnd\ws-security\WssResponseReceiver.cs" />
     <Compile Include="BackEnd\ws-security\WssDispatcherInfo.cs" />
@@ -216,6 +121,9 @@
     </Compile>
     <Compile Include="BackEnd\ServiceTaskDispatcherInfo.cs" />
     <Compile Include="BalanceResultInfo.cs" />
+    <Compile Include="BrokerIdentity.cs" />
+    <Compile Include="BrokerPerformanceCounterHelper.cs" />
+    <Compile Include="BrokerPerformanceCounterKey.cs" />
     <Compile Include="BrokerQueue\BrokerQueueAsyncToken.cs" />
     <Compile Include="BrokerQueue\BrokerQueueCallbackItem.cs" />
     <Compile Include="BrokerQueue\BrokerQueueConstants.cs" />
@@ -275,6 +183,7 @@
     <Compile Include="Common\TimeoutManager.cs" />
     <Compile Include="Common\TraceUtils.cs" />
     <Compile Include="Common\Utility.cs" />
+    <Compile Include="ExceptionHelper.cs" />
     <Compile Include="FrontEnd\AzureQueueFrontEnd.cs" />
     <Compile Include="FrontEnd\AzureQueue\AzureQueueProxy.cs" />
     <Compile Include="FrontEnd\AzureQueue\AzureStorageClient.cs" />
@@ -311,7 +220,7 @@
     <Compile Include="Persistences\MSMQPersist\MSMQPersistTransaction.cs" />
     <Compile Include="BrokerTrace.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SoaDiagTraceHelper.cs" />
+    <Compile Include="ProxyFault.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -341,6 +250,10 @@
     <ProjectReference Include="..\SessionAPI.Data\SessionAPI.Data.csproj">
       <Project>{40fc3ebb-d692-4d69-b6a9-6cbd46f19025}</Project>
       <Name>SessionAPI.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SessionAPI.Internal\SessionAPI.Internal.csproj">
+      <Project>{22b73dab-28f8-489b-99b4-076955e669fc}</Project>
+      <Name>SessionAPI.Internal</Name>
     </ProjectReference>
     <ProjectReference Include="..\SessionAPI\Session.csproj">
       <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>
