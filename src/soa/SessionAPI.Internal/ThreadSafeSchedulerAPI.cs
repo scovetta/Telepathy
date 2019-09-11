@@ -16,7 +16,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
     /// Wraps a object
     /// </summary>
     /// <typeparam name="T">TYpe of wrapped object</typeparam>
-    internal class Wrapper<T>
+    public class Wrapper<T>
     {
         /// <summary>
         /// Instance member
@@ -48,7 +48,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
     /// A thread safe wrapper with lock
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    internal class ThreadSafeWrapper<T> : Wrapper<T>, IDisposable
+    public class ThreadSafeWrapper<T> : Wrapper<T>, IDisposable
     {
         /// <summary>
         /// The object that will be used for synchronization

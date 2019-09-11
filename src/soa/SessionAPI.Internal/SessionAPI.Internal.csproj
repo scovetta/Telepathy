@@ -49,6 +49,7 @@
     <Compile Include="SafeThreadHandle.cs" />
     <Compile Include="SessionBrokerNodes.cs" />
     <Compile Include="SimulateFailure.cs" />
+    <Compile Include="ThreadSafeSchedulerAPI.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\base\BrokerBase.csproj">

@@ -180,7 +180,6 @@
     <Compile Include="ISessionLauncher.cs" />
     <Compile Include="JobHelper.cs" />
     <Compile Include="SessionLauncher.cs" />
-    <Compile Include="..\Common\ThreadSafeSchedulerAPI.cs" />
     <Compile Include="Impls\SessionLaunchers\HpcPack\SchedulerConnectState.cs" />
     <Compile Include="SessionLauncherSettings.Designer.cs">
       <AutoGen>True</AutoGen>
