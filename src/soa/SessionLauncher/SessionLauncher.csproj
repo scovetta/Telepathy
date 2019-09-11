@@ -81,9 +81,6 @@
     <Compile Include="..\CcpWSLB\Common\TraceUtils.cs">
       <Link>DataService\TraceUtils.cs</Link>
     </Compile>
-    <Compile Include="..\CcpWSLB\Common\Utility.cs">
-      <Link>Utility.cs</Link>
-    </Compile>
     <Compile Include="..\Data\Common\AzureBlobHelper.cs">
       <Link>DataService\AzureBlobHelper.cs</Link>
     </Compile>
