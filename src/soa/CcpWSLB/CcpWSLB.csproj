@@ -71,9 +71,6 @@
     <Compile Include="..\BrokerLauncher\HpcSchedulerAdapterInternalClient.cs">
       <Link>Common\SchedulerAdapter\HpcSchedulerAdapterInternalClient.cs</Link>
     </Compile>
-    <Compile Include="..\Common\SimulateFailure.cs">
-      <Link>SimulateFailure.cs</Link>
-    </Compile>
     <Compile Include="..\Common\SoaHelper.cs">
       <Link>SoaHelper.cs</Link>
     </Compile>

@@ -14,7 +14,7 @@ using System.Diagnostics;
 
 namespace Microsoft.Hpc.ServiceBroker
 {
-    internal static class SimulateFailure
+    public static class SimulateFailure
     {
         static volatile string operationToFail;
         static volatile int stepToFailOn = 1;

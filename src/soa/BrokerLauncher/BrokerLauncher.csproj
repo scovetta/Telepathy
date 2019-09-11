@@ -88,9 +88,6 @@
     <Compile Include="..\CcpWSLB\Common\Utility.cs">
       <Link>Utility.cs</Link>
     </Compile>
-    <Compile Include="..\Common\SimulateFailure.cs">
-      <Link>SimulateFailure.cs</Link>
-    </Compile>
     <Compile Include="..\Common\SoaHelper.cs">
       <Link>SoaHelper.cs</Link>
     </Compile>
