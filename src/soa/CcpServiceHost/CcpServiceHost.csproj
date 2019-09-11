@@ -85,9 +85,6 @@
     <None Include="..\Common\DiagAzureTraceHelper.cs">
       <Link>DiagAzureTraceHelper.cs</Link>
     </None>
-    <Compile Include="..\Common\NativeMethods.cs">
-      <Link>NativeMethods.cs</Link>
-    </Compile>
     <Compile Include="..\Common\PortHelper.cs">
       <Link>PortHelper.cs</Link>
     </Compile>
@@ -112,6 +109,7 @@
     <Compile Include="DummyService.cs" />
     <Compile Include="HpcServiceHost.cs" />
     <Compile Include="IntParameter.cs" />
+    <Compile Include="NativeMethods.cs" />
     <Compile Include="OperationBehavior.cs" />
     <Compile Include="OperationInvokerWrapper.cs" />
     <Compile Include="Parameter.cs" />
