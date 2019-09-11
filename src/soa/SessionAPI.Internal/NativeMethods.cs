@@ -12,29 +12,31 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using System.Runtime.ConstrainedExecution;
     using System.Runtime.InteropServices;
     using System.Text;
+
     using Microsoft.Hpc.RuntimeTrace;
+    // using Microsoft.Hpc.RuntimeTrace;
     using Win32.SafeHandles;
 
     /// <summary>
     /// Wrapped native methods
     /// </summary>
-    internal static class NativeMethods
+    public static class NativeMethods
     {
-        internal static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
+        public static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
 
         // Create process
-        internal const uint CREATE_UNICODE_ENVIRONMENT = 0x00000400;
-        internal const uint CREATE_SUSPENDED = 0x00000004;
-        internal const uint CREATE_BREAKAWAY_FROM_JOB = 0x01000000;
-        internal const uint CREATE_NO_WINDOW = 0x08000000;
+        public const uint CREATE_UNICODE_ENVIRONMENT = 0x00000400;
+        public const uint CREATE_SUSPENDED = 0x00000004;
+        public const uint CREATE_BREAKAWAY_FROM_JOB = 0x01000000;
+        public const uint CREATE_NO_WINDOW = 0x08000000;
 
 
         // Job object
-        internal const int JobObjectExtendedLimitInformationClass = 9;
-        internal const uint JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x00002000;
+        public const int JobObjectExtendedLimitInformationClass = 9;
+        public const uint JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x00002000;
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct PROCESS_INFORMATION
+        public struct PROCESS_INFORMATION
         {
             public IntPtr hProcess;
             public IntPtr hThread;
@@ -43,7 +45,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        internal struct STARTUPINFO
+        public struct STARTUPINFO
         {
             public Int32 cb;
             public string lpReserved;
@@ -66,7 +68,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct JobObjectExtendedLimitInformation
+        public struct JobObjectExtendedLimitInformation
         {
             public Int64 PerProcessUserTimeLimit;
             public Int64 PerJobUserTimeLimit;
@@ -91,7 +93,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 
         [DllImport("Kernel32.dll", CallingConvention = CallingConvention.Winapi, SetLastError = true, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool CreateProcess([MarshalAs(UnmanagedType.LPTStr)]string lpApplicationName,
+        public static extern bool CreateProcess([MarshalAs(UnmanagedType.LPTStr)]string lpApplicationName,
            StringBuilder lpCommandLine, IntPtr lpProcessAttributes,
            IntPtr lpThreadAttributes, bool bInheritHandles,
            uint dwCreationFlags, IntPtr lpEnvironment, string lpCurrentDirectory,
@@ -100,36 +102,36 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 
         [DllImport("Kernel32.dll", CallingConvention = CallingConvention.Winapi, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool GetExitCodeProcess(SafeProcessHandle hProcess, out uint lpExitCode);
+        public static extern bool GetExitCodeProcess(SafeProcessHandle hProcess, out uint lpExitCode);
 
         [DllImport("Kernel32.dll", CallingConvention = CallingConvention.Winapi, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool TerminateProcess(SafeProcessHandle hProcess, int uExitCode);
+        public static extern bool TerminateProcess(SafeProcessHandle hProcess, int uExitCode);
 
         [DllImport("Kernel32.dll", CallingConvention = CallingConvention.Winapi, SetLastError = true)]
-        internal static extern uint ResumeThread(SafeThreadHandle hThread);
+        public static extern uint ResumeThread(SafeThreadHandle hThread);
 
         [DllImport("kernel32.dll", CallingConvention = CallingConvention.Winapi, SetLastError = true, CharSet = CharSet.Unicode)]
-        internal static extern IntPtr CreateJobObject(IntPtr lpJobAttributes, string lpName);
+        public static extern IntPtr CreateJobObject(IntPtr lpJobAttributes, string lpName);
 
         [DllImport("kernel32.dll", CallingConvention = CallingConvention.Winapi, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal extern static bool SetInformationJobObject(IntPtr hJob, int informationClass, [In] ref JobObjectExtendedLimitInformation info, int size);
+        public extern static bool SetInformationJobObject(IntPtr hJob, int informationClass, [In] ref JobObjectExtendedLimitInformation info, int size);
 
         [DllImport("kernel32.dll", CallingConvention = CallingConvention.Winapi, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal extern static bool AssignProcessToJobObject(IntPtr hJob, SafeProcessHandle hProcess);
+        public extern static bool AssignProcessToJobObject(IntPtr hJob, SafeProcessHandle hProcess);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-        internal extern static bool CloseHandle(IntPtr handle);
+        public extern static bool CloseHandle(IntPtr handle);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-        internal extern static bool CloseHandle(HandleRef handleRef);
+        public extern static bool CloseHandle(HandleRef handleRef);
 
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-        internal static void SafeCloseValidHandle(HandleRef handleRef)
+        public static void SafeCloseValidHandle(HandleRef handleRef)
         {
             if (handleRef.Handle != IntPtr.Zero && handleRef.Handle != INVALID_HANDLE_VALUE)
             {

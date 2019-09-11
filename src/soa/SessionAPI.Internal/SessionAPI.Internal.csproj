@@ -42,10 +42,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NativeMethods.cs" />
     <Compile Include="PortHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SafeThreadHandle.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\base\BrokerBase.csproj">
+      <Project>{3f01d480-4cde-4f46-99ea-95ceda05063e}</Project>
+      <Name>BrokerBase</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SessionAPI\Session.csproj">
       <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>
       <Name>Session</Name>

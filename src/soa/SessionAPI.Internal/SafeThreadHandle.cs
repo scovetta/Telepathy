@@ -16,7 +16,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 {
     [SecurityPermission(SecurityAction.InheritanceDemand, UnmanagedCode = true)]
     [SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
-    internal sealed class SafeThreadHandle : SafeHandleZeroOrMinusOneIsInvalid
+    public sealed class SafeThreadHandle : SafeHandleZeroOrMinusOneIsInvalid
     {
         private SafeThreadHandle() : base(true) { }
 

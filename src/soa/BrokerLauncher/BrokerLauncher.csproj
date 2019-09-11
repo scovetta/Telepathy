@@ -88,9 +88,6 @@
     <Compile Include="..\CcpWSLB\Common\Utility.cs">
       <Link>Utility.cs</Link>
     </Compile>
-    <Compile Include="..\Common\SafeThreadHandle.cs">
-      <Link>Interop\SafeThreadHandle.cs</Link>
-    </Compile>
     <Compile Include="..\Common\ServiceRegisteration.cs">
       <Link>ServiceRegisteration.cs</Link>
     </Compile>
@@ -119,7 +116,6 @@
     <Compile Include="AzureNodeMapping.cs" />
     <Compile Include="AzureNodeMappingUtil.cs" />
     <Compile Include="AzureRoleHelper.cs" />
-    <Compile Include="NativeMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueAdapter\BrokerLauncherCloudQueueWatcher.cs" />
     <Compile Include="BrokerLauncherEnvironment.cs" />
@@ -182,10 +178,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\HpcCommon\HpcCommon.csproj">
-      <Project>{2c3936c7-4850-41d7-9497-9040be302328}</Project>
-      <Name>HpcCommon</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\TelepathyCommon\TelepathyCommon.csproj">
       <Project>{1F7D53E1-7C00-4DE4-AD73-B0BB17BC1BFB}</Project>
       <Name>TelepathyCommon</Name>
@@ -197,6 +189,10 @@
     <ProjectReference Include="..\CcpWSLB\CcpWSLB.csproj">
       <Project>{2629dc89-f12c-489d-8cf6-e0a6046b6863}</Project>
       <Name>CcpWSLB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SessionAPI.Internal\SessionAPI.Internal.csproj">
+      <Project>{22b73dab-28f8-489b-99b4-076955e669fc}</Project>
+      <Name>SessionAPI.Internal</Name>
     </ProjectReference>
     <ProjectReference Include="..\SessionAPI\Session.csproj">
       <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>
