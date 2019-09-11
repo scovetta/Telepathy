@@ -85,9 +85,6 @@
     <None Include="..\Common\DiagAzureTraceHelper.cs">
       <Link>DiagAzureTraceHelper.cs</Link>
     </None>
-    <Compile Include="..\Common\ServiceRegisteration.cs">
-      <Link>ServiceRegisteration.cs</Link>
-    </Compile>
     <Compile Include="..\Common\SessionBrokerNodes.cs">
       <Link>SessionBrokerNodes.cs</Link>
     </Compile>

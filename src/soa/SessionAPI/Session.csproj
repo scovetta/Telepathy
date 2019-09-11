@@ -69,9 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\ServiceRegisteration.cs">
-      <Link>Internal\ServiceRegisteration.cs</Link>
-    </Compile>
     <Compile Include="..\Common\SoaHelper.cs">
       <Link>SoaHelper.cs</Link>
     </Compile>
@@ -116,6 +113,7 @@
     <Compile Include="Internal\HttpBrokerFrontendFactory.cs" />
     <Compile Include="Internal\IResourceProvider.cs" />
     <Compile Include="Internal\ISchedulerAdapter.cs" />
+    <Compile Include="Internal\ServiceRegisteration.cs" />
     <Compile Include="Internal\SessionFactory\SessionFactory.cs" />
     <Compile Include="Internal\WSBrokerFrontendFactory.cs" />
     <Compile Include="PersistantSession.cs" />

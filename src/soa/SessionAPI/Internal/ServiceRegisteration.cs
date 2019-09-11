@@ -18,7 +18,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using TelepathyCommon;
     using static TelepathyCommon.SoaRegistrationAuxModule;
 
-    internal class ServiceRegistrationRepo
+    public class ServiceRegistrationRepo
     {
         private string[] centralPaths;
 
@@ -82,7 +82,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="serviceName">Name of the service</param>
         /// <param name="serviceVersion">Version of the service</param>
         /// <returns>file name</returns>
-        internal static string GetServiceRegistrationFileName(string serviceName, Version serviceVersion) =>
+        public static string GetServiceRegistrationFileName(string serviceName, Version serviceVersion) =>
             GetRegistrationFileName(serviceName, serviceVersion);
 
         /// <summary>
