@@ -170,5 +170,5 @@ stages:
     steps:
     - task: CmdLine@2
       inputs:
-        script: 'taskkill /im "hpcsession.exe" /f'
+        script: 'taskkill /im "hpcsession.exe" /t /f'
     
