@@ -85,9 +85,6 @@
     <None Include="..\Common\DiagAzureTraceHelper.cs">
       <Link>DiagAzureTraceHelper.cs</Link>
     </None>
-    <Compile Include="..\Common\PortHelper.cs">
-      <Link>PortHelper.cs</Link>
-    </Compile>
     <Compile Include="..\Common\SafeThreadHandle.cs">
       <Link>SafeThreadHandle.cs</Link>
     </Compile>
@@ -151,6 +148,10 @@
     <ProjectReference Include="..\base\BrokerBase.csproj">
       <Project>{3f01d480-4cde-4f46-99ea-95ceda05063e}</Project>
       <Name>BrokerBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SessionAPI.Internal\SessionAPI.Internal.csproj">
+      <Project>{22B73DAB-28F8-489B-99B4-076955E669FC}</Project>
+      <Name>SessionAPI.Internal</Name>
     </ProjectReference>
     <ProjectReference Include="..\SvcHostRestServer\SvcHostRestServer.csproj">
       <Project>{602b999e-6203-432c-af7c-2c31dddde60a}</Project>

@@ -71,9 +71,6 @@
     <Compile Include="..\BrokerLauncher\HpcSchedulerAdapterInternalClient.cs">
       <Link>Common\SchedulerAdapter\HpcSchedulerAdapterInternalClient.cs</Link>
     </Compile>
-    <Compile Include="..\Common\PortHelper.cs">
-      <Link>PortHelper.cs</Link>
-    </Compile>
     <Compile Include="..\Common\RetryHelper.cs">
       <Link>Common\RetryHelper.cs</Link>
     </Compile>
@@ -281,6 +278,10 @@
     <ProjectReference Include="..\SessionAPI.Data\SessionAPI.Data.csproj">
       <Project>{40fc3ebb-d692-4d69-b6a9-6cbd46f19025}</Project>
       <Name>SessionAPI.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SessionAPI.Internal\SessionAPI.Internal.csproj">
+      <Project>{22b73dab-28f8-489b-99b4-076955e669fc}</Project>
+      <Name>SessionAPI.Internal</Name>
     </ProjectReference>
     <ProjectReference Include="..\SessionAPI\Session.csproj">
       <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>

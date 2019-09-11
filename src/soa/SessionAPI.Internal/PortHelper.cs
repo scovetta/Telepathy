@@ -12,7 +12,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// Utility functions for the service host port.
     /// </summary>
-    internal static class PortHelper
+    public static class PortHelper
     {
         /// <summary>
         /// Convert the offset to the valid port, and need to support oversubscription.
@@ -24,7 +24,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         /// <param name="coreId">port offset</param>
         /// <returns>value of port</returns>
-        internal static int ConvertToPort(int coreId, bool controller)
+        public static int ConvertToPort(int coreId, bool controller)
         {
             if (coreId >= Constant.ServiceHostPortDiff)
             {
