@@ -88,12 +88,6 @@
     <Compile Include="..\CcpWSLB\Common\Utility.cs">
       <Link>Utility.cs</Link>
     </Compile>
-    <Compile Include="..\Common\RetryHelper.cs">
-      <Link>RetryHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\RetryPolicy.cs">
-      <Link>RetryPolicy.cs</Link>
-    </Compile>
     <Compile Include="..\Common\SafeThreadHandle.cs">
       <Link>Interop\SafeThreadHandle.cs</Link>
     </Compile>

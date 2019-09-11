@@ -71,12 +71,6 @@
     <Compile Include="..\BrokerLauncher\HpcSchedulerAdapterInternalClient.cs">
       <Link>Common\SchedulerAdapter\HpcSchedulerAdapterInternalClient.cs</Link>
     </Compile>
-    <Compile Include="..\Common\RetryHelper.cs">
-      <Link>Common\RetryHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\RetryPolicy.cs">
-      <Link>Common\RetryPolicy.cs</Link>
-    </Compile>
     <Compile Include="..\Common\SimulateFailure.cs">
       <Link>SimulateFailure.cs</Link>
     </Compile>
