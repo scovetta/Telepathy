@@ -6,73 +6,169 @@
 trigger:
 - dev
 
-pool:
-  vmImage: 'windows-latest'
-
 variables:
   solution: 'Telepathy.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
-steps:
-- task: NuGetToolInstaller@1
+stages:
+- stage: Build
+  jobs:
+  - job: UnitTestPublish
+    pool:
+      vmImage: 'windows-latest'
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+    steps:
+    - task: NuGetToolInstaller@1
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-    maximumCpuCount: true
-    msbuildArchitecture: 'x64'
+    - task: NuGetCommand@2
+      inputs:
+        restoreSolution: '$(solution)'
 
-- task: CmdLine@2
-  inputs:
-    script: |
-      sqllocaldb create MSSQLLocalDB
-      sqllocaldb start MSSQLLocalDB
-      sqllocaldb info MSSQLLocalDB
+    - task: VSBuild@1
+      inputs:
+        solution: '$(solution)'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+        maximumCpuCount: true
+        msbuildArchitecture: 'x64'
+
+    - task: CmdLine@2
+      inputs:
+        script: |
+          sqllocaldb create MSSQLLocalDB
+          sqllocaldb start MSSQLLocalDB
+          sqllocaldb info MSSQLLocalDB
       
-      "C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe" start
+          "C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe" start
 
-- task: VSTest@2
-  inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: |
-      **\*UnitTest*.dll
-      !**\*TestAdapter.dll
-      !**\obj\**
-    searchFolder: '$(System.DefaultWorkingDirectory)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-    codeCoverageEnabled: true
+    - task: VSTest@2
+      inputs:
+        testSelector: 'testAssemblies'
+        testAssemblyVer2: |
+          **\*UnitTest*.dll
+          !**\*TestAdapter.dll
+          !**\obj\**
+        searchFolder: '$(System.DefaultWorkingDirectory)'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+        codeCoverageEnabled: true
 
-- task: PowerShell@2
-  inputs:
-    filePath: 'create-artifacts.ps1'
-    errorActionPreference: 'continue'
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(System.DefaultWorkingDirectory)\test\E2ETest\BvtTest'
+        artifact: 'BVTArtifact'
 
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: 'artifacts'
-    Contents: '**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-    OverWrite: true
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(System.DefaultWorkingDirectory)\src\soa\BrokerOutput\$(buildConfiguration)'
+        artifact: 'Broker'
+        
+    - task: PowerShell@2
+      inputs:
+        filePath: 'create-artifacts.ps1'
+        errorActionPreference: 'continue'
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: 'artifacts'
+        Contents: '**'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+        OverWrite: true
 
-- task: AzureFileCopy@3
-  inputs:
-    SourcePath: 'artifacts'
-    azureSubscription: 'BigCompS-Int1(d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
-    Destination: 'AzureBlob'
-    storage: 'soaserviceartifactci'
-    ContainerName: 'telepathy/$(Build.BuildNumber)'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
 
+    - task: AzureFileCopy@3
+      inputs:
+        SourcePath: 'artifacts'
+        azureSubscription: 'BigCompS-Int1(d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
+        Destination: 'AzureBlob'
+        storage: 'soaserviceartifactci'
+        ContainerName: 'telepathy/$(Build.BuildNumber)'
+
+    - task: AzureFileCopy@3
+      inputs:
+        SourcePath: 'artifacts/$(buildConfiguration)/registration'
+        azureSubscription: 'BigCompS-Int1(d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
+        Destination: 'AzureBlob'
+        storage: 'soaruntimestorage'
+        ContainerName: 'service-registration'
+        
+    - task: AzureFileCopy@3
+      inputs:
+        SourcePath: 'artifacts/$(buildConfiguration)/ccpservicehost'
+        azureSubscription: 'BigCompS-Int1(d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
+        Destination: 'AzureBlob'
+        storage: 'soaruntimestorage'
+        ContainerName: 'runtime/ccpservicehost'
+
+    - task: AzureFileCopy@3
+      inputs:
+        SourcePath: 'artifacts/$(buildConfiguration)/echosvclib'
+        azureSubscription: 'BigCompS-Int1(d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
+        Destination: 'AzureBlob'
+        storage: 'soaruntimestorage'
+        ContainerName: 'service-assembly/ccpechosvc'
+        
+  - job: HNDeployment
+    pool: 'Azure Agent'
+    dependsOn: UnitTestPublish
+    steps:
+    - task: AzurePowerShell@4
+      inputs:
+        azureSubscription: 'BigCompS-Int1(d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
+        ScriptType: 'FilePath'
+        ScriptPath: 'HNDownload.ps1'
+        ScriptArguments: '-version $(build.BuildNumber) -connectString $(publishStorageString)'
+        azurePowerShellVersion: 'LatestVersion'
+        
+    - task: DownloadPipelineArtifact@2
+      inputs: 
+        buildType: 'current'
+        artifactName: 'Broker'
+        targetPath: 'C:\BrokerOutput'
+        
+    - task: CmdLine@2
+      inputs:
+        script: |
+          cmd /c "sc.exe config NetTcpPortSharing start= demand & reg ADD "HKLM\Software\Microsoft\StrongName\Verification\*,*" /f & reg ADD "HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^" /f"
+          SCHTASKS /create /sc onstart /tn sessionLauncher$(build.BuildNumber) /tr "c:\$(build.BuildNumber)\$(buildConfiguration)\SessionLauncher\Hpcsession.exe -d -f D:\\config.json" 
+          SCHTASKS /run /tn sessionLauncher$(build.BuildNumber)
+          
+- stage: BVTTest
+  dependsOn: Build
+  jobs:
+  - job: BVTTest
+    pool: 'Azure Agent'
+
+    steps:
+    - task: DownloadPipelineArtifact@2
+      inputs: 
+        buildType: 'current'
+        artifactName: 'BVTArtifact'
+        targetPath: '$(System.DefaultWorkingDirectory)\BVT'
+        
+    - task: VSTest@2
+      inputs:
+        testSelector: 'testAssemblies'
+        testAssemblyVer2: |
+          **\BvtTest.dll
+          !**\*TestAdapter.dll
+          !**\obj\**
+        searchFolder: '$(System.DefaultWorkingDirectory)'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+        codeCoverageEnabled: true
+        
+  - job: CloseSessionLauncher
+    pool: 'Azure Agent'  
+    dependsOn: BvtTest
+    steps:
+    - task: CmdLine@2
+      inputs:
+        script: 'taskkill /im "hpcsession.exe" /f'
+    
