@@ -71,9 +71,6 @@
     <Compile Include="..\BrokerLauncher\HpcSchedulerAdapterInternalClient.cs">
       <Link>Common\SchedulerAdapter\HpcSchedulerAdapterInternalClient.cs</Link>
     </Compile>
-    <Compile Include="..\Common\Win32API.cs">
-      <Link>Win32API.cs</Link>
-    </Compile>
     <Compile Include="..\SessionAPI\AuthenticationFailure.cs">
       <Link>BackEnd\AuthenticationFailure.cs</Link>
     </Compile>

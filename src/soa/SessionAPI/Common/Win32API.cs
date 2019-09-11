@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
-    internal enum COMPUTER_NAME_FORMAT : int
+    public enum COMPUTER_NAME_FORMAT : int
     {
         ComputerNameNetBIOS,
         ComputerNameDnsHostname,
@@ -17,7 +17,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         ComputerNameMax
     };
 
-    internal enum SC_MANAGER_ACCESS : int
+    public enum SC_MANAGER_ACCESS : int
     {
         SC_MANAGER_ALL_ACCESS = 0xF003F,
         SC_MANAGER_CREATE_SERVICE = 0x0002,
@@ -31,12 +31,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         GENERIC_ALL = SC_MANAGER_ALL_ACCESS
     };
     
-    internal enum WIN32_ERRORS : int
+    public enum WIN32_ERRORS : int
     {
         ERROR_DEPENDENCY_NOT_FOUND = 5002
     };
 
-    internal enum CLUSTER_ENUM_RESULT : uint
+    public enum CLUSTER_ENUM_RESULT : uint
     {
         ERROR_SUCCESS=0,
         ERROR_NO_MORE_ITEMS=259,
@@ -44,7 +44,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         WAIT_TIMEOUT=258  
     };
 
-    internal enum CLUSTER_NODE_ENUM_TYPE : uint
+    public enum CLUSTER_NODE_ENUM_TYPE : uint
     {
         CLUSTER_NODE_ENUM_NETINTERFACES = 0x00000001,
         CLUSTER_NODE_ENUM_GROUPS = 0x00000002,
@@ -52,7 +52,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     };
 
 
-    internal enum CLUSTER_ENUM_TYPE : uint
+    public enum CLUSTER_ENUM_TYPE : uint
     {
         CLUSTER_ENUM_NODE = 0x00000001,
         CLUSTER_ENUM_RESTYPE = 0x00000002,
@@ -69,7 +69,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                            CLUSTER_ENUM_NETINTERFACE)
     };
 
-    internal enum CLUSTER_CHANGE : uint
+    public enum CLUSTER_CHANGE : uint
     {
         CLUSTER_CHANGE_NODE_STATE = 0x00000001,
         CLUSTER_CHANGE_NODE_DELETED = 0x00000002,
@@ -106,7 +106,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         CLUSTER_CHANGE_ALL = 0xffffffff
     };
 
-    internal enum CLUSTER_GROUP_STATE : int
+    public enum CLUSTER_GROUP_STATE : int
     {
         CLUSTER_GROUP_STATE_UNKNOWN=-1,
         CLUSTER_GROUP_ONLINE=0,
@@ -116,7 +116,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         CLUSTER_GROUP_PENDING=4
     };
 
-    internal enum CLUSTER_GROUP_ENUM : uint
+    public enum CLUSTER_GROUP_ENUM : uint
     {
         CLUSTER_GROUP_ENUM_CONTAINS   = 1,
         CLUSTER_GROUP_ENUM_NODES      = 2,
@@ -124,25 +124,25 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     };
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct CLUS_NETNAME_VS_TOKEN_INFO 
+    public struct CLUS_NETNAME_VS_TOKEN_INFO 
     {
         public uint ProcessID;
         public uint DesiredAccess;
         public bool InheritHandle;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Shared source file")]
-        internal static int GetSize()
+        public static int GetSize()
         {
             return 4 + 4 + 4;
         }
     };
 
-    internal enum CLUSCTL_RESOURCE_CODES : uint
+    public enum CLUSCTL_RESOURCE_CODES : uint
     {
         CLUSCTL_RESOURCE_NETNAME_GET_VIRTUAL_SERVER_TOKEN = 0x0100016d
     };
 
-    internal enum ClusterState : uint
+    public enum ClusterState : uint
     {
         ClusterStateNotInstalled = 0,
         ClusterStateNotConfigured = 1,
@@ -152,23 +152,23 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
     // GetVersionEx is used in validation of credentials when a new .Net remoting connection is received
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    internal struct OSVERSIONINFOEX
+    public struct OSVERSIONINFOEX
     {
-        internal uint dwOSVersionInfoSize;
-        internal uint dwMajorVersion;
-        internal uint dwMinorVersion;
-        internal uint dwBuildNumber;
-        internal uint dwPlatformId;
+        public uint dwOSVersionInfoSize;
+        public uint dwMajorVersion;
+        public uint dwMinorVersion;
+        public uint dwBuildNumber;
+        public uint dwPlatformId;
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
-        internal string szCSDVersion;
-        internal ushort wServicePackMajor;
-        internal ushort wServicePackMinor;
-        internal ushort wSuiteMask;
-        internal byte wProductType;
-        internal byte wReserved;
+        public string szCSDVersion;
+        public ushort wServicePackMajor;
+        public ushort wServicePackMinor;
+        public ushort wSuiteMask;
+        public byte wProductType;
+        public byte wReserved;
     }
 
-    internal static class Win32API
+    public static class Win32API
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Justification = "This is a shared source file")]
         static public int MAX_HOST_NAME_LEN = 1024;

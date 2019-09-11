@@ -87,9 +87,6 @@
     <Compile Include="..\CcpWSLB\SoaDiagTraceHelper.cs">
       <Link>SoaDiagTraceHelper.cs</Link>
     </Compile>
-    <Compile Include="..\Common\Win32API.cs">
-      <Link>Win32API.cs</Link>
-    </Compile>
     <Compile Include="..\Data\Common\AzureBlobHelper.cs">
       <Link>DataService\AzureBlobHelper.cs</Link>
     </Compile>

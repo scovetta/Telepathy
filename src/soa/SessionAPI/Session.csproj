@@ -69,9 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\Win32API.cs">
-      <Link>Win32API.cs</Link>
-    </Compile>
     <None Include="..\HpcSOAWebSvc\ISOAWebService.cs">
       <Link>Interface\ISOAWebService.cs</Link>
     </None>
@@ -86,6 +83,7 @@
     <Compile Include="Common\RetryPolicy.cs" />
     <Compile Include="Common\SoaHelper.cs" />
     <Compile Include="Common\ThrowHelper.cs" />
+    <Compile Include="Common\Win32API.cs" />
     <Compile Include="CredentialHelper.cs" />
     <Compile Include="CredExtension.cs" />
     <Compile Include="HeartbeatHelper.cs" />
