@@ -111,9 +111,6 @@
     <Compile Include="..\Data\Common\FileNativeMethods.cs">
       <Link>DataService\FileNativeMethods.cs</Link>
     </Compile>
-    <Compile Include="..\SessionAPI\Interface\IBrokerLauncher.cs">
-      <Link>IBrokerLauncher.cs</Link>
-    </Compile>
     <Compile Include="BrokerLauncherClient.cs" />
     <Compile Include="BrokerNodeItem.cs" />
     <Compile Include="BrokerNodesManager.cs" />
