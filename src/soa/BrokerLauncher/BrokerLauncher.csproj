@@ -88,9 +88,6 @@
     <Compile Include="..\CcpWSLB\Common\Utility.cs">
       <Link>Utility.cs</Link>
     </Compile>
-    <Compile Include="..\Common\ISchedulerAdapterInternalAsync.cs">
-      <Link>ISchedulerAdapterInternalAsync.cs</Link>
-    </Compile>
     <Compile Include="..\Common\NativeMethods.cs">
       <Link>Interop\NativeMethods.cs</Link>
     </Compile>
