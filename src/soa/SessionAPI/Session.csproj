@@ -69,9 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\SoaHelper.cs">
-      <Link>SoaHelper.cs</Link>
-    </Compile>
     <Compile Include="..\Common\ThrowHelper.cs">
       <Link>ThrowHelper.cs</Link>
     </Compile>
@@ -93,6 +90,7 @@
     <Compile Include="Common\ParamCheckUtility.cs" />
     <Compile Include="Common\RetryHelper.cs" />
     <Compile Include="Common\RetryPolicy.cs" />
+    <Compile Include="Common\SoaHelper.cs" />
     <Compile Include="CredentialHelper.cs" />
     <Compile Include="CredExtension.cs" />
     <Compile Include="HeartbeatHelper.cs" />

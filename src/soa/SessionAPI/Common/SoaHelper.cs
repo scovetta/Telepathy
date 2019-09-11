@@ -288,7 +288,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <summary>
         /// Stores the address format of the AAD broker launcher service.
         /// </summary>
-        internal static string BrokerLauncherAadAddressFormat => "{0}{1}:{2}/BrokerLauncher/AAD";
+        public static string BrokerLauncherAadAddressFormat => "{0}{1}:{2}/BrokerLauncher/AAD";
 
         /// <summary>
         /// Stores the address format of the broker worker service.
@@ -524,7 +524,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             }
         }
 
-        internal static EndpointAddress CreateInternalCertEndpointAddress(Uri uri, string certThumbprint)
+        public static EndpointAddress CreateInternalCertEndpointAddress(Uri uri, string certThumbprint)
         {
             string dnsIdentityName = WcfChannelModule.GetCertDnsIdentityName(certThumbprint, StoreName.My, StoreLocation.LocalMachine);
             return new EndpointAddress(uri, EndpointIdentity.CreateDnsIdentity(dnsIdentityName));
@@ -1091,7 +1091,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         /// <param name="context">WCF operation context </param>
         /// <returns>authenticated or not</returns>
-        internal static bool CheckWindowsIdentity(OperationContext context)
+        public static bool CheckWindowsIdentity(OperationContext context)
         {
             WindowsIdentity identity = null;
             return CheckWindowsIdentity(context, out identity);
@@ -1102,7 +1102,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         /// <param name="context">WCF operation context </param>
         /// <returns>authenticated or not</returns>
-        internal static bool CheckX509Identity(OperationContext context)
+        public static bool CheckX509Identity(OperationContext context)
         {
             if (context.ServiceSecurityContext.PrimaryIdentity.AuthenticationType.Equals("X509", StringComparison.OrdinalIgnoreCase))
             {
@@ -1128,7 +1128,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="context">WCF operation context </param>
         /// <param name="identity">return the identity</param>
         /// <returns>authenticated or not</returns>
-        internal static bool CheckWindowsIdentity(OperationContext context, out WindowsIdentity identity)
+        public static bool CheckWindowsIdentity(OperationContext context, out WindowsIdentity identity)
         {
             if (IsOnAzure())
             {

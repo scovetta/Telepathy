@@ -85,9 +85,6 @@
     <None Include="..\Common\DiagAzureTraceHelper.cs">
       <Link>DiagAzureTraceHelper.cs</Link>
     </None>
-    <Compile Include="..\Common\SoaHelper.cs">
-      <Link>SoaHelper.cs</Link>
-    </Compile>
     <Compile Include="..\Common\ThrowHelper.cs">
       <Link>ThrowHelper.cs</Link>
     </Compile>
