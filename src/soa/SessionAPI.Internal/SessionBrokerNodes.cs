@@ -19,7 +19,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
     /// <summary>
     /// Saves the broker node(s) associated to a sessions in job env vars
     /// </summary>
-    internal static class SessionBrokerNodes
+    public static class SessionBrokerNodes
     {
         private const string BrokerCountEnvVarName = "WCF_BROKERNODE_COUNT";
 
@@ -57,7 +57,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
         /// <param name="identity">The broker node as a computer account</param>
         /// <returns></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Shared by multiple projects")]
-        internal static bool IsSessionBrokerNode(WindowsIdentity identity, int jobId)
+        public static bool IsSessionBrokerNode(WindowsIdentity identity, int jobId)
         {
             // BUG 8419 : Cache BN SecurityIdentiy objects to improve latency
             if (!CacheBrokerNodeIdentities(jobId))
