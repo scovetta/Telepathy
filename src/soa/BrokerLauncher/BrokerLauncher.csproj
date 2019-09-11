@@ -85,9 +85,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CcpWSLB\Common\Utility.cs">
-      <Link>Utility.cs</Link>
-    </Compile>
     <Compile Include="AzureNaming.cs" />
     <Compile Include="AzureNodeMapping.cs" />
     <Compile Include="AzureNodeMappingUtil.cs" />
