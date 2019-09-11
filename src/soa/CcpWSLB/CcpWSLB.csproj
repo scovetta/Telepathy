@@ -71,9 +71,6 @@
     <Compile Include="..\BrokerLauncher\HpcSchedulerAdapterInternalClient.cs">
       <Link>Common\SchedulerAdapter\HpcSchedulerAdapterInternalClient.cs</Link>
     </Compile>
-    <Compile Include="..\Common\HeartbeatHelper.cs">
-      <Link>Azure\HeartbeatHelper.cs</Link>
-    </Compile>
     <Compile Include="..\Common\ISchedulerAdapterInternalAsync.cs">
       <Link>Common\ISchedulerAdapterInternalAsync.cs</Link>
     </Compile>

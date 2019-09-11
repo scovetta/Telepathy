@@ -69,9 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\HeartbeatHelper.cs">
-      <Link>HeartbeatHelper.cs</Link>
-    </Compile>
     <Compile Include="..\Common\ParamCheckUtility.cs">
       <Link>ParamCheckUtility.cs</Link>
     </Compile>
@@ -107,6 +104,7 @@
     <Compile Include="ChannelTypes.cs" />
     <Compile Include="CredentialHelper.cs" />
     <Compile Include="CredExtension.cs" />
+    <Compile Include="HeartbeatHelper.cs" />
     <Compile Include="Internal\BrokerSettingsConstants.cs" />
     <Compile Include="Internal\BrokerVersion.cs" />
     <Compile Include="Internal\Constant.cs" />

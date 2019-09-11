@@ -14,7 +14,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// Utilities for sending heartbeat on the connection.
     /// </summary>
-    internal class HeartbeatHelper : IDisposable
+    public class HeartbeatHelper : IDisposable
     {
         /// <summary>
         /// The period of sending out heartbeat message
