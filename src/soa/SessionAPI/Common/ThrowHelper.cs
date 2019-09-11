@@ -15,7 +15,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     /// <summary>
     /// Helper class to throw exception
     /// </summary>
-    internal static class ThrowHelper
+    public static class ThrowHelper
     {
         /// <summary>
         /// Throws SessionFault exception
