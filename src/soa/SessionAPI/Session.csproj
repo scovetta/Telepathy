@@ -68,7 +68,7 @@
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup>    
+  <ItemGroup>
     <Compile Include="BalanceInfo.cs" />
     <Compile Include="BindingHelper.cs" />
     <Compile Include="BrokerClient.cs" />
@@ -251,10 +251,6 @@
     <ProjectReference Include="..\..\TelepathyCommon\TelepathyCommon.csproj">
       <Project>{1f7d53e1-7c00-4de4-ad73-b0bb17bc1bfb}</Project>
       <Name>TelepathyCommon</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\WcfUtil\AzureStorageBinding\AzureStorageBinding.csproj">
-      <Project>{5FDAE262-06FD-49C6-B44F-EC1AF1F326E5}</Project>
-      <Name>AzureStorageBinding</Name>
     </ProjectReference>
     <ProjectReference Include="..\SessionAPI.Data\SessionAPI.Data.csproj">
       <Project>{40fc3ebb-d692-4d69-b6a9-6cbd46f19025}</Project>

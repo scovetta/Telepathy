@@ -17,9 +17,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
     using System.ServiceModel;
     using System.Threading;
     using System.Threading.Tasks;
-
-    using AzureStorageBinding.Table.Binding;
-
+    
     using Microsoft.Hpc.Scheduler.Session;
 
     using SoaAmbientConfig;
