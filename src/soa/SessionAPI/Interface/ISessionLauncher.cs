@@ -62,7 +62,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>the Broker Launcher EPR, sorted by the preference.</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task<SessionAllocateInfoContract> AllocateV5Async(SessionStartInfoContract info, string endpointPrefix);
+        Task<SessionAllocateInfoContract> AllocateAsync(SessionStartInfoContract info, string endpointPrefix);
 
         /// <summary>
         /// Allocate a new session
@@ -108,7 +108,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>the Broker Launcher EPR, sorted by the preference.</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task<SessionAllocateInfoContract> AllocateDurableV5Async(SessionStartInfoContract info, string endpointPrefix);
+        Task<SessionAllocateInfoContract> AllocateDurableAsync(SessionStartInfoContract info, string endpointPrefix);
 
         /// <summary>
         /// Allocate a new session
@@ -151,7 +151,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>the Broker Launcher EPR</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task<SessionInfoContract> GetInfoV5Async(string endpointPrefix, int sessionId);
+        Task<SessionInfoContract> GetInfoAsync(string endpointPrefix, int sessionId);
 
         /// <summary>
         /// Attach to an exisiting session
@@ -162,7 +162,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>the Broker Launcher EPR</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, int sessionId, bool useAad);
+        Task<SessionInfoContract> GetInfoAadAsync(string endpointPrefix, int sessionId, bool useAad);
 
         /// <summary>
         /// Attach to an exisiting session
@@ -197,7 +197,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="sessionId">the session id</param>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task TerminateV5Async(int sessionId);
+        Task TerminateAsync(int sessionId);
 
         /// <summary>
         /// terminate a session.

@@ -89,9 +89,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="serviceVersion">the service version</param>
         /// <param name="sessionInfo">the session info</param>
         /// <returns>The EPRs of the broker launchers</returns>
-        public async Task<SessionAllocateInfoContract> AllocateDurableV5Async(SessionStartInfoContract info, string endpointPrefix)
+        public async Task<SessionAllocateInfoContract> AllocateDurableAsync(SessionStartInfoContract info, string endpointPrefix)
         {
-            return await this.Channel.AllocateDurableV5Async(info, endpointPrefix).ConfigureAwait(false);
+            return await this.Channel.AllocateDurableAsync(info, endpointPrefix).ConfigureAwait(false);
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
             //IAsyncResult result = this.Channel.BeginAllocateDurable(info, endpointPrefix, null, null);
             //return this.Channel.EndAllocateDurable(result);
@@ -151,9 +151,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="serviceVersion">the service version</param>
         /// <param name="sessionInfo">the session info</param>
         /// <returns>The EPRs of the broker launchers</returns>
-        public async Task<SessionAllocateInfoContract> AllocateV5Async(SessionStartInfoContract info, string endpointPrefix)
+        public async Task<SessionAllocateInfoContract> AllocateAsync(SessionStartInfoContract info, string endpointPrefix)
         {
-            return await this.Channel.AllocateV5Async(info, endpointPrefix).ConfigureAwait(false);
+            return await this.Channel.AllocateAsync(info, endpointPrefix).ConfigureAwait(false);
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
             //IAsyncResult result = this.Channel.BeginAllocate(info, endpointPrefix, null, null);
             //return this.Channel.EndAllocate(result);
@@ -208,18 +208,18 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="endpointPrefix">the endpoint prefix, net.tcp:// or https:// </param>
         /// <param name="sessionId">the session id</param>
         /// <returns>The Session Information</returns>
-        public async Task<SessionInfoContract> GetInfoV5Async(string endpointPrefix, int sessionId)
+        public async Task<SessionInfoContract> GetInfoAsync(string endpointPrefix, int sessionId)
         {
-            return await this.Channel.GetInfoV5Async(endpointPrefix, sessionId).ConfigureAwait(false);
+            return await this.Channel.GetInfoAsync(endpointPrefix, sessionId).ConfigureAwait(false);
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
             //IAsyncResult result = this.Channel.BeginGetInfo(headnode, endpointPrefix, sessionId, null, null);
             //return this.Channel.EndGetInfo(result);
         }
 
         /// <inheritdoc />
-        public async Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, int sessionId, bool useAad)
+        public async Task<SessionInfoContract> GetInfoAadAsync(string endpointPrefix, int sessionId, bool useAad)
         {
-            return await this.Channel.GetInfoV5Sp1Async(endpointPrefix, sessionId, useAad).ConfigureAwait(false);
+            return await this.Channel.GetInfoAadAsync(endpointPrefix, sessionId, useAad).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -261,9 +261,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// terminate a session.
         /// </summary>
         /// <param name="sessionId">the session id</param>
-        public async Task TerminateV5Async(int sessionId)
+        public async Task TerminateAsync(int sessionId)
         {
-            await this.Channel.TerminateV5Async(sessionId).ConfigureAwait(false);
+            await this.Channel.TerminateAsync(sessionId).ConfigureAwait(false);
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
             //IAsyncResult result = this.Channel.BeginTerminate(headnode, sessionId, null, null);
             //this.Channel.EndTerminate(result);

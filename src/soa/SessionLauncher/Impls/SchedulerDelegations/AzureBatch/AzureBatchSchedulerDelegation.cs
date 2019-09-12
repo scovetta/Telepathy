@@ -85,9 +85,9 @@
             Trace.TraceWarning($"Ignored call to {nameof(RequeueOrFailJobAsync)}");
         }
 
-        public async Task FailJobAsync(int sessionId, string reason) => await this.sessionLauncher.TerminateV5Async(sessionId);
+        public async Task FailJobAsync(int sessionId, string reason) => await this.sessionLauncher.TerminateAsync(sessionId);
 
-        public async Task FinishJobAsync(int sessionId, string reason) => await this.sessionLauncher.TerminateV5Async(sessionId);
+        public async Task FinishJobAsync(int sessionId, string reason) => await this.sessionLauncher.TerminateAsync(sessionId);
 
         /// <summary>
         /// Start to subscribe the job and task event

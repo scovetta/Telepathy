@@ -100,28 +100,28 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             return await Task.FromResult<Version>(SessionLauncher.ServerVersion); // (new Func<Version>(() => SessionLauncher.ServerVersion).Invoke());
         }
 
-        public virtual async Task<SessionAllocateInfoContract> AllocateV5Async(SessionStartInfoContract info, string endpointPrefix)
+        public virtual async Task<SessionAllocateInfoContract> AllocateAsync(SessionStartInfoContract info, string endpointPrefix)
         {
             return await this.AllocateInternalAsync(info, endpointPrefix, false);
         }
 
         public virtual string[] Allocate(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
         {
-            var contract = this.AllocateV5Async(info, endpointPrefix).GetAwaiter().GetResult();
+            var contract = this.AllocateAsync(info, endpointPrefix).GetAwaiter().GetResult();
             sessionid = contract.Id;
             serviceVersion = contract.ServiceVersion?.ToString();
             sessionInfo = contract.SessionInfo;
             return contract.BrokerLauncherEpr;
         }
 
-        public virtual async Task<SessionAllocateInfoContract> AllocateDurableV5Async(SessionStartInfoContract info, string endpointPrefix)
+        public virtual async Task<SessionAllocateInfoContract> AllocateDurableAsync(SessionStartInfoContract info, string endpointPrefix)
         {
             return await this.AllocateInternalAsync(info, endpointPrefix, true);
         }
 
         public virtual string[] AllocateDurable(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
         {
-            SessionAllocateInfoContract contract = this.AllocateDurableV5Async(info, endpointPrefix).GetAwaiter().GetResult();
+            SessionAllocateInfoContract contract = this.AllocateDurableAsync(info, endpointPrefix).GetAwaiter().GetResult();
             sessionid = contract.Id;
             serviceVersion = contract.ServiceVersion?.ToString();
             sessionInfo = contract.SessionInfo;
@@ -135,11 +135,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <param name="endpointPrefix">the prefix of the endpoint epr.</param>
         /// <param name="sessionId">the session id</param>
         /// <returns>the session information.</returns>
-        Task<SessionInfoContract> ISessionLauncher.GetInfoV5Async(string endpointPrefix, int sessionId) => ((ISessionLauncher)this).GetInfoV5Sp1Async(endpointPrefix, sessionId, false);
+        Task<SessionInfoContract> ISessionLauncher.GetInfoAsync(string endpointPrefix, int sessionId) => ((ISessionLauncher)this).GetInfoAadAsync(endpointPrefix, sessionId, false);
 
-        public abstract Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, int sessionId, bool useAad);
+        public abstract Task<SessionInfoContract> GetInfoAadAsync(string endpointPrefix, int sessionId, bool useAad);
 
-        public abstract Task TerminateV5Async(int sessionId);
+        public abstract Task TerminateAsync(int sessionId);
 
         public abstract Task<Version[]> GetServiceVersionsAsync(string serviceName);
 
@@ -159,7 +159,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <returns>the session information.</returns>
         SessionInfoContract ISessionLauncher.GetInfo(string headnode, string endpointPrefix, int sessionId)
         {
-            return ((ISessionLauncher)this).GetInfoV5Async(endpointPrefix, sessionId).GetAwaiter().GetResult();
+            return ((ISessionLauncher)this).GetInfoAsync(endpointPrefix, sessionId).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <param name="sessionId">the session id</param>
         void ISessionLauncher.Terminate(string headnode, int sessionId)
         {
-            ((ISessionLauncher)this).TerminateV5Async(sessionId).GetAwaiter().GetResult();
+            ((ISessionLauncher)this).TerminateAsync(sessionId).GetAwaiter().GetResult();
         }
 
         #endregion
