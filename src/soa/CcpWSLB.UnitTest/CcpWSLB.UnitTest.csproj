@@ -39,14 +39,31 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BrokerWorkerControllerCloudAdapterUnitTest.cs" />
+    <None Include="BrokerWorkerControllerCloudAdapterUnitTest.cs" />
+    <None Include="BackEnd\DispatcherManagerTest.cs" />
+    <Compile Include="Common\RepeatableCallbackTriggerTest.cs" />
+    <Compile Include="Common\ThreadHelperTest.cs" />
+    <None Include="CcpEchoSvc.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Common\TimeoutManagerTest.cs" />
+    <None Include="FrontEnd\DuplexFrontEndTest.cs" />
+    <Compile Include="FrontEnd\FrontEndBuilderTest.cs" />
+    <Compile Include="FrontEnd\GetResponseFrontEndTest.cs" />
+    <None Include="FrontEnd\RequestReplyFrontEndTest.cs" />
+    <Compile Include="Mock\IMockServiceContract.cs" />
+    <Compile Include="Mock\MockBrokerAuthorization.cs" />
+    <Compile Include="Mock\MockBrokerQueue.cs" />
     <Compile Include="Mock\MockController.cs" />
+    <Compile Include="Mock\MockServiceHost.cs" />
+    <Compile Include="Mock\MockWCFClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AzureQueuePersistUnitTest.cs" />
   </ItemGroup>
