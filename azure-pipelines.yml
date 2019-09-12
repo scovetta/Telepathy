@@ -136,7 +136,7 @@ stages:
       inputs:
         script: |
           cmd /c "sc.exe config NetTcpPortSharing start= demand & reg ADD "HKLM\Software\Microsoft\StrongName\Verification\*,*" /f & reg ADD "HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^" /f"
-          SCHTASKS /create /sc onstart /tn sessionLauncher /tr "c:\$(build.BuildNumber)\$(buildConfiguration)\SessionLauncher\Hpcsession.exe -d -f D:\\config.json -f" 
+          SCHTASKS /create /sc onstart /tn sessionLauncher /tr "c:\$(build.BuildNumber)\$(buildConfiguration)\SessionLauncher\Hpcsession.exe -d -f D:\\config.json" -f 
           SCHTASKS /change /tn sessionLauncher /enable
           SCHTASKS /run /tn sessionLauncher
 
