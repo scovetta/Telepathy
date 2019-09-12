@@ -151,10 +151,6 @@
       <Project>{1f7d53e1-7c00-4de4-ad73-b0bb17bc1bfb}</Project>
       <Name>TelepathyCommon</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\WcfUtil\AzureStorageBinding\AzureStorageBinding.csproj">
-      <Project>{5FDAE262-06FD-49C6-B44F-EC1AF1F326E5}</Project>
-      <Name>AzureStorageBinding</Name>
-    </ProjectReference>
     <ProjectReference Include="..\base\BrokerBase.csproj">
       <Project>{3f01d480-4cde-4f46-99ea-95ceda05063e}</Project>
       <Name>BrokerBase</Name>
