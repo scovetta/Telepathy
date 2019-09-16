@@ -8,6 +8,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
+    using System.Linq;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Text;
@@ -140,6 +141,8 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
         private string userNameField;
 
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
+
+        private Dictionary<string, int> requestRetryDic = new Dictionary<string, int>();
 
         internal AzureQueuePersist(string userName, int sessionId, string clientId, string storageConnectString)
         {
@@ -529,15 +532,31 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                                     {
                                         while (true)
                                         {
-                                            if (tokenSource.Token.IsCancellationRequested)
+                                            if (this.tokenSource.Token.IsCancellationRequested)
                                             {
                                                 return;
                                             }
 
-                                            int time = await AzureStorageTool.CheckRequestQueue(
-                                                           this.privateQueueField,
-                                                           this.responseTableField,
-                                                           this.blobContainer);
+                                            int time;
+                                            int uncommitted;
+                                            IEnumerable<BrokerQueueItem> responses;
+                                            (time, uncommitted, responses) = await AzureStorageTool.CheckRequestQueue(
+                                                   this.requestQueueField,
+                                                   this.privateQueueField,
+                                                   this.responseTableField,
+                                                   this.blobContainer,
+                                                   this.requestRetryDic);
+                                            if (uncommitted > 0)
+                                            {
+                                                Interlocked.Add(ref this.uncommittedRequestsCountField, uncommitted);
+                                                this.CommitRequest();
+                                            }
+
+                                            if (responses.ToArray().Length > 0)
+                                            {
+                                                this.PutResponsesAsync(responses, null, null);
+                                            }
+
                                             await Task.Delay(time);
                                         }
                                     });
@@ -635,7 +654,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                                 {
                                     while (true)
                                     {
-                                        if (tokenSource.Token.IsCancellationRequested)
+                                        if (this.tokenSource.Token.IsCancellationRequested)
                                         {
                                             return;
                                         }
@@ -643,7 +662,8 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                                         this.PersistResponsesThreadProc();
                                         await Task.Delay(this.sleepTime);
                                     }
-                                }, tokenSource.Token);
+                                }, 
+                            this.tokenSource.Token);
                     }
                 }
             }
@@ -914,8 +934,6 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
 
                 try
                 {
-                    List<BrokerQueueItem> redispatchRequestsList = new List<BrokerQueueItem>();
-
                     foreach (BrokerQueueItem response in putResponseState.Messages)
                     {
                         ParamCheckUtility.ThrowIfNull(response, "to-be-persisted response");

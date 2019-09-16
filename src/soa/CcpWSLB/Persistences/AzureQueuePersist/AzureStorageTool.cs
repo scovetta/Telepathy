@@ -6,10 +6,14 @@
     using System.Linq;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
+    using System.ServiceModel;
+    using System.ServiceModel.Channels;
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
+    using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
     using Microsoft.WindowsAzure.Storage.Queue;
@@ -31,6 +35,10 @@
         private static readonly IFormatter formatter = new BinaryFormatter();
 
         private static readonly string queueTableName = "StorageInfoTable";
+
+        private static readonly int MaxRetry = 5;
+
+        private static readonly string FailString = "Bad request unable to get response.";
 
         public static async Task AddBatchMsgToTable(CloudTable table, List<ResponseEntity> entities)
         {
@@ -54,52 +62,86 @@
             }
         }
 
-        public static async Task<int> CheckRequestQueue(
+        public static async Task<(int time, int uncommit, IEnumerable<BrokerQueueItem> responses)> CheckRequestQueue(
+            CloudQueue requestQueue,
             CloudQueue waitQueue,
             CloudTable responseTable,
-            CloudBlobContainer container)
+            CloudBlobContainer container,
+            Dictionary<string, int> retryDic)
         {
+            int uncommit = 0;
+            List<BrokerQueueItem> responses = new List<BrokerQueueItem>(); 
             try
             {
                 while (true)
                 {
-                    var message = await waitQueue.PeekMessageAsync();
-                    if (message == null)
+                    var cloudMessage = await waitQueue.PeekMessageAsync();
+                    if (cloudMessage == null)
                     {
                         break;
                     }
 
-                    var messageId =
-                        ((BrokerQueueItem)formatter.Deserialize(
-                                GetMsgBody(container, message.AsBytes).GetAwaiter().GetResult())).Message.Headers
-                        .MessageId.ToString();
+                    var requestItem = (BrokerQueueItem)formatter.Deserialize(await GetMsgBody(container, cloudMessage.AsBytes));
+                    var messageId = requestItem.Message.Headers.MessageId.ToString();
                     BrokerTracing.TraceVerbose(
                         "[AzureQueueInterop] .CheckRequestQueue: queueName = {0}, cloudMessageId = {1}, messageId = {2}",
                         waitQueue.Name,
-                        message.Id,
+                        cloudMessage.Id,
                         messageId);
                     var query = new TableQuery<TableEntity>().Where("RowKey eq '" + messageId + "'");
                     var list = responseTable.ExecuteQuery(query).ToList();
                     if (list.Count > 0)
                     {
                         await waitQueue.DeleteMessageAsync(await waitQueue.GetMessageAsync());
+                        if (retryDic.ContainsKey(messageId))
+                        {
+                            retryDic.Remove(messageId);
+                        }
                     }
                     else
                     {
-                        var interval = DateTimeOffset.Now - message.InsertionTime.Value;
+                        var interval = DateTimeOffset.Now - cloudMessage.InsertionTime.Value;
                         if (interval.TotalMilliseconds >= maxRequestTimeout)
                         {
-                            message = await waitQueue.GetMessageAsync();
+                            // Add msg to request queue & delete it from private queue.
+                            cloudMessage = await waitQueue.GetMessageAsync();
+                            if (retryDic.ContainsKey(messageId))
+                            {
+                                retryDic[messageId]++;
+                            }
+                            else
+                            {
+                                retryDic.Add(messageId, 1);
+                            }
 
-                            // add msg to request queue & delete it from private queue
-                            // TODO
-                            await waitQueue.DeleteMessageAsync(message);
-
-                            // message hospital 
+                            if (retryDic[messageId] > MaxRetry)
+                            {
+                                // Retry time > MaxRetry, create a fault response for the message.
+                                BrokerTracing.TraceVerbose(
+                                    "[AzureQueueInterop] .CheckRequestQueue: messageId = {0} is resent over MaxRetry time.",
+                                    messageId);
+                                BrokerQueueItem faultResponse = new BrokerQueueItem(GenerateFaultMessage(requestItem.Message), Guid.Empty, null);
+                                faultResponse.PersistAsyncToken.AsyncToken = messageId;
+                                faultResponse.PeerItem = requestItem;
+                                responses.Add(faultResponse);
+                                await waitQueue.DeleteMessageAsync(await waitQueue.GetMessageAsync());
+                                retryDic.Remove(messageId);
+                            }
+                            else
+                            {
+                                // Resend timeout message in waiting queue.
+                                BrokerTracing.TraceVerbose(
+                                    "[AzureQueueInterop] .CheckRequestQueue: messageId = {0} is resent, retry time = {1} ",
+                                    messageId, 
+                                    retryDic[messageId]);
+                                uncommit++;
+                                await requestQueue.AddMessageAsync(cloudMessage);
+                                await waitQueue.DeleteMessageAsync(cloudMessage);
+                            }
                         }
                         else
                         {
-                            return maxRequestTimeout - (int)interval.TotalMilliseconds;
+                            return (maxRequestTimeout - (int)interval.TotalMilliseconds, uncommit, responses);
                         }
                     }
                 }
@@ -114,7 +156,7 @@
                 throw;
             }
 
-            return maxRequestTimeout;
+            return (maxRequestTimeout, uncommit, responses);
         }
 
         public static async Task<long> CountFailed(string connectString, string sessionId, string tableName)
@@ -142,6 +184,19 @@
             }
 
             return 0;
+        }
+
+        private static Message GenerateFaultMessage(Message requestMsg)
+        {
+            MessageVersion version = requestMsg.Headers.MessageVersion;
+            SessionFault sessionFault = new SessionFault(SOAFaultCode.Broker_RetryLimitExceeded, FailString);
+            FaultReason faultReason = new FaultReason(FailString);
+            FaultCode faultCode = FaultCode.CreateReceiverFaultCode("RequestUnableGetResponse", Constant.HpcHeaderNS);
+            FaultException faultException = new FaultException<SessionFault>(sessionFault, faultReason, faultCode, SessionFault.Action);
+            MessageFault fault = faultException.CreateMessageFault();
+            Message faultMessage = Message.CreateMessage(version, fault, faultException.Action);
+            faultMessage.Headers.RelatesTo = requestMsg.Headers.MessageId;
+            return faultMessage;
         }
 
         public static async Task<long> CountTableEntity(string connectString, string tableName)
