@@ -26,7 +26,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// Stop a batch of dispatchers.
         /// </summary>
         /// <param name="taskIds">the id of tasks for dispatchers.</param>
-        void StopDispatchers(IEnumerable<int> taskIds, IEnumerable<int> tasksInInterest, bool resumeRemaining = true);
+        void StopDispatchers(IEnumerable<string> taskIds, IEnumerable<string> tasksInInterest, bool resumeRemaining = true);
 
         /// <summary>
         /// Stop all of the dispatchers.
@@ -46,7 +46,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="dispatcherCount">the dispatcher count</param>
         /// <remarks>Consider calc when dispatchers are added\removed</remarks>
         void GetCoreResourceUsageInformation(
-            IEnumerable<int> tasksInInterest,
+            IEnumerable<string> tasksInInterest,
             out int averageCoresPerDispatcher,
             out int totalCores);
 
@@ -55,7 +55,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// </summary>
         /// <param name="totalTaskIds">total task Ids</param>
         /// <returns></returns>
-        IEnumerable<int> GetRunawayTasks(IEnumerable<int> totalTaskIds);
+        IEnumerable<string> GetRunawayTasks(IEnumerable<string> totalTaskIds);
 
     }
 }

@@ -23,7 +23,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Interface
         /// <summary>
         /// Stores the task id
         /// </summary>
-        private int id;
+        private string id;
 
         /// <summary>
         /// Stores the number of cores that the task occupied
@@ -75,7 +75,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Interface
         ///   <para />
         /// </value>
         [DataMember]
-        public int Id
+        public string Id
         {
             get { return this.id; }
             set { this.id = value; }

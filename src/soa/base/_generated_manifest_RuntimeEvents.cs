@@ -1870,7 +1870,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogFrontEndResponseSent(SessionId, ClientId, MessageId);
         }
         
-        public bool LogBackendRequestSent(int SessionId, int TaskId, System.Guid MessageId, System.Guid DispatchId, string TargetMachine, string EndpointAddress)
+        public bool LogBackendRequestSent(int SessionId, string TaskId, System.Guid MessageId, System.Guid DispatchId, string TargetMachine, string EndpointAddress)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Verbose, RuntimeTraceEventIdConst.BackendRequestSentEventId, LogStringFormatTable.BackendRequestSent, SessionId, TaskId, MessageId, DispatchId, TargetMachine, EndpointAddress);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1880,7 +1880,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendRequestSent(SessionId, TaskId, MessageId, DispatchId, TargetMachine, EndpointAddress);
         }
         
-        public bool LogBackendResponseReceived(int SessionId, int TaskId, System.Guid MessageId, bool Fault)
+        public bool LogBackendResponseReceived(int SessionId, string TaskId, System.Guid MessageId, bool Fault)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Verbose, RuntimeTraceEventIdConst.BackendResponseReceivedEventId, LogStringFormatTable.BackendResponseReceived, SessionId, TaskId, MessageId, Fault);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1890,7 +1890,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendResponseReceived(SessionId, TaskId, MessageId, Fault);
         }
         
-        public bool LogBackendRequestSentFailed(int SessionId, int TaskId, System.Guid MessageId, string Exception)
+        public bool LogBackendRequestSentFailed(int SessionId, string TaskId, System.Guid MessageId, string Exception)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.BackendRequestSentFailedEventId, LogStringFormatTable.BackendRequestSentFailed, SessionId, TaskId, MessageId, Exception);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1900,7 +1900,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendRequestSentFailed(SessionId, TaskId, MessageId, Exception);
         }
         
-        public bool LogBackendResponseReceivedFailed(int SessionId, int TaskId, System.Guid MessageId, int RetryCount, string Exception)
+        public bool LogBackendResponseReceivedFailed(int SessionId, string TaskId, System.Guid MessageId, int RetryCount, string Exception)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.BackendResponseReceivedFailedEventId, LogStringFormatTable.BackendResponseReceivedFailed, SessionId, TaskId, MessageId, RetryCount, Exception);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1950,7 +1950,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogFrontEndRequestRejectedClientStateInvalid(SessionId, ClientId, MessageId);
         }
         
-        public bool LogBackendResponseReceivedRetryOperationError(int SessionId, int TaskId, System.Guid MessageId, int RetryCount)
+        public bool LogBackendResponseReceivedRetryOperationError(int SessionId, string TaskId, System.Guid MessageId, int RetryCount)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.BackendResponseReceivedRetryOperationErrorEventId, LogStringFormatTable.BackendResponseReceivedRetryOperationError, SessionId, TaskId, MessageId, RetryCount);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1960,7 +1960,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendResponseReceivedRetryOperationError(SessionId, TaskId, MessageId, RetryCount);
         }
         
-        public bool LogBackendResponseReceivedRetryLimitExceed(int SessionId, int TaskId, System.Guid MessageId, int RetryCount)
+        public bool LogBackendResponseReceivedRetryLimitExceed(int SessionId, string TaskId, System.Guid MessageId, int RetryCount)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.BackendResponseReceivedRetryLimitExceedEventId, LogStringFormatTable.BackendResponseReceivedRetryLimitExceed, SessionId, TaskId, MessageId, RetryCount);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1970,7 +1970,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendResponseReceivedRetryLimitExceed(SessionId, TaskId, MessageId, RetryCount);
         }
         
-        public bool LogBackendRequestPutBack(int SessionId, int TaskId, System.Guid MessageId)
+        public bool LogBackendRequestPutBack(int SessionId, string TaskId, System.Guid MessageId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Verbose, RuntimeTraceEventIdConst.BackendRequestPutBackEventId, LogStringFormatTable.BackendRequestPutBack, SessionId, TaskId, MessageId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1980,7 +1980,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendRequestPutBack(SessionId, TaskId, MessageId);
         }
         
-        public bool LogBackendGeneratedFaultReply(int SessionId, int TaskId, System.Guid MessageId, string FaultReply)
+        public bool LogBackendGeneratedFaultReply(int SessionId, string TaskId, System.Guid MessageId, string FaultReply)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Verbose, RuntimeTraceEventIdConst.BackendGeneratedFaultReplyEventId, LogStringFormatTable.BackendGeneratedFaultReply, SessionId, TaskId, MessageId, FaultReply);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2010,7 +2010,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogFrontEndRequestRejectedGeneralError(SessionId, ClientId, MessageId, Exception);
         }
         
-        public bool LogBackendHandleResponseFailed(int SessionId, int TaskId, System.Guid MessageId, string Exception)
+        public bool LogBackendHandleResponseFailed(int SessionId, string TaskId, System.Guid MessageId, string Exception)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Error, RuntimeTraceEventIdConst.BackendHandleResponseFailedEventId, LogStringFormatTable.BackendHandleResponseFailed, SessionId, TaskId, MessageId, Exception);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2020,7 +2020,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendHandleResponseFailed(SessionId, TaskId, MessageId, Exception);
         }
         
-        public bool LogBackendHandleEndpointNotFoundExceptionFailed(int SessionId, int TaskId, System.Guid MessageId, string Exception)
+        public bool LogBackendHandleEndpointNotFoundExceptionFailed(int SessionId, string TaskId, System.Guid MessageId, string Exception)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Error, RuntimeTraceEventIdConst.BackendHandleEndpointNotFoundExceptionFailedEventId, LogStringFormatTable.BackendHandleEndpointNotFoundExceptionFailed, SessionId, TaskId, MessageId, Exception);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2030,7 +2030,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendHandleEndpointNotFoundExceptionFailed(SessionId, TaskId, MessageId, Exception);
         }
         
-        public bool LogBackendHandleExceptionFailed(int SessionId, int TaskId, System.Guid MessageId, string Exception)
+        public bool LogBackendHandleExceptionFailed(int SessionId, string TaskId, System.Guid MessageId, string Exception)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Error, RuntimeTraceEventIdConst.BackendHandleExceptionFailedEventId, LogStringFormatTable.BackendHandleExceptionFailed, SessionId, TaskId, MessageId, Exception);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2040,7 +2040,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendHandleExceptionFailed(SessionId, TaskId, MessageId, Exception);
         }
         
-        public bool LogBackendEndpointNotFoundExceptionOccured(int SessionId, int TaskId, System.Guid MessageId, string Exception)
+        public bool LogBackendEndpointNotFoundExceptionOccured(int SessionId, string TaskId, System.Guid MessageId, string Exception)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.BackendEndpointNotFoundExceptionOccuredEventId, LogStringFormatTable.BackendEndpointNotFoundExceptionOccured, SessionId, TaskId, MessageId, Exception);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2050,7 +2050,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendEndpointNotFoundExceptionOccured(SessionId, TaskId, MessageId, Exception);
         }
         
-        public bool LogBackendDispatcherClosed(int SessionId, int TaskId, System.Guid MessageId)
+        public bool LogBackendDispatcherClosed(int SessionId, string TaskId, System.Guid MessageId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.BackendDispatcherClosedEventId, LogStringFormatTable.BackendDispatcherClosed, SessionId, TaskId, MessageId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2060,7 +2060,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendDispatcherClosed(SessionId, TaskId, MessageId);
         }
         
-        public bool LogBackendResponseReceivedSessionFault(int SessionId, int TaskId, System.Guid MessageId, string FaultCode)
+        public bool LogBackendResponseReceivedSessionFault(int SessionId, string TaskId, System.Guid MessageId, string FaultCode)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.BackendResponseReceivedSessionFaultEventId, LogStringFormatTable.BackendResponseReceivedSessionFault, SessionId, TaskId, MessageId, FaultCode);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2070,7 +2070,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendResponseReceivedSessionFault(SessionId, TaskId, MessageId, FaultCode);
         }
         
-        public bool LogBackendValidateClientFailed(int SessionId, int TaskId, System.Guid MessageId)
+        public bool LogBackendValidateClientFailed(int SessionId, string TaskId, System.Guid MessageId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.BackendValidateClientFailedEventId, LogStringFormatTable.BackendValidateClientFailed, SessionId, TaskId, MessageId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2080,7 +2080,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendValidateClientFailed(SessionId, TaskId, MessageId);
         }
         
-        public bool LogBackendResponseStored(int SessionId, int TaskId, System.Guid MessageId, bool Fault)
+        public bool LogBackendResponseStored(int SessionId, string TaskId, System.Guid MessageId, bool Fault)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Verbose, RuntimeTraceEventIdConst.BackendResponseStoredEventId, LogStringFormatTable.BackendResponseStored, SessionId, TaskId, MessageId, Fault);
             if ((this.IsTraceEnabled(SessionId) == false))

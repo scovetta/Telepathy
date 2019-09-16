@@ -68,7 +68,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
         private int _cancelTaskGracePeriod = Constant.DefaultCancelTaskGracePeriod;
 
         private int _jobId;
-        private int _taskId;
+        private string _taskId;
         private int _procNum;
 
         private string _serviceTypeName;
@@ -234,10 +234,14 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
             string taskIdEnvVar = Environment.GetEnvironmentVariable(Constant.TaskIDEnvVar);
 
-            if (string.IsNullOrEmpty(taskIdEnvVar) || !int.TryParse(taskIdEnvVar, out _taskId))
+            if (string.IsNullOrEmpty(taskIdEnvVar))
             {
                 RuntimeTraceHelper.TraceEvent(this._jobId, TraceEventType.Error, StringTable.CantFindTaskId);
                 return ErrorCode.ServiceHost_UnexpectedException;
+            }
+            else
+            {
+                this._taskId = taskIdEnvVar;
             }
 
             RuntimeTraceHelper.TraceEvent(

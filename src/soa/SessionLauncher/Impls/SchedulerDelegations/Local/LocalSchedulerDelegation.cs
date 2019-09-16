@@ -24,14 +24,14 @@
             return true;
         }
 
-        public async Task<(bool succeed, BalanceInfo balanceInfo, List<int> taskIds, List<int> runningTaskIds)> GetGracefulPreemptionInfoAsync(int sessionId)
+        public async Task<(bool succeed, BalanceInfo balanceInfo, List<string> taskIds, List<string> runningTaskIds)> GetGracefulPreemptionInfoAsync(int sessionId)
         {
             Trace.TraceWarning($"Ignored call to {nameof(GetGracefulPreemptionInfoAsync)}");
 
             return (false, null, null, null);
         }
 
-        public async Task<bool> FinishTaskAsync(int jobId, int taskUniqueId)
+        public async Task<bool> FinishTaskAsync(int jobId, string taskUniqueId)
         {
             Trace.TraceWarning($"Ignored call to {nameof(FinishTaskAsync)}");
             return true;
@@ -59,7 +59,7 @@
             return (JobState.Running, int.MaxValue, 0);
         }
 
-        public Task<int?> GetTaskErrorCode(int jobId, int globalTaskId)
+        public Task<int?> GetTaskErrorCode(int jobId, string globalTaskId)
         {
             throw new System.NotImplementedException();
         }

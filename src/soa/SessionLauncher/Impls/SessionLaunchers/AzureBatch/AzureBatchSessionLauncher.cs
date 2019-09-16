@@ -606,14 +606,14 @@
                         }
 
                         //TODO: task id type should be changed from int to string
-                        var tasks = Enumerable.Range(0, numTasks - 1).Select(_ => CreateTask(Guid.NewGuid().GetHashCode().ToString())).ToArray();
+                        var tasks = Enumerable.Range(0, numTasks - 1).Select(_ => CreateTask(Guid.NewGuid().ToString())).ToArray();
                         if (!brokerPerfMode)
                         {
                             tasks = tasks.Union(new[] { CreateBrokerTask(true) }).ToArray();
                         }
                         else
                         {
-                            tasks = tasks.Union(new[] { CreateTask(Guid.NewGuid().GetHashCode().ToString()) }).ToArray();
+                            tasks = tasks.Union(new[] { CreateTask(Guid.NewGuid().ToString()) }).ToArray();
                         }
 
                         return batchClient.JobOperations.AddTaskAsync(jobId, tasks);

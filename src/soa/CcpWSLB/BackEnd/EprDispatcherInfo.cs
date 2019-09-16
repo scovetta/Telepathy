@@ -12,7 +12,7 @@
         /// </summary>
         private string epr;
 
-        public EprDispatcherInfo(string epr, int capacity, int unqiueId)
+        public EprDispatcherInfo(string epr, int capacity, string unqiueId)
             : base(unqiueId, capacity, null, null, Scheduler.Session.Data.NodeLocation.OnPremise)
         {
             this.epr = epr;

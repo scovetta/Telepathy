@@ -461,7 +461,7 @@ using System.Security.Principal;
         //
         // Event method for BackendRequestSent
         //
-        public bool LogBackendRequestSent(int SessionId, int TaskId, Guid MessageId, Guid DispatchId, string TargetMachine, string EndpointAddress)
+        public bool LogBackendRequestSent(int SessionId, string TaskId, Guid MessageId, Guid DispatchId, string TargetMachine, string EndpointAddress)
         {
 
             if (!m_provider.IsEnabled())
@@ -475,7 +475,7 @@ using System.Security.Principal;
         //
         // Event method for BackendResponseReceived
         //
-        public bool LogBackendResponseReceived(int SessionId, int TaskId, Guid MessageId, bool Fault)
+        public bool LogBackendResponseReceived(int SessionId, string TaskId, Guid MessageId, bool Fault)
         {
 
             if (!m_provider.IsEnabled())
@@ -489,7 +489,7 @@ using System.Security.Principal;
         //
         // Event method for BackendRequestSentFailed
         //
-        public bool LogBackendRequestSentFailed(int SessionId, int TaskId, Guid MessageId, string Exception)
+        public bool LogBackendRequestSentFailed(int SessionId, string TaskId, Guid MessageId, string Exception)
         {
 
             if (!m_provider.IsEnabled())
@@ -503,7 +503,7 @@ using System.Security.Principal;
         //
         // Event method for BackendResponseReceivedFailed
         //
-        public bool LogBackendResponseReceivedFailed(int SessionId, int TaskId, Guid MessageId, int RetryCount, string Exception)
+        public bool LogBackendResponseReceivedFailed(int SessionId, string TaskId, Guid MessageId, int RetryCount, string Exception)
         {
 
             if (!m_provider.IsEnabled())
@@ -573,7 +573,7 @@ using System.Security.Principal;
         //
         // Event method for BackendResponseReceivedRetryOperationError
         //
-        public bool LogBackendResponseReceivedRetryOperationError(int SessionId, int TaskId, Guid MessageId, int RetryCount)
+        public bool LogBackendResponseReceivedRetryOperationError(int SessionId, string TaskId, Guid MessageId, int RetryCount)
         {
 
             if (!m_provider.IsEnabled())
@@ -587,7 +587,7 @@ using System.Security.Principal;
         //
         // Event method for BackendResponseReceivedRetryLimitExceed
         //
-        public bool LogBackendResponseReceivedRetryLimitExceed(int SessionId, int TaskId, Guid MessageId, int RetryCount)
+        public bool LogBackendResponseReceivedRetryLimitExceed(int SessionId, string TaskId, Guid MessageId, int RetryCount)
         {
 
             if (!m_provider.IsEnabled())
@@ -601,7 +601,7 @@ using System.Security.Principal;
         //
         // Event method for BackendRequestPutBack
         //
-        public bool LogBackendRequestPutBack(int SessionId, int TaskId, Guid MessageId)
+        public bool LogBackendRequestPutBack(int SessionId, string TaskId, Guid MessageId)
         {
 
             if (!m_provider.IsEnabled())
@@ -615,7 +615,7 @@ using System.Security.Principal;
         //
         // Event method for BackendGeneratedFaultReply
         //
-        public bool LogBackendGeneratedFaultReply(int SessionId, int TaskId, Guid MessageId, string FaultReply)
+        public bool LogBackendGeneratedFaultReply(int SessionId, string TaskId, Guid MessageId, string FaultReply)
         {
 
             if (!m_provider.IsEnabled())
@@ -657,7 +657,7 @@ using System.Security.Principal;
         //
         // Event method for BackendHandleResponseFailed
         //
-        public bool LogBackendHandleResponseFailed(int SessionId, int TaskId, Guid MessageId, string Exception)
+        public bool LogBackendHandleResponseFailed(int SessionId, string TaskId, Guid MessageId, string Exception)
         {
 
             if (!m_provider.IsEnabled())
@@ -671,7 +671,7 @@ using System.Security.Principal;
         //
         // Event method for BackendHandleEndpointNotFoundExceptionFailed
         //
-        public bool LogBackendHandleEndpointNotFoundExceptionFailed(int SessionId, int TaskId, Guid MessageId, string Exception)
+        public bool LogBackendHandleEndpointNotFoundExceptionFailed(int SessionId, string TaskId, Guid MessageId, string Exception)
         {
 
             if (!m_provider.IsEnabled())
@@ -685,7 +685,7 @@ using System.Security.Principal;
         //
         // Event method for BackendHandleExceptionFailed
         //
-        public bool LogBackendHandleExceptionFailed(int SessionId, int TaskId, Guid MessageId, string Exception)
+        public bool LogBackendHandleExceptionFailed(int SessionId, string TaskId, Guid MessageId, string Exception)
         {
 
             if (!m_provider.IsEnabled())
@@ -699,7 +699,7 @@ using System.Security.Principal;
         //
         // Event method for BackendEndpointNotFoundExceptionOccured
         //
-        public bool LogBackendEndpointNotFoundExceptionOccured(int SessionId, int TaskId, Guid MessageId, string Exception)
+        public bool LogBackendEndpointNotFoundExceptionOccured(int SessionId, string TaskId, Guid MessageId, string Exception)
         {
 
             if (!m_provider.IsEnabled())
@@ -713,7 +713,7 @@ using System.Security.Principal;
         //
         // Event method for BackendDispatcherClosed
         //
-        public bool LogBackendDispatcherClosed(int SessionId, int TaskId, Guid MessageId)
+        public bool LogBackendDispatcherClosed(int SessionId, string TaskId, Guid MessageId)
         {
 
             if (!m_provider.IsEnabled())
@@ -727,7 +727,7 @@ using System.Security.Principal;
         //
         // Event method for BackendResponseReceivedSessionFault
         //
-        public bool LogBackendResponseReceivedSessionFault(int SessionId, int TaskId, Guid MessageId, string FaultCode)
+        public bool LogBackendResponseReceivedSessionFault(int SessionId, string TaskId, Guid MessageId, string FaultCode)
         {
 
             if (!m_provider.IsEnabled())
@@ -741,7 +741,7 @@ using System.Security.Principal;
         //
         // Event method for BackendValidateClientFailed
         //
-        public bool LogBackendValidateClientFailed(int SessionId, int TaskId, Guid MessageId)
+        public bool LogBackendValidateClientFailed(int SessionId, string TaskId, Guid MessageId)
         {
 
             if (!m_provider.IsEnabled())
@@ -755,7 +755,7 @@ using System.Security.Principal;
         //
         // Event method for BackendResponseStored
         //
-        public bool LogBackendResponseStored(int SessionId, int TaskId, Guid MessageId, bool Fault)
+        public bool LogBackendResponseStored(int SessionId, string TaskId, Guid MessageId, bool Fault)
         {
 
             if (!m_provider.IsEnabled())
@@ -1744,7 +1744,7 @@ using System.Security.Principal;
         internal unsafe bool TemplateBackendRequestMessageWithEPR(
             ref EventDescriptor eventDescriptor,
             int SessionId,
-            int TaskId,
+            string TaskId,
             Guid MessageId,
             Guid DispatchId,
             string TargetMachine,
@@ -1762,8 +1762,7 @@ using System.Security.Principal;
                 userDataPtr[0].DataPointer = (UInt64)(&SessionId);
                 userDataPtr[0].Size = (uint)(sizeof(int)  );
 
-                userDataPtr[1].DataPointer = (UInt64)(&TaskId);
-                userDataPtr[1].Size = (uint)(sizeof(int)  );
+                userDataPtr[1].Size = (uint)(TaskId.Length + 1) * sizeof(char);
 
                 userDataPtr[2].DataPointer = (UInt64)(&MessageId);
                 userDataPtr[2].Size = (uint)(sizeof(Guid)  );
@@ -1775,10 +1774,11 @@ using System.Security.Principal;
 
                 userDataPtr[5].Size = (uint)(EndpointAddress.Length + 1)*sizeof(char);
 
-                fixed (char* a0 = TargetMachine, a1 = EndpointAddress)
+                fixed (char* a0 = TaskId, a1 = TargetMachine, a2 = EndpointAddress)
                 {
                     userDataPtr[4].DataPointer = (ulong)a0;
-                    userDataPtr[5].DataPointer = (ulong)a1;
+                    userDataPtr[4].DataPointer = (ulong)a1;
+                    userDataPtr[5].DataPointer = (ulong)a2;
                     status = WriteEvent(ref eventDescriptor, argumentCount, (IntPtr)(userData));
                 }
             }
@@ -1792,7 +1792,7 @@ using System.Security.Principal;
         internal unsafe bool TemplateBackendResponseMessage(
             ref EventDescriptor eventDescriptor,
             int SessionId,
-            int TaskId,
+            string TaskId,
             Guid MessageId,
             bool Fault
             )
@@ -1808,8 +1808,11 @@ using System.Security.Principal;
                 userDataPtr[0].DataPointer = (UInt64)(&SessionId);
                 userDataPtr[0].Size = (uint)(sizeof(int)  );
 
-                userDataPtr[1].DataPointer = (UInt64)(&TaskId);
-                userDataPtr[1].Size = (uint)(sizeof(int)  );
+                fixed (char* a0 = TaskId)
+                {
+                    userDataPtr[1].DataPointer = (ulong)a0;
+                }
+                userDataPtr[1].Size = (uint)(TaskId.Length + 1) * sizeof(char);
 
                 userDataPtr[2].DataPointer = (UInt64)(&MessageId);
                 userDataPtr[2].Size = (uint)(sizeof(Guid)  );
@@ -1830,7 +1833,7 @@ using System.Security.Principal;
         internal unsafe bool TemplateBackendMessageWithException(
             ref EventDescriptor eventDescriptor,
             int SessionId,
-            int TaskId,
+            string TaskId,
             Guid MessageId,
             string Exception
             )
@@ -1846,17 +1849,17 @@ using System.Security.Principal;
                 userDataPtr[0].DataPointer = (UInt64)(&SessionId);
                 userDataPtr[0].Size = (uint)(sizeof(int)  );
 
-                userDataPtr[1].DataPointer = (UInt64)(&TaskId);
-                userDataPtr[1].Size = (uint)(sizeof(int)  );
+                userDataPtr[1].Size = (uint)(TaskId.Length + 1) * sizeof(char);
 
                 userDataPtr[2].DataPointer = (UInt64)(&MessageId);
                 userDataPtr[2].Size = (uint)(sizeof(Guid)  );
 
                 userDataPtr[3].Size = (uint)(Exception.Length + 1)*sizeof(char);
 
-                fixed (char* a0 = Exception)
+                fixed (char* a0 = TaskId, a1 = Exception)
                 {
-                    userDataPtr[3].DataPointer = (ulong)a0;
+                    userDataPtr[1].DataPointer = (ulong)a0;
+                    userDataPtr[3].DataPointer = (ulong)a1;
                     status = WriteEvent(ref eventDescriptor, argumentCount, (IntPtr)(userData));
                 }
             }
@@ -1870,7 +1873,7 @@ using System.Security.Principal;
         internal unsafe bool TemplateBackendResponseMessageWithExceptionAndRetryCount(
             ref EventDescriptor eventDescriptor,
             int SessionId,
-            int TaskId,
+            string TaskId,
             Guid MessageId,
             int RetryCount,
             string Exception
@@ -1887,8 +1890,7 @@ using System.Security.Principal;
                 userDataPtr[0].DataPointer = (UInt64)(&SessionId);
                 userDataPtr[0].Size = (uint)(sizeof(int)  );
 
-                userDataPtr[1].DataPointer = (UInt64)(&TaskId);
-                userDataPtr[1].Size = (uint)(sizeof(int)  );
+                userDataPtr[1].Size = (uint)(TaskId.Length + 1) * sizeof(char);
 
                 userDataPtr[2].DataPointer = (UInt64)(&MessageId);
                 userDataPtr[2].Size = (uint)(sizeof(Guid)  );
@@ -1898,9 +1900,10 @@ using System.Security.Principal;
 
                 userDataPtr[4].Size = (uint)(Exception.Length + 1)*sizeof(char);
 
-                fixed (char* a0 = Exception)
+                fixed (char* a0 = TaskId, a1 = Exception)
                 {
-                    userDataPtr[4].DataPointer = (ulong)a0;
+                    userDataPtr[1].DataPointer = (ulong)a0;
+                    userDataPtr[4].DataPointer = (ulong)a1;
                     status = WriteEvent(ref eventDescriptor, argumentCount, (IntPtr)(userData));
                 }
             }
@@ -1954,7 +1957,7 @@ using System.Security.Principal;
         internal unsafe bool TemplateBackendResponseMessageRetry(
             ref EventDescriptor eventDescriptor,
             int SessionId,
-            int TaskId,
+            string TaskId,
             Guid MessageId,
             int RetryCount
             )
@@ -1970,8 +1973,11 @@ using System.Security.Principal;
                 userDataPtr[0].DataPointer = (UInt64)(&SessionId);
                 userDataPtr[0].Size = (uint)(sizeof(int)  );
 
-                userDataPtr[1].DataPointer = (UInt64)(&TaskId);
-                userDataPtr[1].Size = (uint)(sizeof(int)  );
+                fixed (char* a0 = TaskId)
+                {
+                    userDataPtr[1].DataPointer = (ulong)a0;
+                }
+                userDataPtr[1].Size = (uint)(TaskId.Length + 1) * sizeof(char);
 
                 userDataPtr[2].DataPointer = (UInt64)(&MessageId);
                 userDataPtr[2].Size = (uint)(sizeof(Guid)  );
@@ -1991,7 +1997,7 @@ using System.Security.Principal;
         internal unsafe bool TemplateBackendRequestMessage(
             ref EventDescriptor eventDescriptor,
             int SessionId,
-            int TaskId,
+            string TaskId,
             Guid MessageId
             )
         {
@@ -2006,8 +2012,11 @@ using System.Security.Principal;
                 userDataPtr[0].DataPointer = (UInt64)(&SessionId);
                 userDataPtr[0].Size = (uint)(sizeof(int)  );
 
-                userDataPtr[1].DataPointer = (UInt64)(&TaskId);
-                userDataPtr[1].Size = (uint)(sizeof(int)  );
+                fixed (char* a0 = TaskId)
+                {
+                    userDataPtr[1].DataPointer = (ulong)a0;
+                }
+                userDataPtr[1].Size = (uint)(TaskId.Length + 1) * sizeof(char);
 
                 userDataPtr[2].DataPointer = (UInt64)(&MessageId);
                 userDataPtr[2].Size = (uint)(sizeof(Guid)  );
@@ -2024,7 +2033,7 @@ using System.Security.Principal;
         internal unsafe bool TemplateBackendGeneratedFaultReply(
             ref EventDescriptor eventDescriptor,
             int SessionId,
-            int TaskId,
+            string TaskId,
             Guid MessageId,
             string FaultReply
             )
@@ -2040,17 +2049,17 @@ using System.Security.Principal;
                 userDataPtr[0].DataPointer = (UInt64)(&SessionId);
                 userDataPtr[0].Size = (uint)(sizeof(int)  );
 
-                userDataPtr[1].DataPointer = (UInt64)(&TaskId);
-                userDataPtr[1].Size = (uint)(sizeof(int)  );
+                userDataPtr[1].Size = (uint)(TaskId.Length + 1) * sizeof(char);
 
                 userDataPtr[2].DataPointer = (UInt64)(&MessageId);
                 userDataPtr[2].Size = (uint)(sizeof(Guid)  );
 
                 userDataPtr[3].Size = (uint)(FaultReply.Length + 1)*sizeof(char);
 
-                fixed (char* a0 = FaultReply)
+                fixed (char* a0 = TaskId, a1 = FaultReply)
                 {
-                    userDataPtr[3].DataPointer = (ulong)a0;
+                    userDataPtr[1].DataPointer = (ulong)a0;
+                    userDataPtr[3].DataPointer = (ulong)a1;
                     status = WriteEvent(ref eventDescriptor, argumentCount, (IntPtr)(userData));
                 }
             }
@@ -2104,7 +2113,7 @@ using System.Security.Principal;
         internal unsafe bool TemplateBackendResponseMessageWithFaultCode(
             ref EventDescriptor eventDescriptor,
             int SessionId,
-            int TaskId,
+            string TaskId,
             Guid MessageId,
             string FaultCode
             )
@@ -2120,17 +2129,17 @@ using System.Security.Principal;
                 userDataPtr[0].DataPointer = (UInt64)(&SessionId);
                 userDataPtr[0].Size = (uint)(sizeof(int)  );
 
-                userDataPtr[1].DataPointer = (UInt64)(&TaskId);
-                userDataPtr[1].Size = (uint)(sizeof(int)  );
+                userDataPtr[1].Size = (uint)(TaskId.Length + 1) * sizeof(char);
 
                 userDataPtr[2].DataPointer = (UInt64)(&MessageId);
                 userDataPtr[2].Size = (uint)(sizeof(Guid)  );
 
                 userDataPtr[3].Size = (uint)(FaultCode.Length + 1)*sizeof(char);
 
-                fixed (char* a0 = FaultCode)
+                fixed (char* a0 = TaskId, a1 = FaultCode)
                 {
-                    userDataPtr[3].DataPointer = (ulong)a0;
+                    userDataPtr[1].DataPointer = (ulong)a0;
+                    userDataPtr[3].DataPointer = (ulong)a1;
                     status = WriteEvent(ref eventDescriptor, argumentCount, (IntPtr)(userData));
                 }
             }

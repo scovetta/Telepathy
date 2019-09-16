@@ -186,7 +186,7 @@
                 return (Scheduler.Session.Data.JobState.Running, autoMax, autoMin);
             }
 
-            public Task<int?> GetTaskErrorCode(int jobId, int globalTaskId)
+            public Task<int?> GetTaskErrorCode(int jobId, string globalTaskId)
             {
                 return null;
             }
@@ -224,12 +224,12 @@
             */
 
 
-            async Task<(bool succeed, BalanceInfo balanceInfo, List<int> taskIds, List<int> runningTaskIds)> ISchedulerAdapter.GetGracefulPreemptionInfoAsync(int jobId)
+            async Task<(bool succeed, BalanceInfo balanceInfo, List<string> taskIds, List<string> runningTaskIds)> ISchedulerAdapter.GetGracefulPreemptionInfoAsync(int jobId)
             {
                 return (true, new BalanceInfo(int.MaxValue), null, null); 
             }
 
-            public Task<bool> FinishTaskAsync(int jobId, int taskUniqueId)
+            public Task<bool> FinishTaskAsync(int jobId, string taskUniqueId)
             {
                 return Task.FromResult(true);
             }

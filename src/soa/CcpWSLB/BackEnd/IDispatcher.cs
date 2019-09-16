@@ -41,7 +41,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <summary>
         /// Gets the task id
         /// </summary>
-        int TaskId
+        string TaskId
         {
             get;
         }

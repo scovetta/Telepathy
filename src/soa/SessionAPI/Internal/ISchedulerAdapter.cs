@@ -17,12 +17,12 @@
 
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task<(bool succeed, BalanceInfo balanceInfo, List<int> taskIds, List<int> runningTaskIds)> GetGracefulPreemptionInfoAsync(int sessionId);
+        Task<(bool succeed, BalanceInfo balanceInfo, List<string> taskIds, List<string> runningTaskIds)> GetGracefulPreemptionInfoAsync(int sessionId);
 
         // TODO: this sig need to be changed, `taskUniqueId` should be removed
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task<bool> FinishTaskAsync(int jobId, int taskUniqueId);
+        Task<bool> FinishTaskAsync(int jobId, string taskUniqueId);
 
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
@@ -46,6 +46,6 @@
 
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task<int?> GetTaskErrorCode(int jobId, int globalTaskId);
+        Task<int?> GetTaskErrorCode(int jobId, string globalTaskId);
     }
 }

@@ -33,10 +33,10 @@
 
         public async Task<bool> UpdateBrokerInfoAsync(int sessionId, Dictionary<string, object> properties) => await this.Channel.UpdateBrokerInfoAsync(sessionId, properties);
 
-        public async Task<(bool succeed, BalanceInfo balanceInfo, List<int> taskIds, List<int> runningTaskIds)> GetGracefulPreemptionInfoAsync(int sessionId) =>
+        public async Task<(bool succeed, BalanceInfo balanceInfo, List<string> taskIds, List<string> runningTaskIds)> GetGracefulPreemptionInfoAsync(int sessionId) =>
             await this.Channel.GetGracefulPreemptionInfoAsync(sessionId);
 
-        public async Task<bool> FinishTaskAsync(int jobId, int taskUniqueId) => await this.Channel.FinishTaskAsync(jobId, taskUniqueId);
+        public async Task<bool> FinishTaskAsync(int jobId, string taskUniqueId) => await this.Channel.FinishTaskAsync(jobId, taskUniqueId);
 
         public async Task<bool> ExcludeNodeAsync(int jobid, string nodeName) => await this.Channel.ExcludeNodeAsync(jobid, nodeName);
 
@@ -62,7 +62,7 @@
         }
 
         // TODO: remove globalTaskId
-        public async Task<int?> GetTaskErrorCode(int jobId, int globalTaskId)
+        public async Task<int?> GetTaskErrorCode(int jobId, string globalTaskId)
         {
             return await this.Channel.GetTaskErrorCode(jobId, globalTaskId);
         }

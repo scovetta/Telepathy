@@ -33,7 +33,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor
         private const string ApiName = "svchostserver";
 
         //TODO: int should be changed to string when taskid is type of string
-        private static HashSet<int> invalidIds = new HashSet<int>();
+        private static HashSet<string> invalidIds = new HashSet<string>();
 
         public static async Task OpenSvcHostsAsync(int sessionId, SessionStartInfoContract startInfo, Func<List<TaskInfo>, Task> taskStateChangedCallBack)
         {
@@ -49,9 +49,9 @@ namespace Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor
             return await OpenSvcHostWithRetryAsync(sessionId, taskDispatcherInfo, startInfo.RegPath, startInfo.ServiceName, startInfo.ServiceVersion, startInfo.Environments, startInfo.DependFilesStorageInfo);
         }
 
-        public static void StopOpenSvcHostAsync(List<int> cancelledIds)
+        public static void StopOpenSvcHostAsync(List<string> cancelledIds)
         {
-            invalidIds = new HashSet<int>(invalidIds.Union(cancelledIds));
+            invalidIds = new HashSet<string>(invalidIds.Union(cancelledIds));
         }
 
         private static async Task<TaskInfo> OpenSvcHostWithRetryAsync(
@@ -134,7 +134,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor
             Dictionary<string, string> dependFilesInfo)
         {
             TaskInfo ti = new TaskInfo();
-            ti.Id = TaskIdStart + num;
+            ti.Id = (TaskIdStart + num).ToString();
             ti.Capacity = 1;
             ti.FirstCoreIndex = 3;
             ti.Location = Scheduler.Session.Data.NodeLocation.OnPremise;

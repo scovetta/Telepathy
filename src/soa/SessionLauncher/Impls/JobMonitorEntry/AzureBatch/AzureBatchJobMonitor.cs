@@ -200,7 +200,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                     if (state == TaskState.Running)
                     {
                         TaskInfo info = new TaskInfo();
-                        info.Id = Int32.Parse(task.Id);
+                        info.Id = task.Id;
                         info.State = TaskStateConverter.FromAzureBatchTaskState(task.State.Value);
                         info.MachineName = nodes.First(n => n.AffinityId == task.ComputeNodeInformation.AffinityId)
                             .IPAddress;
@@ -211,7 +211,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                     else if (state == TaskState.Completed)
                     {
                         TaskInfo info = new TaskInfo();
-                        info.Id = Int32.Parse(task.Id);
+                        info.Id = task.Id;
                         info.State = TaskStateConverter.FromAzureBatchTaskState(task.State.Value);
                         results.Add(info);
                     }

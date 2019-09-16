@@ -113,7 +113,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 Console.Error.WriteLine(e.Message);
                 return ErrorCode.ServiceHost_UnexpectedException;
             }
-            ServiceInfo serviceInfo = new ServiceInfo(int.Parse(param.JobId), int.Parse(param.TaskId), int.Parse(param.CoreId), param.RegistrationPath, param.FileName, null, null);
+            ServiceInfo serviceInfo = new ServiceInfo(int.Parse(param.JobId), param.TaskId, int.Parse(param.CoreId), param.RegistrationPath, param.FileName, null, null);
             OpenService(serviceInfo);
             return 0;
         }

@@ -4,7 +4,7 @@
 
     public static class TaskInInterestUtil
     {
-        public static bool IsTaskInInterest(HashSet<int> tasksInInterestList, int taskId)
+        public static bool IsTaskInInterest(HashSet<string> tasksInInterestList, string taskId)
         {
             if (tasksInInterestList == null)
             {
