@@ -14,17 +14,17 @@
 
         private Process svcHostProcess;
 
-        public override async Task<SessionAllocateInfoContract> AllocateDurableV5Async(SessionStartInfoContract info, string endpointPrefix)
+        public override async Task<SessionAllocateInfoContract> AllocateDurableAsync(SessionStartInfoContract info, string endpointPrefix)
         {
             throw new NotSupportedException("Currently Session Launcher does not support durable session in Local Session mode.");
         }
 
-        public override async Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, int sessionId, bool useAad)
+        public override async Task<SessionInfoContract> GetInfoAsync(string endpointPrefix, int sessionId)
         {
             throw new NotImplementedException();
         }
 
-        public override async Task TerminateV5Async(int sessionId)
+        public override async Task TerminateAsync(int sessionId)
         {
             this.brokerLauncherProcess.Kill();
             this.svcHostProcess.Kill();

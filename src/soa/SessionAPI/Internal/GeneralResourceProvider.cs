@@ -80,7 +80,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             if (durable)
             {
                 sessionAllocateInfo = await RetryHelper<SessionAllocateInfoContract>.InvokeOperationAsync(
-                    async () => await this.client.AllocateDurableV5Async(startInfo.Data, this.endpointPrefix).ConfigureAwait(false),
+                    async () => await this.client.AllocateDurableAsync(startInfo.Data, this.endpointPrefix).ConfigureAwait(false),
                     (e, r) =>
                     {
                         var remainingTime = GetRemainingTime(timeout, startTime);
@@ -101,7 +101,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             else
             {
                 sessionAllocateInfo = await RetryHelper<SessionAllocateInfoContract>.InvokeOperationAsync(
-                    async () => await this.client.AllocateV5Async(startInfo.Data, this.endpointPrefix).ConfigureAwait(false),
+                    async () => await this.client.AllocateAsync(startInfo.Data, this.endpointPrefix).ConfigureAwait(false),
                     (e, r) =>
                     {
                         var remainingTime = GetRemainingTime(timeout, startTime);
@@ -175,7 +175,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             {
                 info = Utility.BuildSessionInfoFromDataContract(
                     await RetryHelper<SessionInfoContract>.InvokeOperationAsync(
-                            async () => await this.client.GetInfoV5Sp1Async(SessionLauncherClient.HttpsEndpointPrefix, attachInfo.SessionId, attachInfo.UseAad).ConfigureAwait(false),
+                            async () => await this.client.GetInfoAsync(SessionLauncherClient.HttpsEndpointPrefix, attachInfo.SessionId).ConfigureAwait(false),
                             (e, r) =>
                                 {
                                     var remainingTime = GetRemainingTime(timeout, startTime);
@@ -199,7 +199,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             {
                 info = Utility.BuildSessionInfoFromDataContract(
                     await RetryHelper<SessionInfoContract>.InvokeOperationAsync(
-                            async () => await this.client.GetInfoV5Sp1Async(SessionLauncherClient.EndpointPrefix, attachInfo.SessionId, attachInfo.UseAad).ConfigureAwait(false),
+                            async () => await this.client.GetInfoAsync(SessionLauncherClient.EndpointPrefix, attachInfo.SessionId).ConfigureAwait(false),
                             (e, r) =>
                                 {
                                     var remainingTime = GetRemainingTime(timeout, startTime);
@@ -235,7 +235,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     await RetryHelper<object>.InvokeOperationAsync(
                         async () =>
                             {
-                                await this.client.TerminateV5Async(sessionId).ConfigureAwait(false);
+                                await this.client.TerminateAsync(sessionId).ConfigureAwait(false);
                                 return null;
                             },
                         (e, r) =>

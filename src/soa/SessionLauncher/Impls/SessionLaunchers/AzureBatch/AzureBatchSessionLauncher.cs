@@ -68,7 +68,7 @@
                 AzureBatchConfiguration.SoaBrokerStorageConnectionString;
         }
 
-        public override async Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, int sessionId, bool useAad)
+        public override async Task<SessionInfoContract> GetInfoAsync(string endpointPrefix, int sessionId)
         {
             SessionInfoContract sessionInfo = null;
             CheckAccess();
@@ -100,13 +100,13 @@
                     var sessionJob = await batchClient.JobOperations.GetJobAsync(jobId).ConfigureAwait(false);
                     if (sessionJob == null)
                     {
-                        throw new InvalidOperationException($"[{nameof(AzureBatchSessionLauncher)}] .{nameof(this.GetInfoV5Sp1Async)} Failed to get batch job for session {sessionId}");
+                        throw new InvalidOperationException($"[{nameof(AzureBatchSessionLauncher)}] .{nameof(this.GetInfoAsync)} Failed to get batch job for session {sessionId}");
                     }
 
                     TraceHelper.TraceEvent(
                         sessionId,
                         TraceEventType.Information,
-                        $"[{nameof(AzureBatchSessionLauncher)}] .{nameof(this.GetInfoV5Sp1Async)}: try to get the job properties(Secure, TransportScheme, BrokerEpr, BrokerNode, ControllerEpr, ResponseEpr) for the job, jobid={sessionId}.");
+                        $"[{nameof(AzureBatchSessionLauncher)}] .{nameof(this.GetInfoAsync)}: try to get the job properties(Secure, TransportScheme, BrokerEpr, BrokerNode, ControllerEpr, ResponseEpr) for the job, jobid={sessionId}.");
 
                     sessionInfo = new SessionInfoContract();
                     sessionInfo.Id = AzureBatchSessionJobIdConverter.ConvertToSessionId(sessionJob.Id);
@@ -271,7 +271,7 @@
             return sessionInfo;
         }
 
-        public override async Task TerminateV5Async(int sessionId)
+        public override async Task TerminateAsync(int sessionId)
         {
             using (var batchClient = AzureBatchConfiguration.GetBatchClient())
             {
