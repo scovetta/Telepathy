@@ -247,19 +247,17 @@ namespace Microsoft.Hpc.CcpServiceHosting
         /// Get job Id from the env var.
         /// </summary>
         /// <returns>job Id of the session</returns>
-        public static int GetJobId()
+        public static string GetJobId()
         {
-            int jobId;
-
             string jobIdString = Environment.GetEnvironmentVariable(Constant.JobIDEnvVar);
 
-            if (string.IsNullOrEmpty(jobIdString) || !int.TryParse(jobIdString, out jobId))
+            if (string.IsNullOrEmpty(jobIdString))
             {
-                return 0;
+                return "0";
             }
             else
             {
-                return jobId;
+                return jobIdString;
             }
         }
 

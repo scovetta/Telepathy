@@ -54,7 +54,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
         private string userNameField;
 
         /// <summary>the session id</summary>
-        private int sessionIdField;
+        private string sessionIdField;
 
         /// <summary>the client id</summary>
         private string clientIdField;
@@ -70,7 +70,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
         /// <param name="userName">the user name</param>
         /// <param name="sessionId">the session id.</param>
         /// <param name="clientId">the client id.</param>
-        internal MemoryPersist(string userName, int sessionId, string clientId)
+        internal MemoryPersist(string userName, string sessionId, string clientId)
         {
             this.EOMFlag = false;
             this.userNameField = userName;

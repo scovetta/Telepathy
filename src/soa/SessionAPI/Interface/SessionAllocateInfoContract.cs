@@ -28,7 +28,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Session Id, also the service job id
         /// </summary>
-        private int id = 0;
+        private string id = string.Empty;
 
         /// <summary>
         /// Version of the service created for the session
@@ -55,7 +55,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// Gets or sets the session Id
         /// </summary>
         [DataMember(IsRequired = false)]
-        public int Id
+        public string Id
         {
             get { return this.id; }
             set { this.id = value; }

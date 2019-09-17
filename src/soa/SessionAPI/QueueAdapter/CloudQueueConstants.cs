@@ -10,7 +10,7 @@
 
         private const string BrokerWorkerControllerResponseQueueNamePrefix = "brokerworkerctrlres";
 
-        public static string GetBrokerWorkerControllerRequestQueueName(int sessionId) => BrokerWorkerControllerRequestQueueNamePrefix + $"-{sessionId}";
-        public static string GetBrokerWorkerControllerResponseQueueName(int sessionId) => BrokerWorkerControllerResponseQueueNamePrefix + $"-{sessionId}";
+        public static string GetBrokerWorkerControllerRequestQueueName(string sessionId) => BrokerWorkerControllerRequestQueueNamePrefix + $"-{sessionId}";
+        public static string GetBrokerWorkerControllerResponseQueueName(string sessionId) => BrokerWorkerControllerResponseQueueNamePrefix + $"-{sessionId}";
     }
 }

@@ -140,7 +140,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
         /// <summary>
         /// Gets the session id of the broker queue.
         /// </summary>
-        public abstract int SessionId { get; }
+        public abstract string SessionId { get; }
 
         /// <summary>
         /// Gets the client id of the queue.

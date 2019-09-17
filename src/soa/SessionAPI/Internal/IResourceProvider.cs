@@ -41,6 +41,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// Free resource
         /// </summary>
         /// <param name="sessionId">indicating session id</param>
-        Task FreeResource(SessionStartInfo startInfo, int sessionId);
+        Task FreeResource(SessionStartInfo startInfo, string sessionId);
     }
 }

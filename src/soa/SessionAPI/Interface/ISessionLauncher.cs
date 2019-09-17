@@ -75,7 +75,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>the Broker Launcher EPR, sorted by the preference.</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        string[] Allocate(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo);
+        string[] Allocate(SessionStartInfoContract info, string endpointPrefix, out string sessionid, out string serviceVersion, out SessionInfoContract sessionInfo);
 
         /// <summary>
         /// The async version of allocating a new session
@@ -95,7 +95,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="sessionInfo">the session info</param>
         /// <param name="result">async result</param>
         /// <returns>The results</returns>
-        string[] EndAllocate(out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo, IAsyncResult result);
+        string[] EndAllocate(out string sessionid, out string serviceVersion, out SessionInfoContract sessionInfo, IAsyncResult result);
 
         /// <summary>
         /// Allocate a new session
@@ -121,7 +121,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>the Broker Launcher EPR, sorted by the preference.</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        string[] AllocateDurable(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo);
+        string[] AllocateDurable(SessionStartInfoContract info, string endpointPrefix, out string sessionid, out string serviceVersion, out SessionInfoContract sessionInfo);
 
         /// <summary>
         /// The async version of allocating a new session
@@ -141,7 +141,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="sessionInfo">the session info</param>
         /// <param name="result">async result</param>
         /// <returns>The results</returns>
-        string[] EndAllocateDurable(out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo, IAsyncResult result);
+        string[] EndAllocateDurable(out string sessionid, out string serviceVersion, out SessionInfoContract sessionInfo, IAsyncResult result);
 
         /// <summary>
         /// Attach to an exisiting session
@@ -151,7 +151,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>the Broker Launcher EPR</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task<SessionInfoContract> GetInfoV5Async(string endpointPrefix, int sessionId);
+        Task<SessionInfoContract> GetInfoV5Async(string endpointPrefix, string sessionId);
 
         /// <summary>
         /// Attach to an exisiting session
@@ -162,7 +162,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>the Broker Launcher EPR</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, int sessionId, bool useAad);
+        Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, string sessionId, bool useAad);
 
         /// <summary>
         /// Attach to an exisiting session
@@ -173,7 +173,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>the Broker Launcher EPR</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        SessionInfoContract GetInfo(string headnode, string endpointPrefix, int sessionId);
+        SessionInfoContract GetInfo(string headnode, string endpointPrefix, string sessionId);
 
         /// <summary>
         /// Attach to an exisiting session
@@ -183,7 +183,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="sessionId">the session id</param>
         /// <returns>IAsyncResult instance</returns>
         [OperationContract(AsyncPattern = true)]
-        IAsyncResult BeginGetInfo(string headnode, string endpointPrefix, int sessionId, AsyncCallback callback, object state);
+        IAsyncResult BeginGetInfo(string headnode, string endpointPrefix, string sessionId, AsyncCallback callback, object state);
 
         /// <summary>
         /// Attach to an exisiting session
@@ -197,7 +197,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="sessionId">the session id</param>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task TerminateV5Async(int sessionId);
+        Task TerminateV5Async(string sessionId);
 
         /// <summary>
         /// terminate a session.
@@ -206,15 +206,17 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="sessionId">the session id</param>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        void Terminate(string headnode, int sessionId);
+        void Terminate(string headnode, string sessionId);
 
         /// <summary>
         /// terminate a session.
         /// </summary>
         /// <param name="headnode">the headnode.</param>
         /// <param name="sessionId">the session id</param>
+        /// <param name="callback"></param>
+        /// <param name="state"></param>
         [OperationContract(AsyncPattern = true)]
-        IAsyncResult BeginTerminate(string headnode, int sessionId, AsyncCallback callback, object state);
+        IAsyncResult BeginTerminate(string headnode, string sessionId, AsyncCallback callback, object state);
 
         /// <summary>
         /// terminate a session.

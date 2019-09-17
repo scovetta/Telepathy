@@ -48,7 +48,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="epr">output selected epr</param>
         /// <param name="binding">indicting the binding</param>
         /// <returns>returns the session information</returns>
-        public async Task<SessionBase> CreateBroker(SessionStartInfo startInfo, int sessionId, DateTime targetTimeout, string[] eprs, Binding binding)
+        public async Task<SessionBase> CreateBroker(SessionStartInfo startInfo, string sessionId, DateTime targetTimeout, string[] eprs, Binding binding)
         {
             Exception innerException = null;
             IEnumerable<string> endpoints = eprs;

@@ -40,7 +40,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <summary>
         /// Stores the session id
         /// </summary>
-        private int sessionId;
+        private string sessionId;
 
         /// <summary>
         /// Stores the initialization result
@@ -161,7 +161,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <summary>
         /// Gets the session id
         /// </summary>
-        public int SessionId
+        public string SessionId
         {
             get { return this.sessionId; }
         }

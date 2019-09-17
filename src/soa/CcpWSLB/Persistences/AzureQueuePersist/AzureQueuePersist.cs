@@ -127,7 +127,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
         private CloudTable responseTableField;
 
         /// <summary>the session id.</summary>
-        private int sessionIdField;
+        private string sessionIdField;
 
         private int sleepTime = 500;
 
@@ -141,7 +141,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
 
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
 
-        internal AzureQueuePersist(string userName, int sessionId, string clientId, string storageConnectString)
+        internal AzureQueuePersist(string userName, string sessionId, string clientId, string storageConnectString)
         {
             BrokerTracing.TraceVerbose(
                 "[AzureQueuePersist] .AzureQueuePersist: constructor. session id = {0}, client id = {1}, user name = {2}",
@@ -388,12 +388,12 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             ParamCheckUtility.ThrowIfNull(connectString, "connectString");
             List<QueueInfo> queueinfos = AzureStorageTool.GetAllQueues(connectString).GetAwaiter().GetResult();
             List<QueueInfo> staleQueueNameList = new List<QueueInfo>();
-            Dictionary<int, bool> sessionIdStaleDic = new Dictionary<int, bool>();
+            Dictionary<string, bool> sessionIdStaleDic = new Dictionary<string, bool>();
             if (queueinfos != null && queueinfos.Count > 0)
             {
                 foreach (QueueInfo queueInfo in queueinfos)
                 {
-                    int queueSessionId = int.Parse(queueInfo.PartitionKey);
+                    string queueSessionId = queueInfo.PartitionKey;
 
                     bool isStaleSession = false;
                     if (!sessionIdStaleDic.TryGetValue(queueSessionId, out isStaleSession))
@@ -666,7 +666,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                 this.blobContainer);
         }
 
-        internal static ClientInfo[] GetSessionClients(string connectString, int sessionId, bool useAad)
+        internal static ClientInfo[] GetSessionClients(string connectString, string sessionId, bool useAad)
         {
             ParamCheckUtility.ThrowIfNull(connectString, "connectString");
 
@@ -755,7 +755,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             this.ResetRequestsTransaction(true);
         }
 
-        private static string MakeQueuePath(int sessionId, string clientId, bool isRequest)
+        private static string MakeQueuePath(string sessionId, string clientId, bool isRequest)
         {
             if (isRequest)
             {
@@ -769,7 +769,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             }
         }
 
-        private static string MakeTablePath(int sessionId, string clientId)
+        private static string MakeTablePath(string sessionId, string clientId)
         {
             StringBuilder sb = new StringBuilder();
             foreach (string str in clientId.Split('-'))

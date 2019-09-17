@@ -21,7 +21,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// <summary>
         /// the session Id
         /// </summary>
-        private static int sessionId;
+        private static string sessionId;
 
         /// <summary>
         /// Gets the instance of RuntimeTraceWrapper.
@@ -38,7 +38,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// Initializes the broker tracing object
         /// </summary>
         /// <param name="sessionId">indicating the session id</param>
-        public static void Initialize(int sessionId)
+        public static void Initialize(string sessionId)
         {
             BrokerTracing.sessionId = sessionId;
         }

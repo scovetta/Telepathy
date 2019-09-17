@@ -11,20 +11,20 @@
     {
         private const string AzureBatchSessionJobIdPrefix = "Session_";
 
-        public static string ConvertToAzureBatchJobId(int sessionId)
+        public static string ConvertToAzureBatchJobId(string sessionId)
         {
-            return AzureBatchSessionJobIdPrefix + sessionId.ToString();
+            return AzureBatchSessionJobIdPrefix + sessionId;
         }
 
-        public static int ConvertToSessionId(string jobId)
+        public static string ConvertToSessionId(string jobId)
         {
             if (!jobId.StartsWith(AzureBatchSessionJobIdPrefix))
             {
                 Trace.TraceWarning($"{jobId} is not valid Azure Batch Session Job Id. Treated as empty");
-                return -1;
+                return "-1";
             }
 
-            return int.Parse(jobId.Substring(AzureBatchSessionJobIdPrefix.Length));
+            return jobId.Substring(AzureBatchSessionJobIdPrefix.Length);
         }
     }
 }

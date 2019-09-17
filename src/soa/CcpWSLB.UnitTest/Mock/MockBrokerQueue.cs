@@ -112,7 +112,7 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest.Mock
 
         public override long FailedRequestsCount { get; }
 
-        public override int SessionId { get; }
+        public override string SessionId { get; }
 
         public override string ClientId { get; }
 

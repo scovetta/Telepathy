@@ -57,7 +57,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
         /// <param name="identity">The broker node as a computer account</param>
         /// <returns></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Shared by multiple projects")]
-        public static bool IsSessionBrokerNode(WindowsIdentity identity, int jobId)
+        public static bool IsSessionBrokerNode(WindowsIdentity identity, string jobId)
         {
             // BUG 8419 : Cache BN SecurityIdentiy objects to improve latency
             if (!CacheBrokerNodeIdentities(jobId))
@@ -91,7 +91,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
         /// Returned broker node identity cache
         /// </summary>
         /// <returns></returns>
-        private static bool CacheBrokerNodeIdentities(int jobId)
+        private static bool CacheBrokerNodeIdentities(string jobId)
         {
             bool ret = true;
 

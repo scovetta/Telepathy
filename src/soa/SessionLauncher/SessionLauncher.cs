@@ -105,7 +105,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             return await this.AllocateInternalAsync(info, endpointPrefix, false);
         }
 
-        public virtual string[] Allocate(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
+        public virtual string[] Allocate(SessionStartInfoContract info, string endpointPrefix, out string sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
         {
             var contract = this.AllocateV5Async(info, endpointPrefix).GetAwaiter().GetResult();
             sessionid = contract.Id;
@@ -119,7 +119,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             return await this.AllocateInternalAsync(info, endpointPrefix, true);
         }
 
-        public virtual string[] AllocateDurable(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
+        public virtual string[] AllocateDurable(SessionStartInfoContract info, string endpointPrefix, out string sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
         {
             SessionAllocateInfoContract contract = this.AllocateDurableV5Async(info, endpointPrefix).GetAwaiter().GetResult();
             sessionid = contract.Id;
@@ -135,11 +135,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <param name="endpointPrefix">the prefix of the endpoint epr.</param>
         /// <param name="sessionId">the session id</param>
         /// <returns>the session information.</returns>
-        Task<SessionInfoContract> ISessionLauncher.GetInfoV5Async(string endpointPrefix, int sessionId) => ((ISessionLauncher)this).GetInfoV5Sp1Async(endpointPrefix, sessionId, false);
+        Task<SessionInfoContract> ISessionLauncher.GetInfoV5Async(string endpointPrefix, string sessionId) => ((ISessionLauncher)this).GetInfoV5Sp1Async(endpointPrefix, sessionId, false);
 
-        public abstract Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, int sessionId, bool useAad);
+        public abstract Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, string sessionId, bool useAad);
 
-        public abstract Task TerminateV5Async(int sessionId);
+        public abstract Task TerminateV5Async(string sessionId);
 
         public abstract Task<Version[]> GetServiceVersionsAsync(string serviceName);
 
@@ -157,7 +157,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <param name="endpointPrefix">the prefix of the endpoint epr.</param>
         /// <param name="sessionId">the session id</param>
         /// <returns>the session information.</returns>
-        SessionInfoContract ISessionLauncher.GetInfo(string headnode, string endpointPrefix, int sessionId)
+        SessionInfoContract ISessionLauncher.GetInfo(string headnode, string endpointPrefix, string sessionId)
         {
             return ((ISessionLauncher)this).GetInfoV5Async(endpointPrefix, sessionId).GetAwaiter().GetResult();
         }
@@ -167,7 +167,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         /// <param name="headnode">the headnode.</param>
         /// <param name="sessionId">the session id</param>
-        void ISessionLauncher.Terminate(string headnode, int sessionId)
+        void ISessionLauncher.Terminate(string headnode, string sessionId)
         {
             ((ISessionLauncher)this).TerminateV5Async(sessionId).GetAwaiter().GetResult();
         }
@@ -260,7 +260,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         protected class SessionPool
         {
-            public int this[int i]
+            public string this[int i]
             {
                 get
                 {
@@ -308,9 +308,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 }
             }
 
-            private List<int> sessionIds = new List<int>();
+            private List<string> sessionIds = new List<string>();
 
-            public List<int> SessionIds
+            public List<string> SessionIds
             {
                 get
                 {
@@ -505,7 +505,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
 
             // after figuring out the service and version, and the session pool size, we check if the service pool already has the instance.
-            sessionAllocateInfo.Id = 0;
+            sessionAllocateInfo.Id = "0";
             sessionAllocateInfo.SessionInfo = null;
             if (startInfo.UseSessionPool)
             {
@@ -560,7 +560,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             BrokerConfigurations brokerConfigurations,
             string hostpath);
 
-        protected abstract void AddSessionToPool(string serviceNameWithVersion, bool durable, int sessionId, int poolSize);
+        protected abstract void AddSessionToPool(string serviceNameWithVersion, bool durable, string sessionId, int poolSize);
 
         protected abstract bool TryGetSessionAllocateInfoFromPooled(
             string endpointPrefix,

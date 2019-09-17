@@ -143,7 +143,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 {
                     // Swallow exception
                     TraceHelper.TraceWarning(
-                        0,
+                        "0",
                         "[NativeMethods].SafeCloseValidHandle: Exception {0}.",
                         ex);
                 }

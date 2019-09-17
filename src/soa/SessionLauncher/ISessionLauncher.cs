@@ -61,7 +61,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <returns>the Broker Launcher EPR, sorted by the preference.</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        string[] Allocate(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo);
+        string[] Allocate(SessionStartInfoContract info, string endpointPrefix, out string sessionid, out string serviceVersion, out SessionInfoContract sessionInfo);
 
         /// <summary>
         /// Allocate a new session
@@ -87,7 +87,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <returns>the Broker Launcher EPR, sorted by the preference.</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        string[] AllocateDurable(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo);
+        string[] AllocateDurable(SessionStartInfoContract info, string endpointPrefix, out string sessionid, out string serviceVersion, out SessionInfoContract sessionInfo);
 
         /// <summary>
         /// Attach to an exisiting session
@@ -97,7 +97,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <returns>the Broker Launcher EPR</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task<SessionInfoContract> GetInfoV5Async(string endpointPrefix, int sessionId);
+        Task<SessionInfoContract> GetInfoV5Async(string endpointPrefix, string sessionId);
 
         /// <summary>
         /// Attach to an exisiting session
@@ -108,7 +108,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <returns>the Broker Launcher EPR</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, int sessionId, bool useAad);
+        Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, string sessionId, bool useAad);
 
         /// <summary>
         /// Attach to an exisiting session
@@ -119,7 +119,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <returns>the Broker Launcher EPR</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        SessionInfoContract GetInfo(string headnode, string endpointPrefix, int sessionId);
+        SessionInfoContract GetInfo(string headnode, string endpointPrefix, string sessionId);
 
         /// <summary>
         /// terminate a session.
@@ -127,7 +127,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <param name="sessionId">the session id</param>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task TerminateV5Async(int sessionId);
+        Task TerminateV5Async(string sessionId);
 
         /// <summary>
         /// terminate a session.
@@ -136,7 +136,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <param name="sessionId">the session id</param>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        void Terminate(string headnode, int sessionId);
+        void Terminate(string headnode, string sessionId);
 
         /// <summary>
         /// Returns the versions for a specific service

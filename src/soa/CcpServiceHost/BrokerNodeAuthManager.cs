@@ -39,13 +39,13 @@ namespace Microsoft.Hpc.CcpServiceHosting
         /// <summary>
         /// Stores the job id.
         /// </summary>
-        private int jobId;
+        private string jobId;
 
         /// <summary>
         /// Initializes a new instance of the BrokerNodeAuthManager class.
         /// </summary>
         /// <param name="jobId">job id of the soa session</param>
-        internal BrokerNodeAuthManager(int jobId)
+        internal BrokerNodeAuthManager(string jobId)
         {
             this.jobId = jobId;
 

@@ -33,7 +33,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Stores session id
         /// </summary>
-        private int sessionId;
+        private string sessionId;
 
         /// <summary>
         /// Stores the purged failed count
@@ -98,7 +98,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         ///   <para />
         /// </value>
         [DataMember]
-        public int SessionId
+        public string SessionId
         {
             get { return this.sessionId; }
             set { this.sessionId = value; }

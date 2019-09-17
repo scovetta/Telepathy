@@ -67,7 +67,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
         // Timeout for Exiting event to execute. This must be the same as node manager's default CTRL+C timeout
         private int _cancelTaskGracePeriod = Constant.DefaultCancelTaskGracePeriod;
 
-        private int _jobId;
+        private string _jobId;
         private string _taskId;
         private int _procNum;
 
@@ -224,8 +224,9 @@ namespace Microsoft.Hpc.CcpServiceHosting
         {
             string jobIdEnvVar = Environment.GetEnvironmentVariable(Constant.JobIDEnvVar);
 
-            if (string.IsNullOrEmpty(jobIdEnvVar) || !int.TryParse(jobIdEnvVar, out _jobId))
+            if (string.IsNullOrEmpty(jobIdEnvVar))
             {
+                this._jobId = jobIdEnvVar;
                 RuntimeTraceHelper.TraceEvent(this._jobId, TraceEventType.Error, StringTable.CantFindJobId);
                 return ErrorCode.ServiceHost_UnexpectedException;
             }

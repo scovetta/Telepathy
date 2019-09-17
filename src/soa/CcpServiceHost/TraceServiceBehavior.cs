@@ -41,7 +41,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
         /// </summary>
         private const string PropagateActivityValue = "propagateActivity";
 
-        private int sessionId;
+        private string sessionId;
 
         private bool enableSoaDebugger;
 
@@ -49,7 +49,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
         private CcpServiceHostWrapper hostWrapper;
 
-        public TraceServiceBehavior(int sessionId, CcpServiceHostWrapper hostWrapper)
+        public TraceServiceBehavior(string sessionId, CcpServiceHostWrapper hostWrapper)
         {
             this.sessionId = sessionId;
             this.hostWrapper = hostWrapper;

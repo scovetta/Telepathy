@@ -85,7 +85,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
         /// </summary>
         /// <param name="sessionId">the session id.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public BrokerQueueDispatcher(int sessionId, bool isDurable, SharedData sharedData)
+        public BrokerQueueDispatcher(string sessionId, bool isDurable, SharedData sharedData)
         {
             this.sharedData = sharedData;
 

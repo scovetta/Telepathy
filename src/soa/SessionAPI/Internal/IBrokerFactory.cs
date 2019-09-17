@@ -26,7 +26,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="eprs">indicating the broker epr list</param>
         /// <param name="binding">indicting the binding</param>
         /// <returns>returns the session instance</returns>
-        Task<SessionBase> CreateBroker(SessionStartInfo startInfo, int sessionId, DateTime targetTimeout, string[] eprs, Binding binding);
+        Task<SessionBase> CreateBroker(SessionStartInfo startInfo, string sessionId, DateTime targetTimeout, string[] eprs, Binding binding);
 
         /// <summary>
         /// Attach to a broker, returns session instance

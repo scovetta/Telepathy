@@ -21,7 +21,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// key: session id
         /// value: enable/disable diag trace
         /// </summary>
-        private static ConcurrentDictionary<int, bool> dic = new ConcurrentDictionary<int, bool>();
+        private static ConcurrentDictionary<string, bool> dic = new ConcurrentDictionary<string, bool>();
 
         /// <summary>
         /// Stores the value indicating whether it is running on Azure
@@ -42,7 +42,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// </summary>
         /// <param name="jobId">job id of the session</param>
         /// <returns>is trace enabled</returns>
-        public static bool IsDiagTraceEnabled(int jobId)
+        public static bool IsDiagTraceEnabled(string jobId)
         {
             bool enable = false;
 
@@ -50,7 +50,7 @@ namespace Microsoft.Hpc.ServiceBroker
             {
                 return enable;
             }
-            else if (isOnAzure || jobId <= 0)
+            else if (isOnAzure)
             {
                 // If on azure, always enable diag trace
                 return true;
@@ -72,7 +72,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// </summary>
         /// <param name="jobId">job id of the session</param>
         /// <param name="enabled">is trace enabled</param>
-        public static void SetDiagTraceEnabledFlag(int jobId, bool enabled)
+        public static void SetDiagTraceEnabledFlag(string jobId, bool enabled)
         {
             dic.AddOrUpdate(jobId, enabled, (key, value) => enabled);
         }
@@ -81,7 +81,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// Delete the diag trace enabled/disabled flag.
         /// </summary>
         /// <param name="jobId">job id of the session</param>
-        public static void RemoveDiagTraceEnabledFlag(int jobId)
+        public static void RemoveDiagTraceEnabledFlag(string jobId)
         {
             bool enable = false;
             dic.TryRemove(jobId, out enable);

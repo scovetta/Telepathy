@@ -23,7 +23,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="sessionId">indicating the session id</param>
         /// <param name="clientIndex">indicating the client index</param>
         /// <param name="taskId">indicating the task id</param>
-        public DispatchData(int sessionId, int clientIndex, string taskId)
+        public DispatchData(string sessionId, int clientIndex, string taskId)
         {
             this.SessionId = sessionId;
             this.ClientIndex = clientIndex;
@@ -39,7 +39,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <summary>
         /// Gets the session id
         /// </summary>
-        public int SessionId { get; private set; }
+        public string SessionId { get; private set; }
 
         /// <summary>
         /// Gets the client index

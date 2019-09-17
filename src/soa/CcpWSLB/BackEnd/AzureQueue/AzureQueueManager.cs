@@ -123,7 +123,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <summary>
         /// Session Id.
         /// </summary>
-        private int sessionId;
+        private string sessionId;
 
         /// <summary>
         /// This flag indicates if the request queue exists.
@@ -134,7 +134,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// Initializes a new instance of the AzureQueueManager class.
         /// </summary>
         /// <param name="sessionId">session Id</param>
-        public AzureQueueManager(int sessionId, string clusterName, string clusterId)
+        public AzureQueueManager(string sessionId, string clusterName, string clusterId)
         {
             ThreadPool.SetMinThreads(MinThreadsOfThreadpool, MinThreadsOfThreadpool);
 
@@ -269,7 +269,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="jobId">job Id</param>
         /// <param name="jobRequeueCount">job re-queue count</param>
         /// <returns>response storage name</returns>
-        public string Start(int jobId, int jobRequeueCount)
+        public string Start(string jobId, int jobRequeueCount)
         {
             string responseStorageName = SoaHelper.GetResponseStorageName(this.clusterId.ToString(), jobId, jobRequeueCount);
 

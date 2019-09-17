@@ -101,7 +101,7 @@ namespace Microsoft.Hpc.Scheduler.Session
 
         private readonly SessionInfoBase _info;
 
-        private readonly int serviceJobId;
+        private readonly string serviceJobId;
         
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             this._headnode = headnode;
             this.IsBrokerAvailable = true;
 
-            if (this.serviceJobId == SessionStartInfo.StandaloneSessionId)
+            if (this.serviceJobId.Equals(SessionStartInfo.StandaloneSessionId))
             {
                 this.sessionHash = 0;
             }
@@ -323,7 +323,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <remarks>
         ///   <para>In Microsoft HPC Pack, the session identifier is the job identifier of the service job for the session.</para>
         /// </remarks>
-        public int Id
+        public string Id
         {
             get
             {
@@ -538,7 +538,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="brokerLauncherEpr">indicating the broker launcher epr</param>
         /// <param name="scheme">indicating the transport scheme</param>
         /// <returns>returns the session info</returns>
-        internal static SessionInfo BuildSessionInfo(BrokerInitializationResult result, bool durable, int id, string brokerLauncherEpr, Version serviceVersion, SessionStartInfo startInfo)
+        internal static SessionInfo BuildSessionInfo(BrokerInitializationResult result, bool durable, string id, string brokerLauncherEpr, Version serviceVersion, SessionStartInfo startInfo)
         {
             SessionInfo info = new SessionInfo();
 

@@ -1668,7 +1668,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             }
         }
         
-        private bool IsTraceEnabled(int sessionId)
+        private bool IsTraceEnabled(string sessionId)
         {
             if ((this.IsDiagTraceEnabled != null))
             {
@@ -1680,7 +1680,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             }
         }
         
-        public bool LogTextVerbose(int SessionId, string String)
+        public bool LogTextVerbose(string SessionId, string String)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Verbose, RuntimeTraceEventIdConst.TextVerboseEventId, LogStringFormatTable.StringMessage, SessionId, String);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1690,7 +1690,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogTextVerbose(SessionId, String);
         }
         
-        public bool LogTextInfo(int SessionId, string String)
+        public bool LogTextInfo(string SessionId, string String)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.TextInfoEventId, LogStringFormatTable.StringMessage, SessionId, String);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1700,7 +1700,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogTextInfo(SessionId, String);
         }
         
-        public bool LogTextWarning(int SessionId, string String)
+        public bool LogTextWarning(string SessionId, string String)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.TextWarningEventId, LogStringFormatTable.StringMessage, SessionId, String);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1710,7 +1710,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogTextWarning(SessionId, String);
         }
         
-        public bool LogTextError(int SessionId, string String)
+        public bool LogTextError(string SessionId, string String)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Error, RuntimeTraceEventIdConst.TextErrorEventId, LogStringFormatTable.StringMessage, SessionId, String);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1720,7 +1720,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogTextError(SessionId, String);
         }
         
-        public bool LogTextCritial(int SessionId, string String)
+        public bool LogTextCritial(string SessionId, string String)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Critical, RuntimeTraceEventIdConst.TextCritialEventId, LogStringFormatTable.StringMessage, SessionId, String);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1733,7 +1733,7 @@ namespace Microsoft.Hpc.RuntimeTrace
         public bool LogEventTextCritial(string String)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Critical, RuntimeTraceEventIdConst.EventTextCritialEventId, LogStringFormatTable.PureString, String);
-            if ((this.IsTraceEnabled(0) == false))
+            if ((this.IsTraceEnabled("0") == false))
             {
                 return false;
             }
@@ -1743,7 +1743,7 @@ namespace Microsoft.Hpc.RuntimeTrace
         public bool LogEventTextVerbose(string String)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Verbose, RuntimeTraceEventIdConst.EventTextVerboseEventId, LogStringFormatTable.PureString, String);
-            if ((this.IsTraceEnabled(0) == false))
+            if ((this.IsTraceEnabled("0") == false))
             {
                 return false;
             }
@@ -1753,7 +1753,7 @@ namespace Microsoft.Hpc.RuntimeTrace
         public bool LogEventTextInfo(string String)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.EventTextInfoEventId, LogStringFormatTable.PureString, String);
-            if ((this.IsTraceEnabled(0) == false))
+            if ((this.IsTraceEnabled("0") == false))
             {
                 return false;
             }
@@ -1763,7 +1763,7 @@ namespace Microsoft.Hpc.RuntimeTrace
         public bool LogEventTextWarning(string String)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.EventTextWarningEventId, LogStringFormatTable.PureString, String);
-            if ((this.IsTraceEnabled(0) == false))
+            if ((this.IsTraceEnabled("0") == false))
             {
                 return false;
             }
@@ -1773,14 +1773,14 @@ namespace Microsoft.Hpc.RuntimeTrace
         public bool LogEventTextError(string String)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Error, RuntimeTraceEventIdConst.EventTextErrorEventId, LogStringFormatTable.PureString, String);
-            if ((this.IsTraceEnabled(0) == false))
+            if ((this.IsTraceEnabled("0") == false))
             {
                 return false;
             }
             return etwTrace.LogEventTextError(String);
         }
         
-        public bool LogHostRequestReceived(int SessionId, System.Guid MessageId)
+        public bool LogHostRequestReceived(string SessionId, System.Guid MessageId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Verbose, RuntimeTraceEventIdConst.HostRequestReceivedEventId, LogStringFormatTable.HostRequestReceived, SessionId, MessageId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1790,7 +1790,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogHostRequestReceived(SessionId, MessageId);
         }
         
-        public bool LogHostResponseSent(int SessionId, System.Guid MessageId, bool Fault)
+        public bool LogHostResponseSent(string SessionId, System.Guid MessageId, bool Fault)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Verbose, RuntimeTraceEventIdConst.HostResponseSentEventId, LogStringFormatTable.HostResponseSent, SessionId, MessageId, Fault);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1800,7 +1800,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogHostResponseSent(SessionId, MessageId, Fault);
         }
         
-        public bool LogHostStart(int SessionId)
+        public bool LogHostStart(string SessionId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.HostStartEventId, LogStringFormatTable.HostStart, SessionId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1810,7 +1810,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogHostStart(SessionId);
         }
         
-        public bool LogHostStop(int SessionId)
+        public bool LogHostStop(string SessionId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.HostStopEventId, LogStringFormatTable.HostStart, SessionId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1823,14 +1823,14 @@ namespace Microsoft.Hpc.RuntimeTrace
         public bool LogHostServiceConfigCheck(string FileName)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.HostServiceConfigCheckEventId, LogStringFormatTable.HostServiceConfigCheck, FileName);
-            if ((this.IsTraceEnabled(0) == false))
+            if ((this.IsTraceEnabled("0") == false))
             {
                 return false;
             }
             return etwTrace.LogHostServiceConfigCheck(FileName);
         }
         
-        public bool LogHostAssemblyLoaded(int SessionId)
+        public bool LogHostAssemblyLoaded(string SessionId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.HostAssemblyLoadedEventId, LogStringFormatTable.HostAssemblyLoaded, SessionId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1840,7 +1840,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogHostAssemblyLoaded(SessionId);
         }
         
-        public bool LogHostCanceled(int SessionId)
+        public bool LogHostCanceled(string SessionId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.HostCanceledEventId, LogStringFormatTable.HostCanceled, SessionId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1850,7 +1850,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogHostCanceled(SessionId);
         }
         
-        public bool LogFrontEndRequestReceived(int SessionId, string ClientId, System.Guid MessageId)
+        public bool LogFrontEndRequestReceived(string SessionId, string ClientId, System.Guid MessageId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Verbose, RuntimeTraceEventIdConst.FrontEndRequestReceivedEventId, LogStringFormatTable.FrontEndRequestReceived, SessionId, ClientId, MessageId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1860,7 +1860,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogFrontEndRequestReceived(SessionId, ClientId, MessageId);
         }
         
-        public bool LogFrontEndResponseSent(int SessionId, string ClientId, System.Guid MessageId)
+        public bool LogFrontEndResponseSent(string SessionId, string ClientId, System.Guid MessageId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Verbose, RuntimeTraceEventIdConst.FrontEndResponseSentEventId, LogStringFormatTable.FrontEndResponseSent, SessionId, ClientId, MessageId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1870,7 +1870,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogFrontEndResponseSent(SessionId, ClientId, MessageId);
         }
         
-        public bool LogBackendRequestSent(int SessionId, string TaskId, System.Guid MessageId, System.Guid DispatchId, string TargetMachine, string EndpointAddress)
+        public bool LogBackendRequestSent(string SessionId, string TaskId, System.Guid MessageId, System.Guid DispatchId, string TargetMachine, string EndpointAddress)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Verbose, RuntimeTraceEventIdConst.BackendRequestSentEventId, LogStringFormatTable.BackendRequestSent, SessionId, TaskId, MessageId, DispatchId, TargetMachine, EndpointAddress);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1880,7 +1880,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendRequestSent(SessionId, TaskId, MessageId, DispatchId, TargetMachine, EndpointAddress);
         }
         
-        public bool LogBackendResponseReceived(int SessionId, string TaskId, System.Guid MessageId, bool Fault)
+        public bool LogBackendResponseReceived(string SessionId, string TaskId, System.Guid MessageId, bool Fault)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Verbose, RuntimeTraceEventIdConst.BackendResponseReceivedEventId, LogStringFormatTable.BackendResponseReceived, SessionId, TaskId, MessageId, Fault);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1890,7 +1890,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendResponseReceived(SessionId, TaskId, MessageId, Fault);
         }
         
-        public bool LogBackendRequestSentFailed(int SessionId, string TaskId, System.Guid MessageId, string Exception)
+        public bool LogBackendRequestSentFailed(string SessionId, string TaskId, System.Guid MessageId, string Exception)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.BackendRequestSentFailedEventId, LogStringFormatTable.BackendRequestSentFailed, SessionId, TaskId, MessageId, Exception);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1900,7 +1900,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendRequestSentFailed(SessionId, TaskId, MessageId, Exception);
         }
         
-        public bool LogBackendResponseReceivedFailed(int SessionId, string TaskId, System.Guid MessageId, int RetryCount, string Exception)
+        public bool LogBackendResponseReceivedFailed(string SessionId, string TaskId, System.Guid MessageId, int RetryCount, string Exception)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.BackendResponseReceivedFailedEventId, LogStringFormatTable.BackendResponseReceivedFailed, SessionId, TaskId, MessageId, RetryCount, Exception);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1910,7 +1910,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendResponseReceivedFailed(SessionId, TaskId, MessageId, RetryCount, Exception);
         }
         
-        public bool LogFrontEndResponseSentFailed(int SessionId, string ClientId, System.Guid MessageId, string Exception)
+        public bool LogFrontEndResponseSentFailed(string SessionId, string ClientId, System.Guid MessageId, string Exception)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.FrontEndResponseSentFailedEventId, LogStringFormatTable.FrontEndResponseSentFailed, SessionId, ClientId, MessageId, Exception);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1920,7 +1920,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogFrontEndResponseSentFailed(SessionId, ClientId, MessageId, Exception);
         }
         
-        public bool LogFrontEndRequestRejectedClientIdNotMatch(int SessionId, string ClientId, System.Guid MessageId)
+        public bool LogFrontEndRequestRejectedClientIdNotMatch(string SessionId, string ClientId, System.Guid MessageId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.FrontEndRequestRejectedClientIdNotMatchEventId, LogStringFormatTable.FrontEndRequestRejectedClientIdNotMatch, SessionId, ClientId, MessageId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1930,7 +1930,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogFrontEndRequestRejectedClientIdNotMatch(SessionId, ClientId, MessageId);
         }
         
-        public bool LogFrontEndRequestRejectedClientIdInvalid(int SessionId, string ClientId, System.Guid MessageId)
+        public bool LogFrontEndRequestRejectedClientIdInvalid(string SessionId, string ClientId, System.Guid MessageId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.FrontEndRequestRejectedClientIdInvalidEventId, LogStringFormatTable.FrontEndRequestRejectedClientIdInvalid, SessionId, ClientId, MessageId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1940,7 +1940,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogFrontEndRequestRejectedClientIdInvalid(SessionId, ClientId, MessageId);
         }
         
-        public bool LogFrontEndRequestRejectedClientStateInvalid(int SessionId, string ClientId, System.Guid MessageId)
+        public bool LogFrontEndRequestRejectedClientStateInvalid(string SessionId, string ClientId, System.Guid MessageId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.FrontEndRequestRejectedClientStateInvalidEventId, LogStringFormatTable.FrontEndRequestRejectedClientStateInvalid, SessionId, ClientId, MessageId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1950,7 +1950,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogFrontEndRequestRejectedClientStateInvalid(SessionId, ClientId, MessageId);
         }
         
-        public bool LogBackendResponseReceivedRetryOperationError(int SessionId, string TaskId, System.Guid MessageId, int RetryCount)
+        public bool LogBackendResponseReceivedRetryOperationError(string SessionId, string TaskId, System.Guid MessageId, int RetryCount)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.BackendResponseReceivedRetryOperationErrorEventId, LogStringFormatTable.BackendResponseReceivedRetryOperationError, SessionId, TaskId, MessageId, RetryCount);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1960,7 +1960,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendResponseReceivedRetryOperationError(SessionId, TaskId, MessageId, RetryCount);
         }
         
-        public bool LogBackendResponseReceivedRetryLimitExceed(int SessionId, string TaskId, System.Guid MessageId, int RetryCount)
+        public bool LogBackendResponseReceivedRetryLimitExceed(string SessionId, string TaskId, System.Guid MessageId, int RetryCount)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.BackendResponseReceivedRetryLimitExceedEventId, LogStringFormatTable.BackendResponseReceivedRetryLimitExceed, SessionId, TaskId, MessageId, RetryCount);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1970,7 +1970,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendResponseReceivedRetryLimitExceed(SessionId, TaskId, MessageId, RetryCount);
         }
         
-        public bool LogBackendRequestPutBack(int SessionId, string TaskId, System.Guid MessageId)
+        public bool LogBackendRequestPutBack(string SessionId, string TaskId, System.Guid MessageId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Verbose, RuntimeTraceEventIdConst.BackendRequestPutBackEventId, LogStringFormatTable.BackendRequestPutBack, SessionId, TaskId, MessageId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1980,7 +1980,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendRequestPutBack(SessionId, TaskId, MessageId);
         }
         
-        public bool LogBackendGeneratedFaultReply(int SessionId, string TaskId, System.Guid MessageId, string FaultReply)
+        public bool LogBackendGeneratedFaultReply(string SessionId, string TaskId, System.Guid MessageId, string FaultReply)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Verbose, RuntimeTraceEventIdConst.BackendGeneratedFaultReplyEventId, LogStringFormatTable.BackendGeneratedFaultReply, SessionId, TaskId, MessageId, FaultReply);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -1990,7 +1990,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendGeneratedFaultReply(SessionId, TaskId, MessageId, FaultReply);
         }
         
-        public bool LogFrontEndRequestRejectedAuthenticationError(int SessionId, string ClientId, System.Guid MessageId, string UserName)
+        public bool LogFrontEndRequestRejectedAuthenticationError(string SessionId, string ClientId, System.Guid MessageId, string UserName)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.FrontEndRequestRejectedAuthenticationErrorEventId, LogStringFormatTable.FrontEndRequestRejectedAuthenticationError, SessionId, ClientId, MessageId, UserName);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2000,7 +2000,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogFrontEndRequestRejectedAuthenticationError(SessionId, ClientId, MessageId, UserName);
         }
         
-        public bool LogFrontEndRequestRejectedGeneralError(int SessionId, string ClientId, System.Guid MessageId, string Exception)
+        public bool LogFrontEndRequestRejectedGeneralError(string SessionId, string ClientId, System.Guid MessageId, string Exception)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.FrontEndRequestRejectedGeneralErrorEventId, LogStringFormatTable.FrontEndRequestRejectedGeneralError, SessionId, ClientId, MessageId, Exception);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2010,7 +2010,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogFrontEndRequestRejectedGeneralError(SessionId, ClientId, MessageId, Exception);
         }
         
-        public bool LogBackendHandleResponseFailed(int SessionId, string TaskId, System.Guid MessageId, string Exception)
+        public bool LogBackendHandleResponseFailed(string SessionId, string TaskId, System.Guid MessageId, string Exception)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Error, RuntimeTraceEventIdConst.BackendHandleResponseFailedEventId, LogStringFormatTable.BackendHandleResponseFailed, SessionId, TaskId, MessageId, Exception);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2020,7 +2020,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendHandleResponseFailed(SessionId, TaskId, MessageId, Exception);
         }
         
-        public bool LogBackendHandleEndpointNotFoundExceptionFailed(int SessionId, string TaskId, System.Guid MessageId, string Exception)
+        public bool LogBackendHandleEndpointNotFoundExceptionFailed(string SessionId, string TaskId, System.Guid MessageId, string Exception)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Error, RuntimeTraceEventIdConst.BackendHandleEndpointNotFoundExceptionFailedEventId, LogStringFormatTable.BackendHandleEndpointNotFoundExceptionFailed, SessionId, TaskId, MessageId, Exception);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2030,7 +2030,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendHandleEndpointNotFoundExceptionFailed(SessionId, TaskId, MessageId, Exception);
         }
         
-        public bool LogBackendHandleExceptionFailed(int SessionId, string TaskId, System.Guid MessageId, string Exception)
+        public bool LogBackendHandleExceptionFailed(string SessionId, string TaskId, System.Guid MessageId, string Exception)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Error, RuntimeTraceEventIdConst.BackendHandleExceptionFailedEventId, LogStringFormatTable.BackendHandleExceptionFailed, SessionId, TaskId, MessageId, Exception);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2040,7 +2040,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendHandleExceptionFailed(SessionId, TaskId, MessageId, Exception);
         }
         
-        public bool LogBackendEndpointNotFoundExceptionOccured(int SessionId, string TaskId, System.Guid MessageId, string Exception)
+        public bool LogBackendEndpointNotFoundExceptionOccured(string SessionId, string TaskId, System.Guid MessageId, string Exception)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.BackendEndpointNotFoundExceptionOccuredEventId, LogStringFormatTable.BackendEndpointNotFoundExceptionOccured, SessionId, TaskId, MessageId, Exception);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2050,7 +2050,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendEndpointNotFoundExceptionOccured(SessionId, TaskId, MessageId, Exception);
         }
         
-        public bool LogBackendDispatcherClosed(int SessionId, string TaskId, System.Guid MessageId)
+        public bool LogBackendDispatcherClosed(string SessionId, string TaskId, System.Guid MessageId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.BackendDispatcherClosedEventId, LogStringFormatTable.BackendDispatcherClosed, SessionId, TaskId, MessageId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2060,7 +2060,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendDispatcherClosed(SessionId, TaskId, MessageId);
         }
         
-        public bool LogBackendResponseReceivedSessionFault(int SessionId, string TaskId, System.Guid MessageId, string FaultCode)
+        public bool LogBackendResponseReceivedSessionFault(string SessionId, string TaskId, System.Guid MessageId, string FaultCode)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.BackendResponseReceivedSessionFaultEventId, LogStringFormatTable.BackendResponseReceivedSessionFault, SessionId, TaskId, MessageId, FaultCode);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2070,7 +2070,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendResponseReceivedSessionFault(SessionId, TaskId, MessageId, FaultCode);
         }
         
-        public bool LogBackendValidateClientFailed(int SessionId, string TaskId, System.Guid MessageId)
+        public bool LogBackendValidateClientFailed(string SessionId, string TaskId, System.Guid MessageId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.BackendValidateClientFailedEventId, LogStringFormatTable.BackendValidateClientFailed, SessionId, TaskId, MessageId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2080,7 +2080,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendValidateClientFailed(SessionId, TaskId, MessageId);
         }
         
-        public bool LogBackendResponseStored(int SessionId, string TaskId, System.Guid MessageId, bool Fault)
+        public bool LogBackendResponseStored(string SessionId, string TaskId, System.Guid MessageId, bool Fault)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Verbose, RuntimeTraceEventIdConst.BackendResponseStoredEventId, LogStringFormatTable.BackendResponseStored, SessionId, TaskId, MessageId, Fault);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2090,7 +2090,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendResponseStored(SessionId, TaskId, MessageId, Fault);
         }
         
-        public bool LogSessionCreating(int SessionId, string UserName)
+        public bool LogSessionCreating(string SessionId, string UserName)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.SessionCreatingEventId, LogStringFormatTable.SessionCreating, SessionId, UserName);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2100,7 +2100,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogSessionCreating(SessionId, UserName);
         }
         
-        public bool LogSessionCreated(int SessionId)
+        public bool LogSessionCreated(string SessionId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.SessionCreatedEventId, LogStringFormatTable.SessionCreated, SessionId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2110,7 +2110,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogSessionCreated(SessionId);
         }
         
-        public bool LogFailedToCreateSession(int SessionId)
+        public bool LogFailedToCreateSession(string SessionId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.FailedToCreateSessionEventId, LogStringFormatTable.FailedToCreateSession, SessionId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2120,7 +2120,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogFailedToCreateSession(SessionId);
         }
         
-        public bool LogSessionFinished(int SessionId)
+        public bool LogSessionFinished(string SessionId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.SessionFinishedEventId, LogStringFormatTable.SessionFinished, SessionId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2130,7 +2130,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogSessionFinished(SessionId);
         }
         
-        public bool LogSessionFinishedBecauseOfJobCanceled(int SessionId)
+        public bool LogSessionFinishedBecauseOfJobCanceled(string SessionId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.SessionFinishedBecauseOfJobCanceledEventId, LogStringFormatTable.SessionFinishedBecauseOfJobCanceled, SessionId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2140,7 +2140,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogSessionFinishedBecauseOfJobCanceled(SessionId);
         }
         
-        public bool LogSessionFinishedBecauseOfTimeout(int SessionId)
+        public bool LogSessionFinishedBecauseOfTimeout(string SessionId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.SessionFinishedBecauseOfTimeoutEventId, LogStringFormatTable.SessionTimeoutToFinished, SessionId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2150,7 +2150,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogSessionFinishedBecauseOfTimeout(SessionId);
         }
         
-        public bool LogSessionSuspended(int SessionId)
+        public bool LogSessionSuspended(string SessionId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.SessionSuspendedEventId, LogStringFormatTable.SessionSuspended, SessionId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2160,7 +2160,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogSessionSuspended(SessionId);
         }
         
-        public bool LogSessionSuspendedBecauseOfJobCanceled(int SessionId)
+        public bool LogSessionSuspendedBecauseOfJobCanceled(string SessionId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.SessionSuspendedBecauseOfJobCanceledEventId, LogStringFormatTable.SessionSuspendedBecauseOfJobCanceled, SessionId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2170,7 +2170,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogSessionSuspendedBecauseOfJobCanceled(SessionId);
         }
         
-        public bool LogSessionSuspendedBecauseOfTimeout(int SessionId)
+        public bool LogSessionSuspendedBecauseOfTimeout(string SessionId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.SessionSuspendedBecauseOfTimeoutEventId, LogStringFormatTable.SessionTimeoutToSuspended, SessionId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2180,7 +2180,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogSessionSuspendedBecauseOfTimeout(SessionId);
         }
         
-        public bool LogSessionRaisedUp(int SessionId, string UserName)
+        public bool LogSessionRaisedUp(string SessionId, string UserName)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.SessionRaisedUpEventId, LogStringFormatTable.SessionRaisedUp, SessionId, UserName);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2190,7 +2190,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogSessionRaisedUp(SessionId, UserName);
         }
         
-        public bool LogSessionRaisedUpFailover(int SessionId)
+        public bool LogSessionRaisedUpFailover(string SessionId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.SessionRaisedUpFailoverEventId, LogStringFormatTable.SessionRaisedUpFailover, SessionId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2203,7 +2203,7 @@ namespace Microsoft.Hpc.RuntimeTrace
         public bool LogBrokerWorkerUnexpectedlyExit(int Id, string Message)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Error, RuntimeTraceEventIdConst.BrokerWorkerUnexpectedlyExitEventId, LogStringFormatTable.BrokerWorkerUnexpectedlyExitString, Id, Message);
-            if ((this.IsTraceEnabled(0) == false))
+            if ((this.IsTraceEnabled("0") == false))
             {
                 return false;
             }
@@ -2213,7 +2213,7 @@ namespace Microsoft.Hpc.RuntimeTrace
         public bool LogBrokerWorkerMessage(int Id, string Message)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.BrokerWorkerMessageEventId, LogStringFormatTable.BrokerWorkerMessageString, Id, Message);
-            if ((this.IsTraceEnabled(0) == false))
+            if ((this.IsTraceEnabled("0") == false))
             {
                 return false;
             }
@@ -2223,7 +2223,7 @@ namespace Microsoft.Hpc.RuntimeTrace
         public bool LogBrokerWorkerProcessReady(int PID)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.BrokerWorkerProcessReadyEventId, LogStringFormatTable.BrokerWorkerProcessCreated, PID);
-            if ((this.IsTraceEnabled(0) == false))
+            if ((this.IsTraceEnabled("0") == false))
             {
                 return false;
             }
@@ -2233,7 +2233,7 @@ namespace Microsoft.Hpc.RuntimeTrace
         public bool LogBrokerWorkerProcessExited(int PID, int ExitCode)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.BrokerWorkerProcessExitedEventId, LogStringFormatTable.BrokerWorkerProcessExited, PID, ExitCode);
-            if ((this.IsTraceEnabled(0) == false))
+            if ((this.IsTraceEnabled("0") == false))
             {
                 return false;
             }
@@ -2243,14 +2243,14 @@ namespace Microsoft.Hpc.RuntimeTrace
         public bool LogBrokerWorkerProcessFailedToInitialize(int PID)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.BrokerWorkerProcessFailedToInitializeEventId, LogStringFormatTable.BrokerWorkerProcessFailedToInitialize, PID);
-            if ((this.IsTraceEnabled(0) == false))
+            if ((this.IsTraceEnabled("0") == false))
             {
                 return false;
             }
             return etwTrace.LogBrokerWorkerProcessFailedToInitialize(PID);
         }
         
-        public bool LogBrokerClientCreated(int SessionId, string ClientId)
+        public bool LogBrokerClientCreated(string SessionId, string ClientId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.BrokerClientCreatedEventId, LogStringFormatTable.BrokerClientCreated, SessionId, ClientId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2260,7 +2260,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBrokerClientCreated(SessionId, ClientId);
         }
         
-        public bool LogBrokerClientStateTransition(int SessionId, string ClientId, string State)
+        public bool LogBrokerClientStateTransition(string SessionId, string ClientId, string State)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.BrokerClientStateTransitionEventId, LogStringFormatTable.BrokerClientStateTransition, SessionId, ClientId, State);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2270,7 +2270,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBrokerClientStateTransition(SessionId, ClientId, State);
         }
         
-        public bool LogBrokerClientRejectFlush(int SessionId, string ClientId, string State)
+        public bool LogBrokerClientRejectFlush(string SessionId, string ClientId, string State)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.BrokerClientRejectFlushEventId, LogStringFormatTable.BrokerClientRejectFlush, SessionId, ClientId, State);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2280,7 +2280,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBrokerClientRejectFlush(SessionId, ClientId, State);
         }
         
-        public bool LogBrokerClientRejectEOM(int SessionId, string ClientId, string State)
+        public bool LogBrokerClientRejectEOM(string SessionId, string ClientId, string State)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.BrokerClientRejectEOMEventId, LogStringFormatTable.BrokerClientRejectEOM, SessionId, ClientId, State);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2290,7 +2290,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBrokerClientRejectEOM(SessionId, ClientId, State);
         }
         
-        public bool LogBrokerClientTimedOut(int SessionId, string ClientId)
+        public bool LogBrokerClientTimedOut(string SessionId, string ClientId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.BrokerClientTimedOutEventId, LogStringFormatTable.BrokerClientTimedOut, SessionId, ClientId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2300,7 +2300,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBrokerClientTimedOut(SessionId, ClientId);
         }
         
-        public bool LogBrokerClientAllResponseDispatched(int SessionId, string ClientId)
+        public bool LogBrokerClientAllResponseDispatched(string SessionId, string ClientId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.BrokerClientAllResponseDispatchedEventId, LogStringFormatTable.BrokerClientAllResponseDispatched, SessionId, ClientId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2310,7 +2310,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBrokerClientAllResponseDispatched(SessionId, ClientId);
         }
         
-        public bool LogBrokerClientAllRequestDone(int SessionId, string ClientId)
+        public bool LogBrokerClientAllRequestDone(string SessionId, string ClientId)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.BrokerClientAllRequestDoneEventId, LogStringFormatTable.BrokerClientAllRequestDone, SessionId, ClientId);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2320,7 +2320,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBrokerClientAllRequestDone(SessionId, ClientId);
         }
         
-        public bool LogBrokerClientDisconnected(int SessionId, string ClientId, string State)
+        public bool LogBrokerClientDisconnected(string SessionId, string ClientId, string State)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.BrokerClientDisconnectedEventId, LogStringFormatTable.BrokerClientDisconnected, SessionId, ClientId, State);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2330,7 +2330,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBrokerClientDisconnected(SessionId, ClientId, State);
         }
         
-        public bool LogUserTraceVerbose(int SessionId, System.Guid MessageId, System.Guid DispatchId, string String)
+        public bool LogUserTraceVerbose(string SessionId, System.Guid MessageId, System.Guid DispatchId, string String)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Verbose, RuntimeTraceEventIdConst.UserTraceVerboseEventId, LogStringFormatTable.UserTraceMessage, SessionId, MessageId, DispatchId, String);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2340,7 +2340,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogUserTraceVerbose(SessionId, MessageId, DispatchId, String);
         }
         
-        public bool LogUserTraceInfo(int SessionId, System.Guid MessageId, System.Guid DispatchId, string String)
+        public bool LogUserTraceInfo(string SessionId, System.Guid MessageId, System.Guid DispatchId, string String)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.UserTraceInfoEventId, LogStringFormatTable.UserTraceMessage, SessionId, MessageId, DispatchId, String);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2350,7 +2350,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogUserTraceInfo(SessionId, MessageId, DispatchId, String);
         }
         
-        public bool LogUserTraceWarning(int SessionId, System.Guid MessageId, System.Guid DispatchId, string String)
+        public bool LogUserTraceWarning(string SessionId, System.Guid MessageId, System.Guid DispatchId, string String)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Warning, RuntimeTraceEventIdConst.UserTraceWarningEventId, LogStringFormatTable.UserTraceMessage, SessionId, MessageId, DispatchId, String);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2360,7 +2360,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogUserTraceWarning(SessionId, MessageId, DispatchId, String);
         }
         
-        public bool LogUserTraceError(int SessionId, System.Guid MessageId, System.Guid DispatchId, string String)
+        public bool LogUserTraceError(string SessionId, System.Guid MessageId, System.Guid DispatchId, string String)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Error, RuntimeTraceEventIdConst.UserTraceErrorEventId, LogStringFormatTable.UserTraceMessage, SessionId, MessageId, DispatchId, String);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2370,7 +2370,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogUserTraceError(SessionId, MessageId, DispatchId, String);
         }
         
-        public bool LogUserTraceCritial(int SessionId, System.Guid MessageId, System.Guid DispatchId, string String)
+        public bool LogUserTraceCritial(string SessionId, System.Guid MessageId, System.Guid DispatchId, string String)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Critical, RuntimeTraceEventIdConst.UserTraceCritialEventId, LogStringFormatTable.UserTraceMessage, SessionId, MessageId, DispatchId, String);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2380,7 +2380,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogUserTraceCritial(SessionId, MessageId, DispatchId, String);
         }
         
-        public bool LogFrontendBindingLoaded(int SessionId, string Symbol, long MaxMessageSize, long ReceiveTimeout, long SendTimeout, string MessageVersion, string Scheme)
+        public bool LogFrontendBindingLoaded(string SessionId, string Symbol, long MaxMessageSize, long ReceiveTimeout, long SendTimeout, string MessageVersion, string Scheme)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.FrontendBindingLoadedEventId, LogStringFormatTable.FrontendBindingLoaded, SessionId, Symbol, MaxMessageSize, ReceiveTimeout, SendTimeout, MessageVersion, Scheme);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2390,7 +2390,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogFrontendBindingLoaded(SessionId, Symbol, MaxMessageSize, ReceiveTimeout, SendTimeout, MessageVersion, Scheme);
         }
         
-        public bool LogBackendBindingLoaded(int SessionId, string Symbol, long MaxMessageSize, long ReceiveTimeout, long SendTimeout, string MessageVersion, string Scheme)
+        public bool LogBackendBindingLoaded(string SessionId, string Symbol, long MaxMessageSize, long ReceiveTimeout, long SendTimeout, string MessageVersion, string Scheme)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.BackendBindingLoadedEventId, LogStringFormatTable.BackendBindingLoaded, SessionId, Symbol, MaxMessageSize, ReceiveTimeout, SendTimeout, MessageVersion, Scheme);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2400,7 +2400,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogBackendBindingLoaded(SessionId, Symbol, MaxMessageSize, ReceiveTimeout, SendTimeout, MessageVersion, Scheme);
         }
         
-        public bool LogFrontendCreated(int SessionId, string Symbol, string FrontendUri)
+        public bool LogFrontendCreated(string SessionId, string Symbol, string FrontendUri)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.FrontendCreatedEventId, LogStringFormatTable.FrontendCreated, SessionId, Symbol, FrontendUri);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2410,7 +2410,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogFrontendCreated(SessionId, Symbol, FrontendUri);
         }
         
-        public bool LogFrontendControllerCreated(int SessionId, string Symbol, string ControllerUri, string GetResponseUri)
+        public bool LogFrontendControllerCreated(string SessionId, string Symbol, string ControllerUri, string GetResponseUri)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.FrontendControllerCreatedEventId, LogStringFormatTable.FrontendControllerCreated, SessionId, Symbol, ControllerUri, GetResponseUri);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2420,7 +2420,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogFrontendControllerCreated(SessionId, Symbol, ControllerUri, GetResponseUri);
         }
         
-        public bool LogQueueCreatedOrExist(int SessionId, string QueueName)
+        public bool LogQueueCreatedOrExist(string SessionId, string QueueName)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.QueueCreatedOrExistEventId, LogStringFormatTable.QueueCreatedOrExist, SessionId, QueueName);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2430,7 +2430,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogQueueCreatedOrExist(SessionId, QueueName);
         }
         
-        public bool LogQueueDeleted(int SessionId, string QueueName)
+        public bool LogQueueDeleted(string SessionId, string QueueName)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Information, RuntimeTraceEventIdConst.QueueDeletedEventId, LogStringFormatTable.QueueDeleted, SessionId, QueueName);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2440,7 +2440,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogQueueDeleted(SessionId, QueueName);
         }
         
-        public bool LogQueueNotExist(int SessionId, string QueueName)
+        public bool LogQueueNotExist(string SessionId, string QueueName)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Error, RuntimeTraceEventIdConst.QueueNotExistEventId, LogStringFormatTable.QueueNotExist, SessionId, QueueName);
             if ((this.IsTraceEnabled(SessionId) == false))
@@ -2502,7 +2502,7 @@ namespace Microsoft.Hpc.RuntimeTrace
             return etwTrace.LogEventReceived(EventId);
         }
         
-        public bool LogEventBuffered(int EventId, int SessionId, int BufferId, int Count, System.DateTime CreatedTime)
+        public bool LogEventBuffered(int EventId, string SessionId, int BufferId, int Count, System.DateTime CreatedTime)
         {
             cosmosTrace.TraceEvent(System.Diagnostics.TraceEventType.Verbose, SOADiagTraceEventIdConst.EventBufferedEventId, LogStringFormatTable.EventBuffered, EventId, SessionId, BufferId, Count, CreatedTime);
             return etwTrace.LogEventBuffered(EventId, SessionId, BufferId, Count, CreatedTime);

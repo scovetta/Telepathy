@@ -107,7 +107,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// Initializes a new instance of the BrokerEntry class
         /// </summary>
         /// <param name="sessionId">indicating the session id</param>
-        public BrokerEntry(int sessionId)
+        public BrokerEntry(string sessionId)
         {
             BrokerTracing.Initialize(sessionId);
 
@@ -141,7 +141,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// <summary>
         /// Gets the session id
         /// </summary>
-        public int SessionId
+        public string SessionId
         {
             get { return this.sharedData.BrokerInfo.SessionId; }
         }

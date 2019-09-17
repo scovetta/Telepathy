@@ -23,6 +23,6 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <returns>
         /// returns a flag indicating whether the authentication succeeded
         /// </returns>
-        bool AuthenticateUser(int sessionId, WindowsIdentity identity);
+        bool AuthenticateUser(string sessionId, WindowsIdentity identity);
     }
 }

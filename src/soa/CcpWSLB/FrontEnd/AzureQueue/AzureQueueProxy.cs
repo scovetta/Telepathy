@@ -94,7 +94,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// <summary>
         /// Session Id.
         /// </summary>
-        public int SessionId { get; private set; }
+        public string SessionId { get; private set; }
 
         /// <summary>
         /// Azure storage connection string
@@ -301,7 +301,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// <param name="clusterHash">the cluster id hash</param>
         /// <param name="sessionId">the session id</param>
         /// <param name="azureStorageConnectionString">the Azure storage connection string</param>
-        public AzureQueueProxy(string clusterName, int clusterHash, int sessionId, string azureStorageConnectionString)
+        public AzureQueueProxy(string clusterName, int clusterHash, string sessionId, string azureStorageConnectionString)
         {
             // this works for broker
             ThreadPool.SetMinThreads(MinThreadsOfThreadpool, MinThreadsOfThreadpool);

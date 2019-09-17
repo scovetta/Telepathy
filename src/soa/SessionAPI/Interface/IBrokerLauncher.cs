@@ -27,7 +27,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>The session Info</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        BrokerInitializationResult Create(SessionStartInfoContract info, int sessionId);
+        BrokerInitializationResult Create(SessionStartInfoContract info, string sessionId);
 
         /// <summary>
         /// Async Create a new broker
@@ -36,7 +36,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="sessionid">the session id which is also service job id</param>
         /// <returns>The session Info</returns>
         [OperationContract(AsyncPattern = true)]
-        IAsyncResult BeginCreate(SessionStartInfoContract info, int sessionId, AsyncCallback callback, object state);
+        IAsyncResult BeginCreate(SessionStartInfoContract info, string sessionId, AsyncCallback callback, object state);
 
         /// <summary>
         /// End the async creating
@@ -50,14 +50,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         /// <param name="sessionID">sessionID of broker to ping</param>
         [OperationContract]
-        bool PingBroker(int sessionID);
+        bool PingBroker(string sessionID);
 
         /// <summary>
         /// Pings specified broker
         /// </summary>
         /// <param name="sessionID">sessionID of broker to ping</param>
         [OperationContract(AsyncPattern = true)]
-        IAsyncResult BeginPingBroker(int sessionID, AsyncCallback callback, object state);
+        IAsyncResult BeginPingBroker(string sessionID, AsyncCallback callback, object state);
 
         /// <summary>
         /// Pings specified broker
@@ -70,14 +70,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         /// <param name="sessionID">sessionID of broker to ping</param>
         [OperationContract]
-        String PingBroker2(int sessionID);
+        String PingBroker2(string sessionID);
 
         /// <summary>
         /// Pings specified broker
         /// </summary>
         /// <param name="sessionID">sessionID of broker to ping</param>
         [OperationContract(AsyncPattern = true)]
-        IAsyncResult BeginPingBroker2(int sessionID, AsyncCallback callback, object state);
+        IAsyncResult BeginPingBroker2(string sessionID, AsyncCallback callback, object state);
 
         /// <summary>
         /// Pings specified broker
@@ -93,7 +93,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>The created session info</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        BrokerInitializationResult CreateDurable(SessionStartInfoContract info, int sessionId);
+        BrokerInitializationResult CreateDurable(SessionStartInfoContract info, string sessionId);
 
         /// <summary>
         /// Create a new broker which working under Durable manner.
@@ -104,7 +104,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="state">the async state</param>
         /// <returns>Async result</returns>
         [OperationContract(AsyncPattern = true)]
-        IAsyncResult BeginCreateDurable(SessionStartInfoContract info, int sessionId, AsyncCallback callback, object state);
+        IAsyncResult BeginCreateDurable(SessionStartInfoContract info, string sessionId, AsyncCallback callback, object state);
 
         /// <summary>
         /// End the async operation of CreateDurable
@@ -120,7 +120,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <returns>the Broker Launcher EPR</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        BrokerInitializationResult Attach(int sessionId);
+        BrokerInitializationResult Attach(string sessionId);
 
         /// <summary>
         /// Attach to an exisiting session
@@ -128,7 +128,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="sessionId">The session Identity</param>
         /// <returns>IAsyncResult instance</returns>
         [OperationContract(AsyncPattern = true)]
-        IAsyncResult BeginAttach(int sessionId, AsyncCallback callback, object state);
+        IAsyncResult BeginAttach(string sessionId, AsyncCallback callback, object state);
 
         /// <summary>
         /// Attach to an exisiting session
@@ -144,7 +144,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="sessionId">The session id</param>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        void Close(int sessionId);
+        void Close(string sessionId);
 
         /// <summary>
         /// Clean up all the resource related to this session.
@@ -152,7 +152,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         /// <param name="sessionId">The session id</param>
         [OperationContract(AsyncPattern = true)]
-        IAsyncResult BeginClose(int sessionId, AsyncCallback callback, object state);
+        IAsyncResult BeginClose(string sessionId, AsyncCallback callback, object state);
 
         /// <summary>
         /// Clean up all the resource related to this session.

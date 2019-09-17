@@ -224,11 +224,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             return info;
         }
 
-        public async Task FreeResource(SessionStartInfo startInfo, int sessionId)
+        public async Task FreeResource(SessionStartInfo startInfo, string sessionId)
         {
             try
             {
-                if (sessionId != 0)
+                if (!sessionId.Equals("0"))
                 {
                     RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
 

@@ -21,7 +21,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
         /// <summary>
         /// The session id
         /// </summary>
-        private readonly int sessionid;
+        private readonly string sessionid;
 
         /// <summary>
         /// Service job
@@ -70,7 +70,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
         /// Initializes a new instance of the JobMonitorEntry class
         /// </summary>
         /// <param name="sessionid">indicating the session id</param>
-        public AzureBatchJobMonitor(int sessionid, Action<Data.JobState, List<TaskInfo>> reportJobStateAction)
+        public AzureBatchJobMonitor(string sessionid, Action<Data.JobState, List<TaskInfo>> reportJobStateAction)
         {
             this.sessionid = sessionid;
             this.batchClient = AzureBatchConfiguration.GetBatchClient();

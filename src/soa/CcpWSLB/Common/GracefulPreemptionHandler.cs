@@ -59,7 +59,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
         /// <summary>
         /// The sessionId.
         /// </summary>
-        private int sessionId;
+        private string sessionId;
 
         /// <summary>
         /// Possible runaway tasks and how many times it is seen
@@ -79,7 +79,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
         /// Callback to finish *only* runaway tasks
         /// </summary>
         private readonly Action<string> finishRunawayTaskCallback;
-        public GracefulPreemptionHandler(IDispatcherManager dispatcherManager, int sessionId, Action<string> finishRunawayTaskCallback)
+        public GracefulPreemptionHandler(IDispatcherManager dispatcherManager, string sessionId, Action<string> finishRunawayTaskCallback)
         {
             // Initialize it to the max value to not preempt until get an actual number from scheduler.
             this.BalanceInfo = new BalanceInfo(int.MaxValue);

@@ -24,7 +24,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Session Id, also the service job id
         /// </summary>
-        private int id;
+        private string id;
 
         /// <summary>
         /// The launcher EPR to open/close Broker
@@ -115,7 +115,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// Gets or sets the session Id
         /// </summary>
         [DataMember]
-        public int Id
+        public string Id
         {
             get { return this.id; }
             set { this.id = value; }

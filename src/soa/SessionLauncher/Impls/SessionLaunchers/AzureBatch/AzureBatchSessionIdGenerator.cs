@@ -8,9 +8,9 @@
 
     internal static class AzureBatchSessionIdGenerator
     {
-        public static int GenerateSessionId()
+        public static string GenerateSessionId()
         {
-            return (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            return DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
         }
     }
 }

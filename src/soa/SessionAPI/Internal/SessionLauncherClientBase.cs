@@ -107,7 +107,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="serviceVersion">the service version</param>
         /// <param name="sessionInfo">the session info</param>
         /// <returns>The EPRs of the broker launchers</returns>
-        public string[] AllocateDurable(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
+        public string[] AllocateDurable(SessionStartInfoContract info, string endpointPrefix, out string sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
         {
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
             IAsyncResult result = this.Channel.BeginAllocateDurable(info, endpointPrefix, null, null);
@@ -136,7 +136,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="sessionInfo">the session info</param>
         /// <param name="result">the async result</param>
         /// <returns>the canidate broker launchers' eprs</returns>
-        public string[] EndAllocateDurable(out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo, IAsyncResult result)
+        public string[] EndAllocateDurable(out string sessionid, out string serviceVersion, out SessionInfoContract sessionInfo, IAsyncResult result)
         {
             return this.Channel.EndAllocateDurable(out sessionid, out serviceVersion, out sessionInfo, result);
         }
@@ -168,7 +168,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="serviceVersion">the service version</param>
         /// <param name="sessionInfo">the session info</param>
         /// <returns>The EPRs of the broker launchers</returns>
-        public string[] Allocate(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
+        public string[] Allocate(SessionStartInfoContract info, string endpointPrefix, out string sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
         {
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
             IAsyncResult result = this.Channel.BeginAllocate(info, endpointPrefix, null, null);
@@ -196,7 +196,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="sessionInfo">the session info</param>
         /// <param name="result">the async result</param>
         /// <returns>the canidate broker launchers' eprs</returns>
-        public string[] EndAllocate(out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo, IAsyncResult result)
+        public string[] EndAllocate(out string sessionid, out string serviceVersion, out SessionInfoContract sessionInfo, IAsyncResult result)
         {
             return this.Channel.EndAllocate(out sessionid, out serviceVersion, out sessionInfo, result);
         }
@@ -208,7 +208,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="endpointPrefix">the endpoint prefix, net.tcp:// or https:// </param>
         /// <param name="sessionId">the session id</param>
         /// <returns>The Session Information</returns>
-        public async Task<SessionInfoContract> GetInfoV5Async(string endpointPrefix, int sessionId)
+        public async Task<SessionInfoContract> GetInfoV5Async(string endpointPrefix, string sessionId)
         {
             return await this.Channel.GetInfoV5Async(endpointPrefix, sessionId).ConfigureAwait(false);
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
@@ -217,7 +217,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         }
 
         /// <inheritdoc />
-        public async Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, int sessionId, bool useAad)
+        public async Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, string sessionId, bool useAad)
         {
             return await this.Channel.GetInfoV5Sp1Async(endpointPrefix, sessionId, useAad).ConfigureAwait(false);
         }
@@ -229,7 +229,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="endpointPrefix">the endpoint prefix, net.tcp:// or https:// </param>
         /// <param name="sessionId">the session id</param>
         /// <returns>The Session Information</returns>
-        public SessionInfoContract GetInfo(string headnode, string endpointPrefix, int sessionId)
+        public SessionInfoContract GetInfo(string headnode, string endpointPrefix, string sessionId)
         {
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
             IAsyncResult result = this.Channel.BeginGetInfo(headnode, endpointPrefix, sessionId, null, null);
@@ -243,7 +243,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="endpointPrefix">the endpoint prefix, net.tcp:// or https:// </param>
         /// <param name="sessionId">the session id</param>
         /// <returns>IAsyncResult instance</returns>
-        public IAsyncResult BeginGetInfo(string headnode, string endpointPrefix, int sessionId, AsyncCallback callback, object state)
+        public IAsyncResult BeginGetInfo(string headnode, string endpointPrefix, string sessionId, AsyncCallback callback, object state)
         {
             return this.Channel.BeginGetInfo(headnode, endpointPrefix, sessionId, callback, state);
         }
@@ -261,7 +261,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// terminate a session.
         /// </summary>
         /// <param name="sessionId">the session id</param>
-        public async Task TerminateV5Async(int sessionId)
+        public async Task TerminateV5Async(string sessionId)
         {
             await this.Channel.TerminateV5Async(sessionId).ConfigureAwait(false);
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
@@ -274,7 +274,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         /// <param name="headnode">the headnode.</param>
         /// <param name="sessionId">the session id</param>
-        public void Terminate(string headnode, int sessionId)
+        public void Terminate(string headnode, string sessionId)
         {
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
             IAsyncResult result = this.Channel.BeginTerminate(headnode, sessionId, null, null);
@@ -286,7 +286,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         /// <param name="headnode">the headnode.</param>
         /// <param name="sessionId">the session id</param>
-        public IAsyncResult BeginTerminate(string headnode, int sessionId, AsyncCallback callback, object state)
+        public IAsyncResult BeginTerminate(string headnode, string sessionId, AsyncCallback callback, object state)
         {
             return this.Channel.BeginTerminate(headnode, sessionId, callback, state);
         }

@@ -27,7 +27,7 @@
         /// <value>
         ///   <para>An identifier that uniquely identifies the session.</para>
         /// </value>
-        public int Id
+        public string Id
         {
             get
             {

@@ -13,7 +13,7 @@
 
         public string HeadNode => string.Empty;
 
-        public async Task<bool> IsJobPurged(int jobId)
+        public async Task<bool> IsJobPurged(string jobId)
         {
             return false;
         }
@@ -22,7 +22,7 @@
         {
         }
 
-        public async Task UpdateSuspended(int sessionId, bool suspended)
+        public async Task UpdateSuspended(string sessionId, bool suspended)
         {
         }
 
@@ -31,7 +31,7 @@
             throw new System.InvalidOperationException();
         }
 
-        public async Task<BrokerRecoverInfo> TryGetSessionStartInfoFromFininshedJobs(int sessionId)
+        public async Task<BrokerRecoverInfo> TryGetSessionStartInfoFromFininshedJobs(string sessionId)
         {
             throw new System.InvalidOperationException();
         }
@@ -41,16 +41,16 @@
             throw new System.InvalidOperationException();
         }
 
-        public async Task<string> GetJobOwnerSID(int jobId)
+        public async Task<string> GetJobOwnerSID(string jobId)
         {
             return DummyJobOnwerSID;
         }
 
-        public async Task FailJob(int jobid, string reason)
+        public async Task FailJob(string jobid, string reason)
         {
         }
 
-        public async Task<bool> IsDiagTraceEnabled(int jobId)
+        public async Task<bool> IsDiagTraceEnabled(string jobId)
         {
             return false;
         }

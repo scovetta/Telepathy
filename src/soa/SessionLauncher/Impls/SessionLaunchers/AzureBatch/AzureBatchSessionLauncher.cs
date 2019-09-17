@@ -68,13 +68,13 @@
                 AzureBatchConfiguration.SoaBrokerStorageConnectionString;
         }
 
-        public override async Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, int sessionId, bool useAad)
+        public override async Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, string sessionId, bool useAad)
         {
             SessionInfoContract sessionInfo = null;
             CheckAccess();
 
             ParamCheckUtility.ThrowIfNullOrEmpty(endpointPrefix, "endpointPrefix");
-            ParamCheckUtility.ThrowIfOutofRange(sessionId <= 0, "sessionId");
+            ParamCheckUtility.ThrowIfNullOrEmpty(sessionId, "sessionId");
 
             TraceHelper.TraceEvent(
                 sessionId,
@@ -271,7 +271,7 @@
             return sessionInfo;
         }
 
-        public override async Task TerminateV5Async(int sessionId)
+        public override async Task TerminateV5Async(string sessionId)
         {
             using (var batchClient = AzureBatchConfiguration.GetBatchClient())
             {
@@ -352,7 +352,7 @@
                         throw new InvalidOperationException("Compute node count in selected pool is less then 1.");
                     }
 
-                    sessionAllocateInfo.Id = 0;
+                    sessionAllocateInfo.Id = string.Empty;
 
                     // sessionAllocateInfo.BrokerLauncherEpr = new[] { SessionInternalConstants.BrokerConnectionStringToken };
                     IList<EnvironmentSetting> ConstructEnvironmentVariable()
@@ -552,8 +552,8 @@
                     }
 
                     var jobId = await CreateJobAsync();
-                    int sessionId = AzureBatchSessionJobIdConverter.ConvertToSessionId(jobId);
-                    if (sessionId != -1)
+                    string sessionId = AzureBatchSessionJobIdConverter.ConvertToSessionId(jobId);
+                    if (!sessionId.Equals("-1"))
                     {
                         sessionAllocateInfo.Id = sessionId;
                     }
@@ -697,7 +697,7 @@
             }
         }
 
-        protected override void AddSessionToPool(string serviceNameWithVersion, bool durable, int sessionId, int poolSize)
+        protected override void AddSessionToPool(string serviceNameWithVersion, bool durable, string sessionId, int poolSize)
         {
             throw new NotSupportedException("Currently Session Launcher does not support session pool on Azure Batch.");
         }
