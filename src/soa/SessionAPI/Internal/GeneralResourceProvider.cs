@@ -175,7 +175,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             {
                 info = Utility.BuildSessionInfoFromDataContract(
                     await RetryHelper<SessionInfoContract>.InvokeOperationAsync(
-                            async () => await this.client.GetInfoAadAsync(SessionLauncherClient.HttpsEndpointPrefix, attachInfo.SessionId, attachInfo.UseAad).ConfigureAwait(false),
+                            async () => await this.client.GetInfoAsync(SessionLauncherClient.HttpsEndpointPrefix, attachInfo.SessionId).ConfigureAwait(false),
                             (e, r) =>
                                 {
                                     var remainingTime = GetRemainingTime(timeout, startTime);
@@ -199,7 +199,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             {
                 info = Utility.BuildSessionInfoFromDataContract(
                     await RetryHelper<SessionInfoContract>.InvokeOperationAsync(
-                            async () => await this.client.GetInfoAadAsync(SessionLauncherClient.EndpointPrefix, attachInfo.SessionId, attachInfo.UseAad).ConfigureAwait(false),
+                            async () => await this.client.GetInfoAsync(SessionLauncherClient.EndpointPrefix, attachInfo.SessionId).ConfigureAwait(false),
                             (e, r) =>
                                 {
                                     var remainingTime = GetRemainingTime(timeout, startTime);

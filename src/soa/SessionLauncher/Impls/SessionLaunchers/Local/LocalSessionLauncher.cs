@@ -19,7 +19,7 @@
             throw new NotSupportedException("Currently Session Launcher does not support durable session in Local Session mode.");
         }
 
-        public override async Task<SessionInfoContract> GetInfoAadAsync(string endpointPrefix, int sessionId, bool useAad)
+        public override async Task<SessionInfoContract> GetInfoAsync(string endpointPrefix, int sessionId)
         {
             throw new NotImplementedException();
         }

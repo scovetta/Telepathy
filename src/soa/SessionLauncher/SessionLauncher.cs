@@ -105,27 +105,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             return await this.AllocateInternalAsync(info, endpointPrefix, false);
         }
 
-        public virtual string[] Allocate(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
-        {
-            var contract = this.AllocateAsync(info, endpointPrefix).GetAwaiter().GetResult();
-            sessionid = contract.Id;
-            serviceVersion = contract.ServiceVersion?.ToString();
-            sessionInfo = contract.SessionInfo;
-            return contract.BrokerLauncherEpr;
-        }
-
         public virtual async Task<SessionAllocateInfoContract> AllocateDurableAsync(SessionStartInfoContract info, string endpointPrefix)
         {
             return await this.AllocateInternalAsync(info, endpointPrefix, true);
-        }
-
-        public virtual string[] AllocateDurable(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
-        {
-            SessionAllocateInfoContract contract = this.AllocateDurableAsync(info, endpointPrefix).GetAwaiter().GetResult();
-            sessionid = contract.Id;
-            serviceVersion = contract.ServiceVersion?.ToString();
-            sessionInfo = contract.SessionInfo;
-            return contract.BrokerLauncherEpr;
         }
 
         /// <summary>
@@ -135,9 +117,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <param name="endpointPrefix">the prefix of the endpoint epr.</param>
         /// <param name="sessionId">the session id</param>
         /// <returns>the session information.</returns>
-        Task<SessionInfoContract> ISessionLauncher.GetInfoAsync(string endpointPrefix, int sessionId) => ((ISessionLauncher)this).GetInfoAadAsync(endpointPrefix, sessionId, false);
-
-        public abstract Task<SessionInfoContract> GetInfoAadAsync(string endpointPrefix, int sessionId, bool useAad);
+        public abstract Task<SessionInfoContract> GetInfoAsync(string endpointPrefix, int sessionId);
 
         public abstract Task TerminateAsync(int sessionId);
 
@@ -146,34 +126,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         public abstract Task<string> GetSOAConfigurationAsync(string key);
 
         public abstract Task<Dictionary<string, string>> GetSOAConfigurationsAsync(List<string> keys);
-
-        #region sync interface
-
-
-        /// <summary>
-        /// Attach to an exisiting session (create a session info by the specified service job)
-        /// </summary>
-        /// <param name="headnode">the headnode.</param>
-        /// <param name="endpointPrefix">the prefix of the endpoint epr.</param>
-        /// <param name="sessionId">the session id</param>
-        /// <returns>the session information.</returns>
-        SessionInfoContract ISessionLauncher.GetInfo(string headnode, string endpointPrefix, int sessionId)
-        {
-            return ((ISessionLauncher)this).GetInfoAsync(endpointPrefix, sessionId).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// terminate a session (cancel the service job specified by the id)
-        /// </summary>
-        /// <param name="headnode">the headnode.</param>
-        /// <param name="sessionId">the session id</param>
-        void ISessionLauncher.Terminate(string headnode, int sessionId)
-        {
-            ((ISessionLauncher)this).TerminateAsync(sessionId).GetAwaiter().GetResult();
-        }
-
-        #endregion
-
         #endregion
 
 
