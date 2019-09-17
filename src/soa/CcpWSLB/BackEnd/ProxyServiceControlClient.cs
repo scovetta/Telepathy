@@ -9,7 +9,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     internal interface IProxyServiceControlClient : IProxyServiceManagement
     {
         [OperationContractAttribute(AsyncPattern = true, IsOneWay = true, Action = "http://hpc.microsoft.com/hpcbrokerproxy/exit")]
-        IAsyncResult BeginExit(string machine, int jobId, string taskId, int port, BindingData data, AsyncCallback callback, object state);
+        IAsyncResult BeginExit(string machine, string jobId, string taskId, int port, BindingData data, AsyncCallback callback, object state);
 
         void EndExit(IAsyncResult result);
     }
@@ -22,7 +22,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         {
         }
 
-        public IAsyncResult BeginExit(string machine, int jobId, string taskId, int port, BindingData data, AsyncCallback callback, object state)
+        public IAsyncResult BeginExit(string machine, string jobId, string taskId, int port, BindingData data, AsyncCallback callback, object state)
         {
             return this.Channel.BeginExit(machine, jobId, taskId, port, data, callback, state);
         }

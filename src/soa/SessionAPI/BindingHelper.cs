@@ -1129,7 +1129,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// <param name="port"></param>
         /// <param name="isHttp"></param>
         /// <returns></returns>
-        public static string GenerateServiceHostEndpointAddress(string hostnameWithPrefix, int jobId, string taskId, int port, bool isHttp)
+        public static string GenerateServiceHostEndpointAddress(string hostnameWithPrefix, string jobId, string taskId, int port, bool isHttp)
         {
             return string.Format(
                 CultureInfo.InvariantCulture,

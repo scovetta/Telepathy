@@ -149,13 +149,13 @@ namespace Microsoft.Hpc.Scheduler.Session
                 SessionInfo info = null;
                 if (binding is NetTcpBinding)
                 {
-                    info = Utility.BuildSessionInfoFromDataContract(await client.GetInfoV5Async(SessionLauncherClient.EndpointPrefix, sessionId).ConfigureAwait(false));
+                    info = Utility.BuildSessionInfoFromDataContract(await client.GetInfoAsync(SessionLauncherClient.EndpointPrefix, sessionId).ConfigureAwait(false));
                 }
 
 #if !net40
                 else if (binding is BasicHttpBinding || binding is NetHttpBinding || binding is NetHttpsBinding)
                 {
-                    info = Utility.BuildSessionInfoFromDataContract(await client.GetInfoV5Async(SessionLauncherClient.HttpsEndpointPrefix, sessionId).ConfigureAwait(false));
+                    info = Utility.BuildSessionInfoFromDataContract(await client.GetInfoAsync(SessionLauncherClient.HttpsEndpointPrefix, sessionId).ConfigureAwait(false));
                 }
 
 #endif

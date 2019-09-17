@@ -111,14 +111,14 @@ namespace BvtTest
 
             sessionStartInfo = BuildSessionStartInfo(Server, EchoSvcName, null, null, null, null, SessionUnitType.Node, null, null, null);
             sessionStartInfo.Secure = false;
-            int serviceJobId = -1;
+            string serviceJobId;
             Info("Begin to create Durable Session.");
             string guid = Guid.NewGuid().ToString();
-            var epr = new EndpointAddress(string.Format(NetTcpEndpointPattern, Server, serviceJobId));
-            Info("EPR: {0}", epr);
             using (DurableSession session = DurableSession.CreateSession(sessionStartInfo))
             {
                 serviceJobId = session.Id;
+                var epr = new EndpointAddress(string.Format(NetTcpEndpointPattern, Server, serviceJobId));
+                Info("EPR: {0}", epr);
                 try
                 {
                     Info("Client {0}: Begin to send requests.", guid);
@@ -198,7 +198,7 @@ namespace BvtTest
             sessionStartInfo = BuildSessionStartInfo(Server, EchoSvcName, null, null, null, null, SessionUnitType.Node, null, null, null);
             sessionStartInfo.Secure = false;
             Info("Begin to create session");
-            int serviceJobId = -1;
+            string serviceJobId;
             int clientNum = 2;
             AutoResetEvent anotherClient = new AutoResetEvent(false);
 
@@ -306,7 +306,7 @@ namespace BvtTest
             sessionStartInfo.ShareSession = true;
 
             Info("Begin to create session");
-            int serviceJobId = -1;
+            string serviceJobId;
             int clientNum = 2;
             AutoResetEvent anotherClient = new AutoResetEvent(false);
 

@@ -13,7 +13,7 @@
     {
         private IController instance;
 
-        internal BrokerWorkerControllerQueueWatcher(IController instance, string connectionString, int sessionId)
+        internal BrokerWorkerControllerQueueWatcher(IController instance, string connectionString, string sessionId)
         {
             this.instance = instance;
             CloudQueueSerializer serializer = new CloudQueueSerializer(CloudQueueCmdTypeBinder.BrokerLauncherBinder);

@@ -169,7 +169,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack
         /// <param name="serviceVersion">the service version</param>
         /// <param name="sessionInfo">the session info</param>
         /// <returns>the Broker Launcher EPRs, sorted by the preference.</returns>
-        public override async Task<SessionAllocateInfoContract> AllocateV5Async(SessionStartInfoContract startInfo, string endpointPrefix)
+        public override async Task<SessionAllocateInfoContract> AllocateAsync(SessionStartInfoContract startInfo, string endpointPrefix)
         {
             if (SoaHelper.IsOnAzure())
             {
@@ -191,7 +191,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack
         /// <param name="serviceVersion">the service version</param>
         /// <param name="sessionInfo">the session info</param>
         /// <returns>the Broker Launcher EPRs, sorted by the preference.</returns>
-        public override async Task<SessionAllocateInfoContract> AllocateDurableV5Async(SessionStartInfoContract startInfo, string endpointPrefix)
+        public override async Task<SessionAllocateInfoContract> AllocateDurableAsync(SessionStartInfoContract startInfo, string endpointPrefix)
         {
             // TODO: on Azure, we don't support durable session in SP3 CTP.
             if (SoaHelper.IsOnAzure())
@@ -210,7 +210,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack
         /// <param name="sessionId">the session id</param>
         /// <param name="useAad">if getting info of an AAD session</param>
         /// <returns>the session information.</returns>
-        public override async Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, int sessionId, bool useAad)
+        public override async Task<SessionInfoContract> GetInfoAadAsync(string endpointPrefix, int sessionId, bool useAad)
         {
             using (new SessionIdentityImpersonation(useAad))
             {
@@ -737,7 +737,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack
         /// </summary>
         /// <param name="headnode">the headnode.</param>
         /// <param name="sessionId">the session id</param>
-        public override async Task TerminateV5Async(int sessionId)
+        public override async Task TerminateAsync(int sessionId)
         {
             using (GetCallerWindowsIdentity().Impersonate())
             {
