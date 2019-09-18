@@ -226,9 +226,12 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
             if (string.IsNullOrEmpty(jobIdEnvVar))
             {
-                this._jobId = jobIdEnvVar;
                 RuntimeTraceHelper.TraceEvent(this._jobId, TraceEventType.Error, StringTable.CantFindJobId);
                 return ErrorCode.ServiceHost_UnexpectedException;
+            }
+            else
+            {
+                this._jobId = jobIdEnvVar;
             }
 
             RuntimeTraceHelper.RuntimeTrace.LogHostStart(_jobId);
