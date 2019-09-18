@@ -12,7 +12,7 @@
             this.ResumeRemaining = shouldResumeRemaining;
         }
 
-        public IEnumerable<int> TaskIdsInInterest { get; set; }
+        public IEnumerable<string> TaskIdsInInterest { get; set; }
 
         public bool ResumeRemaining { get; set; }
 

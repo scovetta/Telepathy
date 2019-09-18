@@ -31,7 +31,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Interface
         /// <value>
         ///   <para />
         /// </value>
-        int SessionId { get; }
+        string SessionId { get; }
 
         /// <summary>
         /// Attach to the broker.

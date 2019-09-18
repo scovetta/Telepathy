@@ -63,7 +63,7 @@
         private static bool multiThreads = false;
 
         private static bool createSessionOnly = false;
-        private static int sessionId = -1;
+        private static string sessionId = "-1";
 
         private static bool inproc = false;
         private static bool standalone = false;
@@ -209,7 +209,7 @@
             Log("Begin to close session.");
             data.CloseSessionStart = DateTime.Now;
             // if sessionId is set by user, it's mostly used by multi-client-one-session, so do not close it
-            if (sessionId == -1)
+            if (sessionId.Equals(-1))
             {
                 try
                 {
@@ -249,7 +249,8 @@
             {
                 Utils.DrawChart(data, filename);
             }
-            return data.SessionId;
+            //return data.SessionId;
+            return 0;
         }
 
 
@@ -315,9 +316,9 @@
             ArgumentsParser.SetIfExist(parser["userTraceCount"], ref userTraceCount);
         }
 
-        private static int CreateSession(SessionStartInfo startInfo, bool isDurable)
+        private static string CreateSession(SessionStartInfo startInfo, bool isDurable)
         {
-            int sessionId;
+            string sessionId;
 #if False
             if (isDurable)
             {
@@ -335,11 +336,11 @@
             sessionId = session.Id;
 
             Log("Session created.");
-            Environment.ExitCode = sessionId;
+            //Environment.ExitCode = sessionId;
             return sessionId;
         }
 
-        private static void PrepareCommonData(int sessionId)
+        private static void PrepareCommonData(string sessionId)
         {
             if (common_data_size > 0)
             {

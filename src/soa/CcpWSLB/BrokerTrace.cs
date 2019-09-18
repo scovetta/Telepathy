@@ -21,7 +21,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// <summary>
         /// the session Id
         /// </summary>
-        private static int sessionId;
+        private static string sessionId;
 
         /// <summary>
         /// Gets the instance of RuntimeTraceWrapper.
@@ -38,7 +38,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// Initializes the broker tracing object
         /// </summary>
         /// <param name="sessionId">indicating the session id</param>
-        public static void Initialize(int sessionId)
+        public static void Initialize(string sessionId)
         {
             BrokerTracing.sessionId = sessionId;
         }
@@ -119,7 +119,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// <summary>
         /// Generate trace string for broker.
         /// </summary>
-        internal static string GenerateTraceString(string className, string methodName, int taskId, int clientIndex, string clientInfo, Guid messageId, string rawTraceString)
+        internal static string GenerateTraceString(string className, string methodName, string taskId, int clientIndex, string clientInfo, Guid messageId, string rawTraceString)
         {
             return InternalGenerateTraceString(className, methodName, taskId, clientIndex, clientInfo, messageId.ToString(), rawTraceString, null);
         }
@@ -127,7 +127,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// <summary>
         /// Generate trace string for broker.
         /// </summary>
-        internal static string GenerateTraceString(string className, string methodName, int taskId, int clientIndex, string clientInfo, string messageIdString, string rawTraceString)
+        internal static string GenerateTraceString(string className, string methodName, string taskId, int clientIndex, string clientInfo, string messageIdString, string rawTraceString)
         {
             return InternalGenerateTraceString(className, methodName, taskId, clientIndex, clientInfo, messageIdString, rawTraceString, null);
         }
@@ -135,7 +135,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// <summary>
         /// Generate trace string for broker.
         /// </summary>
-        internal static string GenerateTraceString(string className, string methodName, int taskId, int clientIndex, string clientInfo, Guid messageId, string rawTraceString, Exception e)
+        internal static string GenerateTraceString(string className, string methodName, string taskId, int clientIndex, string clientInfo, Guid messageId, string rawTraceString, Exception e)
         {
             return InternalGenerateTraceString(className, methodName, taskId, clientIndex, clientInfo, messageId.ToString(), rawTraceString, e);
         }
@@ -143,7 +143,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// <summary>
         /// Generate trace string for broker.
         /// </summary>
-        private static string InternalGenerateTraceString(string className, string methodName, int taskId, int clientIndex, string clientInfo, string messageIdString, string rawTraceString, Exception e)
+        private static string InternalGenerateTraceString(string className, string methodName, string taskId, int clientIndex, string clientInfo, string messageIdString, string rawTraceString, Exception e)
         {
             string exceptionString = string.Empty;
             if (e != null)

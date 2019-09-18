@@ -26,7 +26,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <returns>The brokerLauncher's EPRs, client should connect to them by order</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        BrokerInitializationResult Create(SessionStartInfoContract info, int sessionId);
+        BrokerInitializationResult Create(SessionStartInfoContract info, string sessionId);
 
         /// <summary>
         /// Create a new broker which working under reliable manner.
@@ -36,7 +36,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <returns>The brokerLauncher's EPRs, client should connect to them by order</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        BrokerInitializationResult CreateDurable(SessionStartInfoContract info, int sessionId);
+        BrokerInitializationResult CreateDurable(SessionStartInfoContract info, string sessionId);
 
         /// <summary>
         /// Attach to an exisiting session
@@ -45,7 +45,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <returns>the Broker Launcher EPR</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        BrokerInitializationResult Attach(int sessionId);
+        BrokerInitializationResult Attach(string sessionId);
 
         /// <summary>
         /// Clean up all the resource related to this session.
@@ -54,7 +54,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <param name="sessionId">The session id</param>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        void Close(int sessionId);
+        void Close(string sessionId);
 
         /// <summary>
         /// Pings specified broker
@@ -62,7 +62,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <param name="sessionID">indicating the session id</param>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        bool PingBroker(int sessionID);
+        bool PingBroker(string sessionID);
 
         /// <summary>
         /// Pings specified broker. New Version
@@ -70,7 +70,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <param name="sessionID">indicating the session id</param>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        string PingBroker2(int sessionID);
+        string PingBroker2(string sessionID);
 
         /// <summary>
         /// Gets the active broker id list
@@ -78,6 +78,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <returns>the list of active broker's session id</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        int[] GetActiveBrokerIdList();
+        string[] GetActiveBrokerIdList();
     }
 }

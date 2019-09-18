@@ -13,39 +13,39 @@
     {
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task<bool> UpdateBrokerInfoAsync(int sessionId, Dictionary<string, object> properties);
+        Task<bool> UpdateBrokerInfoAsync(string sessionId, Dictionary<string, object> properties);
 
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task<(bool succeed, BalanceInfo balanceInfo, List<int> taskIds, List<int> runningTaskIds)> GetGracefulPreemptionInfoAsync(int sessionId);
+        Task<(bool succeed, BalanceInfo balanceInfo, List<string> taskIds, List<string> runningTaskIds)> GetGracefulPreemptionInfoAsync(string sessionId);
 
         // TODO: this sig need to be changed, `taskUniqueId` should be removed
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task<bool> FinishTaskAsync(int jobId, int taskUniqueId);
+        Task<bool> FinishTaskAsync(string jobId, string taskUniqueId);
 
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task<bool> ExcludeNodeAsync(int jobid, string nodeName);
+        Task<bool> ExcludeNodeAsync(string jobid, string nodeName);
 
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task RequeueOrFailJobAsync(int sessionId, string reason);
+        Task RequeueOrFailJobAsync(string sessionId, string reason);
 
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task FailJobAsync(int sessionId, string reason);
+        Task FailJobAsync(string sessionId, string reason);
 
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task FinishJobAsync(int sessionId, string reason);
+        Task FinishJobAsync(string sessionId, string reason);
 
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task<(JobState jobState, int autoMax, int autoMin)> RegisterJobAsync(int jobid);
+        Task<(JobState jobState, int autoMax, int autoMin)> RegisterJobAsync(string jobid);
 
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task<int?> GetTaskErrorCode(int jobId, int globalTaskId);
+        Task<int?> GetTaskErrorCode(string jobId, string globalTaskId);
     }
 }

@@ -40,6 +40,6 @@
 
         public static string SessionSchedulerDelegationAzureTableBindingAddress => $"{AzureTableBindingSchemePrefix}SchedulerDelegation";
 
-        public static int StandaloneSessionId => 0;
+        public static string StandaloneSessionId => "0";
     }
 }

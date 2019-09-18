@@ -102,7 +102,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <param name="state">object used by the callback method.</param>
         private void UpdateNodeMappingProc(object state)
         {
-            TraceHelper.TraceVerbose(0, "[NodeMappingCache] .UpdateNodeMappingProc: updating node mapping cache");
+            TraceHelper.TraceVerbose("0", "[NodeMappingCache] .UpdateNodeMappingProc: updating node mapping cache");
             UpdateNodeMapping();
         }
 
@@ -143,7 +143,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             }
             catch (Exception e)
             {
-                TraceHelper.TraceError(0, "[NodeMappingCache] .GetNodeMappingData: Failed to get node mapping. {0}", e);
+                TraceHelper.TraceError("0", "[NodeMappingCache] .GetNodeMappingData: Failed to get node mapping. {0}", e);
                 return null;
             }
         }

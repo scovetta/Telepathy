@@ -65,7 +65,7 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest.FrontEnd
             BrokerConfigurations brokerConfig = BrokerConfigurations.GetSectionGroup(config);
 
             startInfo.Durable = true;
-            startInfo.SessionId = 100;
+            startInfo.SessionId = "100";
             startInfo.ConfigurationFile = "CcpEchoSvc.config";
             ConfigurationHelper.LoadConfiguration(info, startInfo, out brokerConfig, out var serviceConfig, out var bindings);
 
@@ -98,7 +98,7 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest.FrontEnd
             BrokerConfigurations brokerConfig = BrokerConfigurations.GetSectionGroup(config);
 
             startInfo.Durable = false;
-            startInfo.SessionId = 100;
+            startInfo.SessionId = "100";
             startInfo.ConfigurationFile = "CcpEchoSvc.config";
 
 
@@ -134,7 +134,7 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest.FrontEnd
             BrokerConfigurations brokerConfig = BrokerConfigurations.GetSectionGroup(config);
 
             startInfo.Durable = false;
-            startInfo.SessionId = 100;
+            startInfo.SessionId = "100";
             startInfo.ConfigurationFile = "CcpEchoSvc.config";
 
             ConfigurationHelper.LoadConfiguration(info, startInfo, out brokerConfig, out var serviceConfig, out var bindings);

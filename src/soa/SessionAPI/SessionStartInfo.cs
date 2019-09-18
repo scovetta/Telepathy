@@ -578,7 +578,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         public string BrokerLauncherStorageConnectionString { get; set; }
         
-        public static int StandaloneSessionId => TelepathyConstants.StandaloneSessionId;
+        public static string StandaloneSessionId => TelepathyConstants.StandaloneSessionId;
 
         /// <summary>
         ///   <para>Determines if a secure connection is used between the client and the HPC broker.</para>

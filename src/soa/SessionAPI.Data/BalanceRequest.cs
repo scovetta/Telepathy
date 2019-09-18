@@ -12,6 +12,6 @@
         public int AllowedCoreCount { get; set; }
 
         [DataMember]
-        public IList<int> TaskIds { get; set; }
+        public IList<string> TaskIds { get; set; }
     }
 }

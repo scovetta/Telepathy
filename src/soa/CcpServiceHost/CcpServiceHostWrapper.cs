@@ -67,8 +67,8 @@ namespace Microsoft.Hpc.CcpServiceHosting
         // Timeout for Exiting event to execute. This must be the same as node manager's default CTRL+C timeout
         private int _cancelTaskGracePeriod = Constant.DefaultCancelTaskGracePeriod;
 
-        private int _jobId;
-        private int _taskId;
+        private string _jobId;
+        private string _taskId;
         private int _procNum;
 
         private string _serviceTypeName;
@@ -224,20 +224,28 @@ namespace Microsoft.Hpc.CcpServiceHosting
         {
             string jobIdEnvVar = Environment.GetEnvironmentVariable(Constant.JobIDEnvVar);
 
-            if (string.IsNullOrEmpty(jobIdEnvVar) || !int.TryParse(jobIdEnvVar, out _jobId))
+            if (string.IsNullOrEmpty(jobIdEnvVar))
             {
                 RuntimeTraceHelper.TraceEvent(this._jobId, TraceEventType.Error, StringTable.CantFindJobId);
                 return ErrorCode.ServiceHost_UnexpectedException;
+            }
+            else
+            {
+                this._jobId = jobIdEnvVar;
             }
 
             RuntimeTraceHelper.RuntimeTrace.LogHostStart(_jobId);
 
             string taskIdEnvVar = Environment.GetEnvironmentVariable(Constant.TaskIDEnvVar);
 
-            if (string.IsNullOrEmpty(taskIdEnvVar) || !int.TryParse(taskIdEnvVar, out _taskId))
+            if (string.IsNullOrEmpty(taskIdEnvVar))
             {
                 RuntimeTraceHelper.TraceEvent(this._jobId, TraceEventType.Error, StringTable.CantFindTaskId);
                 return ErrorCode.ServiceHost_UnexpectedException;
+            }
+            else
+            {
+                this._taskId = taskIdEnvVar;
             }
 
             RuntimeTraceHelper.TraceEvent(

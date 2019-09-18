@@ -54,7 +54,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
         Task<SessionAllocateInfoContract> AllocateDurableAsync(SessionStartInfoContract info, string endpointPrefix);
-      
+
         /// <summary>
         /// Attach to an exisiting session
         /// </summary>
@@ -63,7 +63,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <returns>the Broker Launcher EPR</returns>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task<SessionInfoContract> GetInfoAsync(string endpointPrefix, int sessionId);
+        Task<SessionInfoContract> GetInfoAsync(string endpointPrefix, string sessionId);
 
         /// <summary>
         /// terminate a session.
@@ -71,7 +71,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <param name="sessionId">the session id</param>
         [OperationContract]
         [FaultContract(typeof(SessionFault), Action = SessionFault.Action)]
-        Task TerminateAsync(int sessionId);
+        Task TerminateAsync(string sessionId);
 
         /// <summary>
         /// Returns the versions for a specific service

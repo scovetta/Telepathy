@@ -59,7 +59,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <summary>
         /// Session Id.
         /// </summary>
-        private int sessionId;
+        private string sessionId;
 
         /// <summary>
         /// Session hash code
@@ -168,7 +168,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// Initializes a new instance of the AzureQueueManager class.
         /// </summary>
         /// <param name="sessionId">session Id</param>
-        public AzureQueueProxy(string clusterName, int sessionId, int sessionHash, string[] azureRequestQueueUris, string azureRequestBlobUri)
+        public AzureQueueProxy(string clusterName, string sessionId, int sessionHash, string[] azureRequestQueueUris, string azureRequestBlobUri)
         {
             this.sendConcurrencyLevel = azureRequestQueueUris.Length;
             this.requestMessageQueues = Enumerable.Range(0, this.sendConcurrencyLevel).Select(_ => new ConcurrentQueue<Message>()).ToArray();

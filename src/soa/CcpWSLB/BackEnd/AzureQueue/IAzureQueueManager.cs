@@ -46,7 +46,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="jobId">job Id</param>
         /// <param name="jobRequeueCount">job re-queue count</param>
         /// <returns>response storage name</returns>
-        string Start(int jobId, int jobRequeueCount);
+        string Start(string jobId, int jobRequeueCount);
 
         /// <summary>
         /// Create request queue for specified Azure service.

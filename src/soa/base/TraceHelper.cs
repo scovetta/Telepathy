@@ -17,7 +17,7 @@ namespace Microsoft.Hpc.RuntimeTrace
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public delegate bool IsDiagTraceEnabledDelegate(int id);
+    public delegate bool IsDiagTraceEnabledDelegate(string id);
 
     /// <summary>
     /// the helper functions for the trace.
@@ -62,7 +62,7 @@ namespace Microsoft.Hpc.RuntimeTrace
         /// <param name="traceLevel">the trace level.</param>
         /// <param name="format">the format string.</param>
         /// <param name="objparams">the parameters.</param>
-        public static void TraceEvent(int sessionId, TraceEventType traceLevel, string format, params object[] objparams)
+        public static void TraceEvent(string sessionId, TraceEventType traceLevel, string format, params object[] objparams)
         {
             TraceHelper.TraceString(sessionId, traceLevel, TraceHelper.CombineTraceString(format, objparams));
         }
@@ -75,7 +75,7 @@ namespace Microsoft.Hpc.RuntimeTrace
         /// <param name="objparams">the parameters.</param>
         public static void TraceEvent(TraceEventType traceLevel, string format, params object[] objparams)
         {
-            TraceHelper.TraceString(0, traceLevel, TraceHelper.CombineTraceString(format, objparams));
+            TraceHelper.TraceString("0", traceLevel, TraceHelper.CombineTraceString(format, objparams));
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Microsoft.Hpc.RuntimeTrace
         /// <param name="format">the format string.</param>
         /// <param name="objparams">the parameteres.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public static void TraceError(int sessionId, string format, params object[] objparams)
+        public static void TraceError(string sessionId, string format, params object[] objparams)
         {
             TraceHelper.TraceString(sessionId, TraceEventType.Error, TraceHelper.CombineTraceString(format, objparams));
         }
@@ -97,7 +97,7 @@ namespace Microsoft.Hpc.RuntimeTrace
         /// <param name="format">the format string.</param>
         /// <param name="objparams">the parameteres.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public static void TraceWarning(int sessionId, string format, params object[] objparams)
+        public static void TraceWarning(string sessionId, string format, params object[] objparams)
         {
             TraceHelper.TraceString(sessionId, TraceEventType.Warning, TraceHelper.CombineTraceString(format, objparams));
         }
@@ -109,7 +109,7 @@ namespace Microsoft.Hpc.RuntimeTrace
         /// <param name="format">the format string.</param>
         /// <param name="objparams">the parameteres.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public static void TraceInfo(int sessionId, string format, params object[] objparams)
+        public static void TraceInfo(string sessionId, string format, params object[] objparams)
         {
             TraceHelper.TraceString(sessionId, TraceEventType.Information, TraceHelper.CombineTraceString(format, objparams));
         }
@@ -121,7 +121,7 @@ namespace Microsoft.Hpc.RuntimeTrace
         /// <param name="format">the format string.</param>
         /// <param name="objparams">the parameteres.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public static void TraceVerbose(int sessionId, string format, params object[] objparams)
+        public static void TraceVerbose(string sessionId, string format, params object[] objparams)
         {
             TraceHelper.TraceString(sessionId, TraceEventType.Verbose, TraceHelper.CombineTraceString(format, objparams));
         }
@@ -132,7 +132,7 @@ namespace Microsoft.Hpc.RuntimeTrace
         /// <param name="traceSource">the trace source.</param>
         /// <param name="exception">the exception.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public static void TraceException(int sessionId, Exception exception)
+        public static void TraceException(string sessionId, Exception exception)
         {
             TraceHelper.TraceString(sessionId, TraceEventType.Error, TraceHelper.Exception2String(null, exception));
         }
@@ -144,7 +144,7 @@ namespace Microsoft.Hpc.RuntimeTrace
         /// <param name="description">the description for the exception.</param>
         /// <param name="exception">the exception.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public static void TraceException(int sessionId, string description, Exception exception)
+        public static void TraceException(string sessionId, string description, Exception exception)
         {
             TraceHelper.TraceString(sessionId, TraceEventType.Error, TraceHelper.Exception2String(description, exception));
         }
@@ -156,7 +156,7 @@ namespace Microsoft.Hpc.RuntimeTrace
         /// <param name="traceLevel">the trace level for the exception.</param>
         /// <param name="exception">the exception.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public static void TraceException(int sessionId, TraceEventType traceLevel, Exception exception)
+        public static void TraceException(string sessionId, TraceEventType traceLevel, Exception exception)
         {
             TraceHelper.TraceString(sessionId, traceLevel, TraceHelper.Exception2String(null, exception));
         }
@@ -169,7 +169,7 @@ namespace Microsoft.Hpc.RuntimeTrace
         /// <param name="description">the description for the exception.</param>
         /// <param name="exception">the exception.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public static void TraceException(int sessionId, TraceEventType traceLevel, string description, Exception exception)
+        public static void TraceException(string sessionId, TraceEventType traceLevel, string description, Exception exception)
         {
             TraceHelper.TraceString(sessionId, traceLevel, TraceHelper.Exception2String(description, exception));
         }
@@ -181,14 +181,14 @@ namespace Microsoft.Hpc.RuntimeTrace
         /// <param name="traceLevel">the trace level.</param>
         /// <param name="content">the string content.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        internal static void TraceString(int sessionId, TraceEventType traceLevel, string traceText)
+        internal static void TraceString(string sessionId, TraceEventType traceLevel, string traceText)
         {
             try
             {
                 switch (traceLevel)
                 {
                     case TraceEventType.Critical:
-                        if (sessionId == 0)
+                        if (sessionId.Equals("0"))
                         {
                             trace.LogEventTextCritial(traceText);
                         }
@@ -200,7 +200,7 @@ namespace Microsoft.Hpc.RuntimeTrace
                         break;
 
                     case TraceEventType.Error:
-                        if (sessionId == 0)
+                        if (sessionId.Equals("0"))
                         {
                             trace.LogEventTextError(traceText);
                         }
@@ -212,7 +212,7 @@ namespace Microsoft.Hpc.RuntimeTrace
                         break;
 
                     case TraceEventType.Information:
-                        if (sessionId == 0)
+                        if (sessionId.Equals("0"))
                         {
                             trace.LogEventTextInfo(traceText);
                         }
@@ -224,7 +224,7 @@ namespace Microsoft.Hpc.RuntimeTrace
                         break;
 
                     case TraceEventType.Warning:
-                        if (sessionId == 0)
+                        if (sessionId.Equals("0"))
                         {
                             trace.LogEventTextWarning(traceText);
                         }
@@ -236,7 +236,7 @@ namespace Microsoft.Hpc.RuntimeTrace
                         break;
 
                     case TraceEventType.Verbose:
-                        if (sessionId == 0)
+                        if (sessionId.Equals("0"))
                         {
                             trace.LogEventTextVerbose(traceText);
                         }
@@ -251,7 +251,7 @@ namespace Microsoft.Hpc.RuntimeTrace
                     case TraceEventType.Start:
                     case TraceEventType.Stop:
                     case TraceEventType.Suspend:
-                        if (sessionId == 0)
+                        if (sessionId.Equals("0"))
                         {
                             trace.LogEventTextInfo(traceText);
                         }

@@ -453,7 +453,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <summary>
         /// Gets the task id
         /// </summary>
-        public int TaskId
+        public string TaskId
         {
             get;
             private set;
@@ -825,7 +825,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
             // the AsyncResult to DispatchData after BeginProcessMessage returns.
             data.AsyncResult = ar;
 
-            int taskId = data.TaskId;
+            string taskId = data.TaskId;
 
             DateTime dispatchTime = data.DispatchTime;
 

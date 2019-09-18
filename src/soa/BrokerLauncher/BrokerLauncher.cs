@@ -104,7 +104,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <param name="info">session start info</param>
         /// <param name="sessionId">session id</param>
         /// <returns>returns broker initialization result</returns>
-        public BrokerInitializationResult Create(SessionStartInfoContract info, int sessionId)
+        public BrokerInitializationResult Create(SessionStartInfoContract info, string sessionId)
         {
             if ((!this.AllowNewSession) || (!this.IsOnline && String.IsNullOrEmpty(info.DiagnosticBrokerNode)))
             {
@@ -114,7 +114,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             // Handle invalid input parameters
             try
             {
-                ParamCheckUtility.ThrowIfOutofRange(sessionId < -1, "sessionId");
                 ParamCheckUtility.ThrowIfNull(info, "info");
                 if (!BrokerLauncherEnvironment.Standalone)
                 {
@@ -154,7 +153,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <param name="info">session start info</param>
         /// <param name="sessionId">session id</param>
         /// <returns>returns broker initialization result</returns>
-        public BrokerInitializationResult CreateDurable(SessionStartInfoContract info, int sessionId)
+        public BrokerInitializationResult CreateDurable(SessionStartInfoContract info, string sessionId)
         {
             if ((!this.AllowNewSession) || (!this.IsOnline && String.IsNullOrEmpty(info.DiagnosticBrokerNode)))
             {
@@ -163,7 +162,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 
             try
             {
-                ParamCheckUtility.ThrowIfOutofRange(sessionId <= 0, "sessionId");
                 ParamCheckUtility.ThrowIfNull(info, "info");
 
                 this.CheckAccess(sessionId);
@@ -202,7 +200,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// </summary>
         /// <param name="sessionId">session id</param>
         /// <returns>returns broker initialization result</returns>
-        public BrokerInitializationResult Attach(int sessionId)
+        public BrokerInitializationResult Attach(string sessionId)
         {
             if (!this.AllowNewSession)
             {
@@ -211,7 +209,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 
             try
             {
-                ParamCheckUtility.ThrowIfOutofRange(sessionId <= 0, "sessionId");
                 this.CheckAccess(sessionId);
 
                 TraceHelper.TraceEvent(sessionId, System.Diagnostics.TraceEventType.Information, "[BrokerLauncher] Attach: SessionId = {0}", sessionId);
@@ -241,12 +238,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// Close a session
         /// </summary>
         /// <param name="sessionId">session id</param>
-        public void Close(int sessionId)
+        public void Close(string sessionId)
         {
             try
             {
-                ParamCheckUtility.ThrowIfOutofRange(sessionId < -1, "sessionId");
-
                 bool? isAadOrLocalUser = this.BrokerManager.IfSeesionCreatedByAadOrLocalUser(sessionId);
                 if (!isAadOrLocalUser.HasValue)
                 {
@@ -280,11 +275,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// Pings specified broker
         /// </summary>
         /// <param name="sessionID">sessionID of broker to ping</param>
-        public bool PingBroker(int sessionId)
+        public bool PingBroker(string sessionId)
         {
             try
             {
-                ParamCheckUtility.ThrowIfOutofRange(sessionId <= 0, "sessionId");
                 this.CheckAccess(sessionId);
 
                 if (!SoaHelper.CheckWindowsIdentity(OperationContext.Current))
@@ -307,11 +301,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// </summary>
         /// <param name="sessionId"></param>
         /// <returns></returns>
-        public string PingBroker2(int sessionId)
+        public string PingBroker2(string sessionId)
         {
             try
             {
-                ParamCheckUtility.ThrowIfOutofRange(sessionId < -1, "sessionId");
                 this.CheckAccess(sessionId);
 
                 string uniqueId;
@@ -335,18 +328,18 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// Get active broker id list
         /// </summary>
         /// <returns>return active broker id lists</returns>
-        public int[] GetActiveBrokerIdList()
+        public string[] GetActiveBrokerIdList()
         {
             try
             {
                 // Set sessionId to 0 to check access for head node machine account
-                this.CheckAccess(0);
+                this.CheckAccess("0");
 
                 return this.brokerManager.GetActiveBrokerIdList();
             }
             catch (Exception e)
             {
-                TraceHelper.TraceEvent(0, System.Diagnostics.TraceEventType.Error, "[BrokerLauncher] Get active broker id list failed: {0}", e);
+                TraceHelper.TraceEvent( "0", System.Diagnostics.TraceEventType.Error, "[BrokerLauncher] Get active broker id list failed: {0}", e);
                 throw ExceptionHelper.ConvertExceptionToFaultException(e);
             }
         }
@@ -378,7 +371,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <summary>
         /// Ensure the caller is a valid cluster user
         /// </summary>
-        private void CheckAccess(int sessionId)
+        private void CheckAccess(string sessionId)
         {
             // TODO: implement authentication logic
         }

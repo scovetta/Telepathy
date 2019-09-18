@@ -19,12 +19,12 @@
             throw new NotSupportedException("Currently Session Launcher does not support durable session in Local Session mode.");
         }
 
-        public override async Task<SessionInfoContract> GetInfoAsync(string endpointPrefix, int sessionId)
+        public override async Task<SessionInfoContract> GetInfoAsync(string endpointPrefix, string sessionId)
         {
             throw new NotImplementedException();
         }
 
-        public override async Task TerminateAsync(int sessionId)
+        public override async Task TerminateAsync(string sessionId)
         {
             this.brokerLauncherProcess.Kill();
             this.svcHostProcess.Kill();
@@ -58,7 +58,7 @@
             BrokerConfigurations brokerConfigurations,
             string hostpath)
         {
-            // int sessionId = LocalSessionConfiguration.GetNextSessionId();
+            // string sessionId = LocalSessionConfiguration.GetNextSessionId();
 
             string cmd;
             if (true)
@@ -72,7 +72,7 @@
 
             }
 
-            int sessionId = SessionStartInfo.StandaloneSessionId;
+            string sessionId = SessionStartInfo.StandaloneSessionId;
             this.brokerLauncherProcess = Process.Start(
                 LocalSessionConfiguration.BrokerLauncherExePath,
                 cmd);
@@ -86,7 +86,7 @@
             return sessionAllocateInfo;
         }
 
-        protected override void AddSessionToPool(string serviceNameWithVersion, bool durable, int sessionId, int poolSize)
+        protected override void AddSessionToPool(string serviceNameWithVersion, bool durable, string sessionId, int poolSize)
         {
             throw new NotImplementedException();
         }

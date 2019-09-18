@@ -46,7 +46,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// Stores the task id that associate with the last failure
         /// </summary>
         [DataMember(IsRequired = false)]
-        private int lastFailedServiceId;
+        private string lastFailedServiceId;
 
         /// <summary>
         ///   <para>Specifies the value of the SOAP action for the error message.</para>
@@ -75,7 +75,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="reason">the detail information, the exception must be Serializable</param>
         /// <param name="retryCount">the retry count</param>
         /// <param name="lastFailedServiceId">indicating the task id that associate with the last failure</param>
-        internal RetryOperationError(string reason, int retryCount, int lastFailedServiceId)
+        internal RetryOperationError(string reason, int retryCount, string lastFailedServiceId)
         {
             this.reason = reason;
             this.retryCount = retryCount;
@@ -120,7 +120,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <value>
         ///   <para>An <see cref="System.Int32" /> that indicates the task identifier of the service that is associated with the last error.</para>
         /// </value>
-        public int LastFailedServiceId
+        public string LastFailedServiceId
         {
             get { return this.lastFailedServiceId; }
 

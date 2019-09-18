@@ -113,7 +113,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// </summary>
         /// <param name="jobId">the job id.</param>
         /// <returns>a value indicating whether the specified job purged or not.</returns>
-        public async Task<bool> IsJobPurged(int jobId)
+        public async Task<bool> IsJobPurged(string jobId)
         {
             /*
             RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
@@ -155,13 +155,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             await this.UpdateBrokerInfoInternalAsync(info.SessionId, properties);
         }
 
-
         /// <summary>
         /// Update the broker's suspended property
         /// </summary>
         /// <param name="sessionId">indicating the session ID</param>
         /// <param name="suspended">indicating the broker is suspended or not</param>
-        public async Task UpdateSuspended(int sessionId, bool suspended)
+        public async Task UpdateSuspended(string sessionId, bool suspended)
         {
             Dictionary<string, object> p = new Dictionary<string, object>();
             p.Add(BrokerSettingsConstants.Suspended, suspended);
@@ -191,7 +190,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// </summary>
         /// <param name="sessionId">indicating the session Id</param>
         /// <returns>session start info</returns>
-        public async Task<BrokerRecoverInfo> TryGetSessionStartInfoFromFininshedJobs(int sessionId)
+        public async Task<BrokerRecoverInfo> TryGetSessionStartInfoFromFininshedJobs(string sessionId)
         {
             /*
             RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
@@ -271,7 +270,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// </summary>
         /// <param name="jobId">indicating the job id</param>
         /// <returns>returns job owner's sid</returns>
-        public async Task<string> GetJobOwnerSID(int jobId)
+        public async Task<string> GetJobOwnerSID(string jobId)
         {
             /*
             RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
@@ -310,7 +309,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// </summary>
         /// <param name="jobid">the job id</param>
         /// <param name="reason">the reason string</param>
-        public async Task FailJob(int jobid, string reason)
+        public async Task FailJob(string jobid, string reason)
         {
             RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
 
@@ -333,7 +332,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// </summary>
         /// <param name="jobId">job id of the session</param>
         /// <returns>soa diag trace is enabled or disabled </returns>
-        public async Task<bool> IsDiagTraceEnabled(int jobId)
+        public async Task<bool> IsDiagTraceEnabled(string jobId)
         {
             /*
             RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
@@ -544,7 +543,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// </summary>
         /// <param name="sessionId">indicating the session id</param>
         /// <param name="properties">indicating the key value pairs to be updated</param>
-        private async Task UpdateBrokerInfoInternalAsync(int sessionId, Dictionary<string, object> properties)
+        private async Task UpdateBrokerInfoInternalAsync(string sessionId, Dictionary<string, object> properties)
         {
             RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
 
@@ -579,7 +578,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                        async () => await this.context.ResolveSessionLauncherNodeAsync(),
                        async (e, r) =>
                            {
-                               TraceHelper.TraceWarning(0, "[SchedulerHelper] Failed to ResolveSessionLauncherNodeAsync: {0}\nRetryCount = {1}", e, r.RetryCount);
+                               TraceHelper.TraceWarning("0", "[SchedulerHelper] Failed to ResolveSessionLauncherNodeAsync: {0}\nRetryCount = {1}", e, r.RetryCount);
                                await Task.CompletedTask;
                            },
                        retry);

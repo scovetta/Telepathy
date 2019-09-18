@@ -52,7 +52,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <summary>
         /// Stores the session id
         /// </summary>
-        private int sessionId;
+        private string sessionId;
 
         /// <summary>
         /// if the server supports PingBroker2
@@ -77,7 +77,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="clientBrokerHeartbeatInterval">indicating the heartbeat interval</param>
         /// <param name="clientBrokerHeartbeatRetryCount">indicating the retry count</param>
         /// <param name="factory">indicating the broker launcher client factory</param>
-        public BrokerHeartbeatHelper(int sessionId, int clientBrokerHeartbeatInterval, int clientBrokerHeartbeatRetryCount, IBrokerLauncherClientFactoryForHeartbeat factory)
+        public BrokerHeartbeatHelper(string sessionId, int clientBrokerHeartbeatInterval, int clientBrokerHeartbeatRetryCount, IBrokerLauncherClientFactoryForHeartbeat factory)
         {
             this.sessionId = sessionId;
             this.clientBrokerHeartbeatInterval = clientBrokerHeartbeatInterval;
@@ -100,7 +100,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="clientBrokerHeartbeatRetryCount">indicating the retry count</param>
         /// <param name="factory">indicating the broker launcher client factory</param>
         /// <param name="expectPingResult">indicating the expect ping result</param>
-        public BrokerHeartbeatHelper(int sessionId, int clientBrokerHeartbeatInterval, int clientBrokerHeartbeatRetryCount, IBrokerLauncherClientFactoryForHeartbeat factory, string expectPingResult)
+        public BrokerHeartbeatHelper(string sessionId, int clientBrokerHeartbeatInterval, int clientBrokerHeartbeatRetryCount, IBrokerLauncherClientFactoryForHeartbeat factory, string expectPingResult)
             : this(sessionId, clientBrokerHeartbeatInterval, clientBrokerHeartbeatRetryCount, factory)
         {
             this.expectPingResult = expectPingResult;

@@ -106,7 +106,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="headNode">Headnode name</param>
         /// <param name="sessionId">The ID of the session to be closed</param>
         /// <param name="isAadUser">If the session is belong to a AAD user</param>
-        public static void CloseSession(string headNode, int sessionId, bool isAadUser)
+        public static void CloseSession(string headNode, string sessionId, bool isAadUser)
         {
             CloseSession(headNode, sessionId, null, isAadUser);
         }
@@ -118,7 +118,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="sessionId">The ID of the session to be closed</param>
         /// <param name="binding">indicting the binding</param>
         /// <param name="isAadUser">If the session is belong to a AAD user</param>
-        public static void CloseSession(string headNode, int sessionId, Binding binding, bool isAadUser)
+        public static void CloseSession(string headNode, string sessionId, Binding binding, bool isAadUser)
         {
             CloseSessionAsync(headNode, sessionId, binding, isAadUser, CancellationToken.None).GetAwaiter().GetResult();
         }
@@ -131,7 +131,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="binding">indicting the binding</param>
         /// <param name="isAadUser">If the session is belong to a AAD user</param>
         /// <param name="token">The cancellation token.</param>
-        public static async Task CloseSessionAsync(string headNode, int sessionId, Binding binding, bool isAadUser, CancellationToken token)
+        public static async Task CloseSessionAsync(string headNode, string sessionId, Binding binding, bool isAadUser, CancellationToken token)
         {
             Utility.ThrowIfEmpty(headNode, "headNode");
 

@@ -22,7 +22,7 @@ namespace Microsoft.Hpc.Scheduler.Session
     /// </remarks>
     public abstract class SessionInfoBase : IConnectionInfo
     {
-        public abstract int Id { get; set; }
+        public abstract string Id { get; set; }
 
         public abstract int ServiceOperationTimeout { get; set; }
 

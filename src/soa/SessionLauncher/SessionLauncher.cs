@@ -105,6 +105,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             return await this.AllocateInternalAsync(info, endpointPrefix, false);
         }
 
+
         public virtual async Task<SessionAllocateInfoContract> AllocateDurableAsync(SessionStartInfoContract info, string endpointPrefix)
         {
             return await this.AllocateInternalAsync(info, endpointPrefix, true);
@@ -117,15 +118,16 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// <param name="endpointPrefix">the prefix of the endpoint epr.</param>
         /// <param name="sessionId">the session id</param>
         /// <returns>the session information.</returns>
-        public abstract Task<SessionInfoContract> GetInfoAsync(string endpointPrefix, int sessionId);
+        public abstract Task<SessionInfoContract> GetInfoAsync(string endpointPrefix, string sessionId);
 
-        public abstract Task TerminateAsync(int sessionId);
+        public abstract Task TerminateAsync(string sessionId);
 
         public abstract Task<Version[]> GetServiceVersionsAsync(string serviceName);
 
         public abstract Task<string> GetSOAConfigurationAsync(string key);
 
         public abstract Task<Dictionary<string, string>> GetSOAConfigurationsAsync(List<string> keys);
+
         #endregion
 
 
@@ -212,7 +214,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
         /// </summary>
         protected class SessionPool
         {
-            public int this[int i]
+            public string this[int i]
             {
                 get
                 {
@@ -260,9 +262,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
                 }
             }
 
-            private List<int> sessionIds = new List<int>();
+            private List<string> sessionIds = new List<string>();
 
-            public List<int> SessionIds
+            public List<string> SessionIds
             {
                 get
                 {
@@ -457,7 +459,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             }
 
             // after figuring out the service and version, and the session pool size, we check if the service pool already has the instance.
-            sessionAllocateInfo.Id = 0;
+            sessionAllocateInfo.Id = "0";
             sessionAllocateInfo.SessionInfo = null;
             if (startInfo.UseSessionPool)
             {
@@ -512,7 +514,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             BrokerConfigurations brokerConfigurations,
             string hostpath);
 
-        protected abstract void AddSessionToPool(string serviceNameWithVersion, bool durable, int sessionId, int poolSize);
+        protected abstract void AddSessionToPool(string serviceNameWithVersion, bool durable, string sessionId, int poolSize);
 
         protected abstract bool TryGetSessionAllocateInfoFromPooled(
             string endpointPrefix,

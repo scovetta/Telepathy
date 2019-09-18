@@ -292,7 +292,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 // Still needs to wait until all event are finished
                 if (!this.processExitAndEventFinishedWaitHandle.WaitOne(processExitEventFinishedWaitTimeout, false))
                 {
-                    TraceHelper.TraceError(0, "[BrokerProcess] Timeout waiting for process exit event finish.");
+                    TraceHelper.TraceError("0", "[BrokerProcess] Timeout waiting for process exit event finish.");
                 }
             }
         }

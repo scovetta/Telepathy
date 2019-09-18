@@ -69,7 +69,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <summary>
         /// Gets or sets the task Id.
         /// </summary>
-        protected int TaskId
+        protected string TaskId
         {
             get;
             set;

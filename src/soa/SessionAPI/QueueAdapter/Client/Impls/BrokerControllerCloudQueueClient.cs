@@ -9,14 +9,6 @@
 
     public class BrokerControllerCloudQueueClient : CloudQueueClientBase, IController
     {
-        public BrokerControllerCloudQueueClient(string connectionString, int sessionId)
-        {
-            CloudQueueSerializer serializer = this.DefaultSerializer;
-            this.Listener = new CloudQueueListener<CloudQueueResponseDto>(connectionString, CloudQueueConstants.GetBrokerWorkerControllerResponseQueueName(sessionId), serializer, this.ReceiveResponse);
-            this.Writer = new CloudQueueWriter<CloudQueueCmdDto>(connectionString, CloudQueueConstants.GetBrokerWorkerControllerRequestQueueName(sessionId), serializer);
-            this.Init();
-        }
-
         public BrokerControllerCloudQueueClient(string requestQueueUri, string responseQueueUri)
         {
             CloudQueueSerializer serializer = this.DefaultSerializer;

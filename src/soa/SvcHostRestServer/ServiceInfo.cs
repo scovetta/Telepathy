@@ -9,7 +9,7 @@
         {
         }
 
-        public ServiceInfo(int jobId, int taskId, int coreId, string registrationPath, string fileName, Dictionary<string, string> environment, Dictionary<string, string> dependFiles)
+        public ServiceInfo(string jobId, string taskId, int coreId, string registrationPath, string fileName, Dictionary<string, string> environment, Dictionary<string, string> dependFiles)
         {
             this.JobId = jobId;
             this.TaskId = taskId;
@@ -23,9 +23,9 @@
             }
         }
 
-        public int JobId { get; set; }
+        public string JobId { get; set; }
 
-        public int TaskId { get; set; }
+        public string TaskId { get; set; }
 
         public int CoreId { get; set; }
 

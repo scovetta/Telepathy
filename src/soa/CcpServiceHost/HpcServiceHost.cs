@@ -32,7 +32,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
         /// <summary>
         /// sessionId
         /// </summary>
-        int _sessionId = 0;
+        string _sessionId = "0";
 
         private CcpServiceHostWrapper hostWrapper;
 
@@ -40,7 +40,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
         /// Constructor for service host
         /// </summary>
         /// <param name="cancelTaskGracePeriod"></param>
-        public HpcServiceHost(int sessionId, int cancelTaskGracePeriod, CcpServiceHostWrapper hostWrapper)
+        public HpcServiceHost(string sessionId, int cancelTaskGracePeriod, CcpServiceHostWrapper hostWrapper)
         {
             this._sessionId = sessionId;
             this._cancelTaskGracePeriod = cancelTaskGracePeriod;

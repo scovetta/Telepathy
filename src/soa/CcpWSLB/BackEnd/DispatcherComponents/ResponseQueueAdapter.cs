@@ -207,7 +207,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="context">indicate the request context</param>
         /// <param name="message">indicate the reply message</param>
         /// <param name="messageId">indicating the message id</param>
-        private void TryReplyMessage(int sessionId, RequestContextBase context, Message message, Guid messageId)
+        private void TryReplyMessage(string sessionId, RequestContextBase context, Message message, Guid messageId)
         {
             try
             {
@@ -235,7 +235,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         {
             // No need to handle exceptions here
             object[] objArr = (object[])ar.AsyncState;
-            int sessionId = (int)objArr[0];
+            string sessionId = (string)objArr[0];
             RequestContextBase context = (RequestContextBase)objArr[1];
             Message message = (Message)objArr[2];
             Guid messageId = (Guid)objArr[3];

@@ -362,9 +362,9 @@
             set { efficiencyFromFirstRequestExcludeSessionEnd = value; }
         }
 
-        private int sessionId;
+        private string sessionId;
 
-        public int SessionId
+        public string SessionId
         {
             get { return sessionId; }
             set { sessionId = value; }

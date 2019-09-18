@@ -39,12 +39,12 @@ namespace Microsoft.Hpc.ServiceBroker.Common
         private const int MaxRunawayTolerance = 6;
         /// The tasks that marked as exit if possible
         /// </summary>
-        private HashSet<int> exitingTaskIds;
+        private HashSet<string> exitingTaskIds;
 
         /// <summary>
         /// The tasks that not marked as exit if possible
         /// </summary>
-        private HashSet<int> runningTaskIds;
+        private HashSet<string> runningTaskIds;
 
         /// <summary>
         /// The maximum core count that the scheduler want the job to have.
@@ -59,27 +59,27 @@ namespace Microsoft.Hpc.ServiceBroker.Common
         /// <summary>
         /// The sessionId.
         /// </summary>
-        private int sessionId;
+        private string sessionId;
 
         /// <summary>
         /// Possible runaway tasks and how many times it is seen
         /// </summary>
-        private readonly Dictionary<int, int> possibleRunaways = new Dictionary<int, int>();
+        private readonly Dictionary<string, int> possibleRunaways = new Dictionary<string, int>();
         /// <summary>
         /// A set field of all recognized task IDs
         /// </summary>
-        private readonly HashSet<int> recognizedTaskIds = new HashSet<int>();
+        private readonly HashSet<string> recognizedTaskIds = new HashSet<string>();
 
         /// <summary>
         /// Task ID of already removed dispatchers
         /// </summary>
-        private readonly HashSet<int> removedDispatcherIds = new HashSet<int>();
+        private readonly HashSet<string> removedDispatcherIds = new HashSet<string>();
 
         /// <summary>
         /// Callback to finish *only* runaway tasks
         /// </summary>
-        private readonly Action<int> finishRunawayTaskCallback;
-        public GracefulPreemptionHandler(IDispatcherManager dispatcherManager, int sessionId, Action<int> finishRunawayTaskCallback)
+        private readonly Action<string> finishRunawayTaskCallback;
+        public GracefulPreemptionHandler(IDispatcherManager dispatcherManager, string sessionId, Action<string> finishRunawayTaskCallback)
         {
             // Initialize it to the max value to not preempt until get an actual number from scheduler.
             this.BalanceInfo = new BalanceInfo(int.MaxValue);
@@ -123,7 +123,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
             var resultInfo = new BalanceResultInfo(info.UseFastBalance);
             if (info.UseFastBalance)
             {
-                List<int> emptyRunningList = new List<int>();
+                List<string> emptyRunningList = new List<string>();
                 foreach (var request in info.BalanceRequests)
                 {
                     resultInfo.GracefulPreemptionResults.Add(
@@ -197,8 +197,8 @@ namespace Microsoft.Hpc.ServiceBroker.Common
             bool fastBalance,
             bool balanceRequestRefreshed,
             int minDispatchers,
-            IEnumerable<int> exitingTasks,
-            IEnumerable<int> runningTasks,
+            IEnumerable<string> exitingTasks,
+            IEnumerable<string> runningTasks,
             ref int activeDispatcherCount,
             out bool shouldCancelJob)
         {
@@ -210,7 +210,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
 
             int totalDispatcherCores;
             int averageCoresPerDispatcher;
-            IEnumerable<int> tasksInInterest = null;
+            IEnumerable<string> tasksInInterest = null;
             if (fastBalance)
             {
                 tasksInInterest = exitingTasks;
@@ -323,7 +323,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
         /// Get possible runaway tasks to shutdown
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<int> GetTasksToShutdown()
+        public IEnumerable<string> GetTasksToShutdown()
         {
             BrokerTracing.TraceVerbose("[GracefulPreemptionHandler].GetTasksToShutdown: exitingTaskIds = {0}, runningTaskIds = {1}, BalanceInfo = {2}",
                 this.exitingTaskIds.Count,
@@ -341,7 +341,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
         /// </summary>
         /// <param name="coresToRelease">the cores to release</param>
         /// <param name="plannedToShutdownTaskIds">the task ids planned to be shutdown</param>
-        private void MarkStoppingFlags(IEnumerable<int> plannedToShutdownTaskIds, IEnumerable<int> exitingTaskIds)
+        private void MarkStoppingFlags(IEnumerable<string> plannedToShutdownTaskIds, IEnumerable<string> exitingTaskIds)
         {
             BrokerTracing.TraceVerbose(
                 "[GracefulPreemptionHandler].MarkStoppingFlags: stop the ExitIfPossible dispatchers, total count = {0}",
@@ -372,8 +372,8 @@ namespace Microsoft.Hpc.ServiceBroker.Common
                 "[GracefulPreemptionHandler].RefreshPreemptionRequest: query scheduler adapter");
 
             bool result;
-            List<int> taskIds;
-            List<int> runningTaskIds;
+            List<string> taskIds;
+            List<string> runningTaskIds;
             BalanceInfo balanceInfo;
             (result, balanceInfo, taskIds, runningTaskIds) = await schedulerAdapter.GetGracefulPreemptionInfoAsync(this.sessionId);
             
@@ -401,8 +401,8 @@ namespace Microsoft.Hpc.ServiceBroker.Common
                 }
 
                 this.BalanceInfo = balanceInfo;
-                this.exitingTaskIds = new HashSet<int>(taskIds);
-                this.runningTaskIds = new HashSet<int>(runningTaskIds);
+                this.exitingTaskIds = new HashSet<string>(taskIds);
+                this.runningTaskIds = new HashSet<string>(runningTaskIds);
                 return true;
             }
             else
@@ -412,7 +412,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
                 return false;
             }
         }
-        private int CheckAndFinishRunawayTasks(IEnumerable<int> taskIds)
+        private int CheckAndFinishRunawayTasks(IEnumerable<string> taskIds)
         {
             int finishedTaskNumber = 0;
 
@@ -437,7 +437,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
                     ThreadPool.QueueUserWorkItem(
                         state =>
                             {
-                                int id = (int)state;
+                                string id = (string)state;
                                 BrokerTracing.TraceVerbose("[GracefulPreemptionHandler].CheckAndFinishRunawayTasks: finish runaway task {0}", id);
                                 try
                                 {
@@ -461,12 +461,12 @@ namespace Microsoft.Hpc.ServiceBroker.Common
             return finishedTaskNumber;
         }
 
-        internal void AddToRecognizedTaskIds(IEnumerable<int> tasksIds)
+        internal void AddToRecognizedTaskIds(IEnumerable<string> tasksIds)
         {
             this.recognizedTaskIds.UnionWith(tasksIds);
         }
 
-        internal void AddToRemovedDispatcherIds(int taskId)
+        internal void AddToRemovedDispatcherIds(string taskId)
         {
             if (this.removedDispatcherIds.Add(taskId))
             {
@@ -474,12 +474,12 @@ namespace Microsoft.Hpc.ServiceBroker.Common
             }
         }
 
-        internal bool IsRemovedDispatcher(int taskId)
+        internal bool IsRemovedDispatcher(string taskId)
         {
             return this.removedDispatcherIds.Contains(taskId);
         }
 
-        private bool IsRecognizedTaskId(int taskId)
+        private bool IsRecognizedTaskId(string taskId)
         {
             return this.recognizedTaskIds.Contains(taskId);
         }

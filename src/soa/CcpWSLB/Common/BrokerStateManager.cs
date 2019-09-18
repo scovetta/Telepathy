@@ -199,7 +199,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// </summary>
         /// <param name="unloadToSuspend">indicating whether the broker is unloading to suspended or not</param>
         /// <param name="sessionId">indicating the session id</param>
-        private static void ThrowBrokerUnloadingException(bool unloadToSuspend, int sessionId)
+        private static void ThrowBrokerUnloadingException(bool unloadToSuspend, string sessionId)
         {
             if (unloadToSuspend)
             {

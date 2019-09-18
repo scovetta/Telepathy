@@ -32,7 +32,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <summary>
         /// Stores the session id
         /// </summary>
-        private int sessionId;
+        private string sessionId;
 
         /// <summary>
         /// Initializes a new instance of the ThreadHelper class
@@ -48,7 +48,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// </summary>
         /// <param name="callbackDelegate">indicating the callback delegate</param>
         /// <param name="sessionId">indicating the session id</param>
-        public ThreadHelper(Delegate callbackDelegate, int sessionId)
+        public ThreadHelper(Delegate callbackDelegate, string sessionId)
             : this(callbackDelegate)
         {
             this.sessionId = sessionId;
@@ -72,7 +72,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             }
             catch (Exception e)
             {
-                if (sessionId != 0)
+                if (!sessionId.Equals("0"))
                 {
                     TraceHelper.TraceEvent(this.sessionId, TraceEventType.Critical, "[ThreadHelper] Exception catched at root: {0}", e);
                 }
@@ -102,7 +102,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             }
             catch (Exception e)
             {
-                if (sessionId != 0)
+                if (!sessionId.Equals("0"))
                 {
                     TraceHelper.TraceEvent(this.sessionId, TraceEventType.Critical, "[ThreadHelper] Exception catched at root: {0}", e);
                 }

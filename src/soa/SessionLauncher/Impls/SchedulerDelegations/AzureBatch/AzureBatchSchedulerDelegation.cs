@@ -29,9 +29,9 @@
         /// <summary>
         /// The dictionary to store the monitors: (JobId, JobMonitorEntry)
         /// </summary>
-        private Dictionary<int, AzureBatchJobMonitorEntry> JobMonitors = new Dictionary<int, AzureBatchJobMonitorEntry>();
+        private Dictionary<string, AzureBatchJobMonitorEntry> JobMonitors = new Dictionary<string, AzureBatchJobMonitorEntry>();
 
-        public async Task<bool> UpdateBrokerInfoAsync(int sessionId, Dictionary<string, object> properties)
+        public async Task<bool> UpdateBrokerInfoAsync(string sessionId, Dictionary<string, object> properties)
         {
             try
             {
@@ -60,34 +60,33 @@
             return false;
         }
 
-        public async Task<(bool succeed, BalanceInfo balanceInfo, List<int> taskIds, List<int> runningTaskIds)> GetGracefulPreemptionInfoAsync(int sessionId)
+        public async Task<(bool succeed, BalanceInfo balanceInfo, List<string> taskIds, List<string> runningTaskIds)> GetGracefulPreemptionInfoAsync(string sessionId)
         {
             Trace.TraceWarning($"Ignored call to {nameof(GetGracefulPreemptionInfoAsync)}");
 
             return (false, null, null, null);
         }
 
-        public async Task<bool> FinishTaskAsync(int jobId, int taskUniqueId)
+        public async Task<bool> FinishTaskAsync(string jobId, string taskUniqueId)
         {
             Trace.TraceWarning($"Ignored call to {nameof(FinishTaskAsync)}");
             return true;
         }
 
-        public async Task<bool> ExcludeNodeAsync(int jobid, string nodeName)
+        public async Task<bool> ExcludeNodeAsync(string jobid, string nodeName)
         {
             Trace.TraceWarning($"Ignored call to {nameof(ExcludeNodeAsync)}");
 
             return true;
         }
 
-        public async Task RequeueOrFailJobAsync(int sessionId, string reason)
+        public async Task RequeueOrFailJobAsync(string sessionId, string reason)
         {
             Trace.TraceWarning($"Ignored call to {nameof(RequeueOrFailJobAsync)}");
         }
+        public async Task FailJobAsync(string sessionId, string reason) => await this.sessionLauncher.TerminateAsync(sessionId);
 
-        public async Task FailJobAsync(int sessionId, string reason) => await this.sessionLauncher.TerminateAsync(sessionId);
-
-        public async Task FinishJobAsync(int sessionId, string reason) => await this.sessionLauncher.TerminateAsync(sessionId);
+        public async Task FinishJobAsync(string sessionId, string reason) => await this.sessionLauncher.TerminateAsync(sessionId);
 
         /// <summary>
         /// Start to subscribe the job and task event
@@ -95,7 +94,7 @@
         /// <param name="jobid">indicating the job id</param>
         /// <param name="autoMax">indicating the auto max property of the job</param>
         /// <param name="autoMin">indicating the auto min property of the job</param>
-        public async Task<(Data.JobState jobState, int autoMax, int autoMin)> RegisterJobAsync(int jobid)
+        public async Task<(Data.JobState jobState, int autoMax, int autoMin)> RegisterJobAsync(string jobid)
         {
             Trace.TraceInformation($"[AzureBatchSchedulerDelegation] Begin: RegisterJob, job id is {jobid}...");
             //CheckBrokerAccess(jobid);
@@ -197,7 +196,7 @@
             entry.Close();
         }
 
-        public Task<int?> GetTaskErrorCode(int jobId, int globalTaskId)
+        public Task<int?> GetTaskErrorCode(string jobId, string globalTaskId)
         {
             throw new NotImplementedException();
         }

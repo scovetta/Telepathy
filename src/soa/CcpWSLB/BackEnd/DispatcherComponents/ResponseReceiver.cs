@@ -66,7 +66,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
 
             Message reply = null;
 
-            int taskId = data.TaskId;
+            string taskId = data.TaskId;
 
             DateTime dispatchTime = data.DispatchTime;
 

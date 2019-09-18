@@ -91,7 +91,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="endpointPrefix">the endpoint prefix, net.tcp:// or https:// </param>
         /// <param name="sessionId">the session id</param>
         /// <returns>The Session Information</returns>
-        public async Task<SessionInfoContract> GetInfoAsync(string endpointPrefix, int sessionId)
+        public async Task<SessionInfoContract> GetInfoAsync(string endpointPrefix, string sessionId)
         {
             return await this.Channel.GetInfoAsync(endpointPrefix, sessionId).ConfigureAwait(false);
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
@@ -103,14 +103,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// terminate a session.
         /// </summary>
         /// <param name="sessionId">the session id</param>
-        public async Task TerminateAsync(int sessionId)
+        public async Task TerminateAsync(string sessionId)
         {
             await this.Channel.TerminateAsync(sessionId).ConfigureAwait(false);
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
             //IAsyncResult result = this.Channel.BeginTerminate(headnode, sessionId, null, null);
             //this.Channel.EndTerminate(result);
         }
-      
+
         /// <summary>
         /// Returns the versions for a specific service
         /// </summary>

@@ -149,7 +149,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             get { return this.clientManager; }
         }
 
-        protected int SessionId
+        protected string SessionId
         {
             get { return this.sharedData.BrokerInfo.SessionId; }
         }

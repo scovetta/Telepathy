@@ -9,9 +9,9 @@ namespace AITestLib.Helper
 {
     class V2WCFClientEndpointBehavior: IEndpointBehavior
     {
-        private int sessionId;
+        private string sessionId;
 
-        public V2WCFClientEndpointBehavior(int sessionId)
+        public V2WCFClientEndpointBehavior(string sessionId)
         {
             this.sessionId = sessionId;
         }

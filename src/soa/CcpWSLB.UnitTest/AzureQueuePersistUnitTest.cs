@@ -42,7 +42,7 @@
 
         private static readonly string ResponseQueueSuffix = "RESPONSES";
 
-        private static readonly int sessionId = 1;
+        private static readonly string sessionId = "1";
 
         private static readonly string shortMsg = "This is short message!";
 
@@ -229,13 +229,13 @@
             Assert.AreEqual(shortMsg, persistMessage.Message.GetBody<string>());
         }
 
-        private static string MakePrivatePath(int sessionId, string clientId)
+        private static string MakePrivatePath(string sessionId, string clientId)
         {
             return (PrivatePathPrefix + sessionId.ToString(CultureInfo.InvariantCulture) + QueueNameFieldDelimeter
                     + clientId).ToLower();
         }
 
-        private static string MakeQueuePath(int sessionId, string clientId, bool isRequest)
+        private static string MakeQueuePath(string sessionId, string clientId, bool isRequest)
         {
             if (isRequest)
             {
@@ -247,7 +247,7 @@
                     + clientId + QueueNameFieldDelimeter + ResponseQueueSuffix).ToLower();
         }
 
-        private static string MakeTablePath(int sessionId, string clientId)
+        private static string MakeTablePath(string sessionId, string clientId)
         {
             var sb = new StringBuilder();
             foreach (var str in clientId.Split('-'))
