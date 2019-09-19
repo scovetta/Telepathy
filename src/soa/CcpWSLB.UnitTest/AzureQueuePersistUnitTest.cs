@@ -32,7 +32,7 @@ namespace CcpWSLB.UnitTest
 
         private static readonly byte[] largeMsg = new byte[64000];
 
-        private static readonly string PrivatePathPrefix = "Private";
+        private static readonly string PendingPathPrefix = "Pending";
 
         private static readonly string QueueNameFieldDelimeter = "-";
 
@@ -55,7 +55,7 @@ namespace CcpWSLB.UnitTest
 
         private CloudBlobContainer blobContainer;
 
-        private CloudQueue privateQueue;
+        private CloudQueue pendingQueue;
 
         private CloudQueue requestQueue;
 
@@ -210,7 +210,7 @@ namespace CcpWSLB.UnitTest
                 null);
             message.Message.Headers.MessageId = new UniqueId(Guid.NewGuid());
             var cloudMessage = new CloudQueueMessage(AzureStorageTool.PrepareMessage(message));
-            await this.privateQueue.AddMessageAsync(cloudMessage);
+            await this.pendingQueue.AddMessageAsync(cloudMessage);
             this.sessionPersist = new AzureQueuePersist(username, sessionId, clientId, storageConnectString);
             this.sessionPersist.CloseFetchForTest();
 
@@ -235,9 +235,8 @@ namespace CcpWSLB.UnitTest
                 .GetTableReference(MakeTablePath(sessionId, clientId));
             this.blobContainer = this.storageAccount.CreateCloudBlobClient()
                 .GetContainerReference(MakeQueuePath(sessionId, clientId, true));
-
-            this.privateQueue = this.storageAccount.CreateCloudQueueClient()
-                .GetQueueReference(MakePrivatePath(sessionId, clientId));
+            this.pendingQueue = this.storageAccount.CreateCloudQueueClient()
+                .GetQueueReference(MakePendingPath(sessionId, clientId));
         }
 
         private static void GetLargeMessageTestCallback(
@@ -253,9 +252,9 @@ namespace CcpWSLB.UnitTest
             Assert.AreEqual(shortMsg, persistMessage.Message.GetBody<string>());
         }
 
-        private static string MakePrivatePath(string sessionId, string clientId)
+        private static string MakePendingPath(string sessionId, string clientId)
         {
-            return (PrivatePathPrefix + sessionId.ToString(CultureInfo.InvariantCulture) + QueueNameFieldDelimeter
+            return (PendingPathPrefix + sessionId.ToString(CultureInfo.InvariantCulture) + QueueNameFieldDelimeter
                     + clientId).ToLower();
         }
 

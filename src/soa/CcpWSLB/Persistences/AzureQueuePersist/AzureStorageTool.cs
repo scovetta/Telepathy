@@ -432,7 +432,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureStorageTool
 
         public static async Task RestoreRequest(
             CloudQueue requestQueue,
-            CloudQueue waitQueue,
+            CloudQueue pendingQueue,
             CloudTable responseTable,
             CloudBlobContainer container)
         {
@@ -440,7 +440,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureStorageTool
             {
                 while (true)
                 {
-                    var message = await waitQueue.PeekMessageAsync();
+                    var message = await pendingQueue.PeekMessageAsync();
                     if (message == null)
                     {
                         break;
@@ -451,21 +451,21 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureStorageTool
                         .Headers.MessageId.ToString();
                     BrokerTracing.TraceVerbose(
                         "[AzureQueueInterop] .CheckRequestQueue: queueName = {0}, cloudMessageId = {1}, messageId = {2}",
-                        waitQueue.Name,
+                        pendingQueue.Name,
                         message.Id,
                         messageId);
                     var query = new TableQuery<TableEntity>().Where("RowKey eq '" + messageId + "'");
                     var list = responseTable.ExecuteQuery(query).ToList();
                     if (list.Count > 0)
                     {
-                        await waitQueue.DeleteMessageAsync(await waitQueue.GetMessageAsync());
+                        await pendingQueue.DeleteMessageAsync(await pendingQueue.GetMessageAsync());
                     }
                     else
                     {
-                        // Add msg to request queue & delete it from private queue.
-                        message = await waitQueue.GetMessageAsync();
+                        // Add msg to request queue & delete it from pending queue.
+                        message = await pendingQueue.GetMessageAsync();
                         await requestQueue.AddMessageAsync(new CloudQueueMessage(message.AsBytes));
-                        await waitQueue.DeleteMessageAsync(message);
+                        await pendingQueue.DeleteMessageAsync(message);
                         BrokerTracing.TraceVerbose(
                             "[AzureQueueInterop] .CheckRequestQueue: messageId = {0} is restored into request queue.",
                             messageId);
@@ -476,7 +476,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureStorageTool
             {
                 BrokerTracing.TraceError(
                     "[AzureQueueInterop] .CheckRequestQueue: queueName={0}, responseTable={1}, the exception, {2}",
-                    waitQueue.Name,
+                    pendingQueue.Name,
                     responseTable.Name,
                     e);
                 throw;

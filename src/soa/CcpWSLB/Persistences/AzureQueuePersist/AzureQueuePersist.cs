@@ -32,7 +32,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
         /// <summary>the prefix of the queue path</summary>
         private const string PathPrefix = "HPC";
 
-        private const string PrivatePathPrefix = "Private";
+        private const string PendingPathPrefix = "Pending";
 
         /// <summary>delimeter for generating queue name</summary>
         private const string QueueNameFieldDelimeter = "-";
@@ -97,7 +97,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
 
         private bool isDisposedField;
 
-        private CloudQueue privateQueueField;
+        private CloudQueue pendingQueueField;
 
         private AzureQueueMessageFetcher requestFetcher;
 
@@ -138,7 +138,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
 
             var requestQueueName = MakeQueuePath(sessionId, clientId, true);
             var responseTableName = MakeTablePath(sessionId, clientId);
-            var privateQueueName = MakeQueuePath(sessionId, clientId, false);
+            var pendingQueueName = MakeQueuePath(sessionId, clientId, false);
 
             this.isNewCreatePersistField = true;
             try
@@ -189,10 +189,10 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             {
                 try
                 {
-                    this.privateQueueField = AzureStorageTool.CreateQueueAsync(
+                    this.pendingQueueField = AzureStorageTool.CreateQueueAsync(
                         this.storageConnectString,
                         sessionId,
-                        privateQueueName,
+                        pendingQueueName,
                         clientId,
                         true,
                         this.FormatRequestQueueLabel()).GetAwaiter().GetResult();
@@ -258,7 +258,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                 this.requestQueueField = AzureStorageTool.GetQueue(storageConnectString, requestQueueName).GetAwaiter()
                     .GetResult();
                 this.responseTableField = AzureStorageTool.GetTable(storageConnectString, responseTableName);
-                this.privateQueueField = AzureStorageTool.GetQueue(storageConnectString, privateQueueName).GetAwaiter()
+                this.pendingQueueField = AzureStorageTool.GetQueue(storageConnectString, pendingQueueName).GetAwaiter()
                     .GetResult();
                 this.blobContainer = AzureStorageTool
                     .CreateBlobContainerAsync(this.storageConnectString, requestQueueName).GetAwaiter().GetResult();
@@ -266,7 +266,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                 {
                     AzureStorageTool.RestoreRequest(
                         this.requestQueueField,
-                        this.privateQueueField,
+                        this.pendingQueueField,
                         this.responseTableField,
                         this.blobContainer).GetAwaiter().GetResult();
                     this.requestsCountField = this.requestQueueField.ApproximateMessageCount ?? 0;
@@ -291,7 +291,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             BrokerTracing.TraceVerbose("[AzureQueuePersist] .AzureQueuePersist: AzureQueue Transactions Enabled.");
             this.requestFetcher = new AzureQueueRequestFetcher(
                 this.requestQueueField,
-                this.privateQueueField,
+                this.pendingQueueField,
                 this.requestsCountField,
                 binFormatterField,
                 this.blobContainer);
@@ -403,13 +403,13 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                     this.responseTableField = null;
                 }
 
-                if (this.privateQueueField != null)
+                if (this.pendingQueueField != null)
                 {
                     AzureStorageTool.DeleteQueueAsync(
                         this.storageConnectString,
                         this.sessionIdField,
-                        this.privateQueueField.Name).GetAwaiter().GetResult();
-                    this.privateQueueField = null;
+                        this.pendingQueueField.Name).GetAwaiter().GetResult();
+                    this.pendingQueueField = null;
                 }
 
                 if (this.requestQueueField != null)
@@ -673,7 +673,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                         + clientId + QueueNameFieldDelimeter + RequestQueueSuffix).ToLower();
             }
 
-            return (PrivatePathPrefix + sessionId.ToString(CultureInfo.InvariantCulture) + QueueNameFieldDelimeter
+            return (PendingPathPrefix + sessionId.ToString(CultureInfo.InvariantCulture) + QueueNameFieldDelimeter
                     + clientId).ToLower();
         }
 
@@ -706,7 +706,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                     this.responseFetcher = null;
                 }
 
-                // Stop checkWaitQueue thread and persistResponseProc
+                // Stop persistResponseProc
                 this.tokenSource.Cancel();
             }
         }

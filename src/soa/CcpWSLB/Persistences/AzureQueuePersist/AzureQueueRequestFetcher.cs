@@ -18,11 +18,11 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
     {
         private readonly CloudQueue requestQueue;
 
-        private readonly CloudQueue waitQueue;
+        private readonly CloudQueue pendingQueue;
 
         public AzureQueueRequestFetcher(
             CloudQueue requestQueue,
-            CloudQueue waitQueue,
+            CloudQueue pendingQueue,
             long messageCount,
             IFormatter messageFormatter,
             CloudBlobContainer blobContainer)
@@ -36,7 +36,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                 blobContainer)
         {
             this.requestQueue = requestQueue;
-            this.waitQueue = waitQueue;
+            this.pendingQueue = pendingQueue;
             this.prefetchTimer.Elapsed += (sender, args) =>
                 {
                     Debug.WriteLine("[AzureQueueRequestFetcher] .prefetchTimer raised.");
@@ -73,7 +73,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                     {
                         var message = await this.requestQueue.GetMessageAsync();
                         var copyMessage = new CloudQueueMessage(message.AsBytes);
-                        await this.waitQueue.AddMessageAsync(copyMessage);
+                        await this.pendingQueue.AddMessageAsync(copyMessage);
                         await this.requestQueue.DeleteMessageAsync(message);
                         messageBody = message.AsBytes;
                     }
