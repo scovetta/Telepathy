@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="InprocessSessions.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Singleton class to hold all inproc sessions instances
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using System;
@@ -19,7 +14,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <summary>
         /// Stores the session id for debug mode sessions
         /// </summary>
-        public const int DebugModeSessionId = -1;
+        public const string DebugModeSessionId = "-1";
 
         /// <summary>
         /// Stores the singleton instance of the InprocessSessions class
@@ -48,7 +43,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// We only add int type data to this list but never remove them.
         /// The data is session id, so memory consumption is not a concern here.
         /// </remarks>
-        private List<int> removedSessionIds = new List<int>();
+        private List<string> removedSessionIds = new List<string>();
 
         /// <summary>
         /// Stores the lock to protect debugModeSession reference
@@ -84,7 +79,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// Allocates session id for a new session
         /// </summary>
         /// <returns>returns the new session id</returns>
-        public int AllocateSessionId(bool durable)
+        public string AllocateSessionId(bool durable)
         {
             lock (this.lockThis)
             {
@@ -104,7 +99,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         /// <param name="sessionId">indicating session id</param>
         /// <returns>returns session info instance</returns>
-        public SessionInfo FetchSessionInfo(int sessionId)
+        public SessionInfo FetchSessionInfo(string sessionId)
         {
             return (SessionInfo)this.FetchSessionInstance(sessionId).Info;
         }
@@ -114,14 +109,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         /// <param name="sessionId">indicating session id</param>
         /// <returns>returns session instance</returns>
-        public SessionBase FetchSessionInstance(int sessionId)
+        public SessionBase FetchSessionInstance(string sessionId)
         {
             lock (this.lockThis)
             {
                 // this.debugModeSession has not been assigned, this means no inprocess broker has been created
                 if (this.debugModeSession == null)
                 {
-                    if (sessionId == DebugModeSessionId)
+                    if (sessionId.Equals(DebugModeSessionId))
                     {
                         // In debug mode, simulate an job already finished exception here
                         throw new SessionException(SOAFaultCode.Session_ValidateJobFailed_AlreadyFinished, String.Format(SR.Session_ValidateJobFailed_AlreadyFninshed, sessionId));
@@ -132,7 +127,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                         throw new SessionException(SOAFaultCode.InprocessBroker_InvalidSessionId, String.Format(SR.InprocessBroker_InvalidSessionId, sessionId));
                     }
                 }
-                else if (this.debugModeSession.Id != sessionId)
+                else if (!this.debugModeSession.Id.Equals(sessionId))
                 {
                     // Throw invalid session id exception if session id does not match
                     throw new SessionException(SOAFaultCode.InvalidSessionId, String.Format(SR.Broker_InvalidSessionId, sessionId));
@@ -179,11 +174,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// Removes session instance
         /// </summary>
         /// <param name="sessionId">indicating the session id</param>
-        public void RemoveSessionInstance(int sessionId)
+        public void RemoveSessionInstance(string sessionId)
         {
             lock (this.lockThis)
             {
-                if (this.debugModeSession != null && this.debugModeSession.Id == sessionId)
+                if (this.debugModeSession != null && this.debugModeSession.Id.Equals(sessionId))
                 {
                     this.debugModeSession = null;
                 }

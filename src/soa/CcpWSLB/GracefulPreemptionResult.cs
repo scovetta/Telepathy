@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.ServiceBroker
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.ServiceBroker
 {
     using System.Collections.Generic;
 
@@ -12,7 +15,7 @@
             this.ResumeRemaining = shouldResumeRemaining;
         }
 
-        public IEnumerable<int> TaskIdsInInterest { get; set; }
+        public IEnumerable<string> TaskIdsInInterest { get; set; }
 
         public bool ResumeRemaining { get; set; }
 

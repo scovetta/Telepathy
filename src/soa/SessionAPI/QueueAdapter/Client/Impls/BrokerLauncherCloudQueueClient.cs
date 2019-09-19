@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter.Client
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter.Client
 {
     using System;
     using System.Threading.Tasks;
@@ -36,12 +39,12 @@
             this.RegisterResponseType<object>(nameof(this.Close));
         }
 
-        public BrokerInitializationResult Create(SessionStartInfoContract info, int sessionId)
+        public BrokerInitializationResult Create(SessionStartInfoContract info, string sessionId)
         {
             return this.CreateAsync(info, sessionId).GetAwaiter().GetResult();
         }
 
-        public IAsyncResult BeginCreate(SessionStartInfoContract info, int sessionId, AsyncCallback callback, object state)
+        public IAsyncResult BeginCreate(SessionStartInfoContract info, string sessionId, AsyncCallback callback, object state)
         {
             return AsApm(this.CreateAsync(info, sessionId), callback, state);
         }
@@ -51,17 +54,17 @@
             return ((Task<BrokerInitializationResult>)ar).Result;
         }
 
-        public Task<BrokerInitializationResult> CreateAsync(SessionStartInfoContract info, int sessionId)
+        public Task<BrokerInitializationResult> CreateAsync(SessionStartInfoContract info, string sessionId)
         {
             return this.StartRequestAsync<BrokerInitializationResult>(nameof(this.Create), info, sessionId);
         }
 
-        public bool PingBroker(int sessionID)
+        public bool PingBroker(string sessionID)
         {
             return this.PingBrokerAsync(sessionID).GetAwaiter().GetResult();
         }
 
-        public IAsyncResult BeginPingBroker(int sessionID, AsyncCallback callback, object state)
+        public IAsyncResult BeginPingBroker(string sessionID, AsyncCallback callback, object state)
         {
             return AsApm(this.PingBrokerAsync(sessionID), callback, state);
         }
@@ -71,17 +74,17 @@
             return ((Task<bool>)result).Result;
         }
 
-        public Task<bool> PingBrokerAsync(int sessionID)
+        public Task<bool> PingBrokerAsync(string sessionID)
         {
             return this.StartRequestAsync<bool>(nameof(this.PingBroker), sessionID);
         }
 
-        public string PingBroker2(int sessionID)
+        public string PingBroker2(string sessionID)
         {
             return this.PingBroker2Async(sessionID).GetAwaiter().GetResult();
         }
 
-        public IAsyncResult BeginPingBroker2(int sessionID, AsyncCallback callback, object state)
+        public IAsyncResult BeginPingBroker2(string sessionID, AsyncCallback callback, object state)
         {
             return AsApm(this.PingBroker2Async(sessionID), callback, state);
         }
@@ -91,17 +94,17 @@
             return ((Task<string>)result).Result;
         }
 
-        public Task<string> PingBroker2Async(int sessionID)
+        public Task<string> PingBroker2Async(string sessionID)
         {
             return this.StartRequestAsync<string>(nameof(this.PingBroker2), sessionID);
         }
 
-        public BrokerInitializationResult CreateDurable(SessionStartInfoContract info, int sessionId)
+        public BrokerInitializationResult CreateDurable(SessionStartInfoContract info, string sessionId)
         {
             return this.CreateDurableAsync(info, sessionId).GetAwaiter().GetResult();
         }
 
-        public IAsyncResult BeginCreateDurable(SessionStartInfoContract info, int sessionId, AsyncCallback callback, object state)
+        public IAsyncResult BeginCreateDurable(SessionStartInfoContract info, string sessionId, AsyncCallback callback, object state)
         {
             return AsApm(this.CreateDurableAsync(info, sessionId), callback, state);
         }
@@ -111,17 +114,17 @@
             return ((Task<BrokerInitializationResult>)ar).Result;
         }
 
-        public Task<BrokerInitializationResult> CreateDurableAsync(SessionStartInfoContract info, int sessionId)
+        public Task<BrokerInitializationResult> CreateDurableAsync(SessionStartInfoContract info, string sessionId)
         {
             return this.StartRequestAsync<BrokerInitializationResult>(nameof(this.CreateDurable), info, sessionId);
         }
 
-        public BrokerInitializationResult Attach(int sessionId)
+        public BrokerInitializationResult Attach(string sessionId)
         {
             return this.AttachAsync(sessionId).GetAwaiter().GetResult();
         }
 
-        public IAsyncResult BeginAttach(int sessionId, AsyncCallback callback, object state)
+        public IAsyncResult BeginAttach(string sessionId, AsyncCallback callback, object state)
         {
             return AsApm(this.AttachAsync(sessionId), callback, state);
         }
@@ -131,27 +134,27 @@
             return ((Task<BrokerInitializationResult>)result).Result;
         }
 
-        public Task<BrokerInitializationResult> AttachAsync(int sessionId)
+        public Task<BrokerInitializationResult> AttachAsync(string sessionId)
         {
             return this.StartRequestAsync<BrokerInitializationResult>(nameof(this.Attach), sessionId);
         }
 
-        public void Close(int sessionId)
+        public void Close(string sessionId)
         {
             this.CloseAsync(sessionId).GetAwaiter().GetResult();
         }
 
-        public Task CloseAsync(int sessionId)
+        public Task CloseAsync(string sessionId)
         {
             return this.CloseAsyncAux(sessionId);
         }
 
-        private Task<object> CloseAsyncAux(int sessionId)
+        private Task<object> CloseAsyncAux(string sessionId)
         {
             return this.StartRequestAsync<object>(nameof(this.Close), sessionId);
         }
 
-        public IAsyncResult BeginClose(int sessionId, AsyncCallback callback, object state)
+        public IAsyncResult BeginClose(string sessionId, AsyncCallback callback, object state)
         {
             return AsApm(this.CloseAsyncAux(sessionId), callback, state);
         }

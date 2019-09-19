@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="OperationBehavior.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      It is a customized OperationBehavior, which is used to add OperationInvoker wrapper.
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.CcpServiceHosting
 {

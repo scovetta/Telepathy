@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="ISessionUserAuthenticator.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Provides an interface to authenticate session user
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session
 {
     using System.Security.Principal;
@@ -23,6 +18,6 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <returns>
         /// returns a flag indicating whether the authentication succeeded
         /// </returns>
-        bool AuthenticateUser(int sessionId, WindowsIdentity identity);
+        bool AuthenticateUser(string sessionId, WindowsIdentity identity);
     }
 }

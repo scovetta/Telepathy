@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="RequestReplyFrontEnd.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>FrontEnd for request/reply MEP</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 {
     using System;

@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
 {
     using System;
     using System.Collections.Concurrent;
@@ -130,7 +133,7 @@
 
                 while (getMessageCount > 0)
                 {
-                    if (!(this.prefetchCache.Count > 0 && this.prefetchCache.TryDequeue(out result)))
+                    if (!(this.prefetchCache.Count > 0 && this.prefetchCache.TryDequeue(out result)) )
                     {
                         BrokerTracing.TraceVerbose("[AzureQueueMessageFetcher] .GetMessageAsync: cache miss");
                         result = null;

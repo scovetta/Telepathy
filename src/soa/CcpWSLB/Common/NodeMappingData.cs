@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="NodeMappingData.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      It encapsulates the node mapping logic.
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker
 {

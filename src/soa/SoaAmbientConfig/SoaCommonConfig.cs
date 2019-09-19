@@ -1,4 +1,7 @@
-﻿namespace SoaAmbientConfig
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace SoaAmbientConfig
 {
     using System;
 

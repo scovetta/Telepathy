@@ -1,12 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="BrokerPersistQueue.cs" company="Microsoft">
-//      Copyright (C)  Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//       the persist broke queue for file and recollection scenario that 
-//       will store all the request or response messages to the storage provider.
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     using Microsoft.Hpc.Scheduler.Session;
@@ -127,7 +121,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
         private BrokerQueueDispatcher dispatcherField;
 
         /// <summary>the session id of the queue.</summary>
-        private int sessionIdField;
+        private string sessionIdField;
 
         /// <summary>the client id of the queue.</summary>
         private string clientIdField;
@@ -214,7 +208,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
         /// the elapsed time it great than this value then the original request will be dispatched again.</param>
         /// <param name="sharedData">indicating the shared data</param>
         /// <param name="factory">indicating the broker queue factory</param>
-        public BrokerPersistQueue(BrokerQueueDispatcher dispatcher, string persistenceName, int sessionId, string clientId, ISessionPersist sessionPersist, int thresholdForRequestPersist, int thresholdForResponsePersist, int responseTimeout, bool needQuickCache, SharedData sharedData, BrokerQueueFactory factory)
+        public BrokerPersistQueue(BrokerQueueDispatcher dispatcher, string persistenceName, string sessionId, string clientId, ISessionPersist sessionPersist, int thresholdForRequestPersist, int thresholdForResponsePersist, int responseTimeout, bool needQuickCache, SharedData sharedData, BrokerQueueFactory factory)
             : base(sharedData, factory)
         {
             ParamCheckUtility.ThrowIfNull(sessionPersist, "sessionPersist");
@@ -369,7 +363,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
         /// <summary>
         /// Gets the session id of the queue.
         /// </summary>
-        public override int SessionId
+        public override string SessionId
         {
             get
             {

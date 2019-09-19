@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="InprocBrokerAdapter.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Broker launcher adapter for inproc broker
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session
 {
@@ -219,7 +213,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="info">session start info</param>
         /// <param name="sessionid">the session id which is also service job id</param>
         /// <returns>The session Info</returns>
-        public BrokerInitializationResult Create(SessionStartInfoContract info, int sessionId)
+        public BrokerInitializationResult Create(SessionStartInfoContract info, string sessionId)
         {
             // TODO: SF: change to async
             this.ThrowIfInitialized();
@@ -243,7 +237,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="info">session start info</param>
         /// <param name="sessionid">the session id which is also service job id</param>
         /// <returns>The created session info</returns>
-        public BrokerInitializationResult CreateDurable(SessionStartInfoContract info, int sessionId)
+        public BrokerInitializationResult CreateDurable(SessionStartInfoContract info, string sessionId)
         {
             this.ThrowIfInitialized();
             this.startInfoContract = info;
@@ -257,7 +251,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="sessionId">The session Identity</param>
         /// <returns>the Broker Launcher EPR</returns>
-        public BrokerInitializationResult Attach(int sessionId)
+        public BrokerInitializationResult Attach(string sessionId)
         {
             if (this.brokerEntry == null)
             {
@@ -291,7 +285,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// Finish the session Job
         /// </summary>
         /// <param name="sessionId">The session id</param>
-        public void Close(int sessionId)
+        public void Close(string sessionId)
         {
             if (this.brokerEntry != null)
             {
@@ -306,7 +300,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="info">session start info</param>
         /// <param name="sessionid">the session id which is also service job id</param>
         /// <returns>The session Info</returns>
-        IAsyncResult IBrokerLauncher.BeginCreate(SessionStartInfoContract info, int sessionId, AsyncCallback callback, object state)
+        IAsyncResult IBrokerLauncher.BeginCreate(SessionStartInfoContract info, string sessionId, AsyncCallback callback, object state)
         {
             throw new NotSupportedException();
         }
@@ -325,7 +319,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// Pings specified broker
         /// </summary>
         /// <param name="sessionID">sessionID of broker to ping</param>
-        bool IBrokerLauncher.PingBroker(int sessionID)
+        bool IBrokerLauncher.PingBroker(string sessionID)
         {
             // Inproc broker does not support ping broker
             throw new NotSupportedException();
@@ -335,7 +329,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// Pings specified broker
         /// </summary>
         /// <param name="sessionID">sessionID of broker to ping</param>
-        String IBrokerLauncher.PingBroker2(int sessionID)
+        String IBrokerLauncher.PingBroker2(string sessionID)
         {
             // Inproc broker does not support ping broker
             throw new NotSupportedException();
@@ -345,7 +339,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// Pings specified broker
         /// </summary>
         /// <param name="sessionID">sessionID of broker to ping</param>
-        IAsyncResult IBrokerLauncher.BeginPingBroker(int sessionID, AsyncCallback callback, object state)
+        IAsyncResult IBrokerLauncher.BeginPingBroker(string sessionID, AsyncCallback callback, object state)
         {
             throw new NotSupportedException();
         }
@@ -354,7 +348,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// Pings specified broker
         /// </summary>
         /// <param name="sessionID">sessionID of broker to ping</param>
-        IAsyncResult IBrokerLauncher.BeginPingBroker2(int sessionID, AsyncCallback callback, object state)
+        IAsyncResult IBrokerLauncher.BeginPingBroker2(string sessionID, AsyncCallback callback, object state)
         {
             throw new NotSupportedException();
         }
@@ -385,7 +379,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="callback">The async callback</param>
         /// <param name="state">the async state</param>
         /// <returns>Async result</returns>
-        IAsyncResult IBrokerLauncher.BeginCreateDurable(SessionStartInfoContract info, int sessionId, AsyncCallback callback, object state)
+        IAsyncResult IBrokerLauncher.BeginCreateDurable(SessionStartInfoContract info, string sessionId, AsyncCallback callback, object state)
         {
             throw new NotSupportedException();
         }
@@ -405,7 +399,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="sessionId">The session Identity</param>
         /// <returns>IAsyncResult instance</returns>
-        IAsyncResult IBrokerLauncher.BeginAttach(int sessionId, AsyncCallback callback, object state)
+        IAsyncResult IBrokerLauncher.BeginAttach(string sessionId, AsyncCallback callback, object state)
         {
             throw new NotSupportedException();
         }
@@ -425,7 +419,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// Finish the session Job
         /// </summary>
         /// <param name="sessionId">The session id</param>
-        IAsyncResult IBrokerLauncher.BeginClose(int sessionId, AsyncCallback callback, object state)
+        IAsyncResult IBrokerLauncher.BeginClose(string sessionId, AsyncCallback callback, object state)
         {
             throw new NotSupportedException();
         }
@@ -498,7 +492,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="sessionId">indicating session id</param>
         /// <param name="durable">indicating whether the session is durable</param>
         /// <param name="attached">indicating whether the session is raised up by attaching</param>
-        private async Task BuildBrokerStartInfo(string serviceName, Version serviceVersion, int sessionId, bool durable, bool attached)
+        private async Task BuildBrokerStartInfo(string serviceName, Version serviceVersion, string sessionId, bool durable, bool attached)
         {
             this.brokerInfo = new BrokerStartInfo();
             this.brokerInfo.Headnode = this.startInfo.Headnode;
@@ -585,7 +579,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             }
         }
 
-        private void BuildStandaloneBrokerStartInfo(string serviceName, Version serviceVersion, int sessionId, bool durable, bool attached)
+        private void BuildStandaloneBrokerStartInfo(string serviceName, Version serviceVersion, string sessionId, bool durable, bool attached)
         {
             this.brokerInfo = new BrokerStartInfo();
             this.brokerInfo.Headnode = this.startInfo.Headnode;
@@ -680,7 +674,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// Create broker
         /// </summary>
         /// <param name="sessionId">indicating the session id</param>
-        private async Task CreateInternal(int sessionId)
+        private async Task CreateInternal(string sessionId)
         {
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
 

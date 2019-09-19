@@ -1,10 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="ExceptionHelper.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <owner current="true" primary="true">nzeng</owner>
-// Security review: nzeng 01-11-06
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace TelepathyCommon
 {

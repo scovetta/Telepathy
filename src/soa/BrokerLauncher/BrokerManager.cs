@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="BrokerManager.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Manager for all broker app domains
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 {
     using System;
@@ -83,7 +78,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <summary>
         /// Stores the dictionary of broker info, keyed by session id
         /// </summary>
-        private volatile Dictionary<int, BrokerInfo> brokerDic;
+        private volatile Dictionary<string, BrokerInfo> brokerDic;
 
         /// <summary>
         /// Stores the request queue length counter
@@ -155,7 +150,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 
             this.context = context;
 
-            this.brokerDic = new Dictionary<int, BrokerInfo>();
+            this.brokerDic = new Dictionary<string, BrokerInfo>();
 
             this.staleSessionCleanupTimer = new Timer(this.CleanStaleSessionData, null, Timeout.Infinite, Timeout.Infinite);
 #if HPCPACK
@@ -216,7 +211,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <param name="sessionid">session id</param>
         /// <param name="durable">indicate if the session is durable</param>
         /// <returns>returns broker initialization result</returns>
-        public async Task<BrokerInitializationResult> CreateNewBrokerDomain(SessionStartInfoContract info, int sessionid, bool durable)
+        public async Task<BrokerInitializationResult> CreateNewBrokerDomain(SessionStartInfoContract info, string sessionid, bool durable)
         {
             string userName =
                 (OperationContext.Current != null && OperationContext.Current.ServiceSecurityContext != null && OperationContext.Current.ServiceSecurityContext.WindowsIdentity != null) ?
@@ -242,7 +237,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// Close the broker domain
         /// </summary>
         /// <param name="sessionId">indicating the session id</param>
-        public async Task CloseBrokerDomain(int sessionId)
+        public async Task CloseBrokerDomain(string sessionId)
         {
             TraceHelper.TraceEvent(sessionId, System.Diagnostics.TraceEventType.Information, "[BrokerManager] Close broker {0}", sessionId);
 
@@ -267,7 +262,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// Returns whether specified broker is loaded
         /// </summary>
         /// <returns></returns>
-        public bool DoesBrokerExist(int sessionId, out string brokerWorkerUniqueId)
+        public bool DoesBrokerExist(string sessionId, out string brokerWorkerUniqueId)
         {
             lock (this.brokerDic)
             {
@@ -290,7 +285,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// </summary>
         /// <param name="sessionId">session id</param>
         /// <returns>returns initialization result</returns>
-        public async Task<BrokerInitializationResult> AttachBroker(int sessionId)
+        public async Task<BrokerInitializationResult> AttachBroker(string sessionId)
         {
             BrokerInfo info;
             BrokerInitializationResult result = null;
@@ -438,11 +433,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// Gets the active broker id list
         /// </summary>
         /// <returns>the list of active broker's session id</returns>
-        public int[] GetActiveBrokerIdList()
+        public string[] GetActiveBrokerIdList()
         {
             lock (this.brokerDic)
             {
-                int[] result = new int[this.brokerDic.Count];
+                string[] result = new string[this.brokerDic.Count];
                 this.brokerDic.Keys.CopyTo(result, 0);
                 return result;
             }
@@ -456,7 +451,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <returns>
         /// returns a flag indicating whether the authentication succeeded
         /// </returns>
-        public bool AuthenticateUser(int sessionId, WindowsIdentity caller)
+        public bool AuthenticateUser(string sessionId, WindowsIdentity caller)
         {
             try
             {
@@ -554,7 +549,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// </summary>
         /// <param name="sessionId">indicate the session Id</param>
         /// <param name="suspend">indicate whether the broker is suspended</param>
-        private async Task CleanupAsync(int sessionId, bool suspend)
+        private async Task CleanupAsync(string sessionId, bool suspend)
         {
             // lock the broker dic to remove the info
             // if no such broker info is found, return because somebody has done the cleanup.
@@ -1093,7 +1088,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             try
             {
                 await BrokerEntry.CleanupStaleSessionData(
-                    async delegate(int jobId)
+                    async delegate(string jobId)
                     {
                         return await this.schedulerHelper.IsJobPurged(jobId);
                     },
@@ -1107,7 +1102,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             TraceHelper.TraceEvent(TraceEventType.Verbose, "[BrokerManager] CleanStaleSessionData: end.");
         }
 
-        public bool? IfSeesionCreatedByAadOrLocalUser(int sessionId)
+        public bool? IfSeesionCreatedByAadOrLocalUser(string sessionId)
         {
             BrokerInfo info = null;
             lock (this.brokerDic)
@@ -1140,13 +1135,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 return;
             }
 
-            List<int> sessionIdList;
+            List<string> sessionIdList;
             lock (this.brokerDic)
             {
-                sessionIdList = new List<int>(this.brokerDic.Keys);
+                sessionIdList = new List<string>(this.brokerDic.Keys);
             }
 
-            foreach (int sessionId in sessionIdList)
+            foreach (string sessionId in sessionIdList)
             {
                 // Clean up will not throw exceptions
                 this.CleanupAsync(sessionId, true).GetAwaiter().GetResult();
@@ -1218,7 +1213,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <returns>returns whether the caller is head node's machine account</returns>
         private bool IsCallingFromHeadNode(WindowsIdentity caller)
         {
-            TraceHelper.TraceVerbose(0, "[BrokerManager] Check if user is calling from head node. UserName = {0}", caller.Name);
+            TraceHelper.TraceVerbose("0", "[BrokerManager] Check if user is calling from head node. UserName = {0}", caller.Name);
             //TODO: SF: this.headnode is cluster connection string. Fix it.
             return Utility.IsCallingFromHeadNode(caller, this.headnode);
         }

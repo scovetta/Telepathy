@@ -1,11 +1,5 @@
-//------------------------------------------------------------------------------
-// <copyright file="SessionStartInfo.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//       HPC class for information to create a session
-// </summary>
-//------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session
 {
@@ -578,7 +572,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         public string BrokerLauncherStorageConnectionString { get; set; }
         
-        public static int StandaloneSessionId => TelepathyConstants.StandaloneSessionId;
+        public static string StandaloneSessionId => TelepathyConstants.StandaloneSessionId;
 
         /// <summary>
         ///   <para>Determines if a secure connection is used between the client and the HPC broker.</para>

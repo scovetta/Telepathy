@@ -1,12 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="AzureHttpsRequestSender.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     This is an implementation of RequestSender for sending requests
-//     to Azure side service hosts via Azure storage.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
     using System;

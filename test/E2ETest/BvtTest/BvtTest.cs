@@ -1,4 +1,7 @@
-﻿namespace BvtTest
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace BvtTest
 {
     using System;
     using System.Collections.Generic;
@@ -103,7 +106,7 @@
             return startInfo;
         }
 
-        private static T CreateV2WCFTestServiceClient<T, TChannel>(int sessionId, EndpointAddress epr, NetTcpBinding binding)
+        private static T CreateV2WCFTestServiceClient<T, TChannel>(string sessionId, EndpointAddress epr, NetTcpBinding binding)
             where TChannel : class
         {
             Type serviceClientType = typeof(T);
@@ -127,7 +130,7 @@
             sessionStartInfo = BuildSessionStartInfo(Server, EchoSvcName, null, null, null, null, SessionUnitType.Node, null, null, null);
 
             Info("Begin to create session");
-            int serviceJobId = -1;
+            string serviceJobId;
             using (Session session = Session.CreateSession(sessionStartInfo))
             {
                 serviceJobId = session.Id;
@@ -217,7 +220,7 @@
             sessionStartInfo.Secure = false;
             sessionStartInfo.BrokerSettings.SessionIdleTimeout = 60 * 10 * 1000;
             Info("Begin to create session");
-            int serviceJobId = -1;
+            string serviceJobId;
             int clients = 2;
             AutoResetEvent evt = new AutoResetEvent(false);
             using (Session session = Session.CreateSession(sessionStartInfo))
@@ -316,7 +319,7 @@
             sessionStartInfo.Secure = false;
             sessionStartInfo.BrokerSettings.SessionIdleTimeout = 60 * 10 * 1000;
             Info("Begin to create session");
-            int serviceJobId = -1;
+            string serviceJobId;
             int clients = 2;
             AutoResetEvent evt = new AutoResetEvent(false);
             Session session = Session.CreateSession(sessionStartInfo);

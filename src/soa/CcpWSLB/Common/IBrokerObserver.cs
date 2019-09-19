@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="IBrokerObserver.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Provides an interface defining operations of BrokerObserver component
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker
 {
     /// <summary>

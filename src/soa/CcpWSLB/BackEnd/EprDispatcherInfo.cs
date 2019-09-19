@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.ServiceBroker.BackEnd
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
     using System.ServiceModel;
 
@@ -12,7 +15,7 @@
         /// </summary>
         private string epr;
 
-        public EprDispatcherInfo(string epr, int capacity, int unqiueId)
+        public EprDispatcherInfo(string epr, int capacity, string unqiueId)
             : base(unqiueId, capacity, null, null, Scheduler.Session.Data.NodeLocation.OnPremise)
         {
             this.epr = epr;

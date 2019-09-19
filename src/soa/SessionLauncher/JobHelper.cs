@@ -1,9 +1,6 @@
-﻿//----------------------------------------------------------------------------------------------------------------------------------------
-// <copyright file="JobHelper.cs" company="Microsoft">
-//     Copyright(C) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>the helper class for job.</summary>
-//-----------------------------------------------------------------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 #if HPCPACK
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher

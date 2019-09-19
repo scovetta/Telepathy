@@ -1,9 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="WssDispatcher.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Dispatch messages to broker proxy for Java WSS4J nodes in Windows Azure</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {

@@ -1,11 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="ResponseQueueManager.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     It is the manager to control response queue.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
@@ -154,7 +148,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <summary>
         /// Session Id.
         /// </summary>
-        private int sessionId;
+        private string sessionId;
 
         /// <summary>
         /// Initializes a new instance of the ResponseQueueManager class.
@@ -163,7 +157,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="sessionId">session Id</param>
         /// <param name="responseStorageName">response storage name</param>
         /// <param name="storageConnectionString">storage connection string</param>
-        public ResponseQueueManager(AzureQueueManager azureQueueManager, int sessionId, string responseStorageName, string storageConnectionString)
+        public ResponseQueueManager(AzureQueueManager azureQueueManager, string sessionId, string responseStorageName, string storageConnectionString)
         {
             this.azureQueueManager = azureQueueManager;
 

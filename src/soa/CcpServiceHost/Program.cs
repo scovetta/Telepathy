@@ -1,13 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="Program.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Main entry for service host
-// </summary>
-//------------------------------------------------------------------------------
-
-
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.CcpServiceHosting
 {
@@ -44,7 +36,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
         /// <summary>
         /// Job Id of current job. We need this when write trace.
         /// </summary>
-        private static int jobId;
+        private static string jobId;
         static SvcHostMgmtRestServer restserver;
         private static string defaultRegistryPath = "ServiceRegistration";
 
@@ -113,7 +105,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 Console.Error.WriteLine(e.Message);
                 return ErrorCode.ServiceHost_UnexpectedException;
             }
-            ServiceInfo serviceInfo = new ServiceInfo(int.Parse(param.JobId), int.Parse(param.TaskId), int.Parse(param.CoreId), param.RegistrationPath, param.FileName, null, null);
+            ServiceInfo serviceInfo = new ServiceInfo(param.JobId, param.TaskId, int.Parse(param.CoreId), param.RegistrationPath, param.FileName, null, null);
             OpenService(serviceInfo);
             return 0;
         }
@@ -148,7 +140,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
         /// </summary>
         static void StartService()
         {
-            int jobId = Utility.GetJobId();
+            string jobId = Utility.GetJobId();
             TraceHelper.TraceInfo(jobId, "RestServer Started!");
             restserver = new SvcHostMgmtRestServer("SvcHost", 80);
             restserver.Initialize();

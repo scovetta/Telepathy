@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="SessionInfoBase.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//       Provides an unified interface for SessionInfo
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session
 {
     using System;
@@ -22,7 +17,7 @@ namespace Microsoft.Hpc.Scheduler.Session
     /// </remarks>
     public abstract class SessionInfoBase : IConnectionInfo
     {
-        public abstract int Id { get; set; }
+        public abstract string Id { get; set; }
 
         public abstract int ServiceOperationTimeout { get; set; }
 

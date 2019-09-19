@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="NativeMethods.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Wrapped native methods
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 {
     using System;
@@ -143,7 +138,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 {
                     // Swallow exception
                     TraceHelper.TraceWarning(
-                        0,
+                        "0",
                         "[NativeMethods].SafeCloseValidHandle: Exception {0}.",
                         ex);
                 }

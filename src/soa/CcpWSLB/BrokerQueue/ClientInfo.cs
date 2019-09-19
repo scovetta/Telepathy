@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="ClientInfo.cs" company="Microsoft">
-//      Copyright (C)  Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      define the client info class for the persist queue to return the client infos for a session.
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     /// <summary>

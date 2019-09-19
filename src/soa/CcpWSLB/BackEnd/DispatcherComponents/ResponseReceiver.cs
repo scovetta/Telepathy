@@ -1,11 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="ResponseReceiver.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     This is an abstract class for receiving response from service host.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
     using System;
@@ -66,7 +61,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
 
             Message reply = null;
 
-            int taskId = data.TaskId;
+            string taskId = data.TaskId;
 
             DateTime dispatchTime = data.DispatchTime;
 

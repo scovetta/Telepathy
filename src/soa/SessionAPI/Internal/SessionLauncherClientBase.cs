@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="SessionLauncherClient.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//       Service client base to connect the session launcher in headnode
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
@@ -51,36 +45,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         }
 
         /// <summary>
-        /// Gets server version
-        /// </summary>
-        /// <returns>returns server version</returns>
-        public Version GetServerVersion()
-        {
-            return this.Channel.EndGetServerVersion(this.Channel.BeginGetServerVersion(null, null));
-        }
-
-        /// <summary>
-        /// The async version of getting server version
-        /// </summary>
-        /// <param name="asyncState">indicating the callback</param>
-        /// <param name="callback">indicating the async state</param>
-        /// <returns>returns the async result</returns>
-        public IAsyncResult BeginGetServerVersion(AsyncCallback callback, object asyncState)
-        {
-            return this.Channel.BeginGetServerVersion(callback, asyncState);
-        }
-
-        /// <summary>
-        /// End the async version of getting server version
-        /// </summary>
-        /// <param name="result">indicating the async result</param>
-        /// <returns>returns the server version</returns>
-        public Version EndGetServerVersion(IAsyncResult result)
-        {
-            return this.Channel.EndGetServerVersion(result);
-        }
-
-        /// <summary>
         /// Allocate a session and get a list of brokerlauncher EPR
         /// </summary>
         /// <param name="info">Session start info</param>
@@ -89,15 +53,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="serviceVersion">the service version</param>
         /// <param name="sessionInfo">the session info</param>
         /// <returns>The EPRs of the broker launchers</returns>
-        public async Task<SessionAllocateInfoContract> AllocateDurableV5Async(SessionStartInfoContract info, string endpointPrefix)
+        public async Task<SessionAllocateInfoContract> AllocateDurableAsync(SessionStartInfoContract info, string endpointPrefix)
         {
-            return await this.Channel.AllocateDurableV5Async(info, endpointPrefix).ConfigureAwait(false);
+            return await this.Channel.AllocateDurableAsync(info, endpointPrefix).ConfigureAwait(false);
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
             //IAsyncResult result = this.Channel.BeginAllocateDurable(info, endpointPrefix, null, null);
             //return this.Channel.EndAllocateDurable(result);
         }
 
-
         /// <summary>
         /// Allocate a session and get a list of brokerlauncher EPR
         /// </summary>
@@ -107,197 +70,41 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="serviceVersion">the service version</param>
         /// <param name="sessionInfo">the session info</param>
         /// <returns>The EPRs of the broker launchers</returns>
-        public string[] AllocateDurable(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
+        public async Task<SessionAllocateInfoContract> AllocateAsync(SessionStartInfoContract info, string endpointPrefix)
         {
-            // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
-            IAsyncResult result = this.Channel.BeginAllocateDurable(info, endpointPrefix, null, null);
-            return this.Channel.EndAllocateDurable(out sessionid, out serviceVersion, out sessionInfo, result);
-        }
-
-
-        /// <summary>
-        /// The async version of allocating a new session
-        /// </summary>
-        /// <param name="info">session start info</param>
-        /// <param name="endpointPrefix">the endpoint prefix, net.tcp:// or https:// </param>
-        /// <param name="callback">The async callback</param>
-        /// <param name="asyncState">async state object</param>
-        /// <returns>The async result</returns>
-        public IAsyncResult BeginAllocateDurable(SessionStartInfoContract info, string endpointPrefix, AsyncCallback callback, object asyncState)
-        {
-            return this.Channel.BeginAllocateDurable(info, endpointPrefix, callback, asyncState);
-        }
-
-        /// <summary>
-        /// End the async opeartion of allocating
-        /// </summary>
-        /// <param name="sessionid">the session id</param>
-        /// <param name="serviceVersion">the service version</param>
-        /// <param name="sessionInfo">the session info</param>
-        /// <param name="result">the async result</param>
-        /// <returns>the canidate broker launchers' eprs</returns>
-        public string[] EndAllocateDurable(out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo, IAsyncResult result)
-        {
-            return this.Channel.EndAllocateDurable(out sessionid, out serviceVersion, out sessionInfo, result);
-        }
-
-
-        /// <summary>
-        /// Allocate a session and get a list of brokerlauncher EPR
-        /// </summary>
-        /// <param name="info">Session start info</param>
-        /// <param name="endpointPrefix">the endpoint prefix, net.tcp:// or https:// </param>
-        /// <param name="sessionid">the sessionid returns</param>
-        /// <param name="serviceVersion">the service version</param>
-        /// <param name="sessionInfo">the session info</param>
-        /// <returns>The EPRs of the broker launchers</returns>
-        public async Task<SessionAllocateInfoContract> AllocateV5Async(SessionStartInfoContract info, string endpointPrefix)
-        {
-            return await this.Channel.AllocateV5Async(info, endpointPrefix).ConfigureAwait(false);
+            return await this.Channel.AllocateAsync(info, endpointPrefix).ConfigureAwait(false);
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
             //IAsyncResult result = this.Channel.BeginAllocate(info, endpointPrefix, null, null);
             //return this.Channel.EndAllocate(result);
         }
 
         /// <summary>
-        /// Allocate a session and get a list of brokerlauncher EPR
-        /// </summary>
-        /// <param name="info">Session start info</param>
-        /// <param name="endpointPrefix">the endpoint prefix, net.tcp:// or https:// </param>
-        /// <param name="sessionid">the sessionid returns</param>
-        /// <param name="serviceVersion">the service version</param>
-        /// <param name="sessionInfo">the session info</param>
-        /// <returns>The EPRs of the broker launchers</returns>
-        public string[] Allocate(SessionStartInfoContract info, string endpointPrefix, out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo)
-        {
-            // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
-            IAsyncResult result = this.Channel.BeginAllocate(info, endpointPrefix, null, null);
-            return this.Channel.EndAllocate(out sessionid, out serviceVersion, out sessionInfo, result);
-        }
-
-        /// <summary>
-        /// The async version of allocating a new session
-        /// </summary>
-        /// <param name="info">session start info</param>
-        /// <param name="endpointPrefix">the endpoint prefix, net.tcp:// or https:// </param>
-        /// <param name="callback">The async callback</param>
-        /// <param name="asyncState">async state object</param>
-        /// <returns>The async result</returns>
-        public IAsyncResult BeginAllocate(SessionStartInfoContract info, string endpointPrefix, AsyncCallback callback, object asyncState)
-        {
-            return this.Channel.BeginAllocate(info, endpointPrefix, callback, asyncState);
-        }
-
-        /// <summary>
-        /// End the async opeartion of allocating
-        /// </summary>
-        /// <param name="sessionid">the session id</param>
-        /// <param name="serviceVersion">the service version</param>
-        /// <param name="sessionInfo">the session info</param>
-        /// <param name="result">the async result</param>
-        /// <returns>the canidate broker launchers' eprs</returns>
-        public string[] EndAllocate(out int sessionid, out string serviceVersion, out SessionInfoContract sessionInfo, IAsyncResult result)
-        {
-            return this.Channel.EndAllocate(out sessionid, out serviceVersion, out sessionInfo, result);
-        }
-
-        /// <summary>
         /// Get the session informaiton for one session
         /// </summary>
         /// <param name="headnode">the headnode name</param>
         /// <param name="endpointPrefix">the endpoint prefix, net.tcp:// or https:// </param>
         /// <param name="sessionId">the session id</param>
         /// <returns>The Session Information</returns>
-        public async Task<SessionInfoContract> GetInfoV5Async(string endpointPrefix, int sessionId)
+        public async Task<SessionInfoContract> GetInfoAsync(string endpointPrefix, string sessionId)
         {
-            return await this.Channel.GetInfoV5Async(endpointPrefix, sessionId).ConfigureAwait(false);
+            return await this.Channel.GetInfoAsync(endpointPrefix, sessionId).ConfigureAwait(false);
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
             //IAsyncResult result = this.Channel.BeginGetInfo(headnode, endpointPrefix, sessionId, null, null);
             //return this.Channel.EndGetInfo(result);
         }
 
-        /// <inheritdoc />
-        public async Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, int sessionId, bool useAad)
-        {
-            return await this.Channel.GetInfoV5Sp1Async(endpointPrefix, sessionId, useAad).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Get the session informaiton for one session
-        /// </summary>
-        /// <param name="headnode">the headnode name</param>
-        /// <param name="endpointPrefix">the endpoint prefix, net.tcp:// or https:// </param>
-        /// <param name="sessionId">the session id</param>
-        /// <returns>The Session Information</returns>
-        public SessionInfoContract GetInfo(string headnode, string endpointPrefix, int sessionId)
-        {
-            // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
-            IAsyncResult result = this.Channel.BeginGetInfo(headnode, endpointPrefix, sessionId, null, null);
-            return this.Channel.EndGetInfo(result);
-        }
-
-        /// <summary>
-        /// Get the session informaiton for one session
-        /// </summary>
-        /// <param name="headnode">the headnode name</param>
-        /// <param name="endpointPrefix">the endpoint prefix, net.tcp:// or https:// </param>
-        /// <param name="sessionId">the session id</param>
-        /// <returns>IAsyncResult instance</returns>
-        public IAsyncResult BeginGetInfo(string headnode, string endpointPrefix, int sessionId, AsyncCallback callback, object state)
-        {
-            return this.Channel.BeginGetInfo(headnode, endpointPrefix, sessionId, callback, state);
-        }
-
-        /// <summary>
-        /// Get the session informaiton for one session
-        /// </summary>
-        /// <returns>The Session Information</returns>
-        public SessionInfoContract EndGetInfo(IAsyncResult result)
-        {
-            return this.Channel.EndGetInfo(result);
-        }
-
         /// <summary>
         /// terminate a session.
         /// </summary>
         /// <param name="sessionId">the session id</param>
-        public async Task TerminateV5Async(int sessionId)
+        public async Task TerminateAsync(string sessionId)
         {
-            await this.Channel.TerminateV5Async(sessionId).ConfigureAwait(false);
+            await this.Channel.TerminateAsync(sessionId).ConfigureAwait(false);
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
             //IAsyncResult result = this.Channel.BeginTerminate(headnode, sessionId, null, null);
             //this.Channel.EndTerminate(result);
         }
 
-        /// <summary>
-        /// terminate a session.
-        /// </summary>
-        /// <param name="headnode">the headnode.</param>
-        /// <param name="sessionId">the session id</param>
-        public void Terminate(string headnode, int sessionId)
-        {
-            // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
-            IAsyncResult result = this.Channel.BeginTerminate(headnode, sessionId, null, null);
-            this.Channel.EndTerminate(result);
-        }
-
-        /// <summary>
-        /// terminate a session.
-        /// </summary>
-        /// <param name="headnode">the headnode.</param>
-        /// <param name="sessionId">the session id</param>
-        public IAsyncResult BeginTerminate(string headnode, int sessionId, AsyncCallback callback, object state)
-        {
-            return this.Channel.BeginTerminate(headnode, sessionId, callback, state);
-        }
-
-        /// <summary>
-        /// terminate a session.
-        /// </summary>
-        public void EndTerminate(IAsyncResult result)
-        {
-            this.Channel.EndTerminate(result);
-        }
         /// <summary>
         /// Returns the versions for a specific service
         /// </summary>
@@ -375,39 +182,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             return await this.Channel.GetSOAConfigurationAsync(key).ConfigureAwait(false);
             //return this.EndGetSOAConfiguration(this.BeginGetSOAConfiguration(key, null, null));
         }
-
-        /// <summary>
-        /// Gets SOA configuration
-        /// </summary>
-        /// <param name="key">indicating the key</param>
-        /// <returns>returns the value</returns>
-        public string GetSOAConfiguration(string key)
-        {
-            return this.EndGetSOAConfiguration(this.BeginGetSOAConfiguration(key, null, null));
-        }
-
-        /// <summary>
-        /// Begin method to get SOA configuration
-        /// </summary>
-        /// <param name="key">indicating the key</param>
-        /// <param name="callback">indicating the callback</param>
-        /// <param name="state">indicating the async state</param>
-        /// <returns>returns the async result</returns>
-        public IAsyncResult BeginGetSOAConfiguration(string key, AsyncCallback callback, object state)
-        {
-            return this.Channel.BeginGetSOAConfiguration(key, callback, state);
-        }
-
-        /// <summary>
-        /// End method to get SOA configuration
-        /// </summary>
-        /// <param name="result">indicating the async result</param>
-        /// <returns>returns the configuration value</returns>
-        public string EndGetSOAConfiguration(IAsyncResult result)
-        {
-            return this.Channel.EndGetSOAConfiguration(result);
-        }
-
+      
         /// <summary>
         /// Gets SOA configuration
         /// </summary>

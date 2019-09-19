@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="INodeMappingCache.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Interface for retrieving Azure node mapping information
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker
 {
     using System;

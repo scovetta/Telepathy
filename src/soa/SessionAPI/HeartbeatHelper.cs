@@ -1,9 +1,5 @@
-//-----------------------------------------------------------------------
-// <copyright file="HeartbeatHelper.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Utilities for sending heartbeat on the connection</summary>
-//-----------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {

@@ -1,11 +1,6 @@
-//------------------------------------------------------------------------------
-// <copyright file="IBrokerEntry.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Interface for BrokerEntry
-// </summary>
-//------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Interface
 {
     using System;
@@ -31,7 +26,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Interface
         /// <value>
         ///   <para />
         /// </value>
-        int SessionId { get; }
+        string SessionId { get; }
 
         /// <summary>
         /// Attach to the broker.

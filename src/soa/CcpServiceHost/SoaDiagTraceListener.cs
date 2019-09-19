@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="SoaDiagTraceListener.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Provide a trace listener for the soa diag trace.
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.CcpServiceHosting
 {
     using System;
@@ -30,13 +25,13 @@ namespace Microsoft.Hpc.CcpServiceHosting
         /// <summary>
         /// Stores the session Id.
         /// </summary>
-        private int sessionId;
+        private string sessionId;
 
         /// <summary>
         /// Initializes a new instance of the SoaDiagTraceListener class.
         /// </summary>
         /// <param name="sessionId">soa session id</param>
-        public SoaDiagTraceListener(int sessionId)
+        public SoaDiagTraceListener(string sessionId)
         {
             this.sessionId = sessionId;
         }

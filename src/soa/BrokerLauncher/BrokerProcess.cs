@@ -1,11 +1,6 @@
-//------------------------------------------------------------------------------
-// <copyright file="BrokerProcess.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Wrapped native operation to a broker process
-// </summary>
-//------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 {
     using System;
@@ -292,7 +287,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 // Still needs to wait until all event are finished
                 if (!this.processExitAndEventFinishedWaitHandle.WaitOne(processExitEventFinishedWaitTimeout, false))
                 {
-                    TraceHelper.TraceError(0, "[BrokerProcess] Timeout waiting for process exit event finish.");
+                    TraceHelper.TraceError("0", "[BrokerProcess] Timeout waiting for process exit event finish.");
                 }
             }
         }

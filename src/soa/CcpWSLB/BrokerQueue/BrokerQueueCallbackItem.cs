@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------------------
-// <copyright file="BrokerQueueCallbackItem.cs" company="Microsoft">
-//     Copyright (C) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>the response callback item definition.</summary>
-//-----------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     using Microsoft.Hpc.Scheduler.Session.Internal;

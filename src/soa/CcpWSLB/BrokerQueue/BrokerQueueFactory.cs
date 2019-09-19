@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="BrokerQueueFactory.cs" company="Microsoft">
-//      Copyright (C)  Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      the factory class to manager the broker queues.
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     using System;
@@ -20,7 +15,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
     /// </summary>
     /// <param name="sessionId">the session id.</param>
     /// <returns>a value indicates wheter the session is stale.</returns>
-    public delegate Task<bool> IsStaleSessionCallback(int sessionId);
+    public delegate Task<bool> IsStaleSessionCallback(string sessionId);
 
     /// <summary>
     /// the factory class for the broker queue.this class willl parse the broker's local persistence config file.
@@ -37,7 +32,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 
         #region private fields
         /// <summary>the session id for this broker queue factory.</summary>
-        private int sessionId;
+        private string sessionId;
 
         /// <summary>the persist name for this broker queue factory.</summary>
         private string persistName;

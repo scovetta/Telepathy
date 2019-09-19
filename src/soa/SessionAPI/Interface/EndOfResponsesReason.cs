@@ -1,9 +1,6 @@
-//-----------------------------------------------------------------------
-// <copyright file="EndOfResponsesReason.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Enum for reason of EndOfResponses</summary>
-//-----------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Interface
 {
     using System;

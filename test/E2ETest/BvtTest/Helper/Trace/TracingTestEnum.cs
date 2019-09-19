@@ -1,4 +1,7 @@
-﻿namespace AITestLib.Helper.Trace
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace AITestLib.Helper.Trace
 {
 
     public enum TracingType

@@ -1,9 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="BrokerQueueDispatcher.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>the abstract dispatcher interface class for broker queue.</summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     using System;
@@ -85,7 +82,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
         /// </summary>
         /// <param name="sessionId">the session id.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public BrokerQueueDispatcher(int sessionId, bool isDurable, SharedData sharedData)
+        public BrokerQueueDispatcher(string sessionId, bool isDurable, SharedData sharedData)
         {
             this.sharedData = sharedData;
 

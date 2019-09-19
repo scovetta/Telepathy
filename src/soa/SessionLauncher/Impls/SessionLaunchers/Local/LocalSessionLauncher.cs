@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Local
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Local
 {
     using System;
     using System.Collections.Generic;
@@ -14,17 +17,17 @@
 
         private Process svcHostProcess;
 
-        public override async Task<SessionAllocateInfoContract> AllocateDurableV5Async(SessionStartInfoContract info, string endpointPrefix)
+        public override async Task<SessionAllocateInfoContract> AllocateDurableAsync(SessionStartInfoContract info, string endpointPrefix)
         {
             throw new NotSupportedException("Currently Session Launcher does not support durable session in Local Session mode.");
         }
 
-        public override async Task<SessionInfoContract> GetInfoV5Sp1Async(string endpointPrefix, int sessionId, bool useAad)
+        public override async Task<SessionInfoContract> GetInfoAsync(string endpointPrefix, string sessionId)
         {
             throw new NotImplementedException();
         }
 
-        public override async Task TerminateV5Async(int sessionId)
+        public override async Task TerminateAsync(string sessionId)
         {
             this.brokerLauncherProcess.Kill();
             this.svcHostProcess.Kill();
@@ -58,7 +61,7 @@
             BrokerConfigurations brokerConfigurations,
             string hostpath)
         {
-            // int sessionId = LocalSessionConfiguration.GetNextSessionId();
+            // string sessionId = LocalSessionConfiguration.GetNextSessionId();
 
             string cmd;
             if (true)
@@ -72,7 +75,7 @@
 
             }
 
-            int sessionId = SessionStartInfo.StandaloneSessionId;
+            string sessionId = SessionStartInfo.StandaloneSessionId;
             this.brokerLauncherProcess = Process.Start(
                 LocalSessionConfiguration.BrokerLauncherExePath,
                 cmd);
@@ -86,7 +89,7 @@
             return sessionAllocateInfo;
         }
 
-        protected override void AddSessionToPool(string serviceNameWithVersion, bool durable, int sessionId, int poolSize)
+        protected override void AddSessionToPool(string serviceNameWithVersion, bool durable, string sessionId, int poolSize)
         {
             throw new NotImplementedException();
         }

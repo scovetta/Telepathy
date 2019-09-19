@@ -1,11 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="AzureHttpsServiceClient.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     It is the client to pass request to broker proxy via Azure queue.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {

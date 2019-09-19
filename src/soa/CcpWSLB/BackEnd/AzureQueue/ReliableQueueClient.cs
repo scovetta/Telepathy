@@ -1,12 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="ReliableQueueClient.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     It is a wrapper of CloudQueue class, and it handles BeginAddMessage's
-//     callback lost issue.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {

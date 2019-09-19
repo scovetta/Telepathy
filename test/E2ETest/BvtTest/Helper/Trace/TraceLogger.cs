@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -48,12 +51,12 @@ namespace AITestLib.Helper.Trace
 
         #region Logger
 
-        private static string FormatString(int sessionId, TraceTestEvents testEvent, int latency, params string[] args)
+        private static string FormatString(string sessionId, TraceTestEvents testEvent, int latency, params string[] args)
         {
             return FormatString(DateTime.Now, sessionId, testEvent, latency, args);
         }
 
-        private static string FormatString(DateTime dataTime, int sessionId, TraceTestEvents testEvent, int latency, params string[] args)
+        private static string FormatString(DateTime dataTime, string sessionId, TraceTestEvents testEvent, int latency, params string[] args)
         {
             StringBuilder sb = new StringBuilder();
             if (args != null)
@@ -94,66 +97,66 @@ namespace AITestLib.Helper.Trace
             LogInfo("StartTest:" + testCaseName);
         }
 
-        public static void LogSessionCreating(int sessionId)
+        public static void LogSessionCreating(string sessionId)
         {
             LogInfo(FormatString(sessionId,TraceTestEvents.SessionCreating, SessionCreatingLatency));
         }
 
-        public static void LogSessionCreated(int sessionId)
+        public static void LogSessionCreated(string sessionId)
         {
             LogInfo(FormatString(sessionId, TraceTestEvents.SessionCreated, SessionCreatedLatency));
         }
 
-        public static void LogSendRequest(int sessionId, UniqueId messageId)
+        public static void LogSendRequest(string sessionId, UniqueId messageId)
         {
             Guid id;
             messageId.TryGetGuid(out id);
             LogSendRequest(sessionId, id.ToString());
         }
 
-        public static void LogSendRequest(int sessionId, string messageId)
+        public static void LogSendRequest(string sessionId, string messageId)
         {
             LogInfo(FormatString(sessionId, TraceTestEvents.FrontEndRequestReceived, FrontEndRequestReceivedLatency, messageId));
         }
 
-        public static void LogSendRequest(int sessionId, UniqueId messageId, string clientId)
+        public static void LogSendRequest(string sessionId, UniqueId messageId, string clientId)
         {
             Guid id;
             messageId.TryGetGuid(out id);
             LogSendRequest(sessionId, id.ToString(), clientId);
         }
 
-        public static void LogSendRequest(int sessionId, string messageId, string clientId)
+        public static void LogSendRequest(string sessionId, string messageId, string clientId)
         {
             LogInfo(FormatString(sessionId, TraceTestEvents.FrontEndRequestReceived, FrontEndRequestReceivedLatency, messageId, clientId));
         }
 
-        public static void LogRequestDispatching(int sessionId, string messageId, DateTime dateTime)
+        public static void LogRequestDispatching(string sessionId, string messageId, DateTime dateTime)
         {
             LogInfo(FormatString(dateTime, sessionId, TraceTestEvents.BackendRequestSent, BackendRequestSentLatency, messageId));
         }
 
-        public static void LogBrokerResponseReceived(int sessionId, string messageId, DateTime dateTime)
+        public static void LogBrokerResponseReceived(string sessionId, string messageId, DateTime dateTime)
         {
             LogInfo(FormatString(dateTime, sessionId, TraceTestEvents.BackendResponseReceived, BackendResponseReceivedLatency, messageId));
         }
 
-        public static void LogResponseRecived(int sessionId, string messageId)
+        public static void LogResponseRecived(string sessionId, string messageId)
         {
             LogInfo(FormatString(sessionId, TraceTestEvents.FrontEndResponseSent, FrontEndResponseSentLatency, messageId));
         }
 
-        public static void LogResponseRecived(int sessionId, string messageId, string clientId)
+        public static void LogResponseRecived(string sessionId, string messageId, string clientId)
         {
             LogInfo(FormatString(sessionId, TraceTestEvents.FrontEndResponseSent, FrontEndResponseSentLatency, messageId, clientId));
         }
 
-        public static void LogSessionClosed(int sessionId)
+        public static void LogSessionClosed(string sessionId)
         {
             LogInfo(FormatString(sessionId, TraceTestEvents.SessionFinished, SessionFinishedLatency));
         }
 
-        public static void LogSessionFinishedBecauseOfTimeout(int sessionId)
+        public static void LogSessionFinishedBecauseOfTimeout(string sessionId)
         {
             LogInfo(FormatString(sessionId, TraceTestEvents.SessionFinishedBecauseOfTimeout, SessionFinishedBecauseOfTimeoutLatency));
         }

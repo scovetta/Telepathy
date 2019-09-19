@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="ProxyFault.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Wrapper class that encapsulates exception that BrokerProxy encounters when communicating with service hosts
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.BrokerProxy
 {
     using System;

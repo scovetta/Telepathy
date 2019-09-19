@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +12,9 @@ namespace AITestLib.Helper
 {
     class V2WCFClientEndpointBehavior: IEndpointBehavior
     {
-        private int sessionId;
+        private string sessionId;
 
-        public V2WCFClientEndpointBehavior(int sessionId)
+        public V2WCFClientEndpointBehavior(string sessionId)
         {
             this.sessionId = sessionId;
         }

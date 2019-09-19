@@ -1,11 +1,5 @@
-//------------------------------------------------------------------------------
-// <copyright file="SessionAttachInfo.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//       The structure as the parameter to attach a session
-// </summary>
-//------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session
 {
@@ -24,12 +18,12 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         /// Stores the session id
         /// </summary>
-        private int sessionId;
+        private string sessionId;
 
         /// <summary>
         /// Gets the session id
         /// </summary>
-        public int SessionId
+        public string SessionId
         {
             get { return this.sessionId; }
         }
@@ -66,7 +60,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="id">
         ///   <para>Integer that specifies the identifier of the session to which you want to attach an SOA client.</para>
         /// </param>
-        public SessionAttachInfo(string headNode, int id)
+        public SessionAttachInfo(string headNode, string id)
             : base(headNode)
         {
             this.eprList = Utility.TryGetEprList();

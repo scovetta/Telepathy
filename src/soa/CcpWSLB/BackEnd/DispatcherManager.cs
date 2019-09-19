@@ -1,10 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="DispatcherManager.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Manage dispatchers</summary>
-//-----------------------------------------------------------------------
-
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using TelepathyCommon.HpcContext;
 using TelepathyCommon.HpcContext.Extensions;
@@ -68,12 +63,12 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <summary>
         /// Store the dictionary of active dispatchers, keyed by task id
         /// </summary>
-        private Dictionary<int, Dispatcher> dispatcherDic;
+        private Dictionary<string, Dispatcher> dispatcherDic;
 
         /// <summary>
         /// Stores dispatchers that are failed due to Service_InitializeFailed, or EndpointNotFoundException
         /// </summary>
-        private List<int> failedDispatcherList;
+        private List<string> failedDispatcherList;
 
         /// <summary>
         /// Lock object for failedDispatcherList
@@ -83,7 +78,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <summary>
         /// Stores disptacher info of temporarily blocked dispatchers
         /// </summary>
-        private Dictionary<int, DispatcherInfo> blockedDispatcherDic;
+        private Dictionary<string, DispatcherInfo> blockedDispatcherDic;
 
         /// <summary>
         /// Stores dispatcher info of temporarily blocked dispatchers, in order of their blocktime
@@ -170,9 +165,9 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="frontendResult">indicating the frontend result</param>
         public DispatcherManager(BindingsSection bindings, SharedData sharedData, BrokerObserver observer, ServiceJobMonitorBase monitor, BrokerQueueFactory queueFactory, ITelepathyContext context)
         {
-            this.dispatcherDic = new Dictionary<int, Dispatcher>();
-            this.failedDispatcherList = new List<int>();
-            this.blockedDispatcherDic = new Dictionary<int, DispatcherInfo>();
+            this.dispatcherDic = new Dictionary<string, Dispatcher>();
+            this.failedDispatcherList = new List<string>();
+            this.blockedDispatcherDic = new Dictionary<string, DispatcherInfo>();
             this.blockedDispatcherQueue = new Queue<DispatcherInfo>();
 
             this.sharedData = sharedData;
@@ -273,7 +268,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// </summary>
         /// <param name="taskId">indicating the task id</param>
         /// <returns>returns a boolean value</returns>
-        public bool ContainDispather(int taskId)
+        public bool ContainDispather(string taskId)
         {
             lock (this.lockThis)
             {
@@ -302,7 +297,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// </summary>
         /// <param name="taskIds">the task ids identifying the dispatchers to stop</param>
         /// <param name="availableToShutdownTaskIds">true if resume the remaining dispatchers.</param>
-        public void StopDispatchers(IEnumerable<int> availableToShutdownTaskIds, IEnumerable<int> tasksInInterest, bool resumeRemaining = true)
+        public void StopDispatchers(IEnumerable<string> availableToShutdownTaskIds, IEnumerable<string> tasksInInterest, bool resumeRemaining = true)
         {
             lock (this.lockThis)
             {
@@ -310,7 +305,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                 Debug.Assert(tasksInInterest == null || !availableToShutdownTaskIds.Except(tasksInInterest).Any(), "availableToShutdownTaskIds is not subset of tasksInInterest");
 
                 // Get dispatchers available to stop.
-                foreach (int taskId in availableToShutdownTaskIds)
+                foreach (string taskId in availableToShutdownTaskIds)
                 {
                     Dispatcher dispatcher;
                     if (this.dispatcherDic.TryGetValue(taskId, out dispatcher))
@@ -332,13 +327,13 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
 
                 if (resumeRemaining)
                 {
-                    HashSet<int> tasksInInterestSet = null;
+                    HashSet<string> tasksInInterestSet = null;
                     if (tasksInInterest != null)
                     {
-                        tasksInInterestSet = new HashSet<int>(tasksInInterest);
+                        tasksInInterestSet = new HashSet<string>(tasksInInterest);
                     }
 
-                    HashSet<int> shouldNotResumeDispatcherIds = new HashSet<int>(availableToShutdownTaskIds);
+                    HashSet<string> shouldNotResumeDispatcherIds = new HashSet<string>(availableToShutdownTaskIds);
 
                     // resume the remaining dispatchers
                     foreach (var dispatcher in this.dispatcherDic.Values.Where(d => TaskInInterestUtil.IsTaskInInterest(tasksInInterestSet, d.TaskId) && !shouldNotResumeDispatcherIds.Contains(d.TaskId)))
@@ -393,7 +388,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="exitServiceHost">flag indicating if exit related service host</param>
         /// <param name="preemption">flag idicating if the service is preempted</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "May need in the future")]
-        public bool RemoveDispatcher(int taskId, bool exitServiceHost, bool preemption)
+        public bool RemoveDispatcher(string taskId, bool exitServiceHost, bool preemption)
         {
             Dispatcher dispatcher = null;
             DispatcherInfo dispatcherInfo = null;
@@ -802,7 +797,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// </summary>
         /// <param name="taskId">dispatcher's task id</param>
         /// <returns>removed dispatcher</returns>
-        private Dispatcher RemoveActiveDispatcher(int taskId)
+        private Dispatcher RemoveActiveDispatcher(string taskId)
         {
             if (!this.dispatcherDic.ContainsKey(taskId))
             {
@@ -826,7 +821,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// </summary>
         /// <param name="taskId">task id related to the dispatcher</param>
         /// <returns>true on success, false on failure</returns>
-        private DispatcherInfo RemoveBlockedDispatcher(int taskId)
+        private DispatcherInfo RemoveBlockedDispatcher(string taskId)
         {
             DispatcherInfo dispatcherInfo = null;
             if (this.blockedDispatcherDic.TryGetValue(taskId, out dispatcherInfo))
@@ -880,12 +875,12 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// Remove a list of dispatchers
         /// </summary>
         /// <param name="removeIdList">indicating remove id list</param>
-        public void BatchRemoveDispatcher(IEnumerable<int> removeIdList)
+        public void BatchRemoveDispatcher(IEnumerable<string> removeIdList)
         {
             List<Dispatcher> closeInstanceList = new List<Dispatcher>();
             lock (this.lockThis)
             {
-                foreach (int taskId in removeIdList)
+                foreach (string taskId in removeIdList)
                 {
                     Dispatcher dispatcher = this.RemoveActiveDispatcher(taskId);
                     if (dispatcher != null)
@@ -1203,16 +1198,16 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="totalCores">total used cores count</param>
         /// <remarks>Consider calc when dispatchers are added\removed</remarks>
         public void GetCoreResourceUsageInformation(
-            IEnumerable<int> tasksInInterest,
+            IEnumerable<string> tasksInInterest,
             out int averageCoresPerDispatcher,
             out int totalCores)
         {
             totalCores = 0;
 
-            HashSet<int> tasksInInterestSet = null;
+            HashSet<string> tasksInInterestSet = null;
             if (tasksInInterest != null)
             {
-                tasksInInterestSet = new HashSet<int>(tasksInInterest);
+                tasksInInterestSet = new HashSet<string>(tasksInInterest);
             }
 
             lock (this.lockThis)
@@ -1247,7 +1242,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// </summary>
         /// <param name="totalTaskIds">total task Ids in ascending order</param>
         /// <returns></returns>
-        public IEnumerable<int> GetRunawayTasks(IEnumerable<int> totalTaskIds)
+        public IEnumerable<string> GetRunawayTasks(IEnumerable<string> totalTaskIds)
         {
             return totalTaskIds.Except(this.dispatcherDic.Keys).Except(this.blockedDispatcherDic.Keys).OrderBy(i => i);
         }

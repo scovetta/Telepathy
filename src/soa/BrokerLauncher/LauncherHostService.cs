@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="LauncherHostService.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Windows service for launcher host
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
 {
@@ -653,7 +647,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
             /// returns a boolean value indicating whether the incoming user
             /// is authenticated to access the given session
             /// </returns>
-            public bool AuthenticateUser(int sessionId, WindowsIdentity identity)
+            public bool AuthenticateUser(string sessionId, WindowsIdentity identity)
             {
                 if (this.disposed)
                 {

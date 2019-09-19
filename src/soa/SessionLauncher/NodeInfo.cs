@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="NodeInfo.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Represents a collection of information for a node
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 {
     using System;

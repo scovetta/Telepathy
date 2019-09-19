@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="MSMQMessageFetcher.cs" company="Microsoft">
-//     Copyright (C) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>helper class that implements logic of fetching messages from MSMQ queue.</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
 {
     using Microsoft.Hpc.Scheduler.Session.Internal;

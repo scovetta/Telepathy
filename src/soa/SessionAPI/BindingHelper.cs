@@ -1,11 +1,6 @@
-//------------------------------------------------------------------------------
-// <copyright file="BindingHelper.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Helper class to build binding from configuration file
-// </summary>
-//------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker
 {
     using System;
@@ -1129,7 +1124,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// <param name="port"></param>
         /// <param name="isHttp"></param>
         /// <returns></returns>
-        public static string GenerateServiceHostEndpointAddress(string hostnameWithPrefix, int jobId, int taskId, int port, bool isHttp)
+        public static string GenerateServiceHostEndpointAddress(string hostnameWithPrefix, string jobId, string taskId, int port, bool isHttp)
         {
             return string.Format(
                 CultureInfo.InvariantCulture,

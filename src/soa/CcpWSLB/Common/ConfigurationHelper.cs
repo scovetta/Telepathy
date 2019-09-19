@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="ConfigurationHelper.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Helper class to load the configuration
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using TelepathyCommon;
 

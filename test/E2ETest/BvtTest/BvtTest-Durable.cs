@@ -1,4 +1,6 @@
-﻿
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace BvtTest
 {
     using System;
@@ -104,21 +106,21 @@ namespace BvtTest
         /// This case matches with V3_AI_BVT_2 (Simple Fire & Recollect scenario - insecure net.tcp)
         /// </summary>
         [TestMethod]
-        public void BvtCase1()
+        public void BvtDurableCase1()
         {
             Info("Start BVT");
             SessionStartInfo sessionStartInfo;
 
             sessionStartInfo = BuildSessionStartInfo(Server, EchoSvcName, null, null, null, null, SessionUnitType.Node, null, null, null);
             sessionStartInfo.Secure = false;
-            int serviceJobId = -1;
+            string serviceJobId;
             Info("Begin to create Durable Session.");
             string guid = Guid.NewGuid().ToString();
-            var epr = new EndpointAddress(string.Format(NetTcpEndpointPattern, Server, serviceJobId));
-            Info("EPR: {0}", epr);
             using (DurableSession session = DurableSession.CreateSession(sessionStartInfo))
             {
                 serviceJobId = session.Id;
+                var epr = new EndpointAddress(string.Format(NetTcpEndpointPattern, Server, serviceJobId));
+                Info("EPR: {0}", epr);
                 try
                 {
                     Info("Client {0}: Begin to send requests.", guid);
@@ -190,7 +192,7 @@ namespace BvtTest
         /// This case matches with V3_AI_BVT_6 (non-secure net.tcp Durable Session - multiple BrokerClient)
         /// </summary>
         [TestMethod]
-        public void BvtCase2()
+        public void BvtDurableCase2()
         {
             Info("Start BVT");
             SessionStartInfo sessionStartInfo;
@@ -198,7 +200,7 @@ namespace BvtTest
             sessionStartInfo = BuildSessionStartInfo(Server, EchoSvcName, null, null, null, null, SessionUnitType.Node, null, null, null);
             sessionStartInfo.Secure = false;
             Info("Begin to create session");
-            int serviceJobId = -1;
+            string serviceJobId;
             int clientNum = 2;
             AutoResetEvent anotherClient = new AutoResetEvent(false);
 
@@ -296,7 +298,7 @@ namespace BvtTest
         /// This case matches with V3_AI_BVT_8 (non-secure net.tcp shared Durable Session - BrokerClient)
         /// </summary>
         [TestMethod]
-        public void BvtCase3()
+        public void BvtDurableCase3()
         {
             Info("Start BVT");
             SessionStartInfo sessionStartInfo;
@@ -306,7 +308,7 @@ namespace BvtTest
             sessionStartInfo.ShareSession = true;
 
             Info("Begin to create session");
-            int serviceJobId = -1;
+            string serviceJobId;
             int clientNum = 2;
             AutoResetEvent anotherClient = new AutoResetEvent(false);
 

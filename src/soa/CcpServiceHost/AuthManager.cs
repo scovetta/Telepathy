@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 using System.Security.Principal;
 using System.ServiceModel;
 using Microsoft.Hpc.Scheduler.Session.Internal;

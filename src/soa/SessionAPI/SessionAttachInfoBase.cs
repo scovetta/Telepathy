@@ -1,11 +1,6 @@
-//------------------------------------------------------------------------------
-// <copyright file="SessionAttachInfoBase.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//       Base class for information to attach to a session
-// </summary>
-//------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session
 {
     /// <summary>

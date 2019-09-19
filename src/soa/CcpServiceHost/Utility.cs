@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="Utility.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Utility for service host
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.CcpServiceHosting
 {
     using Microsoft.Hpc.Scheduler.Session;
@@ -247,19 +242,17 @@ namespace Microsoft.Hpc.CcpServiceHosting
         /// Get job Id from the env var.
         /// </summary>
         /// <returns>job Id of the session</returns>
-        public static int GetJobId()
+        public static string GetJobId()
         {
-            int jobId;
-
             string jobIdString = Environment.GetEnvironmentVariable(Constant.JobIDEnvVar);
 
-            if (string.IsNullOrEmpty(jobIdString) || !int.TryParse(jobIdString, out jobId))
+            if (string.IsNullOrEmpty(jobIdString))
             {
-                return 0;
+                return "0";
             }
             else
             {
-                return jobId;
+                return jobIdString;
             }
         }
 

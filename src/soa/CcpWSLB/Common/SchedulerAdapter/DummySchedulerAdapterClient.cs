@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.ServiceBroker.Common
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.ServiceBroker.Common
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -172,7 +175,7 @@
             }
             */
 
-            async Task<(Microsoft.Hpc.Scheduler.Session.Data.JobState jobState, int autoMax, int autoMin)> ISchedulerAdapter.RegisterJobAsync(int jobid)
+            async Task<(Microsoft.Hpc.Scheduler.Session.Data.JobState jobState, int autoMax, int autoMin)> ISchedulerAdapter.RegisterJobAsync(string jobid)
             {
                 int autoMax = int.MaxValue;
                 int autoMin = 0;
@@ -186,32 +189,32 @@
                 return (Scheduler.Session.Data.JobState.Running, autoMax, autoMin);
             }
 
-            public Task<int?> GetTaskErrorCode(int jobId, int globalTaskId)
+            public Task<int?> GetTaskErrorCode(string jobId, string globalTaskId)
             {
                 return null;
             }
 
-            async Task ISchedulerAdapter.FinishJobAsync(int jobid, string reason)
+            async Task ISchedulerAdapter.FinishJobAsync(string jobid, string reason)
             {
                 await Task.CompletedTask;
             }
 
-            async Task ISchedulerAdapter.FailJobAsync(int jobid, string reason)
+            async Task ISchedulerAdapter.FailJobAsync(string jobid, string reason)
             {
                 await Task.CompletedTask;
             }
 
-            async Task ISchedulerAdapter.RequeueOrFailJobAsync(int jobid, string reason)
+            async Task ISchedulerAdapter.RequeueOrFailJobAsync(string jobid, string reason)
             {
                 await Task.CompletedTask;
             }
 
-            async Task<bool> ISchedulerAdapter.ExcludeNodeAsync(int jobid, string nodeName)
+            async Task<bool> ISchedulerAdapter.ExcludeNodeAsync(string jobid, string nodeName)
             {
                 return await Task.FromResult(true);
             }
 
-            async Task<bool> ISchedulerAdapter.UpdateBrokerInfoAsync(int jobid, Dictionary<string, object> properties)
+            async Task<bool> ISchedulerAdapter.UpdateBrokerInfoAsync(string jobid, Dictionary<string, object> properties)
             {
                 return await Task.FromResult(true);
             }
@@ -224,12 +227,12 @@
             */
 
 
-            async Task<(bool succeed, BalanceInfo balanceInfo, List<int> taskIds, List<int> runningTaskIds)> ISchedulerAdapter.GetGracefulPreemptionInfoAsync(int jobId)
+            async Task<(bool succeed, BalanceInfo balanceInfo, List<string> taskIds, List<string> runningTaskIds)> ISchedulerAdapter.GetGracefulPreemptionInfoAsync(string jobId)
             {
                 return (true, new BalanceInfo(int.MaxValue), null, null); 
             }
 
-            public Task<bool> FinishTaskAsync(int jobId, int taskUniqueId)
+            public Task<bool> FinishTaskAsync(string jobId, string taskUniqueId)
             {
                 return Task.FromResult(true);
             }

@@ -1,11 +1,6 @@
-//------------------------------------------------------------------------------
-// <copyright file="EprElement.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Represents the configuration element for epr
-// </summary>
-//------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Configuration
 {
     using System.Configuration;

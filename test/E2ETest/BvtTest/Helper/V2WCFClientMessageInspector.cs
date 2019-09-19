@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,9 +14,9 @@ namespace AITestLib.Helper
 {
     public class V2WCFClientMessageInspector : IClientMessageInspector
     {
-        private int sessionId;
+        private string sessionId;
 
-        public V2WCFClientMessageInspector(int sessionId)
+        public V2WCFClientMessageInspector(string sessionId)
         {
             this.sessionId = sessionId;
         }

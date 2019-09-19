@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="BrokerLauncherClient.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      The Broker Launcher Client Base
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
@@ -41,7 +35,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="info">Session Start Info</param>
         /// <param name="sessionid">the session id</param>
         /// <returns>the session info</returns>
-        public BrokerInitializationResult Create(SessionStartInfoContract info, int sessionid)
+        public BrokerInitializationResult Create(SessionStartInfoContract info, string sessionid)
         {
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
             IAsyncResult result = this.Channel.BeginCreate(info, sessionid, null, null);
@@ -56,7 +50,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="callback">The async callback</param>
         /// <param name="state">async state object</param>
         /// <returns>the async result</returns>
-        public IAsyncResult BeginCreate(SessionStartInfoContract info, int sessionid, AsyncCallback callback, object state)
+        public IAsyncResult BeginCreate(
+            SessionStartInfoContract info,
+            string sessionid,
+            AsyncCallback callback,
+            object state)
         {
             return this.Channel.BeginCreate(info, sessionid, callback, state);
         }
@@ -76,7 +74,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         /// <param name="sessionId">the session id</param>
         /// <returns>the session info</returns>
-        public BrokerInitializationResult Attach(int sessionId)
+        public BrokerInitializationResult Attach(string sessionId)
         {
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
             IAsyncResult result = this.Channel.BeginAttach(sessionId, null, null);
@@ -88,7 +86,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         /// <param name="sessionId">the session id</param>
         /// <returns>IAsyncResult instance</returns>
-        public IAsyncResult BeginAttach(int sessionId, AsyncCallback callback, object state)
+        public IAsyncResult BeginAttach(string sessionId, AsyncCallback callback, object state)
         {
             return this.Channel.BeginAttach(sessionId, callback, state);
         }
@@ -106,7 +104,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// Close a session and cleanup all resource
         /// </summary>
         /// <param name="sessionId">the session id</param>
-        public void Close(int sessionId)
+        public void Close(string sessionId)
         {
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
             IAsyncResult result = this.Channel.BeginClose(sessionId, null, null);
@@ -118,7 +116,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         /// <param name="sessionId">the session id</param>
         /// <returns>IAsyncResult instance</returns>
-        public IAsyncResult BeginClose(int sessionId, AsyncCallback callback, object state)
+        public IAsyncResult BeginClose(string sessionId, AsyncCallback callback, object state)
         {
             return this.Channel.BeginClose(sessionId, callback, state);
         }
@@ -139,7 +137,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="info">session start info</param>
         /// <param name="sessionid">the session id</param>
         /// <returns>Session Info</returns>
-        public BrokerInitializationResult CreateDurable(SessionStartInfoContract info, int sessionid)
+        public BrokerInitializationResult CreateDurable(SessionStartInfoContract info, string sessionid)
         {
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
             IAsyncResult result = this.Channel.BeginCreateDurable(info, sessionid, null, null);
@@ -154,7 +152,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="callback">The async callback</param>
         /// <param name="state">async state object</param>
         /// <returns>Session Info</returns>
-        public IAsyncResult BeginCreateDurable(SessionStartInfoContract info, int sessionid, AsyncCallback callback, object state)
+        public IAsyncResult BeginCreateDurable(SessionStartInfoContract info, string sessionid, AsyncCallback callback, object state)
         {
             return this.Channel.BeginCreateDurable(info, sessionid, callback, state);
         }
@@ -200,7 +198,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         /// <param name="sessionid">the session id</param>
         /// <returns>True if alive; else false or fault</returns>
-        public bool PingBroker(int sessionid)
+        public bool PingBroker(string sessionid)
         {
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
             IAsyncResult result = this.Channel.BeginPingBroker(sessionid, null, null);
@@ -212,7 +210,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         /// <param name="sessionid">the session id</param>
         /// <returns>The unique identity</returns>
-        public String PingBroker2(int sessionid)
+        public String PingBroker2(string sessionid)
         {
             // Call async version and block on completion in order to workaround System.Net.Socket bug #750028
             IAsyncResult result = this.Channel.BeginPingBroker2(sessionid, null, null);
@@ -223,7 +221,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// Ping session's broker
         /// </summary>
         /// <param name="sessionid">the session id</param>
-        public IAsyncResult BeginPingBroker(int sessionID, AsyncCallback callback, object state)
+        public IAsyncResult BeginPingBroker(string sessionID, AsyncCallback callback, object state)
         {
             return this.Channel.BeginPingBroker(sessionID, callback, state);
         }
@@ -232,7 +230,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// Ping session's broker
         /// </summary>
         /// <param name="sessionid">the session id</param>
-        public IAsyncResult BeginPingBroker2(int sessionID, AsyncCallback callback, object state)
+        public IAsyncResult BeginPingBroker2(string sessionID, AsyncCallback callback, object state)
         {
             return this.Channel.BeginPingBroker2(sessionID, callback, state);
         }

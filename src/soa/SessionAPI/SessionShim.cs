@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.Scheduler.Session
 {
     using System;
     using System.Collections.Generic;
@@ -27,7 +30,7 @@
         /// <value>
         ///   <para>An identifier that uniquely identifies the session.</para>
         /// </value>
-        public int Id
+        public string Id
         {
             get
             {

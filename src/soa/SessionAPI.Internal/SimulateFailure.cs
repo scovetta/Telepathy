@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="SimulateFailure.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Simulates failures in broker
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using Microsoft.Hpc.RuntimeTrace;
 using System;

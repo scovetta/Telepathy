@@ -1,12 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="TraceUtils.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     It is helper class enabling writting trace on both on-premise side and
-//     proxy side.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker
 {

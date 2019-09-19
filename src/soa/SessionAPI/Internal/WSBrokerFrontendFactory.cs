@@ -1,12 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="WSBrokerFrontendFactory.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Broker frontend factory to build proxy to communicate to broker
-//      frontend using WS contract
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {

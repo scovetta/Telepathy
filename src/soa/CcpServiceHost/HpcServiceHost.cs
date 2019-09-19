@@ -1,10 +1,5 @@
-﻿// <copyright file="HpcServiceHost.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Handles service host commands from the broker
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.CcpServiceHosting
 {
@@ -32,7 +27,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
         /// <summary>
         /// sessionId
         /// </summary>
-        int _sessionId = 0;
+        string _sessionId = "0";
 
         private CcpServiceHostWrapper hostWrapper;
 
@@ -40,7 +35,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
         /// Constructor for service host
         /// </summary>
         /// <param name="cancelTaskGracePeriod"></param>
-        public HpcServiceHost(int sessionId, int cancelTaskGracePeriod, CcpServiceHostWrapper hostWrapper)
+        public HpcServiceHost(string sessionId, int cancelTaskGracePeriod, CcpServiceHostWrapper hostWrapper)
         {
             this._sessionId = sessionId;
             this._cancelTaskGracePeriod = cancelTaskGracePeriod;

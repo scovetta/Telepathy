@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="Program.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Main entry for CcpEchoSvc service client
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.EchoClient
 {

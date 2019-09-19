@@ -1,11 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="Dispatcher.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     Dispatch messages to service hosts
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
@@ -453,7 +447,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <summary>
         /// Gets the task id
         /// </summary>
-        public int TaskId
+        public string TaskId
         {
             get;
             private set;
@@ -825,7 +819,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
             // the AsyncResult to DispatchData after BeginProcessMessage returns.
             data.AsyncResult = ar;
 
-            int taskId = data.TaskId;
+            string taskId = data.TaskId;
 
             DateTime dispatchTime = data.DispatchTime;
 

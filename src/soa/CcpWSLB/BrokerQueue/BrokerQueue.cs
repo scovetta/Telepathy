@@ -1,9 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="BrokerQueue.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>the abstract interface class for broker queue.</summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     using System;
@@ -140,7 +137,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
         /// <summary>
         /// Gets the session id of the broker queue.
         /// </summary>
-        public abstract int SessionId { get; }
+        public abstract string SessionId { get; }
 
         /// <summary>
         /// Gets the client id of the queue.

@@ -1,4 +1,7 @@
-﻿using Microsoft.Azure.Batch.Common;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using Microsoft.Azure.Batch.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

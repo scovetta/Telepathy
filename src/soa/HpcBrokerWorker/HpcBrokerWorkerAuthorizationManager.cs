@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="HpcBrokerWorkerAuthorizationManager.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Authroization manager for HpcBrokerWorker
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim
 {
     using System;

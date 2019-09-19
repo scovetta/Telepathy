@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="DummyResourceProvider.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//       Resource provider that does nothing
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session
 {
     using System;
@@ -92,7 +87,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// Free resource
         /// </summary>
         /// <param name="sessionId">indicating the session id</param>
-        public Task FreeResource(SessionStartInfo startInfo, int sessionId)
+        public Task FreeResource(SessionStartInfo startInfo, string sessionId)
         {
             // Do nothing
 #if net40

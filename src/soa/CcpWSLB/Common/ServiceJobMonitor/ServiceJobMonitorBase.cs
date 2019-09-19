@@ -1,9 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="IServiceJobMonitor.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Internal Monitor service job</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using TelepathyCommon;
 using TelepathyCommon.HpcContext;
@@ -215,7 +211,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// <summary>
         /// The tasks to be cancelled;
         /// </summary>
-        protected ConcurrentDictionary<int, int> tasksToBeCancelled = new ConcurrentDictionary<int, int>();
+        protected ConcurrentDictionary<string, int> tasksToBeCancelled = new ConcurrentDictionary<string, int>();
 
         /// <summary>
         /// Stores the fabric cluster context
@@ -1017,14 +1013,14 @@ namespace Microsoft.Hpc.ServiceBroker
                                 BrokerTracing.TraceVerbose("[ServiceJobMonitor].AllocationAdjust: no dispatacher shutdown, check runaway tasks.");
 
                                 // check and shutdown the runaway tasks
-                                IEnumerable<int> runawayTasks = this.gracefulPreemptionHandler.GetTasksToShutdown();
+                                IEnumerable<string> runawayTasks = this.gracefulPreemptionHandler.GetTasksToShutdown();
                                 if (runawayTasks != null)
                                 {
                                     foreach (var taskid in runawayTasks)
                                     {
                                         ThreadPool.QueueUserWorkItem(new WaitCallback((state) =>
                                         {
-                                            int id = (int)state;
+                                            string id = (string)state;
                                             BrokerTracing.TraceVerbose("[ServiceJobMonitor].AllocationAdjust: finish runaway task {0}", id);
                                             try
                                             {
@@ -1517,7 +1513,7 @@ namespace Microsoft.Hpc.ServiceBroker
                 {
                     List<ServiceTaskDispatcherInfo> validDispatcherInfoList = new List<ServiceTaskDispatcherInfo>();
 
-                    List<int> removeIdList = new List<int>(taskInfoList.Count);
+                    List<string> removeIdList = new List<string>(taskInfoList.Count);
 
                     foreach (TaskInfo info in taskInfoList)
                     {
@@ -1824,7 +1820,7 @@ namespace Microsoft.Hpc.ServiceBroker
             return Task.CompletedTask;
         }
 
-        private void AddToRemovedDispatcherIds(int taskId)
+        private void AddToRemovedDispatcherIds(string taskId)
         {
             if (this.gracefulPreemptionHandler == null)
             {
@@ -1837,7 +1833,7 @@ namespace Microsoft.Hpc.ServiceBroker
             }
         }
 
-        private bool IsRemovedDispatcher(int taskId)
+        private bool IsRemovedDispatcher(string taskId)
         {
             if (this.gracefulPreemptionHandler == null)
             {
@@ -1851,7 +1847,7 @@ namespace Microsoft.Hpc.ServiceBroker
             }
         }
 
-        public async Task FinishTask(int taskId, bool isRunAwayTask)
+        public async Task FinishTask(string taskId, bool isRunAwayTask)
         {
             if (!this.IsRemovedDispatcher(taskId))
             {

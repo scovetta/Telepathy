@@ -1,12 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="AzureStorageCleaner.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Cleanup the Azure storage which stores request and response messages
-//      for Azure burst.
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 {

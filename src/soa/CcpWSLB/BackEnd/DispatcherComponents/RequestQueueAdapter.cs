@@ -1,12 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="RequestQueueAdapter.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     Request queue adapter which is in charge of putting request
-//     back into broker queue
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
     using System.Diagnostics.Contracts;

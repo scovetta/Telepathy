@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="IntParameter.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Parameter for int type value
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.CcpServiceHosting
 {

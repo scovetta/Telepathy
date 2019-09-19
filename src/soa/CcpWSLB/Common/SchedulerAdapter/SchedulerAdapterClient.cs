@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.ServiceBroker.Common.SchedulerAdapter
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.ServiceBroker.Common.SchedulerAdapter
 {
     using System.Collections.Generic;
     using System.ServiceModel;
@@ -31,38 +34,38 @@
             this.dispatcherManager = dispatcherManager;
         }
 
-        public async Task<bool> UpdateBrokerInfoAsync(int sessionId, Dictionary<string, object> properties) => await this.Channel.UpdateBrokerInfoAsync(sessionId, properties);
+        public async Task<bool> UpdateBrokerInfoAsync(string sessionId, Dictionary<string, object> properties) => await this.Channel.UpdateBrokerInfoAsync(sessionId, properties);
 
-        public async Task<(bool succeed, BalanceInfo balanceInfo, List<int> taskIds, List<int> runningTaskIds)> GetGracefulPreemptionInfoAsync(int sessionId) =>
+        public async Task<(bool succeed, BalanceInfo balanceInfo, List<string> taskIds, List<string> runningTaskIds)> GetGracefulPreemptionInfoAsync(string sessionId) =>
             await this.Channel.GetGracefulPreemptionInfoAsync(sessionId);
 
-        public async Task<bool> FinishTaskAsync(int jobId, int taskUniqueId) => await this.Channel.FinishTaskAsync(jobId, taskUniqueId);
+        public async Task<bool> FinishTaskAsync(string jobId, string taskUniqueId) => await this.Channel.FinishTaskAsync(jobId, taskUniqueId);
 
-        public async Task<bool> ExcludeNodeAsync(int jobid, string nodeName) => await this.Channel.ExcludeNodeAsync(jobid, nodeName);
+        public async Task<bool> ExcludeNodeAsync(string jobid, string nodeName) => await this.Channel.ExcludeNodeAsync(jobid, nodeName);
 
-        public async Task RequeueOrFailJobAsync(int sessionId, string reason)
+        public async Task RequeueOrFailJobAsync(string sessionId, string reason)
         {
             await this.Channel.RequeueOrFailJobAsync(sessionId, reason);
         }
 
-        public async Task FailJobAsync(int sessionId, string reason)
+        public async Task FailJobAsync(string sessionId, string reason)
         {
             await this.Channel.FailJobAsync(sessionId, reason);
         }
 
-        public async Task FinishJobAsync(int sessionId, string reason)
+        public async Task FinishJobAsync(string sessionId, string reason)
         {
             await this.Channel.FinishJobAsync(sessionId, reason);
         }
 
-        public async Task<(JobState jobState, int autoMax, int autoMin)> RegisterJobAsync(int jobid)
+        public async Task<(JobState jobState, int autoMax, int autoMin)> RegisterJobAsync(string jobid)
         {
             // TODO: this is not proper place to put dispatcher creating logic. Remove this.
             return await this.Channel.RegisterJobAsync(jobid);
         }
 
         // TODO: remove globalTaskId
-        public async Task<int?> GetTaskErrorCode(int jobId, int globalTaskId)
+        public async Task<int?> GetTaskErrorCode(string jobId, string globalTaskId)
         {
             return await this.Channel.GetTaskErrorCode(jobId, globalTaskId);
         }

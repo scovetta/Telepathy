@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="LauncherHostService.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Windows service for launcher host
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
 {
     using Microsoft.Hpc.Azure.Common;
@@ -22,9 +17,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
     using System.ServiceModel.Security;
     using System.ServiceProcess;
     using System.Threading.Tasks;
-
-    using AzureStorageBinding.Table.Binding;
-
+    
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls;
 #if HPCPACK
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack;
@@ -274,6 +267,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                 this.launcherHost = new ServiceHost(this.sessionLauncher, new Uri(sessionLauncherAddress));
                 BindingHelper.ApplyDefaultThrottlingBehavior(this.launcherHost);
 
+#if AZURE_STORAGE_BINDING
                 if (SessionLauncherRuntimeConfiguration.OpenAzureStorageListener)
                 {
                     this.launcherHost.AddServiceEndpoint(
@@ -282,6 +276,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
                         TelepathyConstants.SessionLauncherAzureTableBindingAddress);
                     TraceHelper.TraceEvent(TraceEventType.Information, "Add session launcher service endpoint {0}", TelepathyConstants.SessionLauncherAzureTableBindingAddress);
                 }
+#endif
 
                 if (SessionLauncherRuntimeConfiguration.SchedulerType == SchedulerType.HpcPack)
                 {

@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="BrokerLauncherClientFactory.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Factory for broker launcher client
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using Microsoft.Hpc.Scheduler.Session.Common;
@@ -248,7 +243,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             /// Close session
             /// </summary>
             /// <param name="sessionId">indicating the session id</param>
-            void IBrokerLauncher.Close(int sessionId)
+            void IBrokerLauncher.Close(string sessionId)
             {
                 try
                 {
@@ -271,12 +266,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             }
 
             #region Not supported operations
-            BrokerInitializationResult IBrokerLauncher.Create(SessionStartInfoContract info, int sessionId)
+            BrokerInitializationResult IBrokerLauncher.Create(SessionStartInfoContract info, string sessionId)
             {
                 throw new NotSupportedException();
             }
 
-            IAsyncResult IBrokerLauncher.BeginCreate(SessionStartInfoContract info, int sessionId, AsyncCallback callback, object state)
+            IAsyncResult IBrokerLauncher.BeginCreate(SessionStartInfoContract info, string sessionId, AsyncCallback callback, object state)
             {
                 throw new NotSupportedException();
             }
@@ -286,22 +281,22 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 throw new NotSupportedException();
             }
 
-            bool IBrokerLauncher.PingBroker(int sessionID)
+            bool IBrokerLauncher.PingBroker(string sessionID)
             {
                 throw new NotSupportedException();
             }
 
-            String IBrokerLauncher.PingBroker2(int sessionID)
+            String IBrokerLauncher.PingBroker2(string sessionID)
             {
                 throw new NotSupportedException();
             }
 
-            IAsyncResult IBrokerLauncher.BeginPingBroker(int sessionID, AsyncCallback callback, object state)
+            IAsyncResult IBrokerLauncher.BeginPingBroker(string sessionID, AsyncCallback callback, object state)
             {
                 throw new NotSupportedException();
             }
 
-            IAsyncResult IBrokerLauncher.BeginPingBroker2(int sessionID, AsyncCallback callback, object state)
+            IAsyncResult IBrokerLauncher.BeginPingBroker2(string sessionID, AsyncCallback callback, object state)
             {
                 throw new NotSupportedException();
             }
@@ -316,12 +311,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 throw new NotSupportedException();
             }
 
-            BrokerInitializationResult IBrokerLauncher.CreateDurable(SessionStartInfoContract info, int sessionId)
+            BrokerInitializationResult IBrokerLauncher.CreateDurable(SessionStartInfoContract info, string sessionId)
             {
                 throw new NotSupportedException();
             }
 
-            IAsyncResult IBrokerLauncher.BeginCreateDurable(SessionStartInfoContract info, int sessionId, AsyncCallback callback, object state)
+            IAsyncResult IBrokerLauncher.BeginCreateDurable(SessionStartInfoContract info, string sessionId, AsyncCallback callback, object state)
             {
                 throw new NotSupportedException();
             }
@@ -331,12 +326,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 throw new NotSupportedException();
             }
 
-            BrokerInitializationResult IBrokerLauncher.Attach(int sessionId)
+            BrokerInitializationResult IBrokerLauncher.Attach(string sessionId)
             {
                 throw new NotSupportedException();
             }
 
-            IAsyncResult IBrokerLauncher.BeginAttach(int sessionId, AsyncCallback callback, object state)
+            IAsyncResult IBrokerLauncher.BeginAttach(string sessionId, AsyncCallback callback, object state)
             {
                 throw new NotSupportedException();
             }
@@ -346,7 +341,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 throw new NotSupportedException();
             }
 
-            IAsyncResult IBrokerLauncher.BeginClose(int sessionId, AsyncCallback callback, object state)
+            IAsyncResult IBrokerLauncher.BeginClose(string sessionId, AsyncCallback callback, object state)
             {
                 throw new NotSupportedException();
             }

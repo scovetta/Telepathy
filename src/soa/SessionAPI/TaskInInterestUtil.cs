@@ -1,10 +1,13 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.Scheduler.Session
 {
     using System.Collections.Generic;
 
     public static class TaskInInterestUtil
     {
-        public static bool IsTaskInInterest(HashSet<int> tasksInInterestList, int taskId)
+        public static bool IsTaskInInterest(HashSet<string> tasksInInterestList, string taskId)
         {
             if (tasksInInterestList == null)
             {

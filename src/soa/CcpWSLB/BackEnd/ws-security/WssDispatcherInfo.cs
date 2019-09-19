@@ -1,11 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="WssDispatcherInfo.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     Dispatcher info for service task targets Java WSS4J nodes.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
@@ -31,7 +25,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="firstCoreId">indicating the first core id</param>
         /// <param name="networkPrefix">indicating the network prefix</param>
         /// <param name="location">indicating target resource location, OnPremise or Azure</param>
-        public WssDispatcherInfo(int jobId, int taskId, int capacity, string machineName, string machineVirtualName, int firstCoreId, string networkPrefix, Microsoft.Hpc.Scheduler.Session.Data.NodeLocation location)
+        public WssDispatcherInfo(string jobId, string taskId, int capacity, string machineName, string machineVirtualName, int firstCoreId, string networkPrefix, Microsoft.Hpc.Scheduler.Session.Data.NodeLocation location)
             : base(jobId, taskId, capacity, machineName, machineVirtualName, firstCoreId, networkPrefix, location, true)
         {
         }

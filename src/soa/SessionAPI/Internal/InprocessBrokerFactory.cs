@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="InprocessBrokerFactory.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Factory to create inprocess broker
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using Microsoft.Hpc.Scheduler.Session.Interface;
@@ -48,7 +43,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="eprs">indicating the broker epr list</param>
         /// <param name="binding">indicating the binding</param>
         /// <returns>returns the broker initialization result</returns>
-        public async Task<SessionBase> CreateBroker(SessionStartInfo startInfo, int sessionId, DateTime targetTimeout, string[] eprs, Binding binding)
+        public async Task<SessionBase> CreateBroker(SessionStartInfo startInfo, string sessionId, DateTime targetTimeout, string[] eprs, Binding binding)
         {
             return await this.CreateBrokerInternal(startInfo, sessionId, false, binding).ConfigureAwait(false);
         }
@@ -146,7 +141,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="attached">indicating whether it is attaching</param>
         /// <param name="binding">indicating the binding</param>
         /// <returns>returns the broker initialization result</returns>
-        private Task<SessionBase> CreateBrokerInternal(SessionStartInfo startInfo, int sessionId, bool attached, Binding binding)
+        private Task<SessionBase> CreateBrokerInternal(SessionStartInfo startInfo, string sessionId, bool attached, Binding binding)
         {
             InprocBrokerAdapter adapter = new InprocBrokerAdapter(startInfo, attached, startInfo.DebugModeEnabled, binding);
             BrokerInitializationResult result;

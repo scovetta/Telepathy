@@ -1,11 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="IAzureQueueManager.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     It is the interface of AzureQueueManager.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
     using System;
@@ -46,7 +41,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="jobId">job Id</param>
         /// <param name="jobRequeueCount">job re-queue count</param>
         /// <returns>response storage name</returns>
-        string Start(int jobId, int jobRequeueCount);
+        string Start(string jobId, int jobRequeueCount);
 
         /// <summary>
         /// Create request queue for specified Azure service.

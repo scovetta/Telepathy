@@ -1,14 +1,5 @@
-//--------------------------------------------------------------------------
-// <copyright file="ProductConstants.cs" company="Microsoft">
-//     Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-//
-// <summary>
-//     Common namespace for product wide conststants. Please use descriptive
-//     class and member names to reflect the type of constant and which component
-//     it refers to.
-// </summary>
-//--------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using System;
 using System.ComponentModel;

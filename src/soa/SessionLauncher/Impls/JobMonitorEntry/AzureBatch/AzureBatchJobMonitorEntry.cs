@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch
 {
     using System;
     using System.Collections.Generic;
@@ -25,7 +28,7 @@
         /// <summary>
         /// The session id
         /// </summary>
-        private readonly int sessionid;
+        private readonly string sessionid;
 
         /// <summary>
         /// Stores the context
@@ -86,7 +89,7 @@
         /// Initializes a new instance of the JobMonitorEntry class
         /// </summary>
         /// <param name="sessionid">indicating the session id</param>
-        public AzureBatchJobMonitorEntry(int sessionid)
+        public AzureBatchJobMonitorEntry(string sessionid)
         {
             this.sessionid = sessionid;
             this.batchClient = AzureBatchConfiguration.GetBatchClient();
@@ -103,7 +106,7 @@
         /// <summary>
         /// Gets the session id
         /// </summary>
-        public int SessionId
+        public string SessionId
         {
             get { return sessionid; }
         }

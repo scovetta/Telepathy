@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="BrokerInfo.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Stores broker info for broker manager
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 {
     using System;
@@ -40,7 +35,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <summary>
         /// Stores the session id
         /// </summary>
-        private int sessionId;
+        private string sessionId;
 
         /// <summary>
         /// Stores the initialization result
@@ -161,7 +156,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <summary>
         /// Gets the session id
         /// </summary>
-        public int SessionId
+        public string SessionId
         {
             get { return this.sessionId; }
         }

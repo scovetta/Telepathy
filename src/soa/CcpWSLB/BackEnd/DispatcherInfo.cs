@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="DispatcherInfo.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Stores the info of a dispatcher</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
     using System;
@@ -17,7 +14,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <summary>
         /// Stores the unique id
         /// </summary>
-        private int uniqueId;
+        private string uniqueId;
 
         /// <summary>
         /// Stores the capacity
@@ -60,7 +57,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="uniqueId">indicating the unique id of this dispatcher</param>
         /// <param name="capacity">indicating the capacity of this dispatcher</param>
         /// <param name="machineName">indicating the machine name</param>
-        protected DispatcherInfo(int uniqueId, int capacity, string machineName, string machineVirtualName, Scheduler.Session.Data.NodeLocation location)
+        protected DispatcherInfo(string uniqueId, int capacity, string machineName, string machineVirtualName, Scheduler.Session.Data.NodeLocation location)
         {
             this.uniqueId = uniqueId;
             this.capacity = capacity;
@@ -83,7 +80,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <summary>
         /// Gets the unique id
         /// </summary>
-        public int UniqueId
+        public string UniqueId
         {
             get { return this.uniqueId; }
         }

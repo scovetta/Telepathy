@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="JobMonitorEntry.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Entry class for HpcPack job monitor
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 #if HPCPACK
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack

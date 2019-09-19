@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="TraceServiceBehavior.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      The message inspector to do the tracing
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.CcpServiceHosting
 {
     using System;
@@ -41,7 +36,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
         /// </summary>
         private const string PropagateActivityValue = "propagateActivity";
 
-        private int sessionId;
+        private string sessionId;
 
         private bool enableSoaDebugger;
 
@@ -49,7 +44,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
         private CcpServiceHostWrapper hostWrapper;
 
-        public TraceServiceBehavior(int sessionId, CcpServiceHostWrapper hostWrapper)
+        public TraceServiceBehavior(string sessionId, CcpServiceHostWrapper hostWrapper)
         {
             this.sessionId = sessionId;
             this.hostWrapper = hostWrapper;

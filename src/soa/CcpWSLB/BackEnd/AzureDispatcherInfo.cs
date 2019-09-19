@@ -1,11 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="AzureDispatcherInfo.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     Dispatcher info for service task targets Azure nodes.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
@@ -38,7 +32,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="proxyServiceName">azure service name</param>
         /// <param name="nettcp">indicating the protocal</param>
         /// <param name="azureLoadBalancerAddress">the DNS name or internal IP for proxy node</param>
-        public AzureDispatcherInfo(int jobId, int requeueCount, int taskId, int capacity, string machineName, int firstCoreId, string networkPrefix, string proxyServiceName, bool nettcp, string azureLoadBalancerAddress)
+        public AzureDispatcherInfo(string jobId, int requeueCount, string taskId, int capacity, string machineName, int firstCoreId, string networkPrefix, string proxyServiceName, bool nettcp, string azureLoadBalancerAddress)
             : base(jobId, taskId, capacity, machineName, null, firstCoreId, networkPrefix, Scheduler.Session.Data.NodeLocation.Azure, false)
         {
             this.AzureServiceName = proxyServiceName;

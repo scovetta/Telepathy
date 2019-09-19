@@ -1,11 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="QueueAsyncResult.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     It is the AsyncResult consumed by AzureQueueClient operations.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {

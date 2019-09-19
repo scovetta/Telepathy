@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="SOAWebServiceRequestBuilder.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//       Builder class to generate SOA web service web request
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using System;
@@ -174,7 +169,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="sessionId">indicating the session id</param>
         /// <param name="credential">indicating the credential</param>
         /// <returns>returns the http web request to close session</returns>
-        public static HttpWebRequest GenerateCloseSessionWebRequest(string headnode, int sessionId, NetworkCredential credential)
+        public static HttpWebRequest GenerateCloseSessionWebRequest(string headnode, string sessionId, NetworkCredential credential)
         {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(String.Format(CloseSessionWebRequestUriFormat, headnode,
                 GetClusterName(headnode, credential), sessionId));

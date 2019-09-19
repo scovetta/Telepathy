@@ -1,4 +1,7 @@
-﻿using TelepathyCommon;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using TelepathyCommon;
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
@@ -80,7 +83,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             if (durable)
             {
                 sessionAllocateInfo = await RetryHelper<SessionAllocateInfoContract>.InvokeOperationAsync(
-                    async () => await this.client.AllocateDurableV5Async(startInfo.Data, this.endpointPrefix).ConfigureAwait(false),
+                    async () => await this.client.AllocateDurableAsync(startInfo.Data, this.endpointPrefix).ConfigureAwait(false),
                     (e, r) =>
                     {
                         var remainingTime = GetRemainingTime(timeout, startTime);
@@ -101,7 +104,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             else
             {
                 sessionAllocateInfo = await RetryHelper<SessionAllocateInfoContract>.InvokeOperationAsync(
-                    async () => await this.client.AllocateV5Async(startInfo.Data, this.endpointPrefix).ConfigureAwait(false),
+                    async () => await this.client.AllocateAsync(startInfo.Data, this.endpointPrefix).ConfigureAwait(false),
                     (e, r) =>
                     {
                         var remainingTime = GetRemainingTime(timeout, startTime);
@@ -175,7 +178,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             {
                 info = Utility.BuildSessionInfoFromDataContract(
                     await RetryHelper<SessionInfoContract>.InvokeOperationAsync(
-                            async () => await this.client.GetInfoV5Sp1Async(SessionLauncherClient.HttpsEndpointPrefix, attachInfo.SessionId, attachInfo.UseAad).ConfigureAwait(false),
+                            async () => await this.client.GetInfoAsync(SessionLauncherClient.HttpsEndpointPrefix, attachInfo.SessionId).ConfigureAwait(false),
                             (e, r) =>
                                 {
                                     var remainingTime = GetRemainingTime(timeout, startTime);
@@ -199,7 +202,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             {
                 info = Utility.BuildSessionInfoFromDataContract(
                     await RetryHelper<SessionInfoContract>.InvokeOperationAsync(
-                            async () => await this.client.GetInfoV5Sp1Async(SessionLauncherClient.EndpointPrefix, attachInfo.SessionId, attachInfo.UseAad).ConfigureAwait(false),
+                            async () => await this.client.GetInfoAsync(SessionLauncherClient.EndpointPrefix, attachInfo.SessionId).ConfigureAwait(false),
                             (e, r) =>
                                 {
                                     var remainingTime = GetRemainingTime(timeout, startTime);
@@ -224,18 +227,18 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             return info;
         }
 
-        public async Task FreeResource(SessionStartInfo startInfo, int sessionId)
+        public async Task FreeResource(SessionStartInfo startInfo, string sessionId)
         {
             try
             {
-                if (sessionId != 0)
+                if (!sessionId.Equals("0"))
                 {
                     RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
 
                     await RetryHelper<object>.InvokeOperationAsync(
                         async () =>
                             {
-                                await this.client.TerminateV5Async(sessionId).ConfigureAwait(false);
+                                await this.client.TerminateAsync(sessionId).ConfigureAwait(false);
                                 return null;
                             },
                         (e, r) =>

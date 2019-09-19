@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="BrokerStateManager.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Broker's state manager
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker
 {
     using System;
@@ -199,7 +194,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// </summary>
         /// <param name="unloadToSuspend">indicating whether the broker is unloading to suspended or not</param>
         /// <param name="sessionId">indicating the session id</param>
-        private static void ThrowBrokerUnloadingException(bool unloadToSuspend, int sessionId)
+        private static void ThrowBrokerUnloadingException(bool unloadToSuspend, string sessionId)
         {
             if (unloadToSuspend)
             {

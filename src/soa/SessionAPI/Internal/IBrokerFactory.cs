@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="IBrokerFactory.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Interface for broker factory
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using System;
@@ -26,7 +21,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="eprs">indicating the broker epr list</param>
         /// <param name="binding">indicting the binding</param>
         /// <returns>returns the session instance</returns>
-        Task<SessionBase> CreateBroker(SessionStartInfo startInfo, int sessionId, DateTime targetTimeout, string[] eprs, Binding binding);
+        Task<SessionBase> CreateBroker(SessionStartInfo startInfo, string sessionId, DateTime targetTimeout, string[] eprs, Binding binding);
 
         /// <summary>
         /// Attach to a broker, returns session instance

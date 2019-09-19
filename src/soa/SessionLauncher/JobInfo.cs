@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="JobInfo.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Stores job informations
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 #if HPCPACK
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 {

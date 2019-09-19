@@ -1,4 +1,7 @@
-﻿namespace CcpWSLB.UnitTest
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace CcpWSLB.UnitTest
 {
     using System;
     using System.Diagnostics;
@@ -7,7 +10,6 @@
     using System.Runtime.Serialization.Formatters.Binary;
     using System.ServiceModel.Channels;
     using System.Text;
-    using System.Threading;
     using System.Threading.Tasks;
     using System.Xml;
 
@@ -28,8 +30,6 @@
 
         private static readonly IFormatter binFormatterField = new BinaryFormatter();
 
-        private static string clientId;
-
         private static readonly byte[] largeMsg = new byte[64000];
 
         private static readonly string PrivatePathPrefix = "Private";
@@ -42,7 +42,7 @@
 
         private static readonly string ResponseQueueSuffix = "RESPONSES";
 
-        private static readonly int sessionId = 1;
+        private static readonly string sessionId = "1";
 
         private static readonly string shortMsg = "This is short message!";
 
@@ -50,6 +50,8 @@
             CloudConfigurationManager.GetSetting("StorageConnectionString");
 
         private static readonly string username = "Any";
+
+        private static string clientId;
 
         private CloudBlobContainer blobContainer;
 
@@ -119,7 +121,7 @@
                 Message.CreateMessage(MessageVersion.Soap12WSAddressing10, action, largeMsg),
                 null);
             this.sessionPersist.CloseFetchForTest();
-                        await Task.Delay(500);
+            await Task.Delay(500);
             this.sessionPersist.PutRequestAsync(request, null, 0);
             var dequeItem = (BrokerQueueItem)binFormatterField.Deserialize(
                 await AzureStorageTool.GetMsgBody(
@@ -172,29 +174,6 @@
         }
 
         [TestMethod]
-        public async Task RestoreRequestTest()
-        {
-            this.sessionPersist.Dispose();
-            await Task.Delay(500);
-            var message = new BrokerQueueItem(
-                null,
-                Message.CreateMessage(MessageVersion.Soap12WSAddressing10, action, shortMsg),
-                null);
-            message.Message.Headers.MessageId = new UniqueId(Guid.NewGuid());
-            CloudQueueMessage cloudMessage = new CloudQueueMessage(AzureStorageTool.PrepareMessage(message));
-            await this.privateQueue.AddMessageAsync(cloudMessage);
-            this.sessionPersist = new AzureQueuePersist(username, sessionId, clientId, storageConnectString);
-            this.sessionPersist.CloseFetchForTest();
-
-            // Casually request fetched by pre-fetcher.
-            var dequeItem = (BrokerQueueItem)binFormatterField.Deserialize(
-                await AzureStorageTool.GetMsgBody(
-                    this.blobContainer,
-                    (await this.requestQueue.GetMessageAsync()).AsBytes));
-            Assert.AreEqual(shortMsg, dequeItem.Message.GetBody<string>());
-        }
-
-        [TestMethod]
         public async Task PutResponseTest()
         {
             var response = new BrokerQueueItem(
@@ -217,6 +196,29 @@
                     await AzureStorageTool.GetMsgBody(this.blobContainer, list[0].Message));
             }
 
+            Assert.AreEqual(shortMsg, dequeItem.Message.GetBody<string>());
+        }
+
+        [TestMethod]
+        public async Task RestoreRequestTest()
+        {
+            this.sessionPersist.Dispose();
+            await Task.Delay(500);
+            var message = new BrokerQueueItem(
+                null,
+                Message.CreateMessage(MessageVersion.Soap12WSAddressing10, action, shortMsg),
+                null);
+            message.Message.Headers.MessageId = new UniqueId(Guid.NewGuid());
+            var cloudMessage = new CloudQueueMessage(AzureStorageTool.PrepareMessage(message));
+            await this.privateQueue.AddMessageAsync(cloudMessage);
+            this.sessionPersist = new AzureQueuePersist(username, sessionId, clientId, storageConnectString);
+            this.sessionPersist.CloseFetchForTest();
+
+            // Casually request fetched by pre-fetcher.
+            var dequeItem = (BrokerQueueItem)binFormatterField.Deserialize(
+                await AzureStorageTool.GetMsgBody(
+                    this.blobContainer,
+                    (await this.requestQueue.GetMessageAsync()).AsBytes));
             Assert.AreEqual(shortMsg, dequeItem.Message.GetBody<string>());
         }
 
@@ -251,13 +253,13 @@
             Assert.AreEqual(shortMsg, persistMessage.Message.GetBody<string>());
         }
 
-        private static string MakePrivatePath(int sessionId, string clientId)
+        private static string MakePrivatePath(string sessionId, string clientId)
         {
             return (PrivatePathPrefix + sessionId.ToString(CultureInfo.InvariantCulture) + QueueNameFieldDelimeter
                     + clientId).ToLower();
         }
 
-        private static string MakeQueuePath(int sessionId, string clientId, bool isRequest)
+        private static string MakeQueuePath(string sessionId, string clientId, bool isRequest)
         {
             if (isRequest)
             {
@@ -269,7 +271,7 @@
                     + clientId + QueueNameFieldDelimeter + ResponseQueueSuffix).ToLower();
         }
 
-        private static string MakeTablePath(int sessionId, string clientId)
+        private static string MakeTablePath(string sessionId, string clientId)
         {
             var sb = new StringBuilder();
             foreach (var str in clientId.Split('-'))

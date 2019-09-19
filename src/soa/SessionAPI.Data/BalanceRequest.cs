@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.Data
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.Scheduler.Session.Data
 {
     using System;
     using System.Collections.Generic;
@@ -12,6 +15,6 @@
         public int AllowedCoreCount { get; set; }
 
         [DataMember]
-        public IList<int> TaskIds { get; set; }
+        public IList<string> TaskIds { get; set; }
     }
 }

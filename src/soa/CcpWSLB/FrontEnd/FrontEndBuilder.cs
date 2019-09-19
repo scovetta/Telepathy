@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="FrontEndBuilder.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      FrontEnd Builder
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 {
     using System;
@@ -690,7 +685,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         /// <param name="postfix">indicate the postfix</param>
         /// <param name="needFqdn">indicate if need FQDN</param>
         /// <returns>uri with session id</returns>
-        private static Uri ApplySessionId(Uri baseUri, int sessionId, string postfix, bool needFqdn)
+        private static Uri ApplySessionId(Uri baseUri, string sessionId, string postfix, bool needFqdn)
         {
             UriBuilder builder = new UriBuilder(baseUri);
             if (baseUri.IsLoopback)

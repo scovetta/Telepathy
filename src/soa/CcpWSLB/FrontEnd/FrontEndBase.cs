@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="FrontEndBase.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Base class for all frontends
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 {
     using Microsoft.Hpc.Scheduler.Session;
@@ -149,7 +144,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             get { return this.clientManager; }
         }
 
-        protected int SessionId
+        protected string SessionId
         {
             get { return this.sharedData.BrokerInfo.SessionId; }
         }

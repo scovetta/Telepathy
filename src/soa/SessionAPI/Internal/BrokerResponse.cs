@@ -1,11 +1,5 @@
-//------------------------------------------------------------------------------
-// <copyright file="BrokerResponse.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Wraps response messages to provide access to data, faults and user data
-// </summary>
-//------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session
 {

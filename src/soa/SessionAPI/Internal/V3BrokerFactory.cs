@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="V3BrokerFactory.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Broker factory for v3
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using Microsoft.Hpc.Scheduler.Session.Interface;
@@ -48,7 +43,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="epr">output selected epr</param>
         /// <param name="binding">indicting the binding</param>
         /// <returns>returns the session information</returns>
-        public async Task<SessionBase> CreateBroker(SessionStartInfo startInfo, int sessionId, DateTime targetTimeout, string[] eprs, Binding binding)
+        public async Task<SessionBase> CreateBroker(SessionStartInfo startInfo, string sessionId, DateTime targetTimeout, string[] eprs, Binding binding)
         {
             Exception innerException = null;
             IEnumerable<string> endpoints = eprs;

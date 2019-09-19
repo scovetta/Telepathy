@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="Utility.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Extension methods of IConnectionInfo
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session
 {
@@ -14,9 +8,7 @@ namespace Microsoft.Hpc.Scheduler.Session
     using System.Diagnostics;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-
-    using AzureStorageBinding.Table.Binding;
-
+    
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.ServiceBroker;
 
@@ -191,6 +183,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                 }
                 return binding;
             }
+#if AZURE_STORAGE_BINDING
             else if ((info.TransportScheme & TransportScheme.AzureStorage) == TransportScheme.AzureStorage)
             {
                 if (string.IsNullOrEmpty(info.AzureStorageConnectionString))
@@ -213,6 +206,7 @@ namespace Microsoft.Hpc.Scheduler.Session
 
                 return new TableTransportBinding() { ConnectionString = info.AzureStorageConnectionString, TargetPartitionKey = partitionKey };
             }
+#endif
             else if ((info.TransportScheme & TransportScheme.Custom) == TransportScheme.Custom)
             {
                 return info.DefaultSessionLauncherNetTcpBinding();

@@ -1,9 +1,6 @@
-//-----------------------------------------------------------------------
-// <copyright file="DisposableObject.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Provide base class for all disposable objects</summary>
-//-----------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Common
 {
     using System;

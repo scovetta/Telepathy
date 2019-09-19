@@ -1,9 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="SoaHelper.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Utilities for both on-premise and azure environment.</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
@@ -675,22 +671,22 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             return string.Format(BrokerWorkerAadAddressFormat, NetTcpPrefix, hostname, BrokerWorkerPort(IsSchedulerOnAzure(hostname)));
         }
 
-        public static string GetBrokerControllerAddress(int sessionId)
+        public static string GetBrokerControllerAddress(string sessionId)
         {
             return GetBrokerControllerAddress(LocalHost, sessionId);
         }
 
-        public static string GetBrokerControllerAddress(string hostname, int sessionId)
+        public static string GetBrokerControllerAddress(string hostname, string sessionId)
         {
             return string.Format(BrokerControllerAddressFormat, hostname, BrokerWorkerPort(IsSchedulerOnAzure(hostname)), sessionId);
         }
 
-        public static string GetBrokerGetResponseAddress(int sessionId)
+        public static string GetBrokerGetResponseAddress(string sessionId)
         {
             return GetBrokerGetResponseAddress(LocalHost, sessionId);
         }
 
-        public static string GetBrokerGetResponseAddress(string hostname, int sessionId)
+        public static string GetBrokerGetResponseAddress(string hostname, string sessionId)
         {
             return string.Format(BrokerGetResponseAddressFormat, hostname, BrokerWorkerPort(IsSchedulerOnAzure(hostname)), sessionId);
         }
@@ -938,15 +934,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="sessionId">session Id</param>
         /// <param name="requeueCount">job requeue count</param>
         /// <returns>response storage name</returns>
-        public static string GetResponseStorageName(string clusterId, int sessionId, int requeueCount)
+        public static string GetResponseStorageName(string clusterId, string sessionId, int requeueCount)
         {
-            if (sessionId < TelepathyConstants.StandaloneSessionId)
+            if (sessionId.Equals(TelepathyConstants.StandaloneSessionId))
             {
-                throw new ArgumentOutOfRangeException(nameof(sessionId));
-            }
-            else if (sessionId == TelepathyConstants.StandaloneSessionId)
-            {
-                sessionId = 0;
+                sessionId = "0";
             }
 
             return string.Format("{0}-{1}-{2}", GetResponseStoragePrefix(clusterId), sessionId, requeueCount).ToLowerInvariant();
@@ -958,15 +950,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="clusterHash">the hash code from cluster id</param>
         /// <param name="sessionId">the session id</param>
         /// <returns></returns>
-        public static string GetRequestStorageName(int clusterHash, int sessionId)
+        public static string GetRequestStorageName(int clusterHash, string sessionId)
         {
-            if (sessionId < TelepathyConstants.StandaloneSessionId)
+            if (sessionId.Equals(TelepathyConstants.StandaloneSessionId))
             {
-                throw new ArgumentOutOfRangeException(nameof(sessionId));
-            }
-            else if (sessionId == TelepathyConstants.StandaloneSessionId)
-            {
-                sessionId = 0;
+                sessionId = "0";
             }
 
             uint uClusterHash = Convert.ToUInt32((long)clusterHash - int.MinValue);
@@ -979,36 +967,28 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="clusterHash">the hash code from cluster id</param>
         /// <param name="sessionId">the session id</param>
         /// <returns></returns>
-        public static string GetResponseStorageName(int clusterHash, int sessionId)
+        public static string GetResponseStorageName(int clusterHash, string sessionId)
         {
             uint uClusterHash = Convert.ToUInt32((long)clusterHash - int.MinValue);
             return string.Format("hpcsoa-{0}-{1}-response", uClusterHash, sessionId);
         }
 
-        public static string GetControllerRequestStorageName(int clusterHash, int sessionId)
+        public static string GetControllerRequestStorageName(int clusterHash, string sessionId)
         {
-            if (sessionId < TelepathyConstants.StandaloneSessionId)
+            if (sessionId.Equals(TelepathyConstants.StandaloneSessionId))
             {
-                throw new ArgumentOutOfRangeException(nameof(sessionId));
-            }
-            else if (sessionId == TelepathyConstants.StandaloneSessionId)
-            {
-                sessionId = 0;
+                sessionId = "0";
             }
 
             uint uClusterHash = Convert.ToUInt32((long)clusterHash - int.MinValue);
             return $"hpcsoa-{uClusterHash}-{sessionId}-controller-request";
         }
 
-        public static string GetControllerResponseStorageName(int clusterHash, int sessionId)
+        public static string GetControllerResponseStorageName(int clusterHash, string sessionId)
         {
-            if (sessionId < TelepathyConstants.StandaloneSessionId)
+            if (sessionId.Equals(TelepathyConstants.StandaloneSessionId))
             {
-                throw new ArgumentOutOfRangeException(nameof(sessionId));
-            }
-            else if (sessionId == TelepathyConstants.StandaloneSessionId)
-            {
-                sessionId = 0;
+                sessionId = "0";
             }
 
             uint uClusterHash = Convert.ToUInt32((long)clusterHash - int.MinValue);
@@ -1022,15 +1002,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="sessionId">the session id</param>
         /// <param name="sessionHash">the hash code from session object</param>
         /// <returns></returns>
-        public static string GetResponseStorageName(int clusterHash, int sessionId, int sessionHash)
+        public static string GetResponseStorageName(int clusterHash, string sessionId, int sessionHash)
         {
-            if (sessionId < TelepathyConstants.StandaloneSessionId)
+            if (sessionId.Equals(TelepathyConstants.StandaloneSessionId))
             {
-                throw new ArgumentOutOfRangeException(nameof(sessionId));
-            }
-            else if (sessionId == TelepathyConstants.StandaloneSessionId)
-            {
-                sessionId = 0;
+                sessionId = "0";
             }
 
             uint uClusterHash = Convert.ToUInt32((long)clusterHash - int.MinValue);

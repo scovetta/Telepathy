@@ -1,11 +1,5 @@
-//------------------------------------------------------------------------------
-// <copyright file="Session.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      The implementation of the Session Class
-// </summary>
-//------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using TelepathyCommon.HpcContext;
 using TelepathyCommon.HpcContext.Extensions;
@@ -106,7 +100,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="headNode">Headnode name</param>
         /// <param name="sessionId">The ID of the session to be closed</param>
         /// <param name="isAadUser">If the session is belong to a AAD user</param>
-        public static void CloseSession(string headNode, int sessionId, bool isAadUser)
+        public static void CloseSession(string headNode, string sessionId, bool isAadUser)
         {
             CloseSession(headNode, sessionId, null, isAadUser);
         }
@@ -118,7 +112,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="sessionId">The ID of the session to be closed</param>
         /// <param name="binding">indicting the binding</param>
         /// <param name="isAadUser">If the session is belong to a AAD user</param>
-        public static void CloseSession(string headNode, int sessionId, Binding binding, bool isAadUser)
+        public static void CloseSession(string headNode, string sessionId, Binding binding, bool isAadUser)
         {
             CloseSessionAsync(headNode, sessionId, binding, isAadUser, CancellationToken.None).GetAwaiter().GetResult();
         }
@@ -131,7 +125,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="binding">indicting the binding</param>
         /// <param name="isAadUser">If the session is belong to a AAD user</param>
         /// <param name="token">The cancellation token.</param>
-        public static async Task CloseSessionAsync(string headNode, int sessionId, Binding binding, bool isAadUser, CancellationToken token)
+        public static async Task CloseSessionAsync(string headNode, string sessionId, Binding binding, bool isAadUser, CancellationToken token)
         {
             Utility.ThrowIfEmpty(headNode, "headNode");
 
@@ -149,13 +143,13 @@ namespace Microsoft.Hpc.Scheduler.Session
                 SessionInfo info = null;
                 if (binding is NetTcpBinding)
                 {
-                    info = Utility.BuildSessionInfoFromDataContract(await client.GetInfoV5Async(SessionLauncherClient.EndpointPrefix, sessionId).ConfigureAwait(false));
+                    info = Utility.BuildSessionInfoFromDataContract(await client.GetInfoAsync(SessionLauncherClient.EndpointPrefix, sessionId).ConfigureAwait(false));
                 }
 
 #if !net40
                 else if (binding is BasicHttpBinding || binding is NetHttpBinding || binding is NetHttpsBinding)
                 {
-                    info = Utility.BuildSessionInfoFromDataContract(await client.GetInfoV5Async(SessionLauncherClient.HttpsEndpointPrefix, sessionId).ConfigureAwait(false));
+                    info = Utility.BuildSessionInfoFromDataContract(await client.GetInfoAsync(SessionLauncherClient.HttpsEndpointPrefix, sessionId).ConfigureAwait(false));
                 }
 
 #endif

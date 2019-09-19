@@ -1,4 +1,7 @@
-﻿namespace TestClient
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace TestClient
 {
     using System;
     using System.Collections.Generic;
@@ -362,9 +365,9 @@
             set { efficiencyFromFirstRequestExcludeSessionEnd = value; }
         }
 
-        private int sessionId;
+        private string sessionId;
 
-        public int SessionId
+        public string SessionId
         {
             get { return sessionId; }
             set { sessionId = value; }

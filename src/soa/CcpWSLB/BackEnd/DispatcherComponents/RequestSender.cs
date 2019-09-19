@@ -1,11 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="RequestSender.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     This is an abstract class for sending requests.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
     using System;
@@ -69,7 +64,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <summary>
         /// Gets or sets the task Id.
         /// </summary>
-        protected int TaskId
+        protected string TaskId
         {
             get;
             set;

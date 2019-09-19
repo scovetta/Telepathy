@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter
 {
     public static class CloudQueueConstants
     {
@@ -10,7 +13,7 @@
 
         private const string BrokerWorkerControllerResponseQueueNamePrefix = "brokerworkerctrlres";
 
-        public static string GetBrokerWorkerControllerRequestQueueName(int sessionId) => BrokerWorkerControllerRequestQueueNamePrefix + $"-{sessionId}";
-        public static string GetBrokerWorkerControllerResponseQueueName(int sessionId) => BrokerWorkerControllerResponseQueueNamePrefix + $"-{sessionId}";
+        public static string GetBrokerWorkerControllerRequestQueueName(string sessionId) => BrokerWorkerControllerRequestQueueNamePrefix + $"-{sessionId}";
+        public static string GetBrokerWorkerControllerResponseQueueName(string sessionId) => BrokerWorkerControllerResponseQueueNamePrefix + $"-{sessionId}";
     }
 }

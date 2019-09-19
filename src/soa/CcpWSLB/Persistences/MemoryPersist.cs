@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="MemoryPersist.cs" company="Microsoft">
-//      Copyright (C)  Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//       in-memory message storage provider.
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     using System;
@@ -54,7 +49,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
         private string userNameField;
 
         /// <summary>the session id</summary>
-        private int sessionIdField;
+        private string sessionIdField;
 
         /// <summary>the client id</summary>
         private string clientIdField;
@@ -70,7 +65,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
         /// <param name="userName">the user name</param>
         /// <param name="sessionId">the session id.</param>
         /// <param name="clientId">the client id.</param>
-        internal MemoryPersist(string userName, int sessionId, string clientId)
+        internal MemoryPersist(string userName, string sessionId, string clientId)
         {
             this.EOMFlag = false;
             this.userNameField = userName;

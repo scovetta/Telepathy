@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch
 {
     using System;
     using System.Collections.Generic;
@@ -8,9 +11,9 @@
 
     internal static class AzureBatchSessionIdGenerator
     {
-        public static int GenerateSessionId()
+        public static string GenerateSessionId()
         {
-            return (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            return DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
         }
     }
 }
