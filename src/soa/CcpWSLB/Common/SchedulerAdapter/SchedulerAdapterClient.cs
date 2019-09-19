@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.ServiceBroker.Common.SchedulerAdapter
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.ServiceBroker.Common.SchedulerAdapter
 {
     using System.Collections.Generic;
     using System.ServiceModel;

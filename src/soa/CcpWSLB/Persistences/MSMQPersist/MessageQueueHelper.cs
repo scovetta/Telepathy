@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="MessageQueueHelper.cs" company="Microsoft">
-//     Copyright (C) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>the MSMQ helper class.</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
 {
     using System;

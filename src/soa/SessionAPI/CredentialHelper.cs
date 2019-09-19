@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="CredentialHelper.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Access window credential set to persist/fetech user's cred
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using System;
 using System.ComponentModel;

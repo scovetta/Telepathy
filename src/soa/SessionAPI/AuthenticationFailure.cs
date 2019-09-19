@@ -1,9 +1,6 @@
-//-----------------------------------------------------------------------
-// <copyright file="AuthenticationFailure.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Fault code for authentication failure</summary>
-//-----------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session
 {
     using System;

@@ -1,4 +1,7 @@
-﻿namespace SessionAPI.UnitTest
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace SessionAPI.UnitTest
 {
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Interface;

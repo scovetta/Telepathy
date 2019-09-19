@@ -1,4 +1,7 @@
-﻿namespace TestClient
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace TestClient
 {
     using System.Collections.Specialized;
     using System.Text.RegularExpressions;

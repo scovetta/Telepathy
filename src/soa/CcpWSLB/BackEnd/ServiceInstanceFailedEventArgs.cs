@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="ServiceInstanceFailedEventArgs.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Service instance failed event args
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {

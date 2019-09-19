@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="TraceHelper.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      the helper functions for the trace.
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.RuntimeTrace
 {
     using System;

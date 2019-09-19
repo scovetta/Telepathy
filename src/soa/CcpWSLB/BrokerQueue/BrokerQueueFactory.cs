@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="BrokerQueueFactory.cs" company="Microsoft">
-//      Copyright (C)  Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      the factory class to manager the broker queues.
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     using System;

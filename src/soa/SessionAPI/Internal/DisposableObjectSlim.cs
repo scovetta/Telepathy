@@ -1,11 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="DisposableObjectSlim.cs" company="Microsoft">
-//     Copyright (C) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Provides the common base class for Disposable objects which
-//   don't need a finalizer
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Common
 {
     using System;

@@ -1,11 +1,6 @@
-//------------------------------------------------------------------------------
-// <copyright file="ISchedulerNotify.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      The event handler for the job and task events
-// </summary>
-//------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Interface
 {
     using System;

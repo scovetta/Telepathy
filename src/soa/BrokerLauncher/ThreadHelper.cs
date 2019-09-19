@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="ThreadHelper.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Provide root entry for thread pool thread and async call back thread</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 {
     using System;

@@ -1,9 +1,6 @@
-//-----------------------------------------------------------------------
-// <copyright file="BrokerTrace.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Broker tracing helper class</summary>
-//-----------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker
 {
     using Microsoft.Hpc.RuntimeTrace;

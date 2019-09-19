@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------------------
-// <copyright file="BrokerQueueAsyncToken.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>the async token for the brokerqueue.</summary>
-//-----------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     using System;

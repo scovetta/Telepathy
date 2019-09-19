@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="SoaDiagTraceHelper.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Utility class providing diag trace enabled/disabled flag.
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker
 {
     using Microsoft.Hpc.RuntimeTrace;

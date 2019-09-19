@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------------------
-// <copyright file="IMockServiceContract.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Mock object for service contract</summary>
-//-----------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.SvcBroker.UnitTest.Mock
 {
     using System;

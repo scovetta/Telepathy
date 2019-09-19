@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="DiagTraceHelper.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Provider util methods to write trace for SOA diag system
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.Diagnostics
 {
     using System;

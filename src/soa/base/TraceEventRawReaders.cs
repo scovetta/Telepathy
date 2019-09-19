@@ -1,11 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="TraceEventRawReaders.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//   Provide raw reader to read data from event
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.Diagnostics
 {
     using System;

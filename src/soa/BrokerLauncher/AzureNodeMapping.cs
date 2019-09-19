@@ -1,10 +1,5 @@
-//------------------------------------------------------------------------------
-// <copyright file="AzureNodeMapping.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <owner current="true" primary="true">tianchim</owner>
-// <securityReview name="colinw" date="9-15-10"/>
-//------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Azure.Common
 {

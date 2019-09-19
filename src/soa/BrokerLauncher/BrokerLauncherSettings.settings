@@ -1,5 +1,8 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher" GeneratedClassName="BrokerLauncherSettings">
+
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)"
+              GeneratedClassNamespace="Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher"
+              GeneratedClassName="BrokerLauncherSettings">
   <Profiles />
   <Settings>
     <Setting Name="MaxConcurrentSession" Type="System.Int32" Scope="User">
@@ -15,10 +18,12 @@
       <Value Profile="(Default)">C:\services\registration</Value>
     </Setting>
     <Setting Name="SvcHostList" Type="System.Collections.Specialized.StringCollection" Scope="User">
-      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;string&gt;127.0.0.1&lt;/string&gt;
-&lt;/ArrayOfString&gt;</Value>
+      <Value Profile="(Default)">
+        &lt;?xml version="1.0" encoding="utf-16"?&gt;
+        &lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+        &lt;string&gt;127.0.0.1&lt;/string&gt;
+        &lt;/ArrayOfString&gt;
+      </Value>
     </Setting>
     <Setting Name="ClusterName" Type="System.String" Scope="User">
       <Value Profile="(Default)">Telepathy</Value>

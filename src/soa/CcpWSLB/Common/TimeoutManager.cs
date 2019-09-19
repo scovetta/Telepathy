@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="TimeoutManager.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Provide management to a timeout</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker
 {
     using System;

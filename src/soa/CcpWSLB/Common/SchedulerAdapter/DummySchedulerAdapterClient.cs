@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.ServiceBroker.Common
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.ServiceBroker.Common
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

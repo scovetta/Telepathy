@@ -1,4 +1,7 @@
-﻿namespace TelepathyCommon
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace TelepathyCommon
 {
     /// <summary>
     ///     Please only put the constants that need to be accessed by more than one services, setup or client here.

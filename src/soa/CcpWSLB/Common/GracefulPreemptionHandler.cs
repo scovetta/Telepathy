@@ -1,13 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="GracefulPreemptionHandler.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-///     This class handles the graceful preemption requests from scheduler.
-///     It reads requests from scheduler and co-works with the ServiceJobMonitor and DispatcherManager
-///     to release resources or cancel job.
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker.Common
 {

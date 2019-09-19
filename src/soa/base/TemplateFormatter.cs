@@ -1,12 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="TemplateFormatter.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//   An abstract class that the custom generated template formatter derives
-//   from to format ETW user payload into a string
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.Diagnostics
 {
     using System;

@@ -1,4 +1,7 @@
-﻿using System.Threading;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System.Threading;
 
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {

@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="MemoryPersist.cs" company="Microsoft">
-//      Copyright (C)  Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//       in-memory message storage provider.
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     using System;

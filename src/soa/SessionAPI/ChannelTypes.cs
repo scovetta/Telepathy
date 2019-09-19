@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="Utility.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      SOA channel types
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session
 {
     /// <summary>

@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="GetNextRequestState.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>It is used to trigger the GetNextRequest method.</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
     using System.Diagnostics;

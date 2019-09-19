@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.SOASample.FirstSOAService
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.SOASample.FirstSOAService
 {
     using System;
 

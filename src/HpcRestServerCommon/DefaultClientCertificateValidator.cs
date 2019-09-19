@@ -1,4 +1,7 @@
-﻿using TelepathyCommon.HpcContext;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using TelepathyCommon.HpcContext;
 using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
 
 namespace Microsoft.Hpc

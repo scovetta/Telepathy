@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="IController.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//       The interface for FireAndRecollect to send the EndOfMessage signal
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session
 {

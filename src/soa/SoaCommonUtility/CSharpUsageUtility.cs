@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="CSharpUsageUtility.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      C# Usage Utility functions
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session.Utility
 {

@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------------------
-// <copyright file="BrokerQueueConstants.cs" company="Microsoft">
-//     Copyright(C) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>the definition of the constants for the broker queue.</summary>
-//-----------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     /// <summary>

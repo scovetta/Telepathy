@@ -1,4 +1,7 @@
-﻿namespace TelepathyCommon.HpcContext.SoaContext
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace TelepathyCommon.HpcContext.SoaContext
 {
     using System.Threading;
 

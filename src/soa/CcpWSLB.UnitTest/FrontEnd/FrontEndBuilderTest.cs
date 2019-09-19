@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="FrontEndBuilderTest.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Unit Test for FrontEndBuilder
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.SvcBroker.UnitTest.FrontEnd
 {
     using System;

@@ -1,11 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="WssDispatcherInfo.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     Dispatcher info for service task targets Java WSS4J nodes.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {

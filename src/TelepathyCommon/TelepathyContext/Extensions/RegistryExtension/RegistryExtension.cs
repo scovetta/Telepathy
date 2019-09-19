@@ -1,4 +1,7 @@
-﻿namespace TelepathyCommon.HpcContext.Extensions.RegistryExtension
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace TelepathyCommon.HpcContext.Extensions.RegistryExtension
 {
     using System.Threading;
     using System.Threading.Tasks;

@@ -1,4 +1,7 @@
-﻿namespace CcpWSLB.UnitTest
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace CcpWSLB.UnitTest
 {
     using System;
     using System.Diagnostics;

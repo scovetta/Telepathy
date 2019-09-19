@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.ServiceContainer
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.Scheduler.Session.ServiceContainer
 {
     using System;
 

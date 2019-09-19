@@ -1,12 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="WssRequestSender.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     This is an implementation of RequestSender for sending requests
-//     to Java WSS4J service hosts.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
     using Microsoft.Hpc.ServiceBroker.Common;

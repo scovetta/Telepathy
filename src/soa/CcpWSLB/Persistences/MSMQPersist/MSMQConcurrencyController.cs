@@ -1,9 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="MSMQConcurrencyController.cs" company="Microsoft">
-//     Copyright (C) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>the implementation of MSMQ concurrency controller.</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
 {

@@ -1,4 +1,7 @@
-﻿#if HPCPACK
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+#if HPCPACK
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack
 {
     using System;

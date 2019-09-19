@@ -1,12 +1,6 @@
-//------------------------------------------------------------------------------
-// <copyright file="FilePermission.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      A utility class that implements some common functionalities related to
-//      file permission check
-// </summary>
-//------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc
 {
     using System;

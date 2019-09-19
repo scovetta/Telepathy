@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.CcpServiceHosting
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.CcpServiceHosting
 {
     using System;
 

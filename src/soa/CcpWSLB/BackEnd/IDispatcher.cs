@@ -1,11 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="IDispatcher.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     It is interface of dispatcher.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
     using Microsoft.Hpc.ServiceBroker.BrokerStorage;

@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="CommonSchedulerHelper.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Saves the broker node(s) associated to a sessions in job env vars
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
 {
     using System;

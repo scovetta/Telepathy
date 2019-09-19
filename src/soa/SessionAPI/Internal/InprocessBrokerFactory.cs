@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="InprocessBrokerFactory.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Factory to create inprocess broker
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using Microsoft.Hpc.Scheduler.Session.Interface;

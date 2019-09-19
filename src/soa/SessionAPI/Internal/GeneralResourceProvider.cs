@@ -1,4 +1,7 @@
-﻿using TelepathyCommon;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using TelepathyCommon;
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {

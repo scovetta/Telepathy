@@ -1,9 +1,5 @@
-//-----------------------------------------------------------------------
-// <copyright file="AzureRoleHelper.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Utilities in Azure role environment</summary>
-//-----------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {

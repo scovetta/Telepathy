@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="FrontEndBuilder.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      FrontEnd Builder
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 {
     using System;

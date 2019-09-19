@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.ServiceBroker.Common.ThreadHelper
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.ServiceBroker.Common.ThreadHelper
 {
     using System;
     using System.Diagnostics;

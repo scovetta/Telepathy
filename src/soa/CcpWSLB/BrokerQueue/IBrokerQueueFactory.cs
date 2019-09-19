@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="IBrokerQueueFactory.cs" company="Microsoft">
-//      Copyright (C)  Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Provides an interface defining opeartions of BrokerQueueFactory
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     using System.ServiceModel.Channels;

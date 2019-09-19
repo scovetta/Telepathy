@@ -1,12 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="MessageSender.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     It sends response messages to response queue and delete request
-//     messages from request queue.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {

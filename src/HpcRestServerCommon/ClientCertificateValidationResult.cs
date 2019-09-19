@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc
 {
     using System.Collections.Generic;
     using System.Linq;

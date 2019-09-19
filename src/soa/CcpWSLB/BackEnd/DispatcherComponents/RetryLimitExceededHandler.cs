@@ -1,11 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="RetryLimitExceededHandler.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     Handle retry limit exceeded 
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {

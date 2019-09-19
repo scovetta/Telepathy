@@ -1,11 +1,6 @@
-//-----------------------------------------------------------------------
-// <copyright file="EchoSvc.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     Implementation of the echo service.
-// </summary>
-//-----------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.EchoSvcLib
 {
     using System;

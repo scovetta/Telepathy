@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="FrontEndFaultMessage.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Generate fault message for frontend</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 {
     using System;

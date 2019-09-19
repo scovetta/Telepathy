@@ -1,9 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="PutResponsesSuccessEventArgs.cs" company="Microsoft">
-//     Copyright(C) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>define the event for putting responses into broker queue succefully.</summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {

@@ -1,14 +1,5 @@
-//-------------------------------------------------------------------------------------------------
-// <copyright file="NetTcpPortSharingService.cs" company="Microsoft">
-//     Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// 
-// <summary>
-//     Model for the WCF port sharing service. We need the model so we 
-//     can manipulate the service configuration in order to run app-integrated
-//     jobs on the cluster
-// </summary>
-//-------------------------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
 {

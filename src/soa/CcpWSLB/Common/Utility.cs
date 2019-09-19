@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="Utility.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Broker helper class
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.Common
 {
     using Microsoft.Hpc.Scheduler.Session.Internal;
