@@ -214,6 +214,17 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             {
                 try
                 {
+                    this.privateQueueField = AzureStorageTool.CreateQueueAsync(
+                        this.storageConnectString,
+                        sessionId.ToString(),
+                        privateQueueName,
+                        clientId,
+                        true,
+                        this.FormatRequestQueueLabel()).GetAwaiter().GetResult();
+
+                    this.blobContainer = AzureStorageTool
+                        .CreateBlobContainerAsync(this.storageConnectString, requestQueueName).GetAwaiter().GetResult();
+
                     BrokerTracing.TraceInfo(
                         "[AzureQueuePersist] .AzureQueuePersist: creating message requests queue {0}",
                         requestQueueName);
@@ -222,14 +233,6 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                         this.storageConnectString,
                         sessionId.ToString(),
                         requestQueueName,
-                        clientId,
-                        true,
-                        this.FormatRequestQueueLabel()).GetAwaiter().GetResult();
-
-                    this.privateQueueField = AzureStorageTool.CreateQueueAsync(
-                        this.storageConnectString,
-                        sessionId.ToString(),
-                        privateQueueName,
                         clientId,
                         true,
                         this.FormatRequestQueueLabel()).GetAwaiter().GetResult();
@@ -245,8 +248,6 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                         false,
                         "0").GetAwaiter().GetResult();
 
-                    this.blobContainer = AzureStorageTool
-                        .CreateBlobContainerAsync(this.storageConnectString, requestQueueName).GetAwaiter().GetResult();
                     this.persistVersion = BrokerQueueItem.PersistVersion;
 
                     BrokerTracing.TraceVerbose(
@@ -282,13 +283,17 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                 this.requestQueueField = AzureStorageTool.GetQueue(storageConnectString, requestQueueName).GetAwaiter()
                     .GetResult();
                 this.responseTableField = AzureStorageTool.GetTable(storageConnectString, responseTableName);
-                //TODO go through the private queue and resend responses not received in response table.
                 this.privateQueueField = AzureStorageTool.GetQueue(storageConnectString, privateQueueName).GetAwaiter()
                     .GetResult();
                 this.blobContainer = AzureStorageTool
                     .CreateBlobContainerAsync(this.storageConnectString, requestQueueName).GetAwaiter().GetResult();
                 try
                 {
+                    AzureStorageTool.RestoreRequest(
+                        this.requestQueueField,
+                        this.privateQueueField,
+                        this.responseTableField,
+                        this.blobContainer).GetAwaiter().GetResult();
                     this.requestsCountField = this.requestQueueField.ApproximateMessageCount ?? 0;
                     this.responsesCountField = AzureStorageTool
                         .CountTableEntity(storageConnectString, responseTableName).GetAwaiter().GetResult();
@@ -307,7 +312,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                 }
             }
 
-            // Init transaction for persisting requests
+            // Init fetchers
             BrokerTracing.TraceVerbose("[AzureQueuePersist] .AzureQueuePersist: AzureQueue Transactions Enabled.");
             this.requestFetcher = new AzureQueueRequestFetcher(
                 this.requestQueueField,
@@ -519,51 +524,6 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             }
 
             BrokerTracing.TraceVerbose("[AzureQueuePersisit] .GetRequestAsync: Get request come in.");
-            if (!this.isCreateRequestTask)
-            {
-                {
-                    lock (this.requestTaskLock)
-                    {
-                        if (!this.isCreateRequestTask)
-                        {
-                            this.isCreateRequestTask = true;
-                            Task.Run(
-                                async () =>
-                                    {
-                                        while (true)
-                                        {
-                                            if (this.tokenSource.Token.IsCancellationRequested)
-                                            {
-                                                return;
-                                            }
-
-                                            int time;
-                                            int uncommitted;
-                                            IEnumerable<BrokerQueueItem> responses;
-                                            (time, uncommitted, responses) = await AzureStorageTool.CheckRequestQueue(
-                                                   this.requestQueueField,
-                                                   this.privateQueueField,
-                                                   this.responseTableField,
-                                                   this.blobContainer,
-                                                   this.requestRetryDic);
-                                            if (uncommitted > 0)
-                                            {
-                                                Interlocked.Add(ref this.uncommittedRequestsCountField, uncommitted);
-                                                this.CommitRequest();
-                                            }
-
-                                            if (responses.ToArray().Length > 0)
-                                            {
-                                                this.PutResponsesAsync(responses, null, null);
-                                            }
-
-                                            await Task.Delay(time);
-                                        }
-                                    });
-                        }
-                    }
-                }
-            }
 
             this.requestFetcher.GetMessageAsync(callback, state);
         }

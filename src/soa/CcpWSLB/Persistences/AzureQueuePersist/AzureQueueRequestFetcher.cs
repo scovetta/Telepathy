@@ -36,14 +36,11 @@
             this.waitQueue = waitQueue;
             this.prefetchTimer.Elapsed += (sender, args) =>
                 {
-                    lock (fetchTimerLock)
+                    Debug.WriteLine("[AzureQueueRequestFetcher] .prefetchTimer raised.");
+                    this.DequeueMessageAsync().GetAwaiter().GetResult();
+                    if (!this.isDisposedField)
                     {
-                        if (!this.isDisposedField)
-                        {
-                            Debug.WriteLine("[AzureQueueRequestFetcher] .prefetchTimer raised.");
-                            this.DequeueMessageAsync().GetAwaiter().GetResult();
-                            this.prefetchTimer.Enabled = true;
-                        }
+                        this.prefetchTimer.Enabled = true;
                     }
                 };
             this.prefetchTimer.Enabled = true;
