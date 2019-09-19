@@ -20,8 +20,6 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureStorageTool
 
     public class AzureStorageTool
     {
-        private const int maxRequestTimeout = 60000 * 5;
-
         private const string MsgPrefix = "MsgInBlob";
 
         /// <summary>
@@ -55,69 +53,6 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureStorageTool
                     "[AzureQueueInterop] .AddBatchMsgToTable: cannot insert batch entities into table.");
                 throw;
             }
-        }
-
-        public static async Task<int> CheckRequestQueue(
-            CloudQueue waitQueue,
-            CloudTable responseTable,
-            CloudBlobContainer container)
-        {
-            try
-            {
-                while (true)
-                {
-                    var message = await waitQueue.PeekMessageAsync();
-                    if (message == null)
-                    {
-                        break;
-                    }
-
-                    var messageId =
-                        ((BrokerQueueItem)formatter.Deserialize(
-                                GetMsgBody(container, message.AsBytes).GetAwaiter().GetResult())).Message.Headers
-                        .MessageId.ToString();
-                    BrokerTracing.TraceVerbose(
-                        "[AzureQueueInterop] .CheckRequestQueue: queueName = {0}, cloudMessageId = {1}, messageId = {2}",
-                        waitQueue.Name,
-                        message.Id,
-                        messageId);
-                    var query = new TableQuery<TableEntity>().Where("RowKey eq '" + messageId + "'");
-                    var list = responseTable.ExecuteQuery(query).ToList();
-                    if (list.Count > 0)
-                    {
-                        await waitQueue.DeleteMessageAsync(await waitQueue.GetMessageAsync());
-                    }
-                    else
-                    {
-                        var interval = DateTimeOffset.Now - message.InsertionTime.Value;
-                        if (interval.TotalMilliseconds >= maxRequestTimeout)
-                        {
-                            message = await waitQueue.GetMessageAsync();
-
-                            // add msg to request queue & delete it from private queue
-                            // TODO
-                            await waitQueue.DeleteMessageAsync(message);
-
-                            // message hospital 
-                        }
-                        else
-                        {
-                            return maxRequestTimeout - (int)interval.TotalMilliseconds;
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                BrokerTracing.TraceError(
-                    "[AzureQueueInterop] .CheckRequestQueue: queueName={0}, responseTable={1}, the exception, {2}",
-                    waitQueue.Name,
-                    responseTable.Name,
-                    e);
-                throw;
-            }
-
-            return maxRequestTimeout;
         }
 
         public static async Task<long> CountFailed(string connectString, string sessionId, string tableName)
@@ -495,6 +430,61 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureStorageTool
             return null;
         }
 
+        public static async Task RestoreRequest(
+            CloudQueue requestQueue,
+            CloudQueue pendingQueue,
+            CloudTable responseTable,
+            CloudBlobContainer container)
+        {
+            try
+            {
+                while (true)
+                {
+                    var message = await pendingQueue.PeekMessageAsync();
+                    if (message == null)
+                    {
+                        break;
+                    }
+
+                    var messageId =
+                        ((BrokerQueueItem)formatter.Deserialize(await GetMsgBody(container, message.AsBytes))).Message
+                        .Headers.MessageId.ToString();
+                    BrokerTracing.TraceVerbose(
+                        "[AzureQueueInterop] .CheckRequestQueue: queueName = {0}, cloudMessageId = {1}, messageId = {2}",
+                        pendingQueue.Name,
+                        message.Id,
+                        messageId);
+                    var query = new TableQuery<TableEntity>().Where("RowKey eq '" + messageId + "'");
+                    var list = responseTable.ExecuteQuery(query).ToList();
+                    if (list.Count > 0)
+                    {
+                        await pendingQueue.DeleteMessageAsync(await pendingQueue.GetMessageAsync());
+                    }
+                    else
+                    {
+                        // Add msg to request queue & delete it from pending queue.
+                        message = await pendingQueue.GetMessageAsync();
+                        await requestQueue.AddMessageAsync(new CloudQueueMessage(message.AsBytes));
+                        await pendingQueue.DeleteMessageAsync(message);
+                        BrokerTracing.TraceVerbose(
+                            "[AzureQueueInterop] .CheckRequestQueue: messageId = {0} is restored into request queue.",
+                            messageId);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                BrokerTracing.TraceError(
+                    "[AzureQueueInterop] .CheckRequestQueue: queueName={0}, responseTable={1}, the exception, {2}",
+                    pendingQueue.Name,
+                    responseTable.Name,
+                    e);
+                throw;
+            }
+
+            await requestQueue.FetchAttributesAsync();
+        }
+
         public static async Task UpdateInfo(string connectString, string sessionId, string queueName, string note)
         {
             var tableClient = GetTableClient(connectString);
@@ -530,33 +520,6 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureStorageTool
         {
             var tableAccount = CloudStorageAccount.Parse(storageConnectString);
             return tableAccount.CreateCloudTableClient();
-        }
-
-        public static async Task RestoreRequest(CloudQueue waitQueue, CloudQueue requestQueue, CloudTable responseTable, CloudBlobContainer container)
-        {
-            CloudQueueMessage message;
-            while ((message = await waitQueue.GetMessageAsync()) != null)
-            {
-                var messageId =
-                    ((BrokerQueueItem)formatter.Deserialize(
-                        GetMsgBody(container, message.AsBytes).GetAwaiter().GetResult())).Message.Headers
-                    .MessageId.ToString();
-                BrokerTracing.TraceVerbose(
-                    "[AzureQueueInterop] .RestoreRequest: queueName = {0}, cloudMessageId = {1}, messageId = {2}",
-                    waitQueue.Name,
-                    message.Id,
-                    messageId);
-                var query = new TableQuery<TableEntity>().Where("RowKey eq '" + messageId + "'");
-                var list = responseTable.ExecuteQuery(query).ToList();
-                if (list.Count > 0)
-                {
-                    await waitQueue.DeleteMessageAsync(message);
-                }
-                else
-                {
-                    await requestQueue.AddMessageAsync(message);
-                }
-            }
         }
     }
 

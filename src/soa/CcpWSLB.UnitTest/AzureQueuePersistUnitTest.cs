@@ -11,6 +11,7 @@ namespace CcpWSLB.UnitTest
     using System.ServiceModel.Channels;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Xml;
 
     using Microsoft.Azure;
     using Microsoft.Hpc.ServiceBroker.BrokerStorage;
@@ -29,13 +30,9 @@ namespace CcpWSLB.UnitTest
 
         private static readonly IFormatter binFormatterField = new BinaryFormatter();
 
-        private static readonly Guid guid = Guid.NewGuid();
-
-        private static readonly string clientId = guid.ToString();
-
         private static readonly byte[] largeMsg = new byte[64000];
 
-        private static readonly string PrivatePathPrefix = "Private";
+        private static readonly string PendingPathPrefix = "Pending";
 
         private static readonly string QueueNameFieldDelimeter = "-";
 
@@ -54,9 +51,11 @@ namespace CcpWSLB.UnitTest
 
         private static readonly string username = "Any";
 
+        private static string clientId;
+
         private CloudBlobContainer blobContainer;
 
-        private CloudQueue privateQueue;
+        private CloudQueue pendingQueue;
 
         private CloudQueue requestQueue;
 
@@ -122,6 +121,7 @@ namespace CcpWSLB.UnitTest
                 Message.CreateMessage(MessageVersion.Soap12WSAddressing10, action, largeMsg),
                 null);
             this.sessionPersist.CloseFetchForTest();
+            await Task.Delay(500);
             this.sessionPersist.PutRequestAsync(request, null, 0);
             var dequeItem = (BrokerQueueItem)binFormatterField.Deserialize(
                 await AzureStorageTool.GetMsgBody(
@@ -164,6 +164,7 @@ namespace CcpWSLB.UnitTest
                 Message.CreateMessage(MessageVersion.Soap12WSAddressing10, action, shortMsg),
                 null);
             this.sessionPersist.CloseFetchForTest();
+            await Task.Delay(500);
             this.sessionPersist.PutRequestAsync(request, null, 0);
             var dequeItem = (BrokerQueueItem)binFormatterField.Deserialize(
                 await AzureStorageTool.GetMsgBody(
@@ -198,25 +199,44 @@ namespace CcpWSLB.UnitTest
             Assert.AreEqual(shortMsg, dequeItem.Message.GetBody<string>());
         }
 
+        [TestMethod]
+        public async Task RestoreRequestTest()
+        {
+            this.sessionPersist.Dispose();
+            await Task.Delay(500);
+            var message = new BrokerQueueItem(
+                null,
+                Message.CreateMessage(MessageVersion.Soap12WSAddressing10, action, shortMsg),
+                null);
+            message.Message.Headers.MessageId = new UniqueId(Guid.NewGuid());
+            var cloudMessage = new CloudQueueMessage(AzureStorageTool.PrepareMessage(message));
+            await this.pendingQueue.AddMessageAsync(cloudMessage);
+            this.sessionPersist = new AzureQueuePersist(username, sessionId, clientId, storageConnectString);
+            this.sessionPersist.CloseFetchForTest();
+
+            // Casually request fetched by pre-fetcher.
+            var dequeItem = (BrokerQueueItem)binFormatterField.Deserialize(
+                await AzureStorageTool.GetMsgBody(
+                    this.blobContainer,
+                    (await this.requestQueue.GetMessageAsync()).AsBytes));
+            Assert.AreEqual(shortMsg, dequeItem.Message.GetBody<string>());
+        }
+
         [TestInitialize]
         public void TestInit()
         {
             this.storageAccount = CloudStorageAccount.Parse(storageConnectString);
             Debug.Print("connect emulator successfully!");
+            clientId = Guid.NewGuid().ToString();
             this.sessionPersist = new AzureQueuePersist(username, sessionId, clientId, storageConnectString);
             this.requestQueue = this.storageAccount.CreateCloudQueueClient()
                 .GetQueueReference(MakeQueuePath(sessionId, clientId, true));
             this.responseTable = this.storageAccount.CreateCloudTableClient()
                 .GetTableReference(MakeTablePath(sessionId, clientId));
-            this.responseTable.DeleteIfExists();
-            this.responseTable.CreateIfNotExists();
             this.blobContainer = this.storageAccount.CreateCloudBlobClient()
                 .GetContainerReference(MakeQueuePath(sessionId, clientId, true));
-
-            this.privateQueue = this.storageAccount.CreateCloudQueueClient()
-                .GetQueueReference(MakePrivatePath(sessionId, clientId));
-            this.requestQueue.Clear();
-            this.privateQueue.Clear();
+            this.pendingQueue = this.storageAccount.CreateCloudQueueClient()
+                .GetQueueReference(MakePendingPath(sessionId, clientId));
         }
 
         private static void GetLargeMessageTestCallback(
@@ -232,9 +252,9 @@ namespace CcpWSLB.UnitTest
             Assert.AreEqual(shortMsg, persistMessage.Message.GetBody<string>());
         }
 
-        private static string MakePrivatePath(string sessionId, string clientId)
+        private static string MakePendingPath(string sessionId, string clientId)
         {
-            return (PrivatePathPrefix + sessionId.ToString(CultureInfo.InvariantCulture) + QueueNameFieldDelimeter
+            return (PendingPathPrefix + sessionId.ToString(CultureInfo.InvariantCulture) + QueueNameFieldDelimeter
                     + clientId).ToLower();
         }
 

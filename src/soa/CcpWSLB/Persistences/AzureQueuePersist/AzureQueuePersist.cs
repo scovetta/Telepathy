@@ -14,13 +14,11 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Text;
-    using System.Text.RegularExpressions;
     using System.Threading;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using Microsoft.Hpc.Scheduler.Session.Utility;
     using Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureStorageTool;
     using Microsoft.WindowsAzure.Storage.Blob;
     using Microsoft.WindowsAzure.Storage.Queue;
@@ -28,19 +26,13 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
 
     public class AzureQueuePersist : ISessionPersist
     {
-        /// <summary>queue owner name for "anonymous" user</summary>
-        private const string AnonymousOwner = "Everyone";
-
         /// <summary>the prefix for EOM flag label</summary>
         private const string EOMLabel = "EOM";
-
-        /// <summary>the prefix for generating queue path on local computer</summary>
-        private const string LocalQueuePathPrefix = "-";
 
         /// <summary>the prefix of the queue path</summary>
         private const string PathPrefix = "HPC";
 
-        private const string PrivatePathPrefix = "Private";
+        private const string PendingPathPrefix = "Pending";
 
         /// <summary>delimeter for generating queue name</summary>
         private const string QueueNameFieldDelimeter = "-";
@@ -51,37 +43,44 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
         /// <summary>the prefix of the response queue name</summary>
         private const string ResponseQueueSuffix = "RESPONSES";
 
-        /// <summary>queue owner name for "anonymous" user</summary>
-        private const string SystemOwner = "System";
-
         /// <summary>the prefix for persist version label</summary>
         private const string VersionLabel = "VERSION";
 
-        /// <summary>
-        /// the regex to match the cert identity user name
-        /// </summary>
-        private static readonly Regex CertUserNameRegex = new Regex(@"CN=[\w\s]*;\ [0-9A-F]+", RegexOptions.IgnoreCase);
-
-        /// <summary>
-        /// the regex to match the queue name
-        /// </summary>
-        private static readonly Regex QueueNameRegex = new Regex(
-            @"PRIVATE\$\\HPC(?<SessionId>-?\d+)-(?<ClientId>.*)-(?<Suffix>(REQUESTS)|(RESPONSES))$",
-            RegexOptions.IgnoreCase);
-
         /// <summary>the binary message formattoer</summary>
-        private static IFormatter binFormatterField = new BinaryFormatter();
+        private static readonly IFormatter binFormatterField = new BinaryFormatter();
 
         /// <summary>the broker node name.  For HA cluster, it is the cluster virtual name.</summary>
         private static string BrokerNodeName = BrokerIdentity.GetBrokerName();
+
+        /// <summary>the client id.</summary>
+        private readonly string clientIdField;
+
+        /// <summary>a value indicating whether this is a new created AzureStorage persistence.</summary>
+        private readonly bool isNewCreatePersistField;
+
+        /// <summary>persist version of this AzureQueue queue</summary>
+        private readonly int persistVersion;
+
+        private readonly object responsePutLock = new object();
+
+        private readonly Queue<PutResponseState> responsePutQueue = new Queue<PutResponseState>();
+
+        /// <summary>the session id.</summary>
+        private readonly string sessionIdField;
+
+        private readonly int sleepTime = 500;
+
+        private readonly string storageConnectString;
+
+        private readonly CancellationTokenSource tokenSource = new CancellationTokenSource();
+
+        /// <summary>the user name.</summary>
+        private readonly string userNameField;
 
         /// <summary>the total request count.</summary>
         private long allRequestsCountField;
 
         private CloudBlobContainer blobContainer;
-
-        /// <summary>the client id.</summary>
-        private string clientIdField;
 
         /// <summary>flag indicating if all requests have been received.</summary>
         private bool EOMFlag;
@@ -92,19 +91,13 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
         /// <summary>a value indicating whether the MSMQ persistence is closed.</summary>
         private volatile bool isClosedField;
 
-        private bool isCreatedResponseTask = false;
+        private bool isCreatedResponseTask;
 
         private bool isCreateRequestTask = false;
 
         private bool isDisposedField;
 
-        /// <summary>a value indicating whether this is a new created AzureStorage persistence.</summary>
-        private bool isNewCreatePersistField;
-
-        /// <summary>persist version of this AzureQueue queue</summary>
-        private int persistVersion;
-
-        private CloudQueue privateQueueField;
+        private CloudQueue pendingQueueField;
 
         private AzureQueueMessageFetcher requestFetcher;
 
@@ -114,35 +107,17 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
         /// <summary>the total requests count in the request queue.</summary>
         private long requestsCountField;
 
-        private object requestTaskLock = new object();
-
         private AzureQueueMessageFetcher responseFetcher;
 
         private int responseIndex = int.MaxValue >> 1;
-
-        private object responsePutLock = new object();
-
-        private Queue<PutResponseState> responsePutQueue = new Queue<PutResponseState>();
 
         /// <summary>the total responses count in the queue.</summary>
         private long responsesCountField;
 
         private CloudTable responseTableField;
 
-        /// <summary>the session id.</summary>
-        private string sessionIdField;
-
-        private int sleepTime = 500;
-
-        private string storageConnectString;
-
         /// <summary>number of requests that are sent to MSMQ but not committed yet. </summary>
         private long uncommittedRequestsCountField;
-
-        /// <summary>the user name.</summary>
-        private string userNameField;
-
-        private CancellationTokenSource tokenSource = new CancellationTokenSource();
 
         internal AzureQueuePersist(string userName, string sessionId, string clientId, string storageConnectString)
         {
@@ -161,15 +136,17 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
 
             this.storageConnectString = storageConnectString;
 
-            string requestQueueName = MakeQueuePath(sessionId, clientId, true);
-            string responseTableName = MakeTablePath(sessionId, clientId);
-            string privateQueueName = MakeQueuePath(sessionId, clientId, false);
+            var requestQueueName = MakeQueuePath(sessionId, clientId, true);
+            var responseTableName = MakeTablePath(sessionId, clientId);
+            var pendingQueueName = MakeQueuePath(sessionId, clientId, false);
 
             this.isNewCreatePersistField = true;
             try
             {
-                bool requestQueueExist = AzureStorageTool.ExistsQueue(storageConnectString, requestQueueName).GetAwaiter().GetResult();
-                bool responseQueueExist = AzureStorageTool.ExistTable(storageConnectString, responseTableName).GetAwaiter().GetResult();
+                var requestQueueExist = AzureStorageTool.ExistsQueue(storageConnectString, requestQueueName)
+                    .GetAwaiter().GetResult();
+                var responseQueueExist = AzureStorageTool.ExistTable(storageConnectString, responseTableName)
+                    .GetAwaiter().GetResult();
 
                 if (requestQueueExist && responseQueueExist)
                 {
@@ -185,7 +162,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                         BrokerTracing.TraceError(
                             "[AzureQueuePersist] .AzureQueuePersist: queue data not integrety.  Fix it by deleting queue = {0}",
                             requestQueueName);
-                        AzureStorageTool.DeleteQueueAsync(storageConnectString, sessionId.ToString(), requestQueueName)
+                        AzureStorageTool.DeleteQueueAsync(storageConnectString, sessionId, requestQueueName)
                             .GetAwaiter().GetResult();
                     }
                     else
@@ -195,10 +172,8 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                         BrokerTracing.TraceError(
                             "[AzureQueuePersist] .AzureQueuePersist: queue data not integrety.  Fix it by deleting queue = {0}",
                             responseTableName);
-                        AzureStorageTool.DeleteTableAsync(
-                            storageConnectString,
-                            sessionId.ToString(),
-                            responseTableName).GetAwaiter().GetResult();
+                        AzureStorageTool.DeleteTableAsync(storageConnectString, sessionId, responseTableName)
+                            .GetAwaiter().GetResult();
                     }
                 }
             }
@@ -214,22 +189,25 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             {
                 try
                 {
+                    this.pendingQueueField = AzureStorageTool.CreateQueueAsync(
+                        this.storageConnectString,
+                        sessionId,
+                        pendingQueueName,
+                        clientId,
+                        true,
+                        this.FormatRequestQueueLabel()).GetAwaiter().GetResult();
+
+                    this.blobContainer = AzureStorageTool
+                        .CreateBlobContainerAsync(this.storageConnectString, requestQueueName).GetAwaiter().GetResult();
+
                     BrokerTracing.TraceInfo(
                         "[AzureQueuePersist] .AzureQueuePersist: creating message requests queue {0}",
                         requestQueueName);
                     this.EOMFlag = false;
                     this.requestQueueField = AzureStorageTool.CreateQueueAsync(
                         this.storageConnectString,
-                        sessionId.ToString(),
+                        sessionId,
                         requestQueueName,
-                        clientId,
-                        true,
-                        this.FormatRequestQueueLabel()).GetAwaiter().GetResult();
-
-                    this.privateQueueField = AzureStorageTool.CreateQueueAsync(
-                        this.storageConnectString,
-                        sessionId.ToString(),
-                        privateQueueName,
                         clientId,
                         true,
                         this.FormatRequestQueueLabel()).GetAwaiter().GetResult();
@@ -239,14 +217,12 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                         responseTableName);
                     this.responseTableField = AzureStorageTool.CreateTableAsync(
                         this.storageConnectString,
-                        sessionId.ToString(),
+                        sessionId,
                         responseTableName,
                         clientId,
                         false,
                         "0").GetAwaiter().GetResult();
 
-                    this.blobContainer = AzureStorageTool
-                        .CreateBlobContainerAsync(this.storageConnectString, requestQueueName).GetAwaiter().GetResult();
                     this.persistVersion = BrokerQueueItem.PersistVersion;
 
                     BrokerTracing.TraceVerbose(
@@ -282,20 +258,24 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                 this.requestQueueField = AzureStorageTool.GetQueue(storageConnectString, requestQueueName).GetAwaiter()
                     .GetResult();
                 this.responseTableField = AzureStorageTool.GetTable(storageConnectString, responseTableName);
-                //TODO go through the private queue and resend responses not received in response table.
-                this.privateQueueField = AzureStorageTool.GetQueue(storageConnectString, privateQueueName).GetAwaiter()
+                this.pendingQueueField = AzureStorageTool.GetQueue(storageConnectString, pendingQueueName).GetAwaiter()
                     .GetResult();
                 this.blobContainer = AzureStorageTool
                     .CreateBlobContainerAsync(this.storageConnectString, requestQueueName).GetAwaiter().GetResult();
                 try
                 {
+                    AzureStorageTool.RestoreRequest(
+                        this.requestQueueField,
+                        this.pendingQueueField,
+                        this.responseTableField,
+                        this.blobContainer).GetAwaiter().GetResult();
                     this.requestsCountField = this.requestQueueField.ApproximateMessageCount ?? 0;
                     this.responsesCountField = AzureStorageTool
                         .CountTableEntity(storageConnectString, responseTableName).GetAwaiter().GetResult();
                     this.allRequestsCountField = this.requestsCountField + this.responsesCountField;
 
                     this.persistVersion = BrokerVersion.DefaultPersistVersion;
-                    this.EOMFlag = (this.allRequestsCountField > 0);
+                    this.EOMFlag = this.allRequestsCountField > 0;
                 }
                 catch (Exception e)
                 {
@@ -307,11 +287,11 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                 }
             }
 
-            // Init transaction for persisting requests
+            // Init fetchers
             BrokerTracing.TraceVerbose("[AzureQueuePersist] .AzureQueuePersist: AzureQueue Transactions Enabled.");
             this.requestFetcher = new AzureQueueRequestFetcher(
                 this.requestQueueField,
-                this.privateQueueField,
+                this.pendingQueueField,
                 this.requestsCountField,
                 binFormatterField,
                 this.blobContainer);
@@ -322,66 +302,24 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                 this.blobContainer);
         }
 
-        public long AllRequestsCount
-        {
-            get
-            {
-                return Interlocked.Read(ref this.allRequestsCountField);
-            }
-        }
+        public long AllRequestsCount => Interlocked.Read(ref this.allRequestsCountField);
 
         public bool EOMReceived
         {
-            get
-            {
-                return this.EOMFlag;
-            }
+            get => this.EOMFlag;
 
-            set
-            {
-                this.EOMFlag = true;
-            }
+            set => this.EOMFlag = true;
         }
 
-        public long FailedRequestsCount
-        {
-            get
-            {
-                return Interlocked.Read(ref this.failedRequestsCountField);
-            }
-        }
+        public long FailedRequestsCount => Interlocked.Read(ref this.failedRequestsCountField);
 
-        public bool IsNewCreated
-        {
-            get
-            {
-                return this.isNewCreatePersistField;
-            }
-        }
+        public bool IsNewCreated => this.isNewCreatePersistField;
 
-        public long RequestsCount
-        {
-            get
-            {
-                return Interlocked.Read(ref this.requestsCountField);
-            }
-        }
+        public long RequestsCount => Interlocked.Read(ref this.requestsCountField);
 
-        public long ResponsesCount
-        {
-            get
-            {
-                return Interlocked.Read(ref this.responsesCountField);
-            }
-        }
+        public long ResponsesCount => Interlocked.Read(ref this.responsesCountField);
 
-        public string UserName
-        {
-            get
-            {
-                return this.userNameField;
-            }
-        }
+        public string UserName => this.userNameField;
 
         public static async Task CleanupStaleMessageQueue(
             IsStaleSessionCallback isStaleSessionCallback,
@@ -389,16 +327,16 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
         {
             ParamCheckUtility.ThrowIfNull(isStaleSessionCallback, "isStaleSessionCallback");
             ParamCheckUtility.ThrowIfNull(connectString, "connectString");
-            List<QueueInfo> queueinfos = AzureStorageTool.GetAllQueues(connectString).GetAwaiter().GetResult();
-            List<QueueInfo> staleQueueNameList = new List<QueueInfo>();
-            Dictionary<string, bool> sessionIdStaleDic = new Dictionary<string, bool>();
+            var queueinfos = AzureStorageTool.GetAllQueues(connectString).GetAwaiter().GetResult();
+            var staleQueueNameList = new List<QueueInfo>();
+            var sessionIdStaleDic = new Dictionary<string, bool>();
             if (queueinfos != null && queueinfos.Count > 0)
             {
-                foreach (QueueInfo queueInfo in queueinfos)
+                foreach (var queueInfo in queueinfos)
                 {
-                    string queueSessionId = queueInfo.PartitionKey;
+                    var queueSessionId = queueInfo.PartitionKey;
 
-                    bool isStaleSession = false;
+                    var isStaleSession = false;
                     if (!sessionIdStaleDic.TryGetValue(queueSessionId, out isStaleSession))
                     {
                         isStaleSession = await isStaleSessionCallback(queueSessionId);
@@ -414,7 +352,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                     }
                 }
 
-                for (int i = 0; i < staleQueueNameList.Count; i++)
+                for (var i = 0; i < staleQueueNameList.Count; i++)
                 {
                     try
                     {
@@ -437,6 +375,11 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             }
         }
 
+        public void AbortRequest()
+        {
+            this.ResetRequestsTransaction(false);
+        }
+
         public void AckResponse(BrokerQueueItem responseItem, bool success)
         {
             responseItem.Dispose();
@@ -455,25 +398,25 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                 {
                     AzureStorageTool.DeleteTableAsync(
                         this.storageConnectString,
-                        this.sessionIdField.ToString(),
+                        this.sessionIdField,
                         this.responseTableField.Name).GetAwaiter().GetResult();
                     this.responseTableField = null;
                 }
 
-                if (this.privateQueueField != null)
+                if (this.pendingQueueField != null)
                 {
                     AzureStorageTool.DeleteQueueAsync(
                         this.storageConnectString,
-                        this.sessionIdField.ToString(),
-                        this.privateQueueField.Name).GetAwaiter().GetResult();
-                    this.privateQueueField = null;
+                        this.sessionIdField,
+                        this.pendingQueueField.Name).GetAwaiter().GetResult();
+                    this.pendingQueueField = null;
                 }
 
                 if (this.requestQueueField != null)
                 {
                     AzureStorageTool.DeleteQueueAsync(
                         this.storageConnectString,
-                        this.sessionIdField.ToString(),
+                        this.sessionIdField,
                         this.requestQueueField.Name).GetAwaiter().GetResult();
                     this.requestQueueField = null;
                 }
@@ -485,15 +428,15 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                 }
             }
 
-            SessionPersistCounter counter = new SessionPersistCounter();
+            var counter = new SessionPersistCounter();
             counter.ResponsesCountField = Interlocked.Read(ref this.responsesCountField);
             counter.FailedRequestsCountField = Interlocked.Read(ref this.failedRequestsCountField);
             return counter;
         }
 
-        public bool IsInMemory()
+        public void CommitRequest()
         {
-            return false;
+            this.ResetRequestsTransaction(true);
         }
 
         public void Dispose()
@@ -519,30 +462,6 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             }
 
             BrokerTracing.TraceVerbose("[AzureQueuePersisit] .GetRequestAsync: Get request come in.");
-            if (!this.isCreateRequestTask)
-            {
-                lock (this.requestTaskLock)
-                {
-                    if (!this.isCreateRequestTask)
-                    {
-                        this.isCreateRequestTask = true;
-                        Task.Run(
-                            async () =>
-                                {
-                                    while (true)
-                                    {
-                                        if (tokenSource.Token.IsCancellationRequested)
-                                        {
-                                            return;
-                                        }
-
-                                        int time = await AzureStorageTool.CheckRequestQueue(this.privateQueueField, this.responseTableField, this.blobContainer);
-                                        await Task.Delay(time);
-                                    }
-                                });
-                    }
-                }
-            }
 
             this.requestFetcher.GetMessageAsync(callback, state);
         }
@@ -564,13 +483,18 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             this.responseFetcher.GetMessageAsync(callback, callbackState);
         }
 
+        public bool IsInMemory()
+        {
+            return false;
+        }
+
         public void PutRequestAsync(
             BrokerQueueItem request,
             PutRequestCallback putRequestCallback,
             object callbackState)
         {
             ParamCheckUtility.ThrowIfNull(request, "request");
-            BrokerQueueItem[] requests = new BrokerQueueItem[1];
+            var requests = new BrokerQueueItem[1];
             requests[0] = request;
             this.PutRequestsAsync(requests, putRequestCallback, callbackState);
         }
@@ -587,7 +511,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                 return;
             }
 
-            PutRequestState putRequestState = new PutRequestState(requests, putRequestCallback, callbackState);
+            var putRequestState = new PutRequestState(requests, putRequestCallback, callbackState);
 
             // TODO: make PutRequestsAsync an async call
             this.PersistRequests(putRequestState);
@@ -598,7 +522,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             PutResponseCallback putResponseCallback,
             object callbackState)
         {
-            BrokerQueueItem[] responses = new BrokerQueueItem[1];
+            var responses = new BrokerQueueItem[1];
             responses[0] = response;
             this.PutResponsesAsync(responses, putResponseCallback, callbackState);
         }
@@ -618,7 +542,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             BrokerTracing.TraceVerbose(
                 "[AzureQueuePersisit] .PutResponsesAsync: new responses come in. Response count: {0}",
                 (int)callbackState);
-            PutResponseState putResponseState = new PutResponseState(responses, putResponseCallback, callbackState);
+            var putResponseState = new PutResponseState(responses, putResponseCallback, callbackState);
 
             this.responsePutQueue.Enqueue(putResponseState);
             if (!this.isCreatedResponseTask)
@@ -633,7 +557,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                                 {
                                     while (true)
                                     {
-                                        if (tokenSource.Token.IsCancellationRequested)
+                                        if (this.tokenSource.Token.IsCancellationRequested)
                                         {
                                             return;
                                         }
@@ -641,7 +565,8 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                                         this.PersistResponsesThreadProc();
                                         await Task.Delay(this.sleepTime);
                                     }
-                                }, tokenSource.Token);
+                                },
+                            this.tokenSource.Token);
                     }
                 }
             }
@@ -669,21 +594,19 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             ParamCheckUtility.ThrowIfNull(connectString, "connectString");
 
             // Client id is case insensitive
-            Dictionary<string, ClientInfo> clientIdDic =
-                new Dictionary<string, ClientInfo>(StringComparer.OrdinalIgnoreCase);
+            var clientIdDic = new Dictionary<string, ClientInfo>(StringComparer.OrdinalIgnoreCase);
             try
             {
-                List<QueueInfo> queueinfos = AzureStorageTool.GetQueuesFromTable(connectString, sessionId.ToString())
-                    .GetAwaiter().GetResult();
+                var queueinfos = AzureStorageTool.GetQueuesFromTable(connectString, sessionId).GetAwaiter().GetResult();
                 if (queueinfos != null && queueinfos.Count > 0)
                 {
-                    foreach (QueueInfo queueInfo in queueinfos)
+                    foreach (var queueInfo in queueinfos)
                     {
                         if (queueInfo.IsRequest)
                         {
-                            CloudQueue queue = AzureStorageTool.GetQueue(connectString, queueInfo.RowKey).GetAwaiter()
+                            var queue = AzureStorageTool.GetQueue(connectString, queueInfo.RowKey).GetAwaiter()
                                 .GetResult();
-                            int requestCount = queue.ApproximateMessageCount == null
+                            var requestCount = queue.ApproximateMessageCount == null
                                                    ? 0
                                                    : queue.ApproximateMessageCount.Value;
                             ClientInfo info;
@@ -700,11 +623,10 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                         }
                         else
                         {
-                            long responseCount = AzureStorageTool.CountTableEntity(connectString, queueInfo.RowKey)
+                            var responseCount = AzureStorageTool.CountTableEntity(connectString, queueInfo.RowKey)
                                 .GetAwaiter().GetResult();
-                            long failedCount = AzureStorageTool
-                                .CountFailed(connectString, sessionId.ToString(), queueInfo.RowKey).GetAwaiter()
-                                .GetResult();
+                            var failedCount = AzureStorageTool.CountFailed(connectString, sessionId, queueInfo.RowKey)
+                                .GetAwaiter().GetResult();
 
                             ClientInfo info;
                             if (clientIdDic.TryGetValue(queueInfo.ClientId, out info))
@@ -730,14 +652,9 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                 throw new BrokerQueueException((int)BrokerQueueErrorCode.E_BQ_PERSIST_STORAGE_FAIL, e.ToString());
             }
 
-            ClientInfo[] clients = new ClientInfo[clientIdDic.Keys.Count];
+            var clients = new ClientInfo[clientIdDic.Keys.Count];
             clientIdDic.Values.CopyTo(clients, 0);
             return clients;
-        }
-
-        public void AbortRequest()
-        {
-            this.ResetRequestsTransaction(false);
         }
 
         internal void CloseFetchForTest()
@@ -748,11 +665,6 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             this.responseFetcher = null;
         }
 
-        public void CommitRequest()
-        {
-            this.ResetRequestsTransaction(true);
-        }
-
         private static string MakeQueuePath(string sessionId, string clientId, bool isRequest)
         {
             if (isRequest)
@@ -760,17 +672,15 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                 return (PathPrefix + sessionId.ToString(CultureInfo.InvariantCulture) + QueueNameFieldDelimeter
                         + clientId + QueueNameFieldDelimeter + RequestQueueSuffix).ToLower();
             }
-            else
-            {
-                return (PrivatePathPrefix + sessionId.ToString(CultureInfo.InvariantCulture) + QueueNameFieldDelimeter
-                        + clientId).ToLower();
-            }
+
+            return (PendingPathPrefix + sessionId.ToString(CultureInfo.InvariantCulture) + QueueNameFieldDelimeter
+                    + clientId).ToLower();
         }
 
         private static string MakeTablePath(string sessionId, string clientId)
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (string str in clientId.Split('-'))
+            var sb = new StringBuilder();
+            foreach (var str in clientId.Split('-'))
             {
                 sb.Append(str);
             }
@@ -796,8 +706,8 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                     this.responseFetcher = null;
                 }
 
-                //Stop checkWaitQueue thread and persistResponseProc
-                tokenSource.Cancel();
+                // Stop persistResponseProc
+                this.tokenSource.Cancel();
             }
         }
 
@@ -813,21 +723,21 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
 
         private void PersistRequests(object state)
         {
-            PutRequestState putRequestState = (PutRequestState)state;
+            var putRequestState = (PutRequestState)state;
             ParamCheckUtility.ThrowIfNull(state, "put request state");
             ParamCheckUtility.ThrowIfNull(putRequestState.Messages, "to-be-persisted requests");
 
             Exception exception = null;
             long requestsCount = 0;
 
-            foreach (BrokerQueueItem request in putRequestState.Messages)
+            foreach (var request in putRequestState.Messages)
             {
                 ParamCheckUtility.ThrowIfNull(request, "to-be-persisted request");
                 using (request)
                 {
                     // check if the request size > 64KB, if yes try to persist it into several partial messages
                     CloudQueueMessage sendMsg;
-                    byte[] bytes = AzureStorageTool.PrepareMessage(request);
+                    var bytes = AzureStorageTool.PrepareMessage(request);
                     try
                     {
                         exception = null;
@@ -875,7 +785,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                 Interlocked.Add(ref this.allRequestsCountField, requestsCount);
             }
 
-            PutRequestCallback putRequestCallback = putRequestState.Callback;
+            var putRequestCallback = putRequestState.Callback;
             if (putRequestCallback != null)
             {
                 try
@@ -894,34 +804,32 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
         private void PersistResponsesThreadProc()
         {
             const int BatchSize = 50;
-            List<BrokerQueueItem> failList = new List<BrokerQueueItem>();
-            List<ResponseEntity> responseEntities = new List<ResponseEntity>();
-            Dictionary<string, BrokerQueueItem> peerItems = new Dictionary<string, BrokerQueueItem>();
-            List<BrokerQueueItem> responsesList = new List<BrokerQueueItem>();
-            int responseCount = 0;
-            int faultResponsesCount = 0;
-            List<Exception> exceptions = new List<Exception>();
+            var failList = new List<BrokerQueueItem>();
+            var responseEntities = new List<ResponseEntity>();
+            var peerItems = new Dictionary<string, BrokerQueueItem>();
+            var responsesList = new List<BrokerQueueItem>();
+            var responseCount = 0;
+            var faultResponsesCount = 0;
+            var exceptions = new List<Exception>();
             PutResponseCallback putResponseCallback = null;
 
             while (this.responsePutQueue.Count > 0)
             {
-                PutResponseState putResponseState = this.responsePutQueue.Dequeue();
+                var putResponseState = this.responsePutQueue.Dequeue();
                 putResponseCallback = putResponseState.Callback;
                 ParamCheckUtility.ThrowIfNull(putResponseState, "putResponseState");
                 ParamCheckUtility.ThrowIfNull(putResponseState.Messages, "putResponseState.Mesasges");
 
                 try
                 {
-                    List<BrokerQueueItem> redispatchRequestsList = new List<BrokerQueueItem>();
-
-                    foreach (BrokerQueueItem response in putResponseState.Messages)
+                    foreach (var response in putResponseState.Messages)
                     {
                         ParamCheckUtility.ThrowIfNull(response, "to-be-persisted response");
 
                         // step 1, receive corresponding request from queue
                         // no duplicate response for one request
-                        string requestToken = (string)response.PersistAsyncToken.AsyncToken;
-                        bool isValid = false;
+                        var requestToken = (string)response.PersistAsyncToken.AsyncToken;
+                        var isValid = false;
                         try
                         {
                             if (requestToken != null)
@@ -954,7 +862,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
 
                         // step 2, put response into queue
                         Interlocked.Increment(ref this.responseIndex);
-                        ResponseEntity sendMsg = new ResponseEntity(
+                        var sendMsg = new ResponseEntity(
                             this.clientIdField,
                             this.responseIndex.ToString(),
                             requestToken,
@@ -991,7 +899,9 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                         // At this point, both step 1 & step 2 are performed successfully
                         responseCount++;
                         if (responseCount % BatchSize == 0)
+                        {
                             insertTableAndUpdate(BatchSize);
+                        }
                     }
                 }
                 catch (Exception e)
@@ -1024,9 +934,9 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                         return;
                     }
 
-                    foreach (BrokerQueueItem responseTemp in responsesList)
+                    foreach (var responseTemp in responsesList)
                     {
-                        string token = (string)responseTemp.PersistAsyncToken.AsyncToken;
+                        var token = (string)responseTemp.PersistAsyncToken.AsyncToken;
                         responseTemp.PeerItem = peerItems[token];
                         failList.Add(responseTemp);
                         peerItems.Remove(token);
@@ -1041,13 +951,13 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                 if (exception == null)
                 {
                     // dispose all response messages
-                    foreach (BrokerQueueItem responseTemp in responsesList)
+                    foreach (var responseTemp in responsesList)
                     {
                         responseTemp.Dispose();
                     }
 
                     // dispose all peer items
-                    foreach (BrokerQueueItem request in peerItems.Values)
+                    foreach (var request in peerItems.Values)
                     {
                         request.Dispose();
                     }
@@ -1062,7 +972,9 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             }
 
             if (responseCount % BatchSize > 0)
+            {
                 insertTableAndUpdate(responseCount % BatchSize);
+            }
 
             if (faultResponsesCount > 0)
             {
@@ -1070,7 +982,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
                 {
                     AzureStorageTool.UpdateInfo(
                             this.storageConnectString,
-                            this.sessionIdField.ToString(),
+                            this.sessionIdField,
                             this.responseTableField.Name,
                             (Interlocked.Read(ref this.failedRequestsCountField) + faultResponsesCount).ToString())
                         .GetAwaiter().GetResult();
@@ -1087,9 +999,11 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             }
 
             if (failList.Count > 0)
+            {
                 this.responsePutQueue.Enqueue(new PutResponseState(failList, putResponseCallback, failList.Count));
+            }
 
-            bool isLastResponse = this.EOMReceived && (this.requestsCountField == 0);
+            var isLastResponse = this.EOMReceived && this.requestsCountField == 0;
             if (putResponseCallback != null)
             {
                 putResponseCallback(
@@ -1106,33 +1020,33 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
         {
             if (needCommit)
             {
-                long committed = Interlocked.Exchange(ref this.uncommittedRequestsCountField, 0);
+                var committed = Interlocked.Exchange(ref this.uncommittedRequestsCountField, 0);
                 this.requestFetcher.NotifyMoreMessages(committed);
             }
             else
             {
                 // reset uncommittedRequestsCountField
-                long committed = Interlocked.Exchange(ref this.uncommittedRequestsCountField, 0);
+                var committed = Interlocked.Exchange(ref this.uncommittedRequestsCountField, 0);
                 Interlocked.Add(ref this.requestsCountField, -committed);
             }
         }
 
         /// <summary>
-        /// thread pool callback state for putting requests
+        ///     thread pool callback state for putting requests
         /// </summary>
         private class PutRequestState
         {
             /// <summary>the callback for putting request.</summary>
-            private PutRequestCallback callbackField;
+            private readonly PutRequestCallback callbackField;
 
             /// <summary>the callback state object.</summary>
-            private object callbackStateField;
+            private readonly object callbackStateField;
 
             /// <summary>the messages.</summary>
-            private IEnumerable<BrokerQueueItem> messagesField;
+            private readonly IEnumerable<BrokerQueueItem> messagesField;
 
             /// <summary>
-            /// Initializes a new instance of the PutRequestState class.
+            ///     Initializes a new instance of the PutRequestState class.
             /// </summary>
             /// <param name="messages">the messages.</param>
             /// <param name="calback">the callback.</param>
@@ -1149,55 +1063,37 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             }
 
             /// <summary>
-            /// Gets the callback.
+            ///     Gets the callback.
             /// </summary>
-            public PutRequestCallback Callback
-            {
-                get
-                {
-                    return this.callbackField;
-                }
-            }
+            public PutRequestCallback Callback => this.callbackField;
 
             /// <summary>
-            /// Gets the callback state.
+            ///     Gets the callback state.
             /// </summary>
-            public object CallbackState
-            {
-                get
-                {
-                    return this.callbackStateField;
-                }
-            }
+            public object CallbackState => this.callbackStateField;
 
             /// <summary>
-            /// Gets the requests.
+            ///     Gets the requests.
             /// </summary>
-            public IEnumerable<BrokerQueueItem> Messages
-            {
-                get
-                {
-                    return this.messagesField;
-                }
-            }
+            public IEnumerable<BrokerQueueItem> Messages => this.messagesField;
         }
 
         /// <summary>
-        /// thread pool callback stat for putting responses
+        ///     thread pool callback stat for putting responses
         /// </summary>
         private class PutResponseState
         {
             /// <summary>the callback for putting response.</summary>
-            private PutResponseCallback callbackField;
+            private readonly PutResponseCallback callbackField;
 
             /// <summary>the calllback state object.</summary>
-            private object callbackStateField;
+            private readonly object callbackStateField;
 
             /// <summary>the messages.</summary>
-            private IEnumerable<BrokerQueueItem> messagesField;
+            private readonly IEnumerable<BrokerQueueItem> messagesField;
 
             /// <summary>
-            /// Initializes a new instance of the PutRequestState class.
+            ///     Initializes a new instance of the PutRequestState class.
             /// </summary>
             /// <param name="messages">the messages.</param>
             /// <param name="callback">the callback.</param>
@@ -1214,37 +1110,19 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             }
 
             /// <summary>
-            /// Gets the callback.
+            ///     Gets the callback.
             /// </summary>
-            public PutResponseCallback Callback
-            {
-                get
-                {
-                    return this.callbackField;
-                }
-            }
+            public PutResponseCallback Callback => this.callbackField;
 
             /// <summary>
-            /// Gets the callback state.
+            ///     Gets the callback state.
             /// </summary>
-            public object CallbackState
-            {
-                get
-                {
-                    return this.callbackStateField;
-                }
-            }
+            public object CallbackState => this.callbackStateField;
 
             /// <summary>
-            /// Gets the requests.
+            ///     Gets the requests.
             /// </summary>
-            public IEnumerable<BrokerQueueItem> Messages
-            {
-                get
-                {
-                    return this.messagesField;
-                }
-            }
+            public IEnumerable<BrokerQueueItem> Messages => this.messagesField;
         }
     }
 }

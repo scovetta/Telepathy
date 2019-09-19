@@ -106,7 +106,7 @@ namespace BvtTest
         /// This case matches with V3_AI_BVT_2 (Simple Fire & Recollect scenario - insecure net.tcp)
         /// </summary>
         [TestMethod]
-        public void BvtCase1()
+        public void BvtDurableCase1()
         {
             Info("Start BVT");
             SessionStartInfo sessionStartInfo;
@@ -192,7 +192,7 @@ namespace BvtTest
         /// This case matches with V3_AI_BVT_6 (non-secure net.tcp Durable Session - multiple BrokerClient)
         /// </summary>
         [TestMethod]
-        public void BvtCase2()
+        public void BvtDurableCase2()
         {
             Info("Start BVT");
             SessionStartInfo sessionStartInfo;
@@ -298,7 +298,7 @@ namespace BvtTest
         /// This case matches with V3_AI_BVT_8 (non-secure net.tcp shared Durable Session - BrokerClient)
         /// </summary>
         [TestMethod]
-        public void BvtCase3()
+        public void BvtDurableCase3()
         {
             Info("Start BVT");
             SessionStartInfo sessionStartInfo;

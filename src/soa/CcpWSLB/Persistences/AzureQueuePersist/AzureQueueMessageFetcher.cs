@@ -60,8 +60,6 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
         /// <summary> Credit for prefetching. It indicates if there is space available in prefetchCache for keeping prefetching result.</summary>
         private int prefetchCredit;
 
-        protected object fetchTimerLock = new object();
-
         public AzureQueueMessageFetcher(
             long messageCount,
             IFormatter messageFormatter,
@@ -204,10 +202,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             // 2. wait for all outstanding BeginPeek operations back, and then dispose the cursor.
             if (!this.isDisposedField)
             {
-                lock (this.fetchTimerLock)
-                {
-                    this.isDisposedField = true;                    
-                }
+                this.isDisposedField = true;
 
                 // dispose prefetched messages
                 this.lockPrefetchCache.EnterWriteLock();
