@@ -1,11 +1,5 @@
-//------------------------------------------------------------------------------
-// <copyright file="IResponseCallbackService.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      The interface which is used as a callback which broker is send back the response through.
-// </summary>
-//------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session
 {

@@ -1,9 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="IServiceJobMonitor.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Internal Monitor service job</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using TelepathyCommon;
 using TelepathyCommon.HpcContext;

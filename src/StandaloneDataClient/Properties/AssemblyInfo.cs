@@ -1,5 +1,7 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
@@ -23,12 +25,10 @@ using System.Runtime.InteropServices;
 [assembly: Guid("8f4412aa-a6e0-49e5-a331-1b1047e2159d")]
 
 // Version information for an assembly consists of the following four values:
-//
 //      Major Version
 //      Minor Version
 //      Build Number
 //      Revision
-//
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]

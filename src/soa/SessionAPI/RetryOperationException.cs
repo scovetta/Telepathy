@@ -1,9 +1,6 @@
-//-----------------------------------------------------------------------
-// <copyright file="MessageRetryException.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Represent retry limit exceeded and wrap the last exception</summary>
-//-----------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session
 {
     using System;

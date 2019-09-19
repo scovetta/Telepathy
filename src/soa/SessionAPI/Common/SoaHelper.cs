@@ -1,9 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="SoaHelper.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Utilities for both on-premise and azure environment.</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {

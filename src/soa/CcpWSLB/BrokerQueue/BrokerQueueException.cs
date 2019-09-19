@@ -1,9 +1,6 @@
-//-----------------------------------------------------------------------
-// <copyright file="BrokerQueueException.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>define the broker queue exception.</summary>
-//-----------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     using System;

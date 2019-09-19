@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="FrontendInfo.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Stores frontend information
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 {
     using System.ServiceModel;

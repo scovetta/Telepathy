@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="BrokerClient.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Represent a broker client
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker
 {
     using System;

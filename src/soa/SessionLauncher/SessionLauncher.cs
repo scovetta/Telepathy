@@ -1,9 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------------------------------
-// <copyright file="SessionLauncher.cs" company="Microsoft">
-//     Copyright(C) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>the session launcher serivce.</summary>
-//-----------------------------------------------------------------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 {

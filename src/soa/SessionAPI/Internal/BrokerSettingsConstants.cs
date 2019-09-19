@@ -1,9 +1,6 @@
-﻿//----------------------------------------------------------------------------------------------------------------------------------------
-// <copyright file="BrokerSettingsConstants.cs" company="Microsoft">
-//     Copyright(C) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>the constants definition for the broker settings.</summary>
-//-----------------------------------------------------------------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
 {
     /// <summary>

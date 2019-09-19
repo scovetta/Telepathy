@@ -1,9 +1,6 @@
-//-----------------------------------------------------------------------
-// <copyright file="RetryPolicy.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Represents the retry policy for retry helper</summary>
-//-----------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using System;

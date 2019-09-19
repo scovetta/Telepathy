@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="SOAWebServiceRequestBuilder.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//       Builder class to generate SOA web service web request
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using System;

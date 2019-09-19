@@ -1,10 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="DispatcherManager.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Manage dispatchers</summary>
-//-----------------------------------------------------------------------
-
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using TelepathyCommon.HpcContext;
 using TelepathyCommon.HpcContext.Extensions;

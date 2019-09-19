@@ -1,14 +1,5 @@
-//-------------------------------------------------------------------------------------------------
-// <copyright file="ServiceHelpers.cs" company="Microsoft">
-//     Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-//
-// Security review: yunjin 01-18-04
-// 
-// <summary>
-//     Utilities to help configurate NT services
-// </summary>
-//-------------------------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc
 {

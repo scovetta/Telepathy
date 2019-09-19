@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="ServiceTaskDispatcherInfo.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Dispatcher info for service task</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
     using System;

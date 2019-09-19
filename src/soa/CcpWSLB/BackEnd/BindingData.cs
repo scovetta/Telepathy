@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="BindingData.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Binding serialization</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 using System;
 using System.Runtime.Serialization;
 using System.ServiceModel;

@@ -1,11 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="ResponseStorageException.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     This exception is specific for response queue issue.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {

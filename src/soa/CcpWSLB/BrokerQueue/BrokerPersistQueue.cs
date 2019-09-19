@@ -1,12 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="BrokerPersistQueue.cs" company="Microsoft">
-//      Copyright (C)  Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//       the persist broke queue for file and recollection scenario that 
-//       will store all the request or response messages to the storage provider.
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     using Microsoft.Hpc.Scheduler.Session;

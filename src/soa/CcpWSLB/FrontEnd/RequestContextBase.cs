@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="RequestContextBase.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Base class for request context</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 {
     using System;

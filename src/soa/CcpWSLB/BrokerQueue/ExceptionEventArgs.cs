@@ -1,9 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="ExceptionEventArgs.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>define the exception event class for broker queue.</summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     using System;

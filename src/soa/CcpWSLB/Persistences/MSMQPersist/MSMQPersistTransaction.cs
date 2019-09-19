@@ -1,9 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------------------------------
-// <copyright file="MSMQPersistTransaction.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>the local persist transaction wrapper for MessageQueueTransaction.</summary>
-//-----------------------------------------------------------------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 #if  MSMQ
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ

@@ -1,11 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="IAzureQueueManager.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     It is the interface of AzureQueueManager.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
     using System;

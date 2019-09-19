@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="DuplexRequestContext.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Request context for duplex channels</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 {
     using System;

@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="BrokerInfo.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Stores broker info for broker manager
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 {
     using System;

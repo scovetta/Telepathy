@@ -1,11 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="MessageRetriever.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     It monitors the specified queue, and gets meesages from it.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 

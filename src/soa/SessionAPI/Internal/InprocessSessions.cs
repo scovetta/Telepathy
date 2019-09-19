@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="InprocessSessions.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Singleton class to hold all inproc sessions instances
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using System;

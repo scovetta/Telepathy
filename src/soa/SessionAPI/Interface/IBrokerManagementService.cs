@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="IBrokerManagementService.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Interface for Broker Management Service
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Interface
 {
     using Microsoft.Hpc.Scheduler.Session.Internal;

@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="BrokerManager.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Manager for all broker app domains
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 {
     using System;

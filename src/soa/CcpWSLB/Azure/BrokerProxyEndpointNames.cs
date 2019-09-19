@@ -1,12 +1,5 @@
-//--------------------------------------------------------------------------
-// <copyright file="BrokerProxyEndpointNames.cs" company="Microsoft">
-//     Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-//
-// <summary>
-//     This is a common file for Azure broker proxy endpoint names.
-// </summary>
-//--------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Azure.Common
 {

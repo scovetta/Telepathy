@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.Data
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.Scheduler.Session.Data
 {
 
     // Important!: this enum is only used in session API and subject to change

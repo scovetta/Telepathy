@@ -1,5 +1,8 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher" GeneratedClassName="SessionLauncherSettings">
+
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)"
+              GeneratedClassNamespace="Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher"
+              GeneratedClassName="SessionLauncherSettings">
   <Profiles />
   <Settings>
     <Setting Name="EnableDataService" Type="System.Boolean" Scope="User">

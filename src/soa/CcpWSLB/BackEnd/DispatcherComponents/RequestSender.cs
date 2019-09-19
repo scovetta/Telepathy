@@ -1,11 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="RequestSender.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     This is an abstract class for sending requests.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
     using System;

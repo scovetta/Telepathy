@@ -1,11 +1,5 @@
-//------------------------------------------------------------------------------
-// <copyright file="SessionStartInfoBase.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//       Base class for information to create a session
-// </summary>
-//------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using System;
 using System.Runtime.Serialization;

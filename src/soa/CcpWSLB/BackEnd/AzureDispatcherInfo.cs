@@ -1,11 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="AzureDispatcherInfo.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     Dispatcher info for service task targets Azure nodes.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {

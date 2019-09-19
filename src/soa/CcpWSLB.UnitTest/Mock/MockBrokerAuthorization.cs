@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------------------
-// <copyright file="MockBrokerAuthorization.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Mock object for broker authorization</summary>
-//-----------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.SvcBroker.UnitTest.Mock
 {
     using System;

@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="HpcSchedulerDelegation.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Scheduler adapter for both broker and broker launcher
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 #if HPCPACK
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher

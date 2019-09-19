@@ -1,11 +1,6 @@
-//------------------------------------------------------------------------------
-// <copyright file="SOAFaultCode.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Define the fault code for the SOA session.
-// </summary>
-//------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session
 {
     using System.Collections.Generic;

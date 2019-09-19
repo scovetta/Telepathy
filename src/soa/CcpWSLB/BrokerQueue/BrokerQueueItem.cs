@@ -1,9 +1,5 @@
-//-----------------------------------------------------------------------------------
-// <copyright file="BrokerQueueItem.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>the broker queue item that is the itomic item of the broker queue.</summary>
-//-----------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("CcpWSLB.UnitTest")]

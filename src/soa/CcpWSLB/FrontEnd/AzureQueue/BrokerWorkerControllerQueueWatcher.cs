@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.ServiceBroker.FrontEnd.AzureQueue
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.ServiceBroker.FrontEnd.AzureQueue
 {
     using System.Diagnostics;
     using System.Threading.Tasks;

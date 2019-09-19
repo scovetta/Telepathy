@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="RepeatableCallbackTrigger.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Trigger for repeatable callback</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker
 {
     using System;

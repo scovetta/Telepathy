@@ -1,4 +1,7 @@
-﻿namespace EchoSvcSample
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace EchoSvcSample
 {
     using System.Text;
 

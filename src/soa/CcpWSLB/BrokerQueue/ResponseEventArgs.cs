@@ -1,9 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="ResponseEventArgs.cs" company="Microsoft">
-//     Copyright(C) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>define the response event class for broker queue.</summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 {
     /// <summary>

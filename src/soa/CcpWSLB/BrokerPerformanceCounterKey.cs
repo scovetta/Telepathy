@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="BrokerPerformanceCounterKey.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Represents broker's performance counter key
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
 {
     using System;

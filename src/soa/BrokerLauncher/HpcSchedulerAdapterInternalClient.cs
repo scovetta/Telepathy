@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="HpcSchedulerAdapterInternalClient.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      The client implementation for the scheduler adapter
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 #if HPCPACK
 namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 {

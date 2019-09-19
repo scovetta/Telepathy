@@ -1,4 +1,7 @@
-﻿using System.Runtime.CompilerServices;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("CcpWSLB.UnitTest")]
 
@@ -518,30 +521,25 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
             BrokerTracing.TraceVerbose("[AzureQueuePersisit] .GetRequestAsync: Get request come in.");
             if (!this.isCreateRequestTask)
             {
+                lock (this.requestTaskLock)
                 {
-                    lock (this.requestTaskLock)
+                    if (!this.isCreateRequestTask)
                     {
-                        if (!this.isCreateRequestTask)
-                        {
-                            this.isCreateRequestTask = true;
-                            Task.Run(
-                                async () =>
+                        this.isCreateRequestTask = true;
+                        Task.Run(
+                            async () =>
+                                {
+                                    while (true)
                                     {
-                                        while (true)
+                                        if (tokenSource.Token.IsCancellationRequested)
                                         {
-                                            if (tokenSource.Token.IsCancellationRequested)
-                                            {
-                                                return;
-                                            }
-
-                                            int time = await AzureStorageTool.CheckRequestQueue(
-                                                           this.privateQueueField,
-                                                           this.responseTableField,
-                                                           this.blobContainer);
-                                            await Task.Delay(time);
+                                            return;
                                         }
-                                    });
-                        }
+
+                                        int time = await AzureStorageTool.CheckRequestQueue(this.privateQueueField, this.responseTableField, this.blobContainer);
+                                        await Task.Delay(time);
+                                    }
+                                });
                     }
                 }
             }

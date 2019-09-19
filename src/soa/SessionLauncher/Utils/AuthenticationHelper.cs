@@ -1,12 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="AuthenticationHelper.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Helper class to authenticate incoming user for both session launcher service
-//      and scheduler delegation service
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 {
     using System;

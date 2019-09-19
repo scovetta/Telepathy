@@ -1,4 +1,7 @@
-﻿namespace TelepathyCommon.Service
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace TelepathyCommon.Service
 {
     using System;
     using System.Collections.Concurrent;

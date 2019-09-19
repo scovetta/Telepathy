@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Local
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Local
 {
     using System;
     using System.Collections.Generic;

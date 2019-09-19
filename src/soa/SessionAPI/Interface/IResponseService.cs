@@ -1,11 +1,5 @@
-//------------------------------------------------------------------------------
-// <copyright file="IResponseService.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      The interface for the client to request the responses
-// </summary>
-//------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session
 {

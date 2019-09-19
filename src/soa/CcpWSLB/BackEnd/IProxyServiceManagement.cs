@@ -1,9 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="IProxyServiceManagement.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Contract of service controller</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using System.ServiceModel;
 

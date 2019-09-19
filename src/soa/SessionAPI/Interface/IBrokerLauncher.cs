@@ -1,11 +1,5 @@
-//------------------------------------------------------------------------------
-// <copyright file="IBrokerLauncher.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Interface for Broker Launcher
-// </summary>
-//------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {

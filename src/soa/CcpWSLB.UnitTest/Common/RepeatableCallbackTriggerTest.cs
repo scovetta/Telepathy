@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------------------
-// <copyright file="RepeatableCallbackTriggerTest.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Test class for RepeatableCallbackTrigger</summary>
-//-----------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.SvcBroker.UnitTest
 {
     using Microsoft.Hpc.ServiceBroker;

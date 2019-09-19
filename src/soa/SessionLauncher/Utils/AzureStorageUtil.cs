@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Utils
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Utils
 {
     using System;
 

@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="AbstractSessionFactory.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Factory class to create session instance
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using System;

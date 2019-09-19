@@ -1,11 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="BrokerLauncherClientFactory.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Factory for broker launcher client
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using Microsoft.Hpc.Scheduler.Session.Common;

@@ -1,11 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="AzureQueueItem.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     The queue item stored in request and response Azure storage queues.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using TelepathyCommon;
 

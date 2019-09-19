@@ -1,11 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="AzureResponseReceiver.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     This is a class for receiving response from Azure side service host.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
     using System;

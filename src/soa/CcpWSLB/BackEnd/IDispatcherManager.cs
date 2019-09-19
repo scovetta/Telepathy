@@ -1,9 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="IDispatcherManager.cs" company="Microsoft">
-//     Copyright 2013 Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>interface of dispatcher manager</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {

@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="SessionInfoContract.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      The information about a cluster (in service fabric)
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using Microsoft.Hpc.RuntimeTrace;
 using System;

@@ -1,12 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="OnPremiseRequestSender.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     This is an implementation of RequestSender for sending requests
-//     to on-premise service hosts.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {
     using System;

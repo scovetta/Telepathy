@@ -1,4 +1,7 @@
-﻿namespace SoaService.DataClient
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace SoaService.DataClient
 {
     using System;
     using System.Collections.Generic;
@@ -6,9 +9,8 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using Microsoft.WindowsAzure.Storage.Blob;
     using Microsoft.WindowsAzure.Storage;
-
+    using Microsoft.WindowsAzure.Storage.Blob;
 
     public class StandaloneDataClient 
     {

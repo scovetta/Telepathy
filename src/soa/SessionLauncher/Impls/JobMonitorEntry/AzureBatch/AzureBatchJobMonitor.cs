@@ -1,4 +1,7 @@
-﻿using Microsoft.Azure.Batch;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using Microsoft.Azure.Batch;
 using Microsoft.Azure.Batch.Common;
 using Microsoft.Hpc.RuntimeTrace;
 using Microsoft.Hpc.Scheduler.Session.Interface;

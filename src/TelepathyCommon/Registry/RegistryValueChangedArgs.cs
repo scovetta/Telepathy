@@ -1,4 +1,7 @@
-﻿namespace TelepathyCommon.Registry
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace TelepathyCommon.Registry
 {
     using System;
 

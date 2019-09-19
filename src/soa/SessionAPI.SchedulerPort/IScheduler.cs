@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.SchedulerPort
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.Scheduler.Session.SchedulerPort
 {
     using System;
     using System.Collections.Generic;

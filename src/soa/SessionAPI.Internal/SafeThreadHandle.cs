@@ -1,11 +1,6 @@
-//------------------------------------------------------------------------------
-// <copyright file="SafeThreadHandle.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Wrapped handle for job object
-// </summary>
-//------------------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 using System;
 using System.Security;
 using System.Security.Permissions;

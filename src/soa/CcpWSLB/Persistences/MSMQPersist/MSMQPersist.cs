@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="MSMQPersist.cs" company="Microsoft">
-//     Copyright (C) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>the implementation of MSMQ storage provider.</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 #if MSMQ
 namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
 {

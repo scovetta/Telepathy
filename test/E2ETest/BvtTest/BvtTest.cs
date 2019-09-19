@@ -1,4 +1,7 @@
-﻿namespace BvtTest
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace BvtTest
 {
     using System;
     using System.Collections.Generic;

@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter
 {
     using System.Collections.Generic;
 

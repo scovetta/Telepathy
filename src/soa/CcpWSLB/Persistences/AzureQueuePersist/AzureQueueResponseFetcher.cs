@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
 {
     using System;
     using System.Collections.Generic;

@@ -1,4 +1,7 @@
-﻿namespace TestService
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace TestService
 {
     using System;
     using System.ServiceModel;

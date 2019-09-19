@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.Scheduler.Session
 {
     using System;
     using System.Diagnostics;

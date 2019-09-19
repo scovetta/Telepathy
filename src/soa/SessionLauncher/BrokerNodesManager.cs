@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="BrokerNodesManager.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      the broker nodes manager.
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 {

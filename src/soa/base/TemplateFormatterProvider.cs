@@ -1,12 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="TemplateFormatterProvider.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//   Inherit and implement this class to provide instances of
-//   the TemplateFormatter class
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.Diagnostics
 {
     using System.Collections.Generic;

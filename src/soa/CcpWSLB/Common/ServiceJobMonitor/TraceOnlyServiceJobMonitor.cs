@@ -1,4 +1,7 @@
-﻿using Microsoft.Hpc.Scheduler.Session.Data;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using Microsoft.Hpc.Scheduler.Session.Data;
 using Microsoft.Hpc.Scheduler.Session.Interface;
 using System.Collections.Generic;
 using System.Threading.Tasks;

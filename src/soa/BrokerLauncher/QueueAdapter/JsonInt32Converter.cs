@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter
 {
     using System;
 

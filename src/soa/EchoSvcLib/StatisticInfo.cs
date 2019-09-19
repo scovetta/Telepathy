@@ -1,11 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="StatisticInfo.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     Statistic info data.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.EchoSvcLib
 {
     using System;

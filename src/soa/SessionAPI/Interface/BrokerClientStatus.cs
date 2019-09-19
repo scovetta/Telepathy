@@ -1,9 +1,6 @@
-//-----------------------------------------------------------------------
-// <copyright file="BrokerClientStatus.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Enum for broker client status</summary>
-//-----------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Interface
 {
     using System;

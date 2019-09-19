@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Hpc.RESTServiceModel
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Hpc.RESTServiceModel
 {
     using System;
     using System.Collections.Generic;

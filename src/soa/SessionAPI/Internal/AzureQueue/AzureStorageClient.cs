@@ -1,12 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="AzureStorageClient.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     It is the client to send message to Azure storage queue or blob based on
-//     the message size.
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {

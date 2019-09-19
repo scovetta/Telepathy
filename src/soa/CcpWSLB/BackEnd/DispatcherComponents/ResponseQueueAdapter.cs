@@ -1,12 +1,5 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="ResponseQueueAdapter.cs" company="Microsoft">
-//     Copyright 2012 Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//     Response queue adapter which is in charge of putting response
-//     back into broker queue
-// </summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.ServiceBroker.BackEnd
 {

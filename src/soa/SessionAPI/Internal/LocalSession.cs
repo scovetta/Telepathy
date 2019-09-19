@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="LocalSession.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      The implementation of the session hosted in-proc
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {

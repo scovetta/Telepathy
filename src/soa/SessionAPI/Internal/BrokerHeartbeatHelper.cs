@@ -1,12 +1,6 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="BrokerHeartbeatHelper.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Provides a heartbeat helper for monitoring heartbeat from session API
-//      to broker worker
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
     using System;

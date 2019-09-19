@@ -1,11 +1,5 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="SchedulerAdapterClientFactory.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Factory class for scheduler adapter client
-// </summary>
-//------------------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using TelepathyCommon.HpcContext;
 using TelepathyCommon.HpcContext.Extensions;

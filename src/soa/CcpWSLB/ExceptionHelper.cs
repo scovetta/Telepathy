@@ -1,9 +1,6 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="ExceptionHelper.cs" company="Microsoft">
-//     Copyright   Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>Exception helper class</summary>
-//-----------------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
 {
     using System;
