@@ -180,7 +180,6 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
         [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "2#", Justification = "we need return the broker queue and a value to indicate whether it is a new queue.")]
         public BrokerQueue GetPersistQueueByClient(string clientId, string userName, out bool isNewCreate)
         {
-            Debug.WriteLine($"[GetPersistQueueByClient] Call stack:{Environment.NewLine}{Environment.StackTrace}");
             BrokerTracing.TraceInfo($"[GetPersistQueueByClient] username:{userName}, sessionid:{this.sessionId}, client:{clientId}");
             isNewCreate = false;
             if (string.IsNullOrEmpty(clientId))
