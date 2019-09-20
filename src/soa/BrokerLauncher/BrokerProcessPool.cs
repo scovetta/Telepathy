@@ -119,7 +119,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
                 {
                     if ((int)DateTime.Now.Subtract(st).TotalMilliseconds > GetBrokerProcessTimeout)
                     {
-                        ThrowHelper.ThrowSessionFault(SOAFaultCode.TimeoutToGetBrokerWorkerProcess, Hpc.Scheduler.Session.SR.TimeoutToGetBrokerWorkerProcess);
+                        ThrowHelper.ThrowSessionFault(SOAFaultCode.TimeoutToGetBrokerWorkerProcess, SR.TimeoutToGetBrokerWorkerProcess);
                     }
                 }
             }

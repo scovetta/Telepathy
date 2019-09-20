@@ -204,7 +204,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
         {
             if (this.auth != null && !this.auth.CheckAccess())
             {
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.AccessDenied_Broker, Hpc.Scheduler.Session.SR.AccessDenied_Broker);
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.AccessDenied_Broker, SR.AccessDenied_Broker);
             }
         }
 
