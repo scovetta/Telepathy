@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.EchoClient
+namespace Microsoft.Telepathy.EchoClient
 {
     using System;
     using System.Collections.Generic;
@@ -56,120 +56,120 @@ namespace Microsoft.Hpc.EchoClient
         private bool helpInfo = false;
         public bool HelpInfo
         {
-            get { return helpInfo; }
+            get { return this.helpInfo; }
         }
         private string headNode = "%CCP_SCHEDULER%";
         public string HeadNode
         {
-            get { return headNode; }
+            get { return this.headNode; }
         }
         private int numberOfRequest = 10;
         public int NumberOfRequest
         {
-            get { return numberOfRequest; }
+            get { return this.numberOfRequest; }
         }
         private int callDurationMS = 0;
         public int CallDurationMS
         {
-            get { return callDurationMS; }
+            get { return this.callDurationMS; }
         }
         private long messageSizeByte = 0;
         public long MessageSizeByte
         {
-            get { return messageSizeByte; }
+            get { return this.messageSizeByte; }
         }
         private int minResource = 0;
         public int MinResource
         {
-            get { return minResource; }
+            get { return this.minResource; }
         }
         private int maxResource = 0;
         public int MaxResource
         {
-            get { return maxResource; }
+            get { return this.maxResource; }
         }
         private string resourceType = "core";
         public string ResourceType
         {
-            get { return resourceType; }
+            get { return this.resourceType; }
         }
         private string transportScheme = "nettcp";
         public string TransportScheme
         {
-            get { return transportScheme; }
+            get { return this.transportScheme; }
         }
         private int warmupTimeSec = 0;
         public int WarmupTimeSec
         {
-            get { return warmupTimeSec; }
+            get { return this.warmupTimeSec; }
         }
         private string jobTemplate = null;
         public string JobTemplate
         {
-            get { return jobTemplate; }
+            get { return this.jobTemplate; }
         }
         private int priority = 2000;
         public int Priority
         {
-            get { return priority; }
+            get { return this.priority; }
         }
         private string nodeGroups = string.Empty;
         public string NodeGroups
         {
-            get { return nodeGroups; }
+            get { return this.nodeGroups; }
         }
         private string nodes = string.Empty;
         public string Nodes
         {
-            get { return nodes; }
+            get { return this.nodes; }
         }
         private string username;
         public string Username
         {
-            get { return username; }
+            get { return this.username; }
         }
         private string password;
         public string Password
         {
-            get { return password; }
+            get { return this.password; }
         }
         private bool durable = false;
         public bool Durable
         {
-            get { return durable; }
+            get { return this.durable; }
         }
         private bool asyncResponseHandler = false;
         public bool AsyncResponseHandler
         {
-            get { return asyncResponseHandler; }
+            get { return this.asyncResponseHandler; }
         }
         private bool inprocessBroker = false;
         public bool InprocessBroker
         {
-            get { return inprocessBroker; }
+            get { return this.inprocessBroker; }
         }
 
         private bool isNoSession = false;
         public bool IsNoSession
         {
-            get { return isNoSession; }
+            get { return this.isNoSession; }
         }
 
         private string regPath = string.Empty;
         public string RegPath
         {
-            get { return regPath; }
+            get { return this.regPath; }
         }
 
         private bool insecure = false;
         public bool Insecure
         {
-            get { return insecure; }
+            get { return this.insecure; }
         }
         private bool? azureQueue = null;
         public bool? AzureQueue
         {
-            get { return azureQueue; }
+            get { return this.azureQueue; }
         }
 
         private string azureStorageConnectionString = null;
@@ -186,135 +186,135 @@ namespace Microsoft.Hpc.EchoClient
 
         public bool ShareSession
         {
-            get { return shareSession; }
+            get { return this.shareSession; }
         }
         private bool sessionPool = false;
         public bool SessionPool
         {
-            get { return sessionPool; }
+            get { return this.sessionPool; }
         }
         private int runtime = -1;
         public int Runtime
         {
-            get { return runtime; }
+            get { return this.runtime; }
         }
         private string jobName = string.Empty;
         public string JobName
         {
-            get { return jobName; }
+            get { return this.jobName; }
         }
         private string environment = string.Empty;
         public string Environment
         {
-            get { return environment; }
+            get { return this.environment; }
         }
         private int brokerClient = 1;
         public int BrokerClient
         {
-            get { return brokerClient; }
+            get { return this.brokerClient; }
         }
         private string serviceName = "CcpEchoSvc";
         public string ServiceName
         {
-            get { return serviceName; }
+            get { return this.serviceName; }
         }
         private bool verbose = false;
         public bool Verbose
         {
-            get { return verbose; }
+            get { return this.verbose; }
         }
         private int flush = 0;
         public int Flush
         {
-            get { return flush; }
+            get { return this.flush; }
         }
         private string sizeKBRandom = string.Empty;
         public string SizeKBRandom
         {
-            get { return sizeKBRandom; }
+            get { return this.sizeKBRandom; }
         }
         private string timeMSRandom = string.Empty;
         public string TimeMSRandom
         {
-            get { return timeMSRandom; }
+            get { return this.timeMSRandom; }
         }
         private int msgTimeoutSec = 60 * 60; //by default, the message operation timeout is 60 minutes
         public int MsgTimeoutSec
         {
-            get { return msgTimeoutSec; }
+            get { return this.msgTimeoutSec; }
         }
         private string parentIds = string.Empty;
         public string ParentIds
         {
-            get { return parentIds; }
+            get { return this.parentIds; }
         }
         private int? serviceIdleSec = null; //by default, the service idle timeout depends on that in service registration
         public int? ServiceIdleSec
         {
-            get { return serviceIdleSec; }
+            get { return this.serviceIdleSec; }
         }
         private int? serviceHangSec = null; //by default, the service hang timeout depends on that in service registration
         public int? ServiceHangSec
         {
-            get { return serviceHangSec; }
+            get { return this.serviceHangSec; }
         }
         private bool useWCC = false;
         public bool UseWCC
         {
-            get { return useWCC; }
+            get { return this.useWCC; }
         }
         public bool UseAad { get; private set; } = false;
 
         private List<string> targetList = null;
         public List<string> TargetList
         {
-            get { return targetList; }
+            get { return this.targetList; }
         }
 
         public Config(CmdParser parser)
         {
-            helpInfo = parser.GetSwitch("?") || parser.GetSwitch("help");
-            parser.TryGetArg<string>(HeadNodeArg, ref headNode);
-            parser.TryGetArg<int>(RequestArg, ref numberOfRequest);
-            parser.TryGetArg<int>(TimeMSArg, ref callDurationMS);
-            parser.TryGetArg<long>(SizeByteArg, ref messageSizeByte);
-            parser.TryGetArg<string>(ResourceTypeArg, ref resourceType);
-            parser.TryGetArg<int>(MinArg, ref minResource);
-            parser.TryGetArg<int>(MaxArg, ref maxResource);
-            parser.TryGetArg<int>(WarmupSecArg, ref warmupTimeSec);
-            parser.TryGetArg<string>(TransportSchemeArg, ref transportScheme);
-            parser.TryGetArg<string>(JobTemplateArg, ref jobTemplate);
-            parser.TryGetArg<int>(PriorityArg, ref priority);
-            parser.TryGetArg<string>(NodeGroupsArg, ref nodeGroups);
-            parser.TryGetArg<string>(NodesArg, ref nodes);
-            parser.TryGetArg<string>(UserNameArg, ref username);
-            parser.TryGetArg<string>(PasswordArg, ref password);
-            parser.TryGetArg<bool?>(AzureQueueArg, ref azureQueue);
-            parser.TryGetArg<int>(RuntimeArg, ref runtime);
-            parser.TryGetArg<int>(BrokerClientArg, ref brokerClient);
-            parser.TryGetArg<string>(JobNameArg, ref jobName);
-            parser.TryGetArg<string>(EnvironmentArg, ref environment);
-            parser.TryGetArg<string>(ServiceNameArg, ref serviceName);
-            parser.TryGetArg<int>(FlushArg, ref flush);
-            parser.TryGetArg<string>(TimeMSRandomArg, ref timeMSRandom);
-            parser.TryGetArg<string>(SizeKBRandomArg, ref sizeKBRandom);
-            parser.TryGetArg<int>(MsgTimeoutSecArg, ref msgTimeoutSec);
-            parser.TryGetArg<string>(ParentJobIdsArg, ref parentIds);
-            parser.TryGetArg<int?>(ServiceIdleSecArg, ref serviceIdleSec);
-            parser.TryGetArg<int?>(ServiceHangSecArg, ref serviceHangSec);
-            parser.TryGetArg<string>(RegPathArg, ref regPath);
-            parser.TryGetArgList<string>(TargetListArg, ref targetList);
-            parser.TryGetArg(AzureStorageConnectionStringArg, ref azureStorageConnectionString);
+            this.helpInfo = parser.GetSwitch("?") || parser.GetSwitch("help");
+            parser.TryGetArg<string>(HeadNodeArg, ref this.headNode);
+            parser.TryGetArg<int>(RequestArg, ref this.numberOfRequest);
+            parser.TryGetArg<int>(TimeMSArg, ref this.callDurationMS);
+            parser.TryGetArg<long>(SizeByteArg, ref this.messageSizeByte);
+            parser.TryGetArg<string>(ResourceTypeArg, ref this.resourceType);
+            parser.TryGetArg<int>(MinArg, ref this.minResource);
+            parser.TryGetArg<int>(MaxArg, ref this.maxResource);
+            parser.TryGetArg<int>(WarmupSecArg, ref this.warmupTimeSec);
+            parser.TryGetArg<string>(TransportSchemeArg, ref this.transportScheme);
+            parser.TryGetArg<string>(JobTemplateArg, ref this.jobTemplate);
+            parser.TryGetArg<int>(PriorityArg, ref this.priority);
+            parser.TryGetArg<string>(NodeGroupsArg, ref this.nodeGroups);
+            parser.TryGetArg<string>(NodesArg, ref this.nodes);
+            parser.TryGetArg<string>(UserNameArg, ref this.username);
+            parser.TryGetArg<string>(PasswordArg, ref this.password);
+            parser.TryGetArg<bool?>(AzureQueueArg, ref this.azureQueue);
+            parser.TryGetArg<int>(RuntimeArg, ref this.runtime);
+            parser.TryGetArg<int>(BrokerClientArg, ref this.brokerClient);
+            parser.TryGetArg<string>(JobNameArg, ref this.jobName);
+            parser.TryGetArg<string>(EnvironmentArg, ref this.environment);
+            parser.TryGetArg<string>(ServiceNameArg, ref this.serviceName);
+            parser.TryGetArg<int>(FlushArg, ref this.flush);
+            parser.TryGetArg<string>(TimeMSRandomArg, ref this.timeMSRandom);
+            parser.TryGetArg<string>(SizeKBRandomArg, ref this.sizeKBRandom);
+            parser.TryGetArg<int>(MsgTimeoutSecArg, ref this.msgTimeoutSec);
+            parser.TryGetArg<string>(ParentJobIdsArg, ref this.parentIds);
+            parser.TryGetArg<int?>(ServiceIdleSecArg, ref this.serviceIdleSec);
+            parser.TryGetArg<int?>(ServiceHangSecArg, ref this.serviceHangSec);
+            parser.TryGetArg<string>(RegPathArg, ref this.regPath);
+            parser.TryGetArgList<string>(TargetListArg, ref this.targetList);
+            parser.TryGetArg(AzureStorageConnectionStringArg, ref this.azureStorageConnectionString);
 
-            inprocessBroker = parser.GetSwitch(InprocessBrokerArg);
-            isNoSession = parser.GetSwitch(IsNoSessionArg);
-            insecure = parser.GetSwitch(InsecureArg);
-            durable = parser.GetSwitch(DurableArg);
-            asyncResponseHandler = parser.GetSwitch(AsyncArg);
-            shareSession = parser.GetSwitch(ShareSessionArg);
-            sessionPool = parser.GetSwitch(SessionPoolArg);
-            verbose = parser.GetSwitch(VerboseArg);
-            useWCC = parser.GetSwitch(UseWindowsClientCredentialArg);
+            this.inprocessBroker = parser.GetSwitch(InprocessBrokerArg);
+            this.isNoSession = parser.GetSwitch(IsNoSessionArg);
+            this.insecure = parser.GetSwitch(InsecureArg);
+            this.durable = parser.GetSwitch(DurableArg);
+            this.asyncResponseHandler = parser.GetSwitch(AsyncArg);
+            this.shareSession = parser.GetSwitch(ShareSessionArg);
+            this.sessionPool = parser.GetSwitch(SessionPoolArg);
+            this.verbose = parser.GetSwitch(VerboseArg);
+            this.useWCC = parser.GetSwitch(UseWindowsClientCredentialArg);
             this.UseAad = parser.GetSwitch(UseAadArg);
         }
 

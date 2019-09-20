@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.EchoClient
+namespace Microsoft.Telepathy.EchoClient
 {
     using System;
     using System.Collections.Generic;
@@ -19,16 +19,16 @@ namespace Microsoft.Hpc.EchoClient
 
         public CmdParser(string[] args)
         {
-            argsGroup = new Dictionary<string, string>();
-            switchGroup = new List<string>();
+            this.argsGroup = new Dictionary<string, string>();
+            this.switchGroup = new List<string>();
 
-            usedArguments = new List<string>();
-            usedSwitchParames = new List<string>();
-            storeArgs = new List<string>();
+            this.usedArguments = new List<string>();
+            this.usedSwitchParames = new List<string>();
+            this.storeArgs = new List<string>();
 
             foreach (string arg in args)
             {
-                storeArgs.Add(arg.ToLowerInvariant());
+                this.storeArgs.Add(arg.ToLowerInvariant());
                 Regex rp = new Regex("(?<=^/).*?(?=:|$)");
                 Match pMatch = rp.Match(arg);
                 if (pMatch.Success)
@@ -39,16 +39,16 @@ namespace Microsoft.Hpc.EchoClient
                     if (vMatch.Success)
                     {
                         string paramValue = Environment.ExpandEnvironmentVariables(vMatch.Value);
-                        if (!argsGroup.ContainsKey(paramName))
+                        if (!this.argsGroup.ContainsKey(paramName))
                         {
-                            argsGroup.Add(paramName, paramValue);
+                            this.argsGroup.Add(paramName, paramValue);
                         }
                     }
                     else
                     {
-                        if (!switchGroup.Contains(paramName))
+                        if (!this.switchGroup.Contains(paramName))
                         {
-                            switchGroup.Add(paramName);
+                            this.switchGroup.Add(paramName);
                         }
                     }
                 }
@@ -63,9 +63,9 @@ namespace Microsoft.Hpc.EchoClient
                     string argTrimmed = arg.TrimStart(new char[] { '-' }).ToLowerInvariant();
                     if (preArg != string.Empty)
                     {
-                        if (!switchGroup.Contains(preArg))
+                        if (!this.switchGroup.Contains(preArg))
                         {
-                            switchGroup.Add(preArg);
+                            this.switchGroup.Add(preArg);
                         }
                     }
                     preArg = argTrimmed;
@@ -74,9 +74,9 @@ namespace Microsoft.Hpc.EchoClient
                 {
                     if (preArg != string.Empty)
                     {
-                        if (!argsGroup.ContainsKey(preArg))
+                        if (!this.argsGroup.ContainsKey(preArg))
                         {
-                            argsGroup.Add(preArg, arg);
+                            this.argsGroup.Add(preArg, arg);
                             preArg = string.Empty;
                         }
                     }
@@ -85,9 +85,9 @@ namespace Microsoft.Hpc.EchoClient
 
             if (preArg != string.Empty)
             {
-                if (!switchGroup.Contains(preArg))
+                if (!this.switchGroup.Contains(preArg))
                 {
-                    switchGroup.Add(preArg);
+                    this.switchGroup.Add(preArg);
                 }
             }
 
@@ -95,7 +95,7 @@ namespace Microsoft.Hpc.EchoClient
 
         public void TryGetArgList<T>(string arg, ref List<T> t)
         {
-            List<string> value = GetArgList(arg);
+            List<string> value = this.GetArgList(arg);
             if (value.Count > 0)
             {
                 try
@@ -122,15 +122,15 @@ namespace Microsoft.Hpc.EchoClient
             arg = arg.ToLowerInvariant();
             string _arg = "-" + arg;
             List<string> value = new List<string>();
-            if (storeArgs.Contains(_arg))
+            if (this.storeArgs.Contains(_arg))
             {
-                usedArguments.Add(arg);
-                for (int i = storeArgs.FindIndex((s) => { return s.Equals(_arg); }) + 1; i < storeArgs.Count; i++)
+                this.usedArguments.Add(arg);
+                for (int i = this.storeArgs.FindIndex((s) => { return s.Equals(_arg); }) + 1; i < this.storeArgs.Count; i++)
                 {
-                    if (!storeArgs[i].StartsWith("-"))
+                    if (!this.storeArgs[i].StartsWith("-"))
                     {
-                        value.Add(storeArgs[i]);
-                        usedArguments.Add(storeArgs[i]);
+                        value.Add(this.storeArgs[i]);
+                        this.usedArguments.Add(this.storeArgs[i]);
                     }
                     else
                     {
@@ -142,21 +142,21 @@ namespace Microsoft.Hpc.EchoClient
             if (value.Count == 0)
             {
                 int start;
-                for (start = 0; start < storeArgs.Count; start++)
+                for (start = 0; start < this.storeArgs.Count; start++)
                 {
-                    if (_arg.StartsWith(storeArgs[start], StringComparison.InvariantCultureIgnoreCase))
+                    if (_arg.StartsWith(this.storeArgs[start], StringComparison.InvariantCultureIgnoreCase))
                     {
-                        usedArguments.Add(storeArgs[start].TrimStart(new char[] { '-' }).ToLowerInvariant());
+                        this.usedArguments.Add(this.storeArgs[start].TrimStart(new char[] { '-' }).ToLowerInvariant());
                         break;
                     }
                 }
 
-                for (int i = start + 1; i < storeArgs.Count; i++)
+                for (int i = start + 1; i < this.storeArgs.Count; i++)
                 {
-                    if (!storeArgs[i].StartsWith("-"))
+                    if (!this.storeArgs[i].StartsWith("-"))
                     {
-                        value.Add(storeArgs[i]);
-                        usedArguments.Add(storeArgs[i]);
+                        value.Add(this.storeArgs[i]);
+                        this.usedArguments.Add(this.storeArgs[i]);
                     }
                     else
                     {
@@ -169,7 +169,7 @@ namespace Microsoft.Hpc.EchoClient
 
         public void TryGetArg<T>(string arg, ref T t)
         {
-            string value = GetArg(arg);
+            string value = this.GetArg(arg);
             if (!string.IsNullOrEmpty(value))
             {
                 try
@@ -188,19 +188,19 @@ namespace Microsoft.Hpc.EchoClient
         {
             arg=arg.ToLowerInvariant();
             string value = null;
-            if (argsGroup.ContainsKey(arg))
+            if (this.argsGroup.ContainsKey(arg))
             {
-                value = argsGroup[arg];
-                usedArguments.Add(arg);
+                value = this.argsGroup[arg];
+                this.usedArguments.Add(arg);
             }
             if (value == null)
             {
-                foreach (string key in argsGroup.Keys)
+                foreach (string key in this.argsGroup.Keys)
                 {
                     if (arg.StartsWith(key, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        value = argsGroup[key];
-                        usedArguments.Add(key);
+                        value = this.argsGroup[key];
+                        this.usedArguments.Add(key);
                         break;
                     }
                 }
@@ -210,19 +210,19 @@ namespace Microsoft.Hpc.EchoClient
 
         public bool GetSwitch(string swi)
         {
-            bool on = switchGroup.Contains(swi);
+            bool on = this.switchGroup.Contains(swi);
             if (on)
             {
-                usedSwitchParames.Add(swi);
+                this.usedSwitchParames.Add(swi);
             }
             else
             {
-                foreach (string s in switchGroup)
+                foreach (string s in this.switchGroup)
                 {
                     if (swi.StartsWith(s, StringComparison.InvariantCultureIgnoreCase))
                     {
                         on = true;
-                        usedSwitchParames.Add(s);
+                        this.usedSwitchParames.Add(s);
                         break;
                     }
                 }
@@ -232,14 +232,14 @@ namespace Microsoft.Hpc.EchoClient
 
         public void Unused(out Dictionary<string, string> unusedArgs, out List<string> unusedSwitches)
         {
-            unusedArgs = argsGroup.Where(kv => !usedArguments.Contains(kv.Key)).ToDictionary(kv => kv.Key, kv => kv.Value);
-            unusedSwitches = switchGroup.Where(s => !usedSwitchParames.Contains(s)).ToList();
+            unusedArgs = this.argsGroup.Where(kv => !this.usedArguments.Contains(kv.Key)).ToDictionary(kv => kv.Key, kv => kv.Value);
+            unusedSwitches = this.switchGroup.Where(s => !this.usedSwitchParames.Contains(s)).ToList();
         }
 
         public void Used(out Dictionary<string, string> usedArgs, out List<string> usedSwitches)
         {
-            usedArgs = argsGroup.Where(kv => usedArguments.Contains(kv.Key)).ToDictionary(kv => kv.Key, kv => kv.Value);
-            usedSwitches = switchGroup.Where(s => usedSwitchParames.Contains(s)).ToList();
+            usedArgs = this.argsGroup.Where(kv => this.usedArguments.Contains(kv.Key)).ToDictionary(kv => kv.Key, kv => kv.Value);
+            usedSwitches = this.switchGroup.Where(s => this.usedSwitchParames.Contains(s)).ToList();
         }
     }
 }

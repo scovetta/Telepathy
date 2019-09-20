@@ -4,7 +4,7 @@
   <PropertyGroup>
     <ProjectGuid>{69CD3572-BE38-4F9D-ADFD-F9151D66C22D}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>EchoClient</RootNamespace>
+    <RootNamespace>Microsoft.Telepathy.EchoClient</RootNamespace>
     <AssemblyName>EchoClient</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <AssemblyClsCompliant>false</AssemblyClsCompliant>

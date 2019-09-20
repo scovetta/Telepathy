@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.EchoClient
+namespace Microsoft.Telepathy.EchoClient
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using System.Threading;
-    using EchoSvcLib;
-    using Microsoft.Hpc.Scheduler.Session;
     using System.ServiceModel;
+    using System.Threading;
+
+    using Microsoft.Hpc.Scheduler.Session;
 
     public class Program
     {
