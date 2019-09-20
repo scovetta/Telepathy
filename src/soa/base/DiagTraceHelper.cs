@@ -1,13 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.Diagnostics
+namespace Microsoft.Telepathy.RuntimeTrace
 {
     using System;
     using System.Diagnostics;
     using System.Globalization;
     using System.Text;
-    using Microsoft.Hpc.RuntimeTrace;
 
     /// <summary>
     /// Provider util methods to write trace for SOA diag system

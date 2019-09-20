@@ -12,8 +12,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Hpc.ServiceBroker.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using Microsoft.Hpc.RuntimeTrace;
+
     using System.Threading;
+
+    using Microsoft.Telepathy.RuntimeTrace;
 
     using Utility = Microsoft.Hpc.ServiceBroker.Common.Utility;
 

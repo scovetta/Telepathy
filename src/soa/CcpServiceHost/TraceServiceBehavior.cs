@@ -17,7 +17,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
     using System.Xml;
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using RuntimeTraceHelper = Microsoft.Hpc.RuntimeTrace.TraceHelper;
+    using RuntimeTraceHelper = Microsoft.Telepathy.RuntimeTrace.TraceHelper;
     using System.Threading;
 
     /// <summary>

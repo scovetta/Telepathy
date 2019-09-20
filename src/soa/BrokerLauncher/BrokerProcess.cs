@@ -15,7 +15,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using System.Security;
     using System.Text;
     using System.Threading;
-    using Microsoft.Hpc.RuntimeTrace;
+
+    using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Win32.SafeHandles;
 
     /// <summary>

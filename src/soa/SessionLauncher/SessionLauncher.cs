@@ -3,7 +3,6 @@
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 {
-    using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal;
@@ -21,6 +20,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 
     using Microsoft.Hpc.Scheduler.Session.Configuration;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
+    using Microsoft.Telepathy.RuntimeTrace;
 
     using TelepathyCommon;
 

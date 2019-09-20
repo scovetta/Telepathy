@@ -12,9 +12,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
 
     using CommandLine;
 
-    using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
     using Microsoft.Hpc.ServiceBroker;
+    using Microsoft.Telepathy.RuntimeTrace;
 
     using Serilog;
 

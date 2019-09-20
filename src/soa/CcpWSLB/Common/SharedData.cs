@@ -5,10 +5,11 @@ namespace Microsoft.Hpc.ServiceBroker
 {
     using System;
     using System.Threading;
-    using Microsoft.Hpc.RuntimeTrace;
+
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Hpc.Scheduler.Session.Configuration;
+    using Microsoft.Telepathy.RuntimeTrace;
 
     /// <summary>
     /// Wrap the shared data amoung components

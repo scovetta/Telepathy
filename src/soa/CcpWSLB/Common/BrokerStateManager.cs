@@ -8,7 +8,7 @@ namespace Microsoft.Hpc.ServiceBroker
 
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.SvcBroker;
-    using Microsoft.Hpc.RuntimeTrace;
+    using Microsoft.Telepathy.RuntimeTrace;
 
     /// <summary>
     /// Broker's state manager

@@ -1,13 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.Hpc.RuntimeTrace;
 using System;
 using System.Configuration;
 using System.Diagnostics;
 
 namespace Microsoft.Hpc.ServiceBroker
 {
+    using Microsoft.Telepathy.RuntimeTrace;
+
     public static class SimulateFailure
     {
         static volatile string operationToFail;

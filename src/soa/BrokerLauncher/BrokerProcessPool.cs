@@ -7,8 +7,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using System.Collections.Generic;
     using System.Text;
     using System.Threading;
-    using Microsoft.Hpc.RuntimeTrace;
     using System.Diagnostics;
+
+    using Microsoft.Telepathy.RuntimeTrace;
 
     /// <summary>
     /// Provide broker process pool

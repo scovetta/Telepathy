@@ -3,9 +3,11 @@
 
 namespace Microsoft.Hpc.ServiceBroker
 {
-    using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using System.Collections.Concurrent;
+
+    using Microsoft.Telepathy.RuntimeTrace;
+
     /// <summary>
     /// Utility class providing diag trace enabled/disabled flag.
     /// </summary>

@@ -10,9 +10,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
     using System.Security.Principal;
     using System.Text;
     using System.Threading;
-    using Microsoft.Hpc.RuntimeTrace;
+
     using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.RuntimeTrace;
 
     /// <summary>
     /// Maintains broker's identity when calling user services. BN computer account for non-

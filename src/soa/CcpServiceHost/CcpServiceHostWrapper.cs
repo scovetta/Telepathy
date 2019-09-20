@@ -22,7 +22,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
     using TelepathyCommon;
 
-    using RuntimeTraceHelper = Microsoft.Hpc.RuntimeTrace.TraceHelper;
+    using RuntimeTraceHelper = Microsoft.Telepathy.RuntimeTrace.TraceHelper;
 
     /// <summary>
     /// This class works in the newly created domain. 

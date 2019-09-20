@@ -14,9 +14,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Schedul
 
     using Microsoft.Azure.Batch;
     using Microsoft.Azure.Batch.Common;
-    using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch;
-
+    using Microsoft.Telepathy.RuntimeTrace;
 
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple, IncludeExceptionDetailInFaults = true, MaxItemsInObjectGraph = int.MaxValue)]
     internal class AzureBatchSchedulerDelegation : ISchedulerAdapter

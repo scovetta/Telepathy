@@ -3,12 +3,13 @@
 
 namespace Microsoft.Hpc.ServiceBroker
 {
-    using Microsoft.Hpc.RuntimeTrace;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
     using System.Text;
+
+    using Microsoft.Telepathy.RuntimeTrace;
 
     /// <summary>
     /// Broker tracing helper class

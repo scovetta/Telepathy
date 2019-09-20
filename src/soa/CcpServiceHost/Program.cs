@@ -20,10 +20,10 @@ namespace Microsoft.Hpc.CcpServiceHosting
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.RESTServiceModel;
-    using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler.Session.Configuration;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
+    using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Win32.SafeHandles;
 
     using SoaService.DataClient;

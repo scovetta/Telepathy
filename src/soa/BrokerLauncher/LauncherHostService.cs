@@ -12,13 +12,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using System.ServiceProcess;
     using System.Threading;
 
-    using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter;
     using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Hpc.ServiceBroker.Common;
+    using Microsoft.Telepathy.RuntimeTrace;
 
     using TelepathyCommon.HpcContext;
 

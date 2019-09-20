@@ -10,9 +10,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim
     using System.Net;
     using System.ServiceModel;
     using System.Threading;
-    using Microsoft.Hpc.RuntimeTrace;
+
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.ServiceBroker;
+    using Microsoft.Telepathy.RuntimeTrace;
 
     using Serilog;
 

@@ -15,7 +15,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
     using TelepathyCommon;
 
-    using RuntimeTraceHelper = Microsoft.Hpc.RuntimeTrace.TraceHelper;
+    using RuntimeTraceHelper = Microsoft.Telepathy.RuntimeTrace.TraceHelper;
     /// <summary>
     /// Utility for service host
     /// </summary>

@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.Hpc.RuntimeTrace;
 using System;
 using System.Diagnostics;
 using System.Threading;

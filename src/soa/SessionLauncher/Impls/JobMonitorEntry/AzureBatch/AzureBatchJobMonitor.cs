@@ -3,7 +3,6 @@
 
 using Microsoft.Azure.Batch;
 using Microsoft.Azure.Batch.Common;
-using Microsoft.Hpc.RuntimeTrace;
 using Microsoft.Hpc.Scheduler.Session.Interface;
 using System;
 using System.Collections.Generic;
@@ -17,6 +16,8 @@ using TelepathyCommon;
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch
 {
+    using Microsoft.Telepathy.RuntimeTrace;
+
     using TelepathyConstants = TelepathyCommon.TelepathyConstants;
 
     internal class AzureBatchJobMonitor : IDisposable

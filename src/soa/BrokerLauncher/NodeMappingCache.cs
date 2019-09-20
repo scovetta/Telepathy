@@ -8,8 +8,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using System.ServiceModel;
     using System.Threading;
     using Microsoft.Hpc.Azure.Common;
-    using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler.Session.Common;
+    using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.WindowsAzure.ServiceRuntime;
     using Microsoft.WindowsAzure.Storage;
 

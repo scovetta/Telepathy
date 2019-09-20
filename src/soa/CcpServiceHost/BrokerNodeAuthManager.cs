@@ -9,7 +9,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
     using System.ServiceModel;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using RuntimeTraceHelper = Microsoft.Hpc.RuntimeTrace.TraceHelper;
+    using RuntimeTraceHelper = Microsoft.Telepathy.RuntimeTrace.TraceHelper;
 
     /// <summary>
     /// An authorization manager which only allows access from broker node or resources group computer accounts

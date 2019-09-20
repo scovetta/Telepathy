@@ -8,7 +8,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using System.Runtime.InteropServices;
     using System.Text;
 
-    using Microsoft.Hpc.RuntimeTrace;
+    using Microsoft.Telepathy.RuntimeTrace;
+
     // using Microsoft.Hpc.RuntimeTrace;
     using Win32.SafeHandles;
 

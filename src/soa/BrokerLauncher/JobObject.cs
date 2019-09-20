@@ -10,7 +10,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using System.Diagnostics;
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.Hpc.RuntimeTrace;
+
+    using Microsoft.Telepathy.RuntimeTrace;
+
     using Win32.SafeHandles;
     /// <summary>
     /// Wrapper of the job object

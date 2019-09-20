@@ -12,12 +12,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
 
     using CommandLine;
 
-    using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Local;
     using Microsoft.Hpc.Scheduler.Session.LauncherHostService;
+    using Microsoft.Telepathy.RuntimeTrace;
 
     using Newtonsoft.Json;
 

@@ -10,11 +10,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using System.ServiceModel;
     using System.Threading;
 
-    using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
+    using Microsoft.Telepathy.RuntimeTrace;
 
     using TelepathyCommon.HpcContext;
 

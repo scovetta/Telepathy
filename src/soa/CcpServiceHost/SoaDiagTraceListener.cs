@@ -9,8 +9,9 @@ namespace Microsoft.Hpc.CcpServiceHosting
     using System.Globalization;
     using System.ServiceModel;
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Diagnostics;
-    using RuntimeTraceHelper = Microsoft.Hpc.RuntimeTrace.TraceHelper;
+    using Microsoft.Telepathy.RuntimeTrace;
+
+    using RuntimeTraceHelper = Microsoft.Telepathy.RuntimeTrace.TraceHelper;
 
     /// <summary>
     /// Provide a trace listener for the soa diag trace.

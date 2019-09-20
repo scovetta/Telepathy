@@ -9,7 +9,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using System.Reflection;
     using System.Text;
     using System.Threading;
-    using Microsoft.Hpc.RuntimeTrace;
+
+    using Microsoft.Telepathy.RuntimeTrace;
 
     /// <summary>
     /// Provide root entry for thread pool thread and async call back thread

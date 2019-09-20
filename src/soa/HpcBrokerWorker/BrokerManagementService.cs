@@ -6,12 +6,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim
     using System;
     using System.ServiceModel;
     using System.Threading;
-    using Microsoft.Hpc.RuntimeTrace;
+
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.ServiceBroker;
     using System.Diagnostics;
     using System.IO;
-    
+
+    using Microsoft.Telepathy.RuntimeTrace;
 
     /// <summary>
     /// The Broker Management Service
