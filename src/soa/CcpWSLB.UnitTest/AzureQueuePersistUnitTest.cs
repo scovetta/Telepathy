@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace CcpWSLB.UnitTest
+namespace Microsoft.Telepathy.ServiceBroker.UnitTest
 {
     using System;
     using System.Diagnostics;

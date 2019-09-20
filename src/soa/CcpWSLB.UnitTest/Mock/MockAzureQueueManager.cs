@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.ServiceModel.Channels;
-using System.Xml;
-using Microsoft.Hpc.Scheduler.Session.Common;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
-using Microsoft.WindowsAzure.Storage.Queue;
-
-namespace Microsoft.Hpc.ServiceBroker.UnitTest.Mock
+﻿namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Mock
 {
+    using System;
+    using System.Collections.Concurrent;
+    using System.ServiceModel.Channels;
+    using System.Xml;
+
     using Microsoft.Telepathy.ServiceBroker.BackEnd.AzureQueue;
+    using Microsoft.WindowsAzure.Storage;
+    using Microsoft.WindowsAzure.Storage.Blob;
+    using Microsoft.WindowsAzure.Storage.Queue;
 
     internal class MockAzureQueueManager : IAzureQueueManager
     {
@@ -31,7 +29,7 @@ namespace Microsoft.Hpc.ServiceBroker.UnitTest.Mock
 
             Tuple<CloudQueue, CloudBlobContainer> tuple = new Tuple<CloudQueue, CloudBlobContainer>(queue, container);
 
-            requestStorage.AddOrUpdate("svc", tuple, (key, value) => tuple);
+            this.requestStorage.AddOrUpdate("svc", tuple, (key, value) => tuple);
         }
 
         public string StorageConnectionString

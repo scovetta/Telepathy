@@ -1,13 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.SvcBroker.UnitTest.Mock
+namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Mock
 {
-    using System;
-    using System.Collections.Generic;
     using System.Runtime.Serialization;
     using System.Security.Principal;
-    using System.Text;
 
     using Microsoft.Hpc.Scheduler.Session;
 
@@ -45,7 +42,7 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest.Mock
         /// <returns>ture or false</returns>
         public override bool CheckAccess(System.ServiceModel.ServiceSecurityContext context)
         {
-            return allow;
+            return this.allow;
         }
 
         public MockBrokerAuthorization(SecurityIdentifier allowedUser) : base(allowedUser)

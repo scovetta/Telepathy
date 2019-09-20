@@ -1,14 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.ServiceModel;
-using System.ServiceModel.Channels;
-
-namespace Microsoft.Hpc.SvcBroker.UnitTest.Mock
+namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Mock
 {
+    using System.ServiceModel;
+    using System.ServiceModel.Channels;
+
     [ServiceContract]
     interface IService
     {

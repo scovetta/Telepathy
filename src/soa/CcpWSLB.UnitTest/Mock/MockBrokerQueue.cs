@@ -1,13 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.SvcBroker.UnitTest.Mock
+namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Mock
 {
     using System;
     using System.Collections.Generic;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using System.Text;
 
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
 
@@ -51,7 +50,7 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest.Mock
         /// </summary>
         public Queue<Message> ReplyMessageQueue
         {
-            get { return replyMessageQueue; }
+            get { return this.replyMessageQueue; }
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.SvcBroker.UnitTest.FrontEnd
+namespace Microsoft.Telepathy.ServiceBroker.UnitTest.FrontEnd
 {
     using System;
     using System.Configuration;
@@ -10,11 +10,10 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest.FrontEnd
 
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Configuration;
-    using Microsoft.Hpc.ServiceBroker;
-    using Microsoft.Hpc.SvcBroker.UnitTest.Mock;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.ServiceBroker.FrontEnd;
+    using Microsoft.Telepathy.ServiceBroker.UnitTest.Mock;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
@@ -36,11 +35,11 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest.FrontEnd
         {
             get
             {
-                return testContextInstance;
+                return this.testContextInstance;
             }
             set
             {
-                testContextInstance = value;
+                this.testContextInstance = value;
             }
         }
 

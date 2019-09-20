@@ -1,13 +1,13 @@
-﻿using System.ServiceModel;
-using System.ServiceModel.Channels;
-using Microsoft.Hpc.Scheduler.Session.Internal;
-using Microsoft.Hpc.ServiceBroker.UnitTest.Mock;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Microsoft.Hpc.ServiceBroker.UnitTest.Dispatcher
+﻿namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Dispatcher
 {
+    using System.ServiceModel;
+    using System.ServiceModel.Channels;
+
+    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.ServiceBroker.UnitTest.Mock;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class OnPremiseResponseReceiverTest

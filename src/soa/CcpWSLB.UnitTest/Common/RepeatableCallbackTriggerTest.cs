@@ -1,14 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.SvcBroker.UnitTest
+namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Common
 {
-    using Microsoft.Hpc.ServiceBroker;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Threading;
 
     using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
     ///This is a test class for RepeatableCallbackTrigger and is intended
@@ -28,12 +27,12 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest
         [TestMethod]
         public void RepeatableCallbackTest()
         {
-            callbackResult = string.Empty;
+            this.callbackResult = string.Empty;
             RepeatableCallbackTrigger trigger = new RepeatableCallbackTrigger();
             trigger.RegisterCallback(TimeSpan.FromMilliseconds(100), this.CallbackMethod, "1");
             trigger.Start();
             Thread.Sleep(350);
-            Assert.AreEqual("111", callbackResult);
+            Assert.AreEqual("111", this.callbackResult);
         }
 
         /// <summary>
@@ -42,7 +41,7 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest
         /// <param name="state">async state object</param>
         private void CallbackMethod(object state)
         {
-            callbackResult += state.ToString();
+            this.callbackResult += state.ToString();
         }
     }
 }

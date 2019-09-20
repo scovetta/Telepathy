@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Hpc.ServiceBroker.UnitTest.Dispatcher
+﻿namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Dispatcher
 {
     using System.Reflection;
 

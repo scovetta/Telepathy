@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceModel.Channels;
-using System.Text;
-using System.Threading;
-
-namespace Microsoft.Hpc.ServiceBroker.UnitTest.Mock
+﻿namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Mock
 {
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.ServiceModel.Channels;
+    using System.Threading;
+
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
 
     internal class MockBrokerQueueFactory : IBrokerQueueFactory
