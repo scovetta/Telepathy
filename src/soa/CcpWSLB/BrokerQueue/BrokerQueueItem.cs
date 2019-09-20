@@ -19,6 +19,8 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.ServiceBroker.FrontEnd;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// the storage item that include the request context and the persist item

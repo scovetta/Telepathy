@@ -1,10 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal
 {
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -12,6 +10,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.ServiceModel.Channels;
     using System.ServiceModel.Description;
     using System.Threading;
+
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal.AzureQueue;
 
     /// <summary>
     /// Broker frontend factory to build proxy to communicate to broker
@@ -839,7 +841,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                             this.brokerClientFactory.Open();
                         }
 
-                        client = this.brokerClientFactory.CreateChannel(GenerateEndpointAddress(info.BrokerEpr, this.scheme, this.info.Secure, this.info.IsAadOrLocalUser));
+                        client = this.brokerClientFactory.CreateChannel(GenerateEndpointAddress(this.info.BrokerEpr, this.scheme, this.info.Secure, this.info.IsAadOrLocalUser));
                         break;
 
                     case ClientType.GetResponse:

@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal
 {
+    using Microsoft.Telepathy.Session.Interface;
+
     /// <summary>
     /// Provides an interface for broker launcher client factories who provide
     /// broker launcher client for heartbeat

@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Configuration
+namespace Microsoft.Telepathy.Session.Configuration
 {
     using System;
     using System.Configuration;
@@ -42,15 +42,15 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
         /// </summary>
         public HostConfiguration()
         {
-            properties.Add(new ConfigurationProperty(HostTypeConfiguratoinName, typeof(HostType), HostType.Standard));
-            properties.Add(new ConfigurationProperty(ExeFileConfiguratoinName, typeof(string), String.Empty));
+            this.properties.Add(new ConfigurationProperty(HostTypeConfiguratoinName, typeof(HostType), HostType.Standard));
+            this.properties.Add(new ConfigurationProperty(ExeFileConfiguratoinName, typeof(string), String.Empty));
         }
 
         protected override ConfigurationPropertyCollection Properties
         {
             get
             {
-                return properties;
+                return this.properties;
             }
         }
 

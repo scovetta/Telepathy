@@ -10,7 +10,8 @@ namespace Microsoft.Telepathy.EchoClient
     using System.ServiceModel;
     using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Internal;
 
     public class Program
     {

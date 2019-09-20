@@ -19,10 +19,12 @@ namespace Microsoft.Telepathy.CcpServiceHost
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.RESTServiceModel;
-    using Microsoft.Hpc.Scheduler.Session.Configuration;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
     using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Configuration;
+    using Microsoft.Telepathy.Session.Internal;
     using Microsoft.Win32.SafeHandles;
 
     using SoaService.DataClient;

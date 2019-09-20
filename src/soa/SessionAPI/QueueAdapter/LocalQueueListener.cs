@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter
+namespace Microsoft.Telepathy.Session.QueueAdapter
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
+    using Microsoft.Telepathy.Session.QueueAdapter.Interface;
 
     public class LocalQueueListener<T> : IQueueListener<T>
     {

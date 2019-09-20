@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc
+namespace Microsoft.Telepathy.Session
 {
     using System;
     using System.ComponentModel;

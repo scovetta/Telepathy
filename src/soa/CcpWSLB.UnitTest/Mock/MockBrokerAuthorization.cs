@@ -6,7 +6,7 @@ namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Mock
     using System.Runtime.Serialization;
     using System.Security.Principal;
 
-    using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Telepathy.Session.Interface;
 
     /// <summary>
     /// Mock object for broker authorization

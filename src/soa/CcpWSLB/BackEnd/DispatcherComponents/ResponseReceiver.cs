@@ -12,6 +12,8 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Internal;
     using Microsoft.WindowsAzure.Storage;
 
     /// <summary>

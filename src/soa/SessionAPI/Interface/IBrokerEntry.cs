@@ -1,12 +1,11 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Interface
+namespace Microsoft.Telepathy.Session.Interface
 {
     using System;
-    using System.Collections.Generic;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using System.Threading.Tasks;
+
     /// <summary>
     /// Interface for BrokerEntry
     /// </summary>

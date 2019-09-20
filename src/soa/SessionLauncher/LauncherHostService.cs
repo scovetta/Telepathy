@@ -4,7 +4,6 @@
 namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
 {
     using Microsoft.Hpc.Azure.Common;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher;
     using Microsoft.Hpc.ServiceBroker;
@@ -24,6 +23,9 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.SchedulerDelegations.AzureBatch;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.SchedulerDelegations.Local;
     using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Internal;
 
     using TelepathyCommon;
     using TelepathyCommon.HpcContext;

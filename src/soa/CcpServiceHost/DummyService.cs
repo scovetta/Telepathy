@@ -8,6 +8,8 @@ namespace Microsoft.Telepathy.CcpServiceHost
 
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Dummy service

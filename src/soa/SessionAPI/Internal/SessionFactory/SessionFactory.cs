@@ -1,21 +1,22 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionFactory
+namespace Microsoft.Telepathy.Session.Internal.SessionFactory
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Security.Authentication;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Security;
-    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session.Data;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
 
     public class SessionFactory : AbstractSessionFactory
     {

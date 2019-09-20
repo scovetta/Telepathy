@@ -15,10 +15,15 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
 
     using Microsoft.Azure.Batch;
     using Microsoft.Azure.Batch.Common;
-    using Microsoft.Hpc.Scheduler.Session.Configuration;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Utils;
     using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Configuration;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
 

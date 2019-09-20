@@ -8,8 +8,9 @@ namespace Microsoft.Telepathy.EchoSvcLib
     using System.IO;
     using System.ServiceModel;
 
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.GenericService;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.GenericService;
 
     /// <summary>
     /// Implementation of the echo service.

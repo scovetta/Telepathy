@@ -5,7 +5,7 @@ namespace Microsoft.Telepathy.EchoSvcLib
 {
     using System.ServiceModel;
 
-    using Microsoft.Hpc.Scheduler.Session.GenericService;
+    using Microsoft.Telepathy.Session.GenericService;
 
     /// <summary>
     /// Service contract of the echo service.

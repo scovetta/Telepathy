@@ -7,7 +7,8 @@ namespace Microsoft.Hpc.SOASample.FirstSOAService
 
     using Client.CalculatorService;
 
-    using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Internal;
 
     class Program
     {

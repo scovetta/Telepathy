@@ -1,10 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using TelepathyCommon.HpcContext;
-using TelepathyCommon.HpcContext.Extensions;
-
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
     using System;
     using System.ServiceModel;
@@ -12,8 +9,13 @@ namespace Microsoft.Hpc.Scheduler.Session
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.SessionFactory;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
+    using Microsoft.Telepathy.Session.Internal.SessionFactory;
+
+    using TelepathyCommon.HpcContext;
+    using TelepathyCommon.HpcContext.Extensions;
 
     // TODO: remove the "V3" prefix
 
@@ -187,7 +189,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             }
 
             // Auto close the jobs if the autoCloseJob is set to true
-            if (autoCloseJob)
+            if (this.autoCloseJob)
             {
                 try
                 {

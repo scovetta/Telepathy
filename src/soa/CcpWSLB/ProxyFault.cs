@@ -7,6 +7,7 @@ namespace Microsoft.Telepathy.ServiceBroker
     using System.Runtime.Serialization;
 
     using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Telepathy.Session.Exceptions;
 
     /// <summary>
     /// Wrapper class for exceptions that BrokerProxy encounters when communicating with service hosts.

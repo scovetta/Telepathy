@@ -11,6 +11,8 @@ namespace Microsoft.Telepathy.ServiceBroker
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
 
     /// <summary>
     /// the exception helper class.

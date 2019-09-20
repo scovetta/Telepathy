@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.Hpc.Scheduler.Session {
+namespace Microsoft.Telepathy.Session {
     using System;
     
     
@@ -31,7 +31,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal SR() {
         }
-
+        
 
         /// <summary>
         ///   Looks up a localized string similar to Argument must be alpha, numeric or punctuation.

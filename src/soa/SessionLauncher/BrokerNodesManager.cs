@@ -5,6 +5,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 {
     using System;
 
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+
     /// <summary>
     /// the broker nodes manager class.
     /// </summary>

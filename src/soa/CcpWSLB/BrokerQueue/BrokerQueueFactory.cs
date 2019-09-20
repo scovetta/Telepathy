@@ -13,6 +13,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.ServiceBroker.Persistences;
     using Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist;
+    using Microsoft.Telepathy.Session.Common;
 
     /// <summary>
     /// a calllback delegate to judge whether the specified session is stale, the related job is purged by the scheduler.

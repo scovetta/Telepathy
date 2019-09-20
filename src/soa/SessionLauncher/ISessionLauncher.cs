@@ -8,7 +8,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
     using Microsoft.Hpc.Scheduler.Session;
     using System.Threading.Tasks;
     using System.Collections.Generic;
-    
+
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+
     /// <summary>
     /// The interface for session Launcher
     /// </summary>

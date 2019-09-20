@@ -11,8 +11,8 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.nettcp
     using System.ServiceModel.Security;
     using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Service Client

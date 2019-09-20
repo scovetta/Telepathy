@@ -4,6 +4,7 @@
 namespace Microsoft.Telepathy.ServiceBroker.Common
 {
     using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.Session.Common;
 
     /// <summary>
     /// It is helper class enabling writting trace on both on-premise side and

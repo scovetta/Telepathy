@@ -22,6 +22,10 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter;
     using Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
 
     using TelepathyCommon;
     using TelepathyCommon.HpcContext;

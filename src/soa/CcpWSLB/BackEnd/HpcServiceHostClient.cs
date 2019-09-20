@@ -7,7 +7,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
     using System.ServiceModel;
     using System.ServiceModel.Channels;
 
-    using Microsoft.Hpc.Scheduler.Session.Interface;
+    using Microsoft.Telepathy.Session.Interface;
 
 #if Broker
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;

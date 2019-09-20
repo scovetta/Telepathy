@@ -15,6 +15,9 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.ServiceBroker.Common.ThreadHelper;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Base class for all frontends

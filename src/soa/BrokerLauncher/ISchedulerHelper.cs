@@ -8,6 +8,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Telepathy.Session.Interface;
 
     internal interface ISchedulerHelper : IDisposable
     {

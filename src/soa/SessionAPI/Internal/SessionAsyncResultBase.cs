@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal
 {
-    using Microsoft.Hpc.Scheduler.Session.Common;
     using System;
     using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
+
     /// <summary>
     /// Provides base class for async result of session creation
     /// </summary>

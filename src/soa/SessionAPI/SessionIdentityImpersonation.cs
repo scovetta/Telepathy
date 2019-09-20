@@ -1,15 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
     using System;
     using System.Diagnostics;
     using System.Security.Principal;
     using System.ServiceModel;
     using System.Threading;
-
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
 
     /// <summary>
     /// Save information of impersonation in session API

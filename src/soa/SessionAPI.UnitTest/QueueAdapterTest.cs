@@ -3,10 +3,10 @@
 
 namespace SessionAPI.UnitTest
 {
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter;
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.QueueAdapter;
+    using Microsoft.Telepathy.Session.QueueAdapter.DTO;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

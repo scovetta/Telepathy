@@ -3,8 +3,7 @@
 
 namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Mock
 {
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
+    using Microsoft.Telepathy.Session.Interface;
 
     public class MockController : IController
     {

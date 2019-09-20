@@ -20,6 +20,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Internal;
     using Microsoft.WindowsAzure.Storage.Blob;
     using Microsoft.WindowsAzure.Storage.Queue;
     using Microsoft.WindowsAzure.Storage.Table;

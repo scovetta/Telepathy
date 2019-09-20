@@ -10,7 +10,8 @@ namespace Microsoft.Telepathy.CcpServiceHost
     using System.ServiceModel;
 
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Interface;
 
     using TelepathyCommon;
 

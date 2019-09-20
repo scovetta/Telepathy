@@ -12,6 +12,10 @@ namespace BvtTest
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Diagnostics;
+
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Internal;
+
     using EchoSvcClient = Microsoft.ComputeCluster.Test.AppIntegration.EchoService.EchoSvcClient;
 
     [TestClass]

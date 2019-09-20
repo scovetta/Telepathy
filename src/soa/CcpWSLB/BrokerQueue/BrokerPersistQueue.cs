@@ -17,6 +17,8 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.ServiceBroker.FrontEnd;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
 
     /// <summary>
     /// the persist queue that will save the messages to the persistence

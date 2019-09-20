@@ -1,11 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
 
     /// <summary>
     ///   <para>Indicates that the broker exceeded the limit for the number of times the broker should retry a request.</para>
@@ -14,10 +12,10 @@ namespace Microsoft.Hpc.Scheduler.Session
     ///   <para>The Microsoft HPC Pack API converts all SOAP faults that 
     /// relate to infrastructure rather than to the application to exceptions. The  
     /// <see cref="System.ServiceModel.FaultException{T}" /> object with a type parameter of 
-    /// <see cref="Microsoft.Hpc.Scheduler.Session.RetryOperationError" /> is converted to a 
-    /// <see cref="Microsoft.Hpc.Scheduler.Session.RetryOperationException" /> object. SOA clients for Microsoft HPC Pack should handle such exceptions.</para> 
+    /// <see cref="RetryOperationError" /> is converted to a 
+    /// <see cref="RetryOperationException" /> object. SOA clients for Microsoft HPC Pack should handle such exceptions.</para> 
     /// </remarks>
-    /// <seealso cref="Microsoft.Hpc.Scheduler.Session.RetryOperationError" />
+    /// <seealso cref="RetryOperationError" />
     /// <seealso cref="System.ServiceModel.FaultException{T}" />
     [Serializable]
     public class RetryOperationException : Exception

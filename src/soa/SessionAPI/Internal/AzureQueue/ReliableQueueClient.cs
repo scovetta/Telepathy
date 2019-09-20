@@ -1,10 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal.AzureQueue
 {
-    using Microsoft.Hpc.Scheduler.Session.Common;
-    using Microsoft.WindowsAzure.Storage.Queue;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
@@ -12,6 +10,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.Linq;
     using System.Threading;
     using System.Xml;
+
+    using Microsoft.WindowsAzure.Storage.Queue;
 
     /// <summary>
     /// It is a wrapper of CloudQueue class, and it handles BeginAddMessage's

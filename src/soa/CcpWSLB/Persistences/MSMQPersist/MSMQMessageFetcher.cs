@@ -13,6 +13,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.MSMQPersist
 
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// A class that implements logic of peeking all messages from MSMQ queue.

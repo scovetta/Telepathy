@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using TelepathyCommon;
-
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session.Internal.AzureQueue
 {
     using System;
     using System.Diagnostics;
@@ -11,9 +9,10 @@ namespace Microsoft.Hpc.Scheduler.Session
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Security;
-    using System.Security.Permissions;
     using System.ServiceModel.Channels;
     using System.Xml;
+
+    using TelepathyCommon;
 
     /// <summary>
     /// The queue item stored in request and response queues.

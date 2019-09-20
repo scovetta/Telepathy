@@ -6,6 +6,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Schedul
     using System.Collections.Generic;
 
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
+    using Microsoft.Telepathy.Session.Internal;
 
     internal static class SchedulerDelegationCommon
     {

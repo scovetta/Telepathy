@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session.Interface
 {
     using System;
 
     using Microsoft.Hpc.Scheduler.Session.Data;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// The structure contains all the information about a session
@@ -136,8 +137,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         public string AzureRequestBlobUri
         {
-            get { return azureRequestBlobUri; }
-            set { azureRequestBlobUri = value; }
+            get { return this.azureRequestBlobUri; }
+            set { this.azureRequestBlobUri = value; }
         }
 
         /// <summary>
@@ -150,8 +151,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         public bool? UseAzureQueue
         {
-            get { return useAzureQueue; }
-            set { useAzureQueue = value; }
+            get { return this.useAzureQueue; }
+            set { this.useAzureQueue = value; }
         }
 
         /// <summary>

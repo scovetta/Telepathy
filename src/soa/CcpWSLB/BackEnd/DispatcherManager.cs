@@ -21,6 +21,9 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
 
     using SoaAmbientConfig;
 

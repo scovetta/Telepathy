@@ -9,6 +9,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
     using System.ServiceModel;
 
     using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Telepathy.Session.Exceptions;
 
     /// <summary>
     /// Exception utilities

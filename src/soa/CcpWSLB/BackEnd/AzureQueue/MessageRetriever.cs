@@ -9,9 +9,10 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.AzureQueue
     using System.Threading;
 
     using Microsoft.Hpc.BrokerBurst;
-    using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Internal;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Queue;
 

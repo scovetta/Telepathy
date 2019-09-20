@@ -1,12 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Configuration
+namespace Microsoft.Telepathy.Session.Configuration
 {
     using System;
-    using System.Collections.Generic;
     using System.Configuration;
-    using System.Text;
 
     /// <summary>
     ///   <para>Contains the properties used to access the different sections of a session’s configuration file.</para>
@@ -14,8 +12,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
     /// <remarks>
     ///   <para>Use the 
     /// 
-    /// <see cref="Microsoft.Hpc.Scheduler.Session.Configuration.BrokerConfigurations.GetSectionGroup(System.Configuration.Configuration)" /> static method to load a  
-    /// <see cref="Microsoft.Hpc.Scheduler.Session.Configuration.BrokerConfigurations" /> object with the session’s configuration file.</para>
+    /// <see cref="GetSectionGroup" /> static method to load a  
+    /// <see cref="BrokerConfigurations" /> object with the session’s configuration file.</para>
     /// </remarks>
     public class BrokerConfigurations : ConfigurationSectionGroup
     {
@@ -74,7 +72,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
         /// <value>
         ///   <para>A 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Configuration.BrokerMonitorConfiguration" /> object that contains the properties of the monitor section of the configuration file.  
+        /// <see cref="BrokerMonitorConfiguration" /> object that contains the properties of the monitor section of the configuration file.  
         /// </para>
         /// </value>
         public BrokerMonitorConfiguration Monitor
@@ -86,7 +84,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
                     return this.Sections["monitor"] as BrokerMonitorConfiguration;
                 }
 
-                return monitor;
+                return this.monitor;
             }
 
             set
@@ -101,7 +99,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
         /// <value>
         ///   <para>A 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Configuration.BrokerServicesConfiguration" /> object that contains the properties of the services section of the configuration file.  
+        /// <see cref="BrokerServicesConfiguration" /> object that contains the properties of the services section of the configuration file.  
         /// </para>
         /// </value>
         public BrokerServicesConfiguration Services
@@ -113,7 +111,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
                     return this.Sections["services"] as BrokerServicesConfiguration;
                 }
 
-                return services;
+                return this.services;
             }
 
             set
@@ -128,7 +126,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
         /// <value>
         ///   <para>A 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Configuration.LoadBalancingConfiguration" /> object that contains the properties of the loadBalancing section of the configuration file.  
+        /// <see cref="LoadBalancingConfiguration" /> object that contains the properties of the loadBalancing section of the configuration file.  
         /// </para>
         /// </value>
         public LoadBalancingConfiguration LoadBalancing
@@ -140,7 +138,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
                     return this.Sections["loadBalancing"] as LoadBalancingConfiguration;
                 }
 
-                return loadBalancing;
+                return this.loadBalancing;
             }
 
             set
@@ -158,7 +156,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
         /// <returns>
         ///   <para>An 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Configuration.BrokerConfigurations" /> object that contains the sections of the session’s configuration file.  
+        /// <see cref="BrokerConfigurations" /> object that contains the sections of the session’s configuration file.  
         /// </para>
         /// </returns>
         public static BrokerConfigurations GetSectionGroup(System.Configuration.Configuration config)
@@ -177,7 +175,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
         /// <param name="errorMessage">
         ///   <para>If 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Configuration.BrokerConfigurations.Validate(out System.String)" /> returns false, this parameter contains the validation error.</para> 
+        /// <see cref="Validate" /> returns false, this parameter contains the validation error.</para> 
         /// </param>
         /// <returns>
         ///   <para>Is true if the file validates; otherwise, false.</para>

@@ -10,8 +10,12 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
     using System.Text;
 
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Configuration;
     using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Configuration;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
 
     using TelepathyCommon;
 

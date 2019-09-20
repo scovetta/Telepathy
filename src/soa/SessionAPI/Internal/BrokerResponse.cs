@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session.Internal
 {
     using System;
     using System.Globalization;
@@ -12,7 +12,8 @@ namespace Microsoft.Hpc.Scheduler.Session
     using System.ServiceModel.Channels;
     using System.ServiceModel.Description;
     using System.Xml;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
+
+    using Microsoft.Telepathy.Session.Exceptions;
 
     /// <summary>
     ///   <para>Represents a single response that a service-oriented architecture (SOA) service sent to the client to fulfill a request.</para>
@@ -170,7 +171,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <remarks>
         ///   <para>If the response is a SOAP fault, an exception based on that fault occurs when you access this property.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{T}.GetUserData{T}" />
+        /// <seealso cref="GetUserData{T}" />
         public TMessage Result
         {
             get
@@ -395,18 +396,18 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         ~BrokerResponse()
         {
-            Dispose();
+            this.Dispose();
         }
 
         #region IDisposable Members
 
         /// <summary>
-        ///   <para>Releases all of the resources that the <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{T}" /> object used.</para>
+        ///   <para>Releases all of the resources that the <see cref="BrokerResponse{TMessage}" /> object used.</para>
         /// </summary>
         /// <remarks>
         ///   <para>Call the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{T}.Dispose" /> method when you finish using the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{T}" /> object.</para>
+        /// <see cref="Dispose" /> method when you finish using the 
+        /// <see cref="BrokerResponse{TMessage}" /> object.</para>
         /// </remarks>
         public void Dispose()
         {

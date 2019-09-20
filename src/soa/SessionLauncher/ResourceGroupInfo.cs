@@ -9,6 +9,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
     using System.Runtime.InteropServices;
     using System.Text;
 
+    using Microsoft.Telepathy.Session.Common;
+
     /// <summary>
     /// Retrieves info about a failover cluster resource group
     /// </summary>

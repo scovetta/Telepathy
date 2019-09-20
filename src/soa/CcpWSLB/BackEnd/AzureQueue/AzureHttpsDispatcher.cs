@@ -13,6 +13,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.AzureQueue
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter;
+    using Microsoft.Telepathy.Session;
 
     /// <summary>
     /// Dispatch messages to broker proxy in Windows Azure

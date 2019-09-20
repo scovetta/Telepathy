@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 {
+    using Microsoft.Telepathy.Session.Interface;
+
     internal class ClusterInfo
     {
         public ClusterInfoContract Contract { get; private set; }

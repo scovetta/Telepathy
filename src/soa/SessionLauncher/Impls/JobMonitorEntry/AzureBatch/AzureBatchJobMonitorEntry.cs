@@ -9,13 +9,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
     using System.Diagnostics;
     using System.ServiceModel;
     using System.Threading;
-
-    using Microsoft.Hpc.Scheduler.Session.Interface;
     using System.Threading.Tasks;
     using Microsoft.Azure.Batch;
     using System.Linq;
 
     using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
 
     using JobState = Microsoft.Azure.Batch.Common.JobState;
     using TaskState = Microsoft.Azure.Batch.Common.TaskState;

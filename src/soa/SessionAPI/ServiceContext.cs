@@ -1,12 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
     using System;
     using System.Diagnostics;
-    using System.Threading;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
 
     /// <summary>
     ///   <para>Provides a property and an event that a service host uses to write traces for SOA code and handle requests to exit.</para>

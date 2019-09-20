@@ -11,6 +11,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
 
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// This is an abstract class for sending requests.

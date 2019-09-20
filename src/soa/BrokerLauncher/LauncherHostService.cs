@@ -12,7 +12,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using System.ServiceProcess;
     using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
     using Microsoft.Hpc.ServiceBroker;
@@ -20,6 +19,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using Microsoft.Telepathy.Internal.BrokerLauncher.QueueAdapter;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Internal;
 
     using TelepathyCommon.HpcContext;
 

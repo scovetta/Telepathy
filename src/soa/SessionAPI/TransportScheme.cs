@@ -1,12 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
+    using System;
+
     /// <summary>
     ///   <para>Defines the transport binding schemes.</para>
     /// </summary>
@@ -23,7 +21,7 @@ namespace Microsoft.Hpc.Scheduler.Session
     /// const WebAPI = 8</code>
     /// </remarks>
     /// <example />
-    /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.TransportScheme" />
+    /// <seealso cref="SessionStartInfo.TransportScheme" />
     [Flags]
     public enum TransportScheme
     {
@@ -40,7 +38,7 @@ namespace Microsoft.Hpc.Scheduler.Session
 
         /// <summary>
         ///   <para>Specifies a string constant for the HTTP or HTTPS binding scheme, depending on the value of the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Secure" /> property. For details, see 
+        /// <see cref="SessionStartInfo.Secure" /> property. For details, see 
         /// <see cref="System.ServiceModel.BasicHttpBinding" />. This enumeration member represents a value of 2.</para>
         /// </summary>
         Http = 0x2,

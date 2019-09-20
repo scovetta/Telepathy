@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session.Internal
 {
     using System;
     using System.Collections.Generic;
@@ -10,15 +10,12 @@ namespace Microsoft.Hpc.Scheduler.Session
     using System.Reflection;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using Microsoft.Hpc.Scheduler.Session.ServiceContainer;
-
-    using TelepathyCommon.HpcContext;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.ServiceContainer;
 
     /// <summary>
     /// Broker launcher adapter for inproc broker
@@ -505,7 +502,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             this.brokerInfo.Attached = attached;
             this.brokerInfo.Durable = durable;
             this.brokerInfo.NetworkPrefix = Constant.EnterpriseNetwork;
-            this.brokerInfo.ConfigurationFile = await FetchServiceRegistrationPath(serviceName, serviceVersion).ConfigureAwait(false);
+            this.brokerInfo.ConfigurationFile = await this.FetchServiceRegistrationPath(serviceName, serviceVersion).ConfigureAwait(false);
 
             // Bug 14892: Fetch AutoShrinkEnabled property from scheduler (via session launcher)
             if (!this.isDebugModeEnabled)
@@ -676,9 +673,9 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="sessionId">indicating the session id</param>
         private async Task CreateInternal(string sessionId)
         {
-            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(this.CurrentDomain_AssemblyResolve);
 
-            SetIsDiagTraceEnabledProperty();
+            this.SetIsDiagTraceEnabledProperty();
             Assembly brokerCoreAsm = Assembly.LoadFile(this.brokerCoreServiceLibPath);
             ConstructorInfo ci = brokerCoreAsm.GetType(BrokerEntryClassFullName).GetConstructor(new Type[1] { typeof(int) });
             this.brokerEntry = (IBrokerEntry)ci.Invoke(new object[1] { sessionId });
@@ -688,7 +685,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             //set isDebugModeEnabled True to jump UpdateBrokerInfo method.
             if (!this.isDebugModeEnabled && !this.isNoSession)
             {
-                await UpdateBrokerInfo(this.brokerInfo).ConfigureAwait(false);
+                await this.UpdateBrokerInfo(this.brokerInfo).ConfigureAwait(false);
             }
         }
 

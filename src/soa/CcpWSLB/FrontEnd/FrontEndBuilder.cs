@@ -20,6 +20,10 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
     using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.ServiceBroker.FrontEnd.AzureQueue;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
 
     /// <summary>
     /// FrontEnd Builder

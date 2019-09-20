@@ -8,7 +8,9 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
 
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Data;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
 
     /// <summary>
     /// Async version of ISchedulerAdapter

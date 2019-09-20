@@ -22,6 +22,8 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter;
     using Microsoft.Telepathy.ServiceBroker.Common.ThreadHelper;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.WindowsAzure.Storage;
 
     /// <summary>

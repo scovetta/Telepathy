@@ -15,12 +15,16 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
 
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Data;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
     using Microsoft.Telepathy.ServiceBroker.BackEnd;
     using Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter;
     using Microsoft.Telepathy.ServiceBroker.Common.ThreadHelper;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
 
     using SoaAmbientConfig;
 

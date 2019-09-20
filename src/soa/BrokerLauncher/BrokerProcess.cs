@@ -20,6 +20,9 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
     using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Internal;
     using Microsoft.Win32.SafeHandles;
 
     /// <summary>

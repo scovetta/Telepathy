@@ -1,41 +1,39 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Interface
+namespace Microsoft.Telepathy.Session.Interface
 {
     using System;
-    using System.Collections.Generic;
     using System.Runtime.Serialization;
-    using System.Text;
 
     /// <summary>
-    ///   <para>Defines values that indicate the state of a <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> object.</para>
+    ///   <para>Defines values that indicate the state of a <see cref="BrokerClient{TContract}" /> object.</para>
     /// </summary>
     [Serializable]
     [DataContract(Namespace = "http://hpc.microsoft.com")]
     public enum BrokerClientStatus
     {
         /// <summary>
-        ///   <para>Indicates that the <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> object is in an unknown state.</para>
+        ///   <para>Indicates that the <see cref="BrokerClient{TContract}" /> object is in an unknown state.</para>
         /// </summary>
         [EnumMember]
         Unknown = 0,
 
         /// <summary>
         ///   <para>Indicates that the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> object is newly created and ready to process requests.</para>
+        /// <see cref="BrokerClient{TContract}" /> object is newly created and ready to process requests.</para>
         /// </summary>
         [EnumMember]
         Ready,
 
         /// <summary>
-        ///   <para>Indicates that the <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> object is processing requests.</para>
+        ///   <para>Indicates that the <see cref="BrokerClient{TContract}" /> object is processing requests.</para>
         /// </summary>
         [EnumMember]
         Processing,
 
         /// <summary>
-        ///   <para>Indicates that the <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> object is finished processing requests.</para>
+        ///   <para>Indicates that the <see cref="BrokerClient{TContract}" /> object is finished processing requests.</para>
         /// </summary>
         [EnumMember]
         Finished,

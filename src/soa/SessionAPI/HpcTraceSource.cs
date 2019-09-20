@@ -1,13 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
+    using System.Diagnostics;
+
     public class HpcTraceSource : TraceSource
     {
         /// <summary>

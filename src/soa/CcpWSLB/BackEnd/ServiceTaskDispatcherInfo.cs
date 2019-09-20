@@ -9,6 +9,8 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Dispatcher info for service task

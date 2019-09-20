@@ -12,6 +12,8 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Provide frontend fault messagesx

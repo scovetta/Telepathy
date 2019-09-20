@@ -6,11 +6,11 @@
     using System.ServiceModel.Channels;
     using System.Xml;
 
-    using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.FrontEnd;
     using Microsoft.Telepathy.ServiceBroker.UnitTest.Mock;
+    using Microsoft.Telepathy.Session;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

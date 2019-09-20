@@ -9,6 +9,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.Azure;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Dispatcher info for service task that targets Azure nodes.

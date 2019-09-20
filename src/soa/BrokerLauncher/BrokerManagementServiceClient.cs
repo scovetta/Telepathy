@@ -8,7 +8,8 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
     using System.ServiceModel.Channels;
 
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Interface;
 
     /// <summary>
     /// WCF client for broker management service

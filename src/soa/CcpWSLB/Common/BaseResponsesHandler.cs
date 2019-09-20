@@ -7,9 +7,9 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
     using System.ServiceModel.Channels;
     using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Base class for GetResponsesHandler and PullResponsesHandler

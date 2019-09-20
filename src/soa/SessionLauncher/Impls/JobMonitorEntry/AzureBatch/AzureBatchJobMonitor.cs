@@ -3,7 +3,7 @@
 
 using Microsoft.Azure.Batch;
 using Microsoft.Azure.Batch.Common;
-using Microsoft.Hpc.Scheduler.Session.Interface;
+
 using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
@@ -17,6 +17,9 @@ using TelepathyCommon;
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch
 {
     using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
 
     using TelepathyConstants = TelepathyCommon.TelepathyConstants;
 

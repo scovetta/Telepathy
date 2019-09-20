@@ -10,6 +10,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
 
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.BackEnd.AzureQueue;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// This is an implementation of RequestSender for sending requests

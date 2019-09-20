@@ -13,11 +13,14 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
     using System.Threading;
 
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor;
     using Microsoft.Telepathy.ServiceBroker.FrontEnd;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Represent a broker client

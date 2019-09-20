@@ -1,25 +1,24 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal.AzureQueue
 {
-    using Microsoft.Hpc.BrokerBurst;
-    using Microsoft.Hpc.Scheduler.Session.Common;
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Blob;
-    using Microsoft.WindowsAzure.Storage.Queue;
-    using Microsoft.WindowsAzure.Storage.Queue.Protocol;
-    using Microsoft.WindowsAzure.Storage.RetryPolicies;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Net;
     using System.ServiceModel.Channels;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Xml;
+
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.WindowsAzure.Storage;
+    using Microsoft.WindowsAzure.Storage.Blob;
+    using Microsoft.WindowsAzure.Storage.Queue;
+    using Microsoft.WindowsAzure.Storage.Queue.Protocol;
+    using Microsoft.WindowsAzure.Storage.RetryPolicies;
 
     /// <summary>
     /// It is the manager to control both request and response queue.
@@ -65,8 +64,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         public int SessionHash
         {
-            get { return sessionHash; }
-            set { sessionHash = value; }
+            get { return this.sessionHash; }
+            set { this.sessionHash = value; }
         }
 
         private CloudQueue[] requestQueues;
@@ -153,7 +152,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
         public bool IsResponseClientInitialized
         {
-            get { return responseClientInitialized; }
+            get { return this.responseClientInitialized; }
         }
 
         private object responseClientLock = new object();
@@ -517,13 +516,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
         public IAsyncResult BeginReceiveRequest(string clientData, AsyncCallback callback, object state)
         {
-            IAsyncResult ar = receiveResponse.BeginInvoke(clientData, callback, state);
+            IAsyncResult ar = this.receiveResponse.BeginInvoke(clientData, callback, state);
             return ar;
         }
 
         public Message EndReceiveRequest(IAsyncResult result)
         {
-            return receiveResponse.EndInvoke(result);
+            return this.receiveResponse.EndInvoke(result);
         }
 
         public void SendMessage(Message message)

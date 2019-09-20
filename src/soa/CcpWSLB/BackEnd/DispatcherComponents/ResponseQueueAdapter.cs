@@ -13,6 +13,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.ServiceBroker.FrontEnd;
+    using Microsoft.Telepathy.Session;
 
     /// <summary>
     /// Response queue adapter which is in charge of putting response

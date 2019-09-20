@@ -8,12 +8,13 @@ namespace Microsoft.Telepathy.ServiceBroker.UnitTest.FrontEnd
     using System.Linq;
     using System.Text.RegularExpressions;
 
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Configuration;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.ServiceBroker.FrontEnd;
     using Microsoft.Telepathy.ServiceBroker.UnitTest.Mock;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Configuration;
+    using Microsoft.Telepathy.Session.Interface;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>

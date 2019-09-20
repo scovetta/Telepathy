@@ -4,7 +4,6 @@
 namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
 {
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal;
 
     using System;
@@ -18,9 +17,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Configuration;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
     using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Configuration;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
 
     using TelepathyCommon;
 

@@ -12,6 +12,9 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter
     using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Telepathy.ServiceBroker.BackEnd;
     using Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Internal;
 
     using SoaAmbientConfig;
 

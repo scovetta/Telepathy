@@ -11,10 +11,12 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Telepathy.ServiceBroker;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
     using Microsoft.WindowsAzure.Storage.Queue;

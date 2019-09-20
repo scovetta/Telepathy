@@ -4,7 +4,7 @@
   <PropertyGroup>
     <ProjectGuid>{72FC4EEA-C32B-444B-80B7-0E2B137C05C7}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Microsoft.Hpc.Scheduler.Session</RootNamespace>
+    <RootNamespace>Microsoft.Telepathy.Session</RootNamespace>
     <AssemblyName>Microsoft.Hpc.Scheduler.Session</AssemblyName>
     <AssemblyVersionName>CCPv2</AssemblyVersionName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>

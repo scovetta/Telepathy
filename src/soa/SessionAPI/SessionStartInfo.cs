@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
     using System;
     using System.Collections.Generic;
@@ -10,7 +10,8 @@ namespace Microsoft.Hpc.Scheduler.Session
     using System.Text;
     using System.Text.RegularExpressions;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Internal;
 
     using TelepathyCommon;
 
@@ -75,8 +76,8 @@ namespace Microsoft.Hpc.Scheduler.Session
             /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.SessionIdleTimeout" />
             public int? ClientIdleTimeout
             {
-                get { return data.ClientIdleTimeout; }
-                set { data.ClientIdleTimeout = value; }
+                get { return this.data.ClientIdleTimeout; }
+                set { this.data.ClientIdleTimeout = value; }
             }
 
             /// <summary>
@@ -96,21 +97,21 @@ namespace Microsoft.Hpc.Scheduler.Session
             ///   <para>If the timeout period is exceeded, the broker closes.</para>
             ///   <para>For Windows HPC Server 2008 R2, if the session uses an HTTP binding, the period for the 
             /// 
-            /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.SessionIdleTimeout" /> setting does not start until after the for the  
-            /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.ClientIdleTimeout" /> setting elapses.</para>
+            /// <see cref="SessionIdleTimeout" /> setting does not start until after the for the  
+            /// <see cref="ClientIdleTimeout" /> setting elapses.</para>
             /// </remarks>
-            /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.ClientIdleTimeout" />
+            /// <seealso cref="ClientIdleTimeout" />
             public int? SessionIdleTimeout
             {
                 get
                 {
-                    return data.SessionIdleTimeout;
+                    return this.data.SessionIdleTimeout;
                 }
 
                 set
                 {
-                    data.ClientConnectionTimeout = value;
-                    data.SessionIdleTimeout = value;
+                    this.data.ClientConnectionTimeout = value;
+                    this.data.SessionIdleTimeout = value;
                 }
             }
 
@@ -121,12 +122,12 @@ namespace Microsoft.Hpc.Scheduler.Session
             {
                 get
                 {
-                    return data.DispatcherCapacityInGrowShrink;
+                    return this.data.DispatcherCapacityInGrowShrink;
                 }
 
                 set
                 {
-                    data.DispatcherCapacityInGrowShrink = value;
+                    this.data.DispatcherCapacityInGrowShrink = value;
                 }
             }
 
@@ -140,11 +141,11 @@ namespace Microsoft.Hpc.Scheduler.Session
             ///   <para>You must cast the value to an integer. If the value is null (a null value means that the 
             /// value has not been set and the broker is using the default value set in the configuration file), the cast raises an exception.</para>
             /// </remarks>
-            /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.MessagesThrottleStopThreshold" />
+            /// <seealso cref="MessagesThrottleStopThreshold" />
             public int? MessagesThrottleStartThreshold
             {
-                get { return data.MessagesThrottleStartThreshold; }
-                set { data.MessagesThrottleStartThreshold = value; }
+                get { return this.data.MessagesThrottleStartThreshold; }
+                set { this.data.MessagesThrottleStartThreshold = value; }
             }
 
             /// <summary>
@@ -157,11 +158,11 @@ namespace Microsoft.Hpc.Scheduler.Session
             ///   <para>You must cast the value to an integer. If the value is null (a value of null means that the 
             /// value has not been set and the broker is using the default value set in the configuration file), the cast raises an exception.</para>
             /// </remarks>
-            /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.MessagesThrottleStartThreshold" />
+            /// <seealso cref="MessagesThrottleStartThreshold" />
             public int? MessagesThrottleStopThreshold
             {
-                get { return data.MessagesThrottleStopThreshold; }
-                set { data.MessagesThrottleStopThreshold = value; }
+                get { return this.data.MessagesThrottleStopThreshold; }
+                set { this.data.MessagesThrottleStopThreshold = value; }
             }
 
             /// <summary>
@@ -178,38 +179,38 @@ namespace Microsoft.Hpc.Scheduler.Session
             ///   <para>The default value for this property is 20,000 milliseconds. Application operation times can be long, 
             /// so this heartbeat interval is used to determine in a more timely fashion when the broker becomes unreachable.</para>
             /// </remarks>
-            /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.ClientBrokerHeartbeatRetryCount" />
+            /// <seealso cref="ClientBrokerHeartbeatRetryCount" />
             public int? ClientBrokerHeartbeatInterval
             {
-                get { return data.ClientBrokerHeartbeatInterval; }
-                set { data.ClientBrokerHeartbeatInterval = value; }
+                get { return this.data.ClientBrokerHeartbeatInterval; }
+                set { this.data.ClientBrokerHeartbeatInterval = value; }
             }
 
             /// <summary>
             ///   <para>Gets or sets the number of times that the amount of time that the 
             /// 
-            /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.ClientBrokerHeartbeatInterval" /> property specifies must elapse between the client and broker heartbeats before the broker is considered unreachable by the session.</para> 
+            /// <see cref="ClientBrokerHeartbeatInterval" /> property specifies must elapse between the client and broker heartbeats before the broker is considered unreachable by the session.</para> 
             /// </summary>
             /// <value>
             ///   <para>A 
             /// <see cref="System.Nullable{T}" /> object with a type parameter of 
             /// int that indicates the number of times that the amount of time that the 
             /// 
-            /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.ClientBrokerHeartbeatInterval" /> property specifies must elapse between the client and broker heartbeats before the broker is considered unreachable by the session.</para> 
+            /// <see cref="ClientBrokerHeartbeatInterval" /> property specifies must elapse between the client and broker heartbeats before the broker is considered unreachable by the session.</para> 
             /// </value>
             /// <remarks>
             ///   <para>The default value for this property is 3. When a broker is considered unreachable, all additional calls to methods of the 
-            /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> class generate a 
-            /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionException" />, and the response handlers for the 
-            /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> object receive a 
-            /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{T}" /> object that contains the same 
-            /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionException" />.</para>
+            /// <see cref="BrokerClient{TContract}" /> class generate a 
+            /// <see cref="SessionException" />, and the response handlers for the 
+            /// <see cref="BrokerClient{TContract}" /> object receive a 
+            /// <see cref="BrokerResponse{TMessage}" /> object that contains the same 
+            /// <see cref="SessionException" />.</para>
             /// </remarks>
-            /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo.ClientBrokerHeartbeatInterval" />
+            /// <seealso cref="ClientBrokerHeartbeatInterval" />
             public int? ClientBrokerHeartbeatRetryCount
             {
-                get { return data.ClientBrokerHeartbeatRetryCount; }
-                set { data.ClientBrokerHeartbeatRetryCount = value; }
+                get { return this.data.ClientBrokerHeartbeatRetryCount; }
+                set { this.data.ClientBrokerHeartbeatRetryCount = value; }
             }
 
             /// <summary>
@@ -227,8 +228,8 @@ namespace Microsoft.Hpc.Scheduler.Session
             /// </remarks>
             public int? MaxMessageSize
             {
-                get { return data.MaxMessageSize; }
-                set { data.MaxMessageSize = value; }
+                get { return this.data.MaxMessageSize; }
+                set { this.data.MaxMessageSize = value; }
             }
 
             /// <summary>
@@ -251,8 +252,8 @@ namespace Microsoft.Hpc.Scheduler.Session
             /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses" />
             public int? ServiceOperationTimeout
             {
-                get { return data.ServiceOperationTimeout; }
-                set { data.ServiceOperationTimeout = value; }
+                get { return this.data.ServiceOperationTimeout; }
+                set { this.data.ServiceOperationTimeout = value; }
             }
         }
 
@@ -277,7 +278,7 @@ namespace Microsoft.Hpc.Scheduler.Session
 
         /// <summary>
         ///   <para>Initializes a new instance of the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo" /> class for the specified service on the cluster with the specified head node.</para> 
+        /// <see cref="SessionStartInfo" /> class for the specified service on the cluster with the specified head node.</para> 
         /// </summary>
         /// <param name="headnode">
         ///   <para>The name of the head node of the cluster to which you want to connect.</para>
@@ -339,32 +340,32 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="serviceVersion">indicating the service version</param>
         private void Init(string headnode, string serviceName, Version serviceVersion)
         {
-            _brokerSettings = new BrokerSettingsInfo(data);
+            this._brokerSettings = new BrokerSettingsInfo(this.data);
             //this._headnode = headnode;
-            data.EprList = Utility.TryGetEprList();
-            data.ServiceName = serviceName;
-            data.RegPath = this.RegPath;
-            data.IpAddress = this.IpAddress;
+            this.data.EprList = Utility.TryGetEprList();
+            this.data.ServiceName = serviceName;
+            this.data.RegPath = this.RegPath;
+            this.data.IpAddress = this.IpAddress;
             if (serviceVersion != SessionBase.NoServiceVersion)
-                data.ServiceVersion = serviceVersion;
+                this.data.ServiceVersion = serviceVersion;
 
             // check diagnostics
             string brokernode = System.Environment.GetEnvironmentVariable(Constant.DiagnosticBrokerNode);
             if (!String.IsNullOrEmpty(brokernode))
             {
-                data.DiagnosticBrokerNode = brokernode;
+                this.data.DiagnosticBrokerNode = brokernode;
             }
 
             // set client api version
-            data.ClientVersion = SessionBase.FullClientVersionInternal;
+            this.data.ClientVersion = SessionBase.FullClientVersionInternal;
 
             // if the head node is on Azure IaaS, set the default TransportScheme to Http
             if (SoaHelper.IsSchedulerOnIaaS(headnode))
             {
-                data.TransportScheme = TransportScheme.Http;
+                this.data.TransportScheme = TransportScheme.Http;
             }
 
-            data.LocalUser = base.LocalUser;
+            this.data.LocalUser = base.LocalUser;
         }
 
         /// <summary>
@@ -422,11 +423,11 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// under whose credentials the job runs to be the same as the job owner, that user does not need to be an administrator.</para> 
         /// </remarks>
         /// <example />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Password" />
+        /// <seealso cref="Password" />
         public override string Username
         {
-            get { return data.Username; }
-            set { data.Username = value; }
+            get { return this.data.Username; }
+            set { this.data.Username = value; }
         }
 
         /// <summary>
@@ -440,12 +441,12 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// empty, this method uses the cached password if cached; otherwise, the user is prompted for the password.</para>
         /// </remarks>
         /// <example />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Username" />
+        /// <seealso cref="Username" />
         public string Password
         {
             set
             {
-                data.Password = value;
+                this.data.Password = value;
             }
         }
 
@@ -454,8 +455,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         public override string InternalPassword
         {
-            get { return data.Password; }
-            set { data.Password = value; }
+            get { return this.data.Password; }
+            set { this.data.Password = value; }
         }
 
         /// <summary>
@@ -478,22 +479,22 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             get
             {
-                return data.SavePassword.HasValue ? data.SavePassword.Value : false;
+                return this.data.SavePassword.HasValue ? this.data.SavePassword.Value : false;
             }
             set
             {
-                data.SavePassword = value;
+                this.data.SavePassword = value;
             }
         }
 
         public byte[] Certificate
         {
-            set { data.Certificate = value; }
+            set { this.data.Certificate = value; }
         }
 
         public string PfxPassword
         {
-            set { data.PfxPassword = value; }
+            set { this.data.PfxPassword = value; }
         }
 
         /// <summary>
@@ -510,7 +511,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <example />
         public string ServiceName
         {
-            get { return data.ServiceName; }
+            get { return this.data.ServiceName; }
         }
 
         /// <summary>
@@ -518,23 +519,23 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <value>
         ///   <para>The transport binding schemes. You can specify one or more schemes. For possible values, see 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.TransportScheme" />. </para>
+        /// <see cref="Telepathy.Session.TransportScheme" />. </para>
         /// </value>
         /// <remarks>
         ///   <para>If you specify 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.TransportScheme.Http" /> and 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Secure" /> is 
+        /// <see cref="Telepathy.Session.TransportScheme.Http" /> and 
+        /// <see cref="Secure" /> is 
         /// True, HTTPS is used; otherwise, if you specify 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.TransportScheme.Http" /> and  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Secure" /> is 
+        /// <see cref="Telepathy.Session.TransportScheme.Http" /> and  
+        /// <see cref="Secure" /> is 
         /// False, HTTP is used.</para>
         /// </remarks>
         /// <example />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Secure" />
+        /// <seealso cref="Secure" />
         public override TransportScheme TransportScheme
         {
-            get { return data.TransportScheme; }
-            set { data.TransportScheme = value; }
+            get { return this.data.TransportScheme; }
+            set { this.data.TransportScheme = value; }
         }
 
         /// <summary>
@@ -589,17 +590,17 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </value>
         /// <remarks>
         ///   <para>Uses SSL if 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.TransportScheme" /> is 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.TransportScheme.Http" />, or uses Kerberos if 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.TransportScheme" /> is 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.TransportScheme.NetTcp" />.</para>
+        /// <see cref="TransportScheme" /> is 
+        /// <see cref="Telepathy.Session.TransportScheme.Http" />, or uses Kerberos if 
+        /// <see cref="TransportScheme" /> is 
+        /// <see cref="Telepathy.Session.TransportScheme.NetTcp" />.</para>
         /// </remarks>
         /// <example />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.ShareSession" />
+        /// <seealso cref="ShareSession" />
         public bool Secure
         {
-            get { return data.Secure; }
-            set { data.Secure = value; }
+            get { return this.data.Secure; }
+            set { this.data.Secure = value; }
         }
 
         /// <summary>
@@ -614,11 +615,11 @@ namespace Microsoft.Hpc.Scheduler.Session
         ///   <para>If True, anyone who can submit jobs based on the job template can send requests to the broker.</para>
         /// </remarks>
         /// <example />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Secure" />
+        /// <seealso cref="Secure" />
         public bool ShareSession
         {
-            get { return data.ShareSession; }
-            set { data.ShareSession = value; }
+            get { return this.data.ShareSession; }
+            set { this.data.ShareSession = value; }
         }
 
         /// <summary>
@@ -632,8 +633,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </value>
         public bool CanPreempt
         {
-            get { return data.CanPreempt.Value; }
-            set { data.CanPreempt = value; }
+            get { return this.data.CanPreempt.Value; }
+            set { this.data.CanPreempt = value; }
         }
 
         /// <summary>
@@ -642,11 +643,11 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <value>
         ///   <para>A 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.BrokerSettingsInfo" /> object that defines the timeout periods that are used by the broker.</para> 
+        /// <see cref="BrokerSettingsInfo" /> object that defines the timeout periods that are used by the broker.</para> 
         /// </value>
         public BrokerSettingsInfo BrokerSettings
         {
-            get { return _brokerSettings; }
+            get { return this._brokerSettings; }
         }
 
         // The following four job properties are put a shortcut in the start info. They will be 
@@ -661,14 +662,14 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <remarks>
         ///   <para>If it is not set, the job uses the Default template.</para>
         ///   <para>Creating the session fails if the values that you specify for 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.MaximumUnits" />, 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.MinimumUnits" />, and 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.SessionResourceUnitType" /> conflict with those that are specified in the template.</para> 
+        /// <see cref="MaximumUnits" />, 
+        /// <see cref="MinimumUnits" />, and 
+        /// <see cref="SessionResourceUnitType" /> conflict with those that are specified in the template.</para> 
         /// </remarks>
         public string JobTemplate
         {
-            get { return data.JobTemplate; }
-            set { data.JobTemplate = value; }
+            get { return this.data.JobTemplate; }
+            set { this.data.JobTemplate = value; }
         }
 
         /// <summary>
@@ -736,9 +737,9 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             get
             {
-                if (data.ResourceUnitType.HasValue)
+                if (this.data.ResourceUnitType.HasValue)
                 {
-                    return (SessionUnitType)data.ResourceUnitType.Value;
+                    return (SessionUnitType)this.data.ResourceUnitType.Value;
                 }
                 else
                 {
@@ -749,11 +750,11 @@ namespace Microsoft.Hpc.Scheduler.Session
             {
                 if (value.HasValue)
                 {
-                    data.ResourceUnitType = (int)value.Value;
+                    this.data.ResourceUnitType = (int)value.Value;
                 }
                 else
                 {
-                    data.ResourceUnitType = null;
+                    this.data.ResourceUnitType = null;
                 }
             }
         }
@@ -766,15 +767,15 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </value>
         /// <remarks>
         ///   <para>The 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.SessionResourceUnitType" /> property defines the resource units (for example, nodes or cores).</para> 
+        /// <see cref="SessionResourceUnitType" /> property defines the resource units (for example, nodes or cores).</para> 
         ///   <para>The maximum units must be within the constraints of the template, if there are any.</para>
         /// </remarks>
         /// <example />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.MinimumUnits" />
+        /// <seealso cref="MinimumUnits" />
         public int? MaximumUnits
         {
-            get { return data.MaxUnits; }
-            set { data.MaxUnits = value; }
+            get { return this.data.MaxUnits; }
+            set { this.data.MaxUnits = value; }
         }
 
         /// <summary>
@@ -785,15 +786,15 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </value>
         /// <remarks>
         ///   <para>The 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.SessionResourceUnitType" /> property defines the resource units (for example, nodes or cores).</para> 
+        /// <see cref="SessionResourceUnitType" /> property defines the resource units (for example, nodes or cores).</para> 
         ///   <para>The minimum units must be within the constraints of the template, if there are any.</para>
         /// </remarks>
         /// <example />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.MaximumUnits" />
+        /// <seealso cref="MaximumUnits" />
         public int? MinimumUnits
         {
-            get { return data.MinUnits; }
-            set { data.MinUnits = value; }
+            get { return this.data.MinUnits; }
+            set { this.data.MinUnits = value; }
         }
 
         /// <summary>
@@ -804,8 +805,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </value>
         public string ServiceJobName
         {
-            get { return data.ServiceJobName; }
-            set { data.ServiceJobName = value; }
+            get { return this.data.ServiceJobName; }
+            set { this.data.ServiceJobName = value; }
         }
 
         /// <summary>
@@ -820,8 +821,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <example />
         public string Project
         {
-            get { return data.ServiceJobProject; }
-            set { data.ServiceJobProject = value; }
+            get { return this.data.ServiceJobProject; }
+            set { this.data.ServiceJobProject = value; }
         }
 
         /// <summary>
@@ -839,13 +840,13 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// contains nodes 1, 2, 3, and 4 and group B contains nodes 3, 4, 5, and 6, the resulting list is 3 and 4.</para>
         ///   <para>If you also specify nodes in the 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.RequestedNodesList" /> property, the job runs on the intersection of the requested node list and the resulting node group list.</para> 
+        /// <see cref="RequestedNodesList" /> property, the job runs on the intersection of the requested node list and the resulting node group list.</para> 
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.RequestedNodesList" />
+        /// <seealso cref="RequestedNodesList" />
         public List<string> NodeGroupList
         {
-            get { return _nodeGroupsList; }
-            set { _nodeGroupsList = value; }
+            get { return this._nodeGroupsList; }
+            set { this._nodeGroupsList = value; }
         }
 
         /// <summary>
@@ -855,24 +856,24 @@ namespace Microsoft.Hpc.Scheduler.Session
         ///   <para>A 
         /// 
         /// <see cref="System.Collections.Generic.List{T}" /> of strings that contain the names of the node on which you request to run the service job for the session. The nodes must exist in the HPC cluster with the head node that the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Headnode" /> property specifies.</para>
+        /// <see cref="SessionInitInfoBase.Headnode" /> property specifies.</para>
         /// </value>
         /// <remarks>
         ///   <para>Specify a list of the nodes on which your job is 
         /// capable of running. For example, the nodes might contain the required software for your job.</para>
         ///   <para>If you also specify a list of node group names in the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.NodeGroupList" /> property, the job runs on the intersection of the two lists.</para>
+        /// <see cref="NodeGroupList" /> property, the job runs on the intersection of the two lists.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.NodeGroupList" />
+        /// <seealso cref="NodeGroupList" />
         public List<string> RequestedNodesList
         {
             get
             {
-                return _requestedNodesList;
+                return this._requestedNodesList;
             }
             set
             {
-                _requestedNodesList = value;
+                this._requestedNodesList = value;
             }
         }
 
@@ -915,11 +916,11 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             get
             {
-                return data.ExtendedPriority.HasValue ? data.ExtendedPriority.Value : 2000;
+                return this.data.ExtendedPriority.HasValue ? this.data.ExtendedPriority.Value : 2000;
             }
             set
             {
-                data.ExtendedPriority = value;
+                this.data.ExtendedPriority = value;
             }
         }
 
@@ -937,8 +938,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <example />
         public int Runtime
         {
-            get { return data.Runtime; }
-            set { data.Runtime = value; }
+            get { return this.data.Runtime; }
+            set { this.data.Runtime = value; }
         }
 
         /// <summary>
@@ -959,8 +960,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// a format of service_name_major.minor.config. For example, MyService_1.0.config. The version must include 
         /// the major and minor portions of the version identifier and no further subversions.</para> 
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.ServiceVersion" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.GetServiceVersions(System.String,System.String)" />
+        /// <seealso cref="SessionBase.ServiceVersion" />
+        /// <seealso cref="SessionBase.GetServiceVersions(string,string)" />
         public Version ServiceVersion
         {
             get { return this.data.ServiceVersion; }
@@ -969,30 +970,30 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         ///   <para>Gets or sets a 
         /// <see cref="System.Boolean" /> value that indicates whether this 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo" /> uses the session pool.</para>
+        /// <see cref="SessionStartInfo" /> uses the session pool.</para>
         /// </summary>
         /// <value>
         ///   <para>Returns a 
         /// <see cref="System.Boolean" /> value that indicates whether this 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo" /> uses the session pool..</para>
+        /// <see cref="SessionStartInfo" /> uses the session pool..</para>
         /// </value>
         public bool UseSessionPool
         {
-            get { return data.UseSessionPool; }
-            set { data.UseSessionPool = value; }
+            get { return this.data.UseSessionPool; }
+            set { this.data.UseSessionPool = value; }
         }
 
         /// <summary>
         /// <para>Gets or sets a value that indicates whether this 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo" /> uses Azure Queue.</para>
+        /// <see cref="SessionStartInfo" /> uses Azure Queue.</para>
         /// </summary>
         /// <value>
         ///   <para />
         /// </value>
         public bool? UseAzureQueue
         {
-            get { return data.UseAzureQueue; }
-            set { data.UseAzureQueue = value; }
+            get { return this.data.UseAzureQueue; }
+            set { this.data.UseAzureQueue = value; }
 
         }
 
@@ -1001,8 +1002,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         public bool UseWindowsClientCredential
         {
-            get { return data.UseWindowsClientCredential; }
-            set { data.UseWindowsClientCredential = value; }
+            get { return this.data.UseWindowsClientCredential; }
+            set { this.data.UseWindowsClientCredential = value; }
         }
 
         /// <summary>
@@ -1013,8 +1014,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </value>
         public Version ClientVersion
         {
-            get { return data.ClientVersion; }
-            set { data.ClientVersion = value; }
+            get { return this.data.ClientVersion; }
+            set { this.data.ClientVersion = value; }
         }
 
         /// <summary>
@@ -1071,12 +1072,12 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             get
             {
-                return data.ServiceHostIdleTimeout;
+                return this.data.ServiceHostIdleTimeout;
             }
 
             set
             {
-                data.ServiceHostIdleTimeout = value;
+                this.data.ServiceHostIdleTimeout = value;
             }
         }
 
@@ -1087,12 +1088,12 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             get
             {
-                return data.ServiceHangTimeout;
+                return this.data.ServiceHangTimeout;
             }
 
             set
             {
-                data.ServiceHangTimeout = value;
+                this.data.ServiceHangTimeout = value;
             }
         }
 
@@ -1132,24 +1133,24 @@ namespace Microsoft.Hpc.Scheduler.Session
             get
             {
                 // update the data
-                data.RequestedNodesStr = SessionStartInfo.Collection2String(this._requestedNodes);
-                data.NodeGroupsStr = SessionStartInfo.Collection2String(this._nodeGroups);
-                data.UseInprocessBroker = this.UseInprocessBroker;
-                data.IsNoSession = this.IsNoSession;
+                this.data.RequestedNodesStr = SessionStartInfo.Collection2String(this._requestedNodes);
+                this.data.NodeGroupsStr = SessionStartInfo.Collection2String(this._nodeGroups);
+                this.data.UseInprocessBroker = this.UseInprocessBroker;
+                this.data.IsNoSession = this.IsNoSession;
 
                 if (this._requestedNodesList.Count != 0)
                 {
-                    data.RequestedNodesStr = List2String(this._requestedNodesList);
+                    this.data.RequestedNodesStr = this.List2String(this._requestedNodesList);
                 }
 
                 if (this._nodeGroupsList.Count != 0)
                 {
-                    data.NodeGroupsStr = List2String(this._nodeGroupsList);
+                    this.data.NodeGroupsStr = this.List2String(this._nodeGroupsList);
                 }
 
                 this.data.UseAad = this.UseAad;
 
-                return data;
+                return this.data;
             }
         }
 
@@ -1214,7 +1215,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         #region ISerializable Members
         /// <summary>
         ///   <para>Initializes a new instance of the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo" /> class with the specified serialization information.</para>
+        /// <see cref="SessionStartInfo" /> class with the specified serialization information.</para>
         /// </summary>
         /// <param name="info">
         ///   <para>The <see cref="System.Runtime.Serialization.SerializationInfo" /> object that contains the serialization information.</para>
@@ -1229,13 +1230,13 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             this.data = (SessionStartInfoContract)info.GetValue("Data", typeof(SessionStartInfoContract));
 
-            _brokerSettings = new BrokerSettingsInfo(data);
+            this._brokerSettings = new BrokerSettingsInfo(this.data);
 
-            if (!String.IsNullOrEmpty(data.RequestedNodesStr))
-                _requestedNodes = new List<string>(data.RequestedNodesStr.Split(','));
+            if (!String.IsNullOrEmpty(this.data.RequestedNodesStr))
+                this._requestedNodes = new List<string>(this.data.RequestedNodesStr.Split(','));
 
-            if (!String.IsNullOrEmpty(data.NodeGroupsStr))
-                _nodeGroups = new List<string>(data.NodeGroupsStr.Split(','));
+            if (!String.IsNullOrEmpty(this.data.NodeGroupsStr))
+                this._nodeGroups = new List<string>(this.data.NodeGroupsStr.Split(','));
         }
 
         /// <summary>
@@ -1314,7 +1315,7 @@ namespace Microsoft.Hpc.Scheduler.Session
 
             this.BrokerLauncherEprs = strlist.ToArray();
             this.RegPath = regPath;
-            this.Init(headnode, serviceName, svcVersion);
+            this.Init(this.headnode, serviceName, svcVersion);
         }
 
         /// <summary>

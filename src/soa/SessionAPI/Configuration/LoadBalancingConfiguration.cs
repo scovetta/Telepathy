@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Configuration
+namespace Microsoft.Telepathy.Session.Configuration
 {
     using System.Collections.Generic;
     using System.Configuration;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
+
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     ///   <para>Contains the configuration properties for the load balancing section of the configuration file.</para>
@@ -29,25 +30,25 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
         Dictionary<string, object> updatedValues = new Dictionary<string, object>();
 
         /// <summary>
-        ///   <para>Initializes a new instance of the <see cref="Microsoft.Hpc.Scheduler.Session.Configuration.LoadBalancingConfiguration" /> class.</para>
+        ///   <para>Initializes a new instance of the <see cref="LoadBalancingConfiguration" /> class.</para>
         /// </summary>
         public LoadBalancingConfiguration()
         {
-            properties.Add(new ConfigurationProperty(MessagesResendLimitConfigurationName, typeof(int), 3));
-            properties.Add(new ConfigurationProperty(MultiEmissionDelayTimeConfigurationName, typeof(int), -1));
-            properties.Add(new ConfigurationProperty(ServiceOperationTimeoutConfigurationName, typeof(int), Constant.DefaultServiceOperationTimeout));
-            properties.Add(new ConfigurationProperty(EndpointNotFoundRetryCountLimitConfigurationName, typeof(int), 10));
+            this.properties.Add(new ConfigurationProperty(MessagesResendLimitConfigurationName, typeof(int), 3));
+            this.properties.Add(new ConfigurationProperty(MultiEmissionDelayTimeConfigurationName, typeof(int), -1));
+            this.properties.Add(new ConfigurationProperty(ServiceOperationTimeoutConfigurationName, typeof(int), Constant.DefaultServiceOperationTimeout));
+            this.properties.Add(new ConfigurationProperty(EndpointNotFoundRetryCountLimitConfigurationName, typeof(int), 10));
 
             //default EndpointNotFoundRetryPeriod: 5 minutes
-            properties.Add(new ConfigurationProperty(EndpointNotFoundRetryPeriodConfigurationName, typeof(int), 5 * 60 * 1000));
+            this.properties.Add(new ConfigurationProperty(EndpointNotFoundRetryPeriodConfigurationName, typeof(int), 5 * 60 * 1000));
 
-            properties.Add(new ConfigurationProperty(ServiceRequestPrefetchCountConfigurationName, typeof(int), 1));
+            this.properties.Add(new ConfigurationProperty(ServiceRequestPrefetchCountConfigurationName, typeof(int), 1));
 
             // According to the test, 64 connections per deployment is too many, it often leads to the failure when open client.
             // Change it to 16, customers can set this in the load balancing configuration based on the network situation.
-            properties.Add(new ConfigurationProperty(MaxConnectionCountPerAzureProxyConfigurationName, typeof(int), 16));
+            this.properties.Add(new ConfigurationProperty(MaxConnectionCountPerAzureProxyConfigurationName, typeof(int), 16));
 
-            properties.Add(new ConfigurationProperty(DispatcherCapacityInGrowShrinkConfigurationName, typeof(int), 0));
+            this.properties.Add(new ConfigurationProperty(DispatcherCapacityInGrowShrinkConfigurationName, typeof(int), 0));
         }
 
         /// <summary>
@@ -61,7 +62,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
         {
             get
             {
-                return properties;
+                return this.properties;
             }
         }
 
@@ -87,7 +88,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
             get
             {
                 object value;
-                if (updatedValues.TryGetValue(EndpointNotFoundRetryCountLimitConfigurationName, out value))
+                if (this.updatedValues.TryGetValue(EndpointNotFoundRetryCountLimitConfigurationName, out value))
                 {
                     return (int)value;
                 }
@@ -97,7 +98,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
 
             set
             {
-                updatedValues[EndpointNotFoundRetryCountLimitConfigurationName] = value;
+                this.updatedValues[EndpointNotFoundRetryCountLimitConfigurationName] = value;
             }
         }
 
@@ -112,7 +113,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
             get
             {
                 object value;
-                if (updatedValues.TryGetValue(EndpointNotFoundRetryPeriodConfigurationName, out value))
+                if (this.updatedValues.TryGetValue(EndpointNotFoundRetryPeriodConfigurationName, out value))
                 {
                     return (int)value;
                 }
@@ -122,7 +123,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
 
             set
             {
-                updatedValues[EndpointNotFoundRetryPeriodConfigurationName] = value;
+                this.updatedValues[EndpointNotFoundRetryPeriodConfigurationName] = value;
             }
         }
 
@@ -137,7 +138,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
             get
             {
                 object value;
-                if (updatedValues.TryGetValue(MultiEmissionDelayTimeConfigurationName, out value))
+                if (this.updatedValues.TryGetValue(MultiEmissionDelayTimeConfigurationName, out value))
                 {
                     return (int)value;
                 }
@@ -147,7 +148,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
 
             set
             {
-                updatedValues[MultiEmissionDelayTimeConfigurationName] = value;
+                this.updatedValues[MultiEmissionDelayTimeConfigurationName] = value;
             }
         }
 
@@ -165,7 +166,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
             get
             {
                 object value;
-                if (updatedValues.TryGetValue(MessagesResendLimitConfigurationName, out value))
+                if (this.updatedValues.TryGetValue(MessagesResendLimitConfigurationName, out value))
                 {
                     return (int)value;
                 }
@@ -175,7 +176,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
 
             set
             {
-                updatedValues[MessagesResendLimitConfigurationName] = value;
+                this.updatedValues[MessagesResendLimitConfigurationName] = value;
             }
         }
 
@@ -191,7 +192,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
             get
             {
                 object value;
-                if (updatedValues.TryGetValue(ServiceOperationTimeoutConfigurationName, out value))
+                if (this.updatedValues.TryGetValue(ServiceOperationTimeoutConfigurationName, out value))
                 {
                     return (int)value;
                 }
@@ -201,7 +202,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
 
             set
             {
-                updatedValues[ServiceOperationTimeoutConfigurationName] = value;
+                this.updatedValues[ServiceOperationTimeoutConfigurationName] = value;
             }
         }
 
@@ -216,7 +217,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
             get
             {
                 object value;
-                if (updatedValues.TryGetValue(MaxConnectionCountPerAzureProxyConfigurationName, out value))
+                if (this.updatedValues.TryGetValue(MaxConnectionCountPerAzureProxyConfigurationName, out value))
                 {
                     return (int)value;
                 }
@@ -226,7 +227,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
 
             set
             {
-                updatedValues[MaxConnectionCountPerAzureProxyConfigurationName] = value;
+                this.updatedValues[MaxConnectionCountPerAzureProxyConfigurationName] = value;
             }
         }
 
@@ -245,7 +246,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
             get
             {
                 object value;
-                if (updatedValues.TryGetValue(DispatcherCapacityInGrowShrinkConfigurationName, out value))
+                if (this.updatedValues.TryGetValue(DispatcherCapacityInGrowShrinkConfigurationName, out value))
                 {
                     return (int)value;
                 }
@@ -255,7 +256,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
 
             set
             {
-                updatedValues[DispatcherCapacityInGrowShrinkConfigurationName] = value;
+                this.updatedValues[DispatcherCapacityInGrowShrinkConfigurationName] = value;
             }
         }
 
@@ -272,43 +273,43 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
         public bool Validate(out string errorMessage)
         {
             errorMessage = string.Empty;
-            if (MessageResendLimit < 0)
+            if (this.MessageResendLimit < 0)
             {
                 errorMessage = SR.MessageRetryLimitNotNegative;
                 return false;
             }
 
-            if (ServiceOperationTimeout <= 0)
+            if (this.ServiceOperationTimeout <= 0)
             {
                 errorMessage = SR.InvalidServiceOperationTimeout;
                 return false;
             }
 
-            if (EndpointNotFoundRetryCountLimit < 0)
+            if (this.EndpointNotFoundRetryCountLimit < 0)
             {
                 errorMessage = SR.EndpointNotFoundRetryCountLimitNotNegative;
                 return false;
             }
 
-            if (EndpointNotFoundRetryPeriod <= 0)
+            if (this.EndpointNotFoundRetryPeriod <= 0)
             {
                 errorMessage = SR.InvalidEndpointNotFoundRetryPeriod;
                 return false;
             }
 
-            if (ServiceRequestPrefetchCount < 0)
+            if (this.ServiceRequestPrefetchCount < 0)
             {
                 errorMessage = SR.InvalidServiceRequestPrefetchCount;
                 return false;
             }
 
-            if (MaxConnectionCountPerAzureProxy <= 0)
+            if (this.MaxConnectionCountPerAzureProxy <= 0)
             {
                 errorMessage = SR.InvalidMaxConnectionCountPerAzureProxy;
                 return false;
             }
 
-            if (DispatcherCapacityInGrowShrink < 0)
+            if (this.DispatcherCapacityInGrowShrink < 0)
             {
                 errorMessage = SR.DispatcherCapacityInGrowShrinkNonNegative;
                 return false;

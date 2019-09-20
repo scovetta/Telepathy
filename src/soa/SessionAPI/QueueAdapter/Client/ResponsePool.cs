@@ -1,17 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter.Client
+namespace Microsoft.Telepathy.Session.QueueAdapter.Client
 {
-    using System;
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
+    using Microsoft.Telepathy.Session.QueueAdapter.DTO;
 
     /// <summary>
     /// If multiple clients are listening to a single Cloud Queue for responses,

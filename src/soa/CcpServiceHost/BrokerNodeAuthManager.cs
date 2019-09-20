@@ -10,6 +10,8 @@ namespace Microsoft.Telepathy.CcpServiceHost
 
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Internal;
 
     using RuntimeTraceHelper = Microsoft.Telepathy.RuntimeTrace.TraceHelper;
 

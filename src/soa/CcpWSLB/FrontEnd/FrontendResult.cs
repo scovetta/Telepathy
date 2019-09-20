@@ -9,6 +9,7 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
     using System.Xml;
 
     using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Telepathy.Session;
 
     /// <summary>
     /// Wrapped result for building frontend

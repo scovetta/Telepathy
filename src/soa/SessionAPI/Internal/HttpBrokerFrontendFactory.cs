@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal
 {
     using System;
     using System.Collections.Generic;
@@ -12,9 +12,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.Threading;
     using System.Xml;
 
-    using Microsoft.Hpc.Scheduler.Session.Common;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Client;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal.AzureQueue;
+    using Microsoft.Telepathy.Session.QueueAdapter.Client.Impls;
 
     /// <summary>
     /// Broker frontend factory to build proxy to communicate to broker
@@ -466,7 +467,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     }
 
                     // check if there is already a handler with the same action and clientData
-                    foreach (IResponseHandler h in handlers)
+                    foreach (IResponseHandler h in this.handlers)
                     {
                         if (h.Action().Equals(action, StringComparison.InvariantCulture) && h.ClientData().Equals(clientData, StringComparison.InvariantCultureIgnoreCase))
                         {
@@ -476,13 +477,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
                     AzureQueueResponseHandler handler = new AzureQueueResponseHandler(this.azureQueueProxy, action, clientData, resetToBegin, count, clientId, this.callback, this);
                     this.handlers.Add(handler);
-                    handler.Completed += new EventHandler(HandlerCompleted);
+                    handler.Completed += new EventHandler(this.HandlerCompleted);
                 }
                 else
                 {
                     HttpResponseHandler handler = new HttpResponseHandler(this.controller, action, clientData, resetToBegin, count, clientId, this.callback, this);
                     this.handlers.Add(handler);
-                    handler.Completed += new EventHandler(HandlerCompleted);
+                    handler.Completed += new EventHandler(this.HandlerCompleted);
                 }
             }
 
@@ -519,14 +520,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
                 public string Action()
                 {
-                    return action;
+                    return this.action;
                 }
 
                 private string clientData;
 
                 public string ClientData()
                 {
-                    return clientData;
+                    return this.clientData;
                 }
 
                 private GetResponsePosition resetToBegin;
@@ -582,15 +583,15 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
                         // while (!isEOM)
                         // {
-                        SessionBase.TraceSource.TraceInformation("Begin PullResponse : count {0} : clientId {1}", count, clientId);
-                        BrokerResponseMessages responseMessages = this.controller.PullResponses(action, resetToBegin, count, clientId);
+                        SessionBase.TraceSource.TraceInformation("Begin PullResponse : count {0} : clientId {1}", this.count, this.clientId);
+                        BrokerResponseMessages responseMessages = this.controller.PullResponses(this.action, this.resetToBegin, this.count, this.clientId);
                         SessionBase.TraceSource.TraceInformation("End PullResponse : count {0} : isEOM {1}", responseMessages.SOAPMessage.Length, responseMessages.EOM);
 
                         // responseCount += responseMessages.SOAPMessage.Length;
                         responseCount = responseMessages.SOAPMessage.Length;
 
                         // results.Add(p.BeginInvoke(responseMessages, clientData, null, null));
-                        ProcessResponses(responseMessages, clientData);
+                        this.ProcessResponses(responseMessages, this.clientData);
                         Interlocked.Add(ref this.responseClient.totalResponseCount, responseCount);
                         isEOM = responseMessages.EOM;
 
@@ -602,7 +603,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                             endOfResponses.Count = this.responseClient.totalResponseCount;
                             endOfResponses.Reason = EndOfResponsesReason.Success;
                             Message eom = converter.ToMessage(endOfResponses, MessageVersion.Soap11);
-                            eom.Headers.Add(MessageHeader.CreateHeader(Constant.ResponseCallbackIdHeaderName, Constant.ResponseCallbackIdHeaderNS, clientData));
+                            eom.Headers.Add(MessageHeader.CreateHeader(Constant.ResponseCallbackIdHeaderName, Constant.ResponseCallbackIdHeaderNS, this.clientData));
 
                             this.callback.SendResponse(eom);
                         }
@@ -617,7 +618,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                         }
 
                         Message exceptionMessage = Message.CreateMessage(MessageVersion.Soap11, @"http://hpc.microsoft.com/ClientSideExeption");
-                        exceptionMessage.Headers.Add(MessageHeader.CreateHeader(Constant.ResponseCallbackIdHeaderName, Constant.ResponseCallbackIdHeaderNS, clientData));
+                        exceptionMessage.Headers.Add(MessageHeader.CreateHeader(Constant.ResponseCallbackIdHeaderName, Constant.ResponseCallbackIdHeaderNS, this.clientData));
                         exceptionMessage.Properties.Add(@"HttpClientException", e);
 
                         this.callback.SendResponse(exceptionMessage);
@@ -663,14 +664,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
                 public string Action()
                 {
-                    return action;
+                    return this.action;
                 }
 
                 private string clientData;
 
                 public string ClientData()
                 {
-                    return clientData;
+                    return this.clientData;
                 }
 
                 private GetResponsePosition resetToBegin;
@@ -733,7 +734,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                         while (true)
                         {
                             // need to filter different client, action and deal with the end of responses
-                            Message m = this.azureQueueProxy.ReceiveMessage(clientData);
+                            Message m = this.azureQueueProxy.ReceiveMessage(this.clientData);
 
                             this.callback.SendResponse(m);
                         }
@@ -748,7 +749,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                         }
 
                         Message exceptionMessage = Message.CreateMessage(MessageVersion.Soap11, @"http://hpc.microsoft.com/ClientSideExeption");
-                        exceptionMessage.Headers.Add(MessageHeader.CreateHeader(Constant.ResponseCallbackIdHeaderName, Constant.ResponseCallbackIdHeaderNS, clientData));
+                        exceptionMessage.Headers.Add(MessageHeader.CreateHeader(Constant.ResponseCallbackIdHeaderName, Constant.ResponseCallbackIdHeaderNS, this.clientData));
                         exceptionMessage.Properties.Add(@"AQClientException", e);
 
                         this.callback.SendResponse(exceptionMessage);
@@ -1199,11 +1200,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                             clientCredentials.UserName.Password = this.info.InternalPassword;
                             BindingParameterCollection bindingParams = new BindingParameterCollection();
                             bindingParams.Add(clientCredentials);
-                            this.brokerClientFactory = binding.BuildChannelFactory<IRequestChannel>(bindingParams);
+                            this.brokerClientFactory = this.binding.BuildChannelFactory<IRequestChannel>(bindingParams);
                             this.brokerClientFactory.Open();
                         }
 
-                        client = this.brokerClientFactory.CreateChannel(GenerateEndpointAddress(info.BrokerEpr, this.scheme, this.info.Secure, this.info.IsAadOrLocalUser));
+                        client = this.brokerClientFactory.CreateChannel(GenerateEndpointAddress(this.info.BrokerEpr, this.scheme, this.info.Secure, this.info.IsAadOrLocalUser));
                         break;
 
                     case ClientType.Controller:

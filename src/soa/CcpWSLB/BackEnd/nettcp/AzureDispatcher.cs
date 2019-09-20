@@ -16,6 +16,8 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.nettcp
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Dispatch messages to broker proxy in Windows Azure

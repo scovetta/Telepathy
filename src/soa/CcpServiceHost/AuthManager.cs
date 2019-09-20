@@ -7,6 +7,7 @@ namespace Microsoft.Telepathy.CcpServiceHost
     using System.ServiceModel;
 
     using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.Session.Common;
 
     /// <summary>
     /// An authorization manager which only allows access from the a specified user

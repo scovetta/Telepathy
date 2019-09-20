@@ -13,6 +13,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.BackEnd;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// This class handles the graceful preemption requests from scheduler.

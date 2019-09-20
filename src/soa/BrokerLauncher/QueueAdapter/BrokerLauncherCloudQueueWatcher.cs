@@ -7,10 +7,11 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher.QueueAdapter
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter;
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Server;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.QueueAdapter;
+    using Microsoft.Telepathy.Session.QueueAdapter.DTO;
+    using Microsoft.Telepathy.Session.QueueAdapter.Interface;
+    using Microsoft.Telepathy.Session.QueueAdapter.Server;
 
     public class BrokerLauncherCloudQueueWatcher : CloudQueueWatcherBase
     {

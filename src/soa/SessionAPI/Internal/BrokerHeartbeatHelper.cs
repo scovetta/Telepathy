@@ -1,12 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal
 {
     using System;
     using System.ServiceModel;
     using System.Threading;
-    using Microsoft.Hpc.Scheduler.Session.Common;
+
+    using Microsoft.Telepathy.Session.Interface;
 
     /// <summary>
     /// Provides a heartbeat helper for monitoring heartbeat from session API to broker worker
@@ -221,7 +222,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 // Connect to the broker launcher
                 IBrokerLauncher launcher = this.factory.GetBrokerLauncherClientForHeartbeat();
 
-                if (supportNewPing)
+                if (this.supportNewPing)
                 {
                     try
                     {
@@ -251,7 +252,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     {
                         if (this.expectPingResult == null)
                         {
-                            supportNewPing = false;
+                            this.supportNewPing = false;
                         }
                         else
                         {
@@ -260,7 +261,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     }
                 }
 
-                if (!supportNewPing)
+                if (!this.supportNewPing)
                 {
                     // Ping it
                     isBrokerLoaded = launcher.PingBroker(this.sessionId);

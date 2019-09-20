@@ -3,6 +3,8 @@
 
 namespace Microsoft.Hpc.Scheduler.Session.Internal
 {
+    using Microsoft.Telepathy.Session.Internal;
+
     /// <summary>
     /// Utility functions for the service host port.
     /// </summary>

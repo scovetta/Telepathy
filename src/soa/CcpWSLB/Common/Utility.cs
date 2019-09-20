@@ -13,6 +13,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
 
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Utility;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Broker helper class

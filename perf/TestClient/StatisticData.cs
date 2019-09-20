@@ -8,6 +8,7 @@ namespace TestClient
     using System.Linq;
 
     using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Telepathy.Session;
 
     internal class StatisticData
     {

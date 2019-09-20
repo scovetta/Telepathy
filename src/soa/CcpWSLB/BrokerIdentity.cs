@@ -11,9 +11,10 @@ namespace Microsoft.Telepathy.ServiceBroker
     using System.Text;
     using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Maintains broker's identity when calling user services. BN computer account for non-

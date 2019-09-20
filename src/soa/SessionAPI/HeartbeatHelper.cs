@@ -1,11 +1,14 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session
 {
     using System;
     using System.ServiceModel.Channels;
     using System.Threading;
+
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Utilities for sending heartbeat on the connection.
@@ -152,7 +155,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
         ~HeartbeatHelper()
         {
-            Dispose(false);
+            this.Dispose(false);
         }
 
         public void Dispose()
@@ -168,12 +171,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         {
             if (disposing)
             {
-                if (heartbeatTimer != null)
+                if (this.heartbeatTimer != null)
                 {
                     try
                     {
-                        heartbeatTimer.Dispose();
-                        heartbeatTimer = null;
+                        this.heartbeatTimer.Dispose();
+                        this.heartbeatTimer = null;
                     }
                     catch
                     { }

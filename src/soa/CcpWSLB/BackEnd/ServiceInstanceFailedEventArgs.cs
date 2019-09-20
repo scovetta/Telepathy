@@ -6,6 +6,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
     using System;
 
     using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Telepathy.Session.Exceptions;
 
     /// <summary>
     /// service instance failed event args

@@ -8,6 +8,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
 
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
 
     /// <summary>
     /// Broker's state manager
@@ -197,11 +199,11 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
         {
             if (unloadToSuspend)
             {
-                ThrowHelper.ThrowSessionFault(Microsoft.Hpc.Scheduler.Session.SOAFaultCode.Broker_BrokerSuspending, SR.BrokerSuspending);
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerSuspending, SR.BrokerSuspending);
             }
             else
             {
-                ThrowHelper.ThrowSessionFault(Microsoft.Hpc.Scheduler.Session.SOAFaultCode.Session_ValidateJobFailed_AlreadyFinished, SR.Session_ValidateJobFailed_AlreadyFninshed, sessionId.ToString());
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.Session_ValidateJobFailed_AlreadyFinished, SR.Session_ValidateJobFailed_AlreadyFninshed, sessionId.ToString());
             }
         }
 

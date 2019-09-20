@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
     using System;
     using System.Collections.Generic;
@@ -14,9 +14,11 @@ namespace Microsoft.Hpc.Scheduler.Session
     using System.Threading;
     using System.Xml;
 
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
+    using Microsoft.Telepathy.Session.Internal.AzureQueue;
 
     /// <summary>
     ///   <para>Provides methods that enable clients to connect to a session and 
@@ -215,7 +217,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             Utility.ThrowIfNull(session, "session");
 
-            Init(null, null);
+            this.Init(null, null);
         }
 
         /// <summary>
@@ -223,7 +225,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         ~BrokerClient()
         {
-            Dispose(false);
+            this.Dispose(false);
         }
 
         /// <summary>
@@ -236,7 +238,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             Utility.ThrowIfNull(session, "session");
 
-            Init(binding, null);
+            this.Init(binding, null);
         }
 
         /// <summary>
@@ -277,7 +279,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             Utility.ThrowIfNullOrEmpty(clientid, "clientid");
             Utility.ThrowIfTooLong(clientid.Length, "clientid", 128, SR.ClientIdTooLong);
 
-            Init(null, null);
+            this.Init(null, null);
         }
         
 
@@ -295,19 +297,19 @@ namespace Microsoft.Hpc.Scheduler.Session
             Utility.ThrowIfNullOrEmpty(clientid, "clientid");
             Utility.ThrowIfTooLong(clientid.Length, "clientid", 128, SR.ClientIdTooLong);
 
-            Init(binding, null);
+            this.Init(binding, null);
         }
 
         /// <summary>
         ///   <para>Initializes a new instance of the 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> class that connects to the specified session by using the specified configuration of  
+        /// <see cref="BrokerClient{TContract}" /> class that connects to the specified session by using the specified configuration of  
         /// <see cref="System.ServiceModel.NetTcpBinding" />.</para>
         /// </summary>
         /// <param name="session">
         ///   <para>An object derived from the 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionBase" /> class that represents the session or durable session that hosts the Windows Communication Foundation (WCF) service to which the client should connect.</para> 
+        /// <see cref="SessionBase" /> class that represents the session or durable session that hosts the Windows Communication Foundation (WCF) service to which the client should connect.</para> 
         /// </param>
         /// <param name="bindingConfigName">
         ///   <para>String that specifies the name of the binding setting that you want to 
@@ -318,17 +320,17 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <see cref="System.ServiceModel.NetTcpBinding" />, which is the default, and CustomBinding.</para>
         ///   <para>If 
         /// <see cref="System.ServiceModel.NetTcpBinding" /> is used, the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.TransportScheme" /> must contain 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.TransportScheme.NetTcp" />.</para>
+        /// <see cref="SessionStartInfo.TransportScheme" /> must contain 
+        /// <see cref="TransportScheme.NetTcp" />.</para>
         ///   <para>If CustomBinding is used, 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.TransportScheme" /> must contain 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.TransportScheme.Custom" />.</para>
+        /// <see cref="SessionStartInfo.TransportScheme" /> must contain 
+        /// <see cref="TransportScheme.Custom" />.</para>
         ///   <para>If you choose CustomBinding and you want to use the 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> class, the binding must support DuplexSessionChannel (for example, Binding.CanBuildChannelFactory&lt;IDuplexSessionChannel&gt;() must return  
+        /// <see cref="BrokerClient{TContract}" /> class, the binding must support DuplexSessionChannel (for example, Binding.CanBuildChannelFactory&lt;IDuplexSessionChannel&gt;() must return  
         /// True).</para>
         ///   <para>If you use 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.TransportScheme.WebAPI" />, binding is ignored because the REST API is used for communication.</para>
+        /// <see cref="TransportScheme.WebAPI" />, binding is ignored because the REST API is used for communication.</para>
         /// </remarks>
         public BrokerClient(SessionBase session, string bindingConfigName)
             : base(null, session)
@@ -336,13 +338,13 @@ namespace Microsoft.Hpc.Scheduler.Session
             Utility.ThrowIfNull(session, "session");
             Utility.ThrowIfNullOrEmpty(bindingConfigName, "bindingConfigName");
 
-            Init(null, bindingConfigName);
+            this.Init(null, bindingConfigName);
         }
 
         /// <summary>
         ///   <para>Initializes a new instance of the 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> class that connects to the specified session by using a specified type of binding from the configuration file for the application, and assigns the specified client identifier to that instance.</para> 
+        /// <see cref="BrokerClient{TContract}" /> class that connects to the specified session by using a specified type of binding from the configuration file for the application, and assigns the specified client identifier to that instance.</para> 
         /// </summary>
         /// <param name="clientid">
         ///   <para>Unicode string that specifies an identifier to use for the client. The maximum length of the string is 128 Unicode 
@@ -352,7 +354,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="session">
         ///   <para>An object derived from the 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionBase" /> class that represents the session or durable session that hosts the Windows Communication Foundation (WCF) service to which the client should connect.</para> 
+        /// <see cref="SessionBase" /> class that represents the session or durable session that hosts the Windows Communication Foundation (WCF) service to which the client should connect.</para> 
         /// </param>
         /// <param name="bindingConfigName">
         ///   <para>String that specifies the name of the binding setting that you want to 
@@ -363,17 +365,17 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <see cref="System.ServiceModel.NetTcpBinding" />, which is the default, and CustomBinding.</para>
         ///   <para>If 
         /// <see cref="System.ServiceModel.NetTcpBinding" /> is used, the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.TransportScheme" /> must contain 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.TransportScheme.NetTcp" />.</para>
+        /// <see cref="SessionStartInfo.TransportScheme" /> must contain 
+        /// <see cref="TransportScheme.NetTcp" />.</para>
         ///   <para>If CustomBinding is used, 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.TransportScheme" /> must contain 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.TransportScheme.Custom" />.</para>
+        /// <see cref="SessionStartInfo.TransportScheme" /> must contain 
+        /// <see cref="TransportScheme.Custom" />.</para>
         ///   <para>If you choose CustomBinding and you want to use the 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> class, the binding must support DuplexSessionChannel (for example, Binding.CanBuildChannelFactory&lt;IDuplexSessionChannel&gt;() must return  
+        /// <see cref="BrokerClient{TContract}" /> class, the binding must support DuplexSessionChannel (for example, Binding.CanBuildChannelFactory&lt;IDuplexSessionChannel&gt;() must return  
         /// True).</para>
         ///   <para>If you use 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.TransportScheme.WebAPI" />, binding is ignored because the REST API is used for communication.</para>
+        /// <see cref="TransportScheme.WebAPI" />, binding is ignored because the REST API is used for communication.</para>
         /// </remarks>
         public BrokerClient(string clientid, SessionBase session, string bindingConfigName)
             : base(clientid, session)
@@ -382,7 +384,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             Utility.ThrowIfNullOrEmpty(clientid, "clientid");
             Utility.ThrowIfTooLong(clientid.Length, "clientid", 128, SR.ClientIdTooLong);
 
-            Init(null, bindingConfigName);
+            this.Init(null, bindingConfigName);
         }
 
         /// <summary>
@@ -429,15 +431,15 @@ namespace Microsoft.Hpc.Scheduler.Session
             // Set the binding
             if (!String.IsNullOrEmpty(bindingConfigName))
             {
-                binding = GetConfiguredClientBinding(bindingConfigName, this.session.Info.Secure);
+                binding = this.GetConfiguredClientBinding(bindingConfigName, this.session.Info.Secure);
             }
             else if (binding == null)
             {
-                binding = GetDefaultClientBinding();
+                binding = this.GetDefaultClientBinding();
             }
 
             // Apply the max message size if specified
-            BindingHelper.ApplyMaxMessageSize(binding, ((SessionInfo)session.Info).MaxMessageSize);
+            BindingHelper.ApplyMaxMessageSize(binding, ((SessionInfo)this.session.Info).MaxMessageSize);
 
             // Set the scheme and make sure it matches the binding
             TransportScheme scheme = TransportScheme.None;
@@ -525,19 +527,19 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// so that the client can correlate requests with responses, use any of the other forms of the SendRequest method instead.</para>
         ///   <para>The default length of time that the method should wait for the broker to accept the request before generating an exception is 
         /// the value specified by the serviceOperationTimeout setting in the configuration file used to register the service. To specify the length of this time-out, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage, System.Object, System.Int32)"/> or 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage, System.Object, System.String, System.Int32)"/> method instead. </para>
+        /// <see cref="SendRequest{TMessage}(TMessage,object,int)"/> or 
+        /// <see cref="SendRequest{TMessage}(TMessage,object,string,int)"/> method instead. </para>
         ///   <para>To send the request along with the SOAP action for the request, use the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.String)" /> or 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage, System.Object, System.String, System.Int32)"/> method.</para>
+        /// <see cref="SendRequest{TMessage}(TMessage,object,string)" /> or 
+        /// <see cref="SendRequest{TMessage}(TMessage,object,string,int)"/> method.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.Int32)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.String,System.Int32)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.String)" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage,object)" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage,object,int)" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage,object,string,int)" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage,object,string)" />
         public void SendRequest<TMessage>(TMessage request)
         {
-            SendRequest<TMessage>(request, messageId: null);
+            this.SendRequest<TMessage>(request, messageId: null);
         }
 
         /// <summary>
@@ -550,9 +552,9 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             Utility.ThrowIfNull(request, "request");
 
-            MessageDescription messageDescription = GetMessageDescription(typeof(TMessage), MessageDirection.Input);
+            MessageDescription messageDescription = this.GetMessageDescription(typeof(TMessage), MessageDirection.Input);
             Utility.ThrowIfInvalid((messageDescription != null), "TMessage");
-            SendRequest<TMessage>(request, String.Empty, messageDescription.Action, defaultSendTimeout, messageId);
+            this.SendRequest<TMessage>(request, String.Empty, messageDescription.Action, this.defaultSendTimeout, messageId);
         }
 
         /// <summary>
@@ -566,7 +568,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="userData">
         ///   <para>An object that contains data that the service should return with the response to the request so 
         /// that the client can correlate requests with responses. The client can get this data from the response by calling the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{TMessage}.GetUserData{T}" /> method.</para>
+        /// <see cref="BrokerResponse{TMessage}.GetUserData{T}" /> method.</para>
         /// </param>
         /// <typeparam name="TMessage">
         ///   <para>The type of the message to send. You create a TMessage type by adding 
@@ -575,23 +577,23 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <remarks>
         ///   <para>To send a request without sending data that the service should return with 
         /// the response to the request so that the client can correlate requests with responses, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage"/> method instead.</para>
+        /// <see cref="SendRequest{TMessage}(TMessage)"/> method instead.</para>
         ///   <para>The default length of time that the method should wait for the broker to accept the request before generating an exception is 
         /// the value specified by the serviceOperationTimeout setting in the configuration file used to register the service. To specify the length of this time-out, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage, System.Object, System.Int32)"/> or 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage, System.Object, System.String, System.Int32)"/>  </para>
+        /// <see cref="SendRequest{TMessage}(TMessage,object,int)"/> or 
+        /// <see cref="SendRequest{TMessage}(TMessage,object,string,int)"/>  </para>
         ///   <para>To send the request along with the SOAP action for the request, use the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.String)" /> or 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage, System.Object, System.String, System.Int32)"/> method.</para>
+        /// <see cref="SendRequest{TMessage}(TMessage,object,string)" /> or 
+        /// <see cref="SendRequest{TMessage}(TMessage,object,string,int)"/> method.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{TMessage}.GetUserData{T}" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.Int32)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.String,System.Int32)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.String)" />
+        /// <seealso cref="BrokerResponse{TMessage}.GetUserData{T}" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage,object,int)" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage,object,string,int)" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage)" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage,object,string)" />
         public void SendRequest<TMessage>(TMessage request, object userData)
         {
-            SendRequest<TMessage>(request, userData, messageId: null);
+            this.SendRequest<TMessage>(request, userData, messageId: null);
         }
 
         /// <summary>
@@ -606,9 +608,9 @@ namespace Microsoft.Hpc.Scheduler.Session
             Utility.ThrowIfNull(request, "request");
             Utility.ThrowIfNull(userData, "userData");
 
-            MessageDescription messageDescription = GetMessageDescription(typeof(TMessage), MessageDirection.Input);
+            MessageDescription messageDescription = this.GetMessageDescription(typeof(TMessage), MessageDirection.Input);
             Utility.ThrowIfInvalid((messageDescription != null), "TMessage");
-            SendRequestInternal<TMessage>(request, userData, messageDescription.Action, defaultSendTimeout, messageId);
+            this.SendRequestInternal<TMessage>(request, userData, messageDescription.Action, this.defaultSendTimeout, messageId);
         }
 
         /// <summary>
@@ -622,7 +624,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="userData">
         ///   <para>An object that contains data that the service should return with the response to the request so 
         /// that the client can correlate requests with responses. The client can get this data from the response by calling the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{TMessage}.GetUserData{T}" /> method.</para>
+        /// <see cref="BrokerResponse{TMessage}.GetUserData{T}" /> method.</para>
         /// </param>
         /// <param name="sendTimeoutMilliseconds">
         ///   <para>An integer that specifies the length of time in milliseconds that 
@@ -638,21 +640,21 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <remarks>
         ///   <para>To use the default length of time that the method should wait for the broker to accept the 
         /// request before generating an exception specified by the serviceOperationTimeout setting in the configuration file used to register the service, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage)" />, 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object)" />, or 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.String)" /> method instead.</para>
+        /// <see cref="SendRequest{TMessage}(TMessage)" />, 
+        /// <see cref="SendRequest{TMessage}(TMessage,object)" />, or 
+        /// <see cref="SendRequest{TMessage}(TMessage,object,string)" /> method instead.</para>
         ///   <para>To send the request along with the SOAP action for the request, use the
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.String)" /> or 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.String,System.Int32)" /> method.</para>
+        /// <see cref="SendRequest{TMessage}(TMessage,object,string)" /> or 
+        /// <see cref="SendRequest{TMessage}(TMessage,object,string,int)" /> method.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{TMessage}.GetUserData{T}" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.String,System.Int32)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.String)" />
+        /// <seealso cref="BrokerResponse{TMessage}.GetUserData{T}" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage,object)" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage,object,string,int)" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage)" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage,object,string)" />
         public void SendRequest<TMessage>(TMessage request, object userData, int sendTimeoutMilliseconds)
         {
-            SendRequest<TMessage>(request, userData, sendTimeoutMilliseconds, null);
+            this.SendRequest<TMessage>(request, userData, sendTimeoutMilliseconds, null);
         }
 
         /// <summary>
@@ -669,9 +671,9 @@ namespace Microsoft.Hpc.Scheduler.Session
             Utility.ThrowIfNull(userData, "userData");
             Utility.ThrowIfInvalidTimeout(sendTimeoutMilliseconds, "sendTimeoutMilliseconds");
 
-            MessageDescription messageDescription = GetMessageDescription(typeof(TMessage), MessageDirection.Input);
+            MessageDescription messageDescription = this.GetMessageDescription(typeof(TMessage), MessageDirection.Input);
             Utility.ThrowIfInvalid((messageDescription != null), "TMessage");
-            SendRequestInternal<TMessage>(request, userData, messageDescription.Action, sendTimeoutMilliseconds, messageId);
+            this.SendRequestInternal<TMessage>(request, userData, messageDescription.Action, sendTimeoutMilliseconds, messageId);
         }
 
         /// <summary>
@@ -685,7 +687,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="userData">
         ///   <para>An object that contains data that the service should return with the response to the request so 
         /// that the client can correlate requests with responses. The client can get this data from the response by calling the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{TMessage}.GetUserData{T}" /> method.</para>
+        /// <see cref="BrokerResponse{TMessage}.GetUserData{T}" /> method.</para>
         /// </param>
         /// <param name="action">
         ///   <para>String that specifies a SOAP action for the message if the appropriate 
@@ -700,21 +702,21 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <remarks>
         ///   <para>The default length of time that the method should wait for the broker to accept the request before generating an exception is 
         /// the value specified by the serviceOperationTimeout setting in the configuration file used to register the service. To specify the length of this time-out, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage, System.Object, System.Int32)"/> or 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage, System.Object, System.String, System.Int32)"/> method instead.</para>
+        /// <see cref="SendRequest{TMessage}(TMessage,object,int)"/> or 
+        /// <see cref="SendRequest{TMessage}(TMessage,object,string,int)"/> method instead.</para>
         ///   <para>To send the request without the SOAP action for the request, use the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage)"/>, 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage, System.Object)"/>" />, or 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage, System.Object, System.Int32)"/> method.</para>
+        /// <see cref="SendRequest{TMessage}(TMessage)"/>, 
+        /// <see cref="SendRequest{TMessage}(TMessage,object)"/>" />, or 
+        /// <see cref="SendRequest{TMessage}(TMessage,object,int)"/> method.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{TMessage}.GetUserData{T}" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.String,System.Int32)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.Int32)" />
+        /// <seealso cref="BrokerResponse{TMessage}.GetUserData{T}" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage,object)" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage,object,string,int)" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage)" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage,object,int)" />
         public void SendRequest<TMessage>(TMessage request, object userData, string action)
         {
-            SendRequest<TMessage>(request, userData, action, null);
+            this.SendRequest<TMessage>(request, userData, action, null);
         }
 
         /// <summary>
@@ -731,9 +733,9 @@ namespace Microsoft.Hpc.Scheduler.Session
             Utility.ThrowIfNull(userData, "userData");
             Utility.ThrowIfNullOrEmpty(action, "action");
 
-            MessageDescription messageDescription = GetMessageDescription(typeof(TMessage), MessageDirection.Input, action);
+            MessageDescription messageDescription = this.GetMessageDescription(typeof(TMessage), MessageDirection.Input, action);
             Utility.ThrowIfInvalid((messageDescription != null), "TMessage/action");
-            SendRequestInternal<TMessage>(request, userData, action, defaultSendTimeout, messageId);
+            this.SendRequestInternal<TMessage>(request, userData, action, this.defaultSendTimeout, messageId);
         }
 
         /// <summary>
@@ -747,7 +749,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="userData">
         ///   <para>An object that contains data that the service should return with the response to the request so 
         /// that the client can correlate requests with responses. The client can get this data from the response by calling the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{TMessage}.GetUserData{T}" /> method.</para>
+        /// <see cref="BrokerResponse{TMessage}.GetUserData{T}" /> method.</para>
         /// </param>
         /// <param name="action">
         ///   <para>String that specifies a SOAP action for the message if the appropriate 
@@ -769,22 +771,22 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <remarks>
         ///   <para>To use the default length of time that the method should wait for the broker to accept the 
         /// request before generating an exception specified by the serviceOperationTimeout setting in the configuration file used to register the service, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage)" />, 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object)" />, or 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.String)" /> method instead.</para>
+        /// <see cref="SendRequest{TMessage}(TMessage)" />, 
+        /// <see cref="SendRequest{TMessage}(TMessage,object)" />, or 
+        /// <see cref="SendRequest{TMessage}(TMessage,object,string)" /> method instead.</para>
         ///   <para>To send the request without the SOAP action for the request, use the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage)" />,
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object)" />, or 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.Int32)" /> method.</para>
+        /// <see cref="SendRequest{TMessage}(TMessage)" />,
+        /// <see cref="SendRequest{TMessage}(TMessage,object)" />, or 
+        /// <see cref="SendRequest{TMessage}(TMessage,object,int)" /> method.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{TMessage}.GetUserData{T}" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.String)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.Int32)" />
+        /// <seealso cref="BrokerResponse{TMessage}.GetUserData{T}" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage,object)" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage,object,string)" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage)" />
+        /// <seealso cref="SendRequest{TMessage}(TMessage,object,int)" />
         public void SendRequest<TMessage>(TMessage request, object userData, string action, int sendTimeoutMilliseconds)
         {
-            SendRequest<TMessage>(request, userData, action, sendTimeoutMilliseconds, null);
+            this.SendRequest<TMessage>(request, userData, action, sendTimeoutMilliseconds, null);
         }
 
         /// <summary>
@@ -803,9 +805,9 @@ namespace Microsoft.Hpc.Scheduler.Session
             Utility.ThrowIfNullOrEmpty(action, "action");
             Utility.ThrowIfInvalidTimeout(sendTimeoutMilliseconds, "sendTimeoutMilliseconds");
 
-            MessageDescription messageDescription = GetMessageDescription(typeof(TMessage), MessageDirection.Input, action);
+            MessageDescription messageDescription = this.GetMessageDescription(typeof(TMessage), MessageDirection.Input, action);
             Utility.ThrowIfInvalid((messageDescription != null), "TMessage/action");
-            SendRequestInternal<TMessage>(request, userData, action, defaultSendTimeout, messageId);
+            this.SendRequestInternal<TMessage>(request, userData, action, this.defaultSendTimeout, messageId);
         }
 
         /// <summary>
@@ -818,7 +820,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="sendTimeoutMS">Timeout for send requests</param>
         private void SendRequestInternal<TMessage>(TMessage request, object userData, string action, int sendTimeoutMilliseconds)
         {
-            SendRequestInternal<TMessage>(request, userData, action, defaultSendTimeout, null);
+            this.SendRequestInternal<TMessage>(request, userData, action, this.defaultSendTimeout, null);
         }
 
         /// <summary>
@@ -1034,8 +1036,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </typeparam>
         /// <returns>
         ///   <para>A 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}" /> object that is an enumerator of 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{T}" /> objects that represent the responses from the SOA service.</para>
+        /// <see cref="BrokerResponseEnumerator{TMessage}" /> object that is an enumerator of 
+        /// <see cref="BrokerResponse{TMessage}" /> objects that represent the responses from the SOA service.</para>
         /// </returns>
         /// <exception cref="System.TimeoutException">
         ///   <para>The enumerator reached the end of the default timeout period before all of the responses were received.</para>
@@ -1043,18 +1045,18 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <remarks>
         ///   <para>The default length of time that the enumeration waits for responses is the value specified by the serviceOperationTimeout setting in the 
         /// configuration file used to register the service. If the sessions for your HPC cluster are queued for long periods of time, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}(System.Int32)" /> or 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}(System.String,System.String,System.Int32)" /> to specify the timeout value instead. You may want to increase the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para> 
+        /// <see cref="GetResponses{TMessage}(int)" /> or 
+        /// <see cref="GetResponses{TMessage}(string,string,int)" /> to specify the timeout value instead. You may want to increase the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para> 
         ///   <para>To get responses for all called SOA operations, regardless of the type of the object that represents the response messages, use the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses()" /> method instead.</para>
+        /// <see cref="GetResponses()" /> method instead.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}(System.Int32)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses()" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}(System.String,System.String,System.Int32)" />
+        /// <seealso cref="BrokerResponseEnumerator{TMessage}" />
+        /// <seealso cref="GetResponses{TMessage}(int)" />
+        /// <seealso cref="GetResponses()" />
+        /// <seealso cref="GetResponses{TMessage}(string,string,int)" />
         public BrokerResponseEnumerator<TMessage> GetResponses<TMessage>()
         {
-            return GetResponses<TMessage>(defaultResponsesTimeout);
+            return this.GetResponses<TMessage>(this.defaultResponsesTimeout);
         }
 
         /// <summary>
@@ -1071,8 +1073,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </typeparam>
         /// <returns>
         ///   <para>A 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}" /> object that is an enumerator of 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{T}" /> objects that represent the responses from the SOA service.</para>
+        /// <see cref="BrokerResponseEnumerator{TMessage}" /> object that is an enumerator of 
+        /// <see cref="BrokerResponse{TMessage}" /> objects that represent the responses from the SOA service.</para>
         /// </returns>
         /// <exception cref="System.TimeoutException">
         ///   <para>The enumerator reached the end of the specified timeout period before 
@@ -1081,16 +1083,16 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <remarks>
         ///   <para>To use the default timeout period specified by the serviceOperationTimeout 
         /// setting in the configuration file used to register the service, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}()" /> method instead.</para>
+        /// <see cref="GetResponses{TMessage}()" /> method instead.</para>
         ///   <para>If the sessions for your HPC cluster are queued for long periods of time, you may want to increase 
         /// the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para>
         ///   <para>To get responses for all called SOA operations, regardless of the type of the object that represents the response messages, use the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses(System.Int32)" /> method instead.</para>
+        /// <see cref="GetResponses(int)" /> method instead.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}()" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses(System.Int32)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}(System.String,System.String,System.Int32)" />
+        /// <seealso cref="BrokerResponseEnumerator{TMessage}" />
+        /// <seealso cref="GetResponses{TMessage}()" />
+        /// <seealso cref="GetResponses(int)" />
+        /// <seealso cref="GetResponses{TMessage}(string,string,int)" />
         public BrokerResponseEnumerator<TMessage> GetResponses<TMessage>(int waitTimeoutMilliseconds)
         {
             Utility.ThrowIfInvalidTimeout(waitTimeoutMilliseconds, "waitTimeoutMilliseconds");
@@ -1124,8 +1126,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </typeparam>
         /// <returns>
         ///   <para>A 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}" /> object that is an enumerator of 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{T}" /> objects that represent the responses from the SOA service.</para>
+        /// <see cref="BrokerResponseEnumerator{TMessage}" /> object that is an enumerator of 
+        /// <see cref="BrokerResponse{TMessage}" /> objects that represent the responses from the SOA service.</para>
         /// </returns>
         /// <exception cref="System.TimeoutException">
         ///   <para>The enumerator reached the end of the specified timeout period before 
@@ -1134,16 +1136,16 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <remarks>
         ///   <para>To use the default timeout period specified by the serviceOperationTimeout 
         /// setting in the configuration file used to register the service, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}()" /> method instead.</para>
+        /// <see cref="GetResponses{TMessage}()" /> method instead.</para>
         ///   <para>If the sessions for your HPC cluster are queued for long periods of time, you may want to increase 
         /// the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para>
         ///   <para>To get responses for all called SOA operations, regardless of the type of the object that represents the response messages, use the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses(System.Int32)" /> method instead.</para>
+        /// <see cref="GetResponses(int)" /> method instead.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}()" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses(System.Int32)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}(System.Int32)" />
+        /// <seealso cref="BrokerResponseEnumerator{TMessage}" />
+        /// <seealso cref="GetResponses{TMessage}()" />
+        /// <seealso cref="GetResponses(int)" />
+        /// <seealso cref="GetResponses{TMessage}(int)" />
         public BrokerResponseEnumerator<TMessage> GetResponses<TMessage>(string action, string replyAction, int waitTimeoutMilliseconds)
         {
             Utility.ThrowIfNullOrEmpty(action, "action");
@@ -1158,7 +1160,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <returns>
         ///   <para>A 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}" /> object that is an enumerator of 
+        /// <see cref="BrokerResponseEnumerator{TMessage}" /> object that is an enumerator of 
         /// <see cref="System.Object" /> objects that represent the responses from the SOA service.</para>
         /// </returns>
         /// <exception cref="System.TimeoutException">
@@ -1167,19 +1169,19 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <remarks>
         ///   <para>The default length of time that the enumeration waits for responses is the value specified by the serviceOperationTimeout setting in the 
         /// configuration file used to register the service. If the sessions for your HPC cluster are queued for long periods of time, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses(System.Int32)" /> method to specify the timeout value instead. You may want to increase the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para> 
+        /// <see cref="GetResponses(int)" /> method to specify the timeout value instead. You may want to increase the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para> 
         ///   <para>When you use the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses()" /> method, check the type of the object that you get with the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{T}.Result" /> property of the object to identify the type of the response, and cast the object to that type to access its members.</para> 
+        /// <see cref="GetResponses()" /> method, check the type of the object that you get with the 
+        /// <see cref="BrokerResponse{TMessage}.Result" /> property of the object to identify the type of the response, and cast the object to that type to access its members.</para> 
         ///   <para>To specify the type of the object that represents the response messages, use the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}()" /> method.</para>
+        /// <see cref="GetResponses{TMessage}()" /> method.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses(System.Int32)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}()" />
+        /// <seealso cref="GetResponses(int)" />
+        /// <seealso cref="BrokerResponseEnumerator{TMessage}" />
+        /// <seealso cref="GetResponses{TMessage}()" />
         public BrokerResponseEnumerator<Object> GetResponses()
         {
-            return GetResponses(defaultResponsesTimeout);
+            return this.GetResponses(this.defaultResponsesTimeout);
         }
 
         /// <summary>
@@ -1192,7 +1194,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </param>
         /// <returns>
         ///   <para>A 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}" /> object that is an enumerator of 
+        /// <see cref="BrokerResponseEnumerator{TMessage}" /> object that is an enumerator of 
         /// <see cref="System.Object" /> objects that represent the responses from the SOA service.</para>
         /// </returns>
         /// <exception cref="System.TimeoutException">
@@ -1202,19 +1204,19 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <remarks>
         ///   <para>To use the default timeout period specified by the serviceOperationTimeout 
         /// setting in the configuration file used to register the service, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}()" /> method instead. If the sessions for your HPC cluster are queued for long periods of time, you may want to increase the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para> 
+        /// <see cref="GetResponses{TMessage}()" /> method instead. If the sessions for your HPC cluster are queued for long periods of time, you may want to increase the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para> 
         ///   <para>When you use the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses(System.Int32)" /> method, check the type of the object that you get with the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{T}.Result" /> property of the object to identify the type of the response, and cast the object to that type to access its members.</para> 
+        /// <see cref="GetResponses(int)" /> method, check the type of the object that you get with the  
+        /// <see cref="BrokerResponse{TMessage}.Result" /> property of the object to identify the type of the response, and cast the object to that type to access its members.</para> 
         ///   <para>To specify the type of the object that represents the response messages, use the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}(System.Int32)" /> method.</para>
+        /// <see cref="GetResponses{TMessage}(int)" /> method.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses()" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}(System.Int32)" />
+        /// <seealso cref="BrokerResponseEnumerator{TMessage}" />
+        /// <seealso cref="GetResponses()" />
+        /// <seealso cref="GetResponses{TMessage}(int)" />
         public BrokerResponseEnumerator<Object> GetResponses(int waitTimeoutMilliseconds)
         {
-            return GetResponses<Object>(waitTimeoutMilliseconds);
+            return this.GetResponses<Object>(waitTimeoutMilliseconds);
         }
 
         /// <summary>
@@ -1223,7 +1225,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="callback">
         ///   <para>A function that implements the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{T}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
+        /// <see cref="BrokerResponseHandler{TMessage}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
         /// </param>
         /// <typeparam name="TMessage">
         ///   <para>The type of the response message that you want the callback function to receive. You create a TMessage 
@@ -1232,39 +1234,39 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <remarks>
         ///   <para>The default length of time that the callback function waits for responses is the value specified by the serviceOperationTimeout setting in 
         /// the configuration file used to register the service. If the sessions for your HPC cluster are queued for long periods of time, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage} ,System.Int32)" />,  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage}, System.String, System.String ,System.Int32)" />,
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage}, System.Object ,System.Int32)" /> or 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage}, System.String, System.String, System.Object, System.Int32)" />
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage},int)" />,  
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage},string,string,int)" />,
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object,int)" /> or 
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},string,string,object,int)" />
         ///  method to specify the timeout value instead. You may want to increase the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para> 
         ///   <para>To designate a callback function that includes a parameter for a state object 
         /// that you want to pass to the callback function each time it is called, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object)" />,  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object,System.Int32)" />, or  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.String, System.String,System.Object,System.Int32)" /> method.</para> 
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object)" />,  
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object,int)" />, or  
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},string,string,object,int)" /> method.</para> 
         ///   <para>To designate a callback function that receives responses for all called SOA 
         /// operations, regardless of the type of the object that represents the response messages, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object})" /> method instead.</para> 
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object})" /> method instead.</para> 
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.GetResponses{TMessage}()" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage},System.String,System.String,System.Int32)" 
+        /// <seealso cref="GetResponses{TMessage}()" />
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage},string,string,int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object})" 
+        /// <seealso cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object})" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{T}" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.String,System.String,System.Object,System.Int32)" 
+        /// <seealso cref="BrokerResponseHandler{TMessage}" />
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},string,string,object,int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object,System.Int32)" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object,int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object)" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage},System.Int32)" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage},int)" 
         /// /> 
         public void SetResponseHandler<TMessage>(BrokerResponseHandler<TMessage> callback)
         {
             Utility.ThrowIfNull(callback, "callback");
 
-            this.SetResponseHandler<TMessage>(callback, defaultResponsesTimeout, !this.EnableIsLastResponseProperty);
+            this.SetResponseHandler<TMessage>(callback, this.defaultResponsesTimeout, !this.EnableIsLastResponseProperty);
         }
 
         /// <summary>
@@ -1274,12 +1276,12 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="callback">
         ///   <para>A function that implements the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{T}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
+        /// <see cref="BrokerResponseStateHandler{TMessage}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
         /// </param>
         /// <param name="state">
         ///   <para>A state object that you want to pass to the callback function each time it is called. The function that the 
         /// <paramref name="callback" /> parameter specifies must include a parameter for this object. You can use this object to pass the instance of the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> class or other state information to the callback function.</para>
+        /// <see cref="BrokerClient{TContract}" /> class or other state information to the callback function.</para>
         /// </param>
         /// <typeparam name="TMessage">
         ///   <para>The type of the response message that you want the callback function to receive. You create a TMessage 
@@ -1288,33 +1290,33 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <remarks>
         ///   <para>The default length of time that the callback function waits for responses is the value specified by the serviceOperationTimeout setting in 
         /// the configuration file used to register the service. If the sessions for your HPC cluster are queued for long periods of time, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage},System.Int32)" />,   
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage},String,String,System.Int32)" />, 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},Object,System.Int32)" /> , or  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},String,String,Object,System.Int32)" /> method to specify the timeout value instead. You may want to increase the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para> 
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage},int)" />,   
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage},string,string,int)" />, 
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object,int)" /> , or  
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},string,string,object,int)" /> method to specify the timeout value instead. You may want to increase the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para> 
         ///   <para>To designate a callback function that receives responses for all called SOA 
         /// operations, regardless of the type of the object that represents the response messages, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{System.Object},System.Object)" /> method instead.</para> 
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{object},object)" /> method instead.</para> 
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{T}" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage},System.Int32)" 
+        /// <seealso cref="BrokerResponseHandler{TMessage}" />
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage},int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{System.Object},System.Object)" 
+        /// <seealso cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{object},object)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}()" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.String,System.String,System.Object,System.Int32)" 
+        /// <seealso cref="GetResponses{TMessage}()" />
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},string,string,object,int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object,System.Int32)" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object,int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage},System.String,System.String,System.Int32)" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage},string,string,int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage})" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage})" 
         /// /> 
         public void SetResponseHandler<TMessage>(BrokerResponseStateHandler<TMessage> callback, object state)
         {
             Utility.ThrowIfNull(callback, "callback");
 
-            this.SetResponseHandler<TMessage>(callback, state, defaultResponsesTimeout, !this.EnableIsLastResponseProperty);
+            this.SetResponseHandler<TMessage>(callback, state, this.defaultResponsesTimeout, !this.EnableIsLastResponseProperty);
         }
 
         /// <summary>
@@ -1323,7 +1325,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="callback">
         ///   <para>A function that implements the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{T}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
+        /// <see cref="BrokerResponseHandler{TMessage}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
         /// </param>
         /// <param name="timeoutMilliseconds">
         ///   <para>Integer that specifies the length of time in milliseconds that the callback function should 
@@ -1342,31 +1344,31 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para>
         ///   <para>To use the default timeout period specified by the serviceOperationTimeout 
         /// setting in the configuration file used to register the service, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage})" /> method instead.</para> 
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage})" /> method instead.</para> 
         ///   <para>To designate a callback function that includes a parameter for a state object that you want 
         /// to pass to the callback function each time it is called, subject to a timeout period, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object,System.Int32)" />   or  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},String,String,System.Object,System.Int32)" /> method.</para> 
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object,int)" />   or  
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},string,string,object,int)" /> method.</para> 
         ///   <para>To designate a callback function along with the SOAP actions for requests and responses, use the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage},String,String,System.Int32)" /> or
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},String,String,System.Object,System.Int32)" /> method.</para> 
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage},string,string,int)" /> or
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},string,string,object,int)" /> method.</para> 
         ///   <para>To designate a callback function that receives responses for all called SOA 
         /// operations, regardless of the type of the object that represents the response messages, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object},System.Int32)" /> method instead.</para> 
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object},int)" /> method instead.</para> 
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{T}" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage},System.String,System.String,System.Int32)" 
+        /// <seealso cref="BrokerResponseHandler{TMessage}" />
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage},string,string,int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object},System.Int32)" 
+        /// <seealso cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object},int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}(System.Int32)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.String,System.String,System.Object,System.Int32)" 
+        /// <seealso cref="GetResponses{TMessage}(int)" />
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},string,string,object,int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object,System.Int32)" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object,int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object)" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage})" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage})" 
         /// /> 
         public void SetResponseHandler<TMessage>(BrokerResponseHandler<TMessage> callback, int timeoutMilliseconds)
         {
@@ -1382,12 +1384,12 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="callback">
         ///   <para>A function that implements the 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{T}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
+        /// <see cref="BrokerResponseStateHandler{TMessage}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
         /// </param>
         /// <param name="state">
         ///   <para>A state object that you want to pass to the callback function each time it is called. The function that the 
         /// <paramref name="callback" /> parameter specifies must include a parameter for this object. You can use this object to pass the instance of the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> class or other state information to the callback function.</para>
+        /// <see cref="BrokerClient{TContract}" /> class or other state information to the callback function.</para>
         /// </param>
         /// <param name="timeoutMilliseconds">
         ///   <para>Integer that specifies the length of time in milliseconds that the callback function should 
@@ -1407,27 +1409,27 @@ namespace Microsoft.Hpc.Scheduler.Session
         ///   <para>To use the default timeout period specified by the serviceOperationTimeout 
         /// setting in the configuration file used to register the service, use the  
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object)" /> or  
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object)" /> or  
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage})" /> method instead.</para> 
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage})" /> method instead.</para> 
         ///   <para>To designate a callback function that receives responses for all called SOA 
         /// operations, regardless of the type of the object that represents the response messages, use the  
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{System.Object},System.Object,System.Int32)" /> method instead.</para> 
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{object},object,int)" /> method instead.</para> 
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{T}" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage},System.Int32)" 
+        /// <seealso cref="BrokerResponseHandler{TMessage}" />
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage},int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object,System.Int32)" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object,int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}(System.Int32)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.String,System.String,System.Object,System.Int32)" 
+        /// <seealso cref="GetResponses{TMessage}(int)" />
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},string,string,object,int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object)" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage},System.String,System.String,System.Int32)" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage},string,string,int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage})" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage})" 
         /// /> 
         public void SetResponseHandler<TMessage>(BrokerResponseStateHandler<TMessage> callback, object state, int timeoutMilliseconds)
         {
@@ -1441,7 +1443,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="callback">
         ///   <para>A function that implements the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{T}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
+        /// <see cref="BrokerResponseHandler{TMessage}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
         /// </param>
         /// <param name="action">
         ///   <para>String that specifies a SOAP action for the request message if the 
@@ -1472,28 +1474,28 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para>
         ///   <para>To use the default timeout period specified by the serviceOperationTimeout 
         /// setting in the configuration file used to register the service, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage})" /> method instead.</para> 
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage})" /> method instead.</para> 
         ///   <para>To designate a callback function that includes a parameter for a state object that you want 
         /// to pass to the callback function each time it is called, subject to a timeout period, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object,int)" /> or  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},string,string,System.Object,int)" /> method.</para> 
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object,int)" /> or  
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},string,string,object,int)" /> method.</para> 
         ///   <para>To designate a callback without specifying the SOAP actions for requests and responses, use the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage})" />, 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage}, int)" />,   
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object)" /> or
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object, int)" /> method.</para> 
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage})" />, 
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage},int)" />,   
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object)" /> or
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object,int)" /> method.</para> 
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{T}" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage},System.Int32)" 
+        /// <seealso cref="BrokerResponseHandler{TMessage}" />
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage},int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.String,System.String,System.Object,System.Int32)" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},string,string,object,int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}(System.String,System.String,System.Int32)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object,System.Int32)" 
+        /// <seealso cref="GetResponses{TMessage}(string,string,int)" />
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object,int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object)" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage})" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage})" 
         /// /> 
         public void SetResponseHandler<TMessage>(BrokerResponseHandler<TMessage> callback, string action, string replyAction, int timeoutMilliseconds)
         {
@@ -1525,7 +1527,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="callback">
         ///   <para>A function that implements the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{T}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
+        /// <see cref="BrokerResponseStateHandler{TMessage}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
         /// </param>
         /// <param name="action">
         ///   <para>String that specifies a SOAP action for the request message if the 
@@ -1542,7 +1544,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="state">
         ///   <para>A state object that you want to pass to the callback function each time it is called. The function that the 
         /// <paramref name="callback" /> parameter specifies must include a parameter for this object. You can use this object to pass the instance of the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> class or other state information to the callback function.</para>
+        /// <see cref="BrokerClient{TContract}" /> class or other state information to the callback function.</para>
         /// </param>
         /// <param name="timeoutMilliseconds">
         ///   <para>Integer that specifies the length of time in milliseconds that the callback function should 
@@ -1561,20 +1563,20 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para>
         ///   <para>To use the default timeout period specified by the serviceOperationTimeout 
         /// setting in the configuration file used to register the service, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object)" /> or  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage})" /> method instead.</para> 
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object)" /> or  
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage})" /> method instead.</para> 
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{T}" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage},System.Int32)" 
+        /// <seealso cref="BrokerResponseHandler{TMessage}" />
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage},int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object,System.Int32)" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object,int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses{T}(System.String,System.String,System.Int32)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object)" 
+        /// <seealso cref="GetResponses{TMessage}(string,string,int)" />
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage},System.String,System.String,System.Int32)" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage},string,string,int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage})" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage})" 
         /// /> 
         public void SetResponseHandler<TMessage>(BrokerResponseStateHandler<TMessage> callback, string action, string replyAction, object state, int timeoutMilliseconds)
         {
@@ -1604,37 +1606,37 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="callback">
         ///   <para>A function that implements the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{T}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
+        /// <see cref="BrokerResponseHandler{TMessage}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
         /// </param>
         /// <remarks>
         ///   <para>The default length of time that the callback function waits for responses is the value specified by the serviceOperationTimeout setting in 
         /// the configuration file used to register the service. If the sessions for your HPC cluster are queued for long periods of time, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object},System.Int32)" /> or  
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object},int)" /> or  
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{System.Object},System.Object,System.Int32)" /> method to specify the timeout value instead. You may want to increase the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para> 
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{object},object,int)" /> method to specify the timeout value instead. You may want to increase the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para> 
         ///   <para>To designate a callback function that includes a parameter for a state object 
         /// that you want to pass to the callback function each time it is called, use the  
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{System.Object},System.Object)" /> or  
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{object},object)" /> or  
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{System.Object},System.Object,System.Int32)" /> method.</para> 
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{object},object,int)" /> method.</para> 
         ///   <para>To designate a callback function that receives responses for the SOA operation that corresponds to 
         /// a specified type parameter, regardless of the type of the object that represents the response messages, use the  
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage})" /> method instead.</para> 
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage})" /> method instead.</para> 
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{T}" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{System.Object},System.Object)" 
+        /// <seealso cref="BrokerResponseHandler{TMessage}" />
+        /// <seealso cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{object},object)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage})" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage})" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object},System.Int32)" 
+        /// <seealso cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object},int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{System.Object},System.Object,System.Int32)" 
+        /// <seealso cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{object},object,int)" 
         /// /> 
         public void SetResponseHandler(BrokerResponseHandler<Object> callback)
         {
-            this.SetResponseHandler(callback, defaultResponsesTimeout, !this.EnableIsLastResponseProperty);
+            this.SetResponseHandler(callback, this.defaultResponsesTimeout, !this.EnableIsLastResponseProperty);
         }
 
         /// <summary>
@@ -1643,38 +1645,38 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="callback">
         ///   <para>A function that implements the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{T}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
+        /// <see cref="BrokerResponseStateHandler{TMessage}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
         /// </param>
         /// <param name="state">
         ///   <para>A state object that you want to pass to the callback function each time it is called. The function that the 
         /// <paramref name="callback" /> parameter specifies must include a parameter for this object. You can use this object to pass the instance of the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> class or other state information to the callback function.</para>
+        /// <see cref="BrokerClient{TContract}" /> class or other state information to the callback function.</para>
         /// </param>
         /// <remarks>
         ///   <para>The default length of time that the callback function waits for responses is the value specified by the serviceOperationTimeout setting in 
         /// the configuration file used to register the service. If the sessions for your HPC cluster are queued for long periods of time, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object},System.Int32)" /> or  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{System.Object},System.Object,System.Int32)" /> method to specify the timeout value instead. You may want to increase the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para> 
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object},int)" /> or  
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{object},object,int)" /> method to specify the timeout value instead. You may want to increase the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para> 
         ///   <para>To designate a callback function that does not include a parameter for a state 
         /// object that you want to pass to the callback function each time it is called, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object})" /> or  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object},System.Int32)" /> method.</para> 
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object})" /> or  
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object},int)" /> method.</para> 
         ///   <para>To designate a callback function that receives responses for the SOA operation that corresponds to 
         /// a specified type parameter, regardless of the type of the object that represents the response messages, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object)" /> method instead.</para> 
+        /// <see cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object)" /> method instead.</para> 
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{T}" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object},System.Int32)" 
+        /// <seealso cref="BrokerResponseStateHandler{TMessage}" />
+        /// <seealso cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object},int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object)" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object})" 
+        /// <seealso cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object})" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object},System.Int32)" 
+        /// <seealso cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object},int)" 
         /// /> 
         public void SetResponseHandler(BrokerResponseStateHandler<Object> callback, object state)
         {
-            this.SetResponseHandler(callback, state, defaultResponsesTimeout, !this.EnableIsLastResponseProperty);
+            this.SetResponseHandler(callback, state, this.defaultResponsesTimeout, !this.EnableIsLastResponseProperty);
         }
 
         /// <summary>
@@ -1683,7 +1685,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="callback">
         ///   <para>A function that implements the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{T}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
+        /// <see cref="BrokerResponseHandler{TMessage}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
         /// </param>
         /// <param name="timeoutMilliseconds">
         ///   <para>Integer that specifies the length of time in milliseconds that the callback function should 
@@ -1698,24 +1700,24 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para>
         ///   <para>To use the default timeout period specified by the serviceOperationTimeout 
         /// setting in the configuration file used to register the service, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object})" /> or  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{System.Object},System.Object)" /> method instead.</para> 
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object})" /> or  
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{object},object)" /> method instead.</para> 
         ///   <para>To designate a callback function that includes a parameter for a state object 
         /// that you want to pass to the callback function each time it is called, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{System.Object},System.Object)" /> or  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{System.Object},System.Object,System.Int32)" /> method.</para> 
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{object},object)" /> or  
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{object},object,int)" /> method.</para> 
         ///   <para>To designate a callback function that receives responses for the SOA operation that corresponds to 
         /// a specified type parameter, regardless of the type of the object that represents the response messages, use the  
         /// "Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage} method instead.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{T}" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{System.Object},System.Object)" 
+        /// <seealso cref="BrokerResponseHandler{TMessage}" />
+        /// <seealso cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{object},object)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage},System.Int32)" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage},int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object})" 
+        /// <seealso cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object})" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{System.Object},System.Object,System.Int32)" 
+        /// <seealso cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{object},object,int)" 
         /// /> 
         public void SetResponseHandler(BrokerResponseHandler<Object> callback, int timeoutMilliseconds)
         {
@@ -1728,12 +1730,12 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="callback">
         ///   <para>A function that implements the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{T}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
+        /// <see cref="BrokerResponseStateHandler{TMessage}" /> delegate that you want to designate as the callback function to receive responses from the SOA service.</para> 
         /// </param>
         /// <param name="state">
         ///   <para>A state object that you want to pass to the callback function each time it is called. The function that the 
         /// <paramref name="callback" /> parameter specifies must include a parameter for this object. You can use this object to pass the instance of the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> class or other state information to the callback function.</para>
+        /// <see cref="BrokerClient{TContract}" /> class or other state information to the callback function.</para>
         /// </param>
         /// <param name="timeoutMilliseconds">
         ///   <para>Integer that specifies the length of time in milliseconds that the callback function should 
@@ -1748,24 +1750,24 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// the value to the sum of the current value of the serviceOperationTimeout setting and the estimated amount of time that sessions are queued.</para>
         ///   <para>To use the default timeout period specified by the serviceOperationTimeout 
         /// setting in the configuration file used to register the service, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object})" /> or  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{System.Object},System.Object)" /> method instead.</para> 
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object})" /> or  
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{object},object)" /> method instead.</para> 
         ///   <para>To designate a callback function that does not include a parameter for a state 
         /// object that you want to pass to the callback function each time it is called, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object})" /> or  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object},System.Int32)" /> method.</para> 
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object})" /> or  
+        /// <see cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object},int)" /> method.</para> 
         ///   <para>To designate a callback function that receives responses for the SOA operation that corresponds to 
         /// a specified type parameter, regardless of the type of the object that represents the response messages, use the  
         /// "Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage} method instead.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{T}" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object},System.Int32)" 
+        /// <seealso cref="BrokerResponseStateHandler{TMessage}" />
+        /// <seealso cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object},int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.Object,System.Int32)" 
+        /// <seealso cref="SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},object,int)" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object})" 
+        /// <seealso cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object})" 
         /// /> 
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{System.Object},System.Object)" 
+        /// <seealso cref="SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{object},object)" 
         /// /> 
         public void SetResponseHandler(BrokerResponseStateHandler<Object> callback, object state, int timeoutMilliseconds)
         {
@@ -1830,12 +1832,12 @@ namespace Microsoft.Hpc.Scheduler.Session
         }
 
         /// <summary>
-        ///   <para>Gets the status of the <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> object.</para>
+        ///   <para>Gets the status of the <see cref="BrokerClient{TContract}" /> object.</para>
         /// </summary>
         /// <returns>
         ///   <para>A 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Interface.BrokerClientStatus" /> that indicates the status of the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> object.</para>
+        /// <see cref="BrokerClientStatus" /> that indicates the status of the 
+        /// <see cref="BrokerClient{TContract}" /> object.</para>
         /// </returns>
         public BrokerClientStatus GetStatus()
         {
@@ -1856,10 +1858,10 @@ namespace Microsoft.Hpc.Scheduler.Session
         }
 
         /// <summary>
-        ///   <para>Gets the number of requests that have been sent to this <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" />.</para>
+        ///   <para>Gets the number of requests that have been sent to this <see cref="BrokerClient{TContract}" />.</para>
         /// </summary>
         /// <value>
-        ///   <para>The number of requests that have been sent to this <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /></para>
+        ///   <para>The number of requests that have been sent to this <see cref="BrokerClient{TContract}" /></para>
         /// </value>
         public int RequestsCount
         {
@@ -2149,19 +2151,19 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </exception>
         /// <remarks>
         ///   <para>The default length of time that the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.Flush()" /> method waits for the broker to commit the request messages is 60,000 milliseconds. To specify a different length of time, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.Flush(System.Int32)" /> method instead.</para>
+        /// <see cref="Flush()" /> method waits for the broker to commit the request messages is 60,000 milliseconds. To specify a different length of time, use the  
+        /// <see cref="Flush(int)" /> method instead.</para>
         ///   <para>The difference between the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.Flush()" /> method and the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.EndRequests()" /> method: The 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.Flush()" /> method commits all pending request messages, and allows further request messages to be sent after the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.Flush()" /> method was called. The 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.EndRequests()" /> method commits all pending request messages, and does not allow further request messages to be sent.</para> 
+        /// <see cref="Flush()" /> method and the 
+        /// <see cref="EndRequests()" /> method: The 
+        /// <see cref="Flush()" /> method commits all pending request messages, and allows further request messages to be sent after the  
+        /// <see cref="Flush()" /> method was called. The 
+        /// <see cref="EndRequests()" /> method commits all pending request messages, and does not allow further request messages to be sent.</para> 
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.Flush(System.Int32)" />
+        /// <seealso cref="Flush(int)" />
         public void Flush()
         {
-            Flush(Constant.EOMTimeoutMS);
+            this.Flush(Constant.EOMTimeoutMS);
         }
 
         /// <summary>
@@ -2176,18 +2178,18 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </exception>
         /// <remarks>
         ///   <para>To use the default timeout period of 60,000 milliseconds, use the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.Flush()" /> method instead.</para>
+        /// <see cref="Flush()" /> method instead.</para>
         ///   <para>The difference between the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.Flush(System.Int32)" /> method and the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.EndRequests(System.Int32)" /> method: The 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.Flush(System.Int32)" /> method commits all pending request messages, and allows further request messages to be sent after the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.Flush(System.Int32)" /> method was called. The 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.EndRequests(System.Int32)" /> method commits all pending request messages, and does not allow further request messages to be sent.</para> 
+        /// <see cref="Flush(int)" /> method and the 
+        /// <see cref="EndRequests(int)" /> method: The 
+        /// <see cref="Flush(int)" /> method commits all pending request messages, and allows further request messages to be sent after the  
+        /// <see cref="Flush(int)" /> method was called. The 
+        /// <see cref="EndRequests(int)" /> method commits all pending request messages, and does not allow further request messages to be sent.</para> 
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.Flush()" />
+        /// <seealso cref="Flush()" />
         public void Flush(int timeoutMilliseconds)
         {
-            Flush(timeoutMilliseconds, /*endOfMessage =*/false);
+            this.Flush(timeoutMilliseconds, /*endOfMessage =*/false);
         }
 
         /// <summary>
@@ -2220,7 +2222,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.EndRequests(System.Int32)" />
         public void EndRequests()
         {
-            EndRequests(Constant.EOMTimeoutMS);
+            this.EndRequests(Constant.EOMTimeoutMS);
         }
 
         /// <summary>
@@ -2256,7 +2258,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.EndRequests()" />
         public void EndRequests(int timeoutMilliseconds)
         {
-            Flush(timeoutMilliseconds, /*endOfMessage =*/true);
+            this.Flush(timeoutMilliseconds, /*endOfMessage =*/true);
         }
 
         /// <summary>
@@ -2336,11 +2338,11 @@ namespace Microsoft.Hpc.Scheduler.Session
                         IAsyncResult ar;
                         if (!endOfMessage)
                         {
-                            ar = controller.BeginFlush(this.uncommittedCount, clientId, this.batchId, timeoutThrottlingMs, timeoutMilliseconds, null, null);
+                            ar = controller.BeginFlush(this.uncommittedCount, this.clientId, this.batchId, timeoutThrottlingMs, timeoutMilliseconds, null, null);
                         }
                         else
                         {
-                            ar = controller.BeginEndRequests(this.uncommittedCount, clientId, this.batchId, timeoutThrottlingMs, timeoutMilliseconds, null, null);
+                            ar = controller.BeginEndRequests(this.uncommittedCount, this.clientId, this.batchId, timeoutThrottlingMs, timeoutMilliseconds, null, null);
                         }
 
                         // Wait for the EndRequests call to complete OR heartbeat to signal
@@ -2397,7 +2399,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                         {
                             try
                             {
-                                controllerProxy.Flush(this.uncommittedCount, clientId, this.batchId, timeoutMilliseconds, timeoutMilliseconds);
+                                controllerProxy.Flush(this.uncommittedCount, this.clientId, this.batchId, timeoutMilliseconds, timeoutMilliseconds);
                             }
                             catch (ActionNotSupportedException)
                             {
@@ -2412,7 +2414,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                         }
                         else
                         {
-                            controllerProxy.EndRequests(this.uncommittedCount, clientId, this.batchId, timeoutThrottlingMs, timeoutMilliseconds);
+                            controllerProxy.EndRequests(this.uncommittedCount, this.clientId, this.batchId, timeoutThrottlingMs, timeoutMilliseconds);
                             this.uncommittedCount = 0;
                             this.frontendFactory.CloseBrokerClient(true, -1);
                             this.endRequests = true;
@@ -2521,21 +2523,21 @@ namespace Microsoft.Hpc.Scheduler.Session
 
         /// <summary>
         ///   <para>Closes the connection to the broker without emptying or deleting the message queues that correspond to the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> object.</para>
+        /// <see cref="BrokerClient{TContract}" /> object.</para>
         /// </summary>
         /// <remarks>
         ///   <para>This method is equivalent to the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.Close(System.Boolean)" /> method with the purge parameter set to 
+        /// <see cref="Close(bool)" /> method with the purge parameter set to 
         /// False. To empty and delete the message queues that correspond to the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> object when you close the connection to the broker, use the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.Close(System.Boolean)" /> or 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.Close(System.Boolean,System.Int32)" /> method instead. </para>
+        /// <see cref="BrokerClient{TContract}" /> object when you close the connection to the broker, use the 
+        /// <see cref="Close(bool)" /> or 
+        /// <see cref="Close(bool,int)" /> method instead. </para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.Close(System.Boolean)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.Close(System.Boolean,System.Int32)" />
+        /// <seealso cref="Close(bool)" />
+        /// <seealso cref="Close(bool,int)" />
         public void Close()
         {
-            Close(false, Constant.PurgeTimeoutMS);
+            this.Close(false, Constant.PurgeTimeoutMS);
         }
 
         /// <summary>
@@ -2560,17 +2562,17 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.Close(System.Boolean,System.Int32)" />
         public void Close(bool purge)
         {
-            Close(purge, Constant.PurgeTimeoutMS);
+            this.Close(purge, Constant.PurgeTimeoutMS);
         }
 
         /// <summary>
         ///   <para>Closes the connection to the broker, and optionally empties and deletes the message queues that correspond to the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> object that is subject to the specified timeout period.</para>
+        /// <see cref="BrokerClient{TContract}" /> object that is subject to the specified timeout period.</para>
         /// </summary>
         /// <param name="purge">
         ///   <para>A 
         /// <see cref="System.Boolean" /> object that specifies whether to empty and delete the message queues that correspond to the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> object. 
+        /// <see cref="BrokerClient{TContract}" /> object. 
         /// True indicates that the method should empty and delete the message queues. 
         /// False indicates that the method should not empty and delete the message queues.</para>
         /// </param>
@@ -2586,7 +2588,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             try
             {
                 // BUG 4968 : Detach from session immediately so this client doesnt get any more session heartbeat signals while closing
-                DetachFromSession();
+                this.DetachFromSession();
             }
 
             catch
@@ -2624,7 +2626,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                         try
                         {
                             IController controller = this.frontendFactory.GetControllerClient(timeoutMilliseconds);
-                            controller.Purge(clientId);
+                            controller.Purge(this.clientId);
                         }
                         catch (FaultException<SessionFault> e)
                         {

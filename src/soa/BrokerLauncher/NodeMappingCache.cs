@@ -8,8 +8,8 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
     using System.ServiceModel;
     using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session.Internal;
     using Microsoft.WindowsAzure.ServiceRuntime;
     using Microsoft.WindowsAzure.Storage;
 

@@ -9,6 +9,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.ServiceModel.Channels;
 
     using Microsoft.Hpc.ServiceBroker;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Internal;
 
     using TelepathyCommon.HpcContext;
     using TelepathyCommon.HpcContext.Extensions.RegistryExtension;

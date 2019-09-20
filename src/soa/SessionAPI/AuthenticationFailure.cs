@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
     using System;
     using System.Runtime.Serialization;
@@ -12,12 +12,12 @@ namespace Microsoft.Hpc.Scheduler.Session
     /// <remarks>
     ///   <para>A client application that communicates with the service through the 
     /// 
-    /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> class specific to Microsoft HPC Pack 2008 R2 or later should catch this failure directly. </para> 
+    /// <see cref="BrokerClient{TContract}" /> class specific to Microsoft HPC Pack 2008 R2 or later should catch this failure directly. </para> 
     ///   <para>A client application that communicates with the service by using the method 
     /// that was available in Windows HPC Server 2008 of directly using the client proxy should catch a  
     /// <see cref="System.ServiceModel.FaultException{T}" /> with a type parameter of 
     /// 
-    /// <see cref="Microsoft.Hpc.Scheduler.Session.AuthenticationFailure" />. Also, you must define a fault contract in your client side service contract by using the following attribute:</para> 
+    /// <see cref="AuthenticationFailure" />. Also, you must define a fault contract in your client side service contract by using the following attribute:</para> 
     ///   <code>[FaultContract(typeof(AuthenticationFailure), Action = AuthenticationFailure.Action)]</code>
     /// </remarks>
     /// <seealso cref="System.ServiceModel.FaultException{T}" />
@@ -34,7 +34,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <remarks>
         ///   <para>The 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.AuthenticationFailure.Action" /> static field is used to write the fault contract needed for the service contract.</para> 
+        /// <see cref="Action" /> static field is used to write the fault contract needed for the service contract.</para> 
         /// </remarks>
         /// <seealso cref="System.ServiceModel.FaultException.Action" />
         public const string Action = "http://hpc.microsoft.com/session/AuthenticationFailure";

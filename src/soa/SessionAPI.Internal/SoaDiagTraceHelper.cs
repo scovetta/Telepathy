@@ -7,6 +7,7 @@ namespace Microsoft.Hpc.ServiceBroker
     using System.Collections.Concurrent;
 
     using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session.Common;
 
     /// <summary>
     /// Utility class providing diag trace enabled/disabled flag.

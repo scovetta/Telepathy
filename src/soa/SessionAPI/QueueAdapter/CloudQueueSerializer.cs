@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter
+namespace Microsoft.Telepathy.Session.QueueAdapter
 {
     using System.Collections.Generic;
 
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
+    using Microsoft.Telepathy.Session.QueueAdapter.DTO;
+    using Microsoft.Telepathy.Session.QueueAdapter.Interface;
 
     using Newtonsoft.Json;
 
