@@ -1,19 +1,18 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Runtime.InteropServices;
-    using System.Diagnostics;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.InteropServices;
 
+    using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
     using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Win32.SafeHandles;
 
-    using Win32.SafeHandles;
     /// <summary>
     /// Wrapper of the job object
     /// </summary>

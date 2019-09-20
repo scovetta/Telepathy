@@ -1,16 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 
 {
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Text;
     using System.Text.RegularExpressions;
-
-    using Microsoft.Win32;
 
     /// <summary>
     /// Common code for determining how we name things in Azure.

@@ -1,13 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Reflection;
-    using System.Text;
     using System.Threading;
 
     using Microsoft.Telepathy.RuntimeTrace;
@@ -70,7 +67,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             }
             catch (Exception e)
             {
-                if (!sessionId.Equals("0"))
+                if (!this.sessionId.Equals("0"))
                 {
                     TraceHelper.TraceEvent(this.sessionId, TraceEventType.Critical, "[ThreadHelper] Exception catched at root: {0}", e);
                 }
@@ -100,7 +97,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             }
             catch (Exception e)
             {
-                if (!sessionId.Equals("0"))
+                if (!this.sessionId.Equals("0"))
                 {
                     TraceHelper.TraceEvent(this.sessionId, TraceEventType.Critical, "[ThreadHelper] Exception catched at root: {0}", e);
                 }

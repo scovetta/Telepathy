@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
     using System.Collections;
@@ -16,6 +16,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using System.Text;
     using System.Threading;
 
+    using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Win32.SafeHandles;
 
@@ -134,14 +137,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             {
                 int errorCode = Marshal.GetLastWin32Error();
                 TraceHelper.TraceEvent(TraceEventType.Error, "[BrokerProcess] Start broker process failed: {0}", errorCode);
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_FailedToStartBrokerServiceProcess, SR.FailedToStartBrokerServiceProcess, errorCode.ToString());
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_FailedToStartBrokerServiceProcess, Hpc.Scheduler.Session.SR.FailedToStartBrokerServiceProcess, errorCode.ToString());
             }
 
             SafeWaitHandle handle = new SafeWaitHandle(this.processInfo.hProcess, false);
             if (handle.IsClosed || handle.IsInvalid)
             {
                 TraceHelper.TraceEvent(TraceEventType.Error, "[BrokerProcess] Start broker process failed because the process handle is invalid or closed.");
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_FailedToStartBrokerServiceProcess, SR.FailedToStartBrokerServiceProcess, "Handle is invalid or closed");
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_FailedToStartBrokerServiceProcess, Hpc.Scheduler.Session.SR.FailedToStartBrokerServiceProcess, "Handle is invalid or closed");
             }
 
             string uniqueWaitHandleName = BuildUniqueWaitHandle(this.Id, out this.readyWaitHandle);
@@ -240,14 +243,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                             // Swallow the exception if failed to kill the custom broker process
                         }
 
-                        ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_CustomBrokerReadyTimeout, SR.CustomBrokerReadyTimeout, readyTimeout.ToString());
+                        ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_CustomBrokerReadyTimeout, Hpc.Scheduler.Session.SR.CustomBrokerReadyTimeout, readyTimeout.ToString());
                         break;
                     case 0:
                         // ReadyWaitHandle triggered, exit
                         break;
                     case 1:
                         // ExitWaitHandle triggered, throw exception
-                        ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_CustomBrokerExitBeforeReady, SR.CustomBrokerExitBeforeReady, this.ExitCode.ToString());
+                        ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_CustomBrokerExitBeforeReady, Hpc.Scheduler.Session.SR.CustomBrokerExitBeforeReady, this.ExitCode.ToString());
                         break;
                     default:
                         Debug.Fail(String.Format("[BrokerProcess] Invalid signal from WaitHandle.WaitAny: {0}", signal));

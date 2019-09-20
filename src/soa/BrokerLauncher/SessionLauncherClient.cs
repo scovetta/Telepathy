@@ -1,13 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
     using System.Security.Principal;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
 
+    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker;
 
     /// <summary>

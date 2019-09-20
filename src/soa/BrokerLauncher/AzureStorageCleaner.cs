@@ -1,22 +1,24 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
-    using Microsoft.Hpc.Scheduler.Session.Common;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using Microsoft.Hpc.ServiceBroker;
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Blob;
-    using Microsoft.WindowsAzure.Storage.Queue;
-    using Microsoft.WindowsAzure.Storage.RetryPolicies;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Threading.Tasks;
+
+    using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Hpc.Scheduler.Session.Common;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Hpc.ServiceBroker;
+    using Microsoft.WindowsAzure.Storage;
+    using Microsoft.WindowsAzure.Storage.Blob;
+    using Microsoft.WindowsAzure.Storage.Queue;
+    using Microsoft.WindowsAzure.Storage.RetryPolicies;
+
     /// <summary>
     /// Cleanup the Azure storage which stores request and response messages
     /// for Azure burst.

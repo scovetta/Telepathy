@@ -8,11 +8,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher {
+namespace Microsoft.Telepathy.Internal.BrokerLauncher {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.2.0.0")]
     internal sealed partial class BrokerLauncherSettings : global::System.Configuration.ApplicationSettingsBase {
         
         private static BrokerLauncherSettings defaultInstance = ((BrokerLauncherSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new BrokerLauncherSettings())));
@@ -73,9 +73,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
-            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
-            "tring>127.0.0.1</string>\r\n</ArrayOfString>")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\r\n        <?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n        <ArrayOfString xmlns:x" +
+            "si=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001" +
+            "/XMLSchema\">\r\n        <string>127.0.0.1</string>\r\n        </ArrayOfString>\r\n    " +
+            "  ")]
         public global::System.Collections.Specialized.StringCollection SvcHostList {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["SvcHostList"]));

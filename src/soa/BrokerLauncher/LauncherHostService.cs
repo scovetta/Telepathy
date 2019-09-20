@@ -15,14 +15,16 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
-    using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter;
     using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Hpc.ServiceBroker.Common;
+    using Microsoft.Telepathy.Internal.BrokerLauncher;
+    using Microsoft.Telepathy.Internal.BrokerLauncher.QueueAdapter;
     using Microsoft.Telepathy.RuntimeTrace;
 
     using TelepathyCommon.HpcContext;
 
-    using IBrokerLauncher = Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.IBrokerLauncher;
+    using IBrokerLauncher = Microsoft.Telepathy.Internal.BrokerLauncher.IBrokerLauncher;
+    using SR = Microsoft.Hpc.Scheduler.Session.SR;
 
     /// <summary>
     /// Launcher Host Service

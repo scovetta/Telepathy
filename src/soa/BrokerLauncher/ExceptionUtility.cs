@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
     using System.Messaging;
     using System.Runtime.Remoting;
     using System.ServiceModel;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using System.Text;
+
+    using Microsoft.Hpc.Scheduler.Session;
 
     /// <summary>
     /// Exception utilities

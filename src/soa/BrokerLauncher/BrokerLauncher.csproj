@@ -4,7 +4,7 @@
   <PropertyGroup>
     <ProjectGuid>{7594BB62-494B-4D72-9F5D-EE4C993FE6C3}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher</RootNamespace>
+    <RootNamespace>Microsoft.Telepathy.Internal.BrokerLauncher</RootNamespace>
     <AssemblyName>HpcBroker</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <DefineTrace>true</DefineTrace>

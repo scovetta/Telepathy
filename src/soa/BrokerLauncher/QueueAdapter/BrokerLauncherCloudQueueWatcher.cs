@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher.QueueAdapter
+namespace Microsoft.Telepathy.Internal.BrokerLauncher.QueueAdapter
 {
     using System.Diagnostics;
     using System.Threading.Tasks;
 
+    using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter;
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;

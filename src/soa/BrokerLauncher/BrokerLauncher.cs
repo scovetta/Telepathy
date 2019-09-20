@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
     using System.Diagnostics;
     using System.Security.Permissions;
-    using System.Security.Principal;
     using System.ServiceModel;
     using System.Threading;
 
@@ -103,7 +102,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         {
             if ((!this.AllowNewSession) || (!this.IsOnline && String.IsNullOrEmpty(info.DiagnosticBrokerNode)))
             {
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, SR.BrokerIsOffline);
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, Hpc.Scheduler.Session.SR.BrokerIsOffline);
             }
 
             // Handle invalid input parameters
@@ -134,7 +133,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 // Bug 10614: Throw a proper exception when the broker node is being taken offline
                 if ((!this.AllowNewSession) || (!this.IsOnline && String.IsNullOrEmpty(info.DiagnosticBrokerNode)))
                 {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, SR.BrokerIsOffline);
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, Hpc.Scheduler.Session.SR.BrokerIsOffline);
                 }
 
                 TraceHelper.TraceEvent(sessionId, System.Diagnostics.TraceEventType.Error, "[BrokerLauncher] Create Broker {0} failed: {1}", sessionId, e.ToString());
@@ -152,7 +151,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         {
             if ((!this.AllowNewSession) || (!this.IsOnline && String.IsNullOrEmpty(info.DiagnosticBrokerNode)))
             {
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, SR.BrokerIsOffline);
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, Hpc.Scheduler.Session.SR.BrokerIsOffline);
             }
 
             try
@@ -182,7 +181,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 // Bug 10614: Throw a proper exception when the broker node is being taken offline
                 if ((!this.AllowNewSession) || (!this.IsOnline && String.IsNullOrEmpty(info.DiagnosticBrokerNode)))
                 {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, SR.BrokerIsOffline);
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, Hpc.Scheduler.Session.SR.BrokerIsOffline);
                 }
 
                 TraceHelper.TraceEvent(sessionId, System.Diagnostics.TraceEventType.Error, "[BrokerLauncher] Create Durable Broker {0} failed: {1}", sessionId, e);
@@ -199,7 +198,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         {
             if (!this.AllowNewSession)
             {
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, SR.BrokerIsOffline);
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, Hpc.Scheduler.Session.SR.BrokerIsOffline);
             }
 
             try
@@ -221,7 +220,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 // Bug 10614: Throw a proper exception when the broker node is being taken offline
                 if (!this.AllowNewSession)
                 {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, SR.BrokerIsOffline);
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, Hpc.Scheduler.Session.SR.BrokerIsOffline);
                 }
 
                 TraceHelper.TraceEvent(sessionId, System.Diagnostics.TraceEventType.Error, "[BrokerLauncher] Attach Broker {0} failed: {1}", sessionId, e);
@@ -278,7 +277,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 
                 if (!SoaHelper.CheckWindowsIdentity(OperationContext.Current))
                 {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.AccessDenied_BrokerLauncher, SR.AccessDenied_BrokerLauncher);
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.AccessDenied_BrokerLauncher, Hpc.Scheduler.Session.SR.AccessDenied_BrokerLauncher);
                 }
 
                 string uniqueId;
@@ -562,7 +561,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         private static bool ShouldRedirectManagementCommand()
         {
             // If this HpcBroker instance is running as a Windows service and on a failover BN, redirect
-            return !LauncherHostService.LauncherHostService.IsConsoleApplication
+            return !Hpc.Scheduler.Session.Internal.LauncherHostService.LauncherHostService.IsConsoleApplication
                         && Win32API.IsFailoverBrokerNode();
         }
 

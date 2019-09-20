@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
     using System.Collections.Generic;
@@ -16,6 +16,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Configuration;
     using Microsoft.Hpc.Scheduler.Session.Interface;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
     using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Hpc.ServiceBroker.Common;
@@ -315,7 +316,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                         if (info.Disposed)
                         {
                             TraceHelper.TraceEvent(sessionId, System.Diagnostics.TraceEventType.Information, "[BrokerManager] Broker is exiting...");
-                            ThrowHelper.ThrowSessionFault(SOAFaultCode.Session_ValidateJobFailed_AlreadyFinished, SR.BrokerFinishing, sessionId.ToString());
+                            ThrowHelper.ThrowSessionFault(SOAFaultCode.Session_ValidateJobFailed_AlreadyFinished, Hpc.Scheduler.Session.SR.BrokerFinishing, sessionId.ToString());
                         }
                         else
                         {
@@ -639,12 +640,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             {
                 if (this.brokerDic.ContainsKey(recoverInfo.SessionId))
                 {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_SessionIdAlreadyExists, SR.SessionIdAlreadyExists, recoverInfo.SessionId.ToString());
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_SessionIdAlreadyExists, Hpc.Scheduler.Session.SR.SessionIdAlreadyExists, recoverInfo.SessionId.ToString());
                 }
 
                 if (BrokerLauncherSettings.Default.MaxConcurrentSession > 0 && this.brokerDic.Count >= BrokerLauncherSettings.Default.MaxConcurrentSession)
                 {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_TooManyBrokerRunning, SR.TooManyBrokerRunning, BrokerLauncherSettings.Default.MaxConcurrentSession.ToString());
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_TooManyBrokerRunning, Hpc.Scheduler.Session.SR.TooManyBrokerRunning, BrokerLauncherSettings.Default.MaxConcurrentSession.ToString());
                 }
             }
 
@@ -786,7 +787,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 // if version is not supported, throw UnsupportedVersion exception
                 if (!BrokerVersion.IsSupportedPersistVersion(brokerInfo.PersistVersion))
                 {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_UnsupportedVersion, SR.UnsupportedVersion, brokerInfo.PersistVersion.ToString(), BrokerVersion.PersistVersion.ToString());
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_UnsupportedVersion, Hpc.Scheduler.Session.SR.UnsupportedVersion, brokerInfo.PersistVersion.ToString(), BrokerVersion.PersistVersion.ToString());
                 }
             }
             BrokerAuthorization auth = null;
@@ -811,7 +812,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             BrokerInfo info = new BrokerInfo(recoverInfo, brokerInfo, auth, customBroker, this.pool);
             try
             {
-                info.BrokerExited += new EventHandler(BrokerInfo_BrokerExited); // if the broker exit quickly due to short timeouts, the broker info could remain in the brokerDic, because it is added later.
+                info.BrokerExited += new EventHandler(this.BrokerInfo_BrokerExited); // if the broker exit quickly due to short timeouts, the broker info could remain in the brokerDic, because it is added later.
 
                 info.StartBroker();
 
@@ -819,12 +820,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 {
                     if (BrokerLauncherSettings.Default.MaxConcurrentSession > 0 && this.brokerDic.Count >= BrokerLauncherSettings.Default.MaxConcurrentSession)
                     {
-                        ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_TooManyBrokerRunning, SR.TooManyBrokerRunning, BrokerLauncherSettings.Default.MaxConcurrentSession.ToString());
+                        ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_TooManyBrokerRunning, Hpc.Scheduler.Session.SR.TooManyBrokerRunning, BrokerLauncherSettings.Default.MaxConcurrentSession.ToString());
                     }
 
                     if (this.brokerDic.ContainsKey(recoverInfo.SessionId))
                     {
-                        ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_SessionIdAlreadyExists, SR.SessionIdAlreadyExists, recoverInfo.SessionId.ToString());
+                        ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_SessionIdAlreadyExists, Hpc.Scheduler.Session.SR.SessionIdAlreadyExists, recoverInfo.SessionId.ToString());
                     }
 
                     this.brokerDic.Add(recoverInfo.SessionId, info);
@@ -861,7 +862,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             {
                 if (string.IsNullOrEmpty(centrialPath))
                 {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.ServiceRegistrationPathEnvironmentMissing, SR.ServiceRegistrationPathEnvironmentMissing);
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.ServiceRegistrationPathEnvironmentMissing, Hpc.Scheduler.Session.SR.ServiceRegistrationPathEnvironmentMissing);
                 }
             }
 #if HPCPACK
@@ -1130,7 +1131,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         private void Dispose(bool disposing)
         {
             //dispose only once
-            if (Interlocked.CompareExchange(ref disposed, 1, 0) == 1)
+            if (Interlocked.CompareExchange(ref this.disposed, 1, 0) == 1)
             {
                 return;
             }

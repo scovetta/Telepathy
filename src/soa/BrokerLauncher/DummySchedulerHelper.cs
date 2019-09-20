@@ -1,11 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+
+    using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
 
     // No session service is in use
     internal class DummySchedulerHelper:ISchedulerHelper

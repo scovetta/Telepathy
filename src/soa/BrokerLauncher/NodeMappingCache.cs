@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
     using System.Collections.Generic;
     using System.ServiceModel;
     using System.Threading;
-    using Microsoft.Hpc.Azure.Common;
+
     using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.WindowsAzure.ServiceRuntime;
@@ -67,7 +67,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         {
             if (this.logicalName2IpMapping == null || !fromCache)
             {
-                UpdateNodeMapping();
+                this.UpdateNodeMapping();
             }
             
             return this.logicalName2IpMapping;
@@ -98,7 +98,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         private void UpdateNodeMappingProc(object state)
         {
             TraceHelper.TraceVerbose("0", "[NodeMappingCache] .UpdateNodeMappingProc: updating node mapping cache");
-            UpdateNodeMapping();
+            this.UpdateNodeMapping();
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 }
 
 
-                this.logicalName2IpMapping = GetNodeMappingData();
+                this.logicalName2IpMapping = this.GetNodeMappingData();
                 this.lastUpdateTime = DateTime.Now;
                 this.updateNodeMappingTimer.Change(UpdateNodeMappingInterval, UpdateNodeMappingInterval);
             }

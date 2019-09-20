@@ -1,14 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
     using System.Collections.Generic;
-    using System.Text;
-    using System.Threading;
     using System.Diagnostics;
+    using System.Threading;
 
+    using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.RuntimeTrace;
 
     /// <summary>
@@ -67,11 +68,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         /// <param name="job">indicating the job object</param>
         public BrokerProcessPool()
         {
-            this.currentPoolSize = poolSize;
-            this.pool = new List<BrokerProcess>(poolSize);
+            this.currentPoolSize = this.poolSize;
+            this.pool = new List<BrokerProcess>(this.poolSize);
             this.createNewBrokerProcessCallback = new ThreadHelper<object>(new WaitCallback(this.CreateNewBrokerProcess)).CallbackRoot;
             this.newBrokerProcessReadyEvent = new AutoResetEvent(false);
-            for (int i = 0; i < poolSize; i++)
+            for (int i = 0; i < this.poolSize; i++)
             {
                 ThreadPool.QueueUserWorkItem(this.createNewBrokerProcessCallback);
             }
@@ -98,16 +99,16 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
 
             while (true)
             {
-                if (pool.Count > 0)
+                if (this.pool.Count > 0)
                 {
-                    lock (pool)
+                    lock (this.pool)
                     {
-                        if (pool.Count > 0)
+                        if (this.pool.Count > 0)
                         {
                             // Gets the last process
-                            BrokerProcess process = pool[pool.Count - 1];
+                            BrokerProcess process = this.pool[this.pool.Count - 1];
                             process.Exited -= this.BrokerProcess_Exited;
-                            pool.RemoveAt(pool.Count - 1);
+                            this.pool.RemoveAt(this.pool.Count - 1);
                             TraceHelper.TraceEvent(TraceEventType.Information, "[BrokerProcessPool] Fetched broker process, PID = {0}", process.Id);
                             return process;
                         }
@@ -118,7 +119,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 {
                     if ((int)DateTime.Now.Subtract(st).TotalMilliseconds > GetBrokerProcessTimeout)
                     {
-                        ThrowHelper.ThrowSessionFault(SOAFaultCode.TimeoutToGetBrokerWorkerProcess, SR.TimeoutToGetBrokerWorkerProcess);
+                        ThrowHelper.ThrowSessionFault(SOAFaultCode.TimeoutToGetBrokerWorkerProcess, Hpc.Scheduler.Session.SR.TimeoutToGetBrokerWorkerProcess);
                     }
                 }
             }
@@ -186,14 +187,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             BrokerProcess process = (BrokerProcess)sender;
             Debug.Assert(process != null, "[BrokerProcessPool] Sender should be an instance of BrokerProcess class.");
             TraceHelper.RuntimeTrace.LogBrokerWorkerProcessFailedToInitialize(process.Id);
-            lock (pool)
+            lock (this.pool)
             {
                 if (this.disposed)
                 {
                     return;
                 }
 
-                pool.Remove(process);
+                this.pool.Remove(process);
             }
 
             int count = Interlocked.Decrement(ref this.currentPoolSize);
@@ -218,7 +219,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             }
             else
             {
-                lock (pool)
+                lock (this.pool)
                 {
                     if (this.disposed)
                     {
@@ -234,22 +235,22 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                     //
                     int indexToInsert = 0;
                     int id = process.Id;
-                    while (indexToInsert < pool.Count)
+                    while (indexToInsert < this.pool.Count)
                     {
-                        if (id >= pool[indexToInsert].Id)
+                        if (id >= this.pool[indexToInsert].Id)
                             break;
 
                         indexToInsert++;
                     }
 
-                    pool.Insert(indexToInsert, process);
+                    this.pool.Insert(indexToInsert, process);
                 }
 
                 this.newBrokerProcessReadyEvent.Set();
                 TraceHelper.RuntimeTrace.LogBrokerWorkerProcessReady(process.Id);
 
                 int count = Interlocked.Increment(ref this.currentPoolSize);
-                if (count <= poolSize)
+                if (count <= this.poolSize)
                 {
                     ThreadPool.QueueUserWorkItem(this.createNewBrokerProcessCallback);
                 }

@@ -1,20 +1,19 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
     using System.Diagnostics;
     using System.Linq;
     using System.ServiceModel;
-    using Microsoft.Hpc.Scheduler.Session.Configuration;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.ServiceBroker;
-    using Microsoft.Hpc.ServiceBroker.Common;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-
     using System.Threading;
 
+    using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Hpc.Scheduler.Session.Configuration;
+    using Microsoft.Hpc.Scheduler.Session.Interface;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Telepathy.RuntimeTrace;
 
     using Utility = Microsoft.Hpc.ServiceBroker.Common.Utility;
@@ -205,7 +204,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         {
             if (this.auth != null && !this.auth.CheckAccess())
             {
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.AccessDenied_Broker, SR.AccessDenied_Broker);
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.AccessDenied_Broker, Hpc.Scheduler.Session.SR.AccessDenied_Broker);
             }
         }
 
@@ -256,7 +255,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 // Set broker's unique id to the initialization result when the process
                 // is (re)started.
                 this.result.BrokerUniqueId = this.UniqueId;
-                this.brokerProcess.Exited += new EventHandler(BrokerProcess_Exited);
+                this.brokerProcess.Exited += new EventHandler(this.BrokerProcess_Exited);
             }
             catch (Exception e)
             {
