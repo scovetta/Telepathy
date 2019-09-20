@@ -1,15 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
 {
     using System;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.BrokerProxy;
     using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd.AzureQueue;
 
     /// <summary>
     /// This is an implementation of RequestSender for sending requests

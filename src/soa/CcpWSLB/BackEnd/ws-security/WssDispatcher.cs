@@ -1,14 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 {
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading;
 
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using Microsoft.Hpc.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents;
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter;
 
     /// <summary>
     /// Dispatch messages to Java WSS4J node in Windows Azure

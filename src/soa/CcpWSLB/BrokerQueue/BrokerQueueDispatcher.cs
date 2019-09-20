@@ -1,16 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
+namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.ServiceModel.Channels;
     using System.Threading;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker.Common;
     using System.Xml;
+
+    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.ServiceBroker.Common;
 
     /// <summary>
     /// the broker queue dispatcher.
@@ -628,7 +629,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
                 {
                     lock (this.responsesWithoutAsyncTokenTable)
                     {
-                        responsesWithoutAsyncTokenTable.TryGetValue(persistId, out asyncTokenItem);
+                        this.responsesWithoutAsyncTokenTable.TryGetValue(persistId, out asyncTokenItem);
                     }
 
                     if (asyncTokenItem != null)

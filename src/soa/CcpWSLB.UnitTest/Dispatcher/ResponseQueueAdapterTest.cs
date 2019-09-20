@@ -4,14 +4,15 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Xml;
 using Microsoft.Hpc.Scheduler.Session;
-using Microsoft.Hpc.ServiceBroker.BackEnd;
-using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-using Microsoft.Hpc.ServiceBroker.FrontEnd;
 using Microsoft.Hpc.ServiceBroker.UnitTest.Mock;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Hpc.ServiceBroker.UnitTest.Dispatcher
 {
+    using Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents;
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.ServiceBroker.FrontEnd;
+
     [TestClass]
     public class ResponseQueueAdapterTest
     {

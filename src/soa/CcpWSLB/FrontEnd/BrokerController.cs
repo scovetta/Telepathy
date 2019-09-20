@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.FrontEnd
+namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
 {
     using System;
     using System.Diagnostics;
+    using System.IO;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading;
@@ -12,12 +13,10 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.FrontEnd.AzureQueue;
 
     using SoaAmbientConfig;
-    using System.IO;
-
-    using SR = Microsoft.Hpc.SvcBroker.SR;
 
     /// <summary>
     /// Implementation the broker controller service
@@ -332,7 +331,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             azureResponseQueueUri = queueProxy.ResponseClientUris[sessionHash].Item1;
             azureResponseBlobUri = queueProxy.ResponseClientUris[sessionHash].Item2;
 
-            GetResponses(action, clientData, resetToBegin, count, clientId);
+            this.GetResponses(action, clientData, resetToBegin, count, clientId);
         }
 
         /// <summary>

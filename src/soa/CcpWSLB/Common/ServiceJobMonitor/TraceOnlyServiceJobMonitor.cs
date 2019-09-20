@@ -1,13 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.Hpc.Scheduler.Session.Data;
-using Microsoft.Hpc.Scheduler.Session.Interface;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor
+namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
+    using Microsoft.Hpc.Scheduler.Session.Data;
+    using Microsoft.Hpc.Scheduler.Session.Interface;
+
     public class TraceOnlyServiceJobMonitor : ISchedulerNotify
     {
         public TraceOnlyServiceJobMonitor()

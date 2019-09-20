@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
 {
     using System;
     using System.Diagnostics;
@@ -10,7 +10,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.Common;
 
     /// <summary>
     /// This is an abstract class for sending requests.

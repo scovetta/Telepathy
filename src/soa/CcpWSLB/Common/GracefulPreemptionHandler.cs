@@ -1,19 +1,18 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.Common
+namespace Microsoft.Telepathy.ServiceBroker.Common
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using Microsoft.Hpc.ServiceBroker.BackEnd;
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd;
 
     /// <summary>
     /// This class handles the graceful preemption requests from scheduler.
@@ -321,7 +320,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
                 this.exitingTaskIds.Count,
                 this.runningTaskIds.Count,
                 this.BalanceInfo.AllowedCoreCount);
-            if (exitingTaskIds.Count + runningTaskIds.Count >= this.BalanceInfo.AllowedCoreCount)
+            if (this.exitingTaskIds.Count + this.runningTaskIds.Count >= this.BalanceInfo.AllowedCoreCount)
             {
                 return this.dispatcherManager.GetRunawayTasks(this.exitingTaskIds.Union(this.runningTaskIds));
             }

@@ -3,13 +3,15 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Hpc.ServiceBroker.BackEnd;
-using Microsoft.Hpc.ServiceBroker.BrokerStorage;
+
 using Microsoft.Hpc.ServiceBroker.UnitTest.Mock;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Hpc.ServiceBroker.UnitTest.Dispatcher
 {
+    using Microsoft.Telepathy.ServiceBroker.BackEnd;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents;
+
     [TestClass]
     public class OnPremiseRequestSenderTest
     {

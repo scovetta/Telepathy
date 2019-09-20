@@ -1,10 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
 {
     using System.Diagnostics.Contracts;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
+
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.ServiceBroker.Common;
 
     /// <summary>
     /// Request queue adapter which is in charge of putting request

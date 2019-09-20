@@ -11,9 +11,10 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest.FrontEnd
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Configuration;
     using Microsoft.Hpc.ServiceBroker;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using Microsoft.Hpc.ServiceBroker.FrontEnd;
     using Microsoft.Hpc.SvcBroker.UnitTest.Mock;
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.FrontEnd;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>

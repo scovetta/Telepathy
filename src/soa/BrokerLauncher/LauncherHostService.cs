@@ -16,10 +16,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
     using Microsoft.Hpc.ServiceBroker;
-    using Microsoft.Hpc.ServiceBroker.Common;
     using Microsoft.Telepathy.Internal.BrokerLauncher;
     using Microsoft.Telepathy.Internal.BrokerLauncher.QueueAdapter;
     using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.ServiceBroker.Common;
 
     using TelepathyCommon.HpcContext;
 

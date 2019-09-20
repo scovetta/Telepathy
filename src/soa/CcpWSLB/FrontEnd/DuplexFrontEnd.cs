@@ -1,10 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
-using TelepathyCommon.Registry;
-
-namespace Microsoft.Hpc.ServiceBroker.FrontEnd
+namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
 {
     using System;
     using System.Diagnostics;
@@ -15,11 +12,12 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using Microsoft.Hpc.ServiceBroker.Common;
-    using Microsoft.Hpc.ServiceBroker.Common.ThreadHelper;
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.Common.ThreadHelper;
 
-    using SR = Microsoft.Hpc.SvcBroker.SR;
+    using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
+    using TelepathyCommon.Registry;
 
     /// <summary>
     /// The FrontEnd for duplex MEP (works for NetTcpBinding)
@@ -237,7 +235,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             catch (Exception ce)
             {
                 BrokerTracing.TraceEvent(TraceEventType.Warning, 0, "[DuplexFrontEnd] Exception while receiving requests: {0}", ce);
-                FrontendDisconnect(channel, client);
+                this.FrontendDisconnect(channel, client);
 
                 lock (channel)
                 {
@@ -272,7 +270,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                 {
                     if (channel.State == CommunicationState.Opened)
                     {
-                        FrontendDisconnect(channel, client);
+                        this.FrontendDisconnect(channel, client);
                         try
                         {
                             channel.Close();
@@ -433,7 +431,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                     if (channel.State == CommunicationState.Faulted)
                     {
                         BrokerTracing.TraceEvent(TraceEventType.Information, 0, "[DuplexFrontEnd] About the channel.");
-                        FrontendDisconnect(channel, client);
+                        this.FrontendDisconnect(channel, client);
 
                         // About the falted channel
                         channel.Abort();

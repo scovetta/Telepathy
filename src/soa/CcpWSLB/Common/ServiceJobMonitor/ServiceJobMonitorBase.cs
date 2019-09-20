@@ -1,14 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using TelepathyCommon;
-using TelepathyCommon.HpcContext;
-
-namespace Microsoft.Hpc.ServiceBroker
+namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Diagnostics;
     using System.Linq;
@@ -21,14 +18,14 @@ namespace Microsoft.Hpc.ServiceBroker
     using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using Microsoft.Hpc.ServiceBroker.BackEnd;
-    using Microsoft.Hpc.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd;
+    using Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter;
+    using Microsoft.Telepathy.ServiceBroker.Common.ThreadHelper;
 
     using SoaAmbientConfig;
-    using Microsoft.Hpc.ServiceBroker.Common.ThreadHelper;
 
-    using SR = Microsoft.Hpc.SvcBroker.SR;
-    using Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor;
+    using TelepathyCommon;
+    using TelepathyCommon.HpcContext;
 
     /// <summary>
     /// Internal Monitor the service job
@@ -887,7 +884,7 @@ namespace Microsoft.Hpc.ServiceBroker
                             // targetResourceCount is currently set to the number of resources needed to process all queued requests in parallel bounded by min and max.
                             // Ensure targetResourceCount isnt set lower than the number of active service calls (not considered in queuelength)
                             targetResourceCountInResourceUnits = Math.Max(totalActiveCapacityInResourceUnits, targetResourceCountInResourceUnits);
-                            targetResourceCountInResourceUnitsCalculated = targetResourceCountInResourceUnits;
+                            this.targetResourceCountInResourceUnitsCalculated = targetResourceCountInResourceUnits;
 
                             BrokerTracing.TraceVerbose(
                                 "[ServiceJobMonitor].AllocationAdjust: new targetResourceCountInResourceUnits={0}, previous targetResourceCountInResourceUnits={1}",
@@ -1429,7 +1426,7 @@ namespace Microsoft.Hpc.ServiceBroker
 
         Task ISchedulerNotify.JobStateChanged(Microsoft.Hpc.Scheduler.Session.Data.JobState jobState)
         {
-            return JobStateChangedInternal(jobState);
+            return this.JobStateChangedInternal(jobState);
         }
 
 
@@ -1537,7 +1534,7 @@ namespace Microsoft.Hpc.ServiceBroker
                                     // if this node is in blacklist, remove it
                                     lock (this.lockRemoteBlacklistCopy)
                                     {
-                                        remoteBlacklistCopy.Remove(info.MachineName);
+                                        this.remoteBlacklistCopy.Remove(info.MachineName);
                                     }
 
                                     BrokerTracing.TraceInfo("[ServiceJobMonitor] Create new dispatcher for on-premise node {0} because task state is changed into {1}.", info.Id, info.State);
@@ -1592,7 +1589,7 @@ namespace Microsoft.Hpc.ServiceBroker
                                     {
                                         lock (this.lockRemoteBlacklistCopy)
                                         {
-                                            remoteBlacklistCopy.Remove(info.MachineVirtualName);
+                                            this.remoteBlacklistCopy.Remove(info.MachineVirtualName);
                                         }
 
                                         if (this.nodeMappingData != null)
@@ -1638,7 +1635,7 @@ namespace Microsoft.Hpc.ServiceBroker
                                     {
                                         lock (this.lockRemoteBlacklistCopy)
                                         {
-                                            remoteBlacklistCopy.Remove(info.MachineName);
+                                            this.remoteBlacklistCopy.Remove(info.MachineName);
                                         }
 
                                         BrokerTracing.TraceInfo(

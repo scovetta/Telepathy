@@ -1,9 +1,10 @@
 ﻿using System;
 using System.ServiceModel.Channels;
-using Microsoft.Hpc.ServiceBroker.BackEnd;
 
 namespace Microsoft.Hpc.ServiceBroker.UnitTest.Mock
 {
+    using Microsoft.Telepathy.ServiceBroker.BackEnd;
+
     internal class MockClient : IService
     {
         public Action Action

@@ -1,21 +1,20 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using TelepathyCommon;
-
-namespace Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor
+namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
-    using System.Threading;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.RESTServiceModel;
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.ServiceBroker.BackEnd;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd;
+
+    using TelepathyCommon;
 
     /// <summary>
     /// Controls service host using its management rest service when
@@ -140,9 +139,9 @@ namespace Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor
             ti.Id = (TaskIdStart + num).ToString();
             ti.Capacity = 1;
             ti.FirstCoreIndex = 3;
-            ti.Location = Scheduler.Session.Data.NodeLocation.OnPremise;
+            ti.Location = Hpc.Scheduler.Session.Data.NodeLocation.OnPremise;
             ti.MachineName = ipAddress;
-            ti.State = Scheduler.Session.Data.TaskState.Dispatching;
+            ti.State = Hpc.Scheduler.Session.Data.TaskState.Dispatching;
             string fileName = SoaRegistrationAuxModule.GetRegistrationFileName(svcName, svcVersion);
             // HTTP POST
             var serviceInfo = new ServiceInfo(sessionId, ti.Id, ti.FirstCoreIndex, regPath + "\\", fileName, environment, dependFilesInfo);

@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.BrokerProxy
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 {
     using System;
     using System.Diagnostics.CodeAnalysis;

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd.AzureQueue
 {
     using System;
     using System.Collections.Concurrent;
@@ -9,7 +9,9 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using System.Linq;
     using System.Threading;
     using System.Xml;
+
     using Microsoft.Hpc.Scheduler.Session.Common;
+    using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.WindowsAzure.Storage.Queue;
 
     /// <summary>

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 {
     using System.ServiceModel;
 
@@ -16,7 +16,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         private string epr;
 
         public EprDispatcherInfo(string epr, int capacity, string unqiueId)
-            : base(unqiueId, capacity, null, null, Scheduler.Session.Data.NodeLocation.OnPremise)
+            : base(unqiueId, capacity, null, null, Hpc.Scheduler.Session.Data.NodeLocation.OnPremise)
         {
             this.epr = epr;
 
@@ -36,7 +36,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
             }
             else
             {
-                return new EndpointAddress(epr);
+                return new EndpointAddress(this.epr);
             }
         }
     }

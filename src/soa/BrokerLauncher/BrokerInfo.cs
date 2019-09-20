@@ -16,7 +16,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
     using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Telepathy.RuntimeTrace;
 
-    using Utility = Microsoft.Hpc.ServiceBroker.Common.Utility;
+    using Utility = Microsoft.Telepathy.ServiceBroker.Common.Utility;
 
     /// <summary>
     /// Stores broker info for broker manager

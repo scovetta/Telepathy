@@ -1,13 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
+namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
 {
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker.FrontEnd;
-
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -15,9 +12,11 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
     using System.ServiceModel.Channels;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Collections.Concurrent;
 
-    using SR = Microsoft.Hpc.SvcBroker.SR;
+    using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.FrontEnd;
 
     /// <summary>
     /// the persist queue that will save the messages to the persistence
@@ -248,7 +247,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
             this.allRequestsPeristedEvent = new AutoResetEvent(false);
             this.commitedRequestsCountField = this.allRequestsCountField = sessionPersist.AllRequestsCount;
             this.availableRequestsCountField = sessionPersist.RequestsCount;
-            this.allResponsesCountField = sessionPersistField.ResponsesCount;
+            this.allResponsesCountField = this.sessionPersistField.ResponsesCount;
 
             this.responsesInCacheTimoutField = responseTimeout;
             if (this.responsesInCacheTimoutField > 0 && this.responsesInCacheTimoutField < BrokerPersistQueue.DefaultResponsesCacheTimeout)
@@ -299,7 +298,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 
                 Debug.WriteLineIf(
                     !res,
-                    $"(DEBUG)[{nameof(BrokerPersistQueue)}].{nameof(IsAllRequestsProcessed)} return false. EOMReceived={eomReceived}(==true), commitedRequestsCountField={commitedRequestsCount}(>0), RequestsCount={requestsCount}(==0), AllRequestsCount={allRequestsCount}(>0)");
+                    $"(DEBUG)[{nameof(BrokerPersistQueue)}].{nameof(this.IsAllRequestsProcessed)} return false. EOMReceived={eomReceived}(==true), commitedRequestsCountField={commitedRequestsCount}(>0), RequestsCount={requestsCount}(==0), AllRequestsCount={allRequestsCount}(>0)");
 
                 return res;
             }
@@ -684,7 +683,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
             BrokerTracing.TraceVerbose("[BrokerPersistQueue] .ResetResponsesCallback: clientId={0}, reset current response callback", this.clientIdField);
             this.sessionPersistField.ResetResponsesCallback();
 
-            if (SharedData.BrokerInfo.Durable)
+            if (this.SharedData.BrokerInfo.Durable)
             {
                 this.fetchedResponsesCountField = 0;
             }
@@ -720,7 +719,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
         {
             foreach (BrokerQueueItem response in responses)
             {
-                AckResponse(response, success);
+                this.AckResponse(response, success);
             }
         }
 
@@ -834,7 +833,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
             catch (Exception e)
             {
                 BrokerTracing.TraceError("[BrokerPersistQueue] .Flush: clientId={0}, flush the requests failed, Exception:{1}", this.clientIdField, e.ToString());
-                AbortPendingTransaction();
+                this.AbortPendingTransaction();
 
                 throw;
             }
@@ -923,10 +922,10 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
             this.ClearQuickCache();
 
             // 2. discard requests that have not been persisted
-            DiscardInMemoryRequests();
+            this.DiscardInMemoryRequests();
 
             // 3. discard requests that have been put into persistence but not committed
-            AbortPendingTransaction();
+            this.AbortPendingTransaction();
         }
 
         /// <summary>
@@ -1684,7 +1683,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
                         {
                             if (!this.isResponseDispatchedEventNotified)
                             {
-                                isResponseDispatchedEventNotified = true;
+                                this.isResponseDispatchedEventNotified = true;
                                 shouldDispatch = true;
                             }
                         }

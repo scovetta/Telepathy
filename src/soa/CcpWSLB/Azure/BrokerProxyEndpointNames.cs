@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Azure.Common
+namespace Microsoft.Telepathy.ServiceBroker.Azure
 {
     internal class BrokerProxyEndpointNames
     {

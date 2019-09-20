@@ -1,16 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
-
-using Microsoft.Hpc.Scheduler.Session.Interface;
-
-namespace Microsoft.Hpc.ServiceBroker
+namespace Microsoft.Telepathy.ServiceBroker.Common
 {
     using System;
+    using System.Collections.Generic;
 
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Data;
+    using Microsoft.Hpc.Scheduler.Session.Interface;
 
     /// <summary>
     /// Async version of ISchedulerAdapter

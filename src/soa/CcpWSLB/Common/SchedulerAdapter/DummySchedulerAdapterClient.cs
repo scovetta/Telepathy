@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.Common
+namespace Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker.BackEnd;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd;
 
     internal partial class SchedulerAdapterClientFactory
     {
@@ -186,7 +186,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
                 //     await this.dispatcherManager.NewDispatcherAsync(info).ConfigureAwait(false);
                 // }
                 // 
-                return (Scheduler.Session.Data.JobState.Running, autoMax, autoMin);
+                return (Hpc.Scheduler.Session.Data.JobState.Running, autoMax, autoMin);
             }
 
             public Task<int?> GetTaskErrorCode(string jobId, string globalTaskId)

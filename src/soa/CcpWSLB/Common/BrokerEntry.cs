@@ -1,17 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using TelepathyCommon.HpcContext;
-
-namespace Microsoft.Hpc.ServiceBroker
+namespace Microsoft.Telepathy.ServiceBroker.Common
 {
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Configuration;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker.BackEnd;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using Microsoft.Hpc.ServiceBroker.FrontEnd;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -21,9 +12,22 @@ namespace Microsoft.Hpc.ServiceBroker
     using System.Threading.Tasks;
     using System.Xml;
 
+    using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Hpc.Scheduler.Session.Configuration;
+    using Microsoft.Hpc.Scheduler.Session.Interface;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter;
     using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Module;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd;
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor;
+    using Microsoft.Telepathy.ServiceBroker.FrontEnd;
+    using Microsoft.Telepathy.ServiceBroker.FrontEnd.AzureQueue;
+
     using SoaAmbientConfig;
+
+    using TelepathyCommon.HpcContext;
+
     /// <summary>
     /// Remoting entry for broker
     /// Called by the broker launcher
@@ -182,11 +186,11 @@ namespace Microsoft.Hpc.ServiceBroker
                 {
                     if (this.cleanData)
                     {
-                        ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerUnavailable, Microsoft.Hpc.SvcBroker.SR.BrokerIsUnavailable);
+                        ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerUnavailable, SR.BrokerIsUnavailable);
                     }
                     else
                     {
-                        ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerSuspending, Microsoft.Hpc.SvcBroker.SR.BrokerSuspending);
+                        ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerSuspending, SR.BrokerSuspending);
                     }
                 }
 
@@ -250,7 +254,7 @@ namespace Microsoft.Hpc.ServiceBroker
                 }
                 else
                 { 
-                    this.monitor = new ServiceJobMonitor(this.sharedData, this.stateManager, this.nodeMappingData, context);
+                    this.monitor = new ServiceJobMonitor.ServiceJobMonitor(this.sharedData, this.stateManager, this.nodeMappingData, context);
                 }
                 BrokerTracing.TraceVerbose("[BrokerEntry] Initialization: Step 5: Initialize service job monitor succeeded.");
 
@@ -316,7 +320,7 @@ namespace Microsoft.Hpc.ServiceBroker
                     else
                     {
                         BrokerTracing.TraceError("[BrokerEntry] Initialization: Use Azure Queue is specified, however the Azure connection string is not set.");
-                        ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_AzureConnectionStringNotAvailable, Microsoft.Hpc.SvcBroker.SR.Broker_AzureConnectionStringNotAvailable);
+                        ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_AzureConnectionStringNotAvailable, SR.Broker_AzureConnectionStringNotAvailable);
                     }
                 }
 
@@ -371,7 +375,7 @@ namespace Microsoft.Hpc.ServiceBroker
                 // Bug 8379: If closing is under going, returns broker suspending exception and let broker manager try again latter.
                 if (this.closeFlag != 0)
                 {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerSuspending, Microsoft.Hpc.SvcBroker.SR.BrokerSuspending);
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerSuspending, SR.BrokerSuspending);
                 }
 
                 this.stateManager.Attach();
@@ -382,7 +386,7 @@ namespace Microsoft.Hpc.ServiceBroker
             catch (NullReferenceException)
             {
                 // Bug 8379: NullReferenceException caught because closing procedure is on going, returns broker suspending exception instead so that broker manager could properly handle
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerSuspending, Microsoft.Hpc.SvcBroker.SR.BrokerSuspending);
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerSuspending, SR.BrokerSuspending);
             }
             catch (Exception e)
             {

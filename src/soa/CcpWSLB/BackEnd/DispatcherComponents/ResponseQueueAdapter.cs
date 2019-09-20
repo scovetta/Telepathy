@@ -1,16 +1,18 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
 {
     using System;
     using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
+
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using Microsoft.Hpc.ServiceBroker.FrontEnd;
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.FrontEnd;
 
     /// <summary>
     /// Response queue adapter which is in charge of putting response

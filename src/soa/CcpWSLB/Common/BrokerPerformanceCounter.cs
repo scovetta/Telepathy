@@ -1,12 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker
+namespace Microsoft.Telepathy.ServiceBroker.Common
 {
     using System;
     using System.Diagnostics;
-
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
 
     /// <summary>
     /// Broker's performance counter

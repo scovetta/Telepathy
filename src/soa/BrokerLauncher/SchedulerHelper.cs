@@ -17,10 +17,11 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
     using Microsoft.Hpc.ServiceBroker;
-    using Microsoft.Hpc.ServiceBroker.Common;
-    using Microsoft.Hpc.ServiceBroker.Common.SchedulerAdapter;
-    using Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor;
     using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.ServiceBroker;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter;
+    using Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor;
 
     using TelepathyCommon;
     using TelepathyCommon.HpcContext;

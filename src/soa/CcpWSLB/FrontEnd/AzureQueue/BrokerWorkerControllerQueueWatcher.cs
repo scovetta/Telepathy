@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.FrontEnd.AzureQueue
+namespace Microsoft.Telepathy.ServiceBroker.FrontEnd.AzureQueue
 {
     using System.Diagnostics;
     using System.Threading.Tasks;

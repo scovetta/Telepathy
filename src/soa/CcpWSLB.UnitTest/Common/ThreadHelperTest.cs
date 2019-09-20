@@ -9,7 +9,7 @@ using Microsoft.Hpc.ServiceBroker;
 
 namespace Microsoft.Hpc.SvcBroker.UnitTest
 {
-
+    using Microsoft.Telepathy.ServiceBroker.Common;
 
     /// <summary>
     ///This is a test class for ThreadHelperTest and is intended

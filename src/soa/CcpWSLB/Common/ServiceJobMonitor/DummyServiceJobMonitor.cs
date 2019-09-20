@@ -1,18 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using TelepathyCommon.HpcContext;
-
-namespace Microsoft.Hpc.ServiceBroker
+namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
 {
     using System.Threading;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.ServiceBroker.BackEnd;
-    using Microsoft.Hpc.ServiceBroker.Common;
-    using Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd;
+    using Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter;
+
+    using TelepathyCommon.HpcContext;
 
     class DummyServiceJobMonitor : ServiceJobMonitorBase
     {
@@ -45,7 +44,7 @@ namespace Microsoft.Hpc.ServiceBroker
 
             this.gracefulPreemptionHandler = new GracefulPreemptionHandler(this.dispatcherManager, this.sharedData.BrokerInfo.SessionId, taskId => this.FinishTask(taskId, isRunAwayTask: true));
 
-            this.schedulerAdapterClientFactory = new SchedulerAdapterClientFactory(sharedData, this, dispatcherManager, this.context);
+            this.schedulerAdapterClientFactory = new SchedulerAdapterClientFactory(this.sharedData, this, dispatcherManager, this.context);
 
             if (this.sharedData.Config.Monitor.AllocationAdjustInterval != Timeout.Infinite && this.sharedData.StartInfo.EprList == null)
             {

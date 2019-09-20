@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 {
     using System;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Security;
-    using Microsoft.Hpc.BrokerProxy;
-    using Microsoft.Hpc.ServiceBroker.Common;
+
+    using Microsoft.Telepathy.ServiceBroker.Common;
 
     /// <summary>
     /// Encapsualte logic that controls service hosts on Azure.
@@ -56,10 +56,10 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                 BindingData bindingData = new BindingData(this.binding);
 
                 proxyServiceControlClient.BeginExit(
-                    dispatcherInfo.MachineName,
-                    dispatcherInfo.JobId,
-                    dispatcherInfo.TaskId,
-                    dispatcherInfo.FirstCoreId,
+                    this.dispatcherInfo.MachineName,
+                    this.dispatcherInfo.JobId,
+                    this.dispatcherInfo.TaskId,
+                    this.dispatcherInfo.FirstCoreId,
                     bindingData,
                     this.EndExit,
                     proxyServiceControlClient);

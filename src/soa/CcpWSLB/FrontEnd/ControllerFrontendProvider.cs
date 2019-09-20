@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.FrontEnd
+namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
 {
     using System;
     using System.ServiceModel;
@@ -11,7 +11,8 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Common;
-    using Microsoft.Hpc.ServiceBroker.FrontEnd.AzureQueue;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.FrontEnd.AzureQueue;
 
     /// <summary>
     /// Broker controller instance provider

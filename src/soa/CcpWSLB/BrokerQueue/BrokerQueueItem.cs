@@ -2,8 +2,9 @@
 // Licensed under the MIT license.
 
 using System.Runtime.CompilerServices;
+
 [assembly: InternalsVisibleTo("CcpWSLB.UnitTest")]
-namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
+namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -12,11 +13,12 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Security;
     using System.ServiceModel.Channels;
-    using System.Xml;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker.FrontEnd;
     using System.Threading;
-    using Microsoft.Hpc.ServiceBroker.Common;
+    using System.Xml;
+
+    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.FrontEnd;
 
     /// <summary>
     /// the storage item that include the request context and the persist item
@@ -187,10 +189,10 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
                     {
                         // add request message action to response message header
                         this.message.Headers.Add(MessageHeader.CreateHeader(Constant.ActionHeaderName, Constant.HpcHeaderNS, this.requestHeaders.Action));
-                        Microsoft.Hpc.ServiceBroker.Common.Utility.CopyMessageHeader(Constant.UserDataHeaderName, Constant.HpcHeaderNS, this.requestHeaders, this.message.Headers);
+                        Utility.CopyMessageHeader(Constant.UserDataHeaderName, Constant.HpcHeaderNS, this.requestHeaders, this.message.Headers);
 
                         // add the request message Id header to the response message
-                        Microsoft.Hpc.ServiceBroker.Common.Utility.CopyMessageHeader(Constant.MessageIdHeaderName, Constant.HpcHeaderNS, this.requestHeaders, this.message.Headers);
+                        Utility.CopyMessageHeader(Constant.MessageIdHeaderName, Constant.HpcHeaderNS, this.requestHeaders, this.message.Headers);
 
                     }
                 }
@@ -253,8 +255,8 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 
                     // only cache necessary headers
                     this.requestHeaders.Action = this.peerItem.Message.Headers.Action;
-                    Microsoft.Hpc.ServiceBroker.Common.Utility.CopyMessageHeader(Constant.UserDataHeaderName, Constant.HpcHeaderNS, this.peerItem.Message.Headers, this.requestHeaders);
-                    Microsoft.Hpc.ServiceBroker.Common.Utility.CopyMessageHeader(Constant.MessageIdHeaderName, Constant.HpcHeaderNS, this.peerItem.Message.Headers, this.requestHeaders);
+                    Utility.CopyMessageHeader(Constant.UserDataHeaderName, Constant.HpcHeaderNS, this.peerItem.Message.Headers, this.requestHeaders);
+                    Utility.CopyMessageHeader(Constant.MessageIdHeaderName, Constant.HpcHeaderNS, this.peerItem.Message.Headers, this.requestHeaders);
                 }
             }
         }

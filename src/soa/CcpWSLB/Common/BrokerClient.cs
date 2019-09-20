@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker
+namespace Microsoft.Telepathy.ServiceBroker.Common
 {
     using System;
     using System.Collections.Concurrent;
@@ -11,14 +11,13 @@ namespace Microsoft.Hpc.ServiceBroker
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading;
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using Microsoft.Hpc.ServiceBroker.Common;
-    using Microsoft.Hpc.ServiceBroker.FrontEnd;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
 
-    using SR = Microsoft.Hpc.SvcBroker.SR;
+    using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Hpc.Scheduler.Session.Interface;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor;
+    using Microsoft.Telepathy.ServiceBroker.FrontEnd;
 
     /// <summary>
     /// Represent a broker client
@@ -150,7 +149,7 @@ namespace Microsoft.Hpc.ServiceBroker
             this.observer = observer;
             this.monitor = monitor;
             this.stateManager = stateManager;
-            this.stateManager.OnFailed += new BrokerStateManager.SessionFailedEventHandler(StateManager_OnFailed);
+            this.stateManager.OnFailed += new BrokerStateManager.SessionFailedEventHandler(this.StateManager_OnFailed);
             
             try
             {
@@ -656,7 +655,7 @@ namespace Microsoft.Hpc.ServiceBroker
         {
             if (!String.Equals(userName, this.queue.UserName, StringComparison.OrdinalIgnoreCase) && this.queue.UserName != Constant.AnonymousUserName)
             {
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.AccessDenied_BrokerQueue, SR.AccessDenied_BrokerQueue, userName, clientId);
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.AccessDenied_BrokerQueue, SR.AccessDenied_BrokerQueue, userName, this.clientId);
             }
         }
 
@@ -726,7 +725,7 @@ namespace Microsoft.Hpc.ServiceBroker
                         }
                         else if (instance is IChannel)
                         {
-                            Microsoft.Hpc.ServiceBroker.Common.Utility.AsyncCloseICommunicationObject((ICommunicationObject)instance);
+                            Utility.AsyncCloseICommunicationObject((ICommunicationObject)instance);
                         }
                         else
                         {
@@ -1042,7 +1041,7 @@ namespace Microsoft.Hpc.ServiceBroker
                     this.responsesClient.ClientDisconnect(false);
                 }
 
-                if (ClientDisconnected != null)
+                if (this.ClientDisconnected != null)
                 {
                     this.ClientDisconnected(this, EventArgs.Empty);
                 }

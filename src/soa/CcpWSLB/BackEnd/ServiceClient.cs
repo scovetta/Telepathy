@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 {
     using System;
     using System.Diagnostics;
@@ -10,8 +10,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using Microsoft.Hpc.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.Common;
 
     /// <summary>
     /// Service Client
@@ -30,7 +29,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         private object stateChangeLock = new object();
         private string stateCache = "Opened";
 
-        public Guid ClientGuid => guid;
+        public Guid ClientGuid => this.guid;
 
         /// <summary>
         /// Create a new instance of the ServiceClient class.
@@ -128,8 +127,8 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                 identity.Impersonate();
 
                 // Call async version and block on completion in order to workaround System.Net.Socket bug #750028 
-                IAsyncResult result = Channel.BeginProcessMessage(request, null, null);
-                return Channel.EndProcessMessage(result);
+                IAsyncResult result = this.Channel.BeginProcessMessage(request, null, null);
+                return this.Channel.EndProcessMessage(result);
             }
         }
 
@@ -149,7 +148,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
             using (BrokerIdentity identity = new BrokerIdentity())
             {
                 identity.Impersonate();
-                return Channel.BeginProcessMessage(request, callback, asyncState);
+                return this.Channel.BeginProcessMessage(request, callback, asyncState);
             }
         }
 
@@ -161,7 +160,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <returns>reply message</returns>
         public Message EndProcessMessage(IAsyncResult ar)
         {
-            return Channel.EndProcessMessage(ar);
+            return this.Channel.EndProcessMessage(ar);
         }
 
         /// <summary>

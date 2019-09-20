@@ -1,10 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.Common
+namespace Microsoft.Telepathy.ServiceBroker.Common
 {
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Utility;
     using System;
     using System.Security.Cryptography.X509Certificates;
     using System.Security.Principal;
@@ -12,6 +10,9 @@ namespace Microsoft.Hpc.ServiceBroker.Common
     using System.ServiceModel.Channels;
     using System.ServiceModel.Description;
     using System.Xml;
+
+    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Hpc.Scheduler.Session.Utility;
 
     /// <summary>
     /// Broker helper class

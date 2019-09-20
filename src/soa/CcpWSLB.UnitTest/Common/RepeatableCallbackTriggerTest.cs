@@ -8,6 +8,8 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest
     using System;
     using System.Threading;
 
+    using Microsoft.Telepathy.ServiceBroker.Common;
+
     /// <summary>
     ///This is a test class for RepeatableCallbackTrigger and is intended
     ///to contain all RepeatableCallbackTrigger Unit Tests

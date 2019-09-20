@@ -7,7 +7,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim
     using System.Collections.Generic;
     using System.Text;
     using System.ServiceModel;
-    using Microsoft.Hpc.BrokerProxy;
 
     /// <summary>
     /// Authroization manager for HpcBrokerWorker

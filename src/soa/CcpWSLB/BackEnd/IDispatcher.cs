@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 {
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using Microsoft.WindowsAzure.Storage;
     using System;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.WindowsAzure.Storage;
 
     /// <summary>
     /// It is interface of dispatcher.

@@ -5,10 +5,11 @@ using System.Linq;
 using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading;
-using Microsoft.Hpc.ServiceBroker.BrokerStorage;
 
 namespace Microsoft.Hpc.ServiceBroker.UnitTest.Mock
 {
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+
     internal class MockBrokerQueueFactory : IBrokerQueueFactory
     {
         private int putResponseAsyncInvokedTimes;

@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.BrokerProxy
+namespace Microsoft.Telepathy.ServiceBroker
 {
     using System;
     using System.Runtime.Serialization;
+
     using Microsoft.Hpc.Scheduler.Session;
 
     /// <summary>

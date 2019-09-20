@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker
+namespace Microsoft.Telepathy.ServiceBroker.Common
 {
     using System;
     using System.Collections.Generic;
@@ -11,11 +11,12 @@ namespace Microsoft.Hpc.ServiceBroker
     using System.Threading;
     using System.Xml;
     using System.Xml.XPath;
+
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Common;
     using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using Microsoft.Hpc.ServiceBroker.FrontEnd;
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.ServiceBroker.FrontEnd;
 
     /// <summary>
     /// Handler for pull responses
@@ -349,10 +350,10 @@ namespace Microsoft.Hpc.ServiceBroker
                 switch (reason)
                 {
                     case EndOfResponsesReason.ClientPurged:
-                        soap11FaultMessage = FrontEndFaultMessage.GenerateFaultMessage(null, MessageVersion.Soap11, SOAFaultCode.ClientPurged, Microsoft.Hpc.SvcBroker.SR.ClientPurged);
+                        soap11FaultMessage = FrontEndFaultMessage.GenerateFaultMessage(null, MessageVersion.Soap11, SOAFaultCode.ClientPurged, SR.ClientPurged);
                         break;
                     case EndOfResponsesReason.ClientTimeout:
-                        soap11FaultMessage = FrontEndFaultMessage.GenerateFaultMessage(null, MessageVersion.Soap11, SOAFaultCode.ClientTimeout, Microsoft.Hpc.SvcBroker.SR.ClientTimeout);
+                        soap11FaultMessage = FrontEndFaultMessage.GenerateFaultMessage(null, MessageVersion.Soap11, SOAFaultCode.ClientTimeout, SR.ClientTimeout);
                         break;
                 }
 
@@ -367,7 +368,7 @@ namespace Microsoft.Hpc.ServiceBroker
             private void GenerateSessionFailureFaultMessage()
             {
                 XmlDocument doc = new XmlDocument() { XmlResolver = null };
-                Message soap11FaultMessage = FrontEndFaultMessage.GenerateFaultMessage(null, MessageVersion.Soap11, SOAFaultCode.Broker_SessionFailure, Microsoft.Hpc.SvcBroker.SR.SessionFailure);
+                Message soap11FaultMessage = FrontEndFaultMessage.GenerateFaultMessage(null, MessageVersion.Soap11, SOAFaultCode.Broker_SessionFailure, SR.SessionFailure);
                 XPathNavigator nav = soap11FaultMessage.CreateBufferedCopy(BrokerEntry.MaxMessageSize).CreateNavigator();
                 doc.Load(nav.ReadSubtree());
                 this.messages.Add(doc.DocumentElement);

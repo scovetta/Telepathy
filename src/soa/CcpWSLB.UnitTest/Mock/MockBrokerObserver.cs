@@ -2,6 +2,8 @@
 
 namespace Microsoft.Hpc.ServiceBroker.UnitTest.Mock
 {
+    using Microsoft.Telepathy.ServiceBroker.Common;
+
     internal class MockBrokerObserver : IBrokerObserver
     {
         private int requestProcessingCompletedInvokedTimes;

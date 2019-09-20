@@ -1,13 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker
+namespace Microsoft.Telepathy.ServiceBroker.Common
 {
     using System;
     using System.Threading;
 
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.SvcBroker;
     using Microsoft.Telepathy.RuntimeTrace;
 
     /// <summary>

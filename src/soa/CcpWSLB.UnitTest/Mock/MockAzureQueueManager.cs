@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.ServiceModel.Channels;
 using System.Xml;
 using Microsoft.Hpc.Scheduler.Session.Common;
-using Microsoft.Hpc.ServiceBroker.BackEnd;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -11,6 +10,8 @@ using Microsoft.WindowsAzure.Storage.Queue;
 
 namespace Microsoft.Hpc.ServiceBroker.UnitTest.Mock
 {
+    using Microsoft.Telepathy.ServiceBroker.BackEnd.AzureQueue;
+
     internal class MockAzureQueueManager : IAzureQueueManager
     {
         public MockAzureQueueManager()

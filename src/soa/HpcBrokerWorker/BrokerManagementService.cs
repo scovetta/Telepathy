@@ -13,6 +13,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim
     using System.IO;
 
     using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.ServiceBroker.Common;
 
     /// <summary>
     /// The Broker Management Service

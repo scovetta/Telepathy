@@ -1,10 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.FrontEnd
+namespace Microsoft.Telepathy.ServiceBroker.FrontEnd.AzureQueue
 {
-    using Microsoft.Hpc.Scheduler.Session.Common;
-    using Microsoft.WindowsAzure.Storage.Queue;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
@@ -13,6 +11,9 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using System.Threading;
     using System.Xml;
 
+    using Microsoft.Hpc.Scheduler.Session.Common;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.WindowsAzure.Storage.Queue;
 
     /// <summary>
     /// It is a wrapper of CloudQueue class, and it handles BeginAddMessage's

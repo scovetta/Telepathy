@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.FrontEnd
+namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
 {
     using System;
     using System.Diagnostics;
@@ -17,8 +17,9 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
-
-    using SR = Microsoft.Hpc.SvcBroker.SR;
+    using Microsoft.Hpc.ServiceBroker;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.FrontEnd.AzureQueue;
 
     /// <summary>
     /// FrontEnd Builder

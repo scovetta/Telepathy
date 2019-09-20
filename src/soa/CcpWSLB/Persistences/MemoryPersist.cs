@@ -1,12 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
+namespace Microsoft.Telepathy.ServiceBroker.Persistences
 {
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Threading;
+
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
 
     /// <summary>
     /// the implementation of in-memory storage provider
@@ -261,7 +263,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 
             Interlocked.Add(ref this.failedRequestCountField, faultResponseCount);
             long remainingRequestCount = Interlocked.Add(ref this.requestCountField, -(responseCount));
-            bool isLastResponse = EOMReceived && (remainingRequestCount == 0);
+            bool isLastResponse = this.EOMReceived && (remainingRequestCount == 0);
 
             PutResponseComplete(responseCount, faultResponseCount, isLastResponse, putResponseCallback, callbackState);
         }

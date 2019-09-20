@@ -1,11 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
+namespace Microsoft.Telepathy.ServiceBroker.Persistences.MSMQPersist
 {
     using System;
     using System.Globalization;
     using System.Messaging;
+
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
 
     /// <summary>
     /// the delegate for the retriable operations.

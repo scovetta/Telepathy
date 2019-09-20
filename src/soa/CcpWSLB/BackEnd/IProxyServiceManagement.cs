@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.ServiceModel;
-
-namespace Microsoft.Hpc.BrokerProxy
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 {
+    using System.ServiceModel;
+
     [ServiceContract(Name = "IServiceControl", Namespace = "http://hpc.microsoft.com/hpcbrokerproxy/")]
     internal interface IProxyServiceManagement
     {

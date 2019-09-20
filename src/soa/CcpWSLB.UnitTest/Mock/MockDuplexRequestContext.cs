@@ -8,7 +8,8 @@ namespace Microsoft.Hpc.ServiceBroker.UnitTest.Mock
 {
     using System;
     using System.ServiceModel.Channels;
-    using Microsoft.Hpc.ServiceBroker.FrontEnd;
+
+    using Microsoft.Telepathy.ServiceBroker.FrontEnd;
 
     /// <summary>
     /// the Mock Duplex Request context

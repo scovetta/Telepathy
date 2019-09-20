@@ -1,14 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker
+namespace Microsoft.Telepathy.ServiceBroker.Common
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
     using System.Threading.Tasks;
+
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor;
+
     /// <summary>
     /// Broker client manager
     /// </summary>

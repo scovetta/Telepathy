@@ -1,17 +1,19 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.FrontEnd
+namespace Microsoft.Telepathy.ServiceBroker.FrontEnd.AzureQueue
 {
-    using Microsoft.Hpc.BrokerBurst;
-    using Microsoft.Hpc.Scheduler.Session.Common;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Queue;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
+
+    using Microsoft.Hpc.BrokerBurst;
+    using Microsoft.Hpc.Scheduler.Session.Common;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.WindowsAzure.Storage;
+    using Microsoft.WindowsAzure.Storage.Queue;
 
     /// <summary>
     /// Delegate of the message handler.

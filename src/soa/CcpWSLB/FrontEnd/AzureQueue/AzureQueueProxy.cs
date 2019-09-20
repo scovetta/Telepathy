@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.FrontEnd
+namespace Microsoft.Telepathy.ServiceBroker.FrontEnd.AzureQueue
 {
     using System;
     using System.Collections.Concurrent;
@@ -66,12 +66,12 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         {
             get
             {
-                return clusterHash;
+                return this.clusterHash;
             }
 
             set
             {
-                clusterHash = value;
+                this.clusterHash = value;
             }
         }
 
@@ -170,12 +170,12 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         {
             get
             {
-                return requestQueueUris;
+                return this.requestQueueUris;
             }
 
             private set
             {
-                requestQueueUris = value;
+                this.requestQueueUris = value;
             }
         }
 
@@ -191,12 +191,12 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         {
             get
             {
-                return requestBlobUri;
+                return this.requestBlobUri;
             }
 
             set
             {
-                requestBlobUri = value;
+                this.requestBlobUri = value;
             }
         }
 
@@ -216,12 +216,12 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
         {
             get
             {
-                return responseClientUris;
+                return this.responseClientUris;
             }
 
             set
             {
-                responseClientUris = value;
+                this.responseClientUris = value;
             }
         }
 
@@ -612,7 +612,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             Message request = null;
             try
             {
-                while (!requestMessageQueue.TryTake(out request, RequestWaitIntervalMs))
+                while (!this.requestMessageQueue.TryTake(out request, RequestWaitIntervalMs))
                 {
                     BrokerTracing.TraceInfo("[AzureQueueProxy] No message in the request message queue. Block wait.");
                 }
@@ -638,7 +638,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 
         public IAsyncResult BeginReceiveRequest(AsyncCallback callback, object state)
         {
-            IAsyncResult ar = receiveRequest.BeginInvoke(callback, state);
+            IAsyncResult ar = this.receiveRequest.BeginInvoke(callback, state);
 
             // BrokerTracing.TraceInfo("[AzureQueueProxy] BeginReceiveRequest ar.CompletedSynchronously {0}", ar.CompletedSynchronously);
             return ar;
@@ -646,7 +646,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
 
         public Message EndReceiveRequest(IAsyncResult result)
         {
-            return receiveRequest.EndInvoke(result);
+            return this.receiveRequest.EndInvoke(result);
         }
 
         public void SendResponse(Message response)

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 {
     using System;
     using System.ServiceModel;
@@ -34,7 +34,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <summary>
         /// Allocated node location, OnPremise or Azure.
         /// </summary>
-        private Scheduler.Session.Data.NodeLocation nodeLocation;
+        private Hpc.Scheduler.Session.Data.NodeLocation nodeLocation;
 
         /// <summary>
         /// Stores the time when the task is started.
@@ -57,7 +57,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="uniqueId">indicating the unique id of this dispatcher</param>
         /// <param name="capacity">indicating the capacity of this dispatcher</param>
         /// <param name="machineName">indicating the machine name</param>
-        protected DispatcherInfo(string uniqueId, int capacity, string machineName, string machineVirtualName, Scheduler.Session.Data.NodeLocation location)
+        protected DispatcherInfo(string uniqueId, int capacity, string machineName, string machineVirtualName, Hpc.Scheduler.Session.Data.NodeLocation location)
         {
             this.uniqueId = uniqueId;
             this.capacity = capacity;

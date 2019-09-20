@@ -10,7 +10,6 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest.Mock
     using System.Text;
 
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.ServiceBroker.FrontEnd;
 
     /// <summary>
     /// Mock object for broker authorization

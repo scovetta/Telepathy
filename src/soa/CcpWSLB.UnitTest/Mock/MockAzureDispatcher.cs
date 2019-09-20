@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
-using Microsoft.Hpc.ServiceBroker.BackEnd;
 
 namespace Microsoft.Hpc.ServiceBroker.UnitTest.Mock
 {
+    using Microsoft.Telepathy.ServiceBroker.BackEnd;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd.nettcp;
+
     internal class MockAzureDispatcher : MockDispatcher
     {
         private ProxyClientPool proxyClientPool;

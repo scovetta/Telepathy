@@ -1,13 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 {
     using System;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using Microsoft.Hpc.Azure.Common;
+
     using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.ServiceBroker.Azure;
 
     /// <summary>
     /// Dispatcher info for service task that targets Azure nodes.
@@ -33,7 +34,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="nettcp">indicating the protocal</param>
         /// <param name="azureLoadBalancerAddress">the DNS name or internal IP for proxy node</param>
         public AzureDispatcherInfo(string jobId, int requeueCount, string taskId, int capacity, string machineName, int firstCoreId, string networkPrefix, string proxyServiceName, bool nettcp, string azureLoadBalancerAddress)
-            : base(jobId, taskId, capacity, machineName, null, firstCoreId, networkPrefix, Scheduler.Session.Data.NodeLocation.Azure, false)
+            : base(jobId, taskId, capacity, machineName, null, firstCoreId, networkPrefix, Hpc.Scheduler.Session.Data.NodeLocation.Azure, false)
         {
             this.AzureServiceName = proxyServiceName;
             this.AzureLoadBalancerAddress = azureLoadBalancerAddress;

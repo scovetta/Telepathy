@@ -4,7 +4,7 @@
   <PropertyGroup>
     <ProjectGuid>{2629DC89-F12C-489D-8CF6-E0A6046B6863}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Microsoft.Hpc.ServiceBroker</RootNamespace>
+    <RootNamespace>Microsoft.Telepathy.ServiceBroker</RootNamespace>
     <AssemblyName>Microsoft.Hpc.SvcBroker</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <AssemblyClsCompliant>false</AssemblyClsCompliant>

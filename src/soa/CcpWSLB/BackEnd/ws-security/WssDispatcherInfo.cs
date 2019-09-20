@@ -1,14 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 {
     using System;
+    using System.Globalization;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
 
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using System.Globalization;
+    using Microsoft.Hpc.ServiceBroker;
 
     /// <summary>
     /// Dispatcher info for service task that targets Azure nodes.

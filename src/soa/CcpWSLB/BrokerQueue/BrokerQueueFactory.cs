@@ -1,15 +1,19 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
+namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.ServiceModel.Channels;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using System.Threading.Tasks;
+
+    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.Persistences;
+    using Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist;
+
     /// <summary>
     /// a calllback delegate to judge whether the specified session is stale, the related job is purged by the scheduler.
     /// </summary>
@@ -70,7 +74,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
             this.persistName = persistName;
             this.sharedData = sharedData;
             this.clientBrokerQueueDic = new Dictionary<string, BrokerQueue>(StringComparer.OrdinalIgnoreCase);
-            this.brokerQueueDispatcher = new BrokerQueueDispatcher(sessionId, !string.IsNullOrEmpty(persistName), sharedData);
+            this.brokerQueueDispatcher = new BrokerQueueDispatcher(this.sessionId, !string.IsNullOrEmpty(persistName), sharedData);
 #if MSMQ
             if (!string.IsNullOrEmpty(sharedData.BrokerInfo.AadUserSid) && !string.IsNullOrEmpty(sharedData.BrokerInfo.AadUserName))
             {
@@ -106,7 +110,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 
                     // for the durable session, the broker maybe restart, need enumerate all the physical queues to get the client ids for the session.
                     //allClients = Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ.MSMQPersist.GetSessionClients(this.sessionId, this.sharedData.StartInfo.UseAad);
-                    allClients = AzureQueuePersist.AzureQueuePersist.GetSessionClients(this.sharedData.BrokerInfo.AzureStorageConnectionString, this.sessionId, false);
+                    allClients = AzureQueuePersist.GetSessionClients(this.sharedData.BrokerInfo.AzureStorageConnectionString, this.sessionId, false);
                 }
 
                 return allClients;
@@ -155,7 +159,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
                 {
                     BrokerTracing.TraceInfo(
                         "[BrokerQueueFactory] .CleanupStalePersistedData: cleaning up stale data in AzureQueue");
-                    await Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist.AzureQueuePersist
+                    await AzureQueuePersist
                         .CleanupStaleMessageQueue(isStaleSessionCallback, connectString);
                 }
                 else
@@ -208,7 +212,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
                         ISessionPersist sessionPersist = null;
                         if (string.IsNullOrEmpty(this.persistName))
                         {
-                            sessionPersist = new MemoryPersist(userName, sessionId, clientId);
+                            sessionPersist = new MemoryPersist(userName, this.sessionId, clientId);
                             brokerQueue = new BrokerPersistQueue(
                                 this.brokerQueueDispatcher,
                                 this.persistName,
@@ -231,7 +235,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
                         {
                             ParamCheckUtility.ThrowIfNull(this.sharedData.BrokerInfo.AzureStorageConnectionString, "StorageConnectString");
 
-                            sessionPersist = new AzureQueuePersist.AzureQueuePersist(userName, this.sessionId, clientId, this.sharedData.BrokerInfo.AzureStorageConnectionString);
+                            sessionPersist = new AzureQueuePersist(userName, this.sessionId, clientId, this.sharedData.BrokerInfo.AzureStorageConnectionString);
                             isNewCreate = sessionPersist.IsNewCreated;
                             brokerQueue = new BrokerPersistQueue(
                                 this.brokerQueueDispatcher,
