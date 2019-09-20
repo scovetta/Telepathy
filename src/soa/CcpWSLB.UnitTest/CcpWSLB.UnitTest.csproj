@@ -61,7 +61,6 @@
     <Compile Include="Dispatcher\ResponseQueueAdapterTest.cs" />
     <Compile Include="Dispatcher\Utility.cs" />
     <Compile Include="FrontEnd\FrontEndBuilderTest.cs" />
-    <Compile Include="FrontEnd\GetResponseFrontEndTest.cs" />
     <None Include="FrontEnd\RequestReplyFrontEndTest.cs" />
     <Compile Include="Mock\IMockServiceContract.cs" />
     <Compile Include="Mock\MockAzureDispatcher.cs" />
