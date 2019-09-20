@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim
+namespace Microsoft.Telepathy.Internal.BrokerShim
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using System.ServiceModel;
+
+    using Microsoft.Hpc.Scheduler.Session.Internal;
 
     /// <summary>
     /// Authroization manager for HpcBrokerWorker
