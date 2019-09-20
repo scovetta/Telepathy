@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.CcpServiceHosting
+namespace Microsoft.Telepathy.CcpServiceHost
 {
     using System;
     using System.Configuration;
@@ -9,7 +9,6 @@ namespace Microsoft.Hpc.CcpServiceHosting
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Net;
     using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Security;
@@ -29,7 +28,6 @@ namespace Microsoft.Hpc.CcpServiceHosting
     using SoaService.DataClient;
 
     using TelepathyCommon;
-    using TelepathyCommon.HpcContext;
 
     class Program
     {

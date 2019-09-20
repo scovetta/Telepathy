@@ -24,7 +24,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using TelepathyCommon.HpcContext;
 
     using IBrokerLauncher = Microsoft.Telepathy.Internal.BrokerLauncher.IBrokerLauncher;
-    using SR = Microsoft.Hpc.Scheduler.Session.SR;
 
     /// <summary>
     /// Launcher Host Service

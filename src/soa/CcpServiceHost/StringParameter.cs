@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.CcpServiceHosting
+namespace Microsoft.Telepathy.CcpServiceHost
 {
     /// <summary>
     /// parameter for string type argument

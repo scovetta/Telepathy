@@ -102,7 +102,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
         {
             if ((!this.AllowNewSession) || (!this.IsOnline && String.IsNullOrEmpty(info.DiagnosticBrokerNode)))
             {
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, Hpc.Scheduler.Session.SR.BrokerIsOffline);
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, SR.BrokerIsOffline);
             }
 
             // Handle invalid input parameters
@@ -133,7 +133,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
                 // Bug 10614: Throw a proper exception when the broker node is being taken offline
                 if ((!this.AllowNewSession) || (!this.IsOnline && String.IsNullOrEmpty(info.DiagnosticBrokerNode)))
                 {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, Hpc.Scheduler.Session.SR.BrokerIsOffline);
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, SR.BrokerIsOffline);
                 }
 
                 TraceHelper.TraceEvent(sessionId, System.Diagnostics.TraceEventType.Error, "[BrokerLauncher] Create Broker {0} failed: {1}", sessionId, e.ToString());
@@ -151,7 +151,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
         {
             if ((!this.AllowNewSession) || (!this.IsOnline && String.IsNullOrEmpty(info.DiagnosticBrokerNode)))
             {
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, Hpc.Scheduler.Session.SR.BrokerIsOffline);
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, SR.BrokerIsOffline);
             }
 
             try
@@ -181,7 +181,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
                 // Bug 10614: Throw a proper exception when the broker node is being taken offline
                 if ((!this.AllowNewSession) || (!this.IsOnline && String.IsNullOrEmpty(info.DiagnosticBrokerNode)))
                 {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, Hpc.Scheduler.Session.SR.BrokerIsOffline);
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, SR.BrokerIsOffline);
                 }
 
                 TraceHelper.TraceEvent(sessionId, System.Diagnostics.TraceEventType.Error, "[BrokerLauncher] Create Durable Broker {0} failed: {1}", sessionId, e);
@@ -198,7 +198,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
         {
             if (!this.AllowNewSession)
             {
-                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, Hpc.Scheduler.Session.SR.BrokerIsOffline);
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, SR.BrokerIsOffline);
             }
 
             try
@@ -220,7 +220,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
                 // Bug 10614: Throw a proper exception when the broker node is being taken offline
                 if (!this.AllowNewSession)
                 {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, Hpc.Scheduler.Session.SR.BrokerIsOffline);
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerIsOffline, SR.BrokerIsOffline);
                 }
 
                 TraceHelper.TraceEvent(sessionId, System.Diagnostics.TraceEventType.Error, "[BrokerLauncher] Attach Broker {0} failed: {1}", sessionId, e);
@@ -277,7 +277,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
 
                 if (!SoaHelper.CheckWindowsIdentity(OperationContext.Current))
                 {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.AccessDenied_BrokerLauncher, Hpc.Scheduler.Session.SR.AccessDenied_BrokerLauncher);
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.AccessDenied_BrokerLauncher, SR.AccessDenied_BrokerLauncher);
                 }
 
                 string uniqueId;

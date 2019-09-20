@@ -316,7 +316,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
                         if (info.Disposed)
                         {
                             TraceHelper.TraceEvent(sessionId, System.Diagnostics.TraceEventType.Information, "[BrokerManager] Broker is exiting...");
-                            ThrowHelper.ThrowSessionFault(SOAFaultCode.Session_ValidateJobFailed_AlreadyFinished, Hpc.Scheduler.Session.SR.BrokerFinishing, sessionId.ToString());
+                            ThrowHelper.ThrowSessionFault(SOAFaultCode.Session_ValidateJobFailed_AlreadyFinished, SR.BrokerFinishing, sessionId.ToString());
                         }
                         else
                         {
@@ -640,12 +640,12 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
             {
                 if (this.brokerDic.ContainsKey(recoverInfo.SessionId))
                 {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_SessionIdAlreadyExists, Hpc.Scheduler.Session.SR.SessionIdAlreadyExists, recoverInfo.SessionId.ToString());
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_SessionIdAlreadyExists, SR.SessionIdAlreadyExists, recoverInfo.SessionId.ToString());
                 }
 
                 if (BrokerLauncherSettings.Default.MaxConcurrentSession > 0 && this.brokerDic.Count >= BrokerLauncherSettings.Default.MaxConcurrentSession)
                 {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_TooManyBrokerRunning, Hpc.Scheduler.Session.SR.TooManyBrokerRunning, BrokerLauncherSettings.Default.MaxConcurrentSession.ToString());
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_TooManyBrokerRunning, SR.TooManyBrokerRunning, BrokerLauncherSettings.Default.MaxConcurrentSession.ToString());
                 }
             }
 
@@ -787,7 +787,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
                 // if version is not supported, throw UnsupportedVersion exception
                 if (!BrokerVersion.IsSupportedPersistVersion(brokerInfo.PersistVersion))
                 {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_UnsupportedVersion, Hpc.Scheduler.Session.SR.UnsupportedVersion, brokerInfo.PersistVersion.ToString(), BrokerVersion.PersistVersion.ToString());
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_UnsupportedVersion, SR.UnsupportedVersion, brokerInfo.PersistVersion.ToString(), BrokerVersion.PersistVersion.ToString());
                 }
             }
             BrokerAuthorization auth = null;
@@ -820,12 +820,12 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
                 {
                     if (BrokerLauncherSettings.Default.MaxConcurrentSession > 0 && this.brokerDic.Count >= BrokerLauncherSettings.Default.MaxConcurrentSession)
                     {
-                        ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_TooManyBrokerRunning, Hpc.Scheduler.Session.SR.TooManyBrokerRunning, BrokerLauncherSettings.Default.MaxConcurrentSession.ToString());
+                        ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_TooManyBrokerRunning, SR.TooManyBrokerRunning, BrokerLauncherSettings.Default.MaxConcurrentSession.ToString());
                     }
 
                     if (this.brokerDic.ContainsKey(recoverInfo.SessionId))
                     {
-                        ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_SessionIdAlreadyExists, Hpc.Scheduler.Session.SR.SessionIdAlreadyExists, recoverInfo.SessionId.ToString());
+                        ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_SessionIdAlreadyExists, SR.SessionIdAlreadyExists, recoverInfo.SessionId.ToString());
                     }
 
                     this.brokerDic.Add(recoverInfo.SessionId, info);
@@ -862,7 +862,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
             {
                 if (string.IsNullOrEmpty(centrialPath))
                 {
-                    ThrowHelper.ThrowSessionFault(SOAFaultCode.ServiceRegistrationPathEnvironmentMissing, Hpc.Scheduler.Session.SR.ServiceRegistrationPathEnvironmentMissing);
+                    ThrowHelper.ThrowSessionFault(SOAFaultCode.ServiceRegistrationPathEnvironmentMissing, SR.ServiceRegistrationPathEnvironmentMissing);
                 }
             }
 #if HPCPACK

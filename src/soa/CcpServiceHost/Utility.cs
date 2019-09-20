@@ -1,17 +1,18 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.CcpServiceHosting
+namespace Microsoft.Telepathy.CcpServiceHost
 {
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Configuration;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using System;
     using System.Configuration;
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Reflection;
+
+    using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Hpc.Scheduler.Session.Configuration;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
 
     using TelepathyCommon;
 

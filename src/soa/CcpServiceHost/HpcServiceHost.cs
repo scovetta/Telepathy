@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.CcpServiceHosting
+namespace Microsoft.Telepathy.CcpServiceHost
 {
     using System;
     using System.Diagnostics;
@@ -56,9 +56,9 @@ namespace Microsoft.Hpc.CcpServiceHosting
                     if (!this.hostWrapper.IsOnExitingCalled)
                     {
                         // Invoke user's Exiting event async with a timeout specified by TaskCancelGracePeriod cluster parameter.
-                        Action<object> a = InvokeFireExitingEvent;
+                        Action<object> a = this.InvokeFireExitingEvent;
                         IAsyncResult ar = a.BeginInvoke(null, null, null);
-                        if (ar.AsyncWaitHandle.WaitOne(_cancelTaskGracePeriod, false))
+                        if (ar.AsyncWaitHandle.WaitOne(this._cancelTaskGracePeriod, false))
                         {
                             a.EndInvoke(ar);
                         }
