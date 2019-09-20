@@ -1,9 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.EchoSvcLib
+namespace Microsoft.Telepathy.EchoSvcLib
 {
     using System.ServiceModel;
+
     using Microsoft.Hpc.Scheduler.Session.GenericService;
 
     /// <summary>
