@@ -13,13 +13,13 @@ This project uses git flow. All new features will go into dev branch.
 
 ## Deployment in Azure
 
-## Deploy in Azure Portal
+### Deploy in Azure Portal
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FBabysbreathJJ%2FTelepathyDeploy%2Fmaster%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
-## Deploy using Azure CLI
+### Deploy using Azure CLI
 
 ```shell
 [ "$(az group exists -n ResourceGroupName)" = "true" ] && az group delete -n  ResourceGroupName -y
@@ -32,7 +32,7 @@ az group deployment create `
   --parameters "location of parameters.json file"
 ```
 
-## Deploy using Powershell
+### Deploy using Powershell
 
 ```shell
 $ResourceGroupName = ""
