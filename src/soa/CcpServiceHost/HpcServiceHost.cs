@@ -9,10 +9,9 @@ namespace Microsoft.Telepathy.CcpServiceHost
     using System.Reflection;
     using System.ServiceModel;
 
+    using Microsoft.Telepathy.Common;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Interface;
-
-    using TelepathyCommon;
 
     using RuntimeTraceHelper = Microsoft.Telepathy.RuntimeTrace.TraceHelper;
 

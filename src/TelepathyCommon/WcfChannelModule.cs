@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace TelepathyCommon.Service
+namespace Microsoft.Telepathy.Common
 {
     using System;
     using System.Collections.Concurrent;
@@ -14,9 +14,9 @@ namespace TelepathyCommon.Service
     using System.ServiceModel.Security;
     using System.Threading.Tasks;
 
-    using TelepathyCommon.HpcContext;
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions.RegistryExtension;
 #if !net40
-    using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
 
 #endif
 

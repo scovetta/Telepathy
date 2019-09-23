@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace TelepathyCommon.HpcContext.Extensions
+namespace Microsoft.Telepathy.Common.TelepathyContext.Extensions
 {
     using System.Threading.Tasks;
 

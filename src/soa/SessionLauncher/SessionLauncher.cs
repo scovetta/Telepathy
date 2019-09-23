@@ -14,6 +14,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Microsoft.Telepathy.Common;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Common;
@@ -21,8 +22,6 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Interface;
     using Microsoft.Telepathy.Session.Internal;
-
-    using TelepathyCommon;
 
     /// <summary>
     /// the session launcher service.

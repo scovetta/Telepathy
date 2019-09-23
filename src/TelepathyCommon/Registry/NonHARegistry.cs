@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace TelepathyCommon.Registry
+namespace Microsoft.Telepathy.Common.Registry
 {
     using Microsoft.Win32;
 

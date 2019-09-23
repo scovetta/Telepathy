@@ -9,9 +9,8 @@ namespace Microsoft.Telepathy.Session.Interface
     using System.Security.Principal;
     using System.ServiceModel;
 
+    using Microsoft.Telepathy.Common;
     using Microsoft.Telepathy.Session.Common;
-
-    using TelepathyCommon.Service;
 
     /// <summary>
     /// Broker Authroization

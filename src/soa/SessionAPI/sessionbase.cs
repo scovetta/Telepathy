@@ -14,14 +14,13 @@ namespace Microsoft.Telepathy.Session
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Interface;
     using Microsoft.Telepathy.Session.Internal;
     using Microsoft.Telepathy.Session.Internal.AzureQueue;
-
-    using TelepathyCommon.HpcContext;
-    using TelepathyCommon.HpcContext.Extensions;
 
     /// <summary>
     ///   <para>Serves as a base class to provide methods and properties that are common to classes that represent different kinds of sessions, such as 

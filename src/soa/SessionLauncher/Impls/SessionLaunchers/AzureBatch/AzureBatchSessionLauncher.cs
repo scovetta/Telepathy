@@ -15,6 +15,8 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
 
     using Microsoft.Azure.Batch;
     using Microsoft.Azure.Batch.Common;
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Common.ServiceRegistrationStore;
     using Microsoft.Telepathy.Internal.SessionLauncher.Utils;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Telepathy.Session;
@@ -25,9 +27,6 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
     using Microsoft.Telepathy.Session.Internal;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
-
-    using TelepathyCommon;
-    using TelepathyCommon.Telepathy;
 
     using JobState = Microsoft.Telepathy.Session.Data.JobState;
 

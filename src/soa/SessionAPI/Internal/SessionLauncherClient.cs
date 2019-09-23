@@ -8,9 +8,8 @@ namespace Microsoft.Telepathy.Session.Internal
     using System.ServiceModel;
     using System.ServiceModel.Channels;
 
+    using Microsoft.Telepathy.Common;
     using Microsoft.Telepathy.Session.Common;
-
-    using TelepathyCommon;
 
     /// <summary>
     /// Service client to connect the session launcher in headnode

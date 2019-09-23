@@ -14,12 +14,11 @@ namespace Microsoft.Telepathy.Session.Internal
     using System.ServiceModel.Channels;
     using System.Threading.Tasks;
 
+    using Microsoft.Telepathy.Common;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Configuration;
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Interface;
-
-    using TelepathyCommon;
 
     /// <summary>
     /// Utility functions

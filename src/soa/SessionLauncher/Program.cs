@@ -13,6 +13,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
     using CommandLine;
 
     using Microsoft.Hpc.Scheduler.Session.LauncherHostService;
+    using Microsoft.Telepathy.Common.TelepathyContext;
     using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers;
     using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.AzureBatch;
     using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Local;
@@ -21,8 +22,6 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
     using Newtonsoft.Json;
 
     using Serilog;
-
-    using TelepathyCommon.HpcContext;
 
     /// <summary>
     /// Main entry point

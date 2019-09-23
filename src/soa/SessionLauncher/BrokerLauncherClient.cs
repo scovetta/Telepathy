@@ -8,12 +8,11 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
     using System.ServiceModel;
     using System.ServiceModel.Channels;
 
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions.RegistryExtension;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Internal;
-
-    using TelepathyCommon.HpcContext;
-    using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
 
     /// <summary>
     /// The Broker Launcher Client

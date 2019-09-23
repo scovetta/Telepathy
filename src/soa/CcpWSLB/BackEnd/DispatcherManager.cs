@@ -14,6 +14,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Microsoft.Telepathy.Common.TelepathyContext;
     using Microsoft.Telepathy.ServiceBroker.BackEnd.AzureQueue;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common;
@@ -23,8 +24,6 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
     using Microsoft.Telepathy.Session.Data;
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Internal;
-
-    using TelepathyCommon.HpcContext;
 
     /// <summary>
     /// Manage dispatchers

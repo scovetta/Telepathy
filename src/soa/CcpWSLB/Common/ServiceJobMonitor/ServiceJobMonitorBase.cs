@@ -13,6 +13,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Common.TelepathyContext;
     using Microsoft.Telepathy.ServiceBroker.BackEnd;
     using Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter;
     using Microsoft.Telepathy.ServiceBroker.Common.ThreadHelper;
@@ -22,9 +24,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Interface;
     using Microsoft.Telepathy.Session.Internal;
-
-    using TelepathyCommon;
-    using TelepathyCommon.HpcContext;
 
     /// <summary>
     /// Internal Monitor the service job

@@ -12,6 +12,8 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
     using System.ServiceProcess;
     using System.Threading.Tasks;
 
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions.RegistryExtension;
     using Microsoft.Telepathy.Internal.SessionLauncher;
     using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SchedulerDelegations.AzureBatch;
     using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SchedulerDelegations.Local;
@@ -24,10 +26,6 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Internal;
-
-    using TelepathyCommon;
-    using TelepathyCommon.HpcContext;
-    using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
 
     using ISessionLauncher = Microsoft.Telepathy.Internal.SessionLauncher.ISessionLauncher;
 

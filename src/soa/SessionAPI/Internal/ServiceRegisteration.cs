@@ -8,9 +8,10 @@ namespace Microsoft.Telepathy.Session.Internal
     using System.Diagnostics;
     using System.IO;
 
-    using TelepathyCommon;
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Common.ServiceRegistrationStore;
 
-    using static TelepathyCommon.SoaRegistrationAuxModule;
+    using static Telepathy.Common.ServiceRegistrationStore.SoaRegistrationAuxModule;
 
     public class ServiceRegistrationRepo
     {

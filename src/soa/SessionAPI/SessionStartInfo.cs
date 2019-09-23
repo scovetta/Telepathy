@@ -10,10 +10,9 @@ namespace Microsoft.Telepathy.Session
     using System.Text;
     using System.Text.RegularExpressions;
 
+    using Microsoft.Telepathy.Common;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Internal;
-
-    using TelepathyCommon;
 
     /// <summary>
     ///   <para>Defines a set of values used to create a session.</para>

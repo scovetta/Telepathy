@@ -9,8 +9,8 @@ namespace Microsoft.Telepathy.Common.Rest.Server
     using System.Linq;
     using System.Security.Cryptography.X509Certificates;
 
-    using TelepathyCommon.HpcContext;
-    using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions.RegistryExtension;
 
     public class DefaultClientCertificateValidator : IClientCertificateValidator
     {

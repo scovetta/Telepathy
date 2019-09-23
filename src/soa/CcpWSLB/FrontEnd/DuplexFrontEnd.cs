@@ -10,6 +10,8 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
     using System.ServiceModel.Channels;
     using System.ServiceModel.Description;
 
+    using Microsoft.Telepathy.Common.Registry;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions.RegistryExtension;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.ServiceBroker.Common.ThreadHelper;
@@ -18,9 +20,6 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Interface;
     using Microsoft.Telepathy.Session.Internal;
-
-    using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
-    using TelepathyCommon.Registry;
 
     /// <summary>
     /// The FrontEnd for duplex MEP (works for NetTcpBinding)

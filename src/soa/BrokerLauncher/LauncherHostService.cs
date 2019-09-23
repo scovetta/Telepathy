@@ -13,6 +13,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using System.Threading;
 
     using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.Common.TelepathyContext;
     using Microsoft.Telepathy.Internal.BrokerLauncher;
     using Microsoft.Telepathy.Internal.BrokerLauncher.QueueAdapter;
     using Microsoft.Telepathy.RuntimeTrace;
@@ -21,8 +22,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Internal;
-
-    using TelepathyCommon.HpcContext;
 
     using IBrokerLauncher = Microsoft.Telepathy.Internal.BrokerLauncher.IBrokerLauncher;
 

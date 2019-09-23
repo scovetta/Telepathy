@@ -12,7 +12,7 @@ namespace Microsoft.Telepathy.Session.Internal.AzureQueue
     using System.ServiceModel.Channels;
     using System.Xml;
 
-    using TelepathyCommon;
+    using Microsoft.Telepathy.Common;
 
     /// <summary>
     /// The queue item stored in request and response queues.

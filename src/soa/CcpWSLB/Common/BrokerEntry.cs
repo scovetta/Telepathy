@@ -12,6 +12,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
     using System.Threading.Tasks;
     using System.Xml;
 
+    using Microsoft.Telepathy.Common.TelepathyContext;
     using Microsoft.Telepathy.ServiceBroker.BackEnd;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor;
@@ -25,8 +26,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
     using Microsoft.Telepathy.Session.Internal;
     using Microsoft.Telepathy.Session.QueueAdapter;
     using Microsoft.Telepathy.Session.QueueAdapter.Module;
-
-    using TelepathyCommon.HpcContext;
 
     /// <summary>
     /// Remoting entry for broker

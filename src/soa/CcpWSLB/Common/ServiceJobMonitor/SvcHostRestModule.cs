@@ -10,12 +10,12 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
     using System.Threading.Tasks;
 
     using Microsoft.Telepathy.CcpServiceHost.Rest;
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Common.ServiceRegistrationStore;
     using Microsoft.Telepathy.ServiceBroker.BackEnd;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Data;
     using Microsoft.Telepathy.Session.Interface;
-
-    using TelepathyCommon;
 
     /// <summary>
     /// Controls service host using its management rest service when

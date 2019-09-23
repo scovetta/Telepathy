@@ -15,6 +15,10 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
 
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions.RegistryExtension;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Telepathy.ServiceBroker;
     using Microsoft.Telepathy.ServiceBroker.Common;
@@ -24,11 +28,6 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Interface;
     using Microsoft.Telepathy.Session.Internal;
-
-    using TelepathyCommon;
-    using TelepathyCommon.HpcContext;
-    using TelepathyCommon.HpcContext.Extensions;
-    using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
 
     /// <summary>
     /// Helper class for operation to scheduler

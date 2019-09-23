@@ -9,13 +9,12 @@ namespace Microsoft.Telepathy.Session
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions;
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Interface;
     using Microsoft.Telepathy.Session.Internal;
     using Microsoft.Telepathy.Session.Internal.SessionFactory;
-
-    using TelepathyCommon.HpcContext;
-    using TelepathyCommon.HpcContext.Extensions;
 
     // TODO: remove the "V3" prefix
 

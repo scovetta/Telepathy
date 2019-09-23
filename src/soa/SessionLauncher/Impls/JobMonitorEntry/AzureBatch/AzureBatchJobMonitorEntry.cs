@@ -12,13 +12,12 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
     using System.Threading.Tasks;
 
     using Microsoft.Azure.Batch;
+    using Microsoft.Telepathy.Common;
     using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.AzureBatch;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Interface;
-
-    using TelepathyCommon;
 
     using JobState = Microsoft.Azure.Batch.Common.JobState;
 

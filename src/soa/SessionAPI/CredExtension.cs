@@ -13,12 +13,11 @@ namespace Microsoft.Telepathy.Session
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Microsoft.Telepathy.Common.Registry;
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions.RegistryExtension;
     using Microsoft.Telepathy.Session.Common;
-
-    using TelepathyCommon.HpcContext;
-    using TelepathyCommon.HpcContext.Extensions;
-    using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
-    using TelepathyCommon.Registry;
 
     /// <summary>
     /// WCF credential extensions

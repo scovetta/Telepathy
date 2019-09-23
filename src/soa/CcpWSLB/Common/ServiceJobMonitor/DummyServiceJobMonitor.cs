@@ -6,12 +6,11 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Microsoft.Telepathy.Common.TelepathyContext;
     using Microsoft.Telepathy.ServiceBroker.BackEnd;
     using Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Interface;
-
-    using TelepathyCommon.HpcContext;
 
     class DummyServiceJobMonitor : ServiceJobMonitorBase
     {

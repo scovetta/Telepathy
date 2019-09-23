@@ -15,6 +15,8 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
 
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Common.TelepathyContext;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Telepathy.ServiceBroker;
     using Microsoft.Telepathy.ServiceBroker.Common;
@@ -24,9 +26,6 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Interface;
     using Microsoft.Telepathy.Session.Internal;
-
-    using TelepathyCommon;
-    using TelepathyCommon.HpcContext;
 
     /// <summary>
     /// Manager for all broker app domains

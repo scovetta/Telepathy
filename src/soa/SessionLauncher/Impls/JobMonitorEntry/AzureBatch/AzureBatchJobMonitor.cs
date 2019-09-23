@@ -20,7 +20,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Interface;
 
-    using TelepathyConstants = TelepathyCommon.TelepathyConstants;
+    using TelepathyConstants = Microsoft.Telepathy.Common.TelepathyConstants;
 
     internal class AzureBatchJobMonitor : IDisposable
     {

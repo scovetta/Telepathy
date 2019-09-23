@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace TelepathyCommon.HpcContext
+namespace Microsoft.Telepathy.Common.TelepathyContext
 {
     using System.Threading;
 
-    using TelepathyCommon.Registry;
+    using Microsoft.Telepathy.Common.Registry;
 
     public interface ITelepathyContext
     {

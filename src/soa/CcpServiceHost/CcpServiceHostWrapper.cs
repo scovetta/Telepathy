@@ -14,14 +14,13 @@ namespace Microsoft.Telepathy.CcpServiceHost
     using System.ServiceModel.Description;
     using System.Threading;
 
+    using Microsoft.Telepathy.Common;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Configuration;
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Interface;
     using Microsoft.Telepathy.Session.Internal;
-
-    using TelepathyCommon;
 
     using RuntimeTraceHelper = Microsoft.Telepathy.RuntimeTrace.TraceHelper;
 

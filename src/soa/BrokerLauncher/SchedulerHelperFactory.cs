@@ -3,7 +3,7 @@
 
 namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
-    using TelepathyCommon.HpcContext;
+    using Microsoft.Telepathy.Common.TelepathyContext;
 
     internal static class SchedulerHelperFactory
     {

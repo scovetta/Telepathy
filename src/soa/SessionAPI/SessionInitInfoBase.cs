@@ -6,10 +6,10 @@ namespace Microsoft.Telepathy.Session
     using System;
     using System.Threading.Tasks;
 
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Common.TelepathyContext;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Interface;
-
-    using TelepathyCommon.HpcContext;
 
     /// <summary>
     /// Base class implements <see cref="IConnectionInfo"/>
@@ -82,7 +82,7 @@ namespace Microsoft.Telepathy.Session
             if (string.IsNullOrEmpty(headnode))
             {
                 // retrieve the head node name from the %ccp_scheduler% environment if it is empty
-                headnode = Environment.GetEnvironmentVariable(TelepathyCommon.TelepathyConstants.SchedulerEnvironmentVariableName);
+                headnode = Environment.GetEnvironmentVariable(TelepathyConstants.SchedulerEnvironmentVariableName);
                 if (string.IsNullOrEmpty(headnode))
                 {
                     throw new ArgumentNullException(SR.HeadnodeCantBeNull);

@@ -9,13 +9,12 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
     using System.ServiceModel.Configuration;
     using System.Text;
 
+    using Microsoft.Telepathy.Common;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Configuration;
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Interface;
-
-    using TelepathyCommon;
 
     /// <summary>
     /// Helper class to load the configuration
