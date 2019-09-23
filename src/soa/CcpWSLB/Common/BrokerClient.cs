@@ -12,7 +12,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
     using System.ServiceModel.Channels;
     using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor;
     using Microsoft.Telepathy.ServiceBroker.FrontEnd;

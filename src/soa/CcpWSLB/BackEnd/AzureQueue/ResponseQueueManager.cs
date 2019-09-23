@@ -12,7 +12,6 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.AzureQueue
     using System.Threading.Tasks;
     using System.Xml;
 
-    using Microsoft.Hpc.BrokerBurst;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Internal;
     using Microsoft.WindowsAzure.Storage;

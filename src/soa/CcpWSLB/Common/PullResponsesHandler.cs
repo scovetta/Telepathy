@@ -12,7 +12,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
     using System.Xml;
     using System.Xml.XPath;
 
-    using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.FrontEnd;
     using Microsoft.Telepathy.Session.Exceptions;

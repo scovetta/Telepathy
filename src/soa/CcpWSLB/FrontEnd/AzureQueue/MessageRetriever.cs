@@ -8,7 +8,6 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd.AzureQueue
     using System.Linq;
     using System.Threading;
 
-    using Microsoft.Hpc.BrokerBurst;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Internal;

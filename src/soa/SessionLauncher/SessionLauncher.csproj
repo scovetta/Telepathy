@@ -167,10 +167,6 @@
       <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>
       <Name>Session</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SoaCommonUtility\SoaCommonUtility.csproj">
-      <Project>{bf0b4020-9934-466c-af35-9f97b4cf18ac}</Project>
-      <Name>SoaCommonUtility</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

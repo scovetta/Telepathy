@@ -8,7 +8,6 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
     using System.ServiceModel;
     using System.ServiceModel.Channels;
 
-    using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.Session.Exceptions;

@@ -8,7 +8,6 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd.AzureQueue
     using System.ServiceModel.Channels;
     using System.Xml;
 
-    using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.Session.Internal;
     using Microsoft.Telepathy.Session.Internal.AzureQueue;

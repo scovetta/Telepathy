@@ -8,7 +8,6 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
     using System.ServiceModel.Channels;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.WindowsAzure.Storage;

@@ -12,7 +12,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
     using System.Threading.Tasks;
     using System.Xml;
 
-    using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Telepathy.ServiceBroker.BackEnd;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor;
@@ -23,10 +22,9 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
     using Microsoft.Telepathy.Session.Configuration;
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
     using Microsoft.Telepathy.Session.QueueAdapter;
     using Microsoft.Telepathy.Session.QueueAdapter.Module;
-
-    using SoaAmbientConfig;
 
     using TelepathyCommon.HpcContext;
 

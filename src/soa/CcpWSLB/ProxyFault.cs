@@ -6,7 +6,6 @@ namespace Microsoft.Telepathy.ServiceBroker
     using System;
     using System.Runtime.Serialization;
 
-    using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Telepathy.Session.Exceptions;
 
     /// <summary>

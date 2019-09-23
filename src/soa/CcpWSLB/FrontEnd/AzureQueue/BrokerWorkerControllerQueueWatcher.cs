@@ -6,7 +6,6 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd.AzureQueue
     using System.Diagnostics;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Telepathy.Session.Interface;
     using Microsoft.Telepathy.Session.QueueAdapter;
     using Microsoft.Telepathy.Session.QueueAdapter.DTO;

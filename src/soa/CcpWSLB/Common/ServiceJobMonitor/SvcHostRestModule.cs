@@ -10,7 +10,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.RESTServiceModel;
-    using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Telepathy.ServiceBroker.BackEnd;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Data;
