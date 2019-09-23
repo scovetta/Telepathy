@@ -30,7 +30,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
     using TelepathyCommon;
     using TelepathyCommon.Telepathy;
 
-    using JobState = Microsoft.Hpc.Scheduler.Session.Data.JobState;
+    using JobState = Microsoft.Telepathy.Session.Data.JobState;
 
     internal class AzureBatchSessionLauncher : SessionLauncher
     {

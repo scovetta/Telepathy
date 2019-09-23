@@ -13,8 +13,8 @@ namespace Microsoft.Telepathy.Session.Internal.SessionFactory
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Data;
     using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Data;
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Interface;
 

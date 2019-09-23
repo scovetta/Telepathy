@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-
-namespace Microsoft.Hpc.Scheduler.Session.Data
+namespace Microsoft.Telepathy.Session.Data
 {
-        #region For The Node State event: Its event arg, interface and handler
+    using System;
+
+    #region For The Node State event: Its event arg, interface and handler
         /// <summary>
         ///   <para>Defines the parameters that are passed to the 
         /// <see cref="Microsoft.Hpc.Scheduler.NodeStateHandler" /> event handler when the state of a node changes.</para>
@@ -67,9 +67,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Data
 
             internal NodeStateEventArg(int nodeId, NodeState newState, NodeState previousState)
             {
-                _nodeId = nodeId;
-                _newState = newState;
-                _previousState = previousState;
+                this._nodeId = nodeId;
+                this._newState = newState;
+                this._previousState = previousState;
 
             }
 
@@ -83,7 +83,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Data
             /// </value>
             public int NodeId
             {
-                get { return _nodeId; }
+                get { return this._nodeId; }
             }
 
             /// <summary>
@@ -94,7 +94,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Data
             /// </value>
             public NodeState NewState
             {
-                get { return _newState; }
+                get { return this._newState; }
             }
 
             /// <summary>
@@ -105,7 +105,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Data
             /// </value>
             public NodeState PreviousState
             {
-                get { return _previousState; }
+                get { return this._previousState; }
             }
 
             #endregion
@@ -199,8 +199,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Data
 
             internal NodeReachableEventArg(int nodeId, bool reachability)
             {
-                _nodeId = nodeId;
-                _reachable = reachability;
+                this._nodeId = nodeId;
+                this._reachable = reachability;
             }
 
             #region INodeReachableEventArg Members
@@ -213,7 +213,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Data
             /// </value>
             public int NodeId
             {
-                get { return _nodeId; }
+                get { return this._nodeId; }
             }
 
             /// <summary>
@@ -224,7 +224,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Data
             /// </value>
             public bool Reachable
             {
-                get { return _reachable; }
+                get { return this._reachable; }
             }
 
             #endregion

@@ -6,7 +6,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Data;
+    using Microsoft.Telepathy.Session.Data;
     using Microsoft.Telepathy.Session.Interface;
 
     public class TraceOnlyServiceJobMonitor : ISchedulerNotify

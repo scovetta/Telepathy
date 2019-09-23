@@ -6,6 +6,8 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
     using System;
     using System.ServiceModel;
 
+    using Microsoft.Telepathy.Session.Data;
+
     /// <summary>
     /// Stores the info of a dispatcher
     /// </summary>
@@ -34,7 +36,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
         /// <summary>
         /// Allocated node location, OnPremise or Azure.
         /// </summary>
-        private Hpc.Scheduler.Session.Data.NodeLocation nodeLocation;
+        private NodeLocation nodeLocation;
 
         /// <summary>
         /// Stores the time when the task is started.
@@ -57,7 +59,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
         /// <param name="uniqueId">indicating the unique id of this dispatcher</param>
         /// <param name="capacity">indicating the capacity of this dispatcher</param>
         /// <param name="machineName">indicating the machine name</param>
-        protected DispatcherInfo(string uniqueId, int capacity, string machineName, string machineVirtualName, Hpc.Scheduler.Session.Data.NodeLocation location)
+        protected DispatcherInfo(string uniqueId, int capacity, string machineName, string machineVirtualName, NodeLocation location)
         {
             this.uniqueId = uniqueId;
             this.capacity = capacity;
@@ -129,7 +131,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
         /// <summary>
         /// Location of the allocated node, on-premise or Azure.
         /// </summary>
-        public Microsoft.Hpc.Scheduler.Session.Data.NodeLocation AllocatedNodeLocation
+        public NodeLocation AllocatedNodeLocation
         {
             get { return this.nodeLocation; }
             set { this.nodeLocation = value; }

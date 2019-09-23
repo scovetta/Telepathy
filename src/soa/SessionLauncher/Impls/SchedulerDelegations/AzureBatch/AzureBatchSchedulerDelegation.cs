@@ -19,6 +19,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Schedul
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Internal;
 
+    using JobState = Microsoft.Telepathy.Session.Data.JobState;
+
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple, IncludeExceptionDetailInFaults = true, MaxItemsInObjectGraph = int.MaxValue)]
     internal class AzureBatchSchedulerDelegation : ISchedulerAdapter
     {
@@ -98,7 +100,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Schedul
         /// <param name="jobid">indicating the job id</param>
         /// <param name="autoMax">indicating the auto max property of the job</param>
         /// <param name="autoMin">indicating the auto min property of the job</param>
-        public async Task<(Data.JobState jobState, int autoMax, int autoMin)> RegisterJobAsync(string jobid)
+        public async Task<(JobState jobState, int autoMax, int autoMin)> RegisterJobAsync(string jobid)
         {
             Trace.TraceInformation($"[AzureBatchSchedulerDelegation] Begin: RegisterJob, job id is {jobid}...");
             //CheckBrokerAccess(jobid);
@@ -182,11 +184,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Schedul
             Debug.Assert(entry != null, "[AzureBatchSchedulerDelegation] Sender should be an instance of JobMonitorEntry class.");
 
             // if a JobMonitorEntry is exited because of job state changed into Finished/Canceled/Failed
-            if (entry.CurrentState == Data.JobState.Finished)
+            if (entry.CurrentState == JobState.Finished)
             {
                 NotifyJobFinished(entry.CloudJob);
             }
-            else if (entry.CurrentState == Data.JobState.Failed || entry.CurrentState == Data.JobState.Canceled)
+            else if (entry.CurrentState == JobState.Failed || entry.CurrentState == JobState.Canceled)
             {
                 NotifyJobFailedOrCanceled(entry.CloudJob);
             }

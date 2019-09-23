@@ -13,6 +13,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Telepathy.ServiceBroker.BackEnd;
     using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Data;
     using Microsoft.Telepathy.Session.Interface;
 
     using TelepathyCommon;
@@ -140,9 +141,9 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
             ti.Id = (TaskIdStart + num).ToString();
             ti.Capacity = 1;
             ti.FirstCoreIndex = 3;
-            ti.Location = Hpc.Scheduler.Session.Data.NodeLocation.OnPremise;
+            ti.Location = NodeLocation.OnPremise;
             ti.MachineName = ipAddress;
-            ti.State = Hpc.Scheduler.Session.Data.TaskState.Dispatching;
+            ti.State = TaskState.Dispatching;
             string fileName = SoaRegistrationAuxModule.GetRegistrationFileName(svcName, svcVersion);
             // HTTP POST
             var serviceInfo = new ServiceInfo(sessionId, ti.Id, ti.FirstCoreIndex, regPath + "\\", fileName, environment, dependFilesInfo);

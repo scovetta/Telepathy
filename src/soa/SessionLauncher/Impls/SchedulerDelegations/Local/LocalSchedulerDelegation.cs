@@ -8,9 +8,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Schedul
     using System.ServiceModel;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Data;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Local;
     using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Data;
     using Microsoft.Telepathy.Session.Internal;
 
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple, IncludeExceptionDetailInFaults = true, MaxItemsInObjectGraph = int.MaxValue)]

@@ -23,6 +23,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
     using Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Data;
     using Microsoft.Telepathy.Session.Exceptions;
 
     using SoaAmbientConfig;
@@ -568,11 +569,11 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
             try
             {
                 BrokerTracing.TraceInfo("[DispatcherManager] Create new dispatcher: {0}", dispatcherInfo.AllocatedNodeLocation);
-                if (dispatcherInfo.AllocatedNodeLocation == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.OnPremise
-                    || dispatcherInfo.AllocatedNodeLocation == Hpc.Scheduler.Session.Data.NodeLocation.Linux
-                    || dispatcherInfo.AllocatedNodeLocation == Hpc.Scheduler.Session.Data.NodeLocation.AzureEmbedded
-                    || dispatcherInfo.AllocatedNodeLocation == Hpc.Scheduler.Session.Data.NodeLocation.AzureEmbeddedVM
-                    || dispatcherInfo.AllocatedNodeLocation == Hpc.Scheduler.Session.Data.NodeLocation.NonDomainJoined)
+                if (dispatcherInfo.AllocatedNodeLocation == NodeLocation.OnPremise
+                    || dispatcherInfo.AllocatedNodeLocation == NodeLocation.Linux
+                    || dispatcherInfo.AllocatedNodeLocation == NodeLocation.AzureEmbedded
+                    || dispatcherInfo.AllocatedNodeLocation == NodeLocation.AzureEmbeddedVM
+                    || dispatcherInfo.AllocatedNodeLocation == NodeLocation.NonDomainJoined)
                 {
                     // check if using backend-security (for java soa only)
                     if (dispatcherInfo is WssDispatcherInfo)

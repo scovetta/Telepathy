@@ -7,7 +7,7 @@ namespace Microsoft.Telepathy.Session
     using System.Linq;
     using System.Runtime.Serialization;
 
-    using Microsoft.Hpc.Scheduler.Session.Data;
+    using Microsoft.Telepathy.Session.Data;
 
     [DataContract]
     public class BalanceInfo

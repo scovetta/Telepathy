@@ -42,7 +42,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
         /// <summary>
         /// Stores the previous state
         /// </summary>
-        private Data.JobState currentState;
+        private Telepathy.Session.Data.JobState currentState;
 
         /// <summary>
         /// Stores the min units of resource
@@ -102,7 +102,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
         /// <summary>
         /// Gets the previous state
         /// </summary>
-        public Data.JobState CurrentState
+        public Telepathy.Session.Data.JobState CurrentState
         {
             get { return currentState; }
         }
@@ -157,7 +157,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
         public async Task<CloudJob> StartAsync(System.ServiceModel.OperationContext context)
         {
             TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitorEntry] Start monitor Entry.");
-            this.currentState = Data.JobState.Queued;
+            this.currentState = Telepathy.Session.Data.JobState.Queued;
             this.context = context.GetCallbackChannel<ISchedulerNotify>();
             this.cloudJob = await batchClient.JobOperations.GetJobAsync(AzureBatchSessionJobIdConverter.ConvertToAzureBatchJobId(this.sessionid));
 
@@ -229,7 +229,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
         /// <summary>
         /// Callback when Azure Batch Monitor report jon state
         /// </summary>
-        private async void JobMonitor_OnReportJobState(Data.JobState state, List<TaskInfo> stateChangedTaskList)
+        private async void JobMonitor_OnReportJobState(Telepathy.Session.Data.JobState state, List<TaskInfo> stateChangedTaskList)
         {
             if (state != this.currentState)
             {

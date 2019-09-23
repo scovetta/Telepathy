@@ -7,8 +7,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
     using System.Collections.Generic;
 
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Data;
     using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Data;
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Interface;
 

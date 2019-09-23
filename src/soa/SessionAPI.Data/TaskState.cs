@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Data
+namespace Microsoft.Telepathy.Session.Data
 {
     // Important!: this class is only intended to be used in session API and subjected to change
     // TODO: Trim the enum down

@@ -65,7 +65,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
         /// <summary>
         /// Gets or sets the report state event
         /// </summary>
-        public Action<Data.JobState, List<TaskInfo>> ReportJobStateAction;
+        public Action<Telepathy.Session.Data.JobState, List<TaskInfo>> ReportJobStateAction;
 
         /// <summary>
         /// Stores the last change time
@@ -77,7 +77,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
         /// Initializes a new instance of the JobMonitorEntry class
         /// </summary>
         /// <param name="sessionid">indicating the session id</param>
-        public AzureBatchJobMonitor(string sessionid, Action<Data.JobState, List<TaskInfo>> reportJobStateAction)
+        public AzureBatchJobMonitor(string sessionid, Action<Telepathy.Session.Data.JobState, List<TaskInfo>> reportJobStateAction)
         {
             this.sessionid = sessionid;
             this.batchClient = AzureBatchConfiguration.GetBatchClient();

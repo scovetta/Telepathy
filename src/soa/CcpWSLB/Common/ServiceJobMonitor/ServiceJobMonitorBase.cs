@@ -14,7 +14,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Data;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
     using Microsoft.Telepathy.ServiceBroker.BackEnd;
@@ -22,6 +21,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
     using Microsoft.Telepathy.ServiceBroker.Common.ThreadHelper;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Data;
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Interface;
     using Microsoft.Telepathy.Session.Internal;
@@ -1336,13 +1336,13 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
             BrokerTracing.TraceVerbose("[ServiceJobMonitor] Begin: RegisterJob");
 
             int autoMax, autoMin;
-            Microsoft.Hpc.Scheduler.Session.Data.JobState jobState;
+            JobState jobState;
             try
             {
                 //lock (this.lockClient)
                 //{
                 RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
-                (jobState, autoMax, autoMin) = await RetryHelper<(Hpc.Scheduler.Session.Data.JobState, int, int)>.InvokeOperationAsync(
+                (jobState, autoMax, autoMin) = await RetryHelper<(JobState, int, int)>.InvokeOperationAsync(
                         async () => await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).RegisterJobAsync(this.sharedData.BrokerInfo.SessionId),
                         async (e, r) => await Task.FromResult<object>(new Func<object>(() => { BrokerTracing.TraceEvent(System.Diagnostics.TraceEventType.Error, 0, "[ServiceJobMonitor] SessionFault throws when registering job: {0} with retry {1}", e, r.RetryCount); return null; }).Invoke()),
                         retry);
@@ -1379,7 +1379,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
             }
 
             BrokerTracing.TraceVerbose("[ServiceJobMonitor] Current job state is {0}", jobState);
-            if (jobState == Hpc.Scheduler.Session.Data.JobState.Finished || jobState == Hpc.Scheduler.Session.Data.JobState.Finishing || jobState == Hpc.Scheduler.Session.Data.JobState.Failed)
+            if (jobState == JobState.Finished || jobState == JobState.Finishing || jobState == JobState.Failed)
             {
                 // Bug 14543: If the job is already in the above state (suppose it should never go back to
                 // Running without user iteraction), set ServiceJobState to Finished as it should not allow
@@ -1428,7 +1428,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
             }
         }
 
-        Task ISchedulerNotify.JobStateChanged(Microsoft.Hpc.Scheduler.Session.Data.JobState jobState)
+        Task ISchedulerNotify.JobStateChanged(JobState jobState)
         {
             return this.JobStateChangedInternal(jobState);
         }
@@ -1518,7 +1518,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
 
                     foreach (TaskInfo info in taskInfoList)
                     {
-                        if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Running || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Dispatching)
+                        if (info.State == TaskState.Running || info.State == TaskState.Dispatching)
                         {
                             if (this.IsRemovedDispatcher(info.Id))
                             {
@@ -1528,8 +1528,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
                             {
                                 ServiceTaskDispatcherInfo serviceTaskDispatcherInfo = null;
 
-                                if (info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.OnPremise || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.Linux
-                                                                                                                 || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.NonDomainJoined)
+                                if (info.Location == NodeLocation.OnPremise || info.Location == NodeLocation.Linux
+                                                                                                                 || info.Location == NodeLocation.NonDomainJoined)
                                 {
                                     //
                                     // the node is on-premise or Linux node
@@ -1582,14 +1582,14 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
                                             this.dispatcherManager.BackEndIsHttp);
                                     }
                                 }
-                                else if (info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.AzureEmbedded
-                                         || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.AzureEmbeddedVM)
+                                else if (info.Location == NodeLocation.AzureEmbedded
+                                         || info.Location == NodeLocation.AzureEmbeddedVM)
                                 {
                                     //
                                     // the cluster is on Azure
                                     //
 
-                                    if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Running)
+                                    if (info.State == TaskState.Running)
                                     {
                                         lock (this.lockRemoteBlacklistCopy)
                                         {
@@ -1629,13 +1629,13 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
                                             info.State);
                                     }
                                 }
-                                else if (info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.Azure || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.AzureVM)
+                                else if (info.Location == NodeLocation.Azure || info.Location == NodeLocation.AzureVM)
                                 {
                                     //
                                     // burst mode (the node is on Azure)
                                     //
 
-                                    if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Running)
+                                    if (info.State == TaskState.Running)
                                     {
                                         lock (this.lockRemoteBlacklistCopy)
                                         {
@@ -1685,9 +1685,9 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
                                 BrokerTracing.TraceInfo("[ServiceJobMonitor] Dispatcher {0} is already created. Task state {1}.", info.Id, info.State);
                             }
                         }
-                        else if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Canceled || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Failed
-                                                                                                       || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Finished
-                                                                                                       || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Finishing)
+                        else if (info.State == TaskState.Canceled || info.State == TaskState.Failed
+                                                                                                       || info.State == TaskState.Finished
+                                                                                                       || info.State == TaskState.Finishing)
                         {
                             // remove (info.State == TaskState.Canceling) from the condition above.
                             // when preemption happens to the task, it is in cancelling state. Should not remove the dispather,

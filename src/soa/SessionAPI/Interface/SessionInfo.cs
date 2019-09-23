@@ -5,7 +5,7 @@ namespace Microsoft.Telepathy.Session.Interface
 {
     using System;
 
-    using Microsoft.Hpc.Scheduler.Session.Data;
+    using Microsoft.Telepathy.Session.Data;
     using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>

@@ -5,6 +5,8 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 {
     using System.ServiceModel;
 
+    using Microsoft.Telepathy.Session.Data;
+
     /// <summary>
     /// Dispatcher info contains only epr
     /// </summary>
@@ -16,7 +18,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
         private string epr;
 
         public EprDispatcherInfo(string epr, int capacity, string unqiueId)
-            : base(unqiueId, capacity, null, null, Hpc.Scheduler.Session.Data.NodeLocation.OnPremise)
+            : base(unqiueId, capacity, null, null, NodeLocation.OnPremise)
         {
             this.epr = epr;
 

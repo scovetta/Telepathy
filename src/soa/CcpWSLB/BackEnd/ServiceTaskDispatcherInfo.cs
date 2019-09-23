@@ -10,6 +10,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Data;
     using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
@@ -53,7 +54,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
         /// <param name="networkPrefix">indicating the network prefix</param>
         /// <param name="isHttp">indicating whether the service task is opening an HTTP service host</param>
         public ServiceTaskDispatcherInfo(string jobId, string taskId, int capacity, string machineName, int firstCoreId, string networkPrefix, bool isHttp)
-            : this(jobId, taskId, capacity, machineName, null, firstCoreId, networkPrefix, Hpc.Scheduler.Session.Data.NodeLocation.OnPremise, isHttp)
+            : this(jobId, taskId, capacity, machineName, null, firstCoreId, networkPrefix, NodeLocation.OnPremise, isHttp)
         {
         }
 
@@ -69,7 +70,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
         /// <param name="networkPrefix">indicating the network prefix</param>
         /// <param name="isHttp">indicating whether the service task is opening an HTTP service host</param>
         public ServiceTaskDispatcherInfo(string jobId, string taskId, int capacity, string machineName, string machineVirtualName, int firstCoreId, string networkPrefix, bool isHttp)
-            : this(jobId, taskId, capacity, machineName, machineVirtualName, firstCoreId, networkPrefix, Hpc.Scheduler.Session.Data.NodeLocation.OnPremise, isHttp)
+            : this(jobId, taskId, capacity, machineName, machineVirtualName, firstCoreId, networkPrefix, NodeLocation.OnPremise, isHttp)
         {
         }
 
@@ -85,7 +86,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
         /// <param name="networkPrefix">indicating the network prefix</param>
         /// <param name="location">indicating target resource location, OnPremise or Azure</param>
         /// <param name="isHttp">indicating whether the service task is opening an HTTP service host</param>
-        public ServiceTaskDispatcherInfo(string jobId, string taskId, int capacity, string machineName, string machineVirtualName, int firstCoreId, string networkPrefix, Hpc.Scheduler.Session.Data.NodeLocation location, bool isHttp)
+        public ServiceTaskDispatcherInfo(string jobId, string taskId, int capacity, string machineName, string machineVirtualName, int firstCoreId, string networkPrefix, NodeLocation location, bool isHttp)
             : base(taskId, capacity, machineName, machineVirtualName, location)
         {
             this.jobId = jobId;
