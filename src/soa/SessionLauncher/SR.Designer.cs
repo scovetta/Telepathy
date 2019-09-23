@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher {
+namespace Microsoft.Telepathy.Internal.SessionLauncher {
     using System;
     
     
@@ -19,7 +19,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class SR {
@@ -39,7 +39,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.SR", typeof(SR).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.Telepathy.Internal.SessionLauncher.SR", typeof(SR).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

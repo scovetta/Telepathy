@@ -1,11 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
+namespace Microsoft.Telepathy.Internal.SessionLauncher
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Runtime.InteropServices;
     using System.Text;
 

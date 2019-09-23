@@ -1,15 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.Azure.Batch.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch
+namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.DataMapping.AzureBatch
 {
+    using System.Collections.Generic;
+
+    using Microsoft.Azure.Batch.Common;
+
     public static class TaskStateConverter
     {
         public static Telepathy.Session.Data.TaskState FromAzureBatchTaskState(TaskState state)

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Local
+namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Local
 {
     internal static class LocalSessionConfiguration
     {

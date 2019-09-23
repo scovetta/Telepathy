@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
+namespace Microsoft.Telepathy.Internal.SessionLauncher
 {
     using System;
     using System.Collections.Generic;
@@ -12,11 +12,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
 
     using CommandLine;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher;
-    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls;
-    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch;
-    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Local;
     using Microsoft.Hpc.Scheduler.Session.LauncherHostService;
+    using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers;
+    using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.AzureBatch;
+    using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Local;
     using Microsoft.Telepathy.RuntimeTrace;
 
     using Newtonsoft.Json;

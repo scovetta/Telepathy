@@ -1,11 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
+namespace Microsoft.Telepathy.Internal.SessionLauncher
 {
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-
     using System;
     using System.Collections.Generic;
     using System.Configuration;
@@ -17,7 +14,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Common;
@@ -218,11 +214,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             {
                 get
                 {
-                    return SessionIds[i];
+                    return this.SessionIds[i];
                 }
                 set
                 {
-                    SessionIds[i] = value;
+                    this.SessionIds[i] = value;
                 }
             }
 
@@ -232,11 +228,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             {
                 get
                 {
-                    return index;
+                    return this.index;
                 }
                 set
                 {
-                    index = value;
+                    this.index = value;
                 }
             }
 
@@ -246,11 +242,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             {
                 get
                 {
-                    return preparing;
+                    return this.preparing;
                 }
                 set
                 {
-                    preparing = value;
+                    this.preparing = value;
                 }
             }
 
@@ -258,7 +254,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             {
                 get
                 {
-                    return SessionIds.Count;
+                    return this.SessionIds.Count;
                 }
             }
 
@@ -268,11 +264,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             {
                 get
                 {
-                    return sessionIds;
+                    return this.sessionIds;
                 }
                 set
                 {
-                    sessionIds = value;
+                    this.sessionIds = value;
                 }
             }
 
@@ -282,20 +278,20 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
             {
                 get
                 {
-                    return poolChangeEvent;
+                    return this.poolChangeEvent;
                 }
                 set
                 {
-                    poolChangeEvent = value;
+                    this.poolChangeEvent = value;
                 }
             }
 
             public void RemoveAt(int i)
             {
-                SessionIds.RemoveAt(i);
-                if (Index > i)
+                this.SessionIds.RemoveAt(i);
+                if (this.Index > i)
                 {
-                    Index--;
+                    this.Index--;
                 }
             }
         }

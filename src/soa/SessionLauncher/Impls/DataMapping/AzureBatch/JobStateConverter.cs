@@ -1,13 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Azure.Batch;
-using Microsoft.Azure.Batch.Common;
-
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch
+namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.DataMapping.AzureBatch
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
+    using Microsoft.Azure.Batch;
+    using Microsoft.Azure.Batch.Common;
+    using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.AzureBatch;
+
     public static class AzureBatchJobStateConverter
     {
         public async static Task<Telepathy.Session.Data.JobState> FromAzureBatchJobAsync(CloudJob job)

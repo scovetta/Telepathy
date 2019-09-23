@@ -1,21 +1,20 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.Azure.Batch;
-using Microsoft.Azure.Batch.Common;
-
-using System;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using TelepathyCommon;
-
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch
+namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.AzureBatch
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data.SqlTypes;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    using Microsoft.Azure.Batch;
+    using Microsoft.Azure.Batch.Common;
+    using Microsoft.Telepathy.Internal.SessionLauncher.Impls.DataMapping.AzureBatch;
+    using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.AzureBatch;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Exceptions;
@@ -91,7 +90,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
         public async Task StartAsync()
         {
             TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Start Azure Batch job monitor.");
-            this.cloudJob = await batchClient.JobOperations.GetJobAsync(AzureBatchSessionJobIdConverter.ConvertToAzureBatchJobId(this.sessionid));
+            this.cloudJob = await this.batchClient.JobOperations.GetJobAsync(AzureBatchSessionJobIdConverter.ConvertToAzureBatchJobId(this.sessionid));
             if (this.cloudJob.State == JobState.Disabled)
             {
                 ThrowHelper.ThrowSessionFault(SOAFaultCode.Session_ValidateJobFailed_JobCanceled, SR.SessionLauncher_ValidateJobFailed_JobCanceled, this.sessionid.ToString());
@@ -114,9 +113,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
         {
             TraceHelper.TraceEvent(this.sessionid, TraceEventType.Verbose, "[AzureBatchJobMonitorEntry] Enters QueryTaskInfo method.");
             bool shouldExit = false;
-            pullJobGap = PullJobMinGap;
+            this.pullJobGap = PullJobMinGap;
             JobState state = JobState.Active;
-            var pool = batchClient.PoolOperations.GetPool(AzureBatchConfiguration.BatchPoolName);
+            var pool = this.batchClient.PoolOperations.GetPool(AzureBatchConfiguration.BatchPoolName);
             ODATADetailLevel detailLevel = new ODATADetailLevel();
             detailLevel.SelectClause = "affinityId, ipAddress";
             var nodes = await pool.ListComputeNodes(detailLevel).ToListAsync();
@@ -126,14 +125,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                 {
                     TraceHelper.TraceEvent(this.sessionid, TraceEventType.Verbose, "[AzureBatchJobMonitor] Starting get job state.");
                     ODATADetailLevel detail = new ODATADetailLevel(selectClause: "state");
-                    this.cloudJob = await batchClient.JobOperations.GetJobAsync(this.cloudJob.Id);
+                    this.cloudJob = await this.batchClient.JobOperations.GetJobAsync(this.cloudJob.Id);
                     state = this.cloudJob.State.HasValue ? this.cloudJob.State.Value : state;
 
                     List<TaskInfo> stateChangedTaskList = await this.GetTaskStateChangeAsync(nodes);
 
                     if (this.ReportJobStateAction != null)
                     {
-                        ReportJobStateAction(await AzureBatchJobStateConverter.FromAzureBatchJobAsync(this.cloudJob), stateChangedTaskList);
+                        this.ReportJobStateAction(await AzureBatchJobStateConverter.FromAzureBatchJobAsync(this.cloudJob), stateChangedTaskList);
                     }
 
                     if (state == JobState.Completed || state == JobState.Disabled || state == JobState.Terminating || state == JobState.Disabling || state == JobState.Deleting)
@@ -188,7 +187,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                 TraceHelper.TraceEvent(this.sessionid, TraceEventType.Verbose, "[AzureBatchgJobMonitorEntry] Query task info...");
                 ODATADetailLevel detail = new ODATADetailLevel(filterClause: $"(stateTransitionTime ge datetime'{this.lastChangeTime:O}')", selectClause: "id,nodeInfo,state,stateTransitionTime");
                 TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitorEntry] filter clause = {0}\n", detail.FilterClause);
-                List<CloudTask> stateChangedTasks = await batchClient.JobOperations.ListTasks(this.cloudJob.Id, detail).ToListAsync();
+                List<CloudTask> stateChangedTasks = await this.batchClient.JobOperations.ListTasks(this.cloudJob.Id, detail).ToListAsync();
                 if (stateChangedTasks.Count == 0)
                 {
                     // no service task dispathed yet.
