@@ -15,7 +15,6 @@ namespace TestClient
     using System.Text;
     using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Internal;
 

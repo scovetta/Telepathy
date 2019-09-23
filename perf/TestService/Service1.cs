@@ -8,7 +8,6 @@ namespace TestService
     using System.Text;
     using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Telepathy.Session;
 
     // NOTE: If you change the class name "Service1" here, you must also update the reference to "Service1" in App.config.
