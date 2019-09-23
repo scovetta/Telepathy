@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal.AzureQueue
 {
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Common;
     using System;
     using System.Collections.Concurrent;
     using System.Linq;
     using System.ServiceModel.Channels;
     using System.Threading;
     using System.Xml;
+
+    using Microsoft.Telepathy.Session.Common;
 
     /// <summary>
     /// It sends response messages to response queue and delete request
@@ -332,7 +332,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                             SoaHelper.CreateTraceMessage(
                                 "MessageSender.Worker",
                                 "InternalBeginAddRequest",
-                                "Request queue length is {0}.", requestMessages.Count));
+                                "Request queue length is {0}.", this.requestMessages.Count));
 
                 try
                 {

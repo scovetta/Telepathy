@@ -1,11 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Interface
+namespace Microsoft.Telepathy.Session.Interface
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
     using System.Runtime.Serialization;
 
     /// <summary>

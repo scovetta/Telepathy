@@ -1,9 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using Microsoft.Hpc.ServiceBroker.BackEnd;
-
-namespace Microsoft.Hpc.ServiceBroker.UnitTest.Mock
+﻿namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Mock
 {
+    using System.Diagnostics;
+
+    using Microsoft.Telepathy.ServiceBroker.BackEnd.nettcp;
+
     internal class MockAzureDispatcher : MockDispatcher
     {
         private ProxyClientPool proxyClientPool;
@@ -13,7 +13,7 @@ namespace Microsoft.Hpc.ServiceBroker.UnitTest.Mock
             this.proxyClientPool = proxyClientPool;
         }
 
-        public override bool CleanupClient(IService client)
+        public override bool CleanupClient(BackEnd.IService client)
         {
             AzureServiceClient serviceClient = client as AzureServiceClient;
             Debug.Assert(serviceClient != null);

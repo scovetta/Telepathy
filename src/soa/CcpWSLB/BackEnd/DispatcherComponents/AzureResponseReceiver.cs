@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
 {
     using System;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using Microsoft.Hpc.BrokerProxy;
 
     /// <summary>
     /// This is a class for receiving response from Azure side service host.

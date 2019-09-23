@@ -1,14 +1,17 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
+namespace Microsoft.Telepathy.Internal.SessionLauncher
 {
     using System;
-    using System.ServiceModel;
-    using Microsoft.Hpc.Scheduler.Session;
-    using System.Threading.Tasks;
     using System.Collections.Generic;
-    
+    using System.ServiceModel;
+    using System.Threading.Tasks;
+
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+
     /// <summary>
     /// The interface for session Launcher
     /// </summary>

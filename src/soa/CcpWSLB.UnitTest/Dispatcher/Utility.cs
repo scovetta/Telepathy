@@ -1,7 +1,11 @@
-﻿namespace Microsoft.Hpc.ServiceBroker.UnitTest.Dispatcher
+﻿namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Dispatcher
 {
     using System.Reflection;
-    using Microsoft.Hpc.ServiceBroker.BackEnd;
+
+    using Microsoft.Telepathy.ServiceBroker.BackEnd;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd.AzureQueue;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd.nettcp;
 
     internal static class Utility
     {

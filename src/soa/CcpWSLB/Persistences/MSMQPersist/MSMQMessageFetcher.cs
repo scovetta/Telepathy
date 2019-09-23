@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
+namespace Microsoft.Telepathy.ServiceBroker.Persistences.MSMQPersist
 {
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
@@ -11,6 +10,9 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
     using System.Linq;
     using System.Messaging;
     using System.Threading;
+
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// A class that implements logic of peeking all messages from MSMQ queue.
@@ -580,7 +582,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
                         string[] labels = message.Label.Split(new char[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
                         string groupId = labels[0];
                         int msgNumber = int.Parse(labels[1]);
-                        ConcurrentDictionary<int, Message> messages = partialMessages.GetOrAdd(groupId, (k) => new ConcurrentDictionary<int, Message>());
+                        ConcurrentDictionary<int, Message> messages = this.partialMessages.GetOrAdd(groupId, (k) => new ConcurrentDictionary<int, Message>());
                         if (!messages.TryAdd(msgNumber, message))
                         {
                             BrokerTracing.TraceError(
@@ -588,7 +590,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
                         }
 
                         // check if all partial messages are peeked and cached
-                        if (partialMessageCounters.AddOrUpdate(groupId, 1, (k, v) => v + 1) == message.AppSpecific)
+                        if (this.partialMessageCounters.AddOrUpdate(groupId, 1, (k, v) => v + 1) == message.AppSpecific)
                         {
                             BrokerTracing.TraceVerbose(
                                "[MSMQMessageFetcher] .PeekMessageComplete: all partial messages are peeked and cached for group {0}.", groupId);
@@ -622,13 +624,13 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
                             }
 
                             messages.Clear();
-                            if (!partialMessages.TryRemove(groupId, out messages))
+                            if (!this.partialMessages.TryRemove(groupId, out messages))
                             {
                                 BrokerTracing.TraceWarning(
                                "[MSMQMessageFetcher] .PeekMessageComplete: try to remove partial messages with groupId {0} from cahce failed.", groupId);
                             }
                             int messageCount;
-                            if (!partialMessageCounters.TryRemove(groupId, out messageCount))
+                            if (!this.partialMessageCounters.TryRemove(groupId, out messageCount))
                             {
                                 BrokerTracing.TraceWarning(
                                "[MSMQMessageFetcher] .PeekMessageComplete: try to remove partial message counters with groupId {0} from cahce failed.", groupId);

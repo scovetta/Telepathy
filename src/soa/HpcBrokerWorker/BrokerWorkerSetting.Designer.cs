@@ -8,11 +8,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim {
+namespace Microsoft.Telepathy.Internal.BrokerShim {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.8.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.2.0.0")]
     internal sealed partial class BrokerWorkerSetting : global::System.Configuration.ApplicationSettingsBase {
         
         private static BrokerWorkerSetting defaultInstance = ((BrokerWorkerSetting)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new BrokerWorkerSetting())));

@@ -1,11 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.ComponentModel;
-
-namespace Microsoft.Hpc
+namespace Microsoft.Telepathy.CcpServiceHost
 {
+    using System;
+
     class ProductConstants
     {
         public class ProductNames

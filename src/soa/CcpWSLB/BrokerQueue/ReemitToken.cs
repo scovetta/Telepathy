@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Threading;
-
-namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
+namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
 {
+    using System.Threading;
+
     public class ReemitToken
     {
         int state = 0;
@@ -15,9 +15,9 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 
         public bool Finish()
         {
-            return 1 == Interlocked.Increment(ref state);
+            return 1 == Interlocked.Increment(ref this.state);
         }
 
-        public bool Available { get { return state == 0; } }
+        public bool Available { get { return this.state == 0; } }
     }
 }

@@ -1,14 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 {
     using System;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using Microsoft.Hpc.ServiceBroker;
-    using Microsoft.Hpc.ServiceBroker.Common;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
+
+    using Microsoft.Telepathy.ServiceBroker.Common;
 
     /// <summary>
     /// Talk to service host management endpoint to, exit service host.
@@ -37,7 +36,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                 HpcServiceHostClient serviceHostClient = new HpcServiceHostClient(this.binding, this.controllerEndpoint, BrokerIdentity.IsHAMode);
                 this.controllerClient = serviceHostClient;
                 BrokerTracing.TraceVerbose("[SerivceHostController].BeginExit: BeginExit. Binding {0}, Endpoint {1}", this.binding, this.controllerEndpoint);
-                serviceHostClient.BeginExit(EndExit, serviceHostClient);
+                serviceHostClient.BeginExit(this.EndExit, serviceHostClient);
                 BrokerTracing.TraceVerbose("[SerivceHostController].BeginExit: Called. Binding {0}, Endpoint {1}", this.binding, this.controllerEndpoint);
             }
             catch (Exception ex)

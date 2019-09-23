@@ -1,17 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal.AzureQueue
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.ServiceModel.Channels;
     using System.Xml;
-    using Microsoft.Hpc.BrokerBurst;
-    using Microsoft.Hpc.Scheduler.Session.Common;
+
     using Microsoft.WindowsAzure.Storage.Blob;
     using Microsoft.WindowsAzure.Storage.Queue;
-    using System.Diagnostics;
 
     /// <summary>
     /// It is the client to send message to Azure storage queue or blob based

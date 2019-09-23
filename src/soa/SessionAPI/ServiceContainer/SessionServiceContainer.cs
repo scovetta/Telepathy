@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.ServiceContainer
+namespace Microsoft.Telepathy.Session.ServiceContainer
 {
     using System;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.Session.Internal;
 
     // TODO: change to industry level service container
     public static class SessionServiceContainer

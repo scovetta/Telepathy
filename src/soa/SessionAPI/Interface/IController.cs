@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session.Interface
 {
     using System.ServiceModel;
     using System.Xml;
     using System.Xml.Serialization;
 
-    using Microsoft.Hpc.Scheduler.Session.Interface;
+    using Microsoft.Telepathy.Session.Exceptions;
 
     /// <summary>
     /// Represents a batch of response messages requests via PullResponses

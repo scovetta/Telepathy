@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
     using System.Collections.Specialized;
@@ -12,13 +12,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
 
     using CommandLine;
 
-    using Microsoft.Hpc.RuntimeTrace;
-    using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
-    using Microsoft.Hpc.ServiceBroker;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService;
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Internal;
 
     using Serilog;
-
-    using TelepathyCommon.HpcContext;
 
     /// <summary>
     /// Main entry point

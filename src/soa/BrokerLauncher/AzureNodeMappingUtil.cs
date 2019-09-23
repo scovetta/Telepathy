@@ -1,12 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Microsoft.Hpc.Azure.Common
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
+    using System;
+
     /// <summary>
     /// This is the list of modules in the Azure deployment.
     /// </summary>

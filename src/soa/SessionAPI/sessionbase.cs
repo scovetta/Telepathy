@@ -1,36 +1,31 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using TelepathyCommon.HpcContext;
-using TelepathyCommon.HpcContext.Extensions;
-
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
-    using System.Net;
     using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Security;
-    using System.Security.Cryptography;
-    using System.Security.Principal;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Data;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
+    using Microsoft.Telepathy.Session.Internal.AzureQueue;
 
     /// <summary>
     ///   <para>Serves as a base class to provide methods and properties that are common to classes that represent different kinds of sessions, such as 
-    /// <see cref="Microsoft.Hpc.Scheduler.Session.DurableSession" /> and 
-    /// <see cref="Microsoft.Hpc.Scheduler.Session.Session" />.</para>
+    /// <see cref="DurableSession" /> and 
+    /// <see cref="Session" />.</para>
     /// </summary>
     public class SessionBase : IDisposable
     {
@@ -144,7 +139,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             get
             {
-                return sessionHash;
+                return this.sessionHash;
             }
         }
 
@@ -207,7 +202,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                 {
                     if (!string.IsNullOrEmpty(uri))
                     {
-                        _endpointReference = new EndpointAddress(uri);
+                        this._endpointReference = new EndpointAddress(uri);
 
                         // this will automatically get the priority order
                         break;
@@ -228,7 +223,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                         this.SessionInfo.ClientBrokerHeartbeatRetryCount,
                         this.factory,
                         this.SessionInfo.BrokerUniqueId);
-                    this.heartbeatHelper.HeartbeatLost += new EventHandler<BrokerHeartbeatEventArgs>(HeartbeatLost);
+                    this.heartbeatHelper.HeartbeatLost += new EventHandler<BrokerHeartbeatEventArgs>(this.HeartbeatLost);
                 }
 
                 // build the proxy if using azure storage queue
@@ -321,7 +316,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             get
             {
-                return serviceJobId;
+                return this.serviceJobId;
             }
         }
 
@@ -346,7 +341,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             get
             {
-                return _endpointReference;
+                return this._endpointReference;
             }
         }
 
@@ -628,11 +623,11 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </param>
         /// <remarks>
         ///   <para>The 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Dispose" /> is equivalent to the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Dispose(System.Boolean)" /> called with the <paramref name="disposing" /> parameter set to 
+        /// <see cref="Dispose" /> is equivalent to the 
+        /// <see cref="Dispose(bool)" /> called with the <paramref name="disposing" /> parameter set to 
         /// False.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Dispose" />
+        /// <seealso cref="Dispose" />
         /// <seealso cref="System.Object.Finalize" />
         protected virtual void Dispose(bool disposing)
         {
@@ -725,13 +720,13 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <remarks>
         ///   <para>This method is equivalent to the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Dispose(System.Boolean)" /> called with the disposing parameter set to 
+        /// <see cref="Dispose(bool)" /> called with the disposing parameter set to 
         /// False.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Dispose(System.Boolean)" />
+        /// <seealso cref="Dispose(bool)" />
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -740,13 +735,13 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <remarks>
         ///   <para>This method is equivalent to the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Close(System.Boolean)" /> method with the purge parameter set to 
+        /// <see cref="Close(bool)" /> method with the purge parameter set to 
         /// False. To finish the job for the session if the job is still active and delete the response messages when you close the session, use the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Close(System.Boolean)" /> or 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Close(System.Boolean,System.Int32)" /> method instead. </para>
+        /// <see cref="Close(bool)" /> or 
+        /// <see cref="Close(bool,int)" /> method instead. </para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Close(System.Boolean)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Close(System.Boolean,System.Int32)" />
+        /// <seealso cref="Close(bool)" />
+        /// <seealso cref="Close(bool,int)" />
         public void Close()
         {
             this.Close(true, Constant.PurgeTimeoutMS);
@@ -764,13 +759,13 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <remarks>
         ///   <para>Calling this method with the <paramref name="purge" /> parameter set to 
         /// False is equivalent to calling the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Close()" /> method.</para>
+        /// <see cref="Close()" /> method.</para>
         ///   <para>The default timeout period for finishing the job and deleting the response 
         /// messages is 60,000 milliseconds. To specify a specific length for the timeout period, use the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Close(System.Boolean,System.Int32)" /> method instead.</para>
+        /// <see cref="Close(bool,int)" /> method instead.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Close()" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Close(System.Boolean,System.Int32)" />
+        /// <seealso cref="Close()" />
+        /// <seealso cref="Close(bool,int)" />
         public void Close(bool purge)
         {
             this.Close(purge, Constant.PurgeTimeoutMS);
@@ -845,7 +840,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <see cref="System.Version.Major" /> and 
         /// <see cref="System.Version.Minor" /> properties set to 0.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.ServiceVersion" />
+        /// <seealso cref="ServiceVersion" />
         public static Version[] GetServiceVersions(string headNode, string serviceName)
         {
             return GetServiceVersions(headNode, serviceName, null);
@@ -992,10 +987,10 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// a format of service_name_major.minor.config. For example, MyService_1.0.config. The version must include 
         /// the major and minor portions of the version identifier and no further subversions.</para> 
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.NoServiceVersion" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.ClientVersion" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.GetServiceVersions(System.String,System.String)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.ServiceVersion" />
+        /// <seealso cref="NoServiceVersion" />
+        /// <seealso cref="ClientVersion" />
+        /// <seealso cref="GetServiceVersions(string,string)" />
+        /// <seealso cref="SessionStartInfo.ServiceVersion" />
         public Version ServiceVersion
         {
             get
@@ -1016,7 +1011,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <see cref="System.Version.Major" /> and 
         /// <see cref="System.Version.Minor" /> properties set to 0.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.ServiceVersion" />
+        /// <seealso cref="ServiceVersion" />
         static public Version NoServiceVersion
         {
             get

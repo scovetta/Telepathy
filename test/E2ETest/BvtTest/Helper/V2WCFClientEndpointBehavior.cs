@@ -1,15 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ServiceModel.Description;
-using System.ServiceModel.Channels;
-
-namespace AITestLib.Helper
+namespace Microsoft.Telepathy.Test.E2E.Bvt.Helper
 {
+    using System.ServiceModel.Channels;
+    using System.ServiceModel.Description;
+
     class V2WCFClientEndpointBehavior: IEndpointBehavior
     {
         private string sessionId;
@@ -26,7 +22,7 @@ namespace AITestLib.Helper
 
         public void ApplyClientBehavior(ServiceEndpoint endpoint, System.ServiceModel.Dispatcher.ClientRuntime clientRuntime)
         {
-            V2WCFClientMessageInspector inspector = new V2WCFClientMessageInspector(sessionId);
+            V2WCFClientMessageInspector inspector = new V2WCFClientMessageInspector(this.sessionId);
             clientRuntime.MessageInspectors.Add(inspector);
         }
 

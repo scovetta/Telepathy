@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter.Module
+namespace Microsoft.Telepathy.Session.QueueAdapter.Module
 {
     using System;
     using System.Linq;

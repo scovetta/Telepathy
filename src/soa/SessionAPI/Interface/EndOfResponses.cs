@@ -1,13 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session.Interface
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using System.ServiceModel;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
 
     /// <summary>
     /// Describes the message which tells client how many responses will be returned

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface
+namespace Microsoft.Telepathy.Session.QueueAdapter.Interface
 {
     using System.Threading.Tasks;
 

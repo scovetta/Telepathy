@@ -1,12 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.RuntimeTrace
+namespace Microsoft.Telepathy.RuntimeTrace
 {
     using System;
     using System.Diagnostics;
     using System.Globalization;
     using System.Text;
+
     /// <summary>
     /// the delegate for the IsDiagTraceEnabled method
     /// </summary>

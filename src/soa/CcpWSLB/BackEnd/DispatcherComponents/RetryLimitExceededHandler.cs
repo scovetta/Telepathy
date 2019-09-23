@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
 {
     using System;
     using System.Diagnostics.Contracts;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
 
-    using SR = Microsoft.Hpc.SvcBroker.SR;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Handle retry limit exceeded 
@@ -68,7 +68,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
             else
             {
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
                 #endregion
 
                 // generate fault exception from original reply

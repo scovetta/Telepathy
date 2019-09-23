@@ -2,15 +2,11 @@
 // Licensed under the MIT license.
 
 
-namespace Microsoft.Hpc.RESTServiceModel
+namespace Microsoft.Telepathy.CcpServiceHost.Rest
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Web.Http;
-
 
     [RoutePrefix("api/svchostserver")]
     public class SvcHostServerController : ApiController
@@ -28,12 +24,12 @@ namespace Microsoft.Hpc.RESTServiceModel
         {
             if (ServiceInfo.SaveInfo(serviceInfo))
             {
-                var response = Request.CreateResponse<ServiceInfo>(HttpStatusCode.OK, serviceInfo);
+                var response = this.Request.CreateResponse<ServiceInfo>(HttpStatusCode.OK, serviceInfo);
                 return response;
             }
             else
             {
-                var response = Request.CreateResponse(HttpStatusCode.BadRequest);
+                var response = this.Request.CreateResponse(HttpStatusCode.BadRequest);
                 return response;
             }
         }
@@ -44,7 +40,7 @@ namespace Microsoft.Hpc.RESTServiceModel
         public HttpResponseMessage Delete()
         {
             ServiceInfo.DeleteInfo();
-            return Request.CreateResponse(HttpStatusCode.OK);
+            return this.Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 

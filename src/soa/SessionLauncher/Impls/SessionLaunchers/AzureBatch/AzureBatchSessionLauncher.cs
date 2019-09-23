@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch
+namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.AzureBatch
 {
     using System;
     using System.Collections.Generic;
@@ -15,17 +15,20 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
 
     using Microsoft.Azure.Batch;
     using Microsoft.Azure.Batch.Common;
-    using Microsoft.Hpc.RuntimeTrace;
-    using Microsoft.Hpc.Scheduler.Session.Configuration;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Utils;
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Common.ServiceRegistrationStore;
+    using Microsoft.Telepathy.Internal.SessionLauncher.Utils;
+    using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Configuration;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
 
-    using TelepathyCommon;
-    using TelepathyCommon.Telepathy;
-
-    using JobState = Microsoft.Hpc.Scheduler.Session.Data.JobState;
+    using JobState = Microsoft.Telepathy.Session.Data.JobState;
 
     internal class AzureBatchSessionLauncher : SessionLauncher
     {
@@ -74,7 +77,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
         public override async Task<SessionInfoContract> GetInfoAsync(string endpointPrefix, string sessionId)
         {
             SessionInfoContract sessionInfo = null;
-            CheckAccess();
+            this.CheckAccess();
 
             ParamCheckUtility.ThrowIfNullOrEmpty(endpointPrefix, "endpointPrefix");
 

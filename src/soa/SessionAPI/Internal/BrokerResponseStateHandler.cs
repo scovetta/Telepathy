@@ -1,21 +1,21 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session.Internal
 {
     /// <summary>
     ///   <para>Defines the delegate that you need to implement when you subscribe to 
     /// the responses in a service-oriented architecture (SOA) client by calling the versions of the  
     /// 
-    /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SetResponseHandler(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{System.Object})" /> method that include a <paramref name="state" /> parameter.</para> 
+    /// <see cref="BrokerClient{TContract}.SetResponseHandler(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{object})" /> method that include a <paramref name="state" /> parameter.</para> 
     /// </summary>
     /// <param name="response">
     ///   <para>A 
-    /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{T}" /> object that represents a response that the delegate receives and processes.</para>
+    /// <see cref="BrokerResponse{TMessage}" /> object that represents a response that the delegate receives and processes.</para>
     /// </param>
     /// <param name="state">
     ///   <para>A state object that the delegate receives each time it is called. You can use this object to pass the instance of the 
-    /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> class or other state information to the delegate.</para>
+    /// <see cref="BrokerClient{TContract}" /> class or other state information to the delegate.</para>
     /// </param>
     /// <typeparam name="TMessage">
     ///   <para>The type of the response messages that you want the delegate to receive. You create a TMessage 

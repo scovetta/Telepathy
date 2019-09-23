@@ -1,12 +1,13 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Security.Principal;
-using System.ServiceModel;
-using Microsoft.Hpc.Scheduler.Session.Internal;
-
-namespace Microsoft.Hpc
+namespace Microsoft.Telepathy.CcpServiceHost
 {
+    using System.Security.Principal;
+    using System.ServiceModel;
+
+    using Microsoft.Telepathy.Session.Common;
+
     /// <summary>
     /// An authorization manager which only allows access from the a specified user
     /// </summary>
@@ -32,7 +33,7 @@ namespace Microsoft.Hpc
                 return true;
             }
 
-            return ServiceSecurityContext.Current.WindowsIdentity.User == allowedUser;
+            return ServiceSecurityContext.Current.WindowsIdentity.User == this.allowedUser;
         }
     }
 }

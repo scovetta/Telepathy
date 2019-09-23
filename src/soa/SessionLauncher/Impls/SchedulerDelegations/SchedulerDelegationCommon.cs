@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.SchedulerDelegations
+namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SchedulerDelegations
 {
     using System.Collections.Generic;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
+    using Microsoft.Telepathy.Session.Internal;
 
     internal static class SchedulerDelegationCommon
     {

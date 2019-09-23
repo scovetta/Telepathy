@@ -1,15 +1,15 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Azure.Common
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Table;
-    using Microsoft.WindowsAzure.Storage.Table.Protocol;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
+
+    using Microsoft.WindowsAzure.Storage;
+    using Microsoft.WindowsAzure.Storage.Table;
+    using Microsoft.WindowsAzure.Storage.Table.Protocol;
 
     /// <summary>
     /// This is the interface for proxy modules to access the logical node name -> physial endpoint mapping.
@@ -43,13 +43,13 @@ namespace Microsoft.Hpc.Azure.Common
         {
             get
             {
-                if (_mappingTableName == null)
+                if (this._mappingTableName == null)
                 {
                     // It must be On-premise now
-                    _mappingTableName = AzureNaming.GenerateAzureEntityName(SchedulerTableNames.NodeMapping, _clusterName, new Guid(_subscriptionId), _serviceName);
+                    this._mappingTableName = AzureNaming.GenerateAzureEntityName(SchedulerTableNames.NodeMapping, this._clusterName, new Guid(this._subscriptionId), this._serviceName);
                 }
 
-                return _mappingTableName;
+                return this._mappingTableName;
             }
         }
 
@@ -102,19 +102,19 @@ namespace Microsoft.Hpc.Azure.Common
 
         public NodeMapping(CloudStorageAccount storageAccount, string clusterName, string subscriptionId, string serviceName)
         {
-            _clusterName = clusterName;
-            _subscriptionId = subscriptionId;
-            _serviceName = serviceName;
+            this._clusterName = clusterName;
+            this._subscriptionId = subscriptionId;
+            this._serviceName = serviceName;
 
-            Init(storageAccount);
+            this.Init(storageAccount);
         }
 
         internal NodeMapping(CloudStorageAccount storageAccount, string tableName, string virtualSchedulerName)
         {
-            _virtualSchedulerName = virtualSchedulerName;
-            _mappingTableName = tableName;
+            this._virtualSchedulerName = virtualSchedulerName;
+            this._mappingTableName = tableName;
 
-            Init(storageAccount);
+            this.Init(storageAccount);
         }
 
         /// <summary>
@@ -130,16 +130,16 @@ namespace Microsoft.Hpc.Azure.Common
         {
             get
             {
-                lock (_tableClientLock)
+                lock (this._tableClientLock)
                 {
                     if (this.tableClient == null)
                     {
-                        if (_storageAccount == null)
+                        if (this._storageAccount == null)
                         {
                             throw new Exception("The storage account has not been initialized.");
                         }
 
-                        this.tableClient = _storageAccount.CreateCloudTableClient();
+                        this.tableClient = this._storageAccount.CreateCloudTableClient();
                     }
 
                     return this.tableClient;
@@ -147,7 +147,7 @@ namespace Microsoft.Hpc.Azure.Common
             }
             set
             {
-                lock (_tableClientLock)
+                lock (this._tableClientLock)
                 {
                     this.tableClient = value;
                 }
@@ -178,12 +178,12 @@ namespace Microsoft.Hpc.Azure.Common
             CloudTableClient client = new CloudTableClient(new Uri(storageAccount.TableEndpoint.AbsoluteUri), storageAccount.Credentials);
             try
             {
-                var table = client.GetTableReference(NodeMappingTableName);
+                var table = client.GetTableReference(this.NodeMappingTableName);
                 table.CreateIfNotExists();
             }
             catch { }
 #endif
-            _storageAccount = storageAccount;
+            this._storageAccount = storageAccount;
 
             // Comment out this since it is not a good idea to do a long operation within constructor.
             // RefreshMapping();
@@ -199,7 +199,7 @@ namespace Microsoft.Hpc.Azure.Common
         /// <returns></returns>
         public bool TryGetNodeEndpoint(string nodeName, Module module, out string azureEndpoint)
         {
-            return TryGetNodeEndpoint(nodeName, module, 0, out azureEndpoint);
+            return this.TryGetNodeEndpoint(nodeName, module, 0, out azureEndpoint);
         }
 
 
@@ -216,11 +216,11 @@ namespace Microsoft.Hpc.Azure.Common
             string endpointString;
 
             azureEndpoint = null;
-            lock (_operationLock)
+            lock (this._operationLock)
             {
-                RefreshWhenNeeded();
+                this.RefreshWhenNeeded();
 
-                bool result = _logicalNameToPhysicalEprMapping.TryGetValue(nodeName, out endpointString);
+                bool result = this._logicalNameToPhysicalEprMapping.TryGetValue(nodeName, out endpointString);
 
                 if (result)
                 {
@@ -248,11 +248,11 @@ namespace Microsoft.Hpc.Azure.Common
         /// <returns></returns>
         public bool TryGetNodeInstanceId(string nodeName, out string instanceName)
         {
-            lock (_operationLock)
+            lock (this._operationLock)
             {
-                RefreshWhenNeeded();
+                this.RefreshWhenNeeded();
 
-                return _logicalNameToPhysicalInstanceMapping.TryGetValue(nodeName, out instanceName);
+                return this._logicalNameToPhysicalInstanceMapping.TryGetValue(nodeName, out instanceName);
             }
         }
 
@@ -264,11 +264,11 @@ namespace Microsoft.Hpc.Azure.Common
         /// <returns></returns>
         public bool TryGetLogicalName(string endpointString, out string nodeName)
         {
-            lock (_operationLock)
+            lock (this._operationLock)
             {
-                RefreshWhenNeeded();
+                this.RefreshWhenNeeded();
 
-                return _physicalEprToLogicalNameMapping.TryGetValue(endpointString, out nodeName);
+                return this._physicalEprToLogicalNameMapping.TryGetValue(endpointString, out nodeName);
             }
         }
 
@@ -280,14 +280,14 @@ namespace Microsoft.Hpc.Azure.Common
         /// <param name="nodeNameMap">dictionary of physical end point to logical node name</param>
         public void TryGetLogicalNames(IEnumerable<string> endPointStrings, IDictionary<string,string> nodeNameMap)
         {
-            lock (_operationLock)
+            lock (this._operationLock)
             {
-                RefreshWhenNeeded();
+                this.RefreshWhenNeeded();
 
                 foreach (string endPointString in endPointStrings)
                 {
                     string nodeName;
-                    if (_physicalEprToLogicalNameMapping.TryGetValue(endPointString, out nodeName))
+                    if (this._physicalEprToLogicalNameMapping.TryGetValue(endPointString, out nodeName))
                     {
                         nodeNameMap[endPointString] = nodeName;
                     }                   
@@ -302,7 +302,7 @@ namespace Microsoft.Hpc.Azure.Common
         /// <returns></returns>
         public int GetNodeCount()
         {
-            return _logicalNameToPhysicalEprMapping.Count;
+            return this._logicalNameToPhysicalEprMapping.Count;
         }
 
         /// <summary>
@@ -313,13 +313,13 @@ namespace Microsoft.Hpc.Azure.Common
         /// <param name="items"></param>
         public void UpdateNodeMapping(KeyValuePair<string, string>[] items, Dictionary<string, string> nodeNameToRoleName, Dictionary<string, string> nodeNameToInstanceName)
         {
-            lock (_operationLock)
+            lock (this._operationLock)
             {
-                RefreshWhenNeeded();
+                this.RefreshWhenNeeded();
 
                 try
                 {
-                    CloudTable table = this.TableClient.GetTableReference(NodeMappingTableName);
+                    CloudTable table = this.TableClient.GetTableReference(this.NodeMappingTableName);
                     foreach (KeyValuePair<string, string> item in items)
                     {
                         string nodeName = item.Key;
@@ -333,11 +333,11 @@ namespace Microsoft.Hpc.Azure.Common
                         string existingEndpointStr = null;
                         string existingInstanceId = null;
 
-                        if (_logicalNameToPhysicalEprMapping.TryGetValue(nodeName, out existingEndpointStr))
+                        if (this._logicalNameToPhysicalEprMapping.TryGetValue(nodeName, out existingEndpointStr))
                         {
                             if (string.Compare(endpointString, existingEndpointStr, StringComparison.InvariantCultureIgnoreCase) == 0)
                             {
-                                if (!_logicalNameToPhysicalInstanceMapping.TryGetValue(nodeName, out existingInstanceId) ||
+                                if (!this._logicalNameToPhysicalInstanceMapping.TryGetValue(nodeName, out existingInstanceId) ||
                                     string.Compare(instanceId, existingInstanceId, StringComparison.InvariantCultureIgnoreCase) == 0)
                                 {
                                     // No need to update
@@ -400,29 +400,29 @@ namespace Microsoft.Hpc.Azure.Common
                     foreach (KeyValuePair<string, string> item in items)
                     {
                         string originalEndpointString;
-                        if (_logicalNameToPhysicalEprMapping.TryGetValue(item.Key, out originalEndpointString))
+                        if (this._logicalNameToPhysicalEprMapping.TryGetValue(item.Key, out originalEndpointString))
                         {
-                            _physicalEprToLogicalNameMapping.Remove(originalEndpointString);
+                            this._physicalEprToLogicalNameMapping.Remove(originalEndpointString);
                         }
 
                         if (item.Value == null)
                         {
                             // This means remove the binding
 
-                            _logicalNameToPhysicalEprMapping.Remove(item.Key);
-                            _logicalNameToPhysicalInstanceMapping.Remove(item.Key);
+                            this._logicalNameToPhysicalEprMapping.Remove(item.Key);
+                            this._logicalNameToPhysicalInstanceMapping.Remove(item.Key);
                         }
                         else
                         {
                             // This means update the binding
 
-                            _logicalNameToPhysicalEprMapping[item.Key] = item.Value;
-                            _physicalEprToLogicalNameMapping[item.Value] = item.Key;
+                            this._logicalNameToPhysicalEprMapping[item.Key] = item.Value;
+                            this._physicalEprToLogicalNameMapping[item.Value] = item.Key;
 
                             string instanceId = null;
                             if (nodeNameToRoleName.TryGetValue(item.Key, out instanceId))
                             {
-                                _logicalNameToPhysicalInstanceMapping[item.Key] = instanceId;
+                                this._logicalNameToPhysicalInstanceMapping[item.Key] = instanceId;
                             }
                         }
                     }
@@ -430,7 +430,7 @@ namespace Microsoft.Hpc.Azure.Common
                 catch (Exception)
                 {
                     this.TableClient = null;
-                    _needRefreshOnNextOperation = true;
+                    this._needRefreshOnNextOperation = true;
                     throw;
                 }
             }
@@ -443,14 +443,14 @@ namespace Microsoft.Hpc.Azure.Common
         /// <param name="logicalNodeName"></param>
         public void DeleteNodeMappingEntry(string logicalNodeName)
         {
-            lock (_operationLock)
+            lock (this._operationLock)
             {
                 try
                 {
-                    RefreshWhenNeeded();
+                    this.RefreshWhenNeeded();
 
                     //Update the node mapping table by deleting the entry corresponding to this logical node name
-                    CloudTable table = this.TableClient.GetTableReference(NodeMappingTableName);
+                    CloudTable table = this.TableClient.GetTableReference(this.NodeMappingTableName);
                     TableOperation retrieveOperation = TableOperation.Retrieve<NodeMappingTableEntry>(AzureNaming.AzurePartitionKey, logicalNodeName.ToUpper());
                     NodeMappingTableEntry entry = null;
                     TableResult retrievedResult = table.Execute(retrieveOperation);
@@ -468,15 +468,15 @@ namespace Microsoft.Hpc.Azure.Common
 
                     //Update the cache
                     string physicalEpr = null;
-                    if (_logicalNameToPhysicalEprMapping.TryGetValue(logicalNodeName, out physicalEpr))
+                    if (this._logicalNameToPhysicalEprMapping.TryGetValue(logicalNodeName, out physicalEpr))
                     {
-                        _logicalNameToPhysicalEprMapping.Remove(logicalNodeName);
-                        _logicalNameToPhysicalInstanceMapping.Remove(logicalNodeName);
+                        this._logicalNameToPhysicalEprMapping.Remove(logicalNodeName);
+                        this._logicalNameToPhysicalInstanceMapping.Remove(logicalNodeName);
                     }
 
                     if (physicalEpr != null)
                     {
-                        _physicalEprToLogicalNameMapping.Remove(physicalEpr);
+                        this._physicalEprToLogicalNameMapping.Remove(physicalEpr);
                     }
                 }
                 catch (Exception)
@@ -485,7 +485,7 @@ namespace Microsoft.Hpc.Azure.Common
                     this.TableClient = null;
                     //If there is any error deleting the entry from the node mapping table
                     //mark the cache for refresh the next time it is accessed
-                    _needRefreshOnNextOperation = true;
+                    this._needRefreshOnNextOperation = true;
                     //Any retry logic should be in the caller 
                     throw;
                 }
@@ -499,15 +499,15 @@ namespace Microsoft.Hpc.Azure.Common
         /// </summary>
         public void RefreshMapping()
         {
-            lock (_operationLock)
+            lock (this._operationLock)
             {
                 try
                 {
-                    _logicalNameToPhysicalEprMapping.Clear();
-                    _physicalEprToLogicalNameMapping.Clear();
-                    _logicalNameToPhysicalInstanceMapping.Clear();
+                    this._logicalNameToPhysicalEprMapping.Clear();
+                    this._physicalEprToLogicalNameMapping.Clear();
+                    this._logicalNameToPhysicalInstanceMapping.Clear();
 
-                    CloudTable table = this.TableClient.GetTableReference(NodeMappingTableName);
+                    CloudTable table = this.TableClient.GetTableReference(this.NodeMappingTableName);
                     TableQuery<NodeMappingTableEntry> tableQuery = new TableQuery<NodeMappingTableEntry>();
                     TableContinuationToken continuationToken = null;
                     do
@@ -519,27 +519,27 @@ namespace Microsoft.Hpc.Azure.Common
                         {
                             Debug.Assert(entry.EndpointString != null);
 
-                            _logicalNameToPhysicalEprMapping[entry.NodeName] = entry.EndpointString;
+                            this._logicalNameToPhysicalEprMapping[entry.NodeName] = entry.EndpointString;
 
-                            if (_virtualSchedulerName == null || string.Compare(_virtualSchedulerName, entry.NodeName, true) != 0)
+                            if (this._virtualSchedulerName == null || string.Compare(this._virtualSchedulerName, entry.NodeName, true) != 0)
                             {
                                 // Don't do this for virtual scheduler name
                                 // This is valid only in scheduler on azure 
-                                _physicalEprToLogicalNameMapping[entry.EndpointString] = entry.NodeName;
+                                this._physicalEprToLogicalNameMapping[entry.EndpointString] = entry.NodeName;
                             }
 
-                            _logicalNameToPhysicalInstanceMapping[entry.NodeName] = entry.RoleInstanceName;
+                            this._logicalNameToPhysicalInstanceMapping[entry.NodeName] = entry.RoleInstanceName;
 
                             if (entry.Timestamp.DateTime > this._lastModified)
                                 this._lastModified = entry.Timestamp.DateTime;
                         }
                     } while (continuationToken != null);
 
-                    _needRefreshOnNextOperation = false;
+                    this._needRefreshOnNextOperation = false;
                 }
                 catch (Exception)
                 {
-                    _needRefreshOnNextOperation = true;
+                    this._needRefreshOnNextOperation = true;
                     throw;
                 }
             }
@@ -550,9 +550,9 @@ namespace Microsoft.Hpc.Azure.Common
         /// </summary>
         void RefreshWhenNeeded()
         {
-            if (_needRefreshOnNextOperation)
+            if (this._needRefreshOnNextOperation)
             {
-                RefreshMapping();
+                this.RefreshMapping();
             }
         }
 
@@ -588,9 +588,9 @@ namespace Microsoft.Hpc.Azure.Common
             }
 
             Dictionary<string, string> mapping = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-            foreach (var item in _logicalNameToPhysicalEprMapping)
+            foreach (var item in this._logicalNameToPhysicalEprMapping)
             {
-                mapping.Add(item.Key, GetIPAddressFromEpr(item.Value));
+                mapping.Add(item.Key, this.GetIPAddressFromEpr(item.Value));
             }
 
             return mapping;
@@ -610,11 +610,11 @@ namespace Microsoft.Hpc.Azure.Common
 
             List<string> removedLogicalNameList = new List<string>();
             List<string> removedPhysicalAddrList = new List<string>();
-            lock (_operationLock)
+            lock (this._operationLock)
             {
-                RefreshWhenNeeded();
+                this.RefreshWhenNeeded();
 
-                foreach (KeyValuePair<string, string> item in _logicalNameToPhysicalEprMapping)
+                foreach (KeyValuePair<string, string> item in this._logicalNameToPhysicalEprMapping)
                 {
                     string ip = GetModuleAddress(item.Value, Module.Ip);
                     if (!physicalIps.ContainsKey(ip))
@@ -638,12 +638,12 @@ namespace Microsoft.Hpc.Azure.Common
         /// <param name="logicalNodeName">the node logical name</param>
         public void RefreshNodeMapping(string logicalNodeName)
         {
-            lock (_operationLock)
+            lock (this._operationLock)
             {
                 try
                 {
                     //Retrieve the node entry from node mapping table by the logical node name
-                    CloudTable table = this.TableClient.GetTableReference(NodeMappingTableName);
+                    CloudTable table = this.TableClient.GetTableReference(this.NodeMappingTableName);
                     TableOperation retrieveOperation = TableOperation.Retrieve<NodeMappingTableEntry>(AzureNaming.AzurePartitionKey, logicalNodeName.ToUpper());
                     NodeMappingTableEntry entry = null;
                     TableResult retrievedResult = table.Execute(retrieveOperation);
@@ -656,21 +656,21 @@ namespace Microsoft.Hpc.Azure.Common
                     {
                         //Update the cache if the epr in the cache is out-of-date
                         string physicalEpr = null;
-                        if (_logicalNameToPhysicalEprMapping.TryGetValue(entry.NodeName, out physicalEpr))
+                        if (this._logicalNameToPhysicalEprMapping.TryGetValue(entry.NodeName, out physicalEpr))
                         {
                             if (!string.Equals(physicalEpr, entry.EndpointString, StringComparison.OrdinalIgnoreCase))
                             {
-                                _logicalNameToPhysicalEprMapping[entry.NodeName] = entry.EndpointString;
-                                _logicalNameToPhysicalInstanceMapping[entry.NodeName] = entry.RoleInstanceName;
-                                _physicalEprToLogicalNameMapping[entry.EndpointString] = entry.NodeName;
+                                this._logicalNameToPhysicalEprMapping[entry.NodeName] = entry.EndpointString;
+                                this._logicalNameToPhysicalInstanceMapping[entry.NodeName] = entry.RoleInstanceName;
+                                this._physicalEprToLogicalNameMapping[entry.EndpointString] = entry.NodeName;
                             }
                         }
                         else
                         { 
                             //insert the node mapping info in the cache
-                            _logicalNameToPhysicalEprMapping[entry.NodeName] = entry.EndpointString;
-                            _logicalNameToPhysicalInstanceMapping[entry.NodeName] = entry.RoleInstanceName;
-                            _physicalEprToLogicalNameMapping[entry.EndpointString] = entry.NodeName;
+                            this._logicalNameToPhysicalEprMapping[entry.NodeName] = entry.EndpointString;
+                            this._logicalNameToPhysicalInstanceMapping[entry.NodeName] = entry.RoleInstanceName;
+                            this._physicalEprToLogicalNameMapping[entry.EndpointString] = entry.NodeName;
                         }
                     }
                 }
@@ -691,9 +691,9 @@ namespace Microsoft.Hpc.Azure.Common
         /// </summary>
         public void RefreshNodeMapping()
         {
-            lock (_operationLock)
+            lock (this._operationLock)
             {
-                CloudTable table = this.TableClient.GetTableReference(NodeMappingTableName);
+                CloudTable table = this.TableClient.GetTableReference(this.NodeMappingTableName);
                 TableQuery<NodeMappingTableEntry> tableQuery = new TableQuery<NodeMappingTableEntry>().Where(
                     TableQuery.GenerateFilterConditionForDate("Timestamp", QueryComparisons.GreaterThan, this.lastNodeRefreshDate)
                     );
@@ -710,21 +710,21 @@ namespace Microsoft.Hpc.Azure.Common
 
                         //Update the cache if the epr in the cache is out-of-date
                         string physicalEpr = null;
-                        if (_logicalNameToPhysicalEprMapping.TryGetValue(entry.NodeName, out physicalEpr))
+                        if (this._logicalNameToPhysicalEprMapping.TryGetValue(entry.NodeName, out physicalEpr))
                         {
                             if (!string.Equals(physicalEpr, entry.EndpointString, StringComparison.OrdinalIgnoreCase))
                             {
-                                _logicalNameToPhysicalEprMapping[entry.NodeName] = entry.EndpointString;
-                                _logicalNameToPhysicalInstanceMapping[entry.NodeName] = entry.RoleInstanceName;
-                                _physicalEprToLogicalNameMapping[entry.EndpointString] = entry.NodeName;
+                                this._logicalNameToPhysicalEprMapping[entry.NodeName] = entry.EndpointString;
+                                this._logicalNameToPhysicalInstanceMapping[entry.NodeName] = entry.RoleInstanceName;
+                                this._physicalEprToLogicalNameMapping[entry.EndpointString] = entry.NodeName;
                             }
                         }
                         else
                         {
                             //insert the node mapping info in the cache
-                            _logicalNameToPhysicalEprMapping[entry.NodeName] = entry.EndpointString;
-                            _logicalNameToPhysicalInstanceMapping[entry.NodeName] = entry.RoleInstanceName;
-                            _physicalEprToLogicalNameMapping[entry.EndpointString] = entry.NodeName;
+                            this._logicalNameToPhysicalEprMapping[entry.NodeName] = entry.EndpointString;
+                            this._logicalNameToPhysicalInstanceMapping[entry.NodeName] = entry.RoleInstanceName;
+                            this._physicalEprToLogicalNameMapping[entry.EndpointString] = entry.NodeName;
                         }
 
                         if (entry.Timestamp > this.lastNodeRefreshDate)
@@ -732,7 +732,7 @@ namespace Microsoft.Hpc.Azure.Common
                     }
                 } while (continuationToken != null);
 
-                _needRefreshOnNextOperation = false;
+                this._needRefreshOnNextOperation = false;
             }
         }
     }
@@ -762,8 +762,8 @@ namespace Microsoft.Hpc.Azure.Common
         /// </summary>
         public string EndpointString
         {
-            get { return _endpointString; }
-            set { _endpointString = value; }
+            get { return this._endpointString; }
+            set { this._endpointString = value; }
         }
 
         /// <summary>
@@ -771,20 +771,20 @@ namespace Microsoft.Hpc.Azure.Common
         /// </summary>
         public string NodeName
         {
-            get { return RowKey; }
-            set { RowKey = value; }
+            get { return this.RowKey; }
+            set { this.RowKey = value; }
         }
 
         public string RoleName
         {
-            get { return _roleName; }
-            set { _roleName = value; }
+            get { return this._roleName; }
+            set { this._roleName = value; }
         }
 
         public string RoleInstanceName
         {
-            get { return _roleInstanceName; }
-            set { _roleInstanceName = value; }
+            get { return this._roleInstanceName; }
+            set { this._roleInstanceName = value; }
         }
 
         /// <summary>
@@ -798,11 +798,11 @@ namespace Microsoft.Hpc.Azure.Common
             // This is because only the scheduler changes this table and everybody else reads it
             // We need to make the read very fast.
 
-            PartitionKey = AzureNaming.AzurePartitionKey;  
-            _endpointString = physicalEpr;
-            RowKey = logicalName;
-            _roleName = roleName;
-            _roleInstanceName = roleInstanceName;
+            this.PartitionKey = AzureNaming.AzurePartitionKey;  
+            this._endpointString = physicalEpr;
+            this.RowKey = logicalName;
+            this._roleName = roleName;
+            this._roleInstanceName = roleInstanceName;
         }
 
         /// <summary>
@@ -810,7 +810,7 @@ namespace Microsoft.Hpc.Azure.Common
         /// </summary>
         public NodeMappingTableEntry()
         {
-            PartitionKey = AzureNaming.AzurePartitionKey;
+            this.PartitionKey = AzureNaming.AzurePartitionKey;
         }
     }    
 }

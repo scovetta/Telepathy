@@ -1,22 +1,24 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
     using System.Diagnostics;
     using System.Security.Permissions;
-    using System.Security.Principal;
     using System.ServiceModel;
     using System.Threading;
 
-    using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-
-    using TelepathyCommon.HpcContext;
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.ServiceBroker;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Implementation of broker launcher
@@ -120,7 +122,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 BrokerInitializationResult returnValue = this.brokerManager.CreateNewBrokerDomain(info, sessionId, false).GetAwaiter().GetResult();
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
                 #endregion
 
                 TraceHelper.RuntimeTrace.LogSessionCreated(sessionId);
@@ -168,7 +170,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 BrokerInitializationResult returnValue = this.brokerManager.CreateNewBrokerDomain(info, sessionId, true).GetAwaiter().GetResult();
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
                 #endregion
 
                 TraceHelper.RuntimeTrace.LogSessionCreated(sessionId);
@@ -210,7 +212,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 BrokerInitializationResult returnValue = this.brokerManager.AttachBroker(sessionId).GetAwaiter().GetResult();
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
                 #endregion
 
                 TraceHelper.TraceEvent(sessionId, System.Diagnostics.TraceEventType.Information, "[BrokerLauncher] Attach Broker {0} Succeeded.", sessionId);
@@ -248,7 +250,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 this.brokerManager.CloseBrokerDomain(sessionId).GetAwaiter().GetResult();
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
                 #endregion
 
                 TraceHelper.TraceEvent(sessionId, System.Diagnostics.TraceEventType.Information, "[BrokerLauncher] Close Broker {0} Succeeded.", sessionId);
@@ -562,7 +564,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         private static bool ShouldRedirectManagementCommand()
         {
             // If this HpcBroker instance is running as a Windows service and on a failover BN, redirect
-            return !LauncherHostService.LauncherHostService.IsConsoleApplication
+            return !Hpc.Scheduler.Session.Internal.LauncherHostService.LauncherHostService.IsConsoleApplication
                         && Win32API.IsFailoverBrokerNode();
         }
 

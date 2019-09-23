@@ -1,14 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 {
-    using Microsoft.Hpc.BrokerBurst;
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.ServiceBroker;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using Microsoft.Hpc.ServiceBroker.Common;
-    using Microsoft.WindowsAzure.Storage;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -20,10 +14,16 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.ServiceBroker.Common.SchedulerAdapter;
-    using Microsoft.Hpc.ServiceBroker.Common.ThreadHelper;
-
-    using SR = Microsoft.Hpc.SvcBroker.SR;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd.AzureQueue;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents;
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter;
+    using Microsoft.Telepathy.ServiceBroker.Common.ThreadHelper;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Internal;
+    using Microsoft.WindowsAzure.Storage;
 
     /// <summary>
     /// Dispatch messages to service hosts
@@ -237,8 +237,8 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// </summary>
         protected int ServiceInitializationTimeout
         {
-            get { return serviceInitializationTimeout; }
-            private set { serviceInitializationTimeout = value; }
+            get { return this.serviceInitializationTimeout; }
+            private set { this.serviceInitializationTimeout = value; }
         }
 
         /// <summary>
@@ -725,7 +725,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                 }
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(2);
+                SimulateFailure.FailOperation(2);
                 #endregion
 
                 Debug.Assert(this.ProcessMessageCallback != null);
@@ -881,7 +881,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                 }
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
                 #endregion
 
                 // Don't create client and dispatch next message if the task is preempted.
@@ -1531,7 +1531,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                 {
 
 #region Debug Failure Test
-                    Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(2);
+                    SimulateFailure.FailOperation(2);
 #endregion
 
                     // Currently since data instance is not widely used here (inside the
@@ -1831,7 +1831,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
                 }
 
 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
 #endregion
 
                 BrokerTracing.TraceEvent(

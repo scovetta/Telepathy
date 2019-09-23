@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
+namespace Microsoft.Telepathy.ServiceBroker
 {
     using System;
     using System.ComponentModel;
@@ -10,9 +10,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
     using System.Security.Principal;
     using System.Text;
     using System.Threading;
-    using Microsoft.Hpc.RuntimeTrace;
-    using Microsoft.Hpc.Scheduler.Session.Common;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
+
+    using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Maintains broker's identity when calling user services. BN computer account for non-

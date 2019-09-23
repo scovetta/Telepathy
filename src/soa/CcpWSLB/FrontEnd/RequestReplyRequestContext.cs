@@ -1,10 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.FrontEnd
+namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
 {
     using System;
     using System.ServiceModel.Channels;
+
+    using Microsoft.Telepathy.ServiceBroker.Common;
 
     /// <summary>
     /// Request context for request/reply channels (BasicHttp and WSHttp)

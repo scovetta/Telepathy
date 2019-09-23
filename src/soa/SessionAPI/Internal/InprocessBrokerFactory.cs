@@ -1,13 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal
 {
-    using Microsoft.Hpc.Scheduler.Session.Interface;
     using System;
     using System.Diagnostics;
     using System.ServiceModel.Channels;
     using System.Threading.Tasks;
+
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+
     /// <summary>
     /// Factory to create inprocess broker
     /// </summary>

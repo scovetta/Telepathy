@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Common
 {
     using System;
     using System.Threading.Tasks;
 
-    using TelepathyCommon;
+    using Microsoft.Telepathy.Common;
 
     /// <summary>
     /// Helper class to retry operation if exception occured

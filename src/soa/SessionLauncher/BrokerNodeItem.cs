@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
+namespace Microsoft.Telepathy.Internal.SessionLauncher
 {
+    using Microsoft.Telepathy.Session.Common;
+
     /// <summary>
     /// the broker node item.
     /// It is immutable.

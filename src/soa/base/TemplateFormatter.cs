@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.Diagnostics
+namespace Microsoft.Telepathy.RuntimeTrace
 {
     using System;
     using System.Collections.Generic;

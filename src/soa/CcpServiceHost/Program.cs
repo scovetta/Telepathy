@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.CcpServiceHosting
+namespace Microsoft.Telepathy.CcpServiceHost
 {
     using System;
     using System.Configuration;
@@ -9,7 +9,6 @@ namespace Microsoft.Hpc.CcpServiceHosting
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Net;
     using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Security;
@@ -19,17 +18,14 @@ namespace Microsoft.Hpc.CcpServiceHosting
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.RESTServiceModel;
-    using Microsoft.Hpc.RuntimeTrace;
-    using Microsoft.Hpc.Scheduler.Session.Configuration;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
+    using Microsoft.Telepathy.CcpServiceHost.Rest;
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Data.Standalone;
+    using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Configuration;
+    using Microsoft.Telepathy.Session.Internal;
     using Microsoft.Win32.SafeHandles;
-
-    using SoaService.DataClient;
-
-    using TelepathyCommon;
-    using TelepathyCommon.HpcContext;
 
     class Program
     {

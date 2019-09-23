@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.GenericService
+namespace Microsoft.Telepathy.Session.GenericService
 {
     using System.ServiceModel;
 
@@ -10,7 +10,7 @@ namespace Microsoft.Hpc.Scheduler.Session.GenericService
     /// </summary>
     /// <remarks>
     ///   <para>Specify the 
-    /// <see cref="Microsoft.Hpc.Scheduler.Session.GenericService.GenericServiceRequest" /> type when calling the 
+    /// <see cref="GenericServiceRequest" /> type when calling the 
     /// "Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.SendRequest{T} method.</para>
     /// </remarks>
     [MessageContract(WrapperName = "GenericOperation", WrapperNamespace = "http://hpc.microsoft.com/GenericService", IsWrapped = true)]
@@ -22,11 +22,11 @@ namespace Microsoft.Hpc.Scheduler.Session.GenericService
         /// <returns>
         ///   <para />
         /// </returns>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.String)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.GenericService.GenericServiceResponse.Data" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.GenericService.GenericServiceResponse.Action" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SendRequest{TMessage}(TMessage,System.Object,System.String,System.Int32)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseStateHandler{TMessage},System.String,System.String,System.Object,System.Int32)" 
+        /// <seealso cref="BrokerClient{TContract}.SendRequest{TMessage}(TMessage,object,string)" />
+        /// <seealso cref="GenericServiceResponse.Data" />
+        /// <seealso cref="GenericServiceResponse.Action" />
+        /// <seealso cref="BrokerClient{TContract}.SendRequest{TMessage}(TMessage,object,string,int)" />
+        /// <seealso cref="BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseStateHandler{TMessage},string,string,object,int)" 
         /// /> 
         public const string Action = "http://hpc.microsoft.com/GenericService/IGenericService/GenericOperation";
 

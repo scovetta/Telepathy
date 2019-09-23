@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session.Exceptions
 {
     using System.Collections.Generic;
     using System.Reflection;
@@ -472,7 +472,7 @@ namespace Microsoft.Hpc.Scheduler.Session
 
         #region ApplicationError
         /// <summary>
-        ///   <para>The <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> object was deleted. The client will receive no more responses.</para>
+        ///   <para>The <see cref="BrokerClient{TContract}" /> object was deleted. The client will receive no more responses.</para>
         /// </summary>
         /// <returns>
         ///   <para />
@@ -500,7 +500,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         public const int Broker_SendBackResponseFailed = (int)SOAFaultCodeCategory.ApplicationError + 0x0002;
 
         /// <summary>
-        ///   <para>The <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> object timed out. Try again later.</para>
+        ///   <para>The <see cref="BrokerClient{TContract}" /> object timed out. Try again later.</para>
         /// </summary>
         /// <returns>
         ///   <para />
@@ -629,9 +629,9 @@ namespace Microsoft.Hpc.Scheduler.Session
 
         /// <summary>
         ///   <para>The client application could not attach to a durable session using the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.AttachSession(Microsoft.Hpc.Scheduler.Session.SessionAttachInfo)" /> method. Use the 
+        /// <see cref="Session.AttachSession(Microsoft.Telepathy.Session.SessionAttachInfo)" /> method. Use the 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.DurableSession.AttachSession(Microsoft.Hpc.Scheduler.Session.SessionAttachInfo)" /> method instead.</para> 
+        /// <see cref="DurableSession.AttachSession(Microsoft.Telepathy.Session.SessionAttachInfo)" /> method instead.</para> 
         /// </summary>
         /// <returns>
         ///   <para />
@@ -640,8 +640,8 @@ namespace Microsoft.Hpc.Scheduler.Session
 
         /// <summary>
         ///   <para>The client application could not attach to an interactive session using the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.DurableSession.AttachSession(Microsoft.Hpc.Scheduler.Session.SessionAttachInfo)" /> method. Use the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.AttachSession(Microsoft.Hpc.Scheduler.Session.SessionAttachInfo)" /> method instead.</para>
+        /// <see cref="DurableSession.AttachSession(Microsoft.Telepathy.Session.SessionAttachInfo)" /> method. Use the 
+        /// <see cref="Session.AttachSession(Microsoft.Telepathy.Session.SessionAttachInfo)" /> method instead.</para>
         /// </summary>
         /// <returns>
         ///   <para />
@@ -691,8 +691,8 @@ namespace Microsoft.Hpc.Scheduler.Session
 
         /// <summary>
         ///   <para>The security mode of the binding did not match the value of 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Secure" /> property. Change the security mode of the binding or the value of the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Secure" /> property so that they match, and try again.</para>
+        /// <see cref="SessionStartInfo.Secure" /> property. Change the security mode of the binding or the value of the 
+        /// <see cref="SessionStartInfo.Secure" /> property so that they match, and try again.</para>
         /// </summary>
         /// <returns>
         ///   <para />
@@ -747,7 +747,7 @@ namespace Microsoft.Hpc.Scheduler.Session
 
         /// <summary>
         ///   <para>The specified user is not authorized to access the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}" /> object with the specified client identifier.</para>
+        /// <see cref="BrokerClient{TContract}" /> object with the specified client identifier.</para>
         /// </summary>
         /// <returns>
         ///   <para />
@@ -956,10 +956,10 @@ namespace Microsoft.Hpc.Scheduler.Session
         ///   <para>The application failed to connect to the SOA web service because permissions to access the web service were 
         /// not granted to the account that started or attached to the session. This error occurs only when the using the  
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.TransportScheme.WebAPI" /> transport scheme to connect to the Windows Azure HPC Scheduler through the REST API. Check that the account specified in the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo" /> or 
+        /// <see cref="TransportScheme.WebAPI" /> transport scheme to connect to the Windows Azure HPC Scheduler through the REST API. Check that the account specified in the  
+        /// <see cref="SessionStartInfo" /> or 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionAttachInfo" /> class has permissions to access the web service, and try to run the application again.</para> 
+        /// <see cref="SessionAttachInfo" /> class has permissions to access the web service, and try to run the application again.</para> 
         /// </summary>
         /// <returns>
         ///   <para />
@@ -1053,7 +1053,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <returns>
         ///   <para>A value from the 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SOAFaultCodeCategory" /> enumeration that represents the category of the error with the specified error code.</para> 
+        /// <see cref="SOAFaultCodeCategory" /> enumeration that represents the category of the error with the specified error code.</para> 
         /// </returns>
         public static SOAFaultCodeCategory Category(int code)
         {

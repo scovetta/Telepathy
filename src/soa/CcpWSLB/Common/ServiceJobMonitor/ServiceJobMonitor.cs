@@ -1,20 +1,18 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using TelepathyCommon.HpcContext;
-
-namespace Microsoft.Hpc.ServiceBroker
+namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
 {
     using System;
     using System.ServiceModel;
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.ServiceBroker.BackEnd;
-    using Microsoft.Hpc.ServiceBroker.Common;
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor;
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd;
+    using Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Interface;
 
     /// <summary>
     /// Monitor the service job
@@ -61,7 +59,7 @@ namespace Microsoft.Hpc.ServiceBroker
                 this.sharedData.BrokerInfo.SessionId,
                 taskId => this.FinishTask(taskId, isRunAwayTask: true));
 
-            this.schedulerAdapterClientFactory = new SchedulerAdapterClientFactory(sharedData, this, dispatcherManager, this.context);
+            this.schedulerAdapterClientFactory = new SchedulerAdapterClientFactory(this.sharedData, this, dispatcherManager, this.context);
 
             try
             {
@@ -120,11 +118,10 @@ namespace Microsoft.Hpc.ServiceBroker
 
         private async Task OpenPreDefinedServiceHosts()
         {
-            // TODO: hack! rafactor this
             var startInfo = this.sharedData.StartInfo;
             if (startInfo != null)
             {
-                await SvcHostRestModule.OpenSvcHostsAsync(this.sharedData.BrokerInfo.SessionId, startInfo, ((ISchedulerNotify)this).TaskStateChanged);
+                await ((ISchedulerNotify)this).TaskStateChanged(SvcHostRestModule.CreateDummyTaskInfos(startInfo.IpAddress));
             }
         }
     }

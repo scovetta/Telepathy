@@ -1,15 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using TelepathyCommon.HpcContext;
-using TelepathyCommon.HpcContext.Extensions;
-using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
-using TelepathyCommon.Registry;
-
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Security.Cryptography.X509Certificates;
     using System.Security.Principal;
@@ -19,7 +13,11 @@ namespace Microsoft.Hpc.Scheduler.Session
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Internal;
+    using Microsoft.Telepathy.Common.Registry;
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions.RegistryExtension;
+    using Microsoft.Telepathy.Session.Common;
 
     /// <summary>
     /// WCF credential extensions

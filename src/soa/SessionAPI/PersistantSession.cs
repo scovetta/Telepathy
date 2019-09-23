@@ -1,15 +1,15 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
     using System;
     using System.ServiceModel.Channels;
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.SessionFactory;
+    using Microsoft.Telepathy.Session.Internal;
+    using Microsoft.Telepathy.Session.Internal.SessionFactory;
 
     /// <summary>
     ///   <para>Represents a durable session that binds a client application 
@@ -44,7 +44,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </summary>
         /// <param name="attachInfo">
         ///   <para>A 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionAttachInfo" /> object that specifies information about the durable session to which you want to attach the SOA client, including the name of the head node for the cluster that hosts the session and the identifier of the session.</para> 
+        /// <see cref="SessionAttachInfo" /> object that specifies information about the durable session to which you want to attach the SOA client, including the name of the head node for the cluster that hosts the session and the identifier of the session.</para> 
         /// </param>
         /// <returns>
         ///   <para>A <see cref="DurableSession" /> that represents the durable session to which the client attached.</para>

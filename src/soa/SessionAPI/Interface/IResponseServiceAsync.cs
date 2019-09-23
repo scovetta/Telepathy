@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Interface
 {
     using System;
-    using System.Runtime.Serialization;
     using System.ServiceModel;
+
+    using Microsoft.Telepathy.Session.Exceptions;
 
     /// <summary>
     /// Async version of IResponseService

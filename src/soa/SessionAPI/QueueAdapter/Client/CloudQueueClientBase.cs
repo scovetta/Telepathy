@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter.Client
+namespace Microsoft.Telepathy.Session.QueueAdapter.Client
 {
     using System;
     using System.Collections.Concurrent;
@@ -9,8 +9,8 @@ namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter.Client
     using System.Diagnostics;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
+    using Microsoft.Telepathy.Session.QueueAdapter.DTO;
+    using Microsoft.Telepathy.Session.QueueAdapter.Interface;
 
     public abstract class CloudQueueClientBase : IDisposable
     {
@@ -133,7 +133,7 @@ namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter.Client
 
         protected virtual void Dispose(bool disposing)
         {
-            ReleaseUnmanagedResources();
+            this.ReleaseUnmanagedResources();
             if (disposing)
             {
             }
@@ -141,13 +141,13 @@ namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter.Client
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
         ~CloudQueueClientBase()
         {
-            Dispose(false);
+            this.Dispose(false);
         }
     }
 }

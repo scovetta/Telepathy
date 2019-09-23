@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-
-namespace Microsoft.Hpc
+namespace Microsoft.Telepathy.Internal.SessionLauncher.Utils
 {
     public class HpcServiceNames
     {

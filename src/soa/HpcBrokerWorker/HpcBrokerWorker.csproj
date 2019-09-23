@@ -4,7 +4,7 @@
   <PropertyGroup>
     <ProjectGuid>{6D59B36E-FB92-40B0-9CB8-9230A6ADFFC1}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim</RootNamespace>
+    <RootNamespace>Microsoft.Telepathy.Internal.BrokerShim</RootNamespace>
     <AssemblyName>HpcBrokerWorker</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <AssemblyClsCompliant>false</AssemblyClsCompliant>

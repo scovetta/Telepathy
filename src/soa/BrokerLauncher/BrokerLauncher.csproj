@@ -4,7 +4,7 @@
   <PropertyGroup>
     <ProjectGuid>{7594BB62-494B-4D72-9F5D-EE4C993FE6C3}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher</RootNamespace>
+    <RootNamespace>Microsoft.Telepathy.Internal.BrokerLauncher</RootNamespace>
     <AssemblyName>HpcBroker</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <DefineTrace>true</DefineTrace>
@@ -89,6 +89,7 @@
     <Compile Include="AzureNodeMapping.cs" />
     <Compile Include="AzureNodeMappingUtil.cs" />
     <Compile Include="AzureRoleHelper.cs" />
+    <Compile Include="BrokerLauncherSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueAdapter\BrokerLauncherCloudQueueWatcher.cs" />
     <Compile Include="BrokerLauncherEnvironment.cs" />
@@ -170,10 +171,6 @@
     <ProjectReference Include="..\SessionAPI\Session.csproj">
       <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>
       <Name>Session</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SoaCommonUtility\SoaCommonUtility.csproj">
-      <Project>{bf0b4020-9934-466c-af35-9f97b4cf18ac}</Project>
-      <Name>SoaCommonUtility</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,21 +1,21 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using TelepathyCommon;
-
-namespace Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor
+namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
-    using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.RESTServiceModel;
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.ServiceBroker.BackEnd;
+    using Microsoft.Telepathy.CcpServiceHost.Rest;
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Common.ServiceRegistrationStore;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Data;
+    using Microsoft.Telepathy.Session.Interface;
 
     /// <summary>
     /// Controls service host using its management rest service when
@@ -136,13 +136,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor
             Dictionary<string, string> environment,
             Dictionary<string, string> dependFilesInfo)
         {
-            TaskInfo ti = new TaskInfo();
-            ti.Id = (TaskIdStart + num).ToString();
-            ti.Capacity = 1;
-            ti.FirstCoreIndex = 3;
-            ti.Location = Scheduler.Session.Data.NodeLocation.OnPremise;
-            ti.MachineName = ipAddress;
-            ti.State = Scheduler.Session.Data.TaskState.Dispatching;
+            var ti = CreateDummyTaskInfo(num, ipAddress);
             string fileName = SoaRegistrationAuxModule.GetRegistrationFileName(svcName, svcVersion);
             // HTTP POST
             var serviceInfo = new ServiceInfo(sessionId, ti.Id, ti.FirstCoreIndex, regPath + "\\", fileName, environment, dependFilesInfo);
@@ -150,6 +144,29 @@ namespace Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor
             BrokerTracing.TraceVerbose("[OpenSvcHost].result:{0}", result);
             result.EnsureSuccessStatusCode();
             return ti;
+        }
+
+        public static TaskInfo CreateDummyTaskInfo(int idx, string ipAddress)
+        {
+            TaskInfo ti = new TaskInfo();
+            ti.Id = (TaskIdStart + idx).ToString();
+            ti.Capacity = 1;
+            ti.FirstCoreIndex = 3;
+            ti.Location = NodeLocation.OnPremise;
+            ti.MachineName = ipAddress;
+            ti.State = TaskState.Dispatching;
+            return ti;
+        }
+
+        public static List<TaskInfo> CreateDummyTaskInfos(string[] ipAddresses)
+        {
+            List<TaskInfo> res = new List<TaskInfo>();
+            for (int i = 0; i < ipAddresses.Length; ++i)
+            {
+                res.Add(CreateDummyTaskInfo(i, ipAddresses[i]));
+            }
+
+            return res;
         }
     }
 }

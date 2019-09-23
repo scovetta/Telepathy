@@ -4,7 +4,7 @@
   <PropertyGroup>
     <ProjectGuid>{602B999E-6203-432C-AF7C-2C31DDDDE60A}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Microsoft.Hpc.SvcHostRestServer</RootNamespace>
+    <RootNamespace>Microsoft.Telepathy.CcpServiceHost.Rest</RootNamespace>
     <AssemblyName>Microsoft.Hpc.SvcHostRestServer</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <AssemblyClsCompliant>false</AssemblyClsCompliant>

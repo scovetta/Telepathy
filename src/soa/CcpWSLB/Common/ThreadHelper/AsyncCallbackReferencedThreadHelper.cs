@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.Common.ThreadHelper
+namespace Microsoft.Telepathy.ServiceBroker.Common.ThreadHelper
 {
     using System;
     using System.Diagnostics;

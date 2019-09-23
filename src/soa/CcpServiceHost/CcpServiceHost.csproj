@@ -4,7 +4,7 @@
   <PropertyGroup>
     <ProjectGuid>{BE6C6D6F-E240-4676-AFB9-46DBF008EFAB}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Microsoft.Hpc.CcpServiceHosting</RootNamespace>
+    <RootNamespace>Microsoft.Telepathy.CcpServiceHost</RootNamespace>
     <AssemblyName Condition="$(BuildArchitecture)=='amd64'">HpcServiceHost</AssemblyName>
     <AssemblyName Condition="$(BuildArchitecture)=='i386'">HpcServiceHost32</AssemblyName>
     <PlatformTarget Condition="$(BuildArchitecture)=='i386'">x86</PlatformTarget>

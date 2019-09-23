@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.FrontEnd.AzureQueue
+namespace Microsoft.Telepathy.ServiceBroker.FrontEnd.AzureQueue
 {
     using System.Diagnostics;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter;
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Server;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.QueueAdapter;
+    using Microsoft.Telepathy.Session.QueueAdapter.DTO;
+    using Microsoft.Telepathy.Session.QueueAdapter.Interface;
+    using Microsoft.Telepathy.Session.QueueAdapter.Server;
 
     public class BrokerWorkerControllerQueueWatcher : CloudQueueWatcherBase
     {

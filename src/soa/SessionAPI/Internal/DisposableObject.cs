@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Common
+namespace Microsoft.Telepathy.Session.Internal
 {
     using System;
     using System.Threading;

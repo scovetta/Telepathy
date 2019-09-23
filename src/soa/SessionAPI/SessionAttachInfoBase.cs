@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
     /// <summary>
     /// Base class for information to attach to a session
@@ -37,7 +37,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             get
             {
-                return headnode;
+                return this.headnode;
             }
         }
     }

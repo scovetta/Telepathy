@@ -1,16 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker
+namespace Microsoft.Telepathy.ServiceBroker.Common
 {
     using System;
     using System.ServiceModel.Channels;
     using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session.Common;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using Microsoft.Hpc.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Base class for GetResponsesHandler and PullResponsesHandler
@@ -203,13 +201,13 @@ namespace Microsoft.Hpc.ServiceBroker
             Message converted = Message.CreateMessage(this.version, message.Headers.Action, message.GetReaderAtBodyContents());
 
             // Add request message action to response message header
-            Microsoft.Hpc.ServiceBroker.Common.Utility.CopyMessageHeader(Constant.ActionHeaderName, Constant.HpcHeaderNS, message.Headers, converted.Headers);
+            Utility.CopyMessageHeader(Constant.ActionHeaderName, Constant.HpcHeaderNS, message.Headers, converted.Headers);
 
             // Add user data header
-            Microsoft.Hpc.ServiceBroker.Common.Utility.CopyMessageHeader(Constant.UserDataHeaderName, Constant.HpcHeaderNS, message.Headers, converted.Headers);
+            Utility.CopyMessageHeader(Constant.UserDataHeaderName, Constant.HpcHeaderNS, message.Headers, converted.Headers);
 
             // Add message id header
-            Microsoft.Hpc.ServiceBroker.Common.Utility.CopyMessageHeader(Constant.MessageIdHeaderName, Constant.HpcHeaderNS, message.Headers, converted.Headers);
+            Utility.CopyMessageHeader(Constant.MessageIdHeaderName, Constant.HpcHeaderNS, message.Headers, converted.Headers);
 
             Utility.PrepareAddressingHeaders(message, converted);
                         

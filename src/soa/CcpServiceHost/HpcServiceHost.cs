@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.CcpServiceHosting
+namespace Microsoft.Telepathy.CcpServiceHost
 {
     using System;
     using System.Diagnostics;
@@ -9,12 +9,11 @@ namespace Microsoft.Hpc.CcpServiceHosting
     using System.Reflection;
     using System.ServiceModel;
 
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Interface;
 
-    using TelepathyCommon;
-
-    using RuntimeTraceHelper = Microsoft.Hpc.RuntimeTrace.TraceHelper;
+    using RuntimeTraceHelper = Microsoft.Telepathy.RuntimeTrace.TraceHelper;
 
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class HpcServiceHost : IHpcServiceHost
@@ -56,9 +55,9 @@ namespace Microsoft.Hpc.CcpServiceHosting
                     if (!this.hostWrapper.IsOnExitingCalled)
                     {
                         // Invoke user's Exiting event async with a timeout specified by TaskCancelGracePeriod cluster parameter.
-                        Action<object> a = InvokeFireExitingEvent;
+                        Action<object> a = this.InvokeFireExitingEvent;
                         IAsyncResult ar = a.BeginInvoke(null, null, null);
-                        if (ar.AsyncWaitHandle.WaitOne(_cancelTaskGracePeriod, false))
+                        if (ar.AsyncWaitHandle.WaitOne(this._cancelTaskGracePeriod, false))
                         {
                             a.EndInvoke(ar);
                         }

@@ -1,10 +1,11 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
     using System.Runtime.InteropServices;
+
     using Microsoft.Win32.SafeHandles;
 
     [System.Security.Permissions.PermissionSetAttribute(System.Security.Permissions.SecurityAction.Demand, Name = "FullTrust")]

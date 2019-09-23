@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace CcpWSLB.UnitTest
+namespace Microsoft.Telepathy.ServiceBroker.UnitTest
 {
     using System;
     using System.Diagnostics;
@@ -14,9 +14,8 @@ namespace CcpWSLB.UnitTest
     using System.Xml;
 
     using Microsoft.Azure;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureStorageTool;
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;

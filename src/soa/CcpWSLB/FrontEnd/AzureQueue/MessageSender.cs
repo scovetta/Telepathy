@@ -1,11 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.FrontEnd
+namespace Microsoft.Telepathy.ServiceBroker.FrontEnd.AzureQueue
 {
-    using Microsoft.Hpc.Scheduler.Session.Common;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
@@ -14,7 +11,10 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using System.Threading;
     using System.Xml;
 
-    using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Internal;
+    using Microsoft.Telepathy.Session.Internal.AzureQueue;
 
     /// <summary>
     /// It sends response messages to response queue

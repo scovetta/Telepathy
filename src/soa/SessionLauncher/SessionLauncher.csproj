@@ -4,7 +4,7 @@
   <PropertyGroup>
     <ProjectGuid>{BC31391D-C35E-4F5F-9116-06B71BDBB79D}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher</RootNamespace>
+    <RootNamespace>Microsoft.Telepathy.Internal.SessionLauncher</RootNamespace>
     <AssemblyName>HpcSession</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <AssemblyClsCompliant>false</AssemblyClsCompliant>
@@ -166,10 +166,6 @@
     <ProjectReference Include="..\SessionAPI\Session.csproj">
       <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>
       <Name>Session</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SoaCommonUtility\SoaCommonUtility.csproj">
-      <Project>{bf0b4020-9934-466c-af35-9f97b4cf18ac}</Project>
-      <Name>SoaCommonUtility</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

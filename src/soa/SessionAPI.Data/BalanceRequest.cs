@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Data
+namespace Microsoft.Telepathy.Session.Data
 {
     using System;
     using System.Collections.Generic;

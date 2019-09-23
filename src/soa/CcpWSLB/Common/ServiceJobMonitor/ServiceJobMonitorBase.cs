@@ -1,14 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using TelepathyCommon;
-using TelepathyCommon.HpcContext;
-
-namespace Microsoft.Hpc.ServiceBroker
+namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Diagnostics;
     using System.Linq;
@@ -16,19 +13,17 @@ namespace Microsoft.Hpc.ServiceBroker
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Data;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using Microsoft.Hpc.ServiceBroker.BackEnd;
-    using Microsoft.Hpc.ServiceBroker.Common;
-
-    using SoaAmbientConfig;
-    using Microsoft.Hpc.ServiceBroker.Common.ThreadHelper;
-
-    using SR = Microsoft.Hpc.SvcBroker.SR;
-    using Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor;
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd;
+    using Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter;
+    using Microsoft.Telepathy.ServiceBroker.Common.ThreadHelper;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Data;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Internal Monitor the service job
@@ -887,7 +882,7 @@ namespace Microsoft.Hpc.ServiceBroker
                             // targetResourceCount is currently set to the number of resources needed to process all queued requests in parallel bounded by min and max.
                             // Ensure targetResourceCount isnt set lower than the number of active service calls (not considered in queuelength)
                             targetResourceCountInResourceUnits = Math.Max(totalActiveCapacityInResourceUnits, targetResourceCountInResourceUnits);
-                            targetResourceCountInResourceUnitsCalculated = targetResourceCountInResourceUnits;
+                            this.targetResourceCountInResourceUnitsCalculated = targetResourceCountInResourceUnits;
 
                             BrokerTracing.TraceVerbose(
                                 "[ServiceJobMonitor].AllocationAdjust: new targetResourceCountInResourceUnits={0}, previous targetResourceCountInResourceUnits={1}",
@@ -1335,13 +1330,13 @@ namespace Microsoft.Hpc.ServiceBroker
             BrokerTracing.TraceVerbose("[ServiceJobMonitor] Begin: RegisterJob");
 
             int autoMax, autoMin;
-            Microsoft.Hpc.Scheduler.Session.Data.JobState jobState;
+            JobState jobState;
             try
             {
                 //lock (this.lockClient)
                 //{
                 RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
-                (jobState, autoMax, autoMin) = await RetryHelper<(Hpc.Scheduler.Session.Data.JobState, int, int)>.InvokeOperationAsync(
+                (jobState, autoMax, autoMin) = await RetryHelper<(JobState, int, int)>.InvokeOperationAsync(
                         async () => await (await this.schedulerAdapterClientFactory.GetSchedulerAdapterClientAsync()).RegisterJobAsync(this.sharedData.BrokerInfo.SessionId),
                         async (e, r) => await Task.FromResult<object>(new Func<object>(() => { BrokerTracing.TraceEvent(System.Diagnostics.TraceEventType.Error, 0, "[ServiceJobMonitor] SessionFault throws when registering job: {0} with retry {1}", e, r.RetryCount); return null; }).Invoke()),
                         retry);
@@ -1378,7 +1373,7 @@ namespace Microsoft.Hpc.ServiceBroker
             }
 
             BrokerTracing.TraceVerbose("[ServiceJobMonitor] Current job state is {0}", jobState);
-            if (jobState == Hpc.Scheduler.Session.Data.JobState.Finished || jobState == Hpc.Scheduler.Session.Data.JobState.Finishing || jobState == Hpc.Scheduler.Session.Data.JobState.Failed)
+            if (jobState == JobState.Finished || jobState == JobState.Finishing || jobState == JobState.Failed)
             {
                 // Bug 14543: If the job is already in the above state (suppose it should never go back to
                 // Running without user iteraction), set ServiceJobState to Finished as it should not allow
@@ -1427,9 +1422,9 @@ namespace Microsoft.Hpc.ServiceBroker
             }
         }
 
-        Task ISchedulerNotify.JobStateChanged(Microsoft.Hpc.Scheduler.Session.Data.JobState jobState)
+        Task ISchedulerNotify.JobStateChanged(JobState jobState)
         {
-            return JobStateChangedInternal(jobState);
+            return this.JobStateChangedInternal(jobState);
         }
 
 
@@ -1517,7 +1512,7 @@ namespace Microsoft.Hpc.ServiceBroker
 
                     foreach (TaskInfo info in taskInfoList)
                     {
-                        if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Running || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Dispatching)
+                        if (info.State == TaskState.Running || info.State == TaskState.Dispatching)
                         {
                             if (this.IsRemovedDispatcher(info.Id))
                             {
@@ -1527,8 +1522,8 @@ namespace Microsoft.Hpc.ServiceBroker
                             {
                                 ServiceTaskDispatcherInfo serviceTaskDispatcherInfo = null;
 
-                                if (info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.OnPremise || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.Linux
-                                                                                                                 || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.NonDomainJoined)
+                                if (info.Location == NodeLocation.OnPremise || info.Location == NodeLocation.Linux
+                                                                                                                 || info.Location == NodeLocation.NonDomainJoined)
                                 {
                                     //
                                     // the node is on-premise or Linux node
@@ -1537,7 +1532,7 @@ namespace Microsoft.Hpc.ServiceBroker
                                     // if this node is in blacklist, remove it
                                     lock (this.lockRemoteBlacklistCopy)
                                     {
-                                        remoteBlacklistCopy.Remove(info.MachineName);
+                                        this.remoteBlacklistCopy.Remove(info.MachineName);
                                     }
 
                                     BrokerTracing.TraceInfo("[ServiceJobMonitor] Create new dispatcher for on-premise node {0} because task state is changed into {1}.", info.Id, info.State);
@@ -1581,18 +1576,18 @@ namespace Microsoft.Hpc.ServiceBroker
                                             this.dispatcherManager.BackEndIsHttp);
                                     }
                                 }
-                                else if (info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.AzureEmbedded
-                                         || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.AzureEmbeddedVM)
+                                else if (info.Location == NodeLocation.AzureEmbedded
+                                         || info.Location == NodeLocation.AzureEmbeddedVM)
                                 {
                                     //
                                     // the cluster is on Azure
                                     //
 
-                                    if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Running)
+                                    if (info.State == TaskState.Running)
                                     {
                                         lock (this.lockRemoteBlacklistCopy)
                                         {
-                                            remoteBlacklistCopy.Remove(info.MachineVirtualName);
+                                            this.remoteBlacklistCopy.Remove(info.MachineVirtualName);
                                         }
 
                                         if (this.nodeMappingData != null)
@@ -1628,17 +1623,17 @@ namespace Microsoft.Hpc.ServiceBroker
                                             info.State);
                                     }
                                 }
-                                else if (info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.Azure || info.Location == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.AzureVM)
+                                else if (info.Location == NodeLocation.Azure || info.Location == NodeLocation.AzureVM)
                                 {
                                     //
                                     // burst mode (the node is on Azure)
                                     //
 
-                                    if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Running)
+                                    if (info.State == TaskState.Running)
                                     {
                                         lock (this.lockRemoteBlacklistCopy)
                                         {
-                                            remoteBlacklistCopy.Remove(info.MachineName);
+                                            this.remoteBlacklistCopy.Remove(info.MachineName);
                                         }
 
                                         BrokerTracing.TraceInfo(
@@ -1684,9 +1679,9 @@ namespace Microsoft.Hpc.ServiceBroker
                                 BrokerTracing.TraceInfo("[ServiceJobMonitor] Dispatcher {0} is already created. Task state {1}.", info.Id, info.State);
                             }
                         }
-                        else if (info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Canceled || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Failed
-                                                                                                       || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Finished
-                                                                                                       || info.State == Microsoft.Hpc.Scheduler.Session.Data.TaskState.Finishing)
+                        else if (info.State == TaskState.Canceled || info.State == TaskState.Failed
+                                                                                                       || info.State == TaskState.Finished
+                                                                                                       || info.State == TaskState.Finishing)
                         {
                             // remove (info.State == TaskState.Canceling) from the condition above.
                             // when preemption happens to the task, it is in cancelling state. Should not remove the dispather,

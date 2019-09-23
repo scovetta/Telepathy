@@ -1,12 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker
+namespace Microsoft.Telepathy.ServiceBroker.Common
 {
     using System;
     using System.Collections.Generic;
     using System.ServiceModel;
     using System.Threading;
+
+    using Microsoft.Telepathy.Session;
 
     /// <summary>
     /// It encapsulates the node mapping logic.
@@ -30,7 +32,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// </summary>
         public Dictionary<string, string> Dictionary
         {
-            get { return dictionary; }
+            get { return this.dictionary; }
         }
 
         /// <summary>
@@ -92,14 +94,14 @@ namespace Microsoft.Hpc.ServiceBroker
 
         ~NodeMappingData()
         {
-            Dispose(false);
+            this.Dispose(false);
         }
 
         public void Dispose()
         {
             if (!this.disposed)
             {
-                Dispose(true);
+                this.Dispose(true);
                 GC.SuppressFinalize(this);
             }
         }

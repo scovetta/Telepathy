@@ -1,10 +1,9 @@
-﻿using System;
-using System.ServiceModel.Channels;
-using Microsoft.Hpc.ServiceBroker.BackEnd;
-
-namespace Microsoft.Hpc.ServiceBroker.UnitTest.Mock
+﻿namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Mock
 {
-    internal class MockClient : IService
+    using System;
+    using System.ServiceModel.Channels;
+
+    internal class MockClient : BackEnd.IService
     {
         public Action Action
         {
@@ -35,7 +34,7 @@ namespace Microsoft.Hpc.ServiceBroker.UnitTest.Mock
                 this.Action();
             }
 
-            return Response;
+            return this.Response;
         }
     }
 }

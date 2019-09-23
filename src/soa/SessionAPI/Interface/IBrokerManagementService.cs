@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Interface
+namespace Microsoft.Telepathy.Session.Interface
 {
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using System.ServiceModel;
+
+    using Microsoft.Telepathy.Session.Exceptions;
 
     /// <summary>
     /// Interface for Broker Management Service

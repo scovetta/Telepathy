@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.GenericService
+namespace Microsoft.Telepathy.Session.GenericService
 {
     using System.ServiceModel;
 
@@ -10,8 +10,8 @@ namespace Microsoft.Hpc.Scheduler.Session.GenericService
     /// </summary>
     /// <remarks>
     ///   <para>Specify the 
-    /// <see cref="Microsoft.Hpc.Scheduler.Session.GenericService.GenericServiceResponse" /> type when calling the 
-    /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{T}.GetResponses()" /> method.</para>
+    /// <see cref="GenericServiceResponse" /> type when calling the 
+    /// <see cref="BrokerClient{TContract}.GetResponses()" /> method.</para>
     /// </remarks>
     [MessageContract(WrapperName = "GenericOperationResponse", WrapperNamespace = "http://hpc.microsoft.com/GenericService", IsWrapped = true)]
     public class GenericServiceResponse
@@ -22,8 +22,8 @@ namespace Microsoft.Hpc.Scheduler.Session.GenericService
         /// <returns>
         ///   <para />
         /// </returns>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.GetResponses{TMessage}(System.String,System.String,System.Int32)" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Hpc.Scheduler.Session.BrokerResponseHandler{TMessage},System.String,System.String,System.Int32)" 
+        /// <seealso cref="BrokerClient{TContract}.GetResponses{TMessage}(string,string,int)" />
+        /// <seealso cref="BrokerClient{TContract}.SetResponseHandler{TMessage}(Microsoft.Telepathy.Session.Internal.BrokerResponseHandler{TMessage},string,string,int)" 
         /// /> 
         public const string Action = "http://hpc.microsoft.com/GenericService/IGenericService/GenericOperationResponse";
 

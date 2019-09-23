@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.CcpServiceHosting
+namespace Microsoft.Telepathy.CcpServiceHost
 {
     using System;
     using System.Collections;
@@ -14,15 +14,15 @@ namespace Microsoft.Hpc.CcpServiceHosting
     using System.ServiceModel.Description;
     using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Configuration;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker;
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Configuration;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
 
-    using TelepathyCommon;
-
-    using RuntimeTraceHelper = Microsoft.Hpc.RuntimeTrace.TraceHelper;
+    using RuntimeTraceHelper = Microsoft.Telepathy.RuntimeTrace.TraceHelper;
 
     /// <summary>
     /// This class works in the newly created domain. 
@@ -145,7 +145,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
         /// </summary>
         public int ServiceHostIdleTimeout
         {
-            get { return serviceHostIdleTimeout; }
+            get { return this.serviceHostIdleTimeout; }
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
         /// </summary>
         public Timer SerivceHostIdleTimer
         {
-            get { return serviceHostIdleTimer; }
+            get { return this.serviceHostIdleTimer; }
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
         /// </summary>
         public int ServiceHangTimeout
         {
-            get { return serviceHangTimeout; }
+            get { return this.serviceHangTimeout; }
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
         /// </summary>
         public Timer ServiceHangTimer
         {
-            get { return serviceHangTimer; }
+            get { return this.serviceHangTimer; }
         }
 
         public CcpServiceHostWrapper(string serviceConfigFile, bool onAzure, bool standAlone)
@@ -192,9 +192,9 @@ namespace Microsoft.Hpc.CcpServiceHosting
             // Here we put the resolve handler in case there is assembly not found exception.
             AppDomain.CurrentDomain.AssemblyResolve += ResolveHandler;
 
-            _onAzure = onAzure;
-            _serviceConfigFile = serviceConfigFile;
-            _standAlone = standAlone;
+            this._onAzure = onAzure;
+            this._serviceConfigFile = serviceConfigFile;
+            this._standAlone = standAlone;
         }
 
         /// <summary>
@@ -229,7 +229,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 this._jobId = jobIdEnvVar;
             }
 
-            RuntimeTraceHelper.RuntimeTrace.LogHostStart(_jobId);
+            RuntimeTraceHelper.RuntimeTrace.LogHostStart(this._jobId);
 
             string taskIdEnvVar = Environment.GetEnvironmentVariable(Constant.TaskIDEnvVar);
 
@@ -247,7 +247,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 this._jobId,
                 TraceEventType.Verbose,
                 "[HpcServiceHost]: Task Id = {0}",
-                _taskId);
+                this._taskId);
 
             string procNumEnvVar = Environment.GetEnvironmentVariable(Constant.ProcNumEnvVar);
             Debug.WriteLine($"{Constant.ProcNumEnvVar}={procNumEnvVar}");
@@ -256,11 +256,11 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
             if (bool.TryParse(overrideProcNumEnvVar, out var ov) && ov)
             {
-                _procNum = Environment.ProcessorCount;
+                this._procNum = Environment.ProcessorCount;
             }
             else
             {
-                if (string.IsNullOrEmpty(procNumEnvVar) || !int.TryParse(procNumEnvVar, out _procNum))
+                if (string.IsNullOrEmpty(procNumEnvVar) || !int.TryParse(procNumEnvVar, out this._procNum))
                 {
                     RuntimeTraceHelper.TraceEvent(this._jobId, TraceEventType.Error, StringTable.CantFindProcNum);
                     return ErrorCode.ServiceHost_UnexpectedException;
@@ -271,18 +271,18 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 this._jobId,
                 TraceEventType.Verbose,
                 "[HpcServiceHost]: Number of processors (service capability) = {0}",
-                _procNum);
+                this._procNum);
 
             string strServiceInitializationTimeout = Environment.GetEnvironmentVariable(Constant.ServiceInitializationTimeoutEnvVar);
             if (string.IsNullOrEmpty(strServiceInitializationTimeout) ||
-               !int.TryParse(strServiceInitializationTimeout, out _retryTimeoutInMilliSecond))
+               !int.TryParse(strServiceInitializationTimeout, out this._retryTimeoutInMilliSecond))
             {
                 RuntimeTraceHelper.TraceEvent(
                     this._jobId,
                     TraceEventType.Warning,
                     "[HpcServiceHost]: invalid serviceInitializationTimeout value. Fall back to default value = 60s");
 
-                _retryTimeoutInMilliSecond = defaultRetryTimeout;
+                this._retryTimeoutInMilliSecond = defaultRetryTimeout;
             }
 
             string cancelTaskGracePeriodEnvVarStr = Environment.GetEnvironmentVariable(Constant.CancelTaskGracePeriodEnvVar);
@@ -294,7 +294,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 if (Int32.TryParse(cancelTaskGracePeriodEnvVarStr, out cancelTaskGracePeriod))
                 {
                     // Convert to ms from sec
-                    _cancelTaskGracePeriod = cancelTaskGracePeriod * 1000;
+                    this._cancelTaskGracePeriod = cancelTaskGracePeriod * 1000;
                 }
             }
 
@@ -302,7 +302,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 this._jobId,
                 TraceEventType.Information,
                 "[HpcServiceHost]: Cancel Task Grace Period = {0}",
-                _cancelTaskGracePeriod);
+                this._cancelTaskGracePeriod);
 
             // parse the coreID list to get the first allocate core
             // the coreids is like "0 1 2 5" if allocate 4 cores
@@ -310,7 +310,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
             if (!String.IsNullOrEmpty(CoreIds))
             {
                 string[] cores = CoreIds.Split(' ');
-                if (cores.Length < 1 || !Int32.TryParse(cores[0], out coreId))
+                if (cores.Length < 1 || !Int32.TryParse(cores[0], out this.coreId))
                 {
                     RuntimeTraceHelper.TraceEvent(
                         this._jobId,
@@ -322,7 +322,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
             RuntimeTraceHelper.TraceEvent(
                 this._jobId,
                 TraceEventType.Information,
-                "[HpcServiceHost]: First Allocated CoreId = {0}", coreId);
+                "[HpcServiceHost]: First Allocated CoreId = {0}", this.coreId);
 
             // get the preemption switcher from the env var, the default value is true.
             string preemption = Environment.GetEnvironmentVariable(Constant.EnableMessageLevelPreemptionEnvVar);
@@ -335,11 +335,11 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 this._jobId,
                 TraceEventType.Information,
                 "[HpcServiceHost]: EnableMessageLevelPreemption = {0}",
-                enableMessageLevelPreemption);
+                this.enableMessageLevelPreemption);
 
             string serviceHostIdleTimeoutEnvVar = Environment.GetEnvironmentVariable(Constant.ServiceHostIdleTimeoutEnvVar);
 
-            if (string.IsNullOrEmpty(serviceHostIdleTimeoutEnvVar) || !int.TryParse(serviceHostIdleTimeoutEnvVar, out serviceHostIdleTimeout))
+            if (string.IsNullOrEmpty(serviceHostIdleTimeoutEnvVar) || !int.TryParse(serviceHostIdleTimeoutEnvVar, out this.serviceHostIdleTimeout))
             {
                 RuntimeTraceHelper.TraceEvent(
                 this._jobId,
@@ -348,12 +348,12 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 serviceHostIdleTimeoutEnvVar);
 
                 // set to Timeout.Infinite if not specified or cannot be parsed.
-                serviceHostIdleTimeout = Timeout.Infinite;
+                this.serviceHostIdleTimeout = Timeout.Infinite;
             }
 
             string serviceHangTimeoutEnvVar = Environment.GetEnvironmentVariable(Constant.ServiceHangTimeoutEnvVar);
 
-            if (string.IsNullOrEmpty(serviceHangTimeoutEnvVar) || !int.TryParse(serviceHangTimeoutEnvVar, out serviceHangTimeout))
+            if (string.IsNullOrEmpty(serviceHangTimeoutEnvVar) || !int.TryParse(serviceHangTimeoutEnvVar, out this.serviceHangTimeout))
             {
                 RuntimeTraceHelper.TraceEvent(
                 this._jobId,
@@ -362,7 +362,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 serviceHangTimeoutEnvVar);
 
                 // set to Timeout.Infinite if not specified or cannot be parsed.
-                serviceHangTimeout = Timeout.Infinite;
+                this.serviceHangTimeout = Timeout.Infinite;
             }
 
             return ErrorCode.Success;
@@ -371,13 +371,13 @@ namespace Microsoft.Hpc.CcpServiceHosting
         private int GetServiceInfo()
         {
             ServiceRegistration registration;
-            int errorCode = Utility.GetServiceRegistration(_serviceConfigFile, _onAzure, out registration, out _serviceAssemblyFileName);
+            int errorCode = Utility.GetServiceRegistration(this._serviceConfigFile, this._onAzure, out registration, out this._serviceAssemblyFileName);
             if (errorCode != ErrorCode.Success)
             {
                 return errorCode;
             }
 
-            string assemblyConfigFile = string.Concat(_serviceAssemblyFileName, ".config");
+            string assemblyConfigFile = string.Concat(this._serviceAssemblyFileName, ".config");
             if (File.Exists(assemblyConfigFile))
             {
                 // We discard the <assembly_name>.dll.config in v3. Everything goes to service
@@ -388,15 +388,15 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 RuntimeTraceHelper.RuntimeTrace.LogHostServiceConfigCheck(assemblyConfigFile);
             }
 
-            _serviceContractName = registration.Service.ContractType;
-            _serviceTypeName = registration.Service.ServiceType;
+            this._serviceContractName = registration.Service.ContractType;
+            this._serviceTypeName = registration.Service.ServiceType;
 
-            _maxConcurrentCalls = registration.Service.MaxConcurrentCalls == 0 ? _procNum : registration.Service.MaxConcurrentCalls;
+            this._maxConcurrentCalls = registration.Service.MaxConcurrentCalls == 0 ? this._procNum : registration.Service.MaxConcurrentCalls;
             Debug.WriteLine($"{nameof(this._maxConcurrentCalls)}={this._maxConcurrentCalls}");
-            _includeFaultedException = registration.Service.IncludeExceptionDetailInFaults;
+            this._includeFaultedException = registration.Service.IncludeExceptionDetailInFaults;
 
             // we have to use this to avoid to load the service config in main domain
-            AppDomain.CurrentDomain.AppendPrivatePath(Path.GetDirectoryName(_serviceAssemblyFileName));
+            AppDomain.CurrentDomain.AppendPrivatePath(Path.GetDirectoryName(this._serviceAssemblyFileName));
 
             return ErrorCode.Success;
         }
@@ -462,7 +462,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
             int retryWaitPeriodInMilliSecond = 500;  // initially retry wait period is 0.5 second
             Stopwatch serviceStartTimeWatch = new Stopwatch();
 
-            errorCode = GetEnvironmentVariables();
+            errorCode = this.GetEnvironmentVariables();
             if (errorCode != ErrorCode.Success)
             {
                 return;
@@ -486,7 +486,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
                 try
                 {
-                    errorCode = RunInternal();
+                    errorCode = this.RunInternal();
 
                     if (retry == uint.MaxValue)
                     {
@@ -539,16 +539,16 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 serviceStartTimeWatch.Stop();
                 // if retry timeout is reached, done 
                 int elapsedStartTimeInMilliSecond = (int)serviceStartTimeWatch.ElapsedMilliseconds;
-                if (elapsedStartTimeInMilliSecond > _retryTimeoutInMilliSecond)
+                if (elapsedStartTimeInMilliSecond > this._retryTimeoutInMilliSecond)
                 {
                     break;
                 }
 
                 serviceStartTimeWatch.Start();
 
-                if (elapsedStartTimeInMilliSecond + retryWaitPeriodInMilliSecond > _retryTimeoutInMilliSecond)
+                if (elapsedStartTimeInMilliSecond + retryWaitPeriodInMilliSecond > this._retryTimeoutInMilliSecond)
                 {
-                    retryWaitPeriodInMilliSecond = _retryTimeoutInMilliSecond - elapsedStartTimeInMilliSecond;
+                    retryWaitPeriodInMilliSecond = this._retryTimeoutInMilliSecond - elapsedStartTimeInMilliSecond;
                 }
 
                 RuntimeTraceHelper.TraceEvent(
@@ -572,7 +572,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
             if (errorCode != ErrorCode.Success)
             {
-                RunAsDummy();
+                this.RunAsDummy();
             }
         }
 
@@ -584,7 +584,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
         private int RunInternal()
         {
             // Initialize
-            int error = GetServiceInfo();
+            int error = this.GetServiceInfo();
             if (error != ErrorCode.Success)
             {
                 return error;
@@ -595,7 +595,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
             #region Load service assemblies
             // Load the service assembly from the specified path
 
-            Assembly asm = Assembly.LoadFrom(_serviceAssemblyFileName);
+            Assembly asm = Assembly.LoadFrom(this._serviceAssemblyFileName);
             if (asm == null)
             {
                 return ErrorCode.ServiceHost_AssemblyLoadingError;
@@ -604,7 +604,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
             RuntimeTraceHelper.RuntimeTrace.LogHostAssemblyLoaded(this._jobId);
 
             // Try to auto discover the service contract interface from the assembly
-            if (string.IsNullOrEmpty(_serviceContractName))
+            if (string.IsNullOrEmpty(this._serviceContractName))
             {
                 Type[] allTypes = asm.GetTypes();
 
@@ -614,7 +614,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
                     if (tmpType.IsInterface && snAttrs != null && snAttrs.Length > 0)
                     {
-                        _serviceContractName = tmpType.FullName;  // the first interface type that has the service contract attribute
+                        this._serviceContractName = tmpType.FullName;  // the first interface type that has the service contract attribute
                         break;
                     }
                 }
@@ -622,7 +622,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 // Can't find the contract from the assembly.
                 // Notice: generic service's contract is in the session.dll, so can't be found in the assembly.
                 // User should specified it in the service registration file.
-                if (string.IsNullOrEmpty(_serviceContractName))
+                if (string.IsNullOrEmpty(this._serviceContractName))
                 {
                     return ErrorCode.ServiceHost_ContractDiscoverError;
                 }
@@ -630,20 +630,20 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
             // Try to auto discover the service type from the assembly
 
-            if (string.IsNullOrEmpty(_serviceTypeName))
+            if (string.IsNullOrEmpty(this._serviceTypeName))
             {
                 Type[] allTypes = asm.GetTypes();
 
                 foreach (Type tmpType in allTypes)
                 {
-                    if (tmpType.GetInterface(_serviceContractName, true) != null)
+                    if (tmpType.GetInterface(this._serviceContractName, true) != null)
                     {
-                        _serviceTypeName = tmpType.FullName;     // The first type implementing the service contract interface
+                        this._serviceTypeName = tmpType.FullName;     // The first type implementing the service contract interface
                         break;
                     }
                 }
 
-                if (_serviceTypeName == null) // Not found
+                if (this._serviceTypeName == null) // Not found
                 {
                     return ErrorCode.ServiceHost_ServiceTypeDiscoverError;
                 }
@@ -651,10 +651,10 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
             // Load the service type
 
-            Type serviceType = asm.GetType(_serviceTypeName);
+            Type serviceType = asm.GetType(this._serviceTypeName);
             if (serviceType == null)
             {
-                string message = string.Format(CultureInfo.CurrentCulture, StringTable.CantFindServiceType, _serviceTypeName, asm.FullName);
+                string message = string.Format(CultureInfo.CurrentCulture, StringTable.CantFindServiceType, this._serviceTypeName, asm.FullName);
                 Console.Error.WriteLine(message);
                 RuntimeTraceHelper.TraceEvent(this._jobId, TraceEventType.Error, message);
                 return ErrorCode.ServiceHost_ServiceTypeLoadingError;
@@ -662,10 +662,10 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
             // Check whether the service contract is implemented by that type
 
-            Type serviceContractInterface = serviceType.GetInterface(_serviceContractName, true);
+            Type serviceContractInterface = serviceType.GetInterface(this._serviceContractName, true);
             if (serviceContractInterface == null)
             {
-                string message = string.Format(CultureInfo.CurrentCulture, StringTable.CantFindServiceContract, _serviceContractName, asm.FullName);
+                string message = string.Format(CultureInfo.CurrentCulture, StringTable.CantFindServiceContract, this._serviceContractName, asm.FullName);
                 Console.Error.WriteLine(message);
                 RuntimeTraceHelper.TraceEvent(this._jobId, TraceEventType.Error, message);
                 return ErrorCode.ServiceHost_NoContractImplemented;
@@ -679,13 +679,13 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
             #endregion
 
-            string defaultBaseAddr = CreateEndpointAddress(PortHelper.ConvertToPort(coreId, false));
+            string defaultBaseAddr = this.CreateEndpointAddress(PortHelper.ConvertToPort(this.coreId, false));
 
             // the backend binding returned by following method is un-secure on Azure.
             Binding binding = BindingHelper.GetBackEndBinding(out var isSecure);
 
             // Update backend binding's receive timeout and max message settings with global settings if they are enabled
-            UpdateServiceBinding(binding);
+            this.UpdateServiceBinding(binding);
 
             Uri listenUri;
 
@@ -696,8 +696,8 @@ namespace Microsoft.Hpc.CcpServiceHosting
                     "defaultBaseAddr = {0}",
                     defaultBaseAddr);
 
-                _host = new ServiceHost(serviceType, new Uri(defaultBaseAddr));
-                ServiceEndpoint endpoint = _host.AddServiceEndpoint(_serviceContractName, binding, "_defaultEndpoint");
+                this._host = new ServiceHost(serviceType, new Uri(defaultBaseAddr));
+                ServiceEndpoint endpoint = this._host.AddServiceEndpoint(this._serviceContractName, binding, "_defaultEndpoint");
                 listenUri = endpoint.ListenUri;
 
                 RuntimeTraceHelper.TraceInfo(
@@ -705,7 +705,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
                    "listenUri = {0}",
                    listenUri);
 
-                BindingHelper.ApplyDefaultThrottlingBehavior(_host, _maxConcurrentCalls);
+                BindingHelper.ApplyDefaultThrottlingBehavior(this._host, this._maxConcurrentCalls);
 
                 // Add endpoint behavior
                 TraceServiceBehavior tsb = new TraceServiceBehavior(this._jobId, this);
@@ -722,34 +722,34 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 }
 
                 // Add debug behavior
-                ServiceDebugBehavior sdb = _host.Description.Behaviors.Find<ServiceDebugBehavior>();
+                ServiceDebugBehavior sdb = this._host.Description.Behaviors.Find<ServiceDebugBehavior>();
                 if (sdb == null)
                 {
                     sdb = new ServiceDebugBehavior();
-                    sdb.IncludeExceptionDetailInFaults = _includeFaultedException;
-                    _host.Description.Behaviors.Add(sdb);
+                    sdb.IncludeExceptionDetailInFaults = this._includeFaultedException;
+                    this._host.Description.Behaviors.Add(sdb);
                 }
                 else
                 {
-                    sdb.IncludeExceptionDetailInFaults = _includeFaultedException;
+                    sdb.IncludeExceptionDetailInFaults = this._includeFaultedException;
                 }
 
-                if (!_onAzure && isSecure && !_standAlone)
+                if (!this._onAzure && isSecure && !this._standAlone)
                 {
-                    _host.Authorization.ServiceAuthorizationManager = new BrokerNodeAuthManager(this._jobId);
+                    this._host.Authorization.ServiceAuthorizationManager = new BrokerNodeAuthManager(this._jobId);
                 }
 
                 RuntimeTraceHelper.TraceInfo(
                    this._jobId,
                    "Try to call _host.Open() below");
-                _host.Open();
+                this._host.Open();
 
                 RuntimeTraceHelper.TraceInfo(
                    this._jobId,
                    "Try to open host controller below");
 
-                string endpointAddress = CreateEndpointAddress(PortHelper.ConvertToPort(coreId, true));
-                OpenHostController(endpointAddress, binding, isSecure);
+                string endpointAddress = this.CreateEndpointAddress(PortHelper.ConvertToPort(this.coreId, true));
+                this.OpenHostController(endpointAddress, binding, isSecure);
             }
             catch (AddressAlreadyInUseException e)
             {
@@ -757,17 +757,17 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
                 RuntimeTraceHelper.TraceEvent(this._jobId, TraceEventType.Error, "[HpcServiceHost]: {0}", e);
 
-                if (_host != null)
+                if (this._host != null)
                 {
                     try
                     {
-                        if (_host.State != CommunicationState.Faulted)
+                        if (this._host.State != CommunicationState.Faulted)
                         {
-                            _host.Close();
+                            this._host.Close();
                         }
                         else
                         {
-                            _host.Abort();
+                            this._host.Abort();
                         }
                     }
                     catch (Exception exp)
@@ -775,20 +775,20 @@ namespace Microsoft.Hpc.CcpServiceHosting
                         RuntimeTraceHelper.TraceEvent(this._jobId, TraceEventType.Error, "[HpcServiceHost]: Service host failed to close {0}", exp);
                     }
 
-                    _host = null;
+                    this._host = null;
                 }
 
-                if (_hostController != null)
+                if (this._hostController != null)
                 {
                     try
                     {
-                        if (_hostController.State != CommunicationState.Faulted)
+                        if (this._hostController.State != CommunicationState.Faulted)
                         {
-                            _hostController.Close();
+                            this._hostController.Close();
                         }
                         else
                         {
-                            _hostController.Abort();
+                            this._hostController.Abort();
                         }
                     }
                     catch (Exception exp)
@@ -796,7 +796,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
                         RuntimeTraceHelper.TraceEvent(this._jobId, TraceEventType.Error, "[HpcServiceHost]: Service host controller failed to close {0}", exp);
                     }
 
-                    _hostController = null;
+                    this._hostController = null;
                 }
 
                 return ErrorCode.ServiceHost_ServiceHostFailedToOpen_AddressAlreadyInUse;
@@ -807,17 +807,17 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
                 RuntimeTraceHelper.TraceEvent(this._jobId, TraceEventType.Error, "[HpcServiceHost]: {0}", e);
 
-                if (_host != null)
+                if (this._host != null)
                 {
                     try
                     {
-                        if (_host.State != CommunicationState.Faulted)
+                        if (this._host.State != CommunicationState.Faulted)
                         {
-                            _host.Close();
+                            this._host.Close();
                         }
                         else
                         {
-                            _host.Abort();
+                            this._host.Abort();
                         }
                     }
                     catch (Exception exp)
@@ -825,20 +825,20 @@ namespace Microsoft.Hpc.CcpServiceHosting
                         RuntimeTraceHelper.TraceEvent(this._jobId, TraceEventType.Error, "[HpcServiceHost]: Service host failed to close {0}", exp);
                     }
 
-                    _host = null;
+                    this._host = null;
                 }
 
-                if (_hostController != null)
+                if (this._hostController != null)
                 {
                     try
                     {
-                        if (_hostController.State != CommunicationState.Faulted)
+                        if (this._hostController.State != CommunicationState.Faulted)
                         {
-                            _hostController.Close();
+                            this._hostController.Close();
                         }
                         else
                         {
-                            _hostController.Abort();
+                            this._hostController.Abort();
                         }
                     }
                     catch (Exception exp)
@@ -846,7 +846,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
                         RuntimeTraceHelper.TraceEvent(this._jobId, TraceEventType.Error, "[HpcServiceHost]: Service host controller failed to close {0}", exp);
                     }
 
-                    _hostController = null;
+                    this._hostController = null;
                 }
 
                 return ErrorCode.ServiceHost_ServiceHostFailedToOpen;
@@ -863,25 +863,25 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
         public bool RunAsDummy()
         {
-            string defaultBaseAddr = CreateEndpointAddress(PortHelper.ConvertToPort(coreId, false));
+            string defaultBaseAddr = this.CreateEndpointAddress(PortHelper.ConvertToPort(this.coreId, false));
 
             // the backend binding returned by following method is un-secure on Azure.
             bool isDefaultBackEndBinding;
             Binding binding = BindingHelper.GetBackEndBinding(out isDefaultBackEndBinding);
 
             // Update backend binding's receive timeout and max message settings with global settings if they are enabled
-            UpdateServiceBinding(binding);
+            this.UpdateServiceBinding(binding);
 
             // Note: use wcf default receive timeout.
             // TODO: configure ReceiveTimeout ?
             // binding.ReceiveTimeout = new TimeSpan(0, 0, 0, 0, timeout);
 
-            _host = null;
+            this._host = null;
             try
             {
-                _host = new ServiceHost(typeof(DummyService), new Uri(defaultBaseAddr));
-                ServiceEndpoint endpoint = _host.AddServiceEndpoint(typeof(DummyService), binding, "_defaultEndpoint");
-                BindingHelper.ApplyDefaultThrottlingBehavior(_host);
+                this._host = new ServiceHost(typeof(DummyService), new Uri(defaultBaseAddr));
+                ServiceEndpoint endpoint = this._host.AddServiceEndpoint(typeof(DummyService), binding, "_defaultEndpoint");
+                BindingHelper.ApplyDefaultThrottlingBehavior(this._host);
 
                 TraceServiceBehavior tsb = new TraceServiceBehavior(this._jobId, this);
                 endpoint.Behaviors.Add(tsb);
@@ -896,14 +896,14 @@ namespace Microsoft.Hpc.CcpServiceHosting
                     }
                 }
 
-                if (!_onAzure && !isDefaultBackEndBinding)
+                if (!this._onAzure && !isDefaultBackEndBinding)
                 {
-                    _host.Authorization.ServiceAuthorizationManager = new BrokerNodeAuthManager(this._jobId);
+                    this._host.Authorization.ServiceAuthorizationManager = new BrokerNodeAuthManager(this._jobId);
                 }
 
-                _host.Open();
+                this._host.Open();
 
-                OpenHostController(defaultBaseAddr, binding, isDefaultBackEndBinding);
+                this.OpenHostController(defaultBaseAddr, binding, isDefaultBackEndBinding);
 
                 RuntimeTraceHelper.TraceEvent(
                     this._jobId,
@@ -917,11 +917,11 @@ namespace Microsoft.Hpc.CcpServiceHosting
 
                 RuntimeTraceHelper.TraceEvent(this._jobId, TraceEventType.Error, "[HpcServiceHost]: {0}", e);
 
-                if (_host != null)
+                if (this._host != null)
                 {
                     try
                     {
-                        _host.Close();
+                        this._host.Close();
                     }
                     catch (Exception)
                     {
@@ -949,26 +949,26 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 "defaultBaseAddr of HostController is {0}",
                 defaultBaseAddr);
 
-            _hostController = new ServiceHost(new HpcServiceHost(this._jobId, _cancelTaskGracePeriod, this), new Uri(defaultBaseAddr));
+            this._hostController = new ServiceHost(new HpcServiceHost(this._jobId, this._cancelTaskGracePeriod, this), new Uri(defaultBaseAddr));
             RuntimeTraceHelper.TraceInfo(
                 this._jobId,
                 "Created ServiceHost for controller.");
 
-            _hostController.AddServiceEndpoint(typeof(IHpcServiceHost), binding, @"_defaultEndpoint/controller");
+            this._hostController.AddServiceEndpoint(typeof(IHpcServiceHost), binding, @"_defaultEndpoint/controller");
             RuntimeTraceHelper.TraceInfo(
                 this._jobId,
                 "Added endpoint to controller.");
 
-            if (!_onAzure && !isDefaultBackEndBinding)
+            if (!this._onAzure && !isDefaultBackEndBinding)
             {
-                _hostController.Authorization.ServiceAuthorizationManager = new BrokerNodeAuthManager(this._jobId);
+                this._hostController.Authorization.ServiceAuthorizationManager = new BrokerNodeAuthManager(this._jobId);
             }
 
             RuntimeTraceHelper.TraceInfo(
                 this._jobId,
                 "Try to call _hostController.Open() below.");
 
-            _hostController.Open();
+            this._hostController.Open();
 
             RuntimeTraceHelper.TraceInfo(
                 this._jobId,
@@ -1025,8 +1025,8 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 BaseAddrTemplate,
                 hostnameWithPrefix,
                 port,
-                _jobId,
-                _taskId);
+                this._jobId,
+                this._taskId);
         }
 
         /// <summary>
@@ -1040,8 +1040,8 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 CultureInfo.InvariantCulture,
                 BaseAddrTemplateOnAzure,
                 Environment.GetEnvironmentVariable(env),
-                _jobId,
-                _taskId);
+                this._jobId,
+                this._taskId);
         }
 
         /// <summary>
@@ -1055,7 +1055,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
                 int serviceTimeout = 0;
                 int maxMessageSize = 0;
 
-                GetServiceSettings(out serviceTimeout, out maxMessageSize);
+                this.GetServiceSettings(out serviceTimeout, out maxMessageSize);
 
                 if (serviceTimeout > 0)
                 {
@@ -1238,7 +1238,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
         {
             get
             {
-                return skippedMessageIds;
+                return this.skippedMessageIds;
             }
         }
 
@@ -1247,7 +1247,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
         {
             get
             {
-                return allMessageIds;
+                return this.allMessageIds;
             }
         }
 
@@ -1316,7 +1316,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
                         excep);
                 }
 
-                if (enableMessageLevelPreemption)
+                if (this.enableMessageLevelPreemption)
                 {
                     if (this.processingMessageIds.Count == 0)
                     {
@@ -1346,7 +1346,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
         /// <param name="e"></param>
         private void CurrentDomain_DomainUnload(object sender, EventArgs e)
         {
-            Console.CancelKeyPress -= new ConsoleCancelEventHandler(Console_CancelKeyPress);
+            Console.CancelKeyPress -= new ConsoleCancelEventHandler(this.Console_CancelKeyPress);
         }
 
         /// <summary>

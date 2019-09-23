@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.Hpc.Scheduler.Session {
+namespace Microsoft.Telepathy.Session {
     using System;
     
     
@@ -19,10 +19,10 @@ namespace Microsoft.Hpc.Scheduler.Session {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class SR {
+    internal class SR {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -32,105 +32,6 @@ namespace Microsoft.Hpc.Scheduler.Session {
         internal SR() {
         }
         
-        /// <summary>
-        ///   Returns the cached ResourceManager instance used by this class.
-        /// </summary>
-        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
-            get {
-                if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.Hpc.Scheduler.Session.SR", typeof(SR).Assembly);
-                    resourceMan = temp;
-                }
-                return resourceMan;
-            }
-        }
-        
-        /// <summary>
-        ///   Overrides the current thread's CurrentUICulture property for all
-        ///   resource lookups using this strongly typed resource class.
-        /// </summary>
-        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
-            get {
-                return resourceCulture;
-            }
-            set {
-                resourceCulture = value;
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to connect to the session&apos;s broker: Permission denied..
-        /// </summary>
-        public static string AccessDenied_Broker {
-            get {
-                return ResourceManager.GetString("AccessDenied_Broker", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to connect to the HpcBroker service: Permission denied..
-        /// </summary>
-        public static string AccessDenied_BrokerLauncher {
-            get {
-                return ResourceManager.GetString("AccessDenied_BrokerLauncher", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to connect to the broker&apos;s storage: Permission denied..
-        /// </summary>
-        public static string AccessDenied_BrokerQueue {
-            get {
-                return ResourceManager.GetString("AccessDenied_BrokerQueue", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to AllocationAdjustInterval must be a positive number..
-        /// </summary>
-        public static string AllocationAdjustIntervalPositive {
-            get {
-                return ResourceManager.GetString("AllocationAdjustIntervalPositive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to A client has closed the session..
-        /// </summary>
-        public static string AllTasksFinished {
-            get {
-                return ResourceManager.GetString("AllTasksFinished", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The same message type has been returned from different operations. Action parameter must be specified by the caller..
-        /// </summary>
-        public static string AmbiguousOperation {
-            get {
-                return ResourceManager.GetString("AmbiguousOperation", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; cannot be empty..
-        /// </summary>
-        public static string ArgumentEmpty {
-            get {
-                return ResourceManager.GetString("ArgumentEmpty", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Argument &apos;{0}&apos; cannot be an empty string..
-        /// </summary>
-        public static string ArgumentEmptyString {
-            get {
-                return ResourceManager.GetString("ArgumentEmptyString", resourceCulture);
-            }
-        }
 
         /// <summary>
         ///   Looks up a localized string similar to Argument must be alpha, numeric or punctuation.
@@ -177,9 +78,109 @@ namespace Microsoft.Hpc.Scheduler.Session {
         }
 
         /// <summary>
+        ///   Returns the cached ResourceManager instance used by this class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.Telepathy.Session.SR", typeof(SR).Assembly);
+                    resourceMan = temp;
+                }
+                return resourceMan;
+            }
+        }
+        
+        /// <summary>
+        ///   Overrides the current thread's CurrentUICulture property for all
+        ///   resource lookups using this strongly typed resource class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Globalization.CultureInfo Culture {
+            get {
+                return resourceCulture;
+            }
+            set {
+                resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to connect to the session&apos;s broker: Permission denied..
+        /// </summary>
+        internal static string AccessDenied_Broker {
+            get {
+                return ResourceManager.GetString("AccessDenied_Broker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to connect to the HpcBroker service: Permission denied..
+        /// </summary>
+        internal static string AccessDenied_BrokerLauncher {
+            get {
+                return ResourceManager.GetString("AccessDenied_BrokerLauncher", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to connect to the broker&apos;s storage: Permission denied..
+        /// </summary>
+        internal static string AccessDenied_BrokerQueue {
+            get {
+                return ResourceManager.GetString("AccessDenied_BrokerQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AllocationAdjustInterval must be a positive number..
+        /// </summary>
+        internal static string AllocationAdjustIntervalPositive {
+            get {
+                return ResourceManager.GetString("AllocationAdjustIntervalPositive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A client has closed the session..
+        /// </summary>
+        internal static string AllTasksFinished {
+            get {
+                return ResourceManager.GetString("AllTasksFinished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The same message type has been returned from different operations. Action parameter must be specified by the caller..
+        /// </summary>
+        internal static string AmbiguousOperation {
+            get {
+                return ResourceManager.GetString("AmbiguousOperation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; cannot be empty..
+        /// </summary>
+        internal static string ArgumentEmpty {
+            get {
+                return ResourceManager.GetString("ArgumentEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Argument &apos;{0}&apos; cannot be an empty string..
+        /// </summary>
+        internal static string ArgumentEmptyString {
+            get {
+                return ResourceManager.GetString("ArgumentEmptyString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot find the related broker node for session {0}. One possible cause is that the session is still in the configuring stage. Retry later..
         /// </summary>
-        public static string AttachConfiguringSession {
+        internal static string AttachConfiguringSession {
             get {
                 return ResourceManager.GetString("AttachConfiguringSession", resourceCulture);
             }
@@ -188,7 +189,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Cannot find the broker node for the session {0}. The job {0} is not a session job..
         /// </summary>
-        public static string AttachNoBrokerSession {
+        internal static string AttachNoBrokerSession {
             get {
                 return ResourceManager.GetString("AttachNoBrokerSession", resourceCulture);
             }
@@ -197,7 +198,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Authentication failed due to the incorrect username and/or password..
         /// </summary>
-        public static string AuthenticationFailed {
+        internal static string AuthenticationFailed {
             get {
                 return ResourceManager.GetString("AuthenticationFailed", resourceCulture);
             }
@@ -206,7 +207,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to User is not authorized to use this session..
         /// </summary>
-        public static string AuthenticationFailure {
+        internal static string AuthenticationFailure {
             get {
                 return ResourceManager.GetString("AuthenticationFailure", resourceCulture);
             }
@@ -215,7 +216,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to DurableSession is not supported when the scheduler is in Azure..
         /// </summary>
-        public static string Azure_NotSupportDurableSession {
+        internal static string Azure_NotSupportDurableSession {
             get {
                 return ResourceManager.GetString("Azure_NotSupportDurableSession", resourceCulture);
             }
@@ -224,7 +225,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The backend session provider is not supported. The provider is derived from the specified argument..
         /// </summary>
-        public static string BackendNotSupported {
+        internal static string BackendNotSupported {
             get {
                 return ResourceManager.GetString("BackendNotSupported", resourceCulture);
             }
@@ -233,7 +234,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The specified property is not implemented by backend session provider..
         /// </summary>
-        public static string BackendPropertyNotFound {
+        internal static string BackendPropertyNotFound {
             get {
                 return ResourceManager.GetString("BackendPropertyNotFound", resourceCulture);
             }
@@ -242,7 +243,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Specified binding does not match the specified TransportScheme..
         /// </summary>
-        public static string BindingTransportSchemeMismatch {
+        internal static string BindingTransportSchemeMismatch {
             get {
                 return ResourceManager.GetString("BindingTransportSchemeMismatch", resourceCulture);
             }
@@ -251,7 +252,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Broker has already been closed. This might be because that a previous call to close broker has timed out..
         /// </summary>
-        public static string Broker_AlreadyClosed {
+        internal static string Broker_AlreadyClosed {
             get {
                 return ResourceManager.GetString("Broker_AlreadyClosed", resourceCulture);
             }
@@ -260,7 +261,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Broker has already been initialized..
         /// </summary>
-        public static string Broker_AlreadyInitialized {
+        internal static string Broker_AlreadyInitialized {
             get {
                 return ResourceManager.GetString("Broker_AlreadyInitialized", resourceCulture);
             }
@@ -269,7 +270,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to User {0} is not authorized to use this session..
         /// </summary>
-        public static string Broker_AuthenticationFailure {
+        internal static string Broker_AuthenticationFailure {
             get {
                 return ResourceManager.GetString("Broker_AuthenticationFailure", resourceCulture);
             }
@@ -278,7 +279,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Binding {0} is not supported..
         /// </summary>
-        public static string Broker_BindingNotSupported {
+        internal static string Broker_BindingNotSupported {
             get {
                 return ResourceManager.GetString("Broker_BindingNotSupported", resourceCulture);
             }
@@ -287,7 +288,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The security mode of the binding must match the Session.Secure property..
         /// </summary>
-        public static string Broker_BindingSecurityModeMismatched {
+        internal static string Broker_BindingSecurityModeMismatched {
             get {
                 return ResourceManager.GetString("Broker_BindingSecurityModeMismatched", resourceCulture);
             }
@@ -296,7 +297,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Cannot attach to the session. The session {0} is in the Finishing state..
         /// </summary>
-        public static string Broker_BrokerFinishing {
+        internal static string Broker_BrokerFinishing {
             get {
                 return ResourceManager.GetString("Broker_BrokerFinishing", resourceCulture);
             }
@@ -305,7 +306,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Broker node is offline and cannot accept requests to create or attach to a session..
         /// </summary>
-        public static string Broker_BrokerIsOffline {
+        internal static string Broker_BrokerIsOffline {
             get {
                 return ResourceManager.GetString("Broker_BrokerIsOffline", resourceCulture);
             }
@@ -314,7 +315,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to read response messages from the broker&apos;s storage..
         /// </summary>
-        public static string Broker_BrokerQueueFailure {
+        internal static string Broker_BrokerQueueFailure {
             get {
                 return ResourceManager.GetString("Broker_BrokerQueueFailure", resourceCulture);
             }
@@ -323,7 +324,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Broker service failed to start..
         /// </summary>
-        public static string Broker_BrokerServiceFailedStartup {
+        internal static string Broker_BrokerServiceFailedStartup {
             get {
                 return ResourceManager.GetString("Broker_BrokerServiceFailedStartup", resourceCulture);
             }
@@ -332,7 +333,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Broker is unavailable due to loss of heartbeat. Make sure you can connect to the broker node, the HpcBroker service is running on the broker node and the session is still running..
         /// </summary>
-        public static string Broker_BrokerUnavailable {
+        internal static string Broker_BrokerUnavailable {
             get {
                 return ResourceManager.GetString("Broker_BrokerUnavailable", resourceCulture);
             }
@@ -341,7 +342,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Cannot find custom binding in the service configuration file..
         /// </summary>
-        public static string Broker_CannotFindCustomBindingConfiguration {
+        internal static string Broker_CannotFindCustomBindingConfiguration {
             get {
                 return ResourceManager.GetString("Broker_CannotFindCustomBindingConfiguration", resourceCulture);
             }
@@ -350,7 +351,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to get job owner from the scheduler..
         /// </summary>
-        public static string Broker_CannotGetUserSID {
+        internal static string Broker_CannotGetUserSID {
             get {
                 return ResourceManager.GetString("Broker_CannotGetUserSID", resourceCulture);
             }
@@ -359,7 +360,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Invalid clientId. ClientId does not match the corresponding messages on this connection..
         /// </summary>
-        public static string Broker_ClientIdNotMatch {
+        internal static string Broker_ClientIdNotMatch {
             get {
                 return ResourceManager.GetString("Broker_ClientIdNotMatch", resourceCulture);
             }
@@ -368,7 +369,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Connection to the scheduler is not ready. It might be that the scheduler service or HpcSession service on the headnode is not started..
         /// </summary>
-        public static string Broker_ConnectionToSchedulerIsNotReady {
+        internal static string Broker_ConnectionToSchedulerIsNotReady {
             get {
                 return ResourceManager.GetString("Broker_ConnectionToSchedulerIsNotReady", resourceCulture);
             }
@@ -377,7 +378,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Custom broker exited unexpectedly. ExitCode = {0}..
         /// </summary>
-        public static string Broker_CustomBrokerExitBeforeReady {
+        internal static string Broker_CustomBrokerExitBeforeReady {
             get {
                 return ResourceManager.GetString("Broker_CustomBrokerExitBeforeReady", resourceCulture);
             }
@@ -386,7 +387,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Timeout occurred when starting the custom broker. Current timeout is {0}..
         /// </summary>
-        public static string Broker_CustomBrokerReadyTimeout {
+        internal static string Broker_CustomBrokerReadyTimeout {
             get {
                 return ResourceManager.GetString("Broker_CustomBrokerReadyTimeout", resourceCulture);
             }
@@ -395,7 +396,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to EndRequests was already called for this BrokerClient..
         /// </summary>
-        public static string Broker_EOMReject_EndRequests {
+        internal static string Broker_EOMReject_EndRequests {
             get {
                 return ResourceManager.GetString("Broker_EOMReject_EndRequests", resourceCulture);
             }
@@ -404,7 +405,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to EndRequests was already called for this BrokerClient or the session&apos;s service job ended..
         /// </summary>
-        public static string Broker_EOMReject_GetResponse {
+        internal static string Broker_EOMReject_GetResponse {
             get {
                 return ResourceManager.GetString("Broker_EOMReject_GetResponse", resourceCulture);
             }
@@ -413,7 +414,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to EndRequests is not allowed. The client is in the {0} state..
         /// </summary>
-        public static string Broker_EOMRejected {
+        internal static string Broker_EOMRejected {
             get {
                 return ResourceManager.GetString("Broker_EOMRejected", resourceCulture);
             }
@@ -422,7 +423,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to get job property Ids from the scheduler..
         /// </summary>
-        public static string Broker_FailedToGetJobPropertyId {
+        internal static string Broker_FailedToGetJobPropertyId {
             get {
                 return ResourceManager.GetString("Broker_FailedToGetJobPropertyId", resourceCulture);
             }
@@ -431,7 +432,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to get job state from the scheduler..
         /// </summary>
-        public static string Broker_FailedToGetJobState {
+        internal static string Broker_FailedToGetJobState {
             get {
                 return ResourceManager.GetString("Broker_FailedToGetJobState", resourceCulture);
             }
@@ -440,7 +441,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to get job template security descriptor from the scheduler..
         /// </summary>
-        public static string Broker_FailedToGetSecurityDescriptor {
+        internal static string Broker_FailedToGetSecurityDescriptor {
             get {
                 return ResourceManager.GetString("Broker_FailedToGetSecurityDescriptor", resourceCulture);
             }
@@ -449,7 +450,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to start broker service process. Win32 error code: {0}..
         /// </summary>
-        public static string Broker_FailedToStartBrokerServiceProcess {
+        internal static string Broker_FailedToStartBrokerServiceProcess {
             get {
                 return ResourceManager.GetString("Broker_FailedToStartBrokerServiceProcess", resourceCulture);
             }
@@ -458,7 +459,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Invalid clientId. ClientId can only have these characters: 0-9, a-z, A-Z, _, -, {, } and space and cannot contain more than 128 characters..
         /// </summary>
-        public static string Broker_InvalidClientIdOrTooLong {
+        internal static string Broker_InvalidClientIdOrTooLong {
             get {
                 return ResourceManager.GetString("Broker_InvalidClientIdOrTooLong", resourceCulture);
             }
@@ -467,7 +468,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The session id, {0}, is invalid..
         /// </summary>
-        public static string Broker_InvalidSessionId {
+        internal static string Broker_InvalidSessionId {
             get {
                 return ResourceManager.GetString("Broker_InvalidSessionId", resourceCulture);
             }
@@ -476,7 +477,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to get network prefix from the service task environment variable WCF_NETWORKPREFIX..
         /// </summary>
-        public static string Broker_LoadNetworkPrefixFailed {
+        internal static string Broker_LoadNetworkPrefixFailed {
             get {
                 return ResourceManager.GetString("Broker_LoadNetworkPrefixFailed", resourceCulture);
             }
@@ -485,7 +486,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to No default uri for scheme {0} could be found..
         /// </summary>
-        public static string Broker_NoDefaultUriForScheme {
+        internal static string Broker_NoDefaultUriForScheme {
             get {
                 return ResourceManager.GetString("Broker_NoDefaultUriForScheme", resourceCulture);
             }
@@ -494,7 +495,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Broker has not been initialized..
         /// </summary>
-        public static string Broker_NotInitialized {
+        internal static string Broker_NotInitialized {
             get {
                 return ResourceManager.GetString("Broker_NotInitialized", resourceCulture);
             }
@@ -503,7 +504,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Transport scheme {0} is not supported..
         /// </summary>
-        public static string Broker_NotSupportedTransportScheme {
+        internal static string Broker_NotSupportedTransportScheme {
             get {
                 return ResourceManager.GetString("Broker_NotSupportedTransportScheme", resourceCulture);
             }
@@ -512,7 +513,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to open frontend: {0}..
         /// </summary>
-        public static string Broker_OpenFrontEndFailed {
+        internal static string Broker_OpenFrontEndFailed {
             get {
                 return ResourceManager.GetString("Broker_OpenFrontEndFailed", resourceCulture);
             }
@@ -521,7 +522,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to get data from job properties from the job scheduler needed to restart the session..
         /// </summary>
-        public static string Broker_PullDataFromCustomJobPropertyFailed {
+        internal static string Broker_PullDataFromCustomJobPropertyFailed {
             get {
                 return ResourceManager.GetString("Broker_PullDataFromCustomJobPropertyFailed", resourceCulture);
             }
@@ -530,7 +531,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to register job in session service: {0}..
         /// </summary>
-        public static string Broker_RegisterJobFailed {
+        internal static string Broker_RegisterJobFailed {
             get {
                 return ResourceManager.GetString("Broker_RegisterJobFailed", resourceCulture);
             }
@@ -539,7 +540,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Request failed {0} time(s) and is marked as failed by the broker. The exception is {1}..
         /// </summary>
-        public static string Broker_RetryLimitExceeded {
+        internal static string Broker_RetryLimitExceeded {
             get {
                 return ResourceManager.GetString("Broker_RetryLimitExceeded", resourceCulture);
             }
@@ -548,7 +549,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to send back the responses. Connection to the client is likely faulted..
         /// </summary>
-        public static string Broker_SendBackResponseFailed {
+        internal static string Broker_SendBackResponseFailed {
             get {
                 return ResourceManager.GetString("Broker_SendBackResponseFailed", resourceCulture);
             }
@@ -557,7 +558,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Service job is failed or canceled..
         /// </summary>
-        public static string Broker_ServiceFailed {
+        internal static string Broker_ServiceFailed {
             get {
                 return ResourceManager.GetString("Broker_ServiceFailed", resourceCulture);
             }
@@ -566,7 +567,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Session is failed or canceled. Please refer to the reason of the session&apos;s job for more information..
         /// </summary>
-        public static string Broker_SessionFailure {
+        internal static string Broker_SessionFailure {
             get {
                 return ResourceManager.GetString("Broker_SessionFailure", resourceCulture);
             }
@@ -575,7 +576,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The session {0} has already been created..
         /// </summary>
-        public static string Broker_SessionIdAlreadyExists {
+        internal static string Broker_SessionIdAlreadyExists {
             get {
                 return ResourceManager.GetString("Broker_SessionIdAlreadyExists", resourceCulture);
             }
@@ -584,7 +585,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Active sessions running on this broker node has exceeded the limit - {0}. Increase maxConcurrentSession setting in HpcBroker.exe.config..
         /// </summary>
-        public static string Broker_TooManyBrokerRunning {
+        internal static string Broker_TooManyBrokerRunning {
             get {
                 return ResourceManager.GetString("Broker_TooManyBrokerRunning", resourceCulture);
             }
@@ -593,7 +594,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Unknown error occured: {0}..
         /// </summary>
-        public static string Broker_UnknownError {
+        internal static string Broker_UnknownError {
             get {
                 return ResourceManager.GetString("Broker_UnknownError", resourceCulture);
             }
@@ -602,7 +603,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Operation &quot;{0}&quot; is not supported by current broker. Please consider upgrading your broker node..
         /// </summary>
-        public static string Broker_UnsupportedOperation {
+        internal static string Broker_UnsupportedOperation {
             get {
                 return ResourceManager.GetString("Broker_UnsupportedOperation", resourceCulture);
             }
@@ -611,7 +612,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The session was originally created by a broker whose version is not supported by current broker. Please consider upgrading your broker node..
         /// </summary>
-        public static string Broker_UnsupportedVersion {
+        internal static string Broker_UnsupportedVersion {
             get {
                 return ResourceManager.GetString("Broker_UnsupportedVersion", resourceCulture);
             }
@@ -620,7 +621,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to User {0} is not authorized to access the BrokerClient with an clientId of {1}..
         /// </summary>
-        public static string Broker_UserNameNotMatch {
+        internal static string Broker_UserNameNotMatch {
             get {
                 return ResourceManager.GetString("Broker_UserNameNotMatch", resourceCulture);
             }
@@ -629,7 +630,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The requested transport scheme is not supported by broker client..
         /// </summary>
-        public static string BrokerClientTransportSchemeNotSupport {
+        internal static string BrokerClientTransportSchemeNotSupport {
             get {
                 return ResourceManager.GetString("BrokerClientTransportSchemeNotSupport", resourceCulture);
             }
@@ -638,7 +639,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Broker is unavailable due to loss of heartbeat. Make sure you can connect to the broker node, the HpcBroker service is running on the broker node and the session is still running..
         /// </summary>
-        public static string BrokerIsUnavailable {
+        internal static string BrokerIsUnavailable {
             get {
                 return ResourceManager.GetString("BrokerIsUnavailable", resourceCulture);
             }
@@ -647,7 +648,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Broker node is unavailable due to loss of heartbeat. Make sure you can connect to the broker node and the HpcBroker service is running on the broker node..
         /// </summary>
-        public static string BrokerNodeIsUnavailable {
+        internal static string BrokerNodeIsUnavailable {
             get {
                 return ResourceManager.GetString("BrokerNodeIsUnavailable", resourceCulture);
             }
@@ -656,7 +657,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Cannot get the session information of session {0}..
         /// </summary>
-        public static string CannotGetSessionInfo {
+        internal static string CannotGetSessionInfo {
             get {
                 return ResourceManager.GetString("CannotGetSessionInfo", resourceCulture);
             }
@@ -665,7 +666,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Choose a certificate to upload to the scheduler.
         /// </summary>
-        public static string CertificateChooser_Text {
+        internal static string CertificateChooser_Text {
             get {
                 return ResourceManager.GetString("CertificateChooser_Text", resourceCulture);
             }
@@ -674,7 +675,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Choose a SOA client certificate for Azure cluster.
         /// </summary>
-        public static string CertificateChooser_Text_Azure {
+        internal static string CertificateChooser_Text_Azure {
             get {
                 return ResourceManager.GetString("CertificateChooser_Text_Azure", resourceCulture);
             }
@@ -683,7 +684,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Certificate Chooser.
         /// </summary>
-        public static string CertificateChooser_Title {
+        internal static string CertificateChooser_Title {
             get {
                 return ResourceManager.GetString("CertificateChooser_Title", resourceCulture);
             }
@@ -692,7 +693,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to ClientBrokerHeartbeatInterval must be a positive number..
         /// </summary>
-        public static string ClientBrokerHeartbeatIntervalPositive {
+        internal static string ClientBrokerHeartbeatIntervalPositive {
             get {
                 return ResourceManager.GetString("ClientBrokerHeartbeatIntervalPositive", resourceCulture);
             }
@@ -701,7 +702,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to ClientBrokerHeartbeatRetryCount must be a positive number..
         /// </summary>
-        public static string ClientBrokerHeartbeatRetryCountPositive {
+        internal static string ClientBrokerHeartbeatRetryCountPositive {
             get {
                 return ResourceManager.GetString("ClientBrokerHeartbeatRetryCountPositive", resourceCulture);
             }
@@ -710,7 +711,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to ClientIdleTimeout must be a positive number..
         /// </summary>
-        public static string ClientIdleTimeoutNotNegative {
+        internal static string ClientIdleTimeoutNotNegative {
             get {
                 return ResourceManager.GetString("ClientIdleTimeoutNotNegative", resourceCulture);
             }
@@ -719,7 +720,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to ClientId is too long. The maximum length is 128 characters..
         /// </summary>
-        public static string ClientIdTooLong {
+        internal static string ClientIdTooLong {
             get {
                 return ResourceManager.GetString("ClientIdTooLong", resourceCulture);
             }
@@ -728,7 +729,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The BrokerClient has been purged. No more responses may be received..
         /// </summary>
-        public static string ClientPurged {
+        internal static string ClientPurged {
             get {
                 return ResourceManager.GetString("ClientPurged", resourceCulture);
             }
@@ -737,7 +738,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The BrokerClient has timed out. Retry later..
         /// </summary>
-        public static string ClientTimeout {
+        internal static string ClientTimeout {
             get {
                 return ResourceManager.GetString("ClientTimeout", resourceCulture);
             }
@@ -746,7 +747,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to A timeout occurred when creating session. The broker {0} did not respond in {1} milliseconds. Make sure HPC Broker Service is running on broker node..
         /// </summary>
-        public static string ConectBrokerLauncherTimeout {
+        internal static string ConectBrokerLauncherTimeout {
             get {
                 return ResourceManager.GetString("ConectBrokerLauncherTimeout", resourceCulture);
             }
@@ -755,7 +756,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The configuration file is invalid: {0}..
         /// </summary>
-        public static string ConfigFile_Invalid {
+        internal static string ConfigFile_Invalid {
             get {
                 return ResourceManager.GetString("ConfigFile_Invalid", resourceCulture);
             }
@@ -764,7 +765,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to connect to HPC broker service. See inner exception for details..
         /// </summary>
-        public static string ConnectBrokerLauncherFailure {
+        internal static string ConnectBrokerLauncherFailure {
             get {
                 return ResourceManager.GetString("ConnectBrokerLauncherFailure", resourceCulture);
             }
@@ -773,7 +774,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to connect to data service..
         /// </summary>
-        public static string ConnectDataServiceFailure {
+        internal static string ConnectDataServiceFailure {
             get {
                 return ResourceManager.GetString("ConnectDataServiceFailure", resourceCulture);
             }
@@ -782,7 +783,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Timeout occurred when connecting to data service..
         /// </summary>
-        public static string ConnectDataServiceTimeout {
+        internal static string ConnectDataServiceTimeout {
             get {
                 return ResourceManager.GetString("ConnectDataServiceTimeout", resourceCulture);
             }
@@ -791,7 +792,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to connect to HPC session service. See inner exception for details..
         /// </summary>
-        public static string ConnectSessionLauncherFailure {
+        internal static string ConnectSessionLauncherFailure {
             get {
                 return ResourceManager.GetString("ConnectSessionLauncherFailure", resourceCulture);
             }
@@ -800,7 +801,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Timeout occurred when creating the session. Scheduler did not respond in {0} milliseconds. Retry later..
         /// </summary>
-        public static string ConnectSessionLauncherTimeout {
+        internal static string ConnectSessionLauncherTimeout {
             get {
                 return ResourceManager.GetString("ConnectSessionLauncherTimeout", resourceCulture);
             }
@@ -809,7 +810,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to HpcSession service does not have a connection to the scheduler yet. Scheduler service may not be started or is busy. Retry later..
         /// </summary>
-        public static string ConnectToSchedulerFailure {
+        internal static string ConnectToSchedulerFailure {
             get {
                 return ResourceManager.GetString("ConnectToSchedulerFailure", resourceCulture);
             }
@@ -818,7 +819,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Cannot create a session or attach to a session on Windows HPC Server 2008..
         /// </summary>
-        public static string ConnectToV2Cluster {
+        internal static string ConnectToV2Cluster {
             get {
                 return ResourceManager.GetString("ConnectToV2Cluster", resourceCulture);
             }
@@ -827,7 +828,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to create job: {0}..
         /// </summary>
-        public static string CreateJobFailure {
+        internal static string CreateJobFailure {
             get {
                 return ResourceManager.GetString("CreateJobFailure", resourceCulture);
             }
@@ -836,7 +837,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to set job properties. The scheduler raised exception: {0}..
         /// </summary>
-        public static string CreateJobPropertiesFailure {
+        internal static string CreateJobPropertiesFailure {
             get {
                 return ResourceManager.GetString("CreateJobPropertiesFailure", resourceCulture);
             }
@@ -845,7 +846,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to create task. The scheduler raised exception: {0}..
         /// </summary>
-        public static string CreateJobTasksFailure {
+        internal static string CreateJobTasksFailure {
             get {
                 return ResourceManager.GetString("CreateJobTasksFailure", resourceCulture);
             }
@@ -854,7 +855,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Create session procedure has been canceled by user..
         /// </summary>
-        public static string CreateSessionCanceled {
+        internal static string CreateSessionCanceled {
             get {
                 return ResourceManager.GetString("CreateSessionCanceled", resourceCulture);
             }
@@ -863,7 +864,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
-        public static string CredentialTypeDialog_CancelButtonString {
+        internal static string CredentialTypeDialog_CancelButtonString {
             get {
                 return ResourceManager.GetString("CredentialTypeDialog_CancelButtonString", resourceCulture);
             }
@@ -872,7 +873,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Choose a &amp;softcard certificate.
         /// </summary>
-        public static string CredentialTypeDialog_CertCheckBoxString {
+        internal static string CredentialTypeDialog_CertCheckBoxString {
             get {
                 return ResourceManager.GetString("CredentialTypeDialog_CertCheckBoxString", resourceCulture);
             }
@@ -881,7 +882,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Choose an authentication method.
         /// </summary>
-        public static string CredentialTypeDialog_LabelString {
+        internal static string CredentialTypeDialog_LabelString {
             get {
                 return ResourceManager.GetString("CredentialTypeDialog_LabelString", resourceCulture);
             }
@@ -890,7 +891,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Ok.
         /// </summary>
-        public static string CredentialTypeDialog_OkButtonString {
+        internal static string CredentialTypeDialog_OkButtonString {
             get {
                 return ResourceManager.GetString("CredentialTypeDialog_OkButtonString", resourceCulture);
             }
@@ -899,7 +900,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Enter a &amp;username/password.
         /// </summary>
-        public static string CredentialTypeDialog_PwdCheckBoxString {
+        internal static string CredentialTypeDialog_PwdCheckBoxString {
             get {
                 return ResourceManager.GetString("CredentialTypeDialog_PwdCheckBoxString", resourceCulture);
             }
@@ -908,7 +909,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to DataClient &apos;{0}&apos; already exists..
         /// </summary>
-        public static string DataClientAlreadyExists {
+        internal static string DataClientAlreadyExists {
             get {
                 return ResourceManager.GetString("DataClientAlreadyExists", resourceCulture);
             }
@@ -917,7 +918,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to open DataClient &apos;{0}&apos; because it is being created. Please retry later..
         /// </summary>
-        public static string DataClientBeingCreated {
+        internal static string DataClientBeingCreated {
             get {
                 return ResourceManager.GetString("DataClientBeingCreated", resourceCulture);
             }
@@ -926,7 +927,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to perform the operation because DataClient &apos;{0}&apos; is used by someone else. Please retry later..
         /// </summary>
-        public static string DataClientBusy {
+        internal static string DataClientBusy {
             get {
                 return ResourceManager.GetString("DataClientBusy", resourceCulture);
             }
@@ -935,7 +936,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to perform the operation because DataClient &apos;{0}&apos; is deleted..
         /// </summary>
-        public static string DataClientDeleted {
+        internal static string DataClientDeleted {
             get {
                 return ResourceManager.GetString("DataClientDeleted", resourceCulture);
             }
@@ -944,7 +945,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Can not access a disposed DataClient instance..
         /// </summary>
-        public static string DataClientDisposed {
+        internal static string DataClientDisposed {
             get {
                 return ResourceManager.GetString("DataClientDisposed", resourceCulture);
             }
@@ -953,7 +954,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Invalid DataClient ID. A DataClient ID can only have the following characters: 0-9, a-z, A-Z, _, -, {, } and a space. And it cannot be ended with a space..
         /// </summary>
-        public static string DataClientIdInvalid {
+        internal static string DataClientIdInvalid {
             get {
                 return ResourceManager.GetString("DataClientIdInvalid", resourceCulture);
             }
@@ -962,7 +963,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to DataClient ID is too long. The maximum length is {0} characters..
         /// </summary>
-        public static string DataClientIdTooLong {
+        internal static string DataClientIdTooLong {
             get {
                 return ResourceManager.GetString("DataClientIdTooLong", resourceCulture);
             }
@@ -971,7 +972,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to DataClient &apos;{0}&apos; is already associated with a life cycle object..
         /// </summary>
-        public static string DataClientLifeCycleSet {
+        internal static string DataClientLifeCycleSet {
             get {
                 return ResourceManager.GetString("DataClientLifeCycleSet", resourceCulture);
             }
@@ -980,7 +981,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to DataClient &apos;{0}&apos; is not found..
         /// </summary>
-        public static string DataClientNotFound {
+        internal static string DataClientNotFound {
             get {
                 return ResourceManager.GetString("DataClientNotFound", resourceCulture);
             }
@@ -989,7 +990,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to add data to DataClient &apos;{0}&apos; because WriteAll&lt;T&gt; or WriteRawBytesAll has been called on it..
         /// </summary>
-        public static string DataClientNotWritable {
+        internal static string DataClientNotWritable {
             get {
                 return ResourceManager.GetString("DataClientNotWritable", resourceCulture);
             }
@@ -998,7 +999,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to perform the operation. DataClient instance obtained via open operation is read only and can not be modified..
         /// </summary>
-        public static string DataClientReadOnly {
+        internal static string DataClientReadOnly {
             get {
                 return ResourceManager.GetString("DataClientReadOnly", resourceCulture);
             }
@@ -1007,7 +1008,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to SOA data feature is not supported by SOA session service. Please contact your HPC system administrator..
         /// </summary>
-        public static string DataFeatureNotSupported {
+        internal static string DataFeatureNotSupported {
             get {
                 return ResourceManager.GetString("DataFeatureNotSupported", resourceCulture);
             }
@@ -1016,7 +1017,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Cannot perform the operation on DataClient &apos;{0}&apos; because it is in inconsistent state. This is usually caused by unexpected application or system crash. Please delete the DataClient if this error occurs repeatedly..
         /// </summary>
-        public static string DataInconsistent {
+        internal static string DataInconsistent {
             get {
                 return ResourceManager.GetString("DataInconsistent", resourceCulture);
             }
@@ -1025,7 +1026,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Maximum data size {0} is exceeded..
         /// </summary>
-        public static string DataMaxSizeExceeded {
+        internal static string DataMaxSizeExceeded {
             get {
                 return ResourceManager.GetString("DataMaxSizeExceeded", resourceCulture);
             }
@@ -1034,7 +1035,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Access denied. No permission to perform the operation..
         /// </summary>
-        public static string DataNoPermission {
+        internal static string DataNoPermission {
             get {
                 return ResourceManager.GetString("DataNoPermission", resourceCulture);
             }
@@ -1043,7 +1044,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to perform the operation. Please retry later..
         /// </summary>
-        public static string DataRetry {
+        internal static string DataRetry {
             get {
                 return ResourceManager.GetString("DataRetry", resourceCulture);
             }
@@ -1052,7 +1053,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Bad data server address {0}. Please contact your HPC system administrator..
         /// </summary>
-        public static string DataServerBadAddress {
+        internal static string DataServerBadAddress {
             get {
                 return ResourceManager.GetString("DataServerBadAddress", resourceCulture);
             }
@@ -1061,7 +1062,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Data server for Azure burst is not configured properly. Please contact your HPC system administrator..
         /// </summary>
-        public static string DataServerForAzureBurstMisconfigured {
+        internal static string DataServerForAzureBurstMisconfigured {
             get {
                 return ResourceManager.GetString("DataServerForAzureBurstMisconfigured", resourceCulture);
             }
@@ -1070,7 +1071,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Data server {0} is not configured properly. Please contact your HPC system administrator..
         /// </summary>
-        public static string DataServerMisconfigured {
+        internal static string DataServerMisconfigured {
             get {
                 return ResourceManager.GetString("DataServerMisconfigured", resourceCulture);
             }
@@ -1079,7 +1080,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Data server is out of space..
         /// </summary>
-        public static string DataServerNoSpace {
+        internal static string DataServerNoSpace {
             get {
                 return ResourceManager.GetString("DataServerNoSpace", resourceCulture);
             }
@@ -1088,7 +1089,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Unknown data server type {0}. Please consider upgrading your HPC client library..
         /// </summary>
-        public static string DataServerNotSupported {
+        internal static string DataServerNotSupported {
             get {
                 return ResourceManager.GetString("DataServerNotSupported", resourceCulture);
             }
@@ -1097,7 +1098,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Cannot reach data server at {0}. Please contact your HPC system administrator..
         /// </summary>
-        public static string DataServerUnreachable {
+        internal static string DataServerUnreachable {
             get {
                 return ResourceManager.GetString("DataServerUnreachable", resourceCulture);
             }
@@ -1106,7 +1107,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to transfer data to Azure storage. Inner exception: {0}..
         /// </summary>
-        public static string DataTransferToAzureFailed {
+        internal static string DataTransferToAzureFailed {
             get {
                 return ResourceManager.GetString("DataTransferToAzureFailed", resourceCulture);
             }
@@ -1115,7 +1116,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Cannot convert data to from type &apos;{0}&apos; to type &apos;{1}&apos;..
         /// </summary>
-        public static string DataTypeMismatch {
+        internal static string DataTypeMismatch {
             get {
                 return ResourceManager.GetString("DataTypeMismatch", resourceCulture);
             }
@@ -1124,7 +1125,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Unknown error..
         /// </summary>
-        public static string DataUnknownError {
+        internal static string DataUnknownError {
             get {
                 return ResourceManager.GetString("DataUnknownError", resourceCulture);
             }
@@ -1133,7 +1134,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Cannot read data of version {0}. Current version is {1}..
         /// </summary>
-        public static string DataVersionNotSupported {
+        internal static string DataVersionNotSupported {
             get {
                 return ResourceManager.GetString("DataVersionNotSupported", resourceCulture);
             }
@@ -1142,7 +1143,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Concurrent sessions are not supported in DEBUG mode..
         /// </summary>
-        public static string DebugModeNotSupportConcurrentSession {
+        internal static string DebugModeNotSupportConcurrentSession {
             get {
                 return ResourceManager.GetString("DebugModeNotSupportConcurrentSession", resourceCulture);
             }
@@ -1151,7 +1152,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The specified task id {0} is not valid. Check your task id and try again..
         /// </summary>
-        public static string DiagService_InvalidTaskId {
+        internal static string DiagService_InvalidTaskId {
             get {
                 return ResourceManager.GetString("DiagService_InvalidTaskId", resourceCulture);
             }
@@ -1160,7 +1161,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to DispatcherCapacityInGrowShrink must be a non-negative value..
         /// </summary>
-        public static string DispatcherCapacityInGrowShrinkNonNegative {
+        internal static string DispatcherCapacityInGrowShrinkNonNegative {
             get {
                 return ResourceManager.GetString("DispatcherCapacityInGrowShrinkNonNegative", resourceCulture);
             }
@@ -1169,7 +1170,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The specified clientId is already being used with this Session..
         /// </summary>
-        public static string DuplicateClientId {
+        internal static string DuplicateClientId {
             get {
                 return ResourceManager.GetString("DuplicateClientId", resourceCulture);
             }
@@ -1178,7 +1179,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to get a valid endpoint reference from the HpcBroker service..
         /// </summary>
-        public static string EndpointAddressNotValid {
+        internal static string EndpointAddressNotValid {
             get {
                 return ResourceManager.GetString("EndpointAddressNotValid", resourceCulture);
             }
@@ -1187,7 +1188,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to EndpointNotFoundRetryCountLimit must be a non-negative number..
         /// </summary>
-        public static string EndpointNotFoundRetryCountLimitNotNegative {
+        internal static string EndpointNotFoundRetryCountLimitNotNegative {
             get {
                 return ResourceManager.GetString("EndpointNotFoundRetryCountLimitNotNegative", resourceCulture);
             }
@@ -1196,7 +1197,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The session&apos;s jobs have been started but the corresponding broker has not. Retry later..
         /// </summary>
-        public static string EndpointTimeout {
+        internal static string EndpointTimeout {
             get {
                 return ResourceManager.GetString("EndpointTimeout", resourceCulture);
             }
@@ -1205,7 +1206,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to An exception occurred when submitting the job, see the inner exception for details..
         /// </summary>
-        public static string ExceptionInCreatingSession {
+        internal static string ExceptionInCreatingSession {
             get {
                 return ResourceManager.GetString("ExceptionInCreatingSession", resourceCulture);
             }
@@ -1214,7 +1215,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to get cluster property. The scheduler raised exception: {0}..
         /// </summary>
-        public static string GetClusterPropertyFailure {
+        internal static string GetClusterPropertyFailure {
             get {
                 return ResourceManager.GetString("GetClusterPropertyFailure", resourceCulture);
             }
@@ -1223,7 +1224,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to retrieve data server information from session launcher..
         /// </summary>
-        public static string GetDataServerInfoFailure {
+        internal static string GetDataServerInfoFailure {
             get {
                 return ResourceManager.GetString("GetDataServerInfoFailure", resourceCulture);
             }
@@ -1232,7 +1233,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to get job property. The scheduler raised exception: {0}..
         /// </summary>
-        public static string GetJobPropertyFailure {
+        internal static string GetJobPropertyFailure {
             get {
                 return ResourceManager.GetString("GetJobPropertyFailure", resourceCulture);
             }
@@ -1241,7 +1242,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The parameter headnode cannot be null or an empty string..
         /// </summary>
-        public static string HeadNodeCannotBeNullOfEmpty {
+        internal static string HeadNodeCannotBeNullOfEmpty {
             get {
                 return ResourceManager.GetString("HeadNodeCannotBeNullOfEmpty", resourceCulture);
             }
@@ -1250,7 +1251,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The headnode cannot be null or empty. Please check the headnode parameter and environment variables..
         /// </summary>
-        public static string HeadnodeCantBeNull {
+        internal static string HeadnodeCantBeNull {
             get {
                 return ResourceManager.GetString("HeadnodeCantBeNull", resourceCulture);
             }
@@ -1259,7 +1260,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The specified backend property type is it incorrect. It is expected to be of type {0}..
         /// </summary>
-        public static string IncorrectBackendPropertyType {
+        internal static string IncorrectBackendPropertyType {
             get {
                 return ResourceManager.GetString("IncorrectBackendPropertyType", resourceCulture);
             }
@@ -1268,7 +1269,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Session {0} does not exist in the current process. It might be because you are trying to attach to an inprocess broker which exists in another process, or the given session id is invalid..
         /// </summary>
-        public static string InprocessBroker_InvalidSessionId {
+        internal static string InprocessBroker_InvalidSessionId {
             get {
                 return ResourceManager.GetString("InprocessBroker_InvalidSessionId", resourceCulture);
             }
@@ -1277,7 +1278,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Durable sessions are not supported in inprocess broker scenario..
         /// </summary>
-        public static string InprocessBroker_NotSupportDurableSession {
+        internal static string InprocessBroker_NotSupportDurableSession {
             get {
                 return ResourceManager.GetString("InprocessBroker_NotSupportDurableSession", resourceCulture);
             }
@@ -1286,7 +1287,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Session pool is not supported in inprocess broker scenario..
         /// </summary>
-        public static string InprocessBroker_NotSupportSessionPool {
+        internal static string InprocessBroker_NotSupportSessionPool {
             get {
                 return ResourceManager.GetString("InprocessBroker_NotSupportSessionPool", resourceCulture);
             }
@@ -1295,7 +1296,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Shared sessions are not supported in inprocess broker scenario..
         /// </summary>
-        public static string InprocessBroker_NotSupportShareSession {
+        internal static string InprocessBroker_NotSupportShareSession {
             get {
                 return ResourceManager.GetString("InprocessBroker_NotSupportShareSession", resourceCulture);
             }
@@ -1304,7 +1305,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Concurrent sessions are not supported in inprocess broker scenario..
         /// </summary>
-        public static string InprocessNotSupportConcurrentSession {
+        internal static string InprocessNotSupportConcurrentSession {
             get {
                 return ResourceManager.GetString("InprocessNotSupportConcurrentSession", resourceCulture);
             }
@@ -1313,7 +1314,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to User {0} cannot be mapped to a known identity..
         /// </summary>
-        public static string InvalidAllowedUser {
+        internal static string InvalidAllowedUser {
             get {
                 return ResourceManager.GetString("InvalidAllowedUser", resourceCulture);
             }
@@ -1322,7 +1323,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to EndpointPrefix: {0} is not supported, please pass in &quot;net.tcp://&quot; or &quot;https://&quot;..
         /// </summary>
-        public static string InvalidArgument {
+        internal static string InvalidArgument {
             get {
                 return ResourceManager.GetString("InvalidArgument", resourceCulture);
             }
@@ -1331,7 +1332,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Cannot attach to a durable session using the Session.Attach method. Use the DurableSession.Attach method instead..
         /// </summary>
-        public static string InvalidAttachDurableSession {
+        internal static string InvalidAttachDurableSession {
             get {
                 return ResourceManager.GetString("InvalidAttachDurableSession", resourceCulture);
             }
@@ -1340,7 +1341,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Cannot attach to an interactive session using the DurableSession.Attach method. Use the Session.Attach method instead..
         /// </summary>
-        public static string InvalidAttachInteractiveSession {
+        internal static string InvalidAttachInteractiveSession {
             get {
                 return ResourceManager.GetString("InvalidAttachInteractiveSession", resourceCulture);
             }
@@ -1349,7 +1350,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Invalid clientId. A BrokerClient clientId can only have the following characters: 0-9, a-z, A-Z, _, -, {, } and a space..
         /// </summary>
-        public static string InvalidClientId {
+        internal static string InvalidClientId {
             get {
                 return ResourceManager.GetString("InvalidClientId", resourceCulture);
             }
@@ -1358,7 +1359,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Invalid data provider configuration setting: downloadBlobMaxBackoffInSeconds value must be equal or greater than downloadBlobMinBackoffInSeconds..
         /// </summary>
-        public static string InvalidDownloadBlobMaxBackoff {
+        internal static string InvalidDownloadBlobMaxBackoff {
             get {
                 return ResourceManager.GetString("InvalidDownloadBlobMaxBackoff", resourceCulture);
             }
@@ -1367,7 +1368,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Invalid data provider configuration setting: downloadBlobMinBackoffInSeconds value must be a positive number..
         /// </summary>
-        public static string InvalidDownloadBlobMinBackoff {
+        internal static string InvalidDownloadBlobMinBackoff {
             get {
                 return ResourceManager.GetString("InvalidDownloadBlobMinBackoff", resourceCulture);
             }
@@ -1376,7 +1377,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Invalid data provider configuration setting: downloadBlobRetryCount value must be equal or greater than 0..
         /// </summary>
-        public static string InvalidDownloadBlobRetryCount {
+        internal static string InvalidDownloadBlobRetryCount {
             get {
                 return ResourceManager.GetString("InvalidDownloadBlobRetryCount", resourceCulture);
             }
@@ -1385,7 +1386,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Invalid data provider configuration setting: downloadBlobThreadCount value must be a positive number..
         /// </summary>
-        public static string InvalidDownloadBlobThreadCount {
+        internal static string InvalidDownloadBlobThreadCount {
             get {
                 return ResourceManager.GetString("InvalidDownloadBlobThreadCount", resourceCulture);
             }
@@ -1394,7 +1395,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Invalid data provider configuration setting: downloadBlobTimeoutInSeconds value must be greater than 0..
         /// </summary>
-        public static string InvalidDownloadBlobTimeout {
+        internal static string InvalidDownloadBlobTimeout {
             get {
                 return ResourceManager.GetString("InvalidDownloadBlobTimeout", resourceCulture);
             }
@@ -1403,7 +1404,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to EndpointNotFoundRetryPeriod must be a positive number..
         /// </summary>
-        public static string InvalidEndpointNotFoundRetryPeriod {
+        internal static string InvalidEndpointNotFoundRetryPeriod {
             get {
                 return ResourceManager.GetString("InvalidEndpointNotFoundRetryPeriod", resourceCulture);
             }
@@ -1412,7 +1413,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to SendRequest must be called at least once before EndRequests..
         /// </summary>
-        public static string InvalidEndRequestsCount {
+        internal static string InvalidEndRequestsCount {
             get {
                 return ResourceManager.GetString("InvalidEndRequestsCount", resourceCulture);
             }
@@ -1421,7 +1422,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Invalid data provider configuration setting: fileShareBufferSizeInKiloBytes value must be a positive number..
         /// </summary>
-        public static string InvalidFileShareBufferSize {
+        internal static string InvalidFileShareBufferSize {
             get {
                 return ResourceManager.GetString("InvalidFileShareBufferSize", resourceCulture);
             }
@@ -1430,7 +1431,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Invalid format of FileShare data server: {0}. This value should be a single UNC path. Please contact your HPC system administrator..
         /// </summary>
-        public static string InvalidFileShareFormat {
+        internal static string InvalidFileShareFormat {
             get {
                 return ResourceManager.GetString("InvalidFileShareFormat", resourceCulture);
             }
@@ -1439,7 +1440,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to MaxConnectionCountPerAzureProxy must be a positive number..
         /// </summary>
-        public static string InvalidMaxConnectionCountPerAzureProxy {
+        internal static string InvalidMaxConnectionCountPerAzureProxy {
             get {
                 return ResourceManager.GetString("InvalidMaxConnectionCountPerAzureProxy", resourceCulture);
             }
@@ -1448,7 +1449,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to MessageID of the incoming message is invalid. It must be an instance of UniqueId which contains a GUID..
         /// </summary>
-        public static string InvalidMessageId {
+        internal static string InvalidMessageId {
             get {
                 return ResourceManager.GetString("InvalidMessageId", resourceCulture);
             }
@@ -1457,7 +1458,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to ServiceOperationTimeout must be a positive number..
         /// </summary>
-        public static string InvalidServiceOperationTimeout {
+        internal static string InvalidServiceOperationTimeout {
             get {
                 return ResourceManager.GetString("InvalidServiceOperationTimeout", resourceCulture);
             }
@@ -1466,7 +1467,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to ServiceRequestPrefetchCount must be a non-negative number..
         /// </summary>
-        public static string InvalidServiceRequestPrefetchCount {
+        internal static string InvalidServiceRequestPrefetchCount {
             get {
                 return ResourceManager.GetString("InvalidServiceRequestPrefetchCount", resourceCulture);
             }
@@ -1475,7 +1476,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Invalid service version string was returned from HpcSession service..
         /// </summary>
-        public static string InvalidServiceVersionReturned {
+        internal static string InvalidServiceVersionReturned {
             get {
                 return ResourceManager.GetString("InvalidServiceVersionReturned", resourceCulture);
             }
@@ -1484,7 +1485,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Invalid session type. The session must be of type Session or DurableSession..
         /// </summary>
-        public static string InvalidSessionType {
+        internal static string InvalidSessionType {
             get {
                 return ResourceManager.GetString("InvalidSessionType", resourceCulture);
             }
@@ -1493,7 +1494,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Timeout can be only positive, 0 or -1. -1 is infinite..
         /// </summary>
-        public static string InvalidTimeout {
+        internal static string InvalidTimeout {
             get {
                 return ResourceManager.GetString("InvalidTimeout", resourceCulture);
             }
@@ -1502,7 +1503,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Invalid transport scheme..
         /// </summary>
-        public static string InvalidTransportScheme {
+        internal static string InvalidTransportScheme {
             get {
                 return ResourceManager.GetString("InvalidTransportScheme", resourceCulture);
             }
@@ -1511,7 +1512,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Cannot find broker load balancing configuration section in service&apos;s configuration file..
         /// </summary>
-        public static string LoadBalancingConfigurationMissing {
+        internal static string LoadBalancingConfigurationMissing {
             get {
                 return ResourceManager.GetString("LoadBalancingConfigurationMissing", resourceCulture);
             }
@@ -1520,7 +1521,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to LoadSamplingInterval must be a positive number..
         /// </summary>
-        public static string LoadSamplingIntervalPositive {
+        internal static string LoadSamplingIntervalPositive {
             get {
                 return ResourceManager.GetString("LoadSamplingIntervalPositive", resourceCulture);
             }
@@ -1529,7 +1530,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Local Broker Mode only supports NetTcp binding..
         /// </summary>
-        public static string LocalBrokerOnlySupportNetTcp {
+        internal static string LocalBrokerOnlySupportNetTcp {
             get {
                 return ResourceManager.GetString("LocalBrokerOnlySupportNetTcp", resourceCulture);
             }
@@ -1538,7 +1539,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Local Broker Mode only supports non-shared session..
         /// </summary>
-        public static string LocalBrokerOnlySupportNonShared {
+        internal static string LocalBrokerOnlySupportNonShared {
             get {
                 return ResourceManager.GetString("LocalBrokerOnlySupportNonShared", resourceCulture);
             }
@@ -1547,7 +1548,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to MessageRetryLimit must be a non-negative number..
         /// </summary>
-        public static string MessageRetryLimitNotNegative {
+        internal static string MessageRetryLimitNotNegative {
             get {
                 return ResourceManager.GetString("MessageRetryLimitNotNegative", resourceCulture);
             }
@@ -1556,7 +1557,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to MessageThrottleStartThreshold must be greater than MessageThrottleStopThreshold..
         /// </summary>
-        public static string MessageThrottleStartGreaterStop {
+        internal static string MessageThrottleStartGreaterStop {
             get {
                 return ResourceManager.GetString("MessageThrottleStartGreaterStop", resourceCulture);
             }
@@ -1565,7 +1566,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to MessageThrottleStopThreshold cannot be less than 0..
         /// </summary>
-        public static string MessageThrottleStopThresholdPositive {
+        internal static string MessageThrottleStopThresholdPositive {
             get {
                 return ResourceManager.GetString("MessageThrottleStopThresholdPositive", resourceCulture);
             }
@@ -1574,7 +1575,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Cannot find broker monitor configuration section in service&apos;s configuration file..
         /// </summary>
-        public static string MonitorConfigurationMissing {
+        internal static string MonitorConfigurationMissing {
             get {
                 return ResourceManager.GetString("MonitorConfigurationMissing", resourceCulture);
             }
@@ -1583,7 +1584,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to No default binding for Custom transport scheme can be loaded. Use alternative constructor BrokerClient(SessionBase, Binding) to indicate binding information instead..
         /// </summary>
-        public static string MustIndicateBindingForCustomTransportScheme {
+        internal static string MustIndicateBindingForCustomTransportScheme {
             get {
                 return ResourceManager.GetString("MustIndicateBindingForCustomTransportScheme", resourceCulture);
             }
@@ -1592,7 +1593,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to TransportScheme must be indicated to a value (NetTcp, Http or Custom)..
         /// </summary>
-        public static string MustIndicateTransportScheme {
+        internal static string MustIndicateTransportScheme {
             get {
                 return ResourceManager.GetString("MustIndicateTransportScheme", resourceCulture);
             }
@@ -1601,7 +1602,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Cannot find a broker node in the cluster that meets the session&apos;s requirements. Please check the documentation on how to configure a broker node. If you are using failover broker nodes and creating a DurableSession, please be sure one or more failover broker nodes are online..
         /// </summary>
-        public static string NoBrokerNodeFound {
+        internal static string NoBrokerNodeFound {
             get {
                 return ResourceManager.GetString("NoBrokerNodeFound", resourceCulture);
             }
@@ -1610,7 +1611,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to CCP_HOME environment variable is not set..
         /// </summary>
-        public static string NoCCPHOMEENV {
+        internal static string NoCCPHOMEENV {
             get {
                 return ResourceManager.GetString("NoCCPHOMEENV", resourceCulture);
             }
@@ -1619,7 +1620,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to DataClient &apos;{0}&apos; contains no data..
         /// </summary>
-        public static string NoDataAvailable {
+        internal static string NoDataAvailable {
             get {
                 return ResourceManager.GetString("NoDataAvailable", resourceCulture);
             }
@@ -1628,7 +1629,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to No data server is configured..
         /// </summary>
-        public static string NoDataServerConfigured {
+        internal static string NoDataServerConfigured {
             get {
                 return ResourceManager.GetString("NoDataServerConfigured", resourceCulture);
             }
@@ -1637,7 +1638,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Durable Session does not support Http binding..
         /// </summary>
-        public static string NotAllowHttpTransport {
+        internal static string NotAllowHttpTransport {
             get {
                 return ResourceManager.GetString("NotAllowHttpTransport", resourceCulture);
             }
@@ -1646,7 +1647,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Invalid AsyncResult object..
         /// </summary>
-        public static string NotCorrectAsyncResultObj {
+        internal static string NotCorrectAsyncResultObj {
             get {
                 return ResourceManager.GetString("NotCorrectAsyncResultObj", resourceCulture);
             }
@@ -1655,7 +1656,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to A BrokerClient object can only have one response handler or active GetResponses enumerator at a time..
         /// </summary>
-        public static string OneResponseEnumerationPerBrokerClient {
+        internal static string OneResponseEnumerationPerBrokerClient {
             get {
                 return ResourceManager.GetString("OneResponseEnumerationPerBrokerClient", resourceCulture);
             }
@@ -1664,7 +1665,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to open job: {0}..
         /// </summary>
-        public static string OpenJobFailure {
+        internal static string OpenJobFailure {
             get {
                 return ResourceManager.GetString("OpenJobFailure", resourceCulture);
             }
@@ -1673,7 +1674,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Timeout occured. Retry later or increase specified timeout..
         /// </summary>
-        public static string OperationTimeout {
+        internal static string OperationTimeout {
             get {
                 return ResourceManager.GetString("OperationTimeout", resourceCulture);
             }
@@ -1682,7 +1683,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The retry failure count exceeded. The request was marked as failed by the broker. Check the exception&apos;s Reason property for details..
         /// </summary>
-        public static string RetryOperationExceptionMessage {
+        internal static string RetryOperationExceptionMessage {
             get {
                 return ResourceManager.GetString("RetryOperationExceptionMessage", resourceCulture);
             }
@@ -1691,7 +1692,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Invalid TransportScheme..
         /// </summary>
-        public static string SchemaNotValid {
+        internal static string SchemaNotValid {
             get {
                 return ResourceManager.GetString("SchemaNotValid", resourceCulture);
             }
@@ -1700,7 +1701,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Send timeout must be positive..
         /// </summary>
-        public static string SendTimeoutMustBeGreaterThanZero {
+        internal static string SendTimeoutMustBeGreaterThanZero {
             get {
                 return ResourceManager.GetString("SendTimeoutMustBeGreaterThanZero", resourceCulture);
             }
@@ -1709,7 +1710,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The service configuration file is not found. Make sure configuration file for service {0} is deployed to the %CCP_SERVICEREGISTRATION_PATH%..
         /// </summary>
-        public static string Service_NotFound {
+        internal static string Service_NotFound {
             get {
                 return ResourceManager.GetString("Service_NotFound", resourceCulture);
             }
@@ -1718,7 +1719,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to No service registration directories are specified in CCP_SERVICEREGISTRATION_PATH..
         /// </summary>
-        public static string Service_RegistrationDirsMissing {
+        internal static string Service_RegistrationDirsMissing {
             get {
                 return ResourceManager.GetString("Service_RegistrationDirsMissing", resourceCulture);
             }
@@ -1727,7 +1728,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to ServiceContext is not available. ServiceContext is only available within the HpcServiceHost.exe..
         /// </summary>
-        public static string ServiceContextIsNotAvailable {
+        internal static string ServiceContextIsNotAvailable {
             get {
                 return ResourceManager.GetString("ServiceContextIsNotAvailable", resourceCulture);
             }
@@ -1736,7 +1737,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The service name cannot be null or empty. It can only contain &quot;0-9&quot;, &quot;a-z&quot;, &quot;A-Z&quot;, &quot;.&quot;, &quot;-&quot; and &quot;_&quot;, and less than 255 characters..
         /// </summary>
-        public static string ServiceNameCantBeNull {
+        internal static string ServiceNameCantBeNull {
             get {
                 return ResourceManager.GetString("ServiceNameCantBeNull", resourceCulture);
             }
@@ -1745,7 +1746,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to CCP_SERVICEREGISTRATION_PATH could not be found in the cluster configuration environments..
         /// </summary>
-        public static string ServiceRegistrationPathEnvironmentMissing {
+        internal static string ServiceRegistrationPathEnvironmentMissing {
             get {
                 return ResourceManager.GetString("ServiceRegistrationPathEnvironmentMissing", resourceCulture);
             }
@@ -1754,7 +1755,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Cannot find broker services configuration section in service&apos;s configuration file..
         /// </summary>
-        public static string ServicesConfigurationMissing {
+        internal static string ServicesConfigurationMissing {
             get {
                 return ResourceManager.GetString("ServicesConfigurationMissing", resourceCulture);
             }
@@ -1763,7 +1764,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Service version not found. Please make sure service {0}_{1} is deployed to the %CCP_SERVICEREGISTRATION_PATH%..
         /// </summary>
-        public static string ServiceVersion_NotFound {
+        internal static string ServiceVersion_NotFound {
             get {
                 return ResourceManager.GetString("ServiceVersion_NotFound", resourceCulture);
             }
@@ -1772,7 +1773,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Service version should not be 0 for both major and minor versions..
         /// </summary>
-        public static string ServiceVersionNoZeroMajorAndMinor {
+        internal static string ServiceVersionNoZeroMajorAndMinor {
             get {
                 return ResourceManager.GetString("ServiceVersionNoZeroMajorAndMinor", resourceCulture);
             }
@@ -1781,7 +1782,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Attach session failed: session {0} cannot be attached to because the session has already finished..
         /// </summary>
-        public static string Session_ValidateJobFailed_AlreadyFninshed {
+        internal static string Session_ValidateJobFailed_AlreadyFninshed {
             get {
                 return ResourceManager.GetString("Session_ValidateJobFailed_AlreadyFninshed", resourceCulture);
             }
@@ -1790,7 +1791,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Attach session failed: session {0} cannot be attached to when the service job is canceled..
         /// </summary>
-        public static string Session_ValidateJobFailed_JobCanceled {
+        internal static string Session_ValidateJobFailed_JobCanceled {
             get {
                 return ResourceManager.GetString("Session_ValidateJobFailed_JobCanceled", resourceCulture);
             }
@@ -1799,7 +1800,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Attach session failed: session {0} is an interactive session. It can only be attached to when its service job is queued or running..
         /// </summary>
-        public static string Session_ValidateJobFailed_NotDurableSession {
+        internal static string Session_ValidateJobFailed_NotDurableSession {
             get {
                 return ResourceManager.GetString("Session_ValidateJobFailed_NotDurableSession", resourceCulture);
             }
@@ -1808,7 +1809,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Attach session failed: job {0} is not a service job..
         /// </summary>
-        public static string Session_ValidateJobFailed_NotServiceJob {
+        internal static string Session_ValidateJobFailed_NotServiceJob {
             get {
                 return ResourceManager.GetString("Session_ValidateJobFailed_NotServiceJob", resourceCulture);
             }
@@ -1817,7 +1818,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The job cannot be canceled because it is in Configuring or Validating state. Try again later..
         /// </summary>
-        public static string SessionCannotBeCanceled {
+        internal static string SessionCannotBeCanceled {
             get {
                 return ResourceManager.GetString("SessionCannotBeCanceled", resourceCulture);
             }
@@ -1826,7 +1827,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Invalid session ID &apos;{0}&apos;..
         /// </summary>
-        public static string SessionIdInvalid {
+        internal static string SessionIdInvalid {
             get {
                 return ResourceManager.GetString("SessionIdInvalid", resourceCulture);
             }
@@ -1835,7 +1836,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to SessionIdleTimeout must be a positive number..
         /// </summary>
-        public static string SessionIdleTimeoutNotNegative {
+        internal static string SessionIdleTimeoutNotNegative {
             get {
                 return ResourceManager.GetString("SessionIdleTimeoutNotNegative", resourceCulture);
             }
@@ -1844,7 +1845,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to get SSDL for broker node {0}. Inner exception: {1}.
         /// </summary>
-        public static string SessionLauncher_FailedToGetBrokerNodeSSDL {
+        internal static string SessionLauncher_FailedToGetBrokerNodeSSDL {
             get {
                 return ResourceManager.GetString("SessionLauncher_FailedToGetBrokerNodeSSDL", resourceCulture);
             }
@@ -1853,7 +1854,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Cannot find the endpoint for the HPC session service on node {0}. The headnode name may be incorrect, the HPC session service may not be started on the specified headnode or the client may be using an unsupported feature with a previous version of HPC Server..
         /// </summary>
-        public static string SessionLauncherEndpointNotFound {
+        internal static string SessionLauncherEndpointNotFound {
             get {
                 return ResourceManager.GetString("SessionLauncherEndpointNotFound", resourceCulture);
             }
@@ -1862,7 +1863,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to SOA client certificate for Azure cluster is not specified. Either choose one in the certificate selection dialog, or set the certificate thumbprint to env var CCP_SOACLIENTCERT_THUMBPRINT..
         /// </summary>
-        public static string SoaClientCertNotSpecified {
+        internal static string SoaClientCertNotSpecified {
             get {
                 return ResourceManager.GetString("SoaClientCertNotSpecified", resourceCulture);
             }
@@ -1871,7 +1872,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to TransportScheme.Http with false Secure is not supported. Please check the session start info settings. .
         /// </summary>
-        public static string StartInfo_HttpBindingWithSecure {
+        internal static string StartInfo_HttpBindingWithSecure {
             get {
                 return ResourceManager.GetString("StartInfo_HttpBindingWithSecure", resourceCulture);
             }
@@ -1880,7 +1881,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to StatusUpdateInterval must be a positive number..
         /// </summary>
-        public static string StatusUpdateIntervalPositive {
+        internal static string StatusUpdateIntervalPositive {
             get {
                 return ResourceManager.GetString("StatusUpdateIntervalPositive", resourceCulture);
             }
@@ -1889,7 +1890,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Broker storage is closed..
         /// </summary>
-        public static string StorageClosed {
+        internal static string StorageClosed {
             get {
                 return ResourceManager.GetString("StorageClosed", resourceCulture);
             }
@@ -1898,7 +1899,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Broker storage failed: {0}..
         /// </summary>
-        public static string StorageFailure {
+        internal static string StorageFailure {
             get {
                 return ResourceManager.GetString("StorageFailure", resourceCulture);
             }
@@ -1907,7 +1908,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Broker storage service is not available..
         /// </summary>
-        public static string StorageServiceNotAvailble {
+        internal static string StorageServiceNotAvailble {
             get {
                 return ResourceManager.GetString("StorageServiceNotAvailble", resourceCulture);
             }
@@ -1916,7 +1917,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The broker&apos;s storage has hit its quota limit or is full. Ask your administrator to increase MSMQ storage quota on the broker node or clean up durable sessions manually via DurableSession.Close(true). Refer http://support.microsoft.com/kb/899612 to change the MSMQ quota..
         /// </summary>
-        public static string StorageSpaceNotSufficient {
+        internal static string StorageSpaceNotSufficient {
             get {
                 return ResourceManager.GetString("StorageSpaceNotSufficient", resourceCulture);
             }
@@ -1925,7 +1926,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Failed to submit job: {0}.
         /// </summary>
-        public static string SubmitJobFailure {
+        internal static string SubmitJobFailure {
             get {
                 return ResourceManager.GetString("SubmitJobFailure", resourceCulture);
             }
@@ -1934,7 +1935,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Timeout occurred while waiting for responses. Timeout = {0} ms..
         /// </summary>
-        public static string TimeoutGetResponse {
+        internal static string TimeoutGetResponse {
             get {
                 return ResourceManager.GetString("TimeoutGetResponse", resourceCulture);
             }
@@ -1943,7 +1944,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Cannot get broker worker process within 1 minute. Broker node is busy. Retry later..
         /// </summary>
-        public static string TimeoutToGetBrokerWorkerProcess {
+        internal static string TimeoutToGetBrokerWorkerProcess {
             get {
                 return ResourceManager.GetString("TimeoutToGetBrokerWorkerProcess", resourceCulture);
             }
@@ -1952,7 +1953,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The requested transport scheme is not supported by a durable session..
         /// </summary>
-        public static string TransportSchemeNotSupport {
+        internal static string TransportSchemeNotSupport {
             get {
                 return ResourceManager.GetString("TransportSchemeNotSupport", resourceCulture);
             }
@@ -1961,7 +1962,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to TransportScheme.WebAPI is exclusive and is not designed to be used with other options at the same time..
         /// </summary>
-        public static string TransportSchemeWebAPIExclusive {
+        internal static string TransportSchemeWebAPIExclusive {
             get {
                 return ResourceManager.GetString("TransportSchemeWebAPIExclusive", resourceCulture);
             }
@@ -1970,7 +1971,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to The UnitType property requires that the value be defined as a JobUnitType enumeration..
         /// </summary>
-        public static string UnitTypeNotDefined {
+        internal static string UnitTypeNotDefined {
             get {
                 return ResourceManager.GetString("UnitTypeNotDefined", resourceCulture);
             }
@@ -1979,7 +1980,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Unknown error occured: {0}..
         /// </summary>
-        public static string UnknownError {
+        internal static string UnknownError {
             get {
                 return ResourceManager.GetString("UnknownError", resourceCulture);
             }
@@ -1988,7 +1989,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Session pool is not supported by unshared session..
         /// </summary>
-        public static string UnsharedSession_NotSupportSessionPool {
+        internal static string UnsharedSession_NotSupportSessionPool {
             get {
                 return ResourceManager.GetString("UnsharedSession_NotSupportSessionPool", resourceCulture);
             }
@@ -1997,7 +1998,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to UserData can only be {0} characters. Specified userData length is {1} characters..
         /// </summary>
-        public static string UserDataTooLong {
+        internal static string UserDataTooLong {
             get {
                 return ResourceManager.GetString("UserDataTooLong", resourceCulture);
             }
@@ -2006,7 +2007,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Access is denied..
         /// </summary>
-        public static string WebAPI_AccessDenied {
+        internal static string WebAPI_AccessDenied {
             get {
                 return ResourceManager.GetString("WebAPI_AccessDenied", resourceCulture);
             }
@@ -2015,7 +2016,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Broker of session {0} is not active. This maybe because the session has suspended or finished (because of timeout). Try to attach to the session first..
         /// </summary>
-        public static string WebAPI_BrokerNotActive {
+        internal static string WebAPI_BrokerNotActive {
             get {
                 return ResourceManager.GetString("WebAPI_BrokerNotActive", resourceCulture);
             }
@@ -2024,7 +2025,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Session API does not support to cancel session creation when creating a session over a Web service..
         /// </summary>
-        public static string WebAPI_NotSupportCancelCreateSession {
+        internal static string WebAPI_NotSupportCancelCreateSession {
             get {
                 return ResourceManager.GetString("WebAPI_NotSupportCancelCreateSession", resourceCulture);
             }
@@ -2033,7 +2034,7 @@ namespace Microsoft.Hpc.Scheduler.Session {
         /// <summary>
         ///   Looks up a localized string similar to Inprocess broker is not supported through Web API. Please use Session API directly for this feature..
         /// </summary>
-        public static string WebAPI_NotSupportInprocessBroker {
+        internal static string WebAPI_NotSupportInprocessBroker {
             get {
                 return ResourceManager.GetString("WebAPI_NotSupportInprocessBroker", resourceCulture);
             }

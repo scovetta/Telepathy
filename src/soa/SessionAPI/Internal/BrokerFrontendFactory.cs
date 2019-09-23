@@ -1,11 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal
 {
     using System;
     using System.ServiceModel.Channels;
-    using Microsoft.Hpc.Scheduler.Session.Common;
+
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal.AzureQueue;
 
     /// <summary>
     /// Factory to build broker frontend

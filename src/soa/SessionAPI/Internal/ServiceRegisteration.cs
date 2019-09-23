@@ -1,16 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using Microsoft.Hpc.Scheduler.Session;
-    
-    using TelepathyCommon;
-    using static TelepathyCommon.SoaRegistrationAuxModule;
+
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Common.ServiceRegistrationStore;
+
+    using static Telepathy.Common.ServiceRegistrationStore.SoaRegistrationAuxModule;
 
     public class ServiceRegistrationRepo
     {
@@ -262,7 +263,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         {
             if (string.IsNullOrEmpty(serviceRegistrationDir) || SoaRegistrationAuxModule.IsRegistrationStoreToken(serviceRegistrationDir))
             {
-                List<string> services = ServiceRegistrationStore.EnumerateAsync().GetAwaiter().GetResult();
+                List<string> services = this.ServiceRegistrationStore.EnumerateAsync().GetAwaiter().GetResult();
                 Trace.TraceInformation("[SessionLauncher] GetVersionFromRegistration from reliable registry.");
 
                 // If caller asked for unversioned service and it hasn't been found yet, check for it now

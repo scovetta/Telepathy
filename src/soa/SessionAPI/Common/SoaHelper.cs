@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Common
 {
     using System;
     using System.Collections.Generic;
@@ -21,13 +21,13 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.Threading;
     using System.Xml;
 
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Common.Registry;
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions;
+    using Microsoft.Telepathy.Session.Internal;
     using Microsoft.Win32;
 
-    using TelepathyCommon;
-    using TelepathyCommon.HpcContext;
-    using TelepathyCommon.HpcContext.Extensions;
-    using TelepathyCommon.Registry;
-    using TelepathyCommon.Service;
     /// <summary>
     /// It is a helper class, shared by broker and proxy.
     /// </summary>

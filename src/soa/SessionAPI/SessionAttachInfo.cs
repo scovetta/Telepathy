@@ -1,10 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
-    using System;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     ///   <para>Defines a set of values that an SOA client should use to attach to an existing session.</para>
@@ -52,7 +52,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         // BUG 9149 - Removed unused public heartbeat properties. RTM documentation to be updated stating properties are for internal use only
 
         /// <summary>
-        ///   <para>Initializes a new instance of the <see cref="Microsoft.Hpc.Scheduler.Session.SessionAttachInfo" /> class.</para>
+        ///   <para>Initializes a new instance of the <see cref="SessionAttachInfo" /> class.</para>
         /// </summary>
         /// <param name="headNode">
         ///   <para>String that specifies the name of the head node for the cluster that hosts the session to which you want to attach an SOA client.</para>
@@ -84,10 +84,10 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <value>
         ///   <para>A value from the 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.TransportScheme" /> enumeration that specifies the transport binding scheme. The values should be either  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.TransportScheme.NetTcp" /> or 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.TransportScheme.WebAPI" />. Use 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.TransportScheme.WebAPI" /> to attach to a session that the Windows Azure HPC Scheduler hosts.</para>
+        /// <see cref="Telepathy.Session.TransportScheme" /> enumeration that specifies the transport binding scheme. The values should be either  
+        /// <see cref="Telepathy.Session.TransportScheme.NetTcp" /> or 
+        /// <see cref="Telepathy.Session.TransportScheme.WebAPI" />. Use 
+        /// <see cref="Telepathy.Session.TransportScheme.WebAPI" /> to attach to a session that the Windows Azure HPC Scheduler hosts.</para>
         /// </value>
         public override TransportScheme TransportScheme
         {
@@ -108,7 +108,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// However, if multiple credentials exist in the cache, the user is prompted for the credentials. </para> 
         ///   <para>You only need to set this property when you use the 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.TransportScheme.WebAPI" /> transport scheme, which you use to connect to the Windows Azure HPC Scheduler.</para> 
+        /// <see cref="Telepathy.Session.TransportScheme.WebAPI" /> transport scheme, which you use to connect to the Windows Azure HPC Scheduler.</para> 
         ///   <para>If the user under whose credentials the job runs differs from the job owner, the user under whose credentials the 
         /// job runs must be an administrator. If that user is not an administrator, an exception occurs because that user does not have  
         /// permission to read the job. The job owner is the user who runs the SOA client application. If you set the user 
@@ -118,8 +118,8 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// cannot send requests to the session. A session that is not secure accepts requests from all clients. A secure 
         /// and shared session accepts requests based on the permissions that the access control list (ACL) in the job template specifies.</para> 
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Username" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionAttachInfo.Password" />
+        /// <seealso cref="SessionStartInfo.Username" />
+        /// <seealso cref="Password" />
         public override string Username { get; set; }
 
         /// <summary>
@@ -133,10 +133,10 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// this method uses the cached password if one exists; otherwise, the user is prompted for the password.</para>
         ///   <para>You only need to set this property when you use the 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.TransportScheme.WebAPI" /> transport scheme, which you use to connect to the Windows Azure HPC Scheduler.</para> 
+        /// <see cref="Telepathy.Session.TransportScheme.WebAPI" /> transport scheme, which you use to connect to the Windows Azure HPC Scheduler.</para> 
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo.Password" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionAttachInfo.Username" />
+        /// <seealso cref="SessionStartInfo.Password" />
+        /// <seealso cref="Username" />
         public string Password
         {
             set { this.password = value; }

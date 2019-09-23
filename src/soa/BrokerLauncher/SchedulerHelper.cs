@@ -4,7 +4,7 @@
 // TODO: remove not supported interfaces
 // TODO: change signature to reveal async nature
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
     using System.Collections.Generic;
@@ -13,17 +13,21 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.RuntimeTrace;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using Microsoft.Hpc.ServiceBroker;
-    using Microsoft.Hpc.ServiceBroker.Common;
-    using Microsoft.Hpc.ServiceBroker.Common.SchedulerAdapter;
-    using Microsoft.Hpc.ServiceBroker.Common.ServiceJobMonitor;
-
-    using TelepathyCommon;
-    using TelepathyCommon.HpcContext;
-    using TelepathyCommon.HpcContext.Extensions;
-    using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
+    using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions.RegistryExtension;
+    using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.ServiceBroker;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter;
+    using Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Helper class for operation to scheduler
@@ -71,7 +75,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         public SchedulerHelper(ITelepathyContext context)
         {
             this.context = context;
-            this.sessionNode = new Lazy<string>(() => ResolveSessionNodeWithRetries().GetAwaiter().GetResult(), LazyThreadSafetyMode.ExecutionAndPublication);
+            this.sessionNode = new Lazy<string>(() => this.ResolveSessionNodeWithRetries().GetAwaiter().GetResult(), LazyThreadSafetyMode.ExecutionAndPublication);
             this.certThumbprint = new Lazy<string>(() => this.context.GetSSLThumbprint().GetAwaiter().GetResult(), LazyThreadSafetyMode.ExecutionAndPublication);
             this.schedulerClient = new Lazy<SchedulerAdapterClient>(
                 () => new SchedulerAdapterClient(BindingHelper.HardCodedUnSecureNetTcpBinding, new EndpointAddress(SoaHelper.GetSchedulerDelegationAddress(this.sessionNode.Value)), new InstanceContext(new TraceOnlyServiceJobMonitor())),
@@ -518,7 +522,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                             Utility.AsyncCloseICommunicationObject(this.sessionLauncherClient.Value);
                         }
 
-                        this.sessionNode = new Lazy<string>(() => ResolveSessionNodeWithRetries().GetAwaiter().GetResult(), LazyThreadSafetyMode.ExecutionAndPublication);
+                        this.sessionNode = new Lazy<string>(() => this.ResolveSessionNodeWithRetries().GetAwaiter().GetResult(), LazyThreadSafetyMode.ExecutionAndPublication);
                         this.certThumbprint = new Lazy<string>(() => this.context.GetSSLThumbprint().GetAwaiter().GetResult(), LazyThreadSafetyMode.ExecutionAndPublication);
                         this.sessionLauncherClient = new Lazy<SessionLauncherClient>(
                             () => new SessionLauncherClient(this.sessionNode.Value, this.certThumbprint.Value),

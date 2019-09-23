@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace TelepathyCommon.HpcContext.SoaContext
+namespace Microsoft.Telepathy.Common.TelepathyContext.ContextImpl
 {
     using System;
     using System.Threading;
     using System.Threading.Tasks;
 
-    using TelepathyCommon.Registry;
+    using Microsoft.Telepathy.Common.Registry;
 
     // TODO: remove me
     public class SoaFabricContext : IFabricContext

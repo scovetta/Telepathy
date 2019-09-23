@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.BrokerBurst
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd.AzureQueue
 {
     using System;
     using System.Diagnostics;
@@ -9,7 +9,6 @@ namespace Microsoft.Hpc.BrokerBurst
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Security;
-    using System.Security.Permissions;
     using System.ServiceModel.Channels;
     using System.Xml;
 

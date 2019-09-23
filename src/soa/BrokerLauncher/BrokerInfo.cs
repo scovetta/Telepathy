@@ -1,21 +1,25 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
     using System.Diagnostics;
     using System.Linq;
     using System.ServiceModel;
-    using Microsoft.Hpc.Scheduler.Session.Configuration;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.ServiceBroker;
-    using Microsoft.Hpc.ServiceBroker.Common;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using Microsoft.Hpc.RuntimeTrace;
     using System.Threading;
 
-    using Utility = Microsoft.Hpc.ServiceBroker.Common.Utility;
+    using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Configuration;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
+
+    using Utility = Microsoft.Telepathy.ServiceBroker.Common.Utility;
 
     /// <summary>
     /// Stores broker info for broker manager
@@ -254,7 +258,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
                 // Set broker's unique id to the initialization result when the process
                 // is (re)started.
                 this.result.BrokerUniqueId = this.UniqueId;
-                this.brokerProcess.Exited += new EventHandler(BrokerProcess_Exited);
+                this.brokerProcess.Exited += new EventHandler(this.BrokerProcess_Exited);
             }
             catch (Exception e)
             {

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 {
     using System.Diagnostics;
 
@@ -39,7 +39,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
 
         public void Invoke()
         {
-            BrokerTracing.TraceVerbose("[GetNextRequestState]. Invoke: Call GetNextRequest method, clientIndex is {0}", clientIndex);
+            BrokerTracing.TraceVerbose("[GetNextRequestState]. Invoke: Call GetNextRequest method, clientIndex is {0}", this.clientIndex);
             this.getNextRequest(this.clientIndex);
         }
     }

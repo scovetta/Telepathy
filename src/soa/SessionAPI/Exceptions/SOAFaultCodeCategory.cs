@@ -1,10 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session.Exceptions
 {
     /// <summary>
-    ///   <para>Defines categories for the errors that a <see cref="Microsoft.Hpc.Scheduler.Session.SOAFaultCode" /> object represents.</para>
+    ///   <para>Defines categories for the errors that a <see cref="SOAFaultCode" /> object represents.</para>
     /// </summary>
     /// <remarks>
     ///   <para>To use this enumeration in Visual Basic Scripting Edition (VBScript), you 
@@ -21,8 +21,8 @@ namespace Microsoft.Hpc.Scheduler.Session
     /// const DataFatalError = &amp;H06200000
     /// const Unknown = &amp;H0F000000</code>
     /// </remarks>
-    /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SOAFaultCode" />
-    /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SOAFaultCode.Category(System.Int32)" />
+    /// <seealso cref="SOAFaultCode" />
+    /// <seealso cref="SOAFaultCode.Category" />
     public enum SOAFaultCodeCategory : int
     {
         /// <summary>
@@ -58,9 +58,9 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <summary>
         ///   <para>Indicates that an unknown error has occurred on the broker proxy in an Windows 
         /// Azure deployment. Treat this error in the same way as you treat an error with a  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SOAFaultCodeCategory" /> value of 
+        /// <see cref="SOAFaultCodeCategory" /> value of 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SOAFaultCodeCategory.SessionFatalError" />. This enumeration member represents a value of 0x05000000.</para> 
+        /// <see cref="SessionFatalError" />. This enumeration member represents a value of 0x05000000.</para> 
         /// </summary>
         BrokerProxyError = 0x05000000,
 
@@ -83,9 +83,9 @@ namespace Microsoft.Hpc.Scheduler.Session
 
         /// <summary>
         ///   <para>Indicates that an unknown error occurred. Treat this error in the same way as you treat an error with a 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SOAFaultCodeCategory" /> value of 
+        /// <see cref="SOAFaultCodeCategory" /> value of 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SOAFaultCodeCategory.SessionFatalError" />. This enumeration member represents a value of 0x0F000000.</para> 
+        /// <see cref="SessionFatalError" />. This enumeration member represents a value of 0x0F000000.</para> 
         /// </summary>
         Unknown = 0x0f000000
     }

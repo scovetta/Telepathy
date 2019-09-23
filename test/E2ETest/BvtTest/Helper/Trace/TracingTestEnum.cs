@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace AITestLib.Helper.Trace
+namespace Microsoft.Telepathy.Test.E2E.Bvt.Helper.Trace
 {
 
     public enum TracingType

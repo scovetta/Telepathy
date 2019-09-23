@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
+namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
 {
     using System;
     using System.Collections.Generic;
@@ -165,8 +165,8 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 
         public long ResponsesCountField
         {
-            get { return responsesCountField; }
-            set { responsesCountField = value; }
+            get { return this.responsesCountField; }
+            set { this.responsesCountField = value; }
         }
 
 
@@ -177,8 +177,8 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 
         public long FailedRequestsCountField
         {
-            get { return failedRequestsCountField; }
-            set { failedRequestsCountField = value; }
+            get { return this.failedRequestsCountField; }
+            set { this.failedRequestsCountField = value; }
         }
 
 
@@ -189,8 +189,8 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
 
         public long FlushedRequestsCount
         {
-            get { return flushedRequestsCount; }
-            set { flushedRequestsCount = value; }
+            get { return this.flushedRequestsCount; }
+            set { this.flushedRequestsCount = value; }
         }
     }
 }

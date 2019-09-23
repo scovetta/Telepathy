@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal
 {
     using System;
     using System.ServiceModel;
@@ -9,8 +9,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.ServiceModel.Description;
     using System.Threading;
     using System.Xml;
-    using Microsoft.Hpc.Scheduler.Session.Common;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
+
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
 
     /// <summary>
     /// Implements response message callback that routes responses to app's delegate
@@ -256,7 +258,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
             if (timeoutMilliseconds != Timeout.Infinite)
             {
                 this.responseHanderTimeout = timeoutMilliseconds;
-                this.responseHandlerTimeoutTimer = new Timer(ResponseHandlerTimeoutTimer, null, timeoutMilliseconds, 0);
+                this.responseHandlerTimeoutTimer = new Timer(this.ResponseHandlerTimeoutTimer, null, timeoutMilliseconds, 0);
             }
         }
 
@@ -285,7 +287,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                 if (string.Equals(message.Headers.Action, Constant.WebAPI_ClientSideException, StringComparison.Ordinal))
                 {
                     Exception e = message.Properties[Constant.WebAPI_ClientSideException] as Exception;
-                    InvokeCallback(new BrokerResponse<TMessage>(e, message.Headers.RelatesTo));
+                    this.InvokeCallback(new BrokerResponse<TMessage>(e, message.Headers.RelatesTo));
                     return;
                 }
 
@@ -306,11 +308,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     catch (Exception e)
                     {
                         Utility.LogError("AsyncResponseCallback.SendResponse received exception - {0}", e);
-                        InvokeCallback(new BrokerResponse<TMessage>(e, message.Headers.RelatesTo));
+                        this.InvokeCallback(new BrokerResponse<TMessage>(e, message.Headers.RelatesTo));
                         return;
                     }
 
-                    BrokerResponse<TMessage> brokerResponse = CreateResponse(BrokerClientBase.GetActionFromResponseMessage(message),
+                    BrokerResponse<TMessage> brokerResponse = this.CreateResponse(BrokerClientBase.GetActionFromResponseMessage(message),
                                         !message.IsFault ? message.Headers.Action : String.Empty,
                                         messageBuffer,
                                         message.Headers.RelatesTo == null ? SoaHelper.GetMessageId(message) : message.Headers.RelatesTo);
@@ -331,7 +333,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     if (lastResponse != null)
                     {
                         // Send it to the callback
-                        InvokeCallback(lastResponse);
+                        this.InvokeCallback(lastResponse);
 
                         // Increment response count
                         currentResponseCount = Interlocked.Increment(ref this.currentResponseCount);
@@ -347,7 +349,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                         try
                         {
 
-                            SessionBase.TraceSource.TraceInformation("GetResponse : currentResponseCount {0} : clientId {1}", currentResponseCount, clientId);
+                            SessionBase.TraceSource.TraceInformation("GetResponse : currentResponseCount {0} : clientId {1}", currentResponseCount, this.clientId);
                             this.responseService.GetResponses(
                                     this.action,
                                     this.callbackManagerId,
@@ -371,10 +373,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     switch (endOfResponses.Reason)
                     {
                         case EndOfResponsesReason.ClientPurged:
-                            InvokeCallback(new BrokerResponse<TMessage>(SessionBase.ClientPurgedException, new UniqueId(Guid.Empty)));
+                            this.InvokeCallback(new BrokerResponse<TMessage>(SessionBase.ClientPurgedException, new UniqueId(Guid.Empty)));
                             break;
                         case EndOfResponsesReason.ClientTimeout:
-                            InvokeCallback(new BrokerResponse<TMessage>(SessionBase.ClientTimeoutException, new UniqueId(Guid.Empty)));
+                            this.InvokeCallback(new BrokerResponse<TMessage>(SessionBase.ClientTimeoutException, new UniqueId(Guid.Empty)));
                             break;
                         default:
                             // Save how many responses are expected (minus 1 for the last response)
@@ -401,7 +403,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                                 // Send last response to callback. Note since currentResponseCount
                                 // is incremented after responses are sent to the callback, the
                                 // callback will not be processing any other responses at this time.
-                                InvokeCallback(this.lastBrokerResponse);
+                                this.InvokeCallback(this.lastBrokerResponse);
 
                                 this.expectedResponseCount = -1;
                             }
@@ -421,7 +423,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// </summary>
         public void SendBrokerDownSignal(bool isBrokerNodeDown)
         {
-            lock (shutdownLock)
+            lock (this.shutdownLock)
             {
                 // If the handler is already shutting down, just return. We dont want user to get unecessary exception responses.
                 if (this.shuttingDown)
@@ -429,7 +431,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
                 try
                 {
-                    InvokeCallback(new BrokerResponse<TMessage>(SessionBase.GetHeartbeatException(isBrokerNodeDown), new UniqueId(Guid.Empty)));
+                    this.InvokeCallback(new BrokerResponse<TMessage>(SessionBase.GetHeartbeatException(isBrokerNodeDown), new UniqueId(Guid.Empty)));
                 }
                 catch (Exception e)
                 {
@@ -495,7 +497,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
         /// <param name="state"></param>
         private void ResponseHandlerTimeoutTimer(object state)
         {
-            lock (shutdownLock)
+            lock (this.shutdownLock)
             {
                 // If the handler is already shutting down, just return. We dont want user to get unecessary exception responses.
                 if (this.shuttingDown)
@@ -510,12 +512,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
                     if (lastResponse != null)
                     {
                         // Send it to the callback
-                        InvokeCallback(lastResponse);
+                        this.InvokeCallback(lastResponse);
                     }
                 }
 
                 // If the response handler times out, give the handler a timeout exception
-                InvokeCallback(new BrokerResponse<TMessage>(new TimeoutException(), new UniqueId(Guid.Empty)));
+                this.InvokeCallback(new BrokerResponse<TMessage>(new TimeoutException(), new UniqueId(Guid.Empty)));
 
                 // close this instance
                 this.Close();

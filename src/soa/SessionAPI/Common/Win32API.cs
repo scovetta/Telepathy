@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Text;
-using System.Runtime.InteropServices;
-
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Common
 {
+    using System;
+    using System.Runtime.InteropServices;
+    using System.Text;
+
     public enum COMPUTER_NAME_FORMAT : int
     {
         ComputerNameNetBIOS,

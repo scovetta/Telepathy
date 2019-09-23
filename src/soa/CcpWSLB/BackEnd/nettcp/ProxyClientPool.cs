@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd.nettcp
 {
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.ServiceModel;
-    using Microsoft.Hpc.BrokerProxy;
 
     /// <summary>
     /// A class that manages ServiceClients to one broker proxy.
@@ -54,7 +53,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <summary> ProxyClientPool size.  Returns number of ServiceClients in the pool.</summary>
         public int Size
         {
-            get { return clientPool.Count; }
+            get { return this.clientPool.Count; }
         }
 
         /// <summary> Returns how many dispatchers are referencing the pool</summary>
