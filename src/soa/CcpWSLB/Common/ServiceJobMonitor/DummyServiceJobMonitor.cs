@@ -52,7 +52,9 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
                 this.allocationAdjustThread.Start();
             }
 
-            await SvcHostRestModule.OpenSvcHostsAsync(this.sharedData.BrokerInfo.SessionId, startInfo, ((ISchedulerNotify)this).TaskStateChanged);
+            // await SvcHostRestModule.OpenSvcHostsAsync(this.sharedData.BrokerInfo.SessionId, startInfo, ((ISchedulerNotify)this).TaskStateChanged);
+
+            await ((ISchedulerNotify)this).TaskStateChanged(SvcHostRestModule.CreateDummyTaskInfos(startInfo.IpAddress));
         }
     }
 }

@@ -136,13 +136,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
             Dictionary<string, string> environment,
             Dictionary<string, string> dependFilesInfo)
         {
-            TaskInfo ti = new TaskInfo();
-            ti.Id = (TaskIdStart + num).ToString();
-            ti.Capacity = 1;
-            ti.FirstCoreIndex = 3;
-            ti.Location = NodeLocation.OnPremise;
-            ti.MachineName = ipAddress;
-            ti.State = TaskState.Dispatching;
+            var ti = CreateDummyTaskInfo(num, ipAddress);
             string fileName = SoaRegistrationAuxModule.GetRegistrationFileName(svcName, svcVersion);
             // HTTP POST
             var serviceInfo = new ServiceInfo(sessionId, ti.Id, ti.FirstCoreIndex, regPath + "\\", fileName, environment, dependFilesInfo);
@@ -150,6 +144,29 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
             BrokerTracing.TraceVerbose("[OpenSvcHost].result:{0}", result);
             result.EnsureSuccessStatusCode();
             return ti;
+        }
+
+        public static TaskInfo CreateDummyTaskInfo(int idx, string ipAddress)
+        {
+            TaskInfo ti = new TaskInfo();
+            ti.Id = (TaskIdStart + idx).ToString();
+            ti.Capacity = 1;
+            ti.FirstCoreIndex = 3;
+            ti.Location = NodeLocation.OnPremise;
+            ti.MachineName = ipAddress;
+            ti.State = TaskState.Dispatching;
+            return ti;
+        }
+
+        public static List<TaskInfo> CreateDummyTaskInfos(string[] ipAddresses)
+        {
+            List<TaskInfo> res = new List<TaskInfo>();
+            for (int i = 0; i < ipAddresses.Length; ++i)
+            {
+                res.Add(CreateDummyTaskInfo(i, ipAddresses[i]));
+            }
+
+            return res;
         }
     }
 }

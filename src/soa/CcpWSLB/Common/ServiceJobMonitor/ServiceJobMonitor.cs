@@ -118,11 +118,10 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
 
         private async Task OpenPreDefinedServiceHosts()
         {
-            // TODO: hack! rafactor this
             var startInfo = this.sharedData.StartInfo;
             if (startInfo != null)
             {
-                await SvcHostRestModule.OpenSvcHostsAsync(this.sharedData.BrokerInfo.SessionId, startInfo, ((ISchedulerNotify)this).TaskStateChanged);
+                await ((ISchedulerNotify)this).TaskStateChanged(SvcHostRestModule.CreateDummyTaskInfos(startInfo.IpAddress));
             }
         }
     }
