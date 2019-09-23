@@ -19,13 +19,12 @@ namespace Microsoft.Telepathy.CcpServiceHost
     using System.Threading.Tasks;
 
     using Microsoft.Telepathy.CcpServiceHost.Rest;
+    using Microsoft.Telepathy.Data.Standalone;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Configuration;
     using Microsoft.Telepathy.Session.Internal;
     using Microsoft.Win32.SafeHandles;
-
-    using SoaService.DataClient;
 
     using TelepathyCommon;
 

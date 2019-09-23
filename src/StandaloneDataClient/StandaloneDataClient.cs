@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace SoaService.DataClient
+namespace Microsoft.Telepathy.Data.Standalone
 {
     using System;
     using System.Collections.Generic;
