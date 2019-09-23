@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.RESTServiceModel
+namespace Microsoft.Telepathy.CcpServiceHost.Rest
 {
-
     using System.Web.Http;
+
     using global::Owin;
 
     public class Startup

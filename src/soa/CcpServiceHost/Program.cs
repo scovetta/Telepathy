@@ -18,7 +18,7 @@ namespace Microsoft.Telepathy.CcpServiceHost
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.RESTServiceModel;
+    using Microsoft.Telepathy.CcpServiceHost.Rest;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Configuration;

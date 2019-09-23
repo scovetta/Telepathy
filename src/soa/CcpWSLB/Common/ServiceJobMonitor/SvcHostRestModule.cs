@@ -9,7 +9,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
     using System.Net.Http;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.RESTServiceModel;
+    using Microsoft.Telepathy.CcpServiceHost.Rest;
     using Microsoft.Telepathy.ServiceBroker.BackEnd;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Data;

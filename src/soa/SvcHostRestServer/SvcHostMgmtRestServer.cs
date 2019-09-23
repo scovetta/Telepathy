@@ -1,13 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.RESTServiceModel
+namespace Microsoft.Telepathy.CcpServiceHost.Rest
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
-    using System.Threading.Tasks;
+    using Microsoft.Hpc;
 
     public class SvcHostMgmtRestServer : InternalRestServer
     {
