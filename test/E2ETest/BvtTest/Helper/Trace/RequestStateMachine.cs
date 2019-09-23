@@ -1,13 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace AITestLib.Helper.Trace
+namespace Microsoft.Telepathy.Test.E2E.Bvt.Helper.Trace
 {
+    using System;
+    using System.Collections.Generic;
+
     class RequestStateMachine
     {
         private RequestState state = RequestState.BeforeFrontEndReceived;
@@ -15,48 +13,48 @@ namespace AITestLib.Helper.Trace
 
         private void InitRule()
         {
-            rule = new Dictionary<RequestState, Dictionary<RequestAction, Action>>();
+            this.rule = new Dictionary<RequestState, Dictionary<RequestAction, Action>>();
 
             foreach (var e in Enum.GetValues(typeof(RequestState)))
             {
-                rule[(RequestState)e] = new Dictionary<RequestAction, Action>();
+                this.rule[(RequestState)e] = new Dictionary<RequestAction, Action>();
             }
 
-            rule[RequestState.BeforeFrontEndReceived][RequestAction.FrontEndRequestReceived] = () => { state = RequestState.FrontEndReceived; };
-            rule[RequestState.BeforeFrontEndReceived][RequestAction.FrontEndRequestRejected] = () => { state = RequestState.FrontEndRequestRejected; };
+            this.rule[RequestState.BeforeFrontEndReceived][RequestAction.FrontEndRequestReceived] = () => { this.state = RequestState.FrontEndReceived; };
+            this.rule[RequestState.BeforeFrontEndReceived][RequestAction.FrontEndRequestRejected] = () => { this.state = RequestState.FrontEndRequestRejected; };
 
-            rule[RequestState.FrontEndReceived][RequestAction.BackendRequestSent] = () => { state = RequestState.Dispatching; };
+            this.rule[RequestState.FrontEndReceived][RequestAction.BackendRequestSent] = () => { this.state = RequestState.Dispatching; };
 
-            rule[RequestState.Dispatching][RequestAction.BackendRequestSentFailed] = () => { state = RequestState.BackendDispatchFailedOrRetry; };
-            rule[RequestState.Dispatching][RequestAction.BackendResponseReceived] = () => { state = RequestState.BackendRecived; };
-            rule[RequestState.Dispatching][RequestAction.BackendResponseReceivedFailed] = () => { state = RequestState.BackendDispatchFailedOrRetry; };
+            this.rule[RequestState.Dispatching][RequestAction.BackendRequestSentFailed] = () => { this.state = RequestState.BackendDispatchFailedOrRetry; };
+            this.rule[RequestState.Dispatching][RequestAction.BackendResponseReceived] = () => { this.state = RequestState.BackendRecived; };
+            this.rule[RequestState.Dispatching][RequestAction.BackendResponseReceivedFailed] = () => { this.state = RequestState.BackendDispatchFailedOrRetry; };
 
-            rule[RequestState.BackendRecived][RequestAction.FrontEndResponseSent] = () => { state = RequestState.RequestReturned; };
-            rule[RequestState.BackendRecived][RequestAction.FrontEndResponseSentFailed] = () => { state = RequestState.RequestReturnedFailed; };
+            this.rule[RequestState.BackendRecived][RequestAction.FrontEndResponseSent] = () => { this.state = RequestState.RequestReturned; };
+            this.rule[RequestState.BackendRecived][RequestAction.FrontEndResponseSentFailed] = () => { this.state = RequestState.RequestReturnedFailed; };
 
-            rule[RequestState.BackendDispatchFailedOrRetry][RequestAction.BackendResponseReceivedFailedRetryLimitExceed] = () => { state = RequestState.BackendDispatchFailedNoRetry; };
-            rule[RequestState.BackendDispatchFailedOrRetry][RequestAction.BackendRequestSent] = () => { state = RequestState.Dispatching; };
+            this.rule[RequestState.BackendDispatchFailedOrRetry][RequestAction.BackendResponseReceivedFailedRetryLimitExceed] = () => { this.state = RequestState.BackendDispatchFailedNoRetry; };
+            this.rule[RequestState.BackendDispatchFailedOrRetry][RequestAction.BackendRequestSent] = () => { this.state = RequestState.Dispatching; };
 
-            rule[RequestState.BackendDispatchFailedNoRetry][RequestAction.BackendResponseGenerateFaultReply] = () => { state = RequestState.BackendGenerateFaultReply; };
+            this.rule[RequestState.BackendDispatchFailedNoRetry][RequestAction.BackendResponseGenerateFaultReply] = () => { this.state = RequestState.BackendGenerateFaultReply; };
 
-            rule[RequestState.BackendGenerateFaultReply][RequestAction.FrontEndResponseSent] = () => { state = RequestState.RequestReturned; };
-            rule[RequestState.BackendGenerateFaultReply][RequestAction.FrontEndResponseSentFailed] = () => { state = RequestState.RequestReturnedFailed; };
+            this.rule[RequestState.BackendGenerateFaultReply][RequestAction.FrontEndResponseSent] = () => { this.state = RequestState.RequestReturned; };
+            this.rule[RequestState.BackendGenerateFaultReply][RequestAction.FrontEndResponseSentFailed] = () => { this.state = RequestState.RequestReturnedFailed; };
         }
 
         public RequestStateMachine()
         {
-            InitRule();
+            this.InitRule();
         }
 
         public void Process(RequestAction action)
         {
             try
             {
-                rule[state][action]();
+                this.rule[this.state][action]();
             }
             catch (KeyNotFoundException)
             {
-                throw new InvalidOperationException(string.Format("Invalid state transistion from {0} with action {1}", state, action));
+                throw new InvalidOperationException(string.Format("Invalid state transistion from {0} with action {1}", this.state, action));
             }
         }
     }

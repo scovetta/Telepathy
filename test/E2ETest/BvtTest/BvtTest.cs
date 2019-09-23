@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace BvtTest
+namespace Microsoft.Telepathy.Test.E2E.Bvt
 {
     using System;
     using System.Collections.Generic;
@@ -10,12 +10,10 @@ namespace BvtTest
     using System.Threading;
     using System.Threading.Tasks;
 
-    using AITestLib.Helper;
-
     using Microsoft.ComputeCluster.Test.AppIntegration.EchoService.MessageContract;
-    using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Internal;
+    using Microsoft.Telepathy.Test.E2E.Bvt.Helper;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using EchoSvcClient = Microsoft.ComputeCluster.Test.AppIntegration.EchoService.EchoSvcClient;
