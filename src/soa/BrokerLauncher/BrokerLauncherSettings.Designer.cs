@@ -73,10 +73,6 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\r\n        <?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n        <ArrayOfString xmlns:x" +
-            "si=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001" +
-            "/XMLSchema\">\r\n        <string>127.0.0.1</string>\r\n        </ArrayOfString>\r\n    " +
-            "  ")]
         public global::System.Collections.Specialized.StringCollection SvcHostList {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["SvcHostList"]));

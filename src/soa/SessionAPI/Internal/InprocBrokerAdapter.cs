@@ -53,12 +53,12 @@ namespace Microsoft.Telepathy.Session.Internal
         /// <summary>
         /// Stores the full class name of BrokerEntry class
         /// </summary>
-        private const string BrokerEntryClassFullName = "Microsoft.Hpc.ServiceBroker.BrokerEntry";
+        private const string BrokerEntryClassFullName = "Microsoft.Telepathy.ServiceBroker.Common.BrokerEntry";
 
         /// <summary>
         /// Stores the full class name of the TraceHelper class, including assembly name
         /// </summary>
-        private const string TraceHelperClassFullName = "Microsoft.Hpc.RuntimeTrace.TraceHelper, BrokerBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null";
+        private const string TraceHelperClassFullName = "Microsoft.Telepathy.RuntimeTrace.TraceHelper, BrokerBase";
 
         /// <summary>
         /// Stores RESTServiceModel assembly full name
@@ -184,8 +184,6 @@ namespace Microsoft.Telepathy.Session.Internal
             // this.MSMQInteropFullPath = BuildPath(binPath, currentPath, "MSMQInterop.dll");
             this.brokerCoreServiceLibPath = BuildPath(binPath, currentPath, "Microsoft.Hpc.SvcBroker.dll");
             this.RESTServiceModelLibPath = BuildPath(binPath, currentPath, "Microsoft.Hpc.SvcHostRestServer.dll");
-            this.soaCommonUtilityLibPath = BuildPath(binPath, currentPath, "Microsoft.Hpc.Scheduler.Session.Utility.dll");
-            this.SoaAmbientConfigLibPath = BuildPath(binPath, currentPath, "SoaAmbientConfig.dll");
         }
 
         private static string BuildPath(string binPath, string currentPath, string libName)
@@ -662,7 +660,7 @@ namespace Microsoft.Telepathy.Session.Internal
         /// </summary>
         /// <param name="sessionId">indicating the session id</param>
         /// <returns>returns a value indicating whether to enable diag trace</returns>
-        private bool IsDiagTraceEnabled(int sessionId)
+        private bool IsDiagTraceEnabled(string sessionId)
         {
             return this.brokerInfo.EnableDiagTrace;
         }
@@ -677,7 +675,7 @@ namespace Microsoft.Telepathy.Session.Internal
 
             this.SetIsDiagTraceEnabledProperty();
             Assembly brokerCoreAsm = Assembly.LoadFile(this.brokerCoreServiceLibPath);
-            ConstructorInfo ci = brokerCoreAsm.GetType(BrokerEntryClassFullName).GetConstructor(new Type[1] { typeof(int) });
+            ConstructorInfo ci = brokerCoreAsm.GetType(BrokerEntryClassFullName).GetConstructor(new Type[1] { typeof(string) });
             this.brokerEntry = (IBrokerEntry)ci.Invoke(new object[1] { sessionId });
             this.brokerEntry.BrokerFinished += new EventHandler(this.Entry_BrokerFinished);
             this.result = this.brokerEntry.Run(this.startInfoContract, this.brokerInfo);

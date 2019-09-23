@@ -265,7 +265,7 @@ namespace Microsoft.Telepathy.Session.Configuration
         /// </summary>
         /// <param name="errorMessage">
         ///   <para>If 
-        /// <see cref=out "Microsoft.Hpc.Scheduler.Session.Configuration.LoadBalancingConfiguration.Validate(System.String)" /> returns false, this parameter contains the validation error.</para> 
+        /// <see cref=out "Microsoft.Telepathy.Session.Configuration.LoadBalancingConfiguration.Validate(System.String)" /> returns false, this parameter contains the validation error.</para> 
         /// </param>
         /// <returns>
         ///   <para>Is true if the file validates; otherwise, false.</para>

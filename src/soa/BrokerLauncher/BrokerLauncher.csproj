@@ -89,6 +89,7 @@
     <Compile Include="AzureNodeMapping.cs" />
     <Compile Include="AzureNodeMappingUtil.cs" />
     <Compile Include="AzureRoleHelper.cs" />
+    <Compile Include="BrokerLauncherSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueAdapter\BrokerLauncherCloudQueueWatcher.cs" />
     <Compile Include="BrokerLauncherEnvironment.cs" />

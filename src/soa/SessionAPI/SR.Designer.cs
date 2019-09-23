@@ -84,7 +84,7 @@ namespace Microsoft.Telepathy.Session {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.Hpc.Scheduler.Session.SR", typeof(SR).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.Telepathy.Session.SR", typeof(SR).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
