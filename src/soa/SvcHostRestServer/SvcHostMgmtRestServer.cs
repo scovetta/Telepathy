@@ -3,7 +3,7 @@
 
 namespace Microsoft.Telepathy.CcpServiceHost.Rest
 {
-    using Microsoft.Hpc;
+    using Microsoft.Telepathy.Common.Rest.Server;
 
     public class SvcHostMgmtRestServer : InternalRestServer
     {

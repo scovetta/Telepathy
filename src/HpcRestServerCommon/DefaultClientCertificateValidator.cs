@@ -1,17 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using TelepathyCommon.HpcContext;
-using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
-
-namespace Microsoft.Hpc
+namespace Microsoft.Telepathy.Common.Rest.Server
 {
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Cryptography.X509Certificates;
-    using System.Threading;
+
+    using TelepathyCommon.HpcContext;
+    using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
 
     public class DefaultClientCertificateValidator : IClientCertificateValidator
     {

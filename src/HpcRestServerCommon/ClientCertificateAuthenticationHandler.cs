@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc
+namespace Microsoft.Telepathy.Common.Rest.Server
 {
     using System;
     using System.Collections.Generic;
