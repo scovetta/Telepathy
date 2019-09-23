@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace SessionAPI.UnitTest
+namespace Microsoft.Telepathy.Session.UnitTest
 {
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Interface;
