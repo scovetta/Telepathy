@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Azure\BrokerProxyEndpointNames.cs" />
     <Compile Include="BackEnd\AzureDispatcherInfo.cs" />
+    <Compile Include="BackEnd\AzureQueue\AzureQueueItem.cs" />
     <Compile Include="BackEnd\AzureQueue\IAzureQueueManager.cs" />
     <Compile Include="BackEnd\AzureQueue\AzureHttpsDispatcher.cs" />
     <Compile Include="BackEnd\AzureQueue\AzureHttpsServiceClient.cs" />
@@ -254,10 +255,6 @@
     <ProjectReference Include="..\SessionAPI\Session.csproj">
       <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>
       <Name>Session</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SOABurst\SOABurst.csproj">
-      <Project>{3ab56212-e9d3-44e3-aa80-ebd1b29a228f}</Project>
-      <Name>SOABurst</Name>
     </ProjectReference>
     <!--
     <ProjectReference Include="..\SOABurst\SOABurst.csproj">

@@ -8,7 +8,6 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.AzureQueue
     using System.ServiceModel.Channels;
     using System.Xml;
 
-    using Microsoft.Hpc.BrokerBurst;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.Session.Internal;
     using Microsoft.WindowsAzure.Storage.Blob;
