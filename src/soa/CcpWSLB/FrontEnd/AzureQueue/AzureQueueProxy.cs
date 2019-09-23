@@ -15,7 +15,6 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd.AzureQueue
 
     using Microsoft.Hpc.BrokerBurst;
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Interface;

@@ -17,8 +17,6 @@ namespace Microsoft.Telepathy.CcpServiceHost
     using System.Threading;
     using System.Xml;
 
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Internal;

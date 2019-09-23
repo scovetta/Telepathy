@@ -11,7 +11,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.MSMQPersist
     using System.Messaging;
     using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.Session.Internal;
 

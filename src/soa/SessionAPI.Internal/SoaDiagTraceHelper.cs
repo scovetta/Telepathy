@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker
+namespace Microsoft.Telepathy.Session.Internal
 {
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using System.Collections.Concurrent;
 
     using Microsoft.Telepathy.RuntimeTrace;

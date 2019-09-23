@@ -9,7 +9,6 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
     using System.ServiceModel.Channels;
 
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Internal;

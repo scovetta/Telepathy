@@ -24,6 +24,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
     using Microsoft.Telepathy.ServiceBroker.Common.ThreadHelper;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Internal;
     using Microsoft.WindowsAzure.Storage;
 
     /// <summary>
@@ -726,7 +727,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
                 }
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(2);
+                SimulateFailure.FailOperation(2);
                 #endregion
 
                 Debug.Assert(this.ProcessMessageCallback != null);
@@ -882,7 +883,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
                 }
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
                 #endregion
 
                 // Don't create client and dispatch next message if the task is preempted.
@@ -1532,7 +1533,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
                 {
 
 #region Debug Failure Test
-                    Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(2);
+                    SimulateFailure.FailOperation(2);
 #endregion
 
                     // Currently since data instance is not widely used here (inside the
@@ -1832,7 +1833,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
                 }
 
 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
 #endregion
 
                 BrokerTracing.TraceEvent(

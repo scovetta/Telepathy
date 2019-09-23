@@ -19,8 +19,6 @@ namespace Microsoft.Telepathy.CcpServiceHost
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.RESTServiceModel;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Configuration;

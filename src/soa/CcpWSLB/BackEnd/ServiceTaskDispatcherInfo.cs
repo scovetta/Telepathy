@@ -7,8 +7,6 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
     using System.Globalization;
     using System.ServiceModel;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Data;
     using Microsoft.Telepathy.Session.Internal;

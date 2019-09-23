@@ -11,7 +11,6 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
     using System.Threading;
 
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.ServiceBroker.FrontEnd.AzureQueue;
     using Microsoft.Telepathy.Session.Common;
@@ -137,7 +136,7 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
             try
             {
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
                 #endregion
 
                 BrokerClient brokerClient = this.GetClient(clientId);
@@ -149,7 +148,7 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
                 brokerClient.Flush(count, batchId, timeoutFlushMs);
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(2);
+                SimulateFailure.FailOperation(2);
                 #endregion
             }
             catch (Exception e)
@@ -181,7 +180,7 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
             try
             {
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
                 #endregion
 
                 BrokerClient brokerClient = this.GetClient(clientId);
@@ -193,7 +192,7 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
                 brokerClient.EndOfMessage(count, batchId, timeoutEOMMs);
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(2);
+                SimulateFailure.FailOperation(2);
                 #endregion
             }
             catch (Exception e)
@@ -294,7 +293,7 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
                 this.GetClient(clientId).GetResponses(action, clientData, resetToBegin, count, callbackInstance, GetMessageVersion());
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
                 #endregion
 
                 BrokerTracing.TraceEvent(System.Diagnostics.TraceEventType.Information, 0, "[BrokerController] GetResponses for Client {0} Succeeded.", clientId);
@@ -429,7 +428,7 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
                 this.CheckAuth();
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
                 #endregion
 
                 return this.GetClient(clientId).PullResponses(action, position, count, GetMessageVersion());

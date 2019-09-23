@@ -6,7 +6,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
     using Microsoft.Hpc.Azure.Common;
     using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher;
-    using Microsoft.Hpc.ServiceBroker;
+
     using System;
     using System.Diagnostics;
     using System.Security.Cryptography.X509Certificates;

@@ -10,9 +10,6 @@ namespace Microsoft.Telepathy.Internal.BrokerShim
     using System.ServiceModel;
     using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Common;

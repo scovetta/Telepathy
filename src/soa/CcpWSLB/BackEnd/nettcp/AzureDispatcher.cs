@@ -10,8 +10,6 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.nettcp
     using System.ServiceModel.Channels;
     using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common;

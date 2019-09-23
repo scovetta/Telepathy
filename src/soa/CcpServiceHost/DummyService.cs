@@ -6,8 +6,6 @@ namespace Microsoft.Telepathy.CcpServiceHost
     using System.ServiceModel;
     using System.ServiceModel.Channels;
 
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Internal;
 

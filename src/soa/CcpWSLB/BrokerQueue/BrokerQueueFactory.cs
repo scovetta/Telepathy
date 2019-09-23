@@ -9,7 +9,6 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
     using System.ServiceModel.Channels;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.ServiceBroker.Persistences;
     using Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist;

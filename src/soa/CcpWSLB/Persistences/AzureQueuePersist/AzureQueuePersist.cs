@@ -17,8 +17,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Internal;

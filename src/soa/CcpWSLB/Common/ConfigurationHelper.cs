@@ -10,7 +10,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
     using System.Text;
 
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Configuration;

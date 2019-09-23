@@ -8,7 +8,6 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.AzureQueue
     using System.ServiceModel.Channels;
     using System.Threading;
 
-    using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common;

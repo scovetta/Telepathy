@@ -14,7 +14,6 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.ServiceBroker.FrontEnd;
     using Microsoft.Telepathy.Session.Common;

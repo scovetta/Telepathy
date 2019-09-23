@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
+namespace Microsoft.Telepathy.Session.Internal
 {
     using System;
     using System.Runtime.ConstrainedExecution;
@@ -9,9 +9,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using System.Text;
 
     using Microsoft.Telepathy.RuntimeTrace;
-
+    using Microsoft.Win32.SafeHandles;
     // using Microsoft.Hpc.RuntimeTrace;
-    using Win32.SafeHandles;
 
     /// <summary>
     /// Wrapped native methods

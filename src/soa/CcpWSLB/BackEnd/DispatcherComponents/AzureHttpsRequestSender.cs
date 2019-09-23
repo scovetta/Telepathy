@@ -8,7 +8,6 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
     using System.ServiceModel.Channels;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.BackEnd.AzureQueue;
     using Microsoft.Telepathy.Session.Internal;
 

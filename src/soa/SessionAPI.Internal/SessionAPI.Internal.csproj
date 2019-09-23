@@ -7,7 +7,7 @@
     <ProjectGuid>{22B73DAB-28F8-489B-99B4-076955E669FC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SessionAPI.Internal</RootNamespace>
+    <RootNamespace>Microsoft.Telepathy.Session.Internal</RootNamespace>
     <AssemblyName>SessionAPI.Internal</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

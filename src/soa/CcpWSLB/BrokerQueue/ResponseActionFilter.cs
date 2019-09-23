@@ -6,7 +6,6 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
     using System;
     using System.ServiceModel.Channels;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>

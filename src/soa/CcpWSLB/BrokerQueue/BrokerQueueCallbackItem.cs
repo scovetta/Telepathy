@@ -3,7 +3,6 @@
 
 namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
 {
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.Session.Common;
 
     /// <summary>

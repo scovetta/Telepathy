@@ -1,10 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal
 {
-    using Microsoft.Telepathy.Session.Internal;
-
     /// <summary>
     /// Utility functions for the service host port.
     /// </summary>

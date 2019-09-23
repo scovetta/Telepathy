@@ -10,7 +10,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
     using System.ServiceModel.Description;
 
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.FrontEnd;
     using Microsoft.Telepathy.ServiceBroker.FrontEnd.AzureQueue;

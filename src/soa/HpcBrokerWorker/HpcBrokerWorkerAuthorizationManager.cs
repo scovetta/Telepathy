@@ -5,7 +5,6 @@ namespace Microsoft.Telepathy.Internal.BrokerShim
 {
     using System.ServiceModel;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.Session.Common;
 
     /// <summary>

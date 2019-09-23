@@ -6,7 +6,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
     using System;
     using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Exceptions;

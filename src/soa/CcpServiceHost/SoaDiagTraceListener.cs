@@ -9,7 +9,6 @@ namespace Microsoft.Telepathy.CcpServiceHost
     using System.Globalization;
     using System.ServiceModel;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Telepathy.Session.Internal;
 

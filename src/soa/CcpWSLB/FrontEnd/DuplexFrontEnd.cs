@@ -11,7 +11,6 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
     using System.ServiceModel.Description;
 
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.ServiceBroker.Common.ThreadHelper;
@@ -262,7 +261,7 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
             }
 
             #region Debug Failure Test
-            Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+            SimulateFailure.FailOperation(1);
             #endregion
 
             // After channel timeout, the request will be null if you call channel.Receive()

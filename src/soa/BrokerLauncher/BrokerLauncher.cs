@@ -11,7 +11,6 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
 
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Telepathy.ServiceBroker;
     using Microsoft.Telepathy.Session;
@@ -124,7 +123,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
                 BrokerInitializationResult returnValue = this.brokerManager.CreateNewBrokerDomain(info, sessionId, false).GetAwaiter().GetResult();
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
                 #endregion
 
                 TraceHelper.RuntimeTrace.LogSessionCreated(sessionId);
@@ -172,7 +171,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
                 BrokerInitializationResult returnValue = this.brokerManager.CreateNewBrokerDomain(info, sessionId, true).GetAwaiter().GetResult();
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
                 #endregion
 
                 TraceHelper.RuntimeTrace.LogSessionCreated(sessionId);
@@ -214,7 +213,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
                 BrokerInitializationResult returnValue = this.brokerManager.AttachBroker(sessionId).GetAwaiter().GetResult();
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
                 #endregion
 
                 TraceHelper.TraceEvent(sessionId, System.Diagnostics.TraceEventType.Information, "[BrokerLauncher] Attach Broker {0} Succeeded.", sessionId);
@@ -252,7 +251,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
                 this.brokerManager.CloseBrokerDomain(sessionId).GetAwaiter().GetResult();
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
                 #endregion
 
                 TraceHelper.TraceEvent(sessionId, System.Diagnostics.TraceEventType.Information, "[BrokerLauncher] Close Broker {0} Succeeded.", sessionId);

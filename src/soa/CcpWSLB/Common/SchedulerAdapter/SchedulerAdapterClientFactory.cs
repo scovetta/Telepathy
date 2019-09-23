@@ -8,8 +8,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Telepathy.ServiceBroker.BackEnd;
     using Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor;
     using Microsoft.Telepathy.Session;

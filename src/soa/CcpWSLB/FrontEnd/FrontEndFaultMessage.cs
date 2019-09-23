@@ -10,7 +10,6 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
     using System.Xml;
 
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Internal;

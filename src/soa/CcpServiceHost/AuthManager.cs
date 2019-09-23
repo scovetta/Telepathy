@@ -6,7 +6,6 @@ namespace Microsoft.Telepathy.CcpServiceHost
     using System.Security.Principal;
     using System.ServiceModel;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.Session.Common;
 
     /// <summary>

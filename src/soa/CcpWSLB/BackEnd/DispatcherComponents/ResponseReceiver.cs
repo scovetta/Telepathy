@@ -9,7 +9,6 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
     using System.ServiceModel.Channels;
 
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.Session.Exceptions;
@@ -204,7 +203,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
             data.ServicePreempted = servicePreempted;
 
             // Debug Failure Test
-            Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+            SimulateFailure.FailOperation(1);
         }
 
         /// <summary>

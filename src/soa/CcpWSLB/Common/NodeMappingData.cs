@@ -8,7 +8,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
     using System.ServiceModel;
     using System.Threading;
 
-    using Microsoft.Hpc.ServiceBroker;
     using Microsoft.Telepathy.Session;
 
     /// <summary>

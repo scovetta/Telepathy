@@ -9,8 +9,8 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.InteropServices;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
     using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session.Internal;
     using Microsoft.Win32.SafeHandles;
 
     /// <summary>

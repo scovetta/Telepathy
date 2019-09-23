@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
+namespace Microsoft.Telepathy.Session.Internal
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Security.Principal;
-    using Microsoft.Hpc.Scheduler;
+
     using RuntimeTraceHelper = Microsoft.Telepathy.RuntimeTrace.TraceHelper;
 
     /// <summary>

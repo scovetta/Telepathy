@@ -18,7 +18,6 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
 
     using Microsoft.Hpc.Scheduler.Session;
     using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Exceptions;
