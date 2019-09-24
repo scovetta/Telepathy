@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
+namespace Microsoft.Telepathy.Session.Internal
 {
     using System;
 
@@ -24,7 +24,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
         {
             get
             {
-                return _instance;
+                return this._instance;
             }
         }
 
@@ -34,7 +34,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
         /// <param name="instance">The instance to wrap</param>
         public Wrapper(T instance)
         {
-            _instance = instance;
+            this._instance = instance;
         }
     }
 
@@ -56,11 +56,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
         {
             get
             {
-                return _syncRoot;
+                return this._syncRoot;
             }
             set
             {
-                _syncRoot = value;
+                this._syncRoot = value;
             }
         }
 
@@ -73,7 +73,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
         {
             // In order to minimize risk, we'll hold locks on the object instance level because
             // there is no guarantee another thread could get hold of the same underlying object by calling some API
-            _syncRoot = instance;
+            this._syncRoot = instance;
         }
 
         /// <summary>
@@ -81,9 +81,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
         /// </summary>
         public void Dispose()
         {
-            lock (SyncRoot)
+            lock (this.SyncRoot)
             {
-                IDisposable disp = Instance as IDisposable;
+                IDisposable disp = this.Instance as IDisposable;
                 if (disp != null)
                     disp.Dispose();
             }

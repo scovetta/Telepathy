@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd.nettcp
 {
     using System;
     using System.Collections.Generic;
@@ -9,10 +9,13 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading;
-    using Microsoft.Hpc.BrokerProxy;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using Microsoft.Hpc.ServiceBroker.Common;
+
+    using Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents;
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Dispatch messages to broker proxy in Windows Azure

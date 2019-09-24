@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal
 {
     using System;
     using System.Collections.Generic;
@@ -480,8 +480,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
             public RestStoreProp(string name, string value)
             {
-                Name = name;
-                Value = value;
+                this.Name = name;
+                this.Value = value;
             }
 
             public RestStoreProp()
@@ -498,7 +498,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
 
             public RestRow(RestStoreProp[] props)
             {
-                Props = props;
+                this.Props = props;
             }
 
             public RestRow()

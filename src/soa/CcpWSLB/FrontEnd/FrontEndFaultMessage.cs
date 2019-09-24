@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.FrontEnd
+namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
 {
     using System;
     using System.Globalization;
@@ -9,10 +9,9 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using System.ServiceModel.Channels;
     using System.Xml;
 
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Provide frontend fault messagesx

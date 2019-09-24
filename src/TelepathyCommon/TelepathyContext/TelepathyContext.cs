@@ -1,13 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace TelepathyCommon.HpcContext
+namespace Microsoft.Telepathy.Common.TelepathyContext
 {
     using System;
     using System.Collections.Concurrent;
     using System.Threading;
 
-    using TelepathyCommon.Registry;
+    using Microsoft.Telepathy.Common.Registry;
+    using Microsoft.Telepathy.Common.TelepathyContext.ContextImpl;
 
     public class TelepathyContext : ITelepathyContext, IDisposable
     {
@@ -55,10 +56,10 @@ namespace TelepathyCommon.HpcContext
         {
             if (!connectionString.IsGateway)
             {
-                return SoaContext.SoaContext.Default;
+                return SoaContext.Default;
             }
 
-            return new SoaContext.SoaContext(connectionString);
+            return new SoaContext(connectionString);
         }
 
         public static ITelepathyContext GetOrAdd(string connectionString)

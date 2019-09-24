@@ -1,15 +1,15 @@
-﻿using System;
-using System.ServiceModel;
-using System.ServiceModel.Channels;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Hpc.ServiceBroker.BackEnd;
-using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-using Microsoft.Hpc.ServiceBroker.UnitTest.Mock;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Microsoft.Hpc.ServiceBroker.UnitTest.Dispatcher
+﻿namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Dispatcher
 {
+    using System;
+    using System.ServiceModel;
+    using System.ServiceModel.Channels;
+    using System.Threading;
+
+    using Microsoft.Telepathy.ServiceBroker.BackEnd;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents;
+    using Microsoft.Telepathy.ServiceBroker.UnitTest.Mock;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     [TestClass]
     public class OnPremiseRequestSenderTest
     {
@@ -28,7 +28,7 @@ namespace Microsoft.Hpc.ServiceBroker.UnitTest.Dispatcher
         {
             MockDispatcher dispatcher = new MockDispatcher();
 
-            OnPremiseRequestSender sender = new OnPremiseRequestSender(this.address, this.binding, this.serviceOperationTimeout, dispatcher, serviceInitializationTimeout, initEndpointNotFoundWaitPeriod);
+            OnPremiseRequestSender sender = new OnPremiseRequestSender(this.address, this.binding, this.serviceOperationTimeout, dispatcher, this.serviceInitializationTimeout, this.initEndpointNotFoundWaitPeriod);
 
             sender.CreateClientAsync(false, 0);
 
@@ -44,7 +44,7 @@ namespace Microsoft.Hpc.ServiceBroker.UnitTest.Dispatcher
         {
             MockDispatcher dispatcher = new MockDispatcher();
 
-            OnPremiseRequestSender sender = new OnPremiseRequestSender(this.address, this.binding, this.serviceOperationTimeout, dispatcher, serviceInitializationTimeout, initEndpointNotFoundWaitPeriod);
+            OnPremiseRequestSender sender = new OnPremiseRequestSender(this.address, this.binding, this.serviceOperationTimeout, dispatcher, this.serviceInitializationTimeout, this.initEndpointNotFoundWaitPeriod);
 
             sender.CreateClientAsync(false, 0);
 
@@ -63,7 +63,7 @@ namespace Microsoft.Hpc.ServiceBroker.UnitTest.Dispatcher
         {
             MockDispatcher dispatcher = new MockDispatcher();
 
-            OnPremiseRequestSender sender = new OnPremiseRequestSender(this.address, this.binding, this.serviceOperationTimeout, dispatcher, serviceInitializationTimeout, initEndpointNotFoundWaitPeriod);
+            OnPremiseRequestSender sender = new OnPremiseRequestSender(this.address, this.binding, this.serviceOperationTimeout, dispatcher, this.serviceInitializationTimeout, this.initEndpointNotFoundWaitPeriod);
 
             sender.CreateClientAsync(false, 0);
 
@@ -88,7 +88,7 @@ namespace Microsoft.Hpc.ServiceBroker.UnitTest.Dispatcher
         {
             MockDispatcher dispatcher = new MockDispatcher();
 
-            OnPremiseRequestSender sender = new OnPremiseRequestSender(this.address, this.binding, this.serviceOperationTimeout, dispatcher, serviceInitializationTimeout, initEndpointNotFoundWaitPeriod);
+            OnPremiseRequestSender sender = new OnPremiseRequestSender(this.address, this.binding, this.serviceOperationTimeout, dispatcher, this.serviceInitializationTimeout, this.initEndpointNotFoundWaitPeriod);
 
             sender.CreateClientAsync(false, 0);
 

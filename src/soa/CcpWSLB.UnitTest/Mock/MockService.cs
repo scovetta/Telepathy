@@ -1,10 +1,7 @@
-﻿using System;
-using System.ServiceModel;
-using System.ServiceModel.Channels;
-using Microsoft.Hpc.ServiceBroker.BackEnd;
-
-namespace Microsoft.Hpc.ServiceBroker.UnitTest.Mock
+﻿namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Mock
 {
+    using System.ServiceModel;
+
     [ServiceBehavior(IncludeExceptionDetailInFaults = true, InstanceContextMode = InstanceContextMode.Single)]
     internal class MockService : IEchoSvc
     {

@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal
 {
     using System;
     using System.Collections.Generic;
@@ -10,7 +10,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.Security.Authentication;
     using System.ServiceModel;
     using System.Xml;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
+
+    using Microsoft.Telepathy.Session.Exceptions;
 
     /// <summary>
     /// Utility class for Web API related staff
@@ -160,9 +161,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     {
         public HpcWebServiceFault(int code, string message, params KeyValuePair<string, string>[] values)
         {
-            Code = code;
-            Message = message;
-            Values = values;
+            this.Code = code;
+            this.Message = message;
+            this.Values = values;
         }
 
         /// <summary>

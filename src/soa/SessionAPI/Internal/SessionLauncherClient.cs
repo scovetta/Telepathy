@@ -1,15 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal
 {
-    using Microsoft.Hpc.ServiceBroker;
     using System;
     using System.Security.Principal;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
 
-    using TelepathyCommon;
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Session.Common;
 
     /// <summary>
     /// Service client to connect the session launcher in headnode

@@ -1,14 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 {
     using System;
+    using System.Globalization;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using System.Globalization;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Data;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Dispatcher info for service task that targets Azure nodes.
@@ -25,7 +27,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// <param name="firstCoreId">indicating the first core id</param>
         /// <param name="networkPrefix">indicating the network prefix</param>
         /// <param name="location">indicating target resource location, OnPremise or Azure</param>
-        public WssDispatcherInfo(string jobId, string taskId, int capacity, string machineName, string machineVirtualName, int firstCoreId, string networkPrefix, Microsoft.Hpc.Scheduler.Session.Data.NodeLocation location)
+        public WssDispatcherInfo(string jobId, string taskId, int capacity, string machineName, string machineVirtualName, int firstCoreId, string networkPrefix, NodeLocation location)
             : base(jobId, taskId, capacity, machineName, machineVirtualName, firstCoreId, networkPrefix, location, true)
         {
         }

@@ -1,18 +1,18 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace BvtTest
+namespace Microsoft.Telepathy.Test.E2E.Bvt
 {
     using System;
-    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.ServiceModel;
     using System.Threading;
     using System.Threading.Tasks;
+
     using Microsoft.ComputeCluster.Test.AppIntegration.EchoService.MessageContract;
-    using Microsoft.Hpc.Scheduler.Session;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Internal;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System.Diagnostics;
-    using EchoSvcClient = Microsoft.ComputeCluster.Test.AppIntegration.EchoService.EchoSvcClient;
 
     [TestClass]
     public class BvtTestDurable

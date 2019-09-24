@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
 {
     using System;
     using System.ServiceModel.Channels;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
+
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
 
     /// <summary>
     /// Provides a data container for dispatching request

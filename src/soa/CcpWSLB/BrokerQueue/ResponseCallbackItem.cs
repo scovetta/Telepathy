@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
+namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
 {
     using System;
-    using System.Threading;
     using System.ServiceModel.Channels;
+    using System.Threading;
 
     /// <summary>
     /// the responses callback item.

@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
+namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
 {
     using System;
     using System.Runtime.Serialization;
@@ -267,7 +267,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
         /// </summary>
         /// <param name="info">The System.Runtime.Serialization.SerializationInfo to populate with data.</param>
         /// <param name="context">The destination (see System.Runtime.Serialization.StreamingContext) for this serialization.</param>
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         [SecurityCritical]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

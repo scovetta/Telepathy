@@ -1,12 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Configuration
+namespace Microsoft.Telepathy.Session.Configuration
 {
-    using System;
-    using System.Collections.Generic;
     using System.Configuration;
-    using System.Text;
 
     /// <summary>
     ///   <para />
@@ -38,8 +35,8 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
         /// </summary>
         public CustomBrokerRegistration()
         {
-            properties.Add(new ConfigurationProperty(ExecutiveAttributeName, typeof(string)));
-            properties.Add(this.envVariables);
+            this.properties.Add(new ConfigurationProperty(ExecutiveAttributeName, typeof(string)));
+            this.properties.Add(this.envVariables);
         }
         
         protected override ConfigurationPropertyCollection Properties

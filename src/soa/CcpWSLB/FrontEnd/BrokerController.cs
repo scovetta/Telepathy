@@ -1,23 +1,21 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.FrontEnd
+namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
 {
     using System;
     using System.Diagnostics;
+    using System.IO;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-
-    using SoaAmbientConfig;
-    using System.IO;
-
-    using SR = Microsoft.Hpc.SvcBroker.SR;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.FrontEnd.AzureQueue;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Implementation the broker controller service
@@ -135,7 +133,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             try
             {
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
                 #endregion
 
                 BrokerClient brokerClient = this.GetClient(clientId);
@@ -147,7 +145,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                 brokerClient.Flush(count, batchId, timeoutFlushMs);
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(2);
+                SimulateFailure.FailOperation(2);
                 #endregion
             }
             catch (Exception e)
@@ -179,7 +177,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             try
             {
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
                 #endregion
 
                 BrokerClient brokerClient = this.GetClient(clientId);
@@ -191,7 +189,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                 brokerClient.EndOfMessage(count, batchId, timeoutEOMMs);
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(2);
+                SimulateFailure.FailOperation(2);
                 #endregion
             }
             catch (Exception e)
@@ -292,7 +290,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                 this.GetClient(clientId).GetResponses(action, clientData, resetToBegin, count, callbackInstance, GetMessageVersion());
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
                 #endregion
 
                 BrokerTracing.TraceEvent(System.Diagnostics.TraceEventType.Information, 0, "[BrokerController] GetResponses for Client {0} Succeeded.", clientId);
@@ -332,7 +330,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             azureResponseQueueUri = queueProxy.ResponseClientUris[sessionHash].Item1;
             azureResponseBlobUri = queueProxy.ResponseClientUris[sessionHash].Item2;
 
-            GetResponses(action, clientData, resetToBegin, count, clientId);
+            this.GetResponses(action, clientData, resetToBegin, count, clientId);
         }
 
         /// <summary>
@@ -427,7 +425,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                 this.CheckAuth();
 
                 #region Debug Failure Test
-                Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+                SimulateFailure.FailOperation(1);
                 #endregion
 
                 return this.GetClient(clientId).PullResponses(action, position, count, GetMessageVersion());

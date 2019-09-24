@@ -1,12 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 {
     using System;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
+
+    using Microsoft.Telepathy.Session.Interface;
 
 #if Broker
     using Microsoft.Hpc.Scheduler.Session.Internal.Common;
@@ -15,7 +16,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     [ServiceContract(Name = "IHpcServiceHost", Namespace = "http://hpc.microsoft.com/hpcservicehost/")]
     internal interface IHpcServiceHostClient : IHpcServiceHost
     {
-        [OperationContractAttribute(AsyncPattern = true, IsOneWay = true, Action = "http://hpc.microsoft.com/hpcservicehost/exit")]
+        [OperationContract(AsyncPattern = true, IsOneWay = true, Action = "http://hpc.microsoft.com/hpcservicehost/exit")]
         IAsyncResult BeginExit(AsyncCallback callback, object state);
 
         void EndExit(IAsyncResult result);

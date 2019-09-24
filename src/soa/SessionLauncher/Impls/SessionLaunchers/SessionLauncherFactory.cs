@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls
+namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers
 {
-    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch;
+    using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.AzureBatch;
+    using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Local;
 #if HPCPACK
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack;
 #endif
-    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Local;
 
     internal static class SessionLauncherFactory
     {

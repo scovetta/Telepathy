@@ -7,7 +7,7 @@
     <ProjectGuid>{8965BC50-986A-4286-BE93-AD4B535E518A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SessionAPI.UnitTest</RootNamespace>
+    <RootNamespace>Microsoft.Telepathy.Session.UnitTest</RootNamespace>
     <AssemblyName>SessionAPI.UnitTest</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

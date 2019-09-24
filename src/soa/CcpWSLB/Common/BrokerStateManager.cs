@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker
+namespace Microsoft.Telepathy.ServiceBroker.Common
 {
     using System;
     using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.SvcBroker;
-    using Microsoft.Hpc.RuntimeTrace;
+    using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
 
     /// <summary>
     /// Broker's state manager
@@ -198,11 +198,11 @@ namespace Microsoft.Hpc.ServiceBroker
         {
             if (unloadToSuspend)
             {
-                ThrowHelper.ThrowSessionFault(Microsoft.Hpc.Scheduler.Session.SOAFaultCode.Broker_BrokerSuspending, SR.BrokerSuspending);
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_BrokerSuspending, SR.BrokerSuspending);
             }
             else
             {
-                ThrowHelper.ThrowSessionFault(Microsoft.Hpc.Scheduler.Session.SOAFaultCode.Session_ValidateJobFailed_AlreadyFinished, SR.Session_ValidateJobFailed_AlreadyFninshed, sessionId.ToString());
+                ThrowHelper.ThrowSessionFault(SOAFaultCode.Session_ValidateJobFailed_AlreadyFinished, SR.Session_ValidateJobFailed_AlreadyFninshed, sessionId.ToString());
             }
         }
 

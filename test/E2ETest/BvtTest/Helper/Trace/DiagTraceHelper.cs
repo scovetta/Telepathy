@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.Diagnostics
+namespace Microsoft.Telepathy.Test.E2E.Bvt.Helper.Trace
 {
     using System;
     using System.Diagnostics;

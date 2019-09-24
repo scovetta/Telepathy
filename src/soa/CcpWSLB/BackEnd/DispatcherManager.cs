@@ -1,33 +1,29 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using TelepathyCommon.HpcContext;
-using TelepathyCommon.HpcContext.Extensions;
-using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
-
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using System.Net;
+    using System.Net.Http;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Configuration;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.Hpc.BrokerBurst;
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Queue;
-    using Microsoft.WindowsAzure.Storage.Shared.Protocol;
-    using System.Net.Http;
-    using SoaAmbientConfig;
 
-    using SR = Microsoft.Hpc.SvcBroker.SR;
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd.AzureQueue;
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Data;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Manage dispatchers
@@ -568,11 +564,11 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
             try
             {
                 BrokerTracing.TraceInfo("[DispatcherManager] Create new dispatcher: {0}", dispatcherInfo.AllocatedNodeLocation);
-                if (dispatcherInfo.AllocatedNodeLocation == Microsoft.Hpc.Scheduler.Session.Data.NodeLocation.OnPremise
-                    || dispatcherInfo.AllocatedNodeLocation == Scheduler.Session.Data.NodeLocation.Linux
-                    || dispatcherInfo.AllocatedNodeLocation == Scheduler.Session.Data.NodeLocation.AzureEmbedded
-                    || dispatcherInfo.AllocatedNodeLocation == Scheduler.Session.Data.NodeLocation.AzureEmbeddedVM
-                    || dispatcherInfo.AllocatedNodeLocation == Scheduler.Session.Data.NodeLocation.NonDomainJoined)
+                if (dispatcherInfo.AllocatedNodeLocation == NodeLocation.OnPremise
+                    || dispatcherInfo.AllocatedNodeLocation == NodeLocation.Linux
+                    || dispatcherInfo.AllocatedNodeLocation == NodeLocation.AzureEmbedded
+                    || dispatcherInfo.AllocatedNodeLocation == NodeLocation.AzureEmbeddedVM
+                    || dispatcherInfo.AllocatedNodeLocation == NodeLocation.NonDomainJoined)
                 {
                     // check if using backend-security (for java soa only)
                     if (dispatcherInfo is WssDispatcherInfo)
@@ -1087,7 +1083,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
             {
                 string epr = dispatcher.MachineName;
                 //clean appdomain from servicehost
-                tasks[count++]=DeleteFromHostAsnyc(epr);
+                tasks[count++]=this.DeleteFromHostAsnyc(epr);
             }
 
             await Task.WhenAll(tasks);
@@ -1097,9 +1093,9 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(prefix + epr + ":" + port + "/" + serverName + "/api/");
+                client.BaseAddress = new Uri(this.prefix + epr + ":" + this.port + "/" + this.serverName + "/api/");
                 //HTTP DELETE
-                var result = await client.DeleteAsync(endPoint);
+                var result = await client.DeleteAsync(this.endPoint);
                 BrokerTracing.TraceVerbose("[CloseSvcHost].result{0}:", result);
             }
         }

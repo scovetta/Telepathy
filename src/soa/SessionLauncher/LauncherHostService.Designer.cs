@@ -11,7 +11,7 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
     using System;
     using System.Diagnostics;
 
-    using Microsoft.Hpc.RuntimeTrace;
+    using Microsoft.Telepathy.RuntimeTrace;
 
     /// <summary>
     /// Launcher Host Service

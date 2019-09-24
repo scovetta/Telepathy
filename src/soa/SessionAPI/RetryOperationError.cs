@@ -1,25 +1,25 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
     using System;
     using System.Runtime.Serialization;
 
     /// <summary>
     ///   <para>Indicates that an error connected to the retrying requests by the broker occurred, when the 
-    /// <see cref="Microsoft.Hpc.Scheduler.Session.RetryOperationError" /> class  is specified as the type parameter for a 
+    /// <see cref="RetryOperationError" /> class  is specified as the type parameter for a 
     /// <see cref="System.ServiceModel.FaultException{T}" /> object.</para>
     /// </summary>
     /// <remarks>
     ///   <para>A SOA service should generate a 
     /// <see cref="System.ServiceModel.FaultException{T}" /> object with type parameter of 
-    /// <see cref="Microsoft.Hpc.Scheduler.Session.RetryOperationError" /> to indicate that the broker should retry the request.</para>
+    /// <see cref="RetryOperationError" /> to indicate that the broker should retry the request.</para>
     ///   <para>When a SOA client that communicates with the service using the Microsoft HPC Pack model receives a 
     /// <see cref="System.ServiceModel.FaultException{T}" /> object with type parameter of 
-    /// <see cref="Microsoft.Hpc.Scheduler.Session.RetryOperationError" />, the exception indicates that the broker exceeded the limit for the number of times the broker should retry a request.</para> 
+    /// <see cref="RetryOperationError" />, the exception indicates that the broker exceeded the limit for the number of times the broker should retry a request.</para> 
     /// </remarks>
-    /// <seealso cref="Microsoft.Hpc.Scheduler.Session.RetryOperationException" />
+    /// <seealso cref="RetryOperationException" />
     /// <seealso cref="System.ServiceModel.FaultException{T}" />
     [DataContract(Namespace = "http://hpc.microsoft.com/session/")]
     [Serializable]
@@ -54,7 +54,7 @@ namespace Microsoft.Hpc.Scheduler.Session
 
         /// <summary>
         ///   <para>Initializes a new instance of the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.RetryOperationError" /> class with the specified reason.</para>
+        /// <see cref="RetryOperationError" /> class with the specified reason.</para>
         /// </summary>
         /// <param name="reason">
         ///   <para>A string that indicates the specific reason that the error in retrying a request occurred.</para>

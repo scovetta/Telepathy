@@ -1,19 +1,20 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.FrontEnd
+namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
 {
     using System;
     using System.Diagnostics;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using Microsoft.Hpc.ServiceBroker.Common;
-    using Microsoft.Hpc.ServiceBroker.Common.ThreadHelper;
 
-    using SR = Microsoft.Hpc.SvcBroker.SR;
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.Common.ThreadHelper;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// The FrontEnd for request/reply MEP (works for both BasicHttpBinding and WSHttpBinding)
@@ -239,7 +240,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             }
 
             #region Debug Failure Test
-            Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+            SimulateFailure.FailOperation(1);
             #endregion
 
             // After channel timed out, the request will be null if you call channel.ReceiveRequest()

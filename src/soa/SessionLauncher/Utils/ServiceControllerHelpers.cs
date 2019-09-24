@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.ServiceProcess;
-using System.Diagnostics;
-using System.Threading;
-
-namespace Microsoft.Hpc.Azure.Common
+namespace Microsoft.Telepathy.Internal.SessionLauncher.Utils
 {
+    using System;
+    using System.Diagnostics;
+    using System.ServiceProcess;
+    using System.Threading;
+
     /// <summary>
     /// Helpers used by Windows service which have HAController service controllers
     /// </summary>
@@ -29,7 +29,7 @@ namespace Microsoft.Hpc.Azure.Common
         {
             try
             {
-                using (ServiceController controller = new ServiceController(Microsoft.Hpc.HpcServiceNames.HpcHAController))
+                using (ServiceController controller = new ServiceController(HpcServiceNames.HpcHAController))
                 {
                     controller.WaitForStatus(ServiceControllerStatus.Stopped);
                 }

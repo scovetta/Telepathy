@@ -1,29 +1,25 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.Azure.Batch.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch
+namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.DataMapping.AzureBatch
 {
-    using Data = Microsoft.Hpc.Scheduler.Session.Data;
+    using System.Collections.Generic;
+
+    using Microsoft.Azure.Batch.Common;
+
     public static class TaskStateConverter
     {
-        public static Data.TaskState FromAzureBatchTaskState(TaskState state)
+        public static Telepathy.Session.Data.TaskState FromAzureBatchTaskState(TaskState state)
         {
             return TaskStateMapping[state];
         }
 
-        private static Dictionary<TaskState, Data.TaskState> TaskStateMapping = new Dictionary<TaskState, Data.TaskState>
+        private static Dictionary<TaskState, Telepathy.Session.Data.TaskState> TaskStateMapping = new Dictionary<TaskState, Telepathy.Session.Data.TaskState>
         {
-            { TaskState.Active, Data.TaskState.Submitted },
-            { TaskState.Completed, Data.TaskState.Finished },
-            { TaskState.Preparing, Data.TaskState.Dispatching },
-            { TaskState.Running, Data.TaskState.Running }
+            { TaskState.Active, Telepathy.Session.Data.TaskState.Submitted },
+            { TaskState.Completed, Telepathy.Session.Data.TaskState.Finished },
+            { TaskState.Preparing, Telepathy.Session.Data.TaskState.Dispatching },
+            { TaskState.Running, Telepathy.Session.Data.TaskState.Running }
         };
     }
 }

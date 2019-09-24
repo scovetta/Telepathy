@@ -3,21 +3,17 @@
 
 #region Using directives
 
-using System;
-using System.IO;
-using System.Collections;
-using System.Xml;
-using System.Text;
-using Microsoft.Win32;
-using System.Security.AccessControl;
-using System.Security.Principal;
-
 #endregion
 
-namespace Microsoft.Hpc.Scheduler
+namespace Microsoft.Telepathy.Session
 {
+    using System;
+    using System.Security.AccessControl;
+    using System.Security.Principal;
 
-// Security review: jvert 1-09-06
+    using Microsoft.Win32;
+
+    // Security review: jvert 1-09-06
 
     static class CredentialCache
     {

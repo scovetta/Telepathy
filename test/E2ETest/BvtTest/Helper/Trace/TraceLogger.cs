@@ -1,18 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.IO;
-using System.Globalization;
-using System.Threading;
-
-namespace AITestLib.Helper.Trace
+namespace Microsoft.Telepathy.Test.E2E.Bvt.Helper.Trace
 {
-   public class TraceLogger
+    using System;
+    using System.Globalization;
+    using System.IO;
+    using System.Text;
+    using System.Threading;
+    using System.Xml;
+
+    public class TraceLogger
     {
         private static string _traceLogFile = null;
         private static StreamWriter writer = null;

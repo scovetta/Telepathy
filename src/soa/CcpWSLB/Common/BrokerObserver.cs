@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker
+namespace Microsoft.Telepathy.ServiceBroker.Common
 {
     using System;
     using System.Threading;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
+
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
 
     /// <summary>
     /// Observer of the broker
@@ -252,7 +252,7 @@ namespace Microsoft.Hpc.ServiceBroker
         /// </summary>
         public void OutgoingResponse()
         {
-            OutgoingResponse(1);
+            this.OutgoingResponse(1);
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace Microsoft.Hpc.ServiceBroker
             Interlocked.Add(ref this.replyFetched, count);
 
             // check if should stop throttling
-            if (enableThrottling)
+            if (this.enableThrottling)
             {
                 if (Interlocked.Add(ref this.queuedMessageCount, -count) < this.messageThrottleStopThreshold)
                 {

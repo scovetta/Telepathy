@@ -1,15 +1,11 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using System.Diagnostics;
-using System.Configuration;
-
-namespace Microsoft.Hpc.Scheduler.Session.Configuration
+namespace Microsoft.Telepathy.Session.Configuration
 {
+    using System;
+    using System.Configuration;
+
     /// <summary>
     ///   <para>Represents the service registration information.</para>
     /// </summary>
@@ -26,7 +22,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
         /// <returns>
         ///   <para>An 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Configuration.ServiceRegistration" /> object that contains the service registration section of the configuration file.  
+        /// <see cref="ServiceRegistration" /> object that contains the service registration section of the configuration file.  
         /// </para>
         /// </returns>
         public static ServiceRegistration GetSectionGroup(System.Configuration.Configuration config)
@@ -42,7 +38,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
         ///   <para>Gets the service section of the service registration configuration file.</para>
         /// </summary>
         /// <value>
-        ///   <para>A <see cref="Microsoft.Hpc.Scheduler.Session.Configuration.ServiceConfiguration" /> object that represents the service section.
+        ///   <para>A <see cref="ServiceConfiguration" /> object that represents the service section.
         /// </para>
         /// </value>
         public ServiceConfiguration Service

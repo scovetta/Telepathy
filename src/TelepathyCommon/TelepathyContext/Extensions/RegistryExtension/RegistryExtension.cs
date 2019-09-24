@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace TelepathyCommon.HpcContext.Extensions.RegistryExtension
+namespace Microsoft.Telepathy.Common.TelepathyContext.Extensions.RegistryExtension
 {
     using System.Threading;
     using System.Threading.Tasks;
 
-    using TelepathyCommon.Registry;
+    using Microsoft.Telepathy.Common.Registry;
 
     public static class RegistryExtension
     {

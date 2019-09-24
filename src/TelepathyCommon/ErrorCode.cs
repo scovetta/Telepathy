@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace TelepathyCommon
+namespace Microsoft.Telepathy.Common
 {
     using System;
     using System.Collections.Generic;

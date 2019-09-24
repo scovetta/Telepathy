@@ -1,23 +1,20 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using TelepathyCommon.HpcContext;
-using TelepathyCommon.HpcContext.Extensions;
-
-namespace Microsoft.Hpc.ServiceBroker.Common
+namespace Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter
 {
-    using Microsoft.Hpc.ServiceBroker.BackEnd;
     using System;
     using System.ServiceModel;
     using System.Threading;
     using System.Threading.Tasks;
-    
-    using Microsoft.Hpc.Scheduler.Session;
 
-    using SoaAmbientConfig;
-
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker.Common.SchedulerAdapter;
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd;
+    using Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Factory class for scheduler adapter client

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.RESTServiceModel
+namespace Microsoft.Telepathy.CcpServiceHost.Rest
 {
     using System;
     using System.Collections.Generic;

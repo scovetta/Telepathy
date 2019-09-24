@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd.nettcp
 {
     using System;
     using System.Collections.Generic;
@@ -10,9 +10,9 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using System.ServiceModel.Channels;
     using System.ServiceModel.Security;
     using System.Threading;
-    using Microsoft.Hpc.Scheduler.Session.Common;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using Microsoft.Hpc.ServiceBroker.Common;
+
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Service Client
@@ -65,7 +65,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
         /// </summary>
         public ServiceClient ServiceClient
         {
-            get { return serviceClient; }
+            get { return this.serviceClient; }
         }
 
         /// <summary>
@@ -229,7 +229,7 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
             {
                 if (state != null)
                 {
-                    lock (SyncObjForStateList)
+                    lock (this.SyncObjForStateList)
                     {
                         // this.stateList cannot be null before BeginOpen is called.
                         BrokerTracing.TraceVerbose("[AzureServiceClient]. AsyncStart: Add async state to the list before BeginOpen is called, client {0}", clientGuid);

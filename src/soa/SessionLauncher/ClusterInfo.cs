@@ -1,14 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.Hpc.RuntimeTrace;
-using System;
-using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher
+namespace Microsoft.Telepathy.Internal.SessionLauncher
 {
+    using Microsoft.Telepathy.Session.Interface;
+
     internal class ClusterInfo
     {
         public ClusterInfoContract Contract { get; private set; }

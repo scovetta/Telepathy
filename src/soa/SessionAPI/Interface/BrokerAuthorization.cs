@@ -1,18 +1,16 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session.Interface
 {
     using System;
     using System.Runtime.Serialization;
     using System.Security;
     using System.Security.Principal;
     using System.ServiceModel;
-    using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-
-    using TelepathyCommon.Service;
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Session.Common;
 
     /// <summary>
     /// Broker Authroization

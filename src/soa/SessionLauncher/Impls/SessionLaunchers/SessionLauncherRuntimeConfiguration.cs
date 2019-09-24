@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls
+namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers
 {
     public static class SessionLauncherRuntimeConfiguration
     {

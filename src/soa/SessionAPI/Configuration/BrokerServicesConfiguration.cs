@@ -1,14 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Configuration;
-using System.ServiceModel.Configuration;
-
-namespace Microsoft.Hpc.Scheduler.Session.Configuration
+namespace Microsoft.Telepathy.Session.Configuration
 {
+    using System;
+    using System.Configuration;
+    using System.ServiceModel.Configuration;
+
     /// <summary>
     ///   <para>Contains the configuration properties for the services section of the configuration file.</para>
     /// </summary>
@@ -22,18 +20,18 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
 
 
         /// <summary>
-        ///   <para>Initializes a new instance of the <see cref="Microsoft.Hpc.Scheduler.Session.Configuration.BrokerServicesConfiguration" /> class.</para>
+        ///   <para>Initializes a new instance of the <see cref="BrokerServicesConfiguration" /> class.</para>
         /// </summary>
         public BrokerServicesConfiguration()
         {
-            properties.Add(brokerServiceAddresses);
+            this.properties.Add(this.brokerServiceAddresses);
         }
 
         protected override ConfigurationPropertyCollection Properties
         {
             get
             {
-                return properties;
+                return this.properties;
             }
         }
 
@@ -50,7 +48,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
         public Uri GetBrokerBaseAddress(string scheme)
         {
             BaseAddressElementCollection baseAddresses = base[BrokerServiceAddressesConfiguratoinName] as BaseAddressElementCollection;
-            return FindBaseAddress(baseAddresses, scheme);
+            return this.FindBaseAddress(baseAddresses, scheme);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Backward compatibility")]

@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter
+namespace Microsoft.Telepathy.Session.QueueAdapter
 {
     using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Module;
+    using Microsoft.Telepathy.Session.QueueAdapter.Interface;
+    using Microsoft.Telepathy.Session.QueueAdapter.Module;
     using Microsoft.WindowsAzure.Storage.Queue;
 
     public class CloudQueueListener<T> : IQueueListener<T>

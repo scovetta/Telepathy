@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Interface
+namespace Microsoft.Telepathy.Session.Interface
 {
     /// <summary>
     /// Connection info used to connect to a channel

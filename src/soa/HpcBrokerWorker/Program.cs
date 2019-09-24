@@ -1,18 +1,20 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerShim
+namespace Microsoft.Telepathy.Internal.BrokerShim
 {
     using System;
     using System.Diagnostics;
     using System.Globalization;
-    using System.IO;
     using System.Net;
     using System.ServiceModel;
     using System.Threading;
-    using Microsoft.Hpc.RuntimeTrace;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.ServiceBroker;
+
+    using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
 
     using Serilog;
 

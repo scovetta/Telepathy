@@ -1,13 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace AITestLib.Helper.Trace
+namespace Microsoft.Telepathy.Test.E2E.Bvt.Helper.Trace
 {
+    using System;
+    using System.Collections.Generic;
+
     class SessionStateMachine
     {
         private SessionState state = SessionState.BeforeCreateSession;
@@ -15,40 +13,40 @@ namespace AITestLib.Helper.Trace
 
         private void InitRule()
         {
-            rule = new Dictionary<SessionState, Dictionary<SessionAction, Action>>();
+            this.rule = new Dictionary<SessionState, Dictionary<SessionAction, Action>>();
 
             foreach (var e in Enum.GetValues(typeof(SessionState)))
             {
-                rule[(SessionState)e] = new Dictionary<SessionAction, Action>();
+                this.rule[(SessionState)e] = new Dictionary<SessionAction, Action>();
             }
 
-            rule[SessionState.BeforeCreateSession][SessionAction.BeginCreateSession] = () => { state = SessionState.SessionCreating; };
+            this.rule[SessionState.BeforeCreateSession][SessionAction.BeginCreateSession] = () => { this.state = SessionState.SessionCreating; };
 
-            rule[SessionState.SessionCreating][SessionAction.CreatedSession] = () => { state = SessionState.SessionRunning; };
+            this.rule[SessionState.SessionCreating][SessionAction.CreatedSession] = () => { this.state = SessionState.SessionRunning; };
 
-            rule[SessionState.SessionSuspended][SessionAction.RasieSession] = () => { state = SessionState.SessionRunning; };
-            rule[SessionState.SessionSuspended][SessionAction.FinishSession] = () => { state = SessionState.SessionClosed; };
+            this.rule[SessionState.SessionSuspended][SessionAction.RasieSession] = () => { this.state = SessionState.SessionRunning; };
+            this.rule[SessionState.SessionSuspended][SessionAction.FinishSession] = () => { this.state = SessionState.SessionClosed; };
 
-            rule[SessionState.SessionRunning][SessionAction.SuspendSession] = () => { state = SessionState.SessionSuspended; };
-            rule[SessionState.SessionRunning][SessionAction.SuspendSession] = () => { state = SessionState.SessionSuspended; };
-            rule[SessionState.SessionRunning][SessionAction.FinishSession] = () => { state = SessionState.SessionClosed; };
-            rule[SessionState.SessionRunning][SessionAction.ProcessRequests] = () => { state = SessionState.SessionRunning; };
+            this.rule[SessionState.SessionRunning][SessionAction.SuspendSession] = () => { this.state = SessionState.SessionSuspended; };
+            this.rule[SessionState.SessionRunning][SessionAction.SuspendSession] = () => { this.state = SessionState.SessionSuspended; };
+            this.rule[SessionState.SessionRunning][SessionAction.FinishSession] = () => { this.state = SessionState.SessionClosed; };
+            this.rule[SessionState.SessionRunning][SessionAction.ProcessRequests] = () => { this.state = SessionState.SessionRunning; };
         }
 
         public SessionStateMachine()
         {
-            InitRule();
+            this.InitRule();
         }
 
         public void Process(SessionAction action)
         {
             try
             {
-                rule[state][action]();
+                this.rule[this.state][action]();
             }
             catch (KeyNotFoundException)
             {
-                throw new InvalidOperationException(string.Format("Invalid state transistion from {0} with action {1}", state, action));
+                throw new InvalidOperationException(string.Format("Invalid state transistion from {0} with action {1}", this.state, action));
             }
         }
     }

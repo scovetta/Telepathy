@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace TelepathyCommon.Telepathy
+namespace Microsoft.Telepathy.Common.ServiceRegistrationStore
 {
     using System;
     using System.Collections.Generic;

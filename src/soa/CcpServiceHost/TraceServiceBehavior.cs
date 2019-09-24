@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.CcpServiceHosting
+namespace Microsoft.Telepathy.CcpServiceHost
 {
     using System;
     using System.Diagnostics;
@@ -14,11 +14,14 @@ namespace Microsoft.Hpc.CcpServiceHosting
     using System.ServiceModel.Description;
     using System.ServiceModel.Dispatcher;
     using System.Text;
-    using System.Xml;
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using RuntimeTraceHelper = Microsoft.Hpc.RuntimeTrace.TraceHelper;
     using System.Threading;
+    using System.Xml;
+
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Internal;
+
+    using RuntimeTraceHelper = Microsoft.Telepathy.RuntimeTrace.TraceHelper;
 
     /// <summary>
     /// The message inspector
@@ -52,7 +55,7 @@ namespace Microsoft.Hpc.CcpServiceHosting
             // determine the propagateActivity setting
             string setting = ServiceContext.Logger.Attributes[PropagateActivityValue];
 
-            bool.TryParse(setting, out propagateActivity);
+            bool.TryParse(setting, out this.propagateActivity);
 
             bool.TryParse(
                 Environment.GetEnvironmentVariable(EnableSoaDebuggerEnvName, EnvironmentVariableTarget.Process),

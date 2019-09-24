@@ -1,15 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Interface
 {
     using System;
-    using System.Collections.Generic;
     using System.ServiceModel;
-    using System.Text;
-    using System.Xml;
-    using System.Xml.Serialization;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
+
+    using Microsoft.Telepathy.Session.Exceptions;
 
     /// <summary>
     /// The async version of IControllerAsync

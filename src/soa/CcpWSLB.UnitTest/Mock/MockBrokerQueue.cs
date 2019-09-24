@@ -1,15 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.SvcBroker.UnitTest.Mock
+namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Mock
 {
     using System;
     using System.Collections.Generic;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using System.Text;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using Microsoft.Hpc.ServiceBroker.FrontEnd;
+
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
 
     /// <summary>
     /// Mock object for broker queue
@@ -51,7 +50,7 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest.Mock
         /// </summary>
         public Queue<Message> ReplyMessageQueue
         {
-            get { return replyMessageQueue; }
+            get { return this.replyMessageQueue; }
         }
 
         /// <summary>
@@ -135,7 +134,7 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest.Mock
         /// <param name="context">the request context relate to the message</param>
         /// <param name="msg">the request message</param>
         /// <param name="asyncState">the asyncState relate to the message</param>
-        public override void PutRequestAsync(RequestContextBase context, Message msg, object asyncState)
+        public override void PutRequestAsync(Telepathy.ServiceBroker.FrontEnd.RequestContextBase context, Message msg, object asyncState)
         {
             this.queue.Enqueue(new BrokerQueueItem(context, msg, asyncState));
             if (this.directReply)

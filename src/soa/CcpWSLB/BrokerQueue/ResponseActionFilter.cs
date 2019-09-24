@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BrokerStorage
+namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
 {
     using System;
     using System.ServiceModel.Channels;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// the response action filter.

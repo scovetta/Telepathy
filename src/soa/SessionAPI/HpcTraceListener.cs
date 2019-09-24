@@ -1,15 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Diagnostics;
-using System.IO;
-
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
+    using System;
+    using System.Diagnostics;
+    using System.IO;
+
     /// <summary>
     /// HPC implementation of <see cref="XmlWriterTraceListener"/>
     /// </summary>

@@ -1,13 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    using System.Diagnostics;
+
+    using Microsoft.Telepathy.Session.Interface;
 
     /// <summary>
     /// Manages broker's response message callback for a session

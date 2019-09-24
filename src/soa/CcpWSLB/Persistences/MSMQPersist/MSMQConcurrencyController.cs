@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.MSMQ
+namespace Microsoft.Telepathy.ServiceBroker.Persistences.MSMQPersist
 {
     using System.Collections.Generic;
     using System.Threading;

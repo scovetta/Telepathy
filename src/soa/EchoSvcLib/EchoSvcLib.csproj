@@ -4,7 +4,7 @@
   <PropertyGroup>
     <ProjectGuid>{CD35A5B5-EB2B-4093-BBC1-AFCD61C42EF1}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>EchoSvcLib</RootNamespace>
+    <RootNamespace>Microsoft.Telepathy.EchoSvcLib</RootNamespace>
     <AssemblyName>EchoSvcLib</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <AssemblyClsCompliant>false</AssemblyClsCompliant>

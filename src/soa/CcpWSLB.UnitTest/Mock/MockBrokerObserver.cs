@@ -1,7 +1,9 @@
-﻿using System.Threading;
-
-namespace Microsoft.Hpc.ServiceBroker.UnitTest.Mock
+﻿namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Mock
 {
+    using System.Threading;
+
+    using Microsoft.Telepathy.ServiceBroker.Common;
+
     internal class MockBrokerObserver : IBrokerObserver
     {
         private int requestProcessingCompletedInvokedTimes;

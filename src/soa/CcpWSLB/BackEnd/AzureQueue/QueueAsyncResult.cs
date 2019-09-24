@@ -1,13 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd.AzureQueue
 {
     using System;
     using System.ServiceModel.Channels;
     using System.Threading;
     using System.Xml;
-    using Microsoft.Hpc.Scheduler.Session.Common;
+
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// It is the AsyncResult consumed by AzureQueueClient operations.

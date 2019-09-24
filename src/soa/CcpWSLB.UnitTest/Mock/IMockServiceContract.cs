@@ -1,12 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.SvcBroker.UnitTest.Mock
+namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Mock
 {
-    using System;
-    using System.Collections.Generic;
     using System.ServiceModel;
-    using System.Text;
     using System.ServiceModel.Channels;
 
     /// <summary>

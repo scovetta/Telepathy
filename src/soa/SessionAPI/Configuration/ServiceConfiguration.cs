@@ -1,12 +1,13 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Configuration;
-using Microsoft.Hpc.Scheduler.Session.Internal;
-
-namespace Microsoft.Hpc.Scheduler.Session.Configuration
+namespace Microsoft.Telepathy.Session.Configuration
 {
+    using System;
+    using System.Configuration;
+
+    using Microsoft.Telepathy.Session.Internal;
+
     /// <summary>
     ///   <para>Defines values that represent the possible service architectures for a service.</para>
     /// </summary>
@@ -71,34 +72,34 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
         ConfigurationPropertyCollection properties = new ConfigurationPropertyCollection();
 
         /// <summary>
-        ///   <para>Initializes a new instance of the <see cref="Microsoft.Hpc.Scheduler.Session.Configuration.ServiceConfiguration" /> class.</para>
+        ///   <para>Initializes a new instance of the <see cref="ServiceConfiguration" /> class.</para>
         /// </summary>
         public ServiceConfiguration()
         {
-            properties.Add(new ConfigurationProperty(AssemblyConfigurationName, typeof(string), ""));
-            properties.Add(new ConfigurationProperty(ContractConfigurationName, typeof(string), ""));
-            properties.Add(new ConfigurationProperty(TypeConfigurationName, typeof(string), ""));
-            properties.Add(new ConfigurationProperty(IncludeExceptionDetailInFaultsConfigurationName, typeof(bool), false));
-            properties.Add(new ConfigurationProperty(MaxConcurrentCallsConfigurationName, typeof(int), 0));
-            properties.Add(new ConfigurationProperty(ServiceInitializationTimeoutConfigurationName, typeof(int), defaultServiceInitializationTimeout));
-            properties.Add(new ConfigurationProperty(ServiceHostIdleTimeoutConfigurationName, typeof(int), defaultServiceHostIdleTimeout));
-            properties.Add(new ConfigurationProperty(ServiceHangTimeoutConfigurationName, typeof(int), defaultServiceHangTimeout));
-            properties.Add(new ConfigurationProperty(EnableMessageLevelPreemptionConfigurationName, typeof(bool), true));
-            properties.Add(new ConfigurationProperty(ArchitectureConfigurationName, typeof(string), "X64"));
-            properties.Add(new ConfigurationProperty(StdErrorConfigurationName, typeof(string), String.Empty));
-            properties.Add(new ConfigurationProperty(MaxMessageSizeConfigurationName, typeof(int), Constant.DefaultMaxMessageSize));
-            properties.Add(new ConfigurationProperty(MaxSessionPoolSizeConfigurationName, typeof(int), Constant.DefaultMaxSessionPoolSize));
-            properties.Add(new ConfigurationProperty(PrepareNodeCommandLineConfigurationName, typeof(string), String.Empty));
-            properties.Add(new ConfigurationProperty(ReleaseNodeCommandLineConfigurationName, typeof(string), String.Empty));
-            properties.Add(new ConfigurationProperty(SoaDiagTraceLevelConfigurationName, typeof(string), String.Empty));
-            properties.Add(envVariables);
+            this.properties.Add(new ConfigurationProperty(AssemblyConfigurationName, typeof(string), ""));
+            this.properties.Add(new ConfigurationProperty(ContractConfigurationName, typeof(string), ""));
+            this.properties.Add(new ConfigurationProperty(TypeConfigurationName, typeof(string), ""));
+            this.properties.Add(new ConfigurationProperty(IncludeExceptionDetailInFaultsConfigurationName, typeof(bool), false));
+            this.properties.Add(new ConfigurationProperty(MaxConcurrentCallsConfigurationName, typeof(int), 0));
+            this.properties.Add(new ConfigurationProperty(ServiceInitializationTimeoutConfigurationName, typeof(int), defaultServiceInitializationTimeout));
+            this.properties.Add(new ConfigurationProperty(ServiceHostIdleTimeoutConfigurationName, typeof(int), defaultServiceHostIdleTimeout));
+            this.properties.Add(new ConfigurationProperty(ServiceHangTimeoutConfigurationName, typeof(int), defaultServiceHangTimeout));
+            this.properties.Add(new ConfigurationProperty(EnableMessageLevelPreemptionConfigurationName, typeof(bool), true));
+            this.properties.Add(new ConfigurationProperty(ArchitectureConfigurationName, typeof(string), "X64"));
+            this.properties.Add(new ConfigurationProperty(StdErrorConfigurationName, typeof(string), String.Empty));
+            this.properties.Add(new ConfigurationProperty(MaxMessageSizeConfigurationName, typeof(int), Constant.DefaultMaxMessageSize));
+            this.properties.Add(new ConfigurationProperty(MaxSessionPoolSizeConfigurationName, typeof(int), Constant.DefaultMaxSessionPoolSize));
+            this.properties.Add(new ConfigurationProperty(PrepareNodeCommandLineConfigurationName, typeof(string), String.Empty));
+            this.properties.Add(new ConfigurationProperty(ReleaseNodeCommandLineConfigurationName, typeof(string), String.Empty));
+            this.properties.Add(new ConfigurationProperty(SoaDiagTraceLevelConfigurationName, typeof(string), String.Empty));
+            this.properties.Add(this.envVariables);
         }
 
         protected override ConfigurationPropertyCollection Properties
         {
             get
             {
-                return properties;
+                return this.properties;
             }
         }
 
@@ -112,12 +113,12 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
         {
             get
             {
-                if (_fullAssemblyPath == null)
+                if (this._fullAssemblyPath == null)
                 {
-                    _fullAssemblyPath = this[AssemblyConfigurationName] as string;
+                    this._fullAssemblyPath = this[AssemblyConfigurationName] as string;
                 }
 
-                return _fullAssemblyPath;
+                return this._fullAssemblyPath;
             }
         }
 
@@ -269,7 +270,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
         ///   <para>The architecture on which your service can run.</para>
         /// </summary>
         /// <value>
-        ///   <para>For possible values, see the   <see cref="Microsoft.Hpc.Scheduler.Session.Configuration.ServiceArch" /> enumeration.</para>
+        ///   <para>For possible values, see the   <see cref="ServiceArch" /> enumeration.</para>
         /// </value>
         public ServiceArch Architecture
         {

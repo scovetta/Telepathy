@@ -1,11 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.CcpServiceHosting
+namespace Microsoft.Telepathy.CcpServiceHost
 {
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Configuration;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using System;
     using System.Configuration;
     using System.Diagnostics;
@@ -13,9 +10,13 @@ namespace Microsoft.Hpc.CcpServiceHosting
     using System.IO;
     using System.Reflection;
 
-    using TelepathyCommon;
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Configuration;
+    using Microsoft.Telepathy.Session.Internal;
 
-    using RuntimeTraceHelper = Microsoft.Hpc.RuntimeTrace.TraceHelper;
+    using RuntimeTraceHelper = Microsoft.Telepathy.RuntimeTrace.TraceHelper;
     /// <summary>
     /// Utility for service host
     /// </summary>

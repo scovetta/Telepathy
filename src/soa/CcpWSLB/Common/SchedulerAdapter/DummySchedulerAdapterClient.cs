@@ -1,14 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.Common
+namespace Microsoft.Telepathy.ServiceBroker.Common.SchedulerAdapter
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker.BackEnd;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Data;
+    using Microsoft.Telepathy.Session.Internal;
 
     internal partial class SchedulerAdapterClientFactory
     {
@@ -175,7 +176,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
             }
             */
 
-            async Task<(Microsoft.Hpc.Scheduler.Session.Data.JobState jobState, int autoMax, int autoMin)> ISchedulerAdapter.RegisterJobAsync(string jobid)
+            async Task<(JobState jobState, int autoMax, int autoMin)> ISchedulerAdapter.RegisterJobAsync(string jobid)
             {
                 int autoMax = int.MaxValue;
                 int autoMin = 0;
@@ -186,7 +187,7 @@ namespace Microsoft.Hpc.ServiceBroker.Common
                 //     await this.dispatcherManager.NewDispatcherAsync(info).ConfigureAwait(false);
                 // }
                 // 
-                return (Scheduler.Session.Data.JobState.Running, autoMax, autoMin);
+                return (JobState.Running, autoMax, autoMin);
             }
 
             public Task<int?> GetTaskErrorCode(string jobId, string globalTaskId)

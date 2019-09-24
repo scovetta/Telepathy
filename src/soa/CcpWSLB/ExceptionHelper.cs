@@ -1,14 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.Common
+namespace Microsoft.Telepathy.ServiceBroker
 {
     using System;
     using System.Diagnostics;
     using System.Globalization;
     using System.ServiceModel;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using Microsoft.Hpc.SvcBroker;
+
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
 
     /// <summary>
     /// the exception helper class.

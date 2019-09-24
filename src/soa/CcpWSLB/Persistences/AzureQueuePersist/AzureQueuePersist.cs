@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("CcpWSLB.UnitTest")]
 
-namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
+namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 {
     using System;
     using System.Collections.Generic;
@@ -17,9 +17,9 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureQueuePersist
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureStorageTool;
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Internal;
     using Microsoft.WindowsAzure.Storage.Blob;
     using Microsoft.WindowsAzure.Storage.Queue;
     using Microsoft.WindowsAzure.Storage.Table;

@@ -1,14 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal.SessionFactory
 {
     using System;
-    using System.Diagnostics;
     using System.IO;
     using System.Reflection;
     using System.ServiceModel.Channels;
     using System.Threading.Tasks;
+
+    using Microsoft.Telepathy.Session.Interface;
+
     /// <summary>
     /// Factory class to create session instance
     /// </summary>

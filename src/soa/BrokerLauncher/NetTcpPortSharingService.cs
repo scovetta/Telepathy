@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,6 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService
     using System.IO;
     using System.Security.Principal;
     using System.ServiceProcess;
-    using Microsoft.Hpc;
 
     internal static class NetTcpPortSharingService
     {

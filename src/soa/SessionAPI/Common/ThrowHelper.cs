@@ -1,11 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Common
 {
     using System;
     using System.Globalization;
     using System.ServiceModel;
+
+    using Microsoft.Telepathy.Session.Exceptions;
 
     /// <summary>
     /// Helper class to throw exception

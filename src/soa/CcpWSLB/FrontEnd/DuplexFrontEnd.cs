@@ -1,10 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
-using TelepathyCommon.Registry;
-
-namespace Microsoft.Hpc.ServiceBroker.FrontEnd
+namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
 {
     using System;
     using System.Diagnostics;
@@ -13,13 +10,16 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
     using System.ServiceModel.Channels;
     using System.ServiceModel.Description;
 
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-    using Microsoft.Hpc.ServiceBroker.Common;
-    using Microsoft.Hpc.ServiceBroker.Common.ThreadHelper;
-
-    using SR = Microsoft.Hpc.SvcBroker.SR;
+    using Microsoft.Telepathy.Common.Registry;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions.RegistryExtension;
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.ServiceBroker.Common.ThreadHelper;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// The FrontEnd for duplex MEP (works for NetTcpBinding)
@@ -237,7 +237,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             catch (Exception ce)
             {
                 BrokerTracing.TraceEvent(TraceEventType.Warning, 0, "[DuplexFrontEnd] Exception while receiving requests: {0}", ce);
-                FrontendDisconnect(channel, client);
+                this.FrontendDisconnect(channel, client);
 
                 lock (channel)
                 {
@@ -259,7 +259,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
             }
 
             #region Debug Failure Test
-            Microsoft.Hpc.ServiceBroker.SimulateFailure.FailOperation(1);
+            SimulateFailure.FailOperation(1);
             #endregion
 
             // After channel timeout, the request will be null if you call channel.Receive()
@@ -272,7 +272,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                 {
                     if (channel.State == CommunicationState.Opened)
                     {
-                        FrontendDisconnect(channel, client);
+                        this.FrontendDisconnect(channel, client);
                         try
                         {
                             channel.Close();
@@ -433,7 +433,7 @@ namespace Microsoft.Hpc.ServiceBroker.FrontEnd
                     if (channel.State == CommunicationState.Faulted)
                     {
                         BrokerTracing.TraceEvent(TraceEventType.Information, 0, "[DuplexFrontEnd] About the channel.");
-                        FrontendDisconnect(channel, client);
+                        this.FrontendDisconnect(channel, client);
 
                         // About the falted channel
                         channel.Abort();

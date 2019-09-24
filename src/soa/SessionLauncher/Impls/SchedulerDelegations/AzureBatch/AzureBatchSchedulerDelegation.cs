@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.SchedulerDelegations.AzureBatch
+namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SchedulerDelegations.AzureBatch
 {
     using System;
     using System.Collections.Generic;
@@ -14,9 +14,14 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Schedul
 
     using Microsoft.Azure.Batch;
     using Microsoft.Azure.Batch.Common;
-    using Microsoft.Hpc.RuntimeTrace;
-    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch;
+    using Microsoft.Telepathy.Internal.SessionLauncher.Impls.DataMapping.AzureBatch;
+    using Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.AzureBatch;
+    using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.AzureBatch;
+    using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Internal;
 
+    using JobState = Microsoft.Telepathy.Session.Data.JobState;
 
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple, IncludeExceptionDetailInFaults = true, MaxItemsInObjectGraph = int.MaxValue)]
     internal class AzureBatchSchedulerDelegation : ISchedulerAdapter
@@ -65,27 +70,27 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Schedul
 
         public async Task<(bool succeed, BalanceInfo balanceInfo, List<string> taskIds, List<string> runningTaskIds)> GetGracefulPreemptionInfoAsync(string sessionId)
         {
-            Trace.TraceWarning($"Ignored call to {nameof(GetGracefulPreemptionInfoAsync)}");
+            Trace.TraceWarning($"Ignored call to {nameof(this.GetGracefulPreemptionInfoAsync)}");
 
             return (false, null, null, null);
         }
 
         public async Task<bool> FinishTaskAsync(string jobId, string taskUniqueId)
         {
-            Trace.TraceWarning($"Ignored call to {nameof(FinishTaskAsync)}");
+            Trace.TraceWarning($"Ignored call to {nameof(this.FinishTaskAsync)}");
             return true;
         }
 
         public async Task<bool> ExcludeNodeAsync(string jobid, string nodeName)
         {
-            Trace.TraceWarning($"Ignored call to {nameof(ExcludeNodeAsync)}");
+            Trace.TraceWarning($"Ignored call to {nameof(this.ExcludeNodeAsync)}");
 
             return true;
         }
 
         public async Task RequeueOrFailJobAsync(string sessionId, string reason)
         {
-            Trace.TraceWarning($"Ignored call to {nameof(RequeueOrFailJobAsync)}");
+            Trace.TraceWarning($"Ignored call to {nameof(this.RequeueOrFailJobAsync)}");
         }
         public async Task FailJobAsync(string sessionId, string reason) => await this.sessionLauncher.TerminateAsync(sessionId);
 
@@ -97,7 +102,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Schedul
         /// <param name="jobid">indicating the job id</param>
         /// <param name="autoMax">indicating the auto max property of the job</param>
         /// <param name="autoMin">indicating the auto min property of the job</param>
-        public async Task<(Data.JobState jobState, int autoMax, int autoMin)> RegisterJobAsync(string jobid)
+        public async Task<(JobState jobState, int autoMax, int autoMin)> RegisterJobAsync(string jobid)
         {
             Trace.TraceInformation($"[AzureBatchSchedulerDelegation] Begin: RegisterJob, job id is {jobid}...");
             //CheckBrokerAccess(jobid);
@@ -112,7 +117,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Schedul
                     if (!this.JobMonitors.TryGetValue(jobid, out jobMonitorEntry))
                     {
                         jobMonitorEntry = new AzureBatchJobMonitorEntry(jobid);
-                        jobMonitorEntry.Exit += new EventHandler(JobMonitorEntry_Exit);
+                        jobMonitorEntry.Exit += new EventHandler(this.JobMonitorEntry_Exit);
                     }
                 }
 
@@ -181,11 +186,11 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Schedul
             Debug.Assert(entry != null, "[AzureBatchSchedulerDelegation] Sender should be an instance of JobMonitorEntry class.");
 
             // if a JobMonitorEntry is exited because of job state changed into Finished/Canceled/Failed
-            if (entry.CurrentState == Data.JobState.Finished)
+            if (entry.CurrentState == JobState.Finished)
             {
                 NotifyJobFinished(entry.CloudJob);
             }
-            else if (entry.CurrentState == Data.JobState.Failed || entry.CurrentState == Data.JobState.Canceled)
+            else if (entry.CurrentState == JobState.Failed || entry.CurrentState == JobState.Canceled)
             {
                 NotifyJobFailedOrCanceled(entry.CloudJob);
             }
@@ -195,7 +200,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Schedul
                 this.JobMonitors.Remove(entry.SessionId);
             }
 
-            entry.Exit -= new EventHandler(JobMonitorEntry_Exit);
+            entry.Exit -= new EventHandler(this.JobMonitorEntry_Exit);
             entry.Close();
         }
 

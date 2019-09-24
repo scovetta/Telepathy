@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker
+namespace Microsoft.Telepathy.ServiceBroker
 {
     using System.Collections.Generic;
 

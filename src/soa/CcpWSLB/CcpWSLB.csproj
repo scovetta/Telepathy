@@ -4,7 +4,7 @@
   <PropertyGroup>
     <ProjectGuid>{2629DC89-F12C-489D-8CF6-E0A6046B6863}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Microsoft.Hpc.ServiceBroker</RootNamespace>
+    <RootNamespace>Microsoft.Telepathy.ServiceBroker</RootNamespace>
     <AssemblyName>Microsoft.Hpc.SvcBroker</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <AssemblyClsCompliant>false</AssemblyClsCompliant>
@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Azure\BrokerProxyEndpointNames.cs" />
     <Compile Include="BackEnd\AzureDispatcherInfo.cs" />
+    <Compile Include="BackEnd\AzureQueue\AzureQueueItem.cs" />
     <Compile Include="BackEnd\AzureQueue\IAzureQueueManager.cs" />
     <Compile Include="BackEnd\AzureQueue\AzureHttpsDispatcher.cs" />
     <Compile Include="BackEnd\AzureQueue\AzureHttpsServiceClient.cs" />
@@ -255,24 +256,12 @@
       <Project>{72fc4eea-c32b-444b-80b7-0e2b137c05c7}</Project>
       <Name>Session</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SoaAmbientConfig\SoaAmbientConfig.csproj">
-      <Project>{9ad369c0-f404-4591-ae7a-6dff3d2d99a2}</Project>
-      <Name>SoaAmbientConfig</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SOABurst\SOABurst.csproj">
-      <Project>{3ab56212-e9d3-44e3-aa80-ebd1b29a228f}</Project>
-      <Name>SOABurst</Name>
-    </ProjectReference>
     <!--
     <ProjectReference Include="..\SOABurst\SOABurst.csproj">
       <Project>{3ab56212-e9d3-44e3-aa80-ebd1b29a228f}</Project>
       <Name>SOABurst</Name>
     </ProjectReference>
 	-->
-    <ProjectReference Include="..\SoaCommonUtility\SoaCommonUtility.csproj">
-      <Project>{bf0b4020-9934-466c-af35-9f97b4cf18ac}</Project>
-      <Name>SoaCommonUtility</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SvcHostRestServer\SvcHostRestServer.csproj">
       <Project>{602b999e-6203-432c-af7c-2c31dddde60a}</Project>
       <Name>SvcHostRestServer</Name>

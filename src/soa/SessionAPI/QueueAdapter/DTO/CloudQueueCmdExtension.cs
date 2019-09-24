@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO
+namespace Microsoft.Telepathy.Session.QueueAdapter.DTO
 {
     public static class CloudQueueCmdExtension
     {

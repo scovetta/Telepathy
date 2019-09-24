@@ -8,7 +8,7 @@
     <ProjectGuid>{50A82165-F662-4290-BB87-805C501D3E70}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BvtTest</RootNamespace>
+    <RootNamespace>Microsoft.Telepathy.Test.E2E.Bvt</RootNamespace>
     <AssemblyName>BvtTest</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

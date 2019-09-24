@@ -1,14 +1,14 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Security;
-using System.Security.Permissions;
-using System.Runtime.ConstrainedExecution;
-using Microsoft.Win32.SafeHandles;
-
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
+namespace Microsoft.Telepathy.Session.Internal
 {
+    using System;
+    using System.Runtime.ConstrainedExecution;
+    using System.Security.Permissions;
+
+    using Microsoft.Win32.SafeHandles;
+
     [SecurityPermission(SecurityAction.InheritanceDemand, UnmanagedCode = true)]
     [SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
     public sealed class SafeThreadHandle : SafeHandleZeroOrMinusOneIsInvalid

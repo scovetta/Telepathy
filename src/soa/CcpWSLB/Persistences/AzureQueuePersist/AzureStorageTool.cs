@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureStorageTool
+namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 {
     using System;
     using System.Collections.Generic;
@@ -13,6 +13,7 @@ namespace Microsoft.Hpc.ServiceBroker.BrokerStorage.AzureStorageTool
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
     using Microsoft.WindowsAzure.Storage.Queue;

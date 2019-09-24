@@ -1,16 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.ServiceModel.Channels;
-    using System.Text;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.Session.Internal;
 
     public class Session : IDisposable
     {
@@ -65,11 +62,11 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <see cref="Close()" />(True). To close the job but keep the durable session active, use
         /// <see cref="Close()" />(False). If you use
         /// <see cref="Close()" />(False) on a durable session, you will still be able to attach to the session after the job completes by using the
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.DurableSession.AttachSession(Microsoft.Hpc.Scheduler.Session.SessionAttachInfo)" /> method.</para>
+        /// <see cref="DurableSession.AttachSession(Microsoft.Telepathy.Session.SessionAttachInfo)" /> method.</para>
         /// </remarks>
         /// <seealso cref="Close()" />
         /// <seealso cref="Close()" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Close()" />
+        /// <seealso cref="SessionBase.Close()" />
         public void Close()
         {
             this.v3session.Close();
@@ -126,17 +123,17 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <remarks>
         ///   <para>To close the session subject to default timeout period for
         /// finishing the job and deleting the response messages of 60,000 milliseconds, use the
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Session.Close()" /> or
+        /// <see cref="Close()" /> or
         /// <see cref="Close()" /> method instead.</para>
         ///   <para>When you create a session, you will also start a new job. To close the job and the session, use
         /// <see cref="Close()" />(True). To close the job but keep the durable session active, use
         /// <see cref="Close()" />(False). If you use
         /// <see cref="Close()" />(False) on a durable session, you will still be able to attach to the session after the job completes by using the
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.DurableSession.AttachSession(Microsoft.Hpc.Scheduler.Session.SessionAttachInfo)" /> method.</para>
+        /// <see cref="DurableSession.AttachSession(Microsoft.Telepathy.Session.SessionAttachInfo)" /> method.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.Session.Close()" />
         /// <seealso cref="Close()" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.SessionBase.Close(System.Boolean,System.Int32)" />
+        /// <seealso cref="Close()" />
+        /// <seealso cref="SessionBase.Close(bool,int)" />
         public void Close(bool purge, int timeoutMilliseconds)
         {
             this.v3session.Close(purge, timeoutMilliseconds);
@@ -192,10 +189,10 @@ namespace Microsoft.Hpc.Scheduler.Session
         ///   <para>Creates a session.</para>
         /// </summary>
         /// <param name="startInfo">
-        ///   <para>A <see cref="Microsoft.Hpc.Scheduler.Session.SessionStartInfo" /> class that contains information for starting the session.</para>
+        ///   <para>A <see cref="SessionStartInfo" /> class that contains information for starting the session.</para>
         /// </param>
         /// <returns>
-        ///   <para>A <see cref="Microsoft.Hpc.Scheduler.Session.Session" /> object that defines the session.</para>
+        ///   <para>A <see cref="Session" /> object that defines the session.</para>
         /// </returns>
         public static Session CreateSession(SessionStartInfo startInfo)
         {
@@ -231,7 +228,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <param name="attachInfo">
         /// <para>
         /// A
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.SessionAttachInfo"/> object that specifies information about the session to which you want to attach the SOA client, including the name of the head node for the cluster that hosts the session and the identifier of the session.
+        /// <see cref="SessionAttachInfo"/> object that specifies information about the session to which you want to attach the SOA client, including the name of the head node for the cluster that hosts the session and the identifier of the session.
         /// </para>
         /// </param>
         /// <param name="binding">
@@ -239,7 +236,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// </param>
         /// <returns>
         /// <para>
-        /// A <see cref="Microsoft.Hpc.Scheduler.Session.Session"/> that represents the session to which the client attached.
+        /// A <see cref="Session"/> that represents the session to which the client attached.
         /// </para>
         /// </returns>
         public static async Task<Session> AttachSessionAsync(SessionAttachInfo attachInfo, Binding binding)

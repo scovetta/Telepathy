@@ -1,15 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter.Client
+namespace Microsoft.Telepathy.Session.QueueAdapter.Client.Impls
 {
     using System;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.DTO;
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Interface;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.QueueAdapter.DTO;
+    using Microsoft.Telepathy.Session.QueueAdapter.Interface;
 
     public class BrokerLauncherCloudQueueClient : CloudQueueClientBase, IBrokerLauncher
     {

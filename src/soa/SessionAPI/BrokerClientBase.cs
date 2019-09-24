@@ -1,14 +1,16 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
     using System;
     using System.Diagnostics;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Description;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     ///   <para />
@@ -123,9 +125,9 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             lock (this.objectLock)
             {
-                DetachFromSession();
+                this.DetachFromSession();
 
-                Dispose(true);
+                this.Dispose(true);
             }
 
             GC.SuppressFinalize(this);

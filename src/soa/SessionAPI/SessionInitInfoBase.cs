@@ -1,20 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using TelepathyCommon.HpcContext;
-
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
     using System;
-    using System.Threading;
     using System.Threading.Tasks;
-    using System.ServiceModel.Channels;
 
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.ServiceBroker;
-
-    using TelepathyCommon;
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Interface;
 
     /// <summary>
     /// Base class implements <see cref="IConnectionInfo"/>
@@ -33,7 +28,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         {
             get
             {
-                return headnode;
+                return this.headnode;
             }
         }
 
@@ -87,7 +82,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             if (string.IsNullOrEmpty(headnode))
             {
                 // retrieve the head node name from the %ccp_scheduler% environment if it is empty
-                headnode = Environment.GetEnvironmentVariable(TelepathyCommon.TelepathyConstants.SchedulerEnvironmentVariableName);
+                headnode = Environment.GetEnvironmentVariable(TelepathyConstants.SchedulerEnvironmentVariableName);
                 if (string.IsNullOrEmpty(headnode))
                 {
                     throw new ArgumentNullException(SR.HeadnodeCantBeNull);

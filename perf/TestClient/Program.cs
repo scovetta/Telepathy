@@ -12,9 +12,7 @@ namespace TestClient
     using System.ServiceModel.Channels;
     using System.Threading;
 
-    using Microsoft.Hpc.Scheduler.Session;
-
-    using TestService;
+    using Microsoft.Telepathy.Session;
 
     /// <summary>
     /// Usage:

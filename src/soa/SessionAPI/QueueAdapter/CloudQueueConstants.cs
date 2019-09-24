@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.QueueAdapter
+namespace Microsoft.Telepathy.Session.QueueAdapter
 {
     public static class CloudQueueConstants
     {

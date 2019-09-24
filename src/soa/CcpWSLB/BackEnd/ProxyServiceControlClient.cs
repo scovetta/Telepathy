@@ -1,17 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.ServiceModel;
-using System.ServiceModel.Channels;
-using Microsoft.Hpc.BrokerProxy;
-
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd
 {
+    using System;
+    using System.ServiceModel;
+    using System.ServiceModel.Channels;
+
     [ServiceContract(Name = "IHpcServiceHost", Namespace = "http://hpc.microsoft.com/hpcbrokerproxy/")]
     internal interface IProxyServiceControlClient : IProxyServiceManagement
     {
-        [OperationContractAttribute(AsyncPattern = true, IsOneWay = true, Action = "http://hpc.microsoft.com/hpcbrokerproxy/exit")]
+        [OperationContract(AsyncPattern = true, IsOneWay = true, Action = "http://hpc.microsoft.com/hpcbrokerproxy/exit")]
         IAsyncResult BeginExit(string machine, string jobId, string taskId, int port, BindingData data, AsyncCallback callback, object state);
 
         void EndExit(IAsyncResult result);

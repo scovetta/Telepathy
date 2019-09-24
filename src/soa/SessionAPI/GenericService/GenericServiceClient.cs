@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.GenericService
+namespace Microsoft.Telepathy.Session.GenericService
 {
     using System;
     using System.ServiceModel;

@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
-using System.Security;
-using System.Security.Principal;
-
-namespace Microsoft.Hpc
+namespace Microsoft.Telepathy.Session
 {
+    using System;
+    using System.ComponentModel;
+    using System.Runtime.InteropServices;
+    using System.Security;
+    using System.Security.Principal;
+
     internal static class CredentialHelper
     {
         private enum CRED_TYPE : uint

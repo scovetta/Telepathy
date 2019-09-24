@@ -1,13 +1,13 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Interface
+namespace Microsoft.Telepathy.Session.Interface
 {
     using System.Collections.Generic;
     using System.ServiceModel;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Data;
+    using Microsoft.Telepathy.Session.Data;
 
     /// <summary>
     /// The event handler for the job and task events

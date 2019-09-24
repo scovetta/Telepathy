@@ -1,13 +1,14 @@
-﻿using System;
-using System.ServiceModel.Channels;
-using System.Threading.Tasks;
-using Microsoft.Hpc.Scheduler.Session;
-using Microsoft.Hpc.ServiceBroker.BackEnd;
-using Microsoft.Hpc.ServiceBroker.BrokerStorage;
-using Microsoft.WindowsAzure.Storage;
-
-namespace Microsoft.Hpc.ServiceBroker.UnitTest.Mock
+﻿namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Mock
 {
+    using System;
+    using System.ServiceModel.Channels;
+    using System.Threading.Tasks;
+
+    using Microsoft.Telepathy.ServiceBroker.BackEnd;
+    using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.WindowsAzure.Storage;
+
     internal class MockDispatcher : IDispatcher
     {
         public DispatcherInfo Info
@@ -84,16 +85,16 @@ namespace Microsoft.Hpc.ServiceBroker.UnitTest.Mock
         {
         }
 
-        public Task HandleException(DateTime dispatchTime, int clientIndex, IService client, BrokerStorage.BrokerQueueItem item, Guid messageId, Exception e)
+        public Task HandleException(DateTime dispatchTime, int clientIndex, BackEnd.IService client, BrokerQueueItem item, Guid messageId, Exception e)
         {
             return Task.CompletedTask;
         }
 
-        public void HandleStorageException(DateTime dispatchTime, int clientIndex, IService client, BrokerStorage.BrokerQueueItem item, Guid messageId, StorageException e)
+        public void HandleStorageException(DateTime dispatchTime, int clientIndex, BackEnd.IService client, BrokerQueueItem item, Guid messageId, StorageException e)
         {
         }
 
-        public void HandleEndpointNotFoundException(int clientIndex, IService client, BrokerStorage.BrokerQueueItem item, Guid messageId, System.ServiceModel.EndpointNotFoundException e)
+        public void HandleEndpointNotFoundException(int clientIndex, BackEnd.IService client, BrokerQueueItem item, Guid messageId, System.ServiceModel.EndpointNotFoundException e)
         {
         }
 
@@ -128,7 +129,7 @@ namespace Microsoft.Hpc.ServiceBroker.UnitTest.Mock
         {
         }
 
-        public virtual bool CleanupClient(IService client)
+        public virtual bool CleanupClient(BackEnd.IService client)
         {
             return true;
         }

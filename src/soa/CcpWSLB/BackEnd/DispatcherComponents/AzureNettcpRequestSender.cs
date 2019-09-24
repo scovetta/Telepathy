@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker.BackEnd
+namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
 {
     using System;
     using System.Diagnostics;
@@ -10,8 +10,8 @@ namespace Microsoft.Hpc.ServiceBroker.BackEnd
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.BrokerProxy;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.ServiceBroker.BackEnd.nettcp;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// This is an implementation of RequestSender for sending requests

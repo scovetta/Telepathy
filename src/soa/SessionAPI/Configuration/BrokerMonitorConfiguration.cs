@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
-using System.Configuration;
-
-namespace Microsoft.Hpc.Scheduler.Session.Configuration
+namespace Microsoft.Telepathy.Session.Configuration
 {
+    using System.Collections.Generic;
+    using System.Configuration;
+
     /// <summary>
     ///   <para>Contains the configuration properties for the monitor section of the configuration file.</para>
     /// </summary>
@@ -30,27 +30,27 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
         Dictionary<string, object> updatedValues = new Dictionary<string, object>();
 
         /// <summary>
-        ///   <para>Initializes a new instance of the <see cref="Microsoft.Hpc.Scheduler.Session.Configuration.BrokerMonitorConfiguration" /> class.</para>
+        ///   <para>Initializes a new instance of the <see cref="BrokerMonitorConfiguration" /> class.</para>
         /// </summary>
         public BrokerMonitorConfiguration()
         {
-            properties.Add(new ConfigurationProperty(LoadSamplingIntervalConfigurationName, typeof(int), 1000));
-            properties.Add(new ConfigurationProperty(AllocationAdjustIntervalConfigurationName, typeof(int), 5 * 1000));
-            properties.Add(new ConfigurationProperty(ClientIdleTimeoutConfigurationName, typeof(int), 5 * 60 * 1000));
-            properties.Add(new ConfigurationProperty(ClientConnectionTimeoutConfigurationName, typeof(int), 5 * 60 * 1000));
-            properties.Add(new ConfigurationProperty(SessionIdleTimeoutConfigurationName, typeof(int), 5 * 60 * 1000));
-            properties.Add(new ConfigurationProperty(StatusUpdateIntervalConfigurationName, typeof(int), 3 * 1000));
-            properties.Add(new ConfigurationProperty(MessageThrottleStartThresholdConfigurationName, typeof(int), 4096));
-            properties.Add(new ConfigurationProperty(MessageThrottleStopThresholdConfigurationName, typeof(int), 3072));
-            properties.Add(new ConfigurationProperty(ClientBrokerHeartbeatIntervalConfigurationName, typeof(int), 20000));
-            properties.Add(new ConfigurationProperty(ClientBrokerHeartbeatRetryCountConfigurationName, typeof(int), 3));
+            this.properties.Add(new ConfigurationProperty(LoadSamplingIntervalConfigurationName, typeof(int), 1000));
+            this.properties.Add(new ConfigurationProperty(AllocationAdjustIntervalConfigurationName, typeof(int), 5 * 1000));
+            this.properties.Add(new ConfigurationProperty(ClientIdleTimeoutConfigurationName, typeof(int), 5 * 60 * 1000));
+            this.properties.Add(new ConfigurationProperty(ClientConnectionTimeoutConfigurationName, typeof(int), 5 * 60 * 1000));
+            this.properties.Add(new ConfigurationProperty(SessionIdleTimeoutConfigurationName, typeof(int), 5 * 60 * 1000));
+            this.properties.Add(new ConfigurationProperty(StatusUpdateIntervalConfigurationName, typeof(int), 3 * 1000));
+            this.properties.Add(new ConfigurationProperty(MessageThrottleStartThresholdConfigurationName, typeof(int), 4096));
+            this.properties.Add(new ConfigurationProperty(MessageThrottleStopThresholdConfigurationName, typeof(int), 3072));
+            this.properties.Add(new ConfigurationProperty(ClientBrokerHeartbeatIntervalConfigurationName, typeof(int), 20000));
+            this.properties.Add(new ConfigurationProperty(ClientBrokerHeartbeatRetryCountConfigurationName, typeof(int), 3));
         }
 
         protected override ConfigurationPropertyCollection Properties
         {
             get
             {
-                return properties;
+                return this.properties;
             }
         }
 
@@ -65,7 +65,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
             get
             {
                 object value;
-                if (updatedValues.TryGetValue(LoadSamplingIntervalConfigurationName, out value))
+                if (this.updatedValues.TryGetValue(LoadSamplingIntervalConfigurationName, out value))
                 {
                     return (int)value;
                 }
@@ -75,7 +75,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
 
             set
             {
-                updatedValues[LoadSamplingIntervalConfigurationName] = value;
+                this.updatedValues[LoadSamplingIntervalConfigurationName] = value;
             }
         }
 
@@ -91,7 +91,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
             get
             {
                 object value;
-                if (updatedValues.TryGetValue(AllocationAdjustIntervalConfigurationName, out value))
+                if (this.updatedValues.TryGetValue(AllocationAdjustIntervalConfigurationName, out value))
                 {
                     return (int)value;
                 }
@@ -101,7 +101,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
 
             set
             {
-                updatedValues[AllocationAdjustIntervalConfigurationName] = value;
+                this.updatedValues[AllocationAdjustIntervalConfigurationName] = value;
             }
         }
 
@@ -122,7 +122,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
             get
             {
                 object value;
-                if (updatedValues.TryGetValue(ClientIdleTimeoutConfigurationName, out value))
+                if (this.updatedValues.TryGetValue(ClientIdleTimeoutConfigurationName, out value))
                 {
                     return (int)value;
                 }
@@ -132,7 +132,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
 
             set
             {
-                updatedValues[ClientIdleTimeoutConfigurationName] = value;
+                this.updatedValues[ClientIdleTimeoutConfigurationName] = value;
             }
         }
 
@@ -153,7 +153,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
             get
             {
                 object value;
-                if (updatedValues.TryGetValue(ClientConnectionTimeoutConfigurationName, out value))
+                if (this.updatedValues.TryGetValue(ClientConnectionTimeoutConfigurationName, out value))
                 {
                     return (int)value;
                 }
@@ -163,7 +163,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
 
             set
             {
-                updatedValues[ClientConnectionTimeoutConfigurationName] = value;
+                this.updatedValues[ClientConnectionTimeoutConfigurationName] = value;
             }
         }
 
@@ -181,7 +181,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
             get
             {
                 object value;
-                if (updatedValues.TryGetValue(SessionIdleTimeoutConfigurationName, out value))
+                if (this.updatedValues.TryGetValue(SessionIdleTimeoutConfigurationName, out value))
                 {
                     return (int)value;
                 }
@@ -191,7 +191,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
 
             set
             {
-                updatedValues[SessionIdleTimeoutConfigurationName] = value;
+                this.updatedValues[SessionIdleTimeoutConfigurationName] = value;
             }
         }
 
@@ -210,7 +210,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
             get
             {
                 object value;
-                if (updatedValues.TryGetValue(StatusUpdateIntervalConfigurationName, out value))
+                if (this.updatedValues.TryGetValue(StatusUpdateIntervalConfigurationName, out value))
                 {
                     return (int)value;
                 }
@@ -220,7 +220,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
 
             set
             {
-                updatedValues[StatusUpdateIntervalConfigurationName] = value;
+                this.updatedValues[StatusUpdateIntervalConfigurationName] = value;
             }
         }
 
@@ -264,7 +264,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
                 //if not defined use 3/4 of throttle limit
                 if (this[MessageThrottleStopThresholdConfigurationName] == null)
                 {
-                    return (MessageThrottleStartThreshold * 3) / 4;
+                    return (this.MessageThrottleStartThreshold * 3) / 4;
                 }
 
                 return (int)this[MessageThrottleStopThresholdConfigurationName];
@@ -287,7 +287,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
             get
             {
                 object value;
-                if (updatedValues.TryGetValue(ClientBrokerHeartbeatIntervalConfigurationName, out value))
+                if (this.updatedValues.TryGetValue(ClientBrokerHeartbeatIntervalConfigurationName, out value))
                 {
                     return (int)value;
                 }
@@ -297,7 +297,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
 
             set
             {
-                updatedValues[ClientBrokerHeartbeatIntervalConfigurationName] = value;
+                this.updatedValues[ClientBrokerHeartbeatIntervalConfigurationName] = value;
             }
         }
 
@@ -312,7 +312,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
             get
             {
                 object value;
-                if (updatedValues.TryGetValue(ClientBrokerHeartbeatRetryCountConfigurationName, out value))
+                if (this.updatedValues.TryGetValue(ClientBrokerHeartbeatRetryCountConfigurationName, out value))
                 {
                     return (int)value;
                 }
@@ -322,7 +322,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
 
             set
             {
-                updatedValues[ClientBrokerHeartbeatRetryCountConfigurationName] = value;
+                this.updatedValues[ClientBrokerHeartbeatRetryCountConfigurationName] = value;
             }
         }
 
@@ -332,7 +332,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
         /// <param name="errorMessage">
         ///   <para>If 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.Configuration.BrokerMonitorConfiguration.Validate(out System.String)" /> returns false, this parameter contains the validation error.</para> 
+        /// <see cref="Validate" /> returns false, this parameter contains the validation error.</para> 
         /// </param>
         /// <returns>
         ///   <para>Is true if the file validates; otherwise, false.</para>
@@ -340,49 +340,49 @@ namespace Microsoft.Hpc.Scheduler.Session.Configuration
         public bool Validate(out string errorMessage)
         {
             errorMessage = string.Empty;
-            if (LoadSamplingInterval <= 0)
+            if (this.LoadSamplingInterval <= 0)
             {
                 errorMessage = SR.LoadSamplingIntervalPositive;
                 return false;
             }
 
-            if (ClientIdleTimeout < 0)
+            if (this.ClientIdleTimeout < 0)
             {
                 errorMessage = SR.ClientIdleTimeoutNotNegative;
                 return false;
             }
 
-            if (SessionIdleTimeout < 0)
+            if (this.SessionIdleTimeout < 0)
             {
                 errorMessage = SR.SessionIdleTimeoutNotNegative;
                 return false;
             }
 
-            if (StatusUpdateInterval <= 0)
+            if (this.StatusUpdateInterval <= 0)
             {
                 errorMessage = SR.StatusUpdateIntervalPositive;
                 return false;
             }
 
-            if (MessageThrottleStartThreshold <= MessageThrottleStopThreshold)
+            if (this.MessageThrottleStartThreshold <= this.MessageThrottleStopThreshold)
             {
                 errorMessage = SR.MessageThrottleStartGreaterStop;
                 return false;
             }
 
-            if (MessageThrottleStopThreshold < 0)
+            if (this.MessageThrottleStopThreshold < 0)
             {
                 errorMessage = SR.MessageThrottleStopThresholdPositive;
                 return false;
             }
 
-            if (ClientBrokerHeartbeatInterval < 0)
+            if (this.ClientBrokerHeartbeatInterval < 0)
             {
                 errorMessage = SR.ClientBrokerHeartbeatIntervalPositive;
                 return false;
             }
 
-            if (ClientBrokerHeartbeatRetryCount < 0)
+            if (this.ClientBrokerHeartbeatRetryCount < 0)
             {
                 errorMessage = SR.ClientBrokerHeartbeatRetryCountPositive;
                 return false;

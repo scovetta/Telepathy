@@ -4,7 +4,7 @@
   <PropertyGroup>
     <ProjectGuid>{3F01D480-4CDE-4F46-99EA-95CEDA05063E}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Microsoft.Hpc.RuntimeTrace</RootNamespace>
+    <RootNamespace>Microsoft.Telepathy.RuntimeTrace</RootNamespace>
     <AssemblyName>BrokerBase</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <AssemblyDescription>Broker Base Assembly</AssemblyDescription>
@@ -67,8 +67,5 @@
   <Target Name="Prin" BeforeTargets="GetFrameworkPaths">
     <Message Text="$(SDK_VERSION)" />
   </Target>
-  <ItemGroup>
-    <Content Include="RuntimeEvents.rc" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

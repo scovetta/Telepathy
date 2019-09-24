@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Local
+namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Local
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.Local
     using System.Security;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Configuration;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Configuration;
+    using Microsoft.Telepathy.Session.Interface;
 
     internal class LocalSessionLauncher : SessionLauncher
     {

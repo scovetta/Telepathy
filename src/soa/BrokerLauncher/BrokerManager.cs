@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
+namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
     using System.Collections.Generic;
@@ -13,16 +13,19 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.RuntimeTrace;
     using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Configuration;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.Internal.Common;
-    using Microsoft.Hpc.ServiceBroker;
-    using Microsoft.Hpc.ServiceBroker.Common;
-
-    using TelepathyCommon;
-    using TelepathyCommon.HpcContext;
+    using Microsoft.Hpc.Scheduler.Session.Internal;
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.ServiceBroker;
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Configuration;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.Internal;
 
     /// <summary>
     /// Manager for all broker app domains
@@ -811,7 +814,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
             BrokerInfo info = new BrokerInfo(recoverInfo, brokerInfo, auth, customBroker, this.pool);
             try
             {
-                info.BrokerExited += new EventHandler(BrokerInfo_BrokerExited); // if the broker exit quickly due to short timeouts, the broker info could remain in the brokerDic, because it is added later.
+                info.BrokerExited += new EventHandler(this.BrokerInfo_BrokerExited); // if the broker exit quickly due to short timeouts, the broker info could remain in the brokerDic, because it is added later.
 
                 info.StartBroker();
 
@@ -1130,7 +1133,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.BrokerLauncher
         private void Dispose(bool disposing)
         {
             //dispose only once
-            if (Interlocked.CompareExchange(ref disposed, 1, 0) == 1)
+            if (Interlocked.CompareExchange(ref this.disposed, 1, 0) == 1)
             {
                 return;
             }

@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal
 {
-    using Microsoft.Hpc.Scheduler.Session.Interface;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -12,7 +11,10 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal
     using System.ServiceModel.Channels;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.QueueAdapter.Client;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+    using Microsoft.Telepathy.Session.QueueAdapter.Client.Impls;
 
     /// <summary>
     /// Broker factory for v3

@@ -3,12 +3,6 @@
 
 namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
 {
-    using Microsoft.Hpc.Azure.Common;
-    using Microsoft.Hpc.RuntimeTrace;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
-    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher;
-    using Microsoft.Hpc.ServiceBroker;
     using System;
     using System.Diagnostics;
     using System.Security.Cryptography.X509Certificates;
@@ -17,19 +11,23 @@ namespace Microsoft.Hpc.Scheduler.Session.LauncherHostService
     using System.ServiceModel.Security;
     using System.ServiceProcess;
     using System.Threading.Tasks;
-    
-    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls;
+
+    using Microsoft.Telepathy.Common.TelepathyContext;
+    using Microsoft.Telepathy.Common.TelepathyContext.Extensions.RegistryExtension;
+    using Microsoft.Telepathy.Internal.SessionLauncher;
+    using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SchedulerDelegations.AzureBatch;
+    using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SchedulerDelegations.Local;
+    using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers;
+    using Microsoft.Telepathy.Internal.SessionLauncher.Utils;
 #if HPCPACK
     using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.HpcPack;
 #endif
-    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.SchedulerDelegations.AzureBatch;
-    using Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.SchedulerDelegations.Local;
+    using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Internal;
 
-    using TelepathyCommon;
-    using TelepathyCommon.HpcContext;
-    using TelepathyCommon.HpcContext.Extensions.RegistryExtension;
-
-    using ISessionLauncher = Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.ISessionLauncher;
+    using ISessionLauncher = Microsoft.Telepathy.Internal.SessionLauncher.ISessionLauncher;
 
     // TODO: Consider changing the if/switch branching for schedulers into sub-classes
     /// <summary>

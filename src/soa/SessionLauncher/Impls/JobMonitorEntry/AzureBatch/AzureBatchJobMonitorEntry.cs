@@ -1,22 +1,25 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBatch
+namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.AzureBatch
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.SqlTypes;
     using System.Diagnostics;
+    using System.Linq;
     using System.ServiceModel;
     using System.Threading;
-    using Microsoft.Hpc.RuntimeTrace;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
     using System.Threading.Tasks;
+
     using Microsoft.Azure.Batch;
-    using System.Linq;
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.AzureBatch;
+    using Microsoft.Telepathy.RuntimeTrace;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
+
     using JobState = Microsoft.Azure.Batch.Common.JobState;
-    using TaskState = Microsoft.Azure.Batch.Common.TaskState;
-    using TelepathyCommon;
 
     internal class AzureBatchJobMonitorEntry : IDisposable
     {
@@ -38,7 +41,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
         /// <summary>
         /// Stores the previous state
         /// </summary>
-        private Data.JobState currentState;
+        private Telepathy.Session.Data.JobState currentState;
 
         /// <summary>
         /// Stores the min units of resource
@@ -98,9 +101,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
         /// <summary>
         /// Gets the previous state
         /// </summary>
-        public Data.JobState CurrentState
+        public Telepathy.Session.Data.JobState CurrentState
         {
-            get { return currentState; }
+            get { return this.currentState; }
         }
 
         /// <summary>
@@ -108,7 +111,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
         /// </summary>
         public string SessionId
         {
-            get { return sessionid; }
+            get { return this.sessionid; }
         }
 
         /// <summary>
@@ -135,7 +138,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
         /// </summary>
         internal CloudJob CloudJob
         {
-            get { return cloudJob; }
+            get { return this.cloudJob; }
         }
 
         /// <summary>
@@ -153,9 +156,9 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
         public async Task<CloudJob> StartAsync(System.ServiceModel.OperationContext context)
         {
             TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitorEntry] Start monitor Entry.");
-            this.currentState = Data.JobState.Queued;
+            this.currentState = Telepathy.Session.Data.JobState.Queued;
             this.context = context.GetCallbackChannel<ISchedulerNotify>();
-            this.cloudJob = await batchClient.JobOperations.GetJobAsync(AzureBatchSessionJobIdConverter.ConvertToAzureBatchJobId(this.sessionid));
+            this.cloudJob = await this.batchClient.JobOperations.GetJobAsync(AzureBatchSessionJobIdConverter.ConvertToAzureBatchJobId(this.sessionid));
 
             if (this.cloudJob.State == JobState.Disabled)
             {
@@ -175,7 +178,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
             }
 
             // monitor batch job state
-            this.batchJobMonitor = new AzureBatchJobMonitor(this.sessionid, JobMonitor_OnReportJobState);
+            this.batchJobMonitor = new AzureBatchJobMonitor(this.sessionid, this.JobMonitor_OnReportJobState);
             try
             {
                 Task.Run(() => this.StartMonitorAsync());
@@ -210,7 +213,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
                 await RetryHelper<Task>.InvokeOperationAsync(
                         async () =>
                         {
-                            await batchJobMonitor.StartAsync();
+                            await this.batchJobMonitor.StartAsync();
                             return null;
                         },
                         async (e, r) => await Task.FromResult<object>(new Func<object>(() => { TraceHelper.TraceEvent(this.sessionid, TraceEventType.Warning, "[AzureBatchJobMonitorEntry] Exception thrown when trigger start Azure Batch Job Monitor: {0} ", e, r.RetryCount); return null; }).Invoke()),
@@ -225,7 +228,7 @@ namespace Microsoft.Hpc.Scheduler.Session.Internal.SessionLauncher.Impls.AzureBa
         /// <summary>
         /// Callback when Azure Batch Monitor report jon state
         /// </summary>
-        private async void JobMonitor_OnReportJobState(Data.JobState state, List<TaskInfo> stateChangedTaskList)
+        private async void JobMonitor_OnReportJobState(Telepathy.Session.Data.JobState state, List<TaskInfo> stateChangedTaskList)
         {
             if (state != this.currentState)
             {

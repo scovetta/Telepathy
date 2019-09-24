@@ -1,14 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session.Internal
+namespace Microsoft.Telepathy.Session.Internal
 {
     using System.Collections.Generic;
     using System.ServiceModel;
     using System.Threading.Tasks;
 
-    using Microsoft.Hpc.Scheduler.Session.Data;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
+    using Microsoft.Telepathy.Session.Data;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
 
     // TODO: this class is subject to change
     [ServiceContract(CallbackContract = typeof(ISchedulerNotify), Namespace = "http://hpc.microsoft.com")]

@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session.Internal
 {
     using System;
     using System.Collections;
@@ -12,8 +12,10 @@ namespace Microsoft.Hpc.Scheduler.Session
     using System.ServiceModel.Description;
     using System.Threading;
     using System.Xml;
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
+
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
+    using Microsoft.Telepathy.Session.Interface;
 
     /// <summary>
     /// Holds messages in message windows
@@ -44,7 +46,7 @@ namespace Microsoft.Hpc.Scheduler.Session
     /// </typeparam>
     /// <remarks>
     ///   <para>This class allows you to enumerate the responses through the 
-    /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> method.</para>
+    /// <see cref="MoveNext" /> method.</para>
     /// </remarks>
     public class BrokerResponseEnumerator<TMessage> : IEnumerator<BrokerResponse<TMessage>>, IResponseServiceCallback, IEnumerable<BrokerResponse<TMessage>>
     {
@@ -306,33 +308,33 @@ namespace Microsoft.Hpc.Scheduler.Session
 
         /// <summary>
         ///   <para>Gets the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{T}" /> object at the current position in the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}" /> enumerator.</para>
+        /// <see cref="BrokerResponse{TMessage}" /> object at the current position in the 
+        /// <see cref="BrokerResponseEnumerator{TMessage}" /> enumerator.</para>
         /// </summary>
         /// <value>
         ///   <para>The 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{T}" /> object at the current position in the 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}" /> enumerator.</para>
+        /// <see cref="BrokerResponse{TMessage}" /> object at the current position in the 
+        /// <see cref="BrokerResponseEnumerator{TMessage}" /> enumerator.</para>
         /// </value>
         /// <remarks>
         ///   <para>The 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Current" /> property is undefined under any of the following conditions:</para> 
+        /// <see cref="Current" /> property is undefined under any of the following conditions:</para> 
         ///   <list type="number">
         ///     <item>
         ///       <description>
         ///         <para>The enumerator is positioned before the first 
         /// element in the collection, which occurs immediately after you create the enumerator or call the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Reset" /> method. You must call the 
+        /// <see cref="Reset" /> method. You must call the 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> method to advance the enumerator to the first element of the collection before you read the value of  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Current" />.</para>
+        /// <see cref="MoveNext" /> method to advance the enumerator to the first element of the collection before you read the value of  
+        /// <see cref="Current" />.</para>
         ///       </description>
         ///     </item>
         ///     <item>
         ///       <description>
         ///         <para>The last call to 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> returned 
+        /// <see cref="MoveNext" /> returned 
         /// False, which indicates the end of the collection.</para>
         ///       </description>
         ///     </item>
@@ -343,16 +345,16 @@ namespace Microsoft.Hpc.Scheduler.Session
         ///     </item>
         ///   </list>
         ///   <para>
-        ///     <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Current" /> returns the same object until you call 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" />. 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> sets 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Current" /> to the next element.</para>
+        ///     <see cref="Current" /> returns the same object until you call 
+        /// <see cref="MoveNext" />. 
+        /// <see cref="MoveNext" /> sets 
+        /// <see cref="Current" /> to the next element.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponse{T}" />
+        /// <seealso cref="MoveNext" />
+        /// <seealso cref="BrokerResponse{TMessage}" />
         /// <seealso cref="System.Collections.Generic.IEnumerator{T}.Current" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Reset" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Current" />
+        /// <seealso cref="Reset" />
+        /// <seealso cref="Current" />
         public BrokerResponse<TMessage> Current
         {
             get
@@ -371,7 +373,7 @@ namespace Microsoft.Hpc.Scheduler.Session
         #region IDisposable Members
 
         /// <summary>
-        ///   <para>Frees resources before the object is reclaimed by garbage collection.<see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}" /> object used.</para> 
+        ///   <para>Frees resources before the object is reclaimed by garbage collection.<see cref="BrokerResponseEnumerator{TMessage}" /> object used.</para> 
         /// </summary>
         public void Dispose()
         {
@@ -457,24 +459,24 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <remarks>
         ///   <para>After you create the enumerator or call the 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Reset" /> method, the enumerator is positioned before the first element of the collection, and the first call to the  
+        /// <see cref="Reset" /> method, the enumerator is positioned before the first element of the collection, and the first call to the  
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> method moves the enumerator over the first element of the collection.</para> 
+        /// <see cref="MoveNext" /> method moves the enumerator over the first element of the collection.</para> 
         ///   <para>If 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> passes the end of the collection, the enumerator is positioned after the last element in the collection, and  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> returns 
+        /// <see cref="MoveNext" /> passes the end of the collection, the enumerator is positioned after the last element in the collection, and  
+        /// <see cref="MoveNext" /> returns 
         /// False. When the enumerator is at this position, subsequent calls to 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> also returns 
+        /// <see cref="MoveNext" /> also returns 
         /// False until you call 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Reset" />.</para>
+        /// <see cref="Reset" />.</para>
         ///   <para>An enumerator remains valid as long as the collection remains unchanged. If you make changes to 
         /// the collection, such as adding, modifying, or deleting elements, the enumerator is irrecoverably invalidated and the next call to  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> or 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Reset" /> results in an 
+        /// <see cref="MoveNext" /> or 
+        /// <see cref="Reset" /> results in an 
         /// <see cref="System.InvalidOperationException" />.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Reset" />
+        /// <seealso cref="Reset" />
         /// <seealso cref="System.Collections.IEnumerator.MoveNext" />
         public bool MoveNext()
         {
@@ -607,7 +609,7 @@ namespace Microsoft.Hpc.Scheduler.Session
             }
 
             // Create a BrokerResponse object from Message
-            this.currentResponse = CreateResponse(messageWindowItem.ActionFromResponse, messageWindowItem.ReplyAction, messageWindowItem.MessageBuffer, messageWindowItem.RelatesTo);
+            this.currentResponse = this.CreateResponse(messageWindowItem.ActionFromResponse, messageWindowItem.ReplyAction, messageWindowItem.MessageBuffer, messageWindowItem.RelatesTo);
 
             // Return true since Current will have a new element
             return true;
@@ -667,11 +669,11 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// <remarks>
         ///   <para>An enumerator remains valid as long as the collection remains unchanged. If you make changes to the 
         /// collection, such as adding, modifying, or deleting elements, the enumerator is irrecoverably invalidated and the next call to the  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> or 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Reset" /> method results in an 
+        /// <see cref="MoveNext" /> or 
+        /// <see cref="Reset" /> method results in an 
         /// <see cref="System.InvalidOperationException" />.</para>
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" />
+        /// <seealso cref="MoveNext" />
         /// <seealso cref="System.Collections.IEnumerator.Reset" />
         public void Reset()
         {
@@ -764,7 +766,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                 else
                 {
                     // If EOM, deserialize EndOfResponses message
-                    endOfResponses = (EndOfResponses)endOfResponsesConverter.FromMessage(response);
+                    endOfResponses = (EndOfResponses)this.endOfResponsesConverter.FromMessage(response);
                 }
 
                 string messageId = String.Empty;
@@ -835,7 +837,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                             this.flushResponsesTimer.Change(Timeout.Infinite, Timeout.Infinite);
 
                             // Immediately flush the receive window
-                            FlushCurrentReceiveWindow();
+                            this.FlushCurrentReceiveWindow();
                         }
 
                         // Otherwise reset the flushtimer to the full interval
@@ -901,7 +903,7 @@ namespace Microsoft.Hpc.Scheduler.Session
                 // If Dispose wasnt called, flush the responses window
                 if (!this.isDisposeCalled)
                 {
-                    FlushCurrentReceiveWindow();
+                    this.FlushCurrentReceiveWindow();
                 }
             }
         }
@@ -984,27 +986,27 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// using foreach is recommended instead of directly manipulating the enumerator. </para> 
         ///   <para>You can use enumerators to read the data in the collection, but not to modify the underlying collection.</para>
         ///   <para>Initially, the enumerator is positioned before the first element in the collection. At this position, 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Current" /> is undefined. Therefore, you must call 
+        /// <see cref="Current" /> is undefined. Therefore, you must call 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> to advance the enumerator to the first element of the collection before reading the value of  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Current" />.</para>
+        /// <see cref="MoveNext" /> to advance the enumerator to the first element of the collection before reading the value of  
+        /// <see cref="Current" />.</para>
         ///   <para>
-        ///     <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Current" /> returns the same object until you call 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" />. 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> sets 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Current" /> to the next element.</para>
+        ///     <see cref="Current" /> returns the same object until you call 
+        /// <see cref="MoveNext" />. 
+        /// <see cref="MoveNext" /> sets 
+        /// <see cref="Current" /> to the next element.</para>
         ///   <para>If 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> passes the end of the collection, the enumerator is positioned after the last element in the collection, and  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> returns 
+        /// <see cref="MoveNext" /> passes the end of the collection, the enumerator is positioned after the last element in the collection, and  
+        /// <see cref="MoveNext" /> returns 
         /// False. When the enumerator is at this position, subsequent calls to 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> also return 
+        /// <see cref="MoveNext" /> also return 
         /// False. If the last call to 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> returned 
+        /// <see cref="MoveNext" /> returned 
         /// False, 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Current" /> is undefined. You cannot set 
+        /// <see cref="Current" /> is undefined. You cannot set 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Current" /> to the first element of the collection again; you must create a new enumerator instance instead.</para> 
+        /// <see cref="Current" /> to the first element of the collection again; you must create a new enumerator instance instead.</para> 
         ///   <para>An enumerator remains valid as long as the collection remains unchanged. If changes are made to 
         /// the collection, such as adding, modifying, or deleting elements, the enumerator is irrecoverably invalidated and its behavior is undefined.</para>
         ///   <para>The enumerator does not have exclusive access to the collection; therefore, enumerating 
@@ -1012,9 +1014,9 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// enumeration, you can lock the collection during the entire enumeration. To allow the collection 
         /// to be accessed by multiple threads for reading and writing, you must implement your own synchronization.</para> 
         /// </remarks>
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Current" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" />
-        /// <seealso cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.GetEnumerator" />
+        /// <seealso cref="Current" />
+        /// <seealso cref="MoveNext" />
+        /// <seealso cref="GetEnumerator" />
         public IEnumerator<BrokerResponse<TMessage>> GetEnumerator()
         {
             return this;
@@ -1036,27 +1038,27 @@ namespace Microsoft.Hpc.Scheduler.Session
         /// using foreach is recommended instead of directly manipulating the enumerator. </para> 
         ///   <para>You can use enumerators to read the data in the collection, but not to modify the underlying collection.</para>
         ///   <para>Initially, the enumerator is positioned before the first element in the collection. At this position, 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Current" /> is undefined. Therefore, you must call 
+        /// <see cref="Current" /> is undefined. Therefore, you must call 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> to advance the enumerator to the first element of the collection before reading the value of  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Current" />.</para>
+        /// <see cref="MoveNext" /> to advance the enumerator to the first element of the collection before reading the value of  
+        /// <see cref="Current" />.</para>
         ///   <para>
-        ///     <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Current" /> returns the same object until you call 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" />. 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> sets 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Current" /> to the next element.</para>
+        ///     <see cref="Current" /> returns the same object until you call 
+        /// <see cref="MoveNext" />. 
+        /// <see cref="MoveNext" /> sets 
+        /// <see cref="Current" /> to the next element.</para>
         ///   <para>If 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> passes the end of the collection, the enumerator is positioned after the last element in the collection, and  
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> returns 
+        /// <see cref="MoveNext" /> passes the end of the collection, the enumerator is positioned after the last element in the collection, and  
+        /// <see cref="MoveNext" /> returns 
         /// False. When the enumerator is at this position, subsequent calls to 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> also return 
+        /// <see cref="MoveNext" /> also return 
         /// False. If the last call to 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.MoveNext" /> returned 
+        /// <see cref="MoveNext" /> returned 
         /// False, 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Current" /> is undefined. You cannot set 
+        /// <see cref="Current" /> is undefined. You cannot set 
         /// 
-        /// <see cref="Microsoft.Hpc.Scheduler.Session.BrokerResponseEnumerator{T}.Current" /> to the first element of the collection again; you must create a new enumerator instance instead.</para> 
+        /// <see cref="Current" /> to the first element of the collection again; you must create a new enumerator instance instead.</para> 
         ///   <para>An enumerator remains valid as long as the collection remains unchanged. If changes are made to 
         /// the collection, such as adding, modifying, or deleting elements, the enumerator is irrecoverably invalidated and its behavior is undefined.</para>
         ///   <para>The enumerator does not have exclusive access to the collection; therefore, enumerating 

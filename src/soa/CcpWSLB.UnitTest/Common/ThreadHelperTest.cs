@@ -1,15 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Threading;
-using System.Diagnostics;
-using Microsoft.Hpc.ServiceBroker;
-
-namespace Microsoft.Hpc.SvcBroker.UnitTest
+namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Common
 {
+    using System.Threading;
 
+    using Microsoft.Telepathy.ServiceBroker.Common;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
     ///This is a test class for ThreadHelperTest and is intended
@@ -32,11 +29,11 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest
         {
             get
             {
-                return testContextInstance;
+                return this.testContextInstance;
             }
             set
             {
-                testContextInstance = value;
+                this.testContextInstance = value;
             }
         }
 
@@ -75,7 +72,7 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest
         {
             ThreadPool.QueueUserWorkItem(new ThreadHelper<object>(new WaitCallback(this.WaitCallbackMethod)).CallbackRoot, "STATE");
             ThreadPool.QueueUserWorkItem(new WaitCallback(this.WaitCallbackMethod), "STATE");
-            if (!wait.WaitOne(1000))
+            if (!this.wait.WaitOne(1000))
             {
                 Assert.Fail();
             }
@@ -84,7 +81,7 @@ namespace Microsoft.Hpc.SvcBroker.UnitTest
         private void WaitCallbackMethod(object state)
         {
             Assert.AreEqual(state, "STATE");
-            wait.Set();
+            this.wait.Set();
         }
     }
 }

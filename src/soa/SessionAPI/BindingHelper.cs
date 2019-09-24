@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.ServiceBroker
+namespace Microsoft.Telepathy.Session
 {
     using System;
     using System.Collections.Generic;
@@ -12,8 +12,9 @@ namespace Microsoft.Hpc.ServiceBroker
     using System.ServiceModel.Configuration;
     using System.ServiceModel.Description;
     using System.Xml;
-    using Microsoft.Hpc.Scheduler.Session;
-    using Microsoft.Hpc.Scheduler.Session.Internal;
+
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Exceptions;
 
     /// <summary>
     /// Helper class to build binding from configuration file

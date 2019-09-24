@@ -1,16 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Hpc.Scheduler.Session
+namespace Microsoft.Telepathy.Session
 {
-    using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
-    
-    using Microsoft.Hpc.Scheduler.Session.Interface;
-    using Microsoft.Hpc.ServiceBroker;
+
+    using Microsoft.Telepathy.Session.Interface;
 
     /// <summary>
     /// Extension methods of IConnectionInfo
