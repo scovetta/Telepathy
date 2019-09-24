@@ -278,6 +278,8 @@ namespace Microsoft.Telepathy.ServiceBroker.UnitTest
                 .GetContainerReference(MakeQueuePath(sessionId, clientId, true));
             this.pendingQueue = this.storageAccount.CreateCloudQueueClient()
                 .GetQueueReference(MakePendingPath(sessionId, clientId));
+            this.CallbackIsCalled = false;
+            this.IsExpected = false;
         }
 
         private static string MakePendingPath(string sessionId, string clientId)

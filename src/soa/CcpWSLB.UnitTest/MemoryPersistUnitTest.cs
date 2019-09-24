@@ -118,6 +118,8 @@ namespace Microsoft.Telepathy.ServiceBroker.UnitTest
         {
             clientId = Guid.NewGuid().ToString();
             this.sessionPersist = new MemoryPersist(username, sessionId, clientId);
+            this.CallbackIsCalled = false;
+            this.IsExpected = false;
         }
 
         private void GetLargeMessageTestCallback(BrokerQueueItem persistMessage, object state, Exception exception)
