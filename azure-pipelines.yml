@@ -130,6 +130,8 @@ stages:
     pool: 'Azure Agent'
     dependsOn: UnitTestPublish
     steps:
+    - checkout: none
+          
     - task: AzurePowerShell@4
       inputs:
         azureSubscription: 'BigCompS-Int1(d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
@@ -159,6 +161,8 @@ stages:
     pool: 'Azure Agent'
 
     steps:
+    - checkout: none
+    
     - task: DownloadPipelineArtifact@2
       inputs: 
         buildType: 'current'
@@ -181,6 +185,8 @@ stages:
     pool: 'Azure Agent'  
     dependsOn: BvtTest
     steps:
+    - checkout: none
+    
     - task: CmdLine@2
       inputs:
         script: |
