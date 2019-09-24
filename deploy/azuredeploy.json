@@ -7,7 +7,7 @@
       "metadata": {
         "description": "The telepathy branch in github"
       },
-      "defaultValue": "master"
+      "defaultValue": "dev"
     },
     "telepathyStorageType": {
       "type": "string",
@@ -162,7 +162,7 @@
     "telepathyVMSubnetRef": "[concat(variables('telepathyVMVnetID'), '/subnets/', variables('telepathyVnetSubnetName'))]",
     "telepathyVMStorageAccountContainerName": "vhds",
     "telepathyVMNicName": "[concat(parameters('telepathyVMName'), 'NetworkInterface')]",
-    "customScriptLocation": "[concat('https://raw.githubusercontent.com/Azure/Telepathy/', parameters('telepathyBranch'), '/deploy/StartTelepathy.ps1)]",
+    "customScriptLocation": "[concat('https://raw.githubusercontent.com/Azure/Telepathy/', parameters('telepathyBranch'), '/deploy/StartTelepathy.ps1')]",
     "doubleQuotation": "\"",
     "caret": "^",
     "scriptParameters": "[concat('-EnableTelepathyStorage ',' -StartSessionLauncher ', ' -Location ', resourceGroup().location, ' -BatchAccountName ', parameters('batchAccountsName'), ' -BatchPoolName ', parameters('batchAccountsPoolName'), ' -ArtifactsFolderName ', parameters('artifactsFolderName'), ' -ContainerName ', parameters('artifactsStorageContainerName'), ' -SrcStorageAccountName ', parameters('artifactsStorageName'), ' -DesStorageAccountName ', variables('telepathyStorageName'))]"
