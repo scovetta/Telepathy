@@ -55,11 +55,10 @@ stages:
         codeCoverageEnabled: true
 
     - task: PowerShell@2
+      displayName: CoreLayerSmokeTest
       inputs:
         filePath: '$(System.DefaultWorkingDirectory)\test\CoreLayerSmokeTest.ps1'
-      env:
-        REPO_ROOT: $(System.DefaultWorkingDirectory)
-
+        
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: 'test\E2ETest\BvtTest'
