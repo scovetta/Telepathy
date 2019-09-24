@@ -130,11 +130,12 @@ stages:
     pool: 'Azure Agent'
     dependsOn: UnitTestPublish
     steps:
+    - checkout: none
     - task: CmdLine@2
       inputs:
         script: |
-          taskkill /im "hpcsession.exe" /t /f
-          SCHTASKS /change /tn sessionLauncher /disable
+          tasklist /FI "IMAGENAME eq Hpcsession.exe" 2>NUL | find /I /N "Hpcsession.exe">NUL
+          if "%ERRORLEVEL%"=="0" taskkill /f /im Hpcsession.exe
           
     - task: AzurePowerShell@4
       inputs:
