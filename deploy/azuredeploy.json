@@ -7,7 +7,7 @@
       "metadata": {
         "description": "The telepathy branch in github"
       },
-      "defaultValue": "master"
+      "defaultValue": "dev"
     },
     "telepathyStorageType": {
       "type": "string",
