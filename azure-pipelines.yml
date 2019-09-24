@@ -56,8 +56,7 @@ stages:
 
     - task: PowerShell@2
       inputs:
-        targetType: 'inline'
-        script: 'gci $REPO_ROOT'
+        filePath: '$(System.DefaultWorkingDirectory)\test\CoreLayerSmokeTest.ps1'
       env:
         REPO_ROOT: $(System.DefaultWorkingDirectory)
 
