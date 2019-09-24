@@ -17,4 +17,6 @@ else {
     Copy-Item "$env:REPO_ROOT\src\soa\EchoSvcLib\bin\Release" -Destination "$env:REPO_ROOT\artifacts\Release\EchoSvcLib" -Recurse
     Copy-Item "$env:REPO_ROOT\src\soa\SessionLauncher\bin\Release" -Destination "$env:REPO_ROOT\artifacts\Release\SessionLauncher" -Recurse
     Copy-Item "$env:REPO_ROOT\batch\Registration" -Destination "$env:REPO_ROOT\artifacts\Release\Registration" -Recurse
+    Copy-Item "$env:REPO_ROOT\deploy\EnableTelepathyStorage.ps1" -Destination "$env:REPO_ROOT\artifacts\Release"
+    Copy-Item "$env:REPO_ROOT\deploy\StartSessionLauncher.ps1" -Destination "$env:REPO_ROOT\artifacts\Release"
 }

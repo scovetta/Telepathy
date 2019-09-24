@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "telepathyVMName": {
+      "value": ""
+    },
+    "telepathyVMAdminUserName": {
+      "value": ""
+    },
+    "telepathyVMAdminPassword": {
+      "value": ""
+    },
+    "vnetName": {
+      "value": ""
+    },
+    "subnetName": {
+      "value": ""
+    },
+    "newOrExistingVnet": {
+      "value": ""
+    },
+    "vnetResourceGroup": {
+      "value": ""
+    },
+    "artifactsStorageName": {
+      "value": ""
+    },
+    "artifactsStorageContainerSasToken": {
+      "value": ""
+    },
+    "artifactsStorageContainerName": {
+      "value": ""
+    },
+    "artifactsFolderName": {
+      "value": ""
+    }
+  }
+}
