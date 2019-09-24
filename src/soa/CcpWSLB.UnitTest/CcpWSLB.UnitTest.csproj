@@ -61,6 +61,7 @@
     <Compile Include="Dispatcher\Utility.cs" />
     <Compile Include="FrontEnd\FrontEndBuilderTest.cs" />
     <None Include="FrontEnd\RequestReplyFrontEndTest.cs" />
+    <Compile Include="MemoryPersistUnitTest.cs" />
     <Compile Include="Mock\IMockServiceContract.cs" />
     <Compile Include="Mock\MockAzureDispatcher.cs" />
     <Compile Include="Mock\MockAzureQueueManager.cs" />
