@@ -129,12 +129,6 @@ stages:
     steps:
     - checkout: none
           
-    - task: CmdLine@2
-      inputs:
-        script: |
-          echo telepathyVMName=$(TemplateName) telepathyVMAdminUserName=$(VMadmin) telepathyVMAdminPassword=$(VMpwd) vnetName=$(VnetName) `
-                        subnetName="default" newOrExistingVnet="existing" vnetResourceGroup=$(VnetRGName) artifactsStorageContainerSasToken=$(artifactsStorageContainerSasToken) `
-                        artifactsFolderName=$(Build.BuildNumber) artifactsStorageName=$(artifactsStorageName) artifactsStorageContainerName="telepathy"
     - task: AzureCLI@1
       inputs:
         azureSubscription: 'BigCompS-Int1(d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
