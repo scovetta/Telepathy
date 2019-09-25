@@ -11,6 +11,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   TemplateName: 'Telepathy$(Build.BuildNumber)'
+  TestLocation: 'japaneast'
 
 stages:
 - stage: Build
@@ -135,11 +136,11 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           [ "$(az group exists -n $(TemplateName))" = "true" ] && az group delete -n $(TemplateName) -y
-          az group create --name $(TemplateName) --location $(RGLocation)
+          az group create --name $(TemplateName) --location $(TestLocation)
           az group deployment create `
             --name $(TemplateName) `
             --resource-group $(TemplateName) `
-            --template-uri  $(TemplateUri)`
+            --template-uri  $(TemplateUri) `
             --parameters telepathyVMName=$(TemplateName) telepathyVMAdminUserName=$(VMadmin) telepathyVMAdminPassword=$(VMpwd) vnetName=$(VnetName) `
                 subnetName="default" newOrExistingVnet="existing" vnetResourceGroup=$(VnetRGName) artifactsStorageContainerSasToken=$(artifactsStorageContainerSasToken) `
                 artifactsFolderName=$(Build.BuildNumber) artifactsStorageName=$(artifactsStorageName) artifactsStorageContainerName="telepathy"
