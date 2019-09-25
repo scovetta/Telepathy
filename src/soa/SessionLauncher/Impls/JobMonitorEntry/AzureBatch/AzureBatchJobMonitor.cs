@@ -121,6 +121,10 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
             var nodes = await pool.ListComputeNodes(detailLevel).ToListAsync();
             while (true)
             {
+                if (shouldExit)
+                {
+                    break;
+                }
                 try
                 {
                     TraceHelper.TraceEvent(this.sessionid, TraceEventType.Verbose, "[AzureBatchJobMonitor] Starting get job state.");
@@ -135,17 +139,18 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
                         this.ReportJobStateAction(await AzureBatchJobStateConverter.FromAzureBatchJobAsync(this.cloudJob), stateChangedTaskList);
                     }
 
-                    if (state == JobState.Completed || state == JobState.Disabled || state == JobState.Terminating || state == JobState.Disabling || state == JobState.Deleting)
-                    {
-                        shouldExit = true;
-                        break;
-                    }                   
-
                     TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Starting query job state: JobState = {0}\n", state);
                 }
                 catch (Exception e)
                 {
                     TraceHelper.TraceEvent(this.sessionid, TraceEventType.Warning, "[AzureBatchJobMonitor] Exception thrown when querying job info: {0}", e);
+                }
+                finally
+                {
+                    if (state == JobState.Completed || state == JobState.Disabled || state == JobState.Terminating || state == JobState.Disabling || state == JobState.Deleting)
+                    {
+                        shouldExit = true;
+                    }
                 }
 
                 TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Waiting {0} miliseconds and start another round of getting job state info.", this.pullJobGap);
