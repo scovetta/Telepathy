@@ -136,14 +136,19 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           [ "$(az group exists -n $(TemplateName))" = "true" ] && az group delete -n $(TemplateName) -y
-          az group create --name $(TemplateName) --location $(TestLocation)
+          az group create --name $(TemplateName) --location "japaneast"
+    - task: AzureCLI@1
+      inputs:
+        azureSubscription: 'BigCompS-Int1(d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
           az group deployment create `
-            --name $(TemplateName) `
-            --resource-group $(TemplateName) `
-            --template-uri  $(TemplateUri) `
-            --parameters telepathyVMName=$(TemplateName) telepathyVMAdminUserName=$(VMadmin) telepathyVMAdminPassword=$(VMpwd) vnetName=$(VnetName) `
-                subnetName="default" newOrExistingVnet="existing" vnetResourceGroup=$(VnetRGName) artifactsStorageContainerSasToken=$(artifactsStorageContainerSasToken) `
-                artifactsFolderName=$(Build.BuildNumber) artifactsStorageName=$(artifactsStorageName) artifactsStorageContainerName="telepathy"
+                      --name $(TemplateName) `
+                      --resource-group $(TemplateName) `
+                      --template-uri  $(TemplateUri) `
+                      --parameters telepathyVMName=$(TemplateName) telepathyVMAdminUserName=$(VMadmin) telepathyVMAdminPassword=$(VMpwd) vnetName=$(VnetName) `
+                          subnetName="default" newOrExistingVnet="existing" vnetResourceGroup=$(VnetRGName) artifactsStorageContainerSasToken=$(artifactsStorageContainerSasToken) `
+                          artifactsFolderName=$(Build.BuildNumber) artifactsStorageName=$(artifactsStorageName) artifactsStorageContainerName="telepathy"
 
 - stage: BVTTest
   dependsOn: Build
