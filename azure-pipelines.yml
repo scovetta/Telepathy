@@ -10,6 +10,7 @@ variables:
   solution: 'Telepathy.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  TemplateName: 'Telepathy$(Build.BuildNumber)'
 
 stages:
 - stage: Build
@@ -70,11 +71,6 @@ stages:
       inputs:
         targetPath: 'test\E2ETest\BvtTest'
         artifact: 'BVTArtifact'
-
-    - task: PublishPipelineArtifact@1
-      inputs:
-        targetPath: '$(System.DefaultWorkingDirectory)\src\soa\BrokerOutput\$(buildConfiguration)'
-        artifact: 'Broker'
         
     - task: PowerShell@2
       inputs:
@@ -127,32 +123,26 @@ stages:
         ContainerName: 'service-assembly/ccpechosvc'
         
   - job: HNDeployment
-    pool: 'Azure Agent'
+    pool:
+      vmImage: 'windows-latest'
     dependsOn: UnitTestPublish
     steps:
     - checkout: none
           
-    - task: AzurePowerShell@4
+    - task: AzureCLI@1
       inputs:
         azureSubscription: 'BigCompS-Int1(d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
-        ScriptType: 'FilePath'
-        ScriptPath: 'HNDownload.ps1'
-        ScriptArguments: '-version $(build.BuildNumber) -connectString $(publishStorageString)'
-        azurePowerShellVersion: 'LatestVersion'
-        
-    - task: DownloadPipelineArtifact@2
-      inputs: 
-        buildType: 'current'
-        artifactName: 'Broker'
-        targetPath: 'C:\BrokerOutput'
-        
-    - task: CmdLine@2
-      inputs:
-        script: |
-          cmd /c "sc.exe config NetTcpPortSharing start= demand & reg ADD "HKLM\Software\Microsoft\StrongName\Verification\*,*" /f & reg ADD "HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^" /f"
-          SCHTASKS /create /sc onstart /tn sessionLauncher /tr "c:\$(build.BuildNumber)\$(buildConfiguration)\SessionLauncher\Hpcsession.exe -d -f D:\\config.json" -f 
-          SCHTASKS /change /tn sessionLauncher /enable
-          SCHTASKS /run /tn sessionLauncher
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          [ "$(az group exists -n $(TemplateName))" = "true" ] && az group delete -n $(TemplateName) -y
+          az group create --name $(TemplateName) --location $(RGLocation)
+          az group deployment create `
+            --name $(TemplateName) `
+            --resource-group $(TemplateName) `
+            --template-uri  $(TemplateUri)`
+            --parameters telepathyVMName=$(TemplateName) telepathyVMAdminUserName=$(VMadmin) telepathyVMAdminPassword=$(VMpwd) vnetName=$(VnetName) `
+                subnetName="default" newOrExistingVnet="existing" vnetResourceGroup=$(VnetRGName) artifactsStorageContainerSasToken=$(artifactsStorageContainerSasToken) `
+                artifactsFolderName=$(Build.BuildNumber) artifactsStorageName=$(artifactsStorageName) artifactsStorageContainerName="telepathy"
 
 - stage: BVTTest
   dependsOn: Build
@@ -162,7 +152,11 @@ stages:
 
     steps:
     - checkout: none
-    
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: '[environment]::setenvironmentvariable("HNMachine", $(TemplateName), "User")'
+        
     - task: DownloadPipelineArtifact@2
       inputs: 
         buildType: 'current'
@@ -181,15 +175,15 @@ stages:
         configuration: '$(buildConfiguration)'
         codeCoverageEnabled: true
         
-  - job: CloseSessionLauncher
-    pool: 'Azure Agent'  
-    dependsOn: BvtTest
-    steps:
-    - checkout: none
-    
-    - task: CmdLine@2
-      inputs:
-        script: |
-          taskkill /im "hpcsession.exe" /t /f
-          SCHTASKS /change /tn sessionLauncher /disable
+#  - job: CloseSessionLauncher
+#    pool: 'Azure Agent'  
+#    dependsOn: BvtTest
+#    steps:
+#    - checkout: none
+#    
+#    - task: CmdLine@2
+#      inputs:
+#        script: |
+#          taskkill /im "hpcsession.exe" /t /f
+#          SCHTASKS /change /tn sessionLauncher /disable
     
