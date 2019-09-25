@@ -31,19 +31,25 @@ namespace Microsoft.Telepathy.Test.E2E.Bvt
 
         private static string NetTcpEndpointPattern = "net.tcp://{0}:9091/{1}/NetTcp";
 
+        private static string FormatMsg(string msg)
+        {
+            string now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            return $"[{now}]: {msg}";
+        }
+
         private static void Info(string msg, params object[] args)
         {
-            Trace.TraceInformation(msg, args);
+            Trace.TraceInformation(FormatMsg(msg), args);
         }
 
         private static void TraceEvent(string msg, params object[] args)
         {
-            Trace.TraceInformation(msg, args);
+            Trace.TraceInformation(FormatMsg(msg), args);
         }
 
         private static void Error(string msg, params object[] args)
         {
-            Trace.TraceError(msg, args);
+            Trace.TraceError(FormatMsg(msg), args);
         }
 
         public static void Assert(bool condition, string msg, params object[] obj)
