@@ -48,6 +48,8 @@ namespace Microsoft.Telepathy.ServiceBroker.UnitTest
 
         private static readonly string shortMsg = "This is short message!";
 
+        private static readonly string wrongMsg = "This is wrong message!";
+
         private static readonly string storageConnectString =
             CloudConfigurationManager.GetSetting("StorageConnectionString");
 
@@ -152,6 +154,25 @@ namespace Microsoft.Telepathy.ServiceBroker.UnitTest
             }
 
             Assert.AreEqual(true, this.IsExpected);
+        }
+
+        [TestMethod]
+        public async Task GetWrongRequestTest()
+        {
+            var request = new BrokerQueueItem(
+                null,
+                Message.CreateMessage(MessageVersion.Soap12WSAddressing10, action, shortMsg),
+                null);
+            this.sessionPersist.PutRequestAsync(request, null, 0);
+            this.sessionPersist.CommitRequest();
+            await Task.Delay(millisecondsDelay);
+            this.sessionPersist.GetRequestAsync(this.GetWrongMessageTestCallback, null);
+            while (!this.CallbackIsCalled)
+            {
+                await Task.Delay(millisecondsDelay);
+            }
+
+            Assert.AreEqual(false, this.IsExpected);
         }
 
         /*[TestMethod]
@@ -321,6 +342,12 @@ namespace Microsoft.Telepathy.ServiceBroker.UnitTest
         private void GetMessageTestCallback(BrokerQueueItem persistMessage, object state, Exception exception)
         {
             this.IsExpected = persistMessage.Message.GetBody<string>().Equals(shortMsg);
+            this.CallbackIsCalled = true;
+        }
+
+        private void GetWrongMessageTestCallback(BrokerQueueItem persistMessage, object state, Exception exception)
+        {
+            this.IsExpected = persistMessage.Message.GetBody<string>().Equals(wrongMsg);
             this.CallbackIsCalled = true;
         }
     }
