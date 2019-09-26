@@ -141,7 +141,8 @@ stages:
           
           New-AzResourceGroup -Name $(TemplateName) -Location $(RGLocation)
           New-AzResourceGroupDeployment -ResourceGroupName $(TemplateName) -TemplateUri "$(TemplateUri)" -TemplateParameterFile $TemplateParameterFile -telepathyVMName "Telepathy$(Build.BuildID)" -telepathyVMAdminUserName $(VMadmin) -telepathyVMAdminPassword $(VMpwd) -vnetName $(VnetName)  -subnetName "default" -newOrExistingVnet "existing" -vnetResourceGroup $(VnetRGName) -artifactsStorageContainerSasToken $(artifactsStorageContainerSasToken) -artifactsFolderName $(Build.BuildNumber) -artifactsStorageName $(artifactsStorageName) -artifactsStorageContainerName "telepathy"
-
+        errorActionPreference: 'silentlyContinue'
+        azurePowerShellVersion: 'LatestVersion'
 - stage: BVTTest
   dependsOn: Build
   jobs:
