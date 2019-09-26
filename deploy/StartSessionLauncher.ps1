@@ -90,6 +90,9 @@ Write-Log -Message "BatchAccountServiceUrl : $BatchAccountServiceUrl"
 Write-Log -Message "Start open NetTCPPortSharing & enable StrongName"
 cmd /c "sc.exe config NetTcpPortSharing start=demand & reg ADD "HKLM\Software\Microsoft\StrongName\Verification\*,*" /f & reg ADD "HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^" /f"
 
+Write-Log -Message "Open tcp port"
+New-NetFirewallRule -DisplayName "Open TCP port for telepathy" -Direction Inbound -LocalPort 9087, 9090, 9091, 9092, 9093 -Protocol TCP -Action Allow
+
 $sessionLauncher = "$DestinationPath\SessionLauncher\HpcSession.exe"
 $broker = "$DestinationPath\BrokerOutput\HpcBroker.exe"
 $serviceName = "TelepathySessionLauncher"

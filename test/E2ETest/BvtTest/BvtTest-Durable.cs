@@ -17,9 +17,13 @@ namespace Microsoft.Telepathy.Test.E2E.Bvt
     [TestClass]
     public class BvtTestDurable
     {
-        private static string Server = "localhost";
+        private static string Server;
 
         private static string EchoSvcName = "CcpEchoSvc";
+
+        private static string HNEnvName = "HNMachine";
+
+        private static string DefaultServer = "localhost";
 
         private static bool InProc = false;
 
@@ -100,6 +104,13 @@ namespace Microsoft.Telepathy.Test.E2E.Bvt
             startInfo.MinimumUnits = minUnit;
 
             return startInfo;
+        }
+
+        [TestInitialize]
+        public void TestInit()
+        {
+            var HNMachine = Environment.GetEnvironmentVariable(HNEnvName, EnvironmentVariableTarget.User);
+            Server = string.IsNullOrEmpty(HNMachine) ? DefaultServer : HNMachine;
         }
 
         /// <summary>
