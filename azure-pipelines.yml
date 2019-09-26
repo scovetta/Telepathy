@@ -191,6 +191,6 @@ stages:
       inputs:
         azureSubscription: 'BigCompS-Int1(d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
         ScriptType: 'InlineScript'
-        Inline: |
-                Remove-AzResourceGroup -Name $(TemplateName) -f
-    
+        Inline: 'Remove-AzResourceGroup -Name $(TemplateName) -f'
+        errorActionPreference: 'silentlyContinue'
+        azurePowerShellVersion: 'LatestVersion'
