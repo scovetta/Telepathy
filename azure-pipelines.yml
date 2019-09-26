@@ -136,6 +136,12 @@ stages:
         inlineScript: |
           [ "$(az group exists -n $(TemplateName))" = "true" ] && az group delete -n $(TemplateName) -y
           az group create --name $(TemplateName) --location $(RGLocation)
+          
+    - task: AzureCLI@1
+      inputs:
+        azureSubscription: 'BigCompS-Int1(d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
           az group deployment create  --resource-group $(TemplateName) `
             --name $(TemplateName) `
             --template-uri  $(TemplateUri)`
