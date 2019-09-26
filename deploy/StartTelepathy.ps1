@@ -130,4 +130,5 @@ if($EnableTelepathyStorage) {
 
 if($StartSessionLauncher) {
     invoke-expression "$artifactsPath\StartSessionLauncher.ps1 -DestinationPath $artifactsPath -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey $BatchAccountKey -BatchAccountServiceUrl $batchServiceUrl"
+    invoke-expression "$artifactsPath\StartBroker.ps1 -DestinationPath $artifactsPath -SessionAddress localhost"
 }
