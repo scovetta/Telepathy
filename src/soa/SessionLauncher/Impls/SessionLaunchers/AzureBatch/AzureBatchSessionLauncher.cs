@@ -46,18 +46,18 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
 
         private const string AzureBatchTaskWorkingDirEnvVar = "%AZ_BATCH_TASK_WORKING_DIR%";
 
-        private const string AzureBatchJobPrepTaskWorkingDirEnvVar = "AZ_BATCH_JOB_PREP_WORKING_DIR";
+        private const string ServiceRegistrationWoringDirVar = "TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR";
 
-        private const string OpenNetTcpPortSharingAndDisableStrongNameValidationCmdLine =
-            @"cmd /c ""sc.exe config NetTcpPortSharing start= demand & reg ADD ^""HKLM\Software\Microsoft\StrongName\Verification\*,*^"" /f & reg ADD ^""HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^"" /f""";
+        private const string JobPrepCmdLine =
+            @"cmd /c ""sc.exe config NetTcpPortSharing start= demand & reg ADD ^""HKLM\Software\Microsoft\StrongName\Verification\*,*^"" /f & reg ADD ^""HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^"" /f & setx /m TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR ~AZ_BATCH_JOB_PREP_WORKING_DIR~""";
 
         private static TimeSpan SchedulingTimeout = TimeSpan.FromMinutes(5);
 
-        private Process brokerLauncherProcess; // TODO: Design - change it to a process has same level with session launcher
+        //private Process brokerLauncherProcess; // TODO: Design - change it to a process has same level with session launcher
 
         private readonly Dictionary<string, string> defaultSoaConfigurations = new Dictionary<string, string>()
                                                                                    {
-                                                                                       { Constant.RegistryPathEnv, $"%{AzureBatchJobPrepTaskWorkingDirEnvVar}%" },
+                                                                                       { Constant.RegistryPathEnv, $"%{ServiceRegistrationWoringDirVar}%" },
                                                                                        { Constant.AutomaticShrinkEnabled, "False" },
                                                                                        { Constant.NettcpOver443, "True" },
                                                                                        { Constant.NetworkPrefixEnv, string.Empty },
@@ -499,7 +499,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
                         string newJobId = AzureBatchSessionJobIdConverter.ConvertToAzureBatchJobId(AzureBatchSessionIdGenerator.GenerateSessionId());
                         Debug.Assert(batchClient != null, nameof(batchClient) + " != null");
                         var job = batchClient.JobOperations.CreateJob(newJobId, new PoolInformation() { PoolId = AzureBatchConfiguration.BatchPoolName });
-                        job.JobPreparationTask = new JobPreparationTask(OpenNetTcpPortSharingAndDisableStrongNameValidationCmdLine);
+                        job.JobPreparationTask = new JobPreparationTask(JobPrepCmdLine);
                         job.JobPreparationTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
                         job.JobPreparationTask.ResourceFiles = new List<ResourceFile>() { GetResourceFileReference(ServiceRegistrationContainer, null) };
 
@@ -596,12 +596,12 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
                             if (direct)
                             {
                                 cmd =
-                                    $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --ServiceRegistrationPath %{AzureBatchJobPrepTaskWorkingDirEnvVar}% --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
+                                    $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
                             }
                             else
                             {
                                 cmd =
-                                    $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --ServiceRegistrationPath %{AzureBatchJobPrepTaskWorkingDirEnvVar}% --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
+                                    $@"cmd /c {AzureBatchTaskWorkingDirEnvVar}\broker\HpcBroker.exe -d --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
                             }
 
                             CloudTask cloudTask = new CloudTask("Broker", cmd);
@@ -627,33 +627,6 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
 
                     await AddTasksAsync();
 
-                    async Task StartAndWaitLocalBrokerLauncher()
-                    {
-                        if (this.brokerLauncherProcess == null || this.brokerLauncherProcess.HasExited)
-                        {
-                            TraceHelper.TraceEvent(TraceEventType.Information, "[AzureBatchSessionLauncher] .StartAndWaitLocalBrokerLauncher: Waiting Batch Job Starting");                           
-                            string cmd = $@"-d --ServiceRegistrationPath %{AzureBatchJobPrepTaskWorkingDirEnvVar}%  --SessionAddress {Environment.MachineName}";
-                            string brokerPath = AzureBatchConfiguration.BrokerLauncherPath;
-
-                            if (string.IsNullOrWhiteSpace(brokerPath) || !File.Exists(brokerPath))
-                            {
-                                throw new InvalidOperationException($"{brokerPath} doesn't exist.");
-                            }
-
-                            var brokerStartInfo = new ProcessStartInfo();
-                            brokerStartInfo.FileName = brokerPath;
-                            brokerStartInfo.Arguments = cmd;
-                            brokerStartInfo.EnvironmentVariables[AzureBatchJobPrepTaskWorkingDirEnvVar] = SessionLauncherSettings.Default.ServiceRegistrationStoreFacadeFolder;
-                            brokerStartInfo.UseShellExecute = false;
-
-                            // var brokerLauncherProcess = Process.Start(brokerPath, cmd);
-                            this.brokerLauncherProcess = Process.Start(brokerStartInfo);
-                        }
-
-                        // await Task.Delay(TimeSpan.FromSeconds(60));
-                        sessionAllocateInfo.BrokerLauncherEpr = new[] { SoaHelper.GetBrokerLauncherAddress(Environment.MachineName) };
-                    }
-
                     async Task WaitBatchBrokerLauncher()
                     {
                         var brokerTask = await batchClient.JobOperations.GetTaskAsync(jobId, "Broker");
@@ -668,7 +641,8 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
 
                     if (brokerPerfMode)
                     {
-                        await StartAndWaitLocalBrokerLauncher();
+                        //If broker node and session launcher node is not the same node, this line should be modified.
+                        sessionAllocateInfo.BrokerLauncherEpr = new[] { SoaHelper.GetBrokerLauncherAddress(Environment.MachineName) };                  
                     }
                     else
                     {
@@ -728,7 +702,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
             new ServiceRegistrationRepo(
                 regPath,
                 new AzureBlobServiceRegistrationStore(SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString),
-                SessionLauncherSettings.Default.ServiceRegistrationStoreFacadeFolder);
+                Environment.GetEnvironmentVariable(ServiceRegistrationWoringDirVar, EnvironmentVariableTarget.Machine));
 
         /// <summary>
         /// the helper function to check whether the endpoint prefix is supported.
