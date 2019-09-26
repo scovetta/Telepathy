@@ -136,11 +136,10 @@ stages:
         inlineScript: |
           [ "$(az group exists -n $(TemplateName))" = "true" ] && az group delete -n $(TemplateName) -y
           az group create --name $(TemplateName) --location $(RGLocation)
-          az group deployment create `
+          az group deployment create  --resource-group $(TemplateName) `
             --name $(TemplateName) `
-            --resource-group $(TemplateName) `
             --template-uri  $(TemplateUri)`
-            --parameters telepathyVMName=$(TemplateName) telepathyVMAdminUserName=$(VMadmin) telepathyVMAdminPassword=$(VMpwd) vnetName=$(VnetName) `
+            --parameters telepathyVMName='Telepathy$(Build.BuildID)' telepathyVMAdminUserName=$(VMadmin) telepathyVMAdminPassword=$(VMpwd) vnetName=$(VnetName) `
                 subnetName="default" newOrExistingVnet="existing" vnetResourceGroup=$(VnetRGName) artifactsStorageContainerSasToken=$(artifactsStorageContainerSasToken) `
                 artifactsFolderName=$(Build.BuildNumber) artifactsStorageName=$(artifactsStorageName) artifactsStorageContainerName="telepathy"
 
@@ -155,7 +154,7 @@ stages:
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
-        script: '[environment]::setenvironmentvariable("HNMachine", $(TemplateName), "User")'
+        script: '[environment]::setenvironmentvariable("HNMachine", "$(TemplateName)", "User")'
         
     - task: DownloadPipelineArtifact@2
       inputs: 
