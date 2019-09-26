@@ -129,20 +129,19 @@ stages:
     steps:
     - checkout: none
           
-    - task: AzureCLI@1
+    - task: AzurePowerShell@4
       inputs:
         azureSubscription: 'BigCompS-Int1(d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          [ "$(az group exists -n $(TemplateName))" = "true" ] && az group delete -n $(TemplateName) -y
-          az group create --name $(TemplateName) --location $(RGLocation)
+        ScriptType: 'InlineScript'
+        Inline: |
+          Connect-AzAccount
+          if(Get-AzResourceGroup -Name $(TemplateName)) {
+              Remove-AzResourceGroup -Name $(TemplateName) -Force
+          }
           
-    - task: AzureCLI@1
-      inputs:
-        azureSubscription: 'BigCompS-Int1(d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
-        scriptLocation: 'inlineScript'
-        inlineScript: 'az group deployment create  --resource-group $(TemplateName) --name $(TemplateName) --template-uri  $(TemplateUri) --parameters telepathyVMName="Telepathy$(Build.BuildID)" telepathyVMAdminUserName=$(VMadmin) telepathyVMAdminPassword=$(VMpwd) vnetName=$(VnetName)  subnetName="default" newOrExistingVnet="existing" vnetResourceGroup=$(VnetRGName) artifactsStorageContainerSasToken=$(artifactsStorageContainerSasToken) artifactsFolderName=$(Build.BuildNumber) artifactsStorageName=$(artifactsStorageName) artifactsStorageContainerName="telepathy"'
- 
+          New-AzResourceGroup -Name $(TemplateName) -Location $(RGLocation)
+          New-AzResourceGroupDeployment -ResourceGroupName $(TemplateName) -TemplateUri "$(TemplateUri)" -TemplateParameterFile $TemplateParameterFile -telepathyVMName "Telepathy$(Build.BuildID)" -telepathyVMAdminUserName $(VMadmin) -telepathyVMAdminPassword $(VMpwd) -vnetName $(VnetName)  -subnetName "default" -newOrExistingVnet "existing" -vnetResourceGroup $(VnetRGName) -artifactsStorageContainerSasToken $(artifactsStorageContainerSasToken) -artifactsFolderName $(Build.BuildNumber) -artifactsStorageName $(artifactsStorageName) -artifactsStorageContainerName "telepathy"
+
 - stage: BVTTest
   dependsOn: Build
   jobs:
