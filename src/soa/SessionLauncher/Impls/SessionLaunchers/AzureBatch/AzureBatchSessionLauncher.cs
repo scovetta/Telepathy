@@ -44,7 +44,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
 
         private const string ServiceRegistrationContainer = "service-registration";
 
-        private const string ServiceWorkingDirEnvVar = "TELEPATHY_TASK_WORKING_DIR";
+        private const string ServiceWorkingDirEnvVar = "TELEPATHY_SERVICE_WORKING_DIR";
 
         private const string ServiceRegistrationWorkingDirEnvVar = "TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR";
 
