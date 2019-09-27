@@ -116,6 +116,8 @@ Try {
 Try {
     Write-Log -Message "Start session launcher windows service"
     Start-Service -Name $serviceName
+	#Todo: should refactor later, start session launcher and broker in start telepathy service script
+	invoke-expression "$artifactsPath\StartBroker.ps1 -DestinationPath $artifactsPath -SessionAddress localhost"
 } Catch {
     Write-Log -Message "Fail to start session launcher windows service" -Level Error
     Write-Log -Message $_ -Level Error
