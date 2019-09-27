@@ -9,6 +9,9 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
 
     internal class StartOption
     {
+        [Option('r', "ServiceRegistrationPath", HelpText = "Path of Service Registration folder")]
+        public string ServiceRegistrationPath { get; set; }
+
         [Option("AzureStorageConnectionString", HelpText = "Azure Storage connection string used in broker launcher")]
         public string AzureStorageConnectionString { get; set; }
 
