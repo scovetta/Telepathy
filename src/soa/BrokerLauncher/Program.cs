@@ -169,6 +169,10 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
                     Trace.TraceInformation($"{nameof(settings.CCP_SERVICEREGISTRATION_PATH)} set to {option.ServiceRegistrationPath}.");
 
                 }
+                else
+                {
+                    settings.CCP_SERVICEREGISTRATION_PATH = "%TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR%";
+                }             
 
                 if (!string.IsNullOrEmpty(option.AzureStorageConnectionString))
                 {

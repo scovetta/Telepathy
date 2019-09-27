@@ -19,4 +19,5 @@ else {
     Copy-Item "$env:REPO_ROOT\batch\Registration" -Destination "$env:REPO_ROOT\artifacts\Release\Registration" -Recurse
     Copy-Item "$env:REPO_ROOT\deploy\EnableTelepathyStorage.ps1" -Destination "$env:REPO_ROOT\artifacts\Release"
     Copy-Item "$env:REPO_ROOT\deploy\StartSessionLauncher.ps1" -Destination "$env:REPO_ROOT\artifacts\Release"
+	Copy-Item "$env:REPO_ROOT\deploy\StartBroker.ps1" -Destination "$env:REPO_ROOT\artifacts\Release"
 }

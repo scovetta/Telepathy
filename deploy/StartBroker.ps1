@@ -1,10 +1,6 @@
-param (
+﻿param (
     [string]$DestinationPath,
-    [string]$DesStorageConnectionString,
-    [string]$BatchAccountName,
-    [string]$BatchPoolName,
-    [string]$BatchAccountKey,
-    [string]$BatchAccountServiceUrl
+    [string]$SessionAddress
 )
 
 function Write-Log 
@@ -82,43 +78,26 @@ function Write-Log
 }
 
 Write-Log -Message "DestinationPath to find resource : $DestinationPath"
-Write-Log -Message "DesStorageConnectionString : $DesStorageConnectionString"
-Write-Log -Message "BatchAccountName : $BatchAccountName"
-Write-Log -Message "BatchAccountKey : $BatchAccountKey"
-Write-Log -Message "BatchAccountServiceUrl : $BatchAccountServiceUrl"
 
-Write-Log -Message "Start open NetTCPPortSharing & enable StrongName"
-cmd /c "sc.exe config NetTcpPortSharing start=demand & reg ADD "HKLM\Software\Microsoft\StrongName\Verification\*,*" /f & reg ADD "HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^" /f"
-
-
-Write-Log -Message "set TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR environment varaibles in session machine"
-cmd /c "setx /m TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR ^"C:\TelepathyServiceRegistration\^""
-
-Write-Log -Message "Open tcp port"
-New-NetFirewallRule -DisplayName "Open TCP port for telepathy" -Direction Inbound -LocalPort 9087, 9090, 9091, 9092, 9093 -Protocol TCP -Action Allow
-
-
-$sessionLauncher = "$DestinationPath\SessionLauncher\HpcSession.exe"
-$serviceName = "TelepathySessionLauncher"
+$broker = "$DestinationPath\BrokerOutput\HpcBroker.exe"
+$serviceName = "TelepathyBroker"
 
 Try {
-    Write-Log -Message "Start to new session launcher windows service"
+    Write-Log -Message "Start to new broker windows service"
     New-Service -Name $serviceName `
-    -BinaryPathName "$sessionLauncher --AzureBatchServiceUrl $BatchAccountServiceUrl --AzureBatchAccountName $BatchAccountName --AzureBatchAccountKey $BatchAccountkey --AzureBatchPoolName $BatchPoolName --AzureBatchBrokerStorageConnectionString $DesStorageConnectionString" `
-    -DisplayName "Telepathy Session Launcher Service" `
+    -BinaryPathName "$broker --SessionAddress $SessionAddress" `
+    -DisplayName "Telepathy Broker Service" `
     -StartupType Automatic `
-    -Description "Telepathy Session Launcher service." 
+    -Description "Telepathy Broker service." 
 } Catch {
-    Write-Log -Message "Error happens when new session launcher windows service" -Level Error
+    Write-Log -Message "Error happens when new broker windows service" -Level Error
     Write-Log -Message $_ -Level Error
 }
 
 Try {
-    Write-Log -Message "Start session launcher windows service"
+    Write-Log -Message "Start broker windows service"
     Start-Service -Name $serviceName
-	#Todo: should refactor later, start session launcher and broker in start telepathy service script
-	invoke-expression "$artifactsPath\StartBroker.ps1 -DestinationPath $artifactsPath -SessionAddress localhost"
 } Catch {
-    Write-Log -Message "Fail to start session launcher windows service" -Level Error
+    Write-Log -Message "Fail to start broker windows service" -Level Error
     Write-Log -Message $_ -Level Error
 }
