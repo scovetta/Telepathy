@@ -81,7 +81,7 @@ function Write-Log
             } 
          
         # Write log entry to $Path 
-        "$FormattedDate $LevelText $Message" | Out-File -FilePath $Path -Append 
+        "$FormattedDate $LevelText [StartTelepathy] $Message" | Out-File -FilePath $Path -Append 
     } 
     End 
     { 
@@ -124,8 +124,13 @@ Try {
 $artifactsPath = "$destination_path\$ArtifactsFolderName\Release"
 $desStorageConnectionString = "DefaultEndpointsProtocol=https;AccountName=$DesStorageAccountName;AccountKey=$DesStorageAccountKey;EndpointSuffix=core.windows.net"
 $batchServiceUrl = "https://$BatchAccountName.$Location.batch.azure.com"
+
+Write-Log -Message "Artifacts path: $artifactsPath"
+Write-Log -Message "desStorageConnectionString: $desStorageConnectionString"
+Write-Log -Message "batchServiceUrl: $batchServiceUrl"
+
 if($EnableTelepathyStorage) {
-    invoke-expression "$artifactsPath\EnableTelepathyStorage.ps1 -DestinationPath $artifactsPath -DesStorageConnectionString '$DesStorageConnectionString'"
+    invoke-expression "$artifactsPath\EnableTelepathyStorage.ps1 -ArtifactsPath $artifactsPath -DesStorageConnectionString '$DesStorageConnectionString'"
 }
 
 if($StartTelepathyService) {

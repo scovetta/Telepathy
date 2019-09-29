@@ -70,7 +70,7 @@ function Write-Log
             } 
          
         # Write log entry to $Path 
-        "$FormattedDate $LevelText $Message" | Out-File -FilePath $Path -Append 
+        "$FormattedDate $LevelText [EnableTelepathyStorage] $Message" | Out-File -FilePath $Path -Append 
     } 
     End 
     { 
