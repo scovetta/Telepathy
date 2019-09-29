@@ -1,7 +1,7 @@
 <# Custom Script for Windows to install a file from Azure Storage using the staging folder created by the deployment script #>
 param (
     [switch]$EnableTelepathyStorage,
-    [switch]$StartSessionLauncher,
+    [switch]$StartTelepathyService,
     [string]$Location,
     [string]$BatchAccountName,
     [string]$BatchPoolName,
@@ -128,6 +128,6 @@ if($EnableTelepathyStorage) {
     invoke-expression "$artifactsPath\EnableTelepathyStorage.ps1 -DestinationPath $artifactsPath -DesStorageConnectionString '$DesStorageConnectionString'"
 }
 
-if($StartSessionLauncher) {
-    invoke-expression "$artifactsPath\StartSessionLauncher.ps1 -DestinationPath $artifactsPath -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey $BatchAccountKey -BatchAccountServiceUrl $batchServiceUrl"
+if($StartTelepathyService) {
+    invoke-expression "$artifactsPath\StartTelepathyService.ps1 -DestinationPath $artifactsPath -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey $BatchAccountKey -BatchAccountServiceUrl $batchServiceUrl"
 }
