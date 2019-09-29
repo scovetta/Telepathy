@@ -1,6 +1,10 @@
 ﻿param (
-    [string]$Broker,
-    [string]$SessionAddress
+    [string]$SessionLauncher,
+    [string]$DesStorageConnectionString,
+    [string]$BatchAccountName,
+    [string]$BatchPoolName,
+    [string]$BatchAccountKey,
+    [string]$BatchAccountServiceUrl
 )
 
 function Write-Log 
@@ -70,34 +74,37 @@ function Write-Log
             } 
          
         # Write log entry to $Path 
-        "$FormattedDate $LevelText [StartBroker] $Message" | Out-File -FilePath $Path -Append 
+        "$FormattedDate $LevelText [StartSessionLauncher] $Message" | Out-File -FilePath $Path -Append 
     } 
     End 
     { 
     } 
 }
 
-Write-Log -Message "DestinationPath to find resource : $DestinationPath"
-Write-Log -Message "Session Address: $SessionAddress"
+Write-Log -Message "DestinationPath to find resource : $SessionLauncher"
+Write-Log -Message "DesStorageConnectionString : $DesStorageConnectionString"
+Write-Log -Message "BatchAccountName : $BatchAccountName"
+Write-Log -Message "BatchPoolName: $BatchPoolName"
+Write-Log -Message "BatchAccountKey : $BatchAccountKey"
+Write-Log -Message "BatchAccountServiceUrl : $BatchAccountServiceUrl"
 
-$serviceName = "TelepathyBroker"
+$serviceName = "TelepathySessionLauncher"
 
 Try {
-    Write-Log -Message "Start to new broker windows service"
+    Write-Log -Message "Start to new session launcher windows service"
     New-Service -Name $serviceName `
-    -BinaryPathName "$Broker --SessionAddress $SessionAddress" `
-    -DisplayName "Telepathy Broker Service" `
+    -BinaryPathName "$SessionLauncher --AzureBatchServiceUrl $BatchAccountServiceUrl --AzureBatchAccountName $BatchAccountName --AzureBatchAccountKey $BatchAccountkey --AzureBatchPoolName $BatchPoolName --AzureBatchBrokerStorageConnectionString $DesStorageConnectionString" `
+    -DisplayName "Telepathy Session Launcher Service" `
     -StartupType Automatic `
-    -Description "Telepathy Broker service." 
+    -Description "Telepathy Session Launcher service." 
 } Catch {
-    Write-Log -Message "Error happens when new broker windows service" -Level Error
+    Write-Log -Message "Error happens when new session launcher windows service" -Level Error
     Write-Log -Message $_ -Level Error
 }
-
 Try {
-    Write-Log -Message "Start broker windows service"
+    Write-Log -Message "Start session launcher windows service"
     Start-Service -Name $serviceName
 } Catch {
-    Write-Log -Message "Fail to start broker windows service" -Level Error
+    Write-Log -Message "Fail to start session launcher windows service" -Level Error
     Write-Log -Message $_ -Level Error
 }

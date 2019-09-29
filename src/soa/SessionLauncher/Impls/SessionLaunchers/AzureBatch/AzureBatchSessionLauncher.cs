@@ -44,6 +44,10 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
 
         private const string ServiceRegistrationContainer = "service-registration";
 
+        private const string AzureBatchTaskWorkingDir = "%AZ_BATCH_TASK_WORKING_DIR%";
+
+        private const string AzureBatchPrepJobWorkingDir = "%AZ_BATCH_JOB_PREP_WORKING_DIR%";
+
         private const string ServiceWorkingDirEnvVar = "TELEPATHY_SERVICE_WORKING_DIR";
 
         private const string ServiceRegistrationWorkingDirEnvVar = "TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR";
@@ -471,8 +475,8 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
                         env.Add(new EnvironmentSetting(Constant.OverrideProcNumEnvVar, "TRUE"));
 
                         //Establish a link via ev between TELEPATHY_SERVICE_WORKING_DIR and AZ_BATCH_JOB_PREP_WORKING_DIR
-                        env.Add(new EnvironmentSetting(ServiceRegistrationWorkingDirEnvVar, "%AZ_BATCH_JOB_PREP_WORKING_DIR%"));
-                        env.Add(new EnvironmentSetting(ServiceWorkingDirEnvVar, "%AZ_BATCH_TASK_WORKING_DIR%"));
+                        env.Add(new EnvironmentSetting(ServiceRegistrationWorkingDirEnvVar, AzureBatchPrepJobWorkingDir));
+                        env.Add(new EnvironmentSetting(ServiceWorkingDirEnvVar, AzureBatchTaskWorkingDir));
                         return env;
                     }
                     var environment = ConstructEnvironmentVariable();
