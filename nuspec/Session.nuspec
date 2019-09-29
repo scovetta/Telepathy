@@ -23,9 +23,9 @@
         </references>
     </metadata>
     <files>
-        <file src="src\soa\SessionAPI\bin\Debug\Microsoft.Hpc.Scheduler.Session.dll" target="lib\net46"/>
-        <file src="src\soa\SessionAPI\bin\Debug\StandaloneDataClient.dll" target="lib\net46"/>
-        <file src="src\soa\SessionAPI\bin\Debug\TelepathyCommon.dll" target="lib\net46"/>
-        <file src="src\soa\SessionAPI\bin\Debug\Microsoft.Hpc.Scheduler.Session.Data.dll" target="lib\net46"/>
+        <file src="..\src\soa\SessionAPI\bin\Debug\Microsoft.Hpc.Scheduler.Session.dll" target="lib\net46"/>
+        <file src="..\src\soa\SessionAPI\bin\Debug\StandaloneDataClient.dll" target="lib\net46"/>
+        <file src="..\src\soa\SessionAPI\bin\Debug\TelepathyCommon.dll" target="lib\net46"/>
+        <file src="..\src\soa\SessionAPI\bin\Debug\Microsoft.Hpc.Scheduler.Session.Data.dll" target="lib\net46"/>
     </files>
 </package>
