@@ -134,5 +134,5 @@ if($EnableTelepathyStorage) {
 }
 
 if($StartTelepathyService) {
-    invoke-expression "$artifactsPath\StartTelepathyService.ps1 -ArtifactsPath $artifactsPath -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey $BatchAccountKey -BatchAccountServiceUrl $batchServiceUrl"
+    invoke-expression "$artifactsPath\StartTelepathyService.ps1 -DestinationPath $artifactsPath -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey $BatchAccountKey -BatchAccountServiceUrl $batchServiceUrl"
 }

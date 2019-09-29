@@ -1,5 +1,5 @@
 param (
-    [string]$ArtifactsPath,
+    [string]$DestinationPath,
     [string]$DesStorageConnectionString,
     [string]$BatchAccountName,
     [string]$BatchPoolName,
@@ -96,10 +96,10 @@ Write-Log -Message "Script location path: $ArtifactsPath"
 
 Try {
     Write-Log -Message "Start session launcher"
-    invoke-expression "$ArtifactsPath\StartSessionLauncher.ps1 -SessionLauncher $ArtifactsPath\SessionLauncher\HpcSession.exe -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey '$BatchAccountKey' -BatchAccountServiceUrl '$BatchAccountServiceUrl'"
+    invoke-expression "$DestinationPath\StartSessionLauncher.ps1 -SessionLauncher $DestinationPath\SessionLauncher\HpcSession.exe -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey '$BatchAccountKey' -BatchAccountServiceUrl '$BatchAccountServiceUrl'"
 	
     Write-Log -Message "Start broker"
-    invoke-expression "$ArtifactsPath\StartBroker.ps1 -Broker $ArtifactsPath\BrokerOutput\HpcBroker.exe -SessionAddress localhost"
+    invoke-expression "$DestinationPath\StartBroker.ps1 -Broker $DestinationPath\BrokerOutput\HpcBroker.exe -SessionAddress localhost"
 } Catch {
     Write-Log -Message "Fail to start telepathy service" -Level Error
     Write-Log -Message $_ -Level Error
