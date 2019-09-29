@@ -127,7 +127,7 @@ stages:
     - task: NuGetCommand@2
       inputs:
         command: 'pack'
-        packagesToPack: '*/nuspec/Session.nuspec'
+        packagesToPack: '$(Build.ArtifactStagingDirectory)/nuspec/Session.nuspec'
         versioningScheme: 'byBuildNumber'
         includeSymbols: true
 
