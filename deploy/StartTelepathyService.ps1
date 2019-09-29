@@ -74,7 +74,7 @@ function Write-Log
             } 
          
         # Write log entry to $Path 
-        "$FormattedDate $LevelText $Message" | Out-File -FilePath $Path -Append 
+        "$FormattedDate $LevelText [StartTelepathyService] $Message" | Out-File -FilePath $Path -Append 
     } 
     End 
     { 
@@ -92,7 +92,12 @@ cmd /c "setx /m TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR ^"C:\TelepathyService
 Write-Log -Message "Open tcp port"
 New-NetFirewallRule -DisplayName "Open TCP port for telepathy" -Direction Inbound -LocalPort 9087, 9090, 9091, 9092, 9093 -Protocol TCP -Action Allow
 
-Write-Log -Message "Script location path: $ArtifactsPath"
+Write-Log -Message "Script location path: $DestinationPath"
+write-Log -Message "DesStorageConnectionString: $DesStorageConnectionString"
+write-Log -Message "BatchAccountName: $BatchAccountName"
+Write-Log -Message "BatchPoolName: $BatchPoolName"
+Write-Log -Message "BatchAccountKey: $BatchAccountKey"
+Write-Log -Message "BatchAccountServiceUrl: $BatchAccountServiceUrl"
 
 Try {
     Write-Log -Message "Start session launcher"
