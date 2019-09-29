@@ -1,5 +1,5 @@
 param (
-    [string]$DestinationPath,
+    [string]$ArtifactsPath,
     [string]$DesStorageConnectionString,
     [string]$BatchAccountName,
     [string]$BatchPoolName,
@@ -92,14 +92,15 @@ cmd /c "setx /m TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR ^"C:\TelepathyService
 Write-Log -Message "Open tcp port"
 New-NetFirewallRule -DisplayName "Open TCP port for telepathy" -Direction Inbound -LocalPort 9087, 9090, 9091, 9092, 9093 -Protocol TCP -Action Allow
 
+Write-Log -Message "Script location path: $ArtifactsPath"
 
 Try {
     Write-Log -Message "Start session launcher"
-    invoke-expression "$artifactsPath\StartSessionLauncher.ps1 -SessionLauncher $DestinationPath\SessionLauncher\HpcSession.exe -DesStorageConnectionString $DesStorageConnectionString -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey $BatchAccountKey -BatchAccountServiceUrl $BatchAccountServiceUrl"
+    invoke-expression "$ArtifactsPath\StartSessionLauncher.ps1 -SessionLauncher $ArtifactsPath\SessionLauncher\HpcSession.exe -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey '$BatchAccountKey' -BatchAccountServiceUrl '$BatchAccountServiceUrl'"
 	
     Write-Log -Message "Start broker"
-    invoke-expression "$artifactsPath\StartBroker.ps1 -Broker $DestinationPath\BrokerOutput\HpcBroker.exe -SessionAddress localhost"
+    invoke-expression "$ArtifactsPath\StartBroker.ps1 -Broker $ArtifactsPath\BrokerOutput\HpcBroker.exe -SessionAddress localhost"
 } Catch {
-    Write-Log -Message "Fail to start session launcher windows service" -Level Error
+    Write-Log -Message "Fail to start telepathy service" -Level Error
     Write-Log -Message $_ -Level Error
 }
