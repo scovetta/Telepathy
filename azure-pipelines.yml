@@ -122,10 +122,26 @@ stages:
         storage: 'soaruntimestorage'
         ContainerName: 'service-assembly/ccpechosvc'
         
+    - task: NuGetCommand@2
+      inputs:
+        command: 'pack'
+        packagesToPack: '*/nuspec/*.nuspec'
+        versioningScheme: 'byBuildNumber'
+        includeSymbols: true
+
+    - task: NuGetCommand@2
+      inputs:
+        command: 'push'
+        packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+        nuGetFeedType: 'internal'
+        publishVstsFeed: '06e5804d-ddb8-4741-8e31-a7c09d717338'
+        
+- stage: Deploy       
+  dependsOn: Build 
+  jobs:
   - job: HNDeployment
     pool:
       vmImage: 'windows-latest'
-    dependsOn: UnitTestPublish
     steps:
     - checkout: none
           
@@ -143,8 +159,9 @@ stages:
           New-AzResourceGroupDeployment -ResourceGroupName $(TemplateName) -TemplateUri $(TemplateUri) -telepathyVMName "Telepathy$(Build.BuildID)" -telepathyVMAdminUserName $(VMadmin) -telepathyVMAdminPassword $secureString -vnetName $(VnetName)  -subnetName "default" -newOrExistingVnet "existing" -vnetResourceGroup $(VnetRGName) -artifactsStorageContainerSasToken $(artifactsStorageContainerSasToken) -artifactsFolderName $(Build.BuildNumber) -artifactsStorageName $(artifactsStorageName) -artifactsStorageContainerName "telepathy"
         errorActionPreference: 'silentlyContinue'
         azurePowerShellVersion: 'LatestVersion'
+        
 - stage: BVTTest
-  dependsOn: Build
+  dependsOn: Deploy
   jobs:
   - job: BVTTest
     pool: 'Azure Agent'
