@@ -1,5 +1,5 @@
-param (
-    [string]$DestinationPath,
+﻿param (
+    [string]$SessionLauncher,
     [string]$DesStorageConnectionString,
     [string]$BatchAccountName,
     [string]$BatchPoolName,
@@ -81,24 +81,29 @@ function Write-Log
     } 
 }
 
+Write-Log -Message "DestinationPath to find resource : $SessionLauncher"
+Write-Log -Message "DesStorageConnectionString : $DesStorageConnectionString"
+Write-Log -Message "BatchAccountName : $BatchAccountName"
+Write-Log -Message "BatchPoolName: $BatchPoolName"
+Write-Log -Message "BatchAccountKey : $BatchAccountKey"
+Write-Log -Message "BatchAccountServiceUrl : $BatchAccountServiceUrl"
 
-Write-Log -Message "Start open NetTCPPortSharing & enable StrongName"
-cmd /c "sc.exe config NetTcpPortSharing start=demand & reg ADD "HKLM\Software\Microsoft\StrongName\Verification\*,*" /f & reg ADD "HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^" /f"
-
-
-Write-Log -Message "set TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR environment varaibles in session machine"
-cmd /c "setx /m TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR ^"C:\TelepathyServiceRegistration\^""
-
-Write-Log -Message "Open tcp port"
-New-NetFirewallRule -DisplayName "Open TCP port for telepathy" -Direction Inbound -LocalPort 9087, 9090, 9091, 9092, 9093 -Protocol TCP -Action Allow
-
+$serviceName = "TelepathySessionLauncher"
 
 Try {
-    Write-Log -Message "Start session launcher"
-    invoke-expression "$artifactsPath\StartSessionLauncher.ps1 -SessionLauncher $DestinationPath\SessionLauncher\HpcSession.exe -DesStorageConnectionString $DesStorageConnectionString -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey $BatchAccountKey -BatchAccountServiceUrl $BatchAccountServiceUrl"
-	
-    Write-Log -Message "Start broker"
-    invoke-expression "$artifactsPath\StartBroker.ps1 -Broker $DestinationPath\BrokerOutput\HpcBroker.exe -SessionAddress localhost"
+    Write-Log -Message "Start to new session launcher windows service"
+    New-Service -Name $serviceName `
+    -BinaryPathName "$SessionLauncher --AzureBatchServiceUrl $BatchAccountServiceUrl --AzureBatchAccountName $BatchAccountName --AzureBatchAccountKey $BatchAccountkey --AzureBatchPoolName $BatchPoolName --AzureBatchBrokerStorageConnectionString $DesStorageConnectionString" `
+    -DisplayName "Telepathy Session Launcher Service" `
+    -StartupType Automatic `
+    -Description "Telepathy Session Launcher service." 
+} Catch {
+    Write-Log -Message "Error happens when new session launcher windows service" -Level Error
+    Write-Log -Message $_ -Level Error
+}
+Try {
+    Write-Log -Message "Start session launcher windows service"
+    Start-Service -Name $serviceName
 } Catch {
     Write-Log -Message "Fail to start session launcher windows service" -Level Error
     Write-Log -Message $_ -Level Error

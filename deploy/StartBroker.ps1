@@ -1,5 +1,5 @@
 ﻿param (
-    [string]$DestinationPath,
+    [string]$Broker,
     [string]$SessionAddress
 )
 
@@ -78,14 +78,14 @@ function Write-Log
 }
 
 Write-Log -Message "DestinationPath to find resource : $DestinationPath"
+Write-Log -Message "Session Address: $SessionAddress"
 
-$broker = "$DestinationPath\BrokerOutput\HpcBroker.exe"
 $serviceName = "TelepathyBroker"
 
 Try {
     Write-Log -Message "Start to new broker windows service"
     New-Service -Name $serviceName `
-    -BinaryPathName "$broker --SessionAddress $SessionAddress" `
+    -BinaryPathName "$Broker --SessionAddress $SessionAddress" `
     -DisplayName "Telepathy Broker Service" `
     -StartupType Automatic `
     -Description "Telepathy Broker service." 
