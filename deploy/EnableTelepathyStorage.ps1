@@ -100,7 +100,7 @@ function uploadFiles{
     }
 }
 
-Write-Log -Message "Files to upload in path : $DestinationPath"
+Write-Log -Message "Files to upload in path : $ArtifactsPath"
 Write-Log -Message "DesStorageConnectionString : $DesStorageConnectionString"
 
 Try {
@@ -118,9 +118,9 @@ Try {
 }
 
 Try {
-    uploadFiles -LocalPath "$DestinationPath\CcpServiceHost" -RemotePath "ccpservicehost" -ContainerName "runtime" -StorageContext $desStorageContext
-    uploadFiles -LocalPath "$DestinationPath\EchoSvcLib" -RemotePath "ccpechosvc" -ContainerName "service-assembly" -StorageContext $desStorageContext
-    uploadFiles -LocalPath "$DestinationPath\Registration"  -ContainerName "service-registration" -StorageContext $desStorageContext
+    uploadFiles -LocalPath "$ArtifactsPath\CcpServiceHost" -RemotePath "ccpservicehost" -ContainerName "runtime" -StorageContext $desStorageContext
+    uploadFiles -LocalPath "$ArtifactsPath\EchoSvcLib" -RemotePath "ccpechosvc" -ContainerName "service-assembly" -StorageContext $desStorageContext
+    uploadFiles -LocalPath "$ArtifactsPath\Registration"  -ContainerName "service-registration" -StorageContext $desStorageContext
 } Catch {
     Write-Log -Message "Error when upload files to storage" -Level Error
     Write-Log -Message $_ -Level Error
