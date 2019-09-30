@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Microsoft.Telepathy.Session</id>
+        <version>1.0.0</version>
+        <title>Microsoft Telepathy Session Nuget</title>
+        <authors>Microsoft</authors>
+        <owners>microsoft,hpcpack</owners>
+        <description>Nuget package for Microsoft Telepathy Session</description>
+        <dependencies>
+            <group>
+				<dependency id="System.ValueTuple" version="4.5.0" />
+				<dependency id="WindowsAzure.Storage" version="8.4.0" />			
+            </group>
+        </dependencies>
+        <references>
+            <group>
+                <reference file="Microsoft.Hpc.Scheduler.Session.dll" />
+                <reference file="StandaloneDataClient.dll" />
+				<reference file="TelepathyCommon.dll" />
+                <reference file="Microsoft.Hpc.Scheduler.Session.Data.dll" />
+            </group>
+        </references>
+    </metadata>
+    <files>
+        <file src="..\src\soa\SessionAPI\bin\Release\Microsoft.Hpc.Scheduler.Session.dll" target="lib\net46"/>
+        <file src="..\src\soa\SessionAPI\bin\Release\StandaloneDataClient.dll" target="lib\net46"/>
+        <file src="..\src\soa\SessionAPI\bin\Release\TelepathyCommon.dll" target="lib\net46"/>
+        <file src="..\src\soa\SessionAPI\bin\Release\Microsoft.Hpc.Scheduler.Session.Data.dll" target="lib\net46"/>
+    </files>
+</package>

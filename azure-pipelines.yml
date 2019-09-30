@@ -3,6 +3,8 @@
 # Add steps that publish symbols, save build artifacts, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
 
+name: 1.0.0$(rev:.r)
+
 trigger:
 - dev
 
@@ -10,7 +12,7 @@ variables:
   solution: 'Telepathy.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  TemplateName: 'Telepathy$(Build.BuildNumber)'
+  TemplateName: 'Telepathy_$(Build.BuildNumber)'
 
 stages:
 - stage: Build
@@ -122,10 +124,27 @@ stages:
         storage: 'soaruntimestorage'
         ContainerName: 'service-assembly/ccpechosvc'
         
+    - task: NuGetCommand@2
+      inputs:
+        command: 'pack'
+        packagesToPack: '**/Session.nuspec'
+        versioningScheme: 'byBuildNumber'
+        includeSymbols: true
+
+    - task: NuGetCommand@2
+      inputs:
+        command: 'push'
+        packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+        nuGetFeedType: 'internal'
+        publishVstsFeed: 'd967b926-1ec4-4fdb-8fb7-4a0dd25734dd'
+        allowPackageConflicts: true
+        
+- stage: Deploy       
+  dependsOn: Build 
+  jobs:
   - job: HNDeployment
     pool:
       vmImage: 'windows-latest'
-    dependsOn: UnitTestPublish
     steps:
     - checkout: none
           
@@ -140,11 +159,12 @@ stages:
           }
           $secureString = convertto-securestring $(VMpwd) -asplaintext -force
           New-AzResourceGroup -Name $(TemplateName) -Location $(RGLocation)
-          New-AzResourceGroupDeployment -ResourceGroupName $(TemplateName) -TemplateUri $(TemplateUri) -telepathyVMName "Telepathy$(Build.BuildID)" -telepathyVMAdminUserName $(VMadmin) -telepathyVMAdminPassword $secureString -vnetName $(VnetName)  -subnetName "default" -newOrExistingVnet "existing" -vnetResourceGroup $(VnetRGName) -artifactsStorageContainerSasToken $(artifactsStorageContainerSasToken) -artifactsFolderName $(Build.BuildNumber) -artifactsStorageName $(artifactsStorageName) -artifactsStorageContainerName "telepathy"
+          New-AzResourceGroupDeployment -ResourceGroupName $(TemplateName) -TemplateUri $(TemplateUri) -telepathyVMName "Telepathy$(Build.BuildID)" -telepathyVMAdminUserName $(VMadmin) -telepathyVMAdminPassword $secureString -vnetName $(VnetName)  -subnetName "default" -batchPoolVMSize "STANDARD_A4_V2" -targetDedicatedNodes 15 -newOrExistingVnet "existing" -vnetResourceGroup $(VnetRGName) -artifactsStorageContainerSasToken $(artifactsStorageContainerSasToken) -artifactsFolderName $(Build.BuildNumber) -artifactsStorageName $(artifactsStorageName) -artifactsStorageContainerName "telepathy"
         errorActionPreference: 'silentlyContinue'
         azurePowerShellVersion: 'LatestVersion'
+        
 - stage: BVTTest
-  dependsOn: Build
+  dependsOn: Deploy
   jobs:
   - job: BVTTest
     pool: 'Azure Agent'
