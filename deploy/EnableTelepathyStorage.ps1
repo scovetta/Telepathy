@@ -1,5 +1,5 @@
 param (
-    [string]$DestinationPath,
+    [string]$ArtifactsPath,
     [string]$DesStorageConnectionString
 )
 
