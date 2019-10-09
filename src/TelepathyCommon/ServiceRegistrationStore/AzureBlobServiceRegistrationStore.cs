@@ -8,6 +8,7 @@ namespace Microsoft.Telepathy.Common.ServiceRegistrationStore
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Security.Cryptography;
     using System.Threading.Tasks;
 
     using Microsoft.WindowsAzure.Storage;
@@ -43,17 +44,29 @@ namespace Microsoft.Telepathy.Common.ServiceRegistrationStore
             return (await this.blobContainer.ListBlobsSegmentedAsync(null, null)).Results.Select(b => Path.GetFileNameWithoutExtension(b.Uri.ToString())).ToList();
         }
 
-        // TODO: Design - do we still need check MD5 here?
+        public string CalculateMd5Hash(byte[] blobData)
+        {
+            var md5 = MD5.Create();
+            var hash = md5.ComputeHash(blobData);
+            return Convert.ToBase64String(hash);
+        }
+
+        // Skip to download again only when the cloud blob has no changes
         public async Task<string> ExportToTempFileAsync(string serviceName, Version serviceVersion)
         {
             var blob = this.GetServiceRegistrationBlockBlobReference(serviceName, serviceVersion);
             var filePath = SoaRegistrationAuxModule.GetServiceRegistrationTempFilePath(Path.GetFileNameWithoutExtension(blob.Uri.ToString()));
             Trace.TraceInformation($"Will write Service Registration file to {filePath}");
 
-            // assume filename is exclusive, only need download once
+            // check if the exsiting file's md5 and cloud blob's md5 have the same value 
             if (File.Exists(filePath))
             {
-                return filePath;
+                var fileMd5 = blob.Properties.ContentMD5;
+                var existingFileMd5 = CalculateMd5Hash(File.ReadAllBytes(filePath));
+                if (string.Equals(fileMd5, existingFileMd5))
+                {
+                    return filePath;
+                }          
             }
 
             if (await blob.ExistsAsync())
