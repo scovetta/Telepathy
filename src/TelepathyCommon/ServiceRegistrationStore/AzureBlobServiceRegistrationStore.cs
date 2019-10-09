@@ -61,8 +61,8 @@ namespace Microsoft.Telepathy.Common.ServiceRegistrationStore
             // check if the exsiting file's md5 and cloud blob's md5 have the same value 
             if (File.Exists(filePath))
             {
-                var fileMd5 = blob.Properties.ContentMD5;
-                var existingFileMd5 = CalculateMd5Hash(File.ReadAllBytes(filePath));
+                string fileMd5 = await GetMd5AuxAsync(blob);
+                string existingFileMd5 = CalculateMd5Hash(File.ReadAllBytes(filePath));
                 if (string.Equals(fileMd5, existingFileMd5))
                 {
                     return filePath;
@@ -89,9 +89,8 @@ namespace Microsoft.Telepathy.Common.ServiceRegistrationStore
             return string.Empty;
         }
 
-        public async Task<string> GetMd5Async(string serviceName, Version serviceVersion)
+        private async Task<string> GetMd5AuxAsync(CloudBlockBlob blob) 
         {
-            var blob = this.GetServiceRegistrationBlockBlobReference(serviceName, serviceVersion);
             if (await blob.ExistsAsync())
             {
                 await blob.FetchAttributesAsync();
@@ -99,6 +98,12 @@ namespace Microsoft.Telepathy.Common.ServiceRegistrationStore
             }
 
             return string.Empty;
+        }
+
+        public async Task<string> GetMd5Async(string serviceName, Version serviceVersion)
+        {
+            var blob = this.GetServiceRegistrationBlockBlobReference(serviceName, serviceVersion);
+            return await GetMd5AuxAsync(blob);
         }
 
         public async Task ImportFromFileAsync(string filePath, string serviceName)
