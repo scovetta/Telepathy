@@ -15,17 +15,17 @@
         </dependencies>
         <references>
             <group>
-                <reference file="Microsoft.Hpc.Scheduler.Session.dll" />
+                <reference file="Microsoft.Telepathy.Session.dll" />
                 <reference file="StandaloneDataClient.dll" />
 				<reference file="TelepathyCommon.dll" />
-                <reference file="Microsoft.Hpc.Scheduler.Session.Data.dll" />
+                <reference file="Microsoft.Telepathy.Session.Data.dll" />
             </group>
         </references>
     </metadata>
     <files>
-        <file src="..\src\soa\SessionAPI\bin\Release\Microsoft.Hpc.Scheduler.Session.dll" target="lib\net46"/>
+        <file src="..\src\soa\SessionAPI\bin\Release\Microsoft.Telepathy.Session.dll" target="lib\net46"/>
         <file src="..\src\soa\SessionAPI\bin\Release\StandaloneDataClient.dll" target="lib\net46"/>
         <file src="..\src\soa\SessionAPI\bin\Release\TelepathyCommon.dll" target="lib\net46"/>
-        <file src="..\src\soa\SessionAPI\bin\Release\Microsoft.Hpc.Scheduler.Session.Data.dll" target="lib\net46"/>
+        <file src="..\src\soa\SessionAPI\bin\Release\Microsoft.Telepathy.Session.Data.dll" target="lib\net46"/>
     </files>
 </package>

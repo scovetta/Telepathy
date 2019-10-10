@@ -160,24 +160,42 @@ namespace Microsoft.Telepathy.Session.Internal
                 }
 
                 var destination = Path.Combine(this.ServiceRegistrationStoreFacadeFolder, Path.GetFileName(filePath));
-               
-                if (File.Exists(destination))
+
+                bool SameFileDownloaded()
                 {
-                    var fileMd5 = ServiceRegistrationStore.CalculateMd5Hash(File.ReadAllBytes(filePath));
-                    var existingFileMd5 = ServiceRegistrationStore.CalculateMd5Hash(File.ReadAllBytes(destination));
-                    if (string.Equals(fileMd5, existingFileMd5))
+                    if (!File.Exists(destination))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        var fileMd5 = this.ServiceRegistrationStore.CalculateMd5Hash(File.ReadAllBytes(filePath));
+                        var existingFileMd5 = this.ServiceRegistrationStore.CalculateMd5Hash(File.ReadAllBytes(destination));
+                        return string.Equals(fileMd5, existingFileMd5);
+                    }
+                }
+
+                try
+                {
+                    if (SameFileDownloaded())
                     {
                         return destination;
-                    }                  
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Trace.TraceWarning($"[{nameof(ServiceRegistrationRepo)}] {nameof(this.MoveFileToFacadeFolder)}: Error happened when comparing file {filePath} and {destination}: {ex.ToString()}");
                 }
 
                 string mutexName = destination;
                 using (new GlobalMutex(mutexName, 5000))
                 {
-                    if (!File.Exists(destination))
+                    if (SameFileDownloaded())
                     {
-                        File.Copy(filePath, destination, true);
+                        return destination;
                     }
+
+                    File.Copy(filePath, destination, true);
                 }
 
                 return destination;
