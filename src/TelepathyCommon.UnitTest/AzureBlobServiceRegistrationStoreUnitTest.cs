@@ -11,6 +11,7 @@ namespace Microsoft.Telepathy.Common.UnitTest
     using System.Threading.Tasks;
     using Microsoft.Telepathy.Common;
     using Microsoft.Telepathy.Common.ServiceRegistrationStore;
+    using System.Text;
 
     [TestClass]
     public class AzureBlobServiceRegistrationStoreUnitTest
@@ -20,6 +21,12 @@ namespace Microsoft.Telepathy.Common.UnitTest
         private CloudStorageAccount storageAccount;
 
         private AzureBlobServiceRegistrationStore serviceRegistrationStore = new AzureBlobServiceRegistrationStore(storageConnectionString);
+
+        private const string emptyContent = "";
+
+        private const string oneCharContent = "<";
+
+        private const string fileContent = "test file content";
 
         [TestMethod]
         public async Task CalculateMd5HashEmptyTest()
@@ -33,17 +40,15 @@ namespace Microsoft.Telepathy.Common.UnitTest
                     await cloudBlobContainer.CreateAsync();
                 }
 
-                string localPath = Environment.CurrentDirectory + "\\blobs\\";
-                string localFileName = "ccpechosvc_empty.config";
-                string sourceFile = Path.Combine(localPath, localFileName);
+                string fileName = "ccpechosvc_empty.config";
 
-                Console.WriteLine("Temp file = {0}", sourceFile);
-                Console.WriteLine("Uploading to Blob storage as blob '{0}'", localFileName);
+                Console.WriteLine("Temp file conetnt : {0}", emptyContent);
+                Console.WriteLine("Uploading to Blob storage as blob '{0}'", fileName);
 
-                CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(localFileName);
-                await cloudBlockBlob.UploadFromFileAsync(sourceFile);
+                CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(fileName);
+                await cloudBlockBlob.UploadTextAsync(emptyContent);
                 string md5 = cloudBlockBlob.Properties.ContentMD5;
-                string calculatedMd5 = serviceRegistrationStore.CalculateMd5Hash(File.ReadAllBytes(sourceFile));
+                string calculatedMd5 = serviceRegistrationStore.CalculateMd5Hash(Encoding.ASCII.GetBytes(emptyContent));
                 Console.WriteLine("storage property md5 value = {0}", md5);
                 Console.WriteLine("calculated md5 value = {0}", calculatedMd5);
                 Assert.AreEqual(calculatedMd5, md5);
@@ -62,17 +67,15 @@ namespace Microsoft.Telepathy.Common.UnitTest
                     await cloudBlobContainer.CreateAsync();
                 }
 
-                string localPath = Environment.CurrentDirectory + "\\blobs\\";
-                string localFileName = "ccpechosvc_1.config";
-                string sourceFile = Path.Combine(localPath, localFileName);
+                string fileName = "ccpechosvc_1.config";
+              
+                Console.WriteLine("Temp file content : {0}", oneCharContent);
+                Console.WriteLine("Uploading to Blob storage as blob '{0}'", fileName);
 
-                Console.WriteLine("Temp file = {0}", sourceFile);
-                Console.WriteLine("Uploading to Blob storage as blob '{0}'", localFileName);
-
-                CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(localFileName);
-                await cloudBlockBlob.UploadFromFileAsync(sourceFile);
+                CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(fileName);
+                await cloudBlockBlob.UploadTextAsync(oneCharContent);
                 string md5 = cloudBlockBlob.Properties.ContentMD5;
-                string calculatedMd5 = serviceRegistrationStore.CalculateMd5Hash(File.ReadAllBytes(sourceFile));
+                string calculatedMd5 = serviceRegistrationStore.CalculateMd5Hash(Encoding.ASCII.GetBytes(oneCharContent));
                 Console.WriteLine("storage property md5 value = {0}", md5);
                 Console.WriteLine("calculated md5 value = {0}", calculatedMd5);
                 Assert.AreEqual(calculatedMd5, md5);
@@ -91,17 +94,15 @@ namespace Microsoft.Telepathy.Common.UnitTest
                     await cloudBlobContainer.CreateAsync();
                 }
 
-                string localPath = Environment.CurrentDirectory + "\\blobs\\";
                 string localFileName = "ccpechosvc.config";
-                string sourceFile = Path.Combine(localPath, localFileName);
-
-                Console.WriteLine("Temp file = {0}", sourceFile);
+            
+                Console.WriteLine("Temp file content : {0}", fileContent);
                 Console.WriteLine("Uploading to Blob storage as blob '{0}'", localFileName);
 
                 CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(localFileName);
-                await cloudBlockBlob.UploadFromFileAsync(sourceFile);
+                await cloudBlockBlob.UploadTextAsync(fileContent);
                 string md5 = cloudBlockBlob.Properties.ContentMD5;
-                string calculatedMd5 = serviceRegistrationStore.CalculateMd5Hash(File.ReadAllBytes(sourceFile));
+                string calculatedMd5 = serviceRegistrationStore.CalculateMd5Hash(Encoding.ASCII.GetBytes(fileContent));
                 Console.WriteLine("storage property md5 value = {0}", md5);
                 Console.WriteLine("calculated md5 value = {0}", calculatedMd5);
                 Assert.AreEqual(calculatedMd5, md5);
@@ -120,29 +121,27 @@ namespace Microsoft.Telepathy.Common.UnitTest
                     await cloudBlobContainer.CreateAsync();
                 }
 
-                string localPath = Environment.CurrentDirectory + "\\blobs\\";
                 string localFileName = "ccpechosvc.config";
-                string sourceFile = Path.Combine(localPath, localFileName);
-
-                Console.WriteLine("Temp file = {0}", sourceFile);
+             
+                Console.WriteLine("Temp file content : {0}", fileContent);
                 Console.WriteLine("Uploading to Blob storage as blob '{0}'", localFileName);
 
                 CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(localFileName);
-                await cloudBlockBlob.UploadFromFileAsync(sourceFile);
+                await cloudBlockBlob.UploadTextAsync(fileContent);
                 string previousMd5 = cloudBlockBlob.Properties.ContentMD5;
-                string previuousCalculatedMd5 = serviceRegistrationStore.CalculateMd5Hash(File.ReadAllBytes(sourceFile));
+                string previuousCalculatedMd5 = serviceRegistrationStore.CalculateMd5Hash(Encoding.ASCII.GetBytes(fileContent));
                 Console.WriteLine("storage property previous md5 value = {0}", previousMd5);
                 Console.WriteLine("calculated md5 previous value = {0}", previuousCalculatedMd5);
                 Assert.AreEqual(previuousCalculatedMd5, previousMd5);
 
-                File.WriteAllText(sourceFile, "Content Changed");
+                string changedFileContent = "test file content changed";               
 
-                Console.WriteLine("Changed Temp file = {0}", sourceFile);
+                Console.WriteLine("Changed Temp file content : {0}", changedFileContent);
                 Console.WriteLine("Uploading changedFile to Blob storage as blob '{0}'", localFileName);
+                await cloudBlockBlob.UploadTextAsync(changedFileContent);
 
-                await cloudBlockBlob.UploadFromFileAsync(sourceFile);
                 string currentMd5 = cloudBlockBlob.Properties.ContentMD5;
-                string currentCalculatedMd5 = serviceRegistrationStore.CalculateMd5Hash(File.ReadAllBytes(sourceFile));
+                string currentCalculatedMd5 = serviceRegistrationStore.CalculateMd5Hash(Encoding.ASCII.GetBytes(changedFileContent));
                 Assert.AreNotEqual(previousMd5, currentMd5);
                 Assert.AreNotEqual(previuousCalculatedMd5, currentCalculatedMd5);
                 Console.WriteLine("storage property current md5 value = {0}", currentMd5);
@@ -153,8 +152,8 @@ namespace Microsoft.Telepathy.Common.UnitTest
 
         [TestMethod]
         public async Task ExportToTempFileAsyncTest()
-        {
-            await serviceRegistrationStore.SetAsync("testservice", new Version("1.0"), "Test service version 1.0");
+        {        
+            await serviceRegistrationStore.SetAsync("testservice", new Version("1.0"), fileContent);
             string initMd5 = await serviceRegistrationStore.GetMd5Async("testservice", new Version("1.0"));
             string filePath = await serviceRegistrationStore.ExportToTempFileAsync("testservice", new Version("1.0"));
             string initCalculatedMd5 = serviceRegistrationStore.CalculateMd5Hash(File.ReadAllBytes(filePath));
@@ -163,12 +162,13 @@ namespace Microsoft.Telepathy.Common.UnitTest
             Console.WriteLine("Init calculated md5 : {0}", initCalculatedMd5);
             Assert.AreEqual(initMd5, initCalculatedMd5);
 
-            await serviceRegistrationStore.SetAsync("testservice", new Version("1.0"), "Test service version 1.0, content changed");
+            const string changedFileContent = "test service version 1.0, content changed";
+            await serviceRegistrationStore.SetAsync("testservice", new Version("1.0"), changedFileContent);
             filePath = await serviceRegistrationStore.ExportToTempFileAsync("testservice", new Version("1.0"));
-            string fileContent = File.ReadAllText(filePath);
+            string currentFileContent = File.ReadAllText(filePath);
             Console.WriteLine("File path : {0}", filePath);
-            Console.WriteLine("Changed file content : {0}", fileContent);
-            Assert.AreEqual("Test service version 1.0, content changed", fileContent);
+            Console.WriteLine("Changed file content : {0}", currentFileContent);         
+            Assert.AreEqual(changedFileContent, currentFileContent);
         }
     }
 }

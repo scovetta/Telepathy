@@ -26,6 +26,8 @@ namespace Microsoft.Telepathy.Common.ServiceRegistrationStore
 
         private CloudStorageAccount cloudStorageAccount;
 
+        private Lazy<MD5> md5 = new Lazy<MD5>(() => MD5.Create());
+
         public AzureBlobServiceRegistrationStore(string connectionString)
         {
             this.blobContainer = CloudStorageAccount.Parse(connectionString).CreateCloudBlobClient().GetContainerReference(ServiceRegistrationBlobContainerName);
@@ -46,8 +48,7 @@ namespace Microsoft.Telepathy.Common.ServiceRegistrationStore
 
         public string CalculateMd5Hash(byte[] blobData)
         {
-            var md5 = MD5.Create();
-            var hash = md5.ComputeHash(blobData);
+            var hash = md5.Value.ComputeHash(blobData);
             return Convert.ToBase64String(hash);
         }
 
