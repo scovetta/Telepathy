@@ -8,6 +8,7 @@ namespace Microsoft.Telepathy.Common.ServiceRegistrationStore
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Security.Cryptography;
     using System.Threading.Tasks;
 
     using Microsoft.WindowsAzure.Storage;
@@ -24,6 +25,8 @@ namespace Microsoft.Telepathy.Common.ServiceRegistrationStore
         private CloudBlobClient blobClient;
 
         private CloudStorageAccount cloudStorageAccount;
+
+        private Lazy<MD5> md5 = new Lazy<MD5>(() => MD5.Create());
 
         public AzureBlobServiceRegistrationStore(string connectionString)
         {
@@ -43,17 +46,28 @@ namespace Microsoft.Telepathy.Common.ServiceRegistrationStore
             return (await this.blobContainer.ListBlobsSegmentedAsync(null, null)).Results.Select(b => Path.GetFileNameWithoutExtension(b.Uri.ToString())).ToList();
         }
 
-        // TODO: Design - do we still need check MD5 here?
+        public string CalculateMd5Hash(byte[] blobData)
+        {
+            var hash = md5.Value.ComputeHash(blobData);
+            return Convert.ToBase64String(hash);
+        }
+
+        // Skip to download again only when the cloud blob has no changes
         public async Task<string> ExportToTempFileAsync(string serviceName, Version serviceVersion)
         {
             var blob = this.GetServiceRegistrationBlockBlobReference(serviceName, serviceVersion);
             var filePath = SoaRegistrationAuxModule.GetServiceRegistrationTempFilePath(Path.GetFileNameWithoutExtension(blob.Uri.ToString()));
             Trace.TraceInformation($"Will write Service Registration file to {filePath}");
 
-            // assume filename is exclusive, only need download once
+            // check if the exsiting file's md5 and cloud blob's md5 have the same value 
             if (File.Exists(filePath))
             {
-                return filePath;
+                string fileMd5 = await GetMd5AuxAsync(blob);
+                string existingFileMd5 = CalculateMd5Hash(File.ReadAllBytes(filePath));
+                if (string.Equals(fileMd5, existingFileMd5))
+                {
+                    return filePath;
+                }          
             }
 
             if (await blob.ExistsAsync())
@@ -76,9 +90,8 @@ namespace Microsoft.Telepathy.Common.ServiceRegistrationStore
             return string.Empty;
         }
 
-        public async Task<string> GetMd5Async(string serviceName, Version serviceVersion)
+        private async Task<string> GetMd5AuxAsync(CloudBlockBlob blob) 
         {
-            var blob = this.GetServiceRegistrationBlockBlobReference(serviceName, serviceVersion);
             if (await blob.ExistsAsync())
             {
                 await blob.FetchAttributesAsync();
@@ -86,6 +99,12 @@ namespace Microsoft.Telepathy.Common.ServiceRegistrationStore
             }
 
             return string.Empty;
+        }
+
+        public async Task<string> GetMd5Async(string serviceName, Version serviceVersion)
+        {
+            var blob = this.GetServiceRegistrationBlockBlobReference(serviceName, serviceVersion);
+            return await GetMd5AuxAsync(blob);
         }
 
         public async Task ImportFromFileAsync(string filePath, string serviceName)

@@ -163,7 +163,12 @@ namespace Microsoft.Telepathy.Session.Internal
                
                 if (File.Exists(destination))
                 {
-                    return destination;
+                    var fileMd5 = ServiceRegistrationStore.CalculateMd5Hash(File.ReadAllBytes(filePath));
+                    var existingFileMd5 = ServiceRegistrationStore.CalculateMd5Hash(File.ReadAllBytes(destination));
+                    if (string.Equals(fileMd5, existingFileMd5))
+                    {
+                        return destination;
+                    }                  
                 }
 
                 string mutexName = destination;

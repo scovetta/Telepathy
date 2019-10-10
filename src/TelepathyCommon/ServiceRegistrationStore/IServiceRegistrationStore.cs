@@ -35,5 +35,7 @@ namespace Microsoft.Telepathy.Common.ServiceRegistrationStore
         Task ImportFromFileAsync(string filePath, string serviceName);
 
         Task SetAsync(string serviceName, Version serviceVersion, string serviceRegistration);
+
+        string CalculateMd5Hash(byte[] blobData);
     }
 }

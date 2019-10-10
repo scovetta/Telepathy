@@ -49,6 +49,11 @@ namespace Microsoft.Telepathy.Common.ServiceRegistrationStore
 
         public abstract Task SetAsync(string serviceName, Version serviceVersion, string serviceRegistration);
 
+        public string CalculateMd5Hash(byte[] blobData)
+        {
+            return SoaRegistrationAuxModule.CalculateMd5Hash(System.Text.Encoding.UTF8.GetString(blobData, 0, blobData.Length));
+        }
+
         /// <summary>
         ///     Find specific service registration file and return the content.
         /// </summary>
