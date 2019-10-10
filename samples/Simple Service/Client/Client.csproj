@@ -129,11 +129,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Hpc.Scheduler.Session">
-      <Version>0.1.0.1</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\..\src\soa\SessionAPI\Session.csproj">
       <Project>{72FC4EEA-C32B-444B-80B7-0E2B137C05C7}</Project>
       <Name>Session</Name>
