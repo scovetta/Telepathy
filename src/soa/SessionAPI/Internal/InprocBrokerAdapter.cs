@@ -182,8 +182,8 @@ namespace Microsoft.Telepathy.Session.Internal
             // this.clusterModelFullPath = BuildPath(binPath, currentPath, "Microsoft.Ccp.ClusterModel.dll");
             this.brokerBaseFullPath = BuildPath(binPath, currentPath, "BrokerBase.dll");
             // this.MSMQInteropFullPath = BuildPath(binPath, currentPath, "MSMQInterop.dll");
-            this.brokerCoreServiceLibPath = BuildPath(binPath, currentPath, "Microsoft.Hpc.SvcBroker.dll");
-            this.RESTServiceModelLibPath = BuildPath(binPath, currentPath, "Microsoft.Hpc.SvcHostRestServer.dll");
+            this.brokerCoreServiceLibPath = BuildPath(binPath, currentPath, "Microsoft.Telepathy.SvcBroker.dll");
+            this.RESTServiceModelLibPath = BuildPath(binPath, currentPath, "Microsoft.Telepathy.SvcHostRestServer.dll");
         }
 
         private static string BuildPath(string binPath, string currentPath, string libName)

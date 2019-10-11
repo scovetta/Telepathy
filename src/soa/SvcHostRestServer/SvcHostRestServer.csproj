@@ -5,7 +5,7 @@
     <ProjectGuid>{602B999E-6203-432C-AF7C-2C31DDDDE60A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Microsoft.Telepathy.CcpServiceHost.Rest</RootNamespace>
-    <AssemblyName>Microsoft.Hpc.SvcHostRestServer</AssemblyName>
+    <AssemblyName>Microsoft.Telepathy.SvcHostRestServer</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <AssemblyClsCompliant>false</AssemblyClsCompliant>
     <DefineTrace>true</DefineTrace>
