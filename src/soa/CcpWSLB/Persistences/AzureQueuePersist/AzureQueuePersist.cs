@@ -264,11 +264,11 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     .CreateBlobContainerAsync(this.storageConnectString, requestQueueName).GetAwaiter().GetResult();
                 try
                 {
-                    AzureStorageTool.RestoreRequest(
+                    /*AzureStorageTool.RestoreRequest(
                         this.requestQueueField,
                         this.pendingQueueField,
                         this.responseTableField,
-                        this.blobContainer).GetAwaiter().GetResult();
+                        this.blobContainer).GetAwaiter().GetResult();*/
                     this.requestsCountField = this.requestQueueField.ApproximateMessageCount ?? 0;
                     this.responsesCountField = AzureStorageTool
                         .CountTableEntity(storageConnectString, responseTableName).GetAwaiter().GetResult();
