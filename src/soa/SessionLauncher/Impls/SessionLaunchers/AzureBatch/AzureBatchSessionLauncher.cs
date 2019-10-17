@@ -285,8 +285,32 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
         {
             using (var batchClient = AzureBatchConfiguration.GetBatchClient())
             {
-                var batchJob = await batchClient.JobOperations.GetJobAsync(AzureBatchSessionJobIdConverter.ConvertToAzureBatchJobId(sessionId));
-                await batchJob.TerminateAsync();
+                try
+                {
+                    var batchJob = await batchClient.JobOperations.GetJobAsync(AzureBatchSessionJobIdConverter.ConvertToAzureBatchJobId(sessionId));
+                    //Conflict error occurs when terminate a job which is not in the state of Enabling or Active
+                    if (batchJob.State == Azure.Batch.Common.JobState.Active || batchJob.State == Azure.Batch.Common.JobState.Enabling || batchJob.State == Azure.Batch.Common.JobState.Disabling)
+                    {
+                        await batchJob.TerminateAsync();
+                    }
+                }
+                catch (BatchException e)
+                {
+                    if (e.RequestInformation != null && e.RequestInformation.HttpStatusCode != null)
+                    {
+                        if (e.RequestInformation.HttpStatusCode == HttpStatusCode.NotFound)
+                        {
+                            TraceHelper.TraceEvent(sessionId, TraceEventType.Warning, "[AzureBatchSessionLauncher] .TerminateAsync: The specified job can't be found, maybe has deleted.");
+                            return;
+                        }
+                    }
+                    TraceHelper.TraceEvent(sessionId, TraceEventType.Error, "[AzureBatchSessionLauncher] .TerminateAsync: Job was failed to terminate : {0}.", e);
+                }
+                catch (Exception e)
+                {
+                    TraceHelper.TraceEvent(sessionId, TraceEventType.Error, "[AzureBatchSessionLauncher] .TerminateAsync: Job was failed to terminate : {0}.", e);
+                }
+                          
             }
         }
 

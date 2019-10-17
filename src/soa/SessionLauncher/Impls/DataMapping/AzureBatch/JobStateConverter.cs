@@ -15,10 +15,11 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.DataMapping.AzureBa
         public async static Task<Telepathy.Session.Data.JobState> FromAzureBatchJobAsync(CloudJob job)
         {
             //Handle job state Active independantly in case of batch tasks are not running
-            if (job.State == JobState.Active)
+            using (var batchClient = AzureBatchConfiguration.GetBatchClient())
             {
-                using (var batchClient = AzureBatchConfiguration.GetBatchClient())
+                if (job.State == JobState.Active)
                 {
+
                     ODATADetailLevel detail = new ODATADetailLevel(selectClause: "id,state");
                     List<CloudTask> allTasks = await batchClient.JobOperations.ListTasks(job.Id, detail).ToListAsync();
                     if (allTasks.Exists(task => task.State == TaskState.Running))
@@ -27,6 +28,16 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.DataMapping.AzureBa
                     }
                     return Telepathy.Session.Data.JobState.Queued;
                 }
+                else if (job.State == JobState.Terminating)
+                {
+                    ODATADetailLevel detail = new ODATADetailLevel(selectClause: "id,state");
+                    List<CloudTask> allTasks = await batchClient.JobOperations.ListTasks(job.Id, detail).ToListAsync();
+                    if (allTasks.Exists(task => task.State != TaskState.Completed))
+                    {
+                        return Telepathy.Session.Data.JobState.Canceling;
+                    }
+                    return Telepathy.Session.Data.JobState.Finishing;
+                }
             }
             return JobStateMapping[(JobState)job.State];
         }
@@ -34,11 +45,10 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.DataMapping.AzureBa
         private static Dictionary<JobState, Telepathy.Session.Data.JobState> JobStateMapping = new Dictionary<JobState, Telepathy.Session.Data.JobState>
         {
             { JobState.Completed, Telepathy.Session.Data.JobState.Finished},
-            { JobState.Deleting, Telepathy.Session.Data.JobState.Finishing},
-            { JobState.Disabled, Telepathy.Session.Data.JobState.Failed},
+            { JobState.Deleting, Telepathy.Session.Data.JobState.Canceling},
+            { JobState.Disabled, Telepathy.Session.Data.JobState.Canceled},
             { JobState.Disabling, Telepathy.Session.Data.JobState.Canceling},
-            { JobState.Enabling, Telepathy.Session.Data.JobState.Configuring},
-            { JobState.Terminating, Telepathy.Session.Data.JobState.Finishing}
+            { JobState.Enabling, Telepathy.Session.Data.JobState.Configuring}
         };
     }
 }

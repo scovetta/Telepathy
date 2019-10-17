@@ -1386,7 +1386,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
                 // Bug 18011: If the service job is already finished, set the event so that
                 // it won't wait until timeout when exiting.
                 this.sharedData.JobFinished();
-                BrokerTracing.TraceInfo("[ServiceJobMonitor] Service job state changed to Finished because current job state is {0}", jobState);
+                BrokerTracing.TraceInfo("[ServiceJobMonitor] Service job state is changed to Finished because current job state is {0}", jobState);
             }
 
             BrokerTracing.TraceVerbose("[ServiceJobMonitor] Set max and min units number: {0}, {1}", this.maxUnits, this.minUnits);
@@ -1446,10 +1446,10 @@ namespace Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor
 
                 try
                 {
-                    if (!this.isFinished && (state == JobState.Failed || state == JobState.Canceled))
+                    if (!this.isFinished && (state == JobState.Failed || state == JobState.Canceled || state == JobState.Finished))
                     {
                         BrokerTracing.TraceEvent(System.Diagnostics.TraceEventType.Critical, 0, "[ServiceJobMonitor] Service job failed.");
-
+                        BrokerTracing.TraceInfo("[ServiceJobMonitor] Service job state is changed to Failed or Canceled");
                         // Set the job finish wait handle
                         this.sharedData.JobFinished();
                         ThreadPool.QueueUserWorkItem(this.serviceFailedCallback);
