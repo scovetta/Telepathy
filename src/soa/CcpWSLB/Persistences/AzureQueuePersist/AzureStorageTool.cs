@@ -455,7 +455,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         pendingQueue.Name,
                         message.Id,
                         messageId);
-                    var query = new TableQuery<TableEntity>().Where("RowKey eq '" + messageId + "'");
+                    var query = new TableQuery<TableEntity>().Where("MessageId eq '" + messageId + "'");
                     var list = responseTable.ExecuteQuery(query).ToList();
                     if (list.Count > 0)
                     {

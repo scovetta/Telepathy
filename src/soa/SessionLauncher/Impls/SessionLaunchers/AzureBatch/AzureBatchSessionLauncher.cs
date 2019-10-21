@@ -44,8 +44,6 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
 
         private const string ServiceRegistrationContainer = "service-registration";
 
-        private const string AzureBatchTaskWorkingDir = "%AZ_BATCH_TASK_WORKING_DIR%";
-
         private const string AzureBatchPrepJobWorkingDir = "%AZ_BATCH_JOB_PREP_WORKING_DIR%";
 
         private const string ServiceWorkingDirEnvVar = "TELEPATHY_SERVICE_WORKING_DIR";
@@ -54,6 +52,8 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
 
         private const string JobPrepCmdLine =
             @"cmd /c ""sc.exe config NetTcpPortSharing start= demand & reg ADD ^""HKLM\Software\Microsoft\StrongName\Verification\*,*^"" /f & reg ADD ^""HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^"" /f""";
+
+        private static string JobReleaseCmdLine = $@"cmd /c rd /s /q {AzureBatchPrepJobWorkingDir}";
 
         private static TimeSpan SchedulingTimeout = TimeSpan.FromMinutes(5);
 
@@ -476,7 +476,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
 
                         //Establish a link via ev between TELEPATHY_SERVICE_WORKING_DIR and AZ_BATCH_JOB_PREP_WORKING_DIR
                         env.Add(new EnvironmentSetting(ServiceRegistrationWorkingDirEnvVar, AzureBatchPrepJobWorkingDir));
-                        env.Add(new EnvironmentSetting(ServiceWorkingDirEnvVar, AzureBatchTaskWorkingDir));
+                        env.Add(new EnvironmentSetting(ServiceWorkingDirEnvVar, AzureBatchPrepJobWorkingDir));
                         return env;
                     }
                     var environment = ConstructEnvironmentVariable();
@@ -509,7 +509,15 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
                         var job = batchClient.JobOperations.CreateJob(newJobId, new PoolInformation() { PoolId = AzureBatchConfiguration.BatchPoolName });
                         job.JobPreparationTask = new JobPreparationTask(JobPrepCmdLine);
                         job.JobPreparationTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
-                        job.JobPreparationTask.ResourceFiles = new List<ResourceFile>() { GetResourceFileReference(ServiceRegistrationContainer, null) };
+                        job.JobPreparationTask.ResourceFiles = new List<ResourceFile>()
+                        {
+                            GetResourceFileReference(ServiceRegistrationContainer, null),
+                            GetResourceFileReference(RuntimeContainer, CcpServiceHostFolder),
+                            GetResourceFileReference(ServiceAssemblyContainer, startInfo.ServiceName.ToLower())
+                        };
+
+                        job.JobReleaseTask = new JobReleaseTask(JobReleaseCmdLine);
+                        job.JobReleaseTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Task));
 
                         // List<ResourceFile> resourceFiles = new List<ResourceFile>();
                         // resourceFiles.Add(GetResourceFileReference(RuntimeContainer, BrokerFolder));
@@ -584,12 +592,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
 
                         CloudTask CreateTask(string taskId)
                         {
-                            List<ResourceFile> resourceFiles = new List<ResourceFile>();
-                            resourceFiles.Add(GetResourceFileReference(RuntimeContainer, CcpServiceHostFolder));
-                            resourceFiles.Add(GetResourceFileReference(ServiceAssemblyContainer, startInfo.ServiceName.ToLower()));
-
                             CloudTask cloudTask = new CloudTask(taskId, $@"cmd /c %{ServiceWorkingDirEnvVar}%\ccpservicehost\CcpServiceHost.exe -standalone");
-                            cloudTask.ResourceFiles = resourceFiles;
                             cloudTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Pool));
                             cloudTask.EnvironmentSettings = cloudTask.EnvironmentSettings == null ? environment : environment.Union(cloudTask.EnvironmentSettings, comparer).ToList();
                             return cloudTask;

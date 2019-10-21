@@ -259,7 +259,7 @@ namespace Microsoft.Telepathy.ServiceBroker.UnitTest
             }
 
             Assert.AreEqual(shortMsg, dequeItem.Message.GetBody<string>());
-        }*/
+        }
 
         [TestMethod]
         public async Task RestoreRequestTest()
@@ -282,7 +282,7 @@ namespace Microsoft.Telepathy.ServiceBroker.UnitTest
                     this.blobContainer,
                     (await this.requestQueue.GetMessageAsync()).AsBytes));
             Assert.AreEqual(shortMsg, dequeItem.Message.GetBody<string>());
-        }
+        }*/
 
         [TestInitialize]
         public void TestInit()
