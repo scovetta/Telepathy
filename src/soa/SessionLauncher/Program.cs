@@ -18,7 +18,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
     using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.AzureBatch;
     using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Local;
     using Microsoft.Telepathy.RuntimeTrace;
-
+    using Microsoft.Telepathy.Session.Internal;
     using Newtonsoft.Json;
 
     using Serilog;
@@ -48,6 +48,13 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
             catch (Exception e)
             {
                 Trace.TraceError("Excepetion parsing and setting configuration - " + e);
+                Log.CloseAndFlush();
+                return;
+            }
+
+            if (SessionLauncherRuntimeConfiguration.ConfigureLogging)
+            {
+                Trace.TraceInformation("Log configuration has done successfully.");
                 Log.CloseAndFlush();
                 return;
             }
@@ -109,6 +116,11 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
                 if (option.AsConsole)
                 {
                     SessionLauncherRuntimeConfiguration.AsConsole = true;
+                }
+
+                if (option.ConfigureLogging)
+                {
+                    SessionLauncherRuntimeConfiguration.ConfigureLogging = true;
                 }
 
                 if (!string.IsNullOrEmpty(option.JsonFilePath))
@@ -180,6 +192,11 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
                     if (!string.IsNullOrEmpty(option.AzureBatchBrokerStorageConnectionString))
                     {
                         SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString = option.AzureBatchBrokerStorageConnectionString;
+                    }
+
+                    if (!string.IsNullOrEmpty(option.Logging))
+                    {
+                        LogHelper.SetLoggingConfig(option, "HpcSession.exe.config", "SessionLauncher");
                     }
                 }
             }

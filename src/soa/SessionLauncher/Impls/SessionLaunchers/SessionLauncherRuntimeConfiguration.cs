@@ -7,6 +7,8 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers
     {
         internal static bool AsConsole { get; set; } = false;
 
+        internal static bool ConfigureLogging { get; set; } = false;
+
         internal static SchedulerType SchedulerType { get; set; } = SchedulerType.Unknown;
 
         internal static bool OpenAzureStorageListener => !string.IsNullOrEmpty(SessionLauncherStorageConnectionString);

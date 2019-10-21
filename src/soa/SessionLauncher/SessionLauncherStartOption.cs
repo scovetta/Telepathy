@@ -4,8 +4,9 @@
 namespace Microsoft.Telepathy.Internal.SessionLauncher
 {
     using CommandLine;
+    using Microsoft.Telepathy.Session.Internal;
 
-    internal class SessionLauncherStartOption
+    internal class SessionLauncherStartOption : LogConfigOption
     {
         [Option('s', "AzureBatchServiceUrl", SetName = "AzureBatch")]
         public string AzureBatchServiceUrl { get; set; }
