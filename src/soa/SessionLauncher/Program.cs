@@ -54,7 +54,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
 
             if (SessionLauncherRuntimeConfiguration.ConfigureLogging)
             {
-                Trace.TraceInformation("Log configuration has done successfully.");
+                Trace.TraceInformation("Log configuration for Session Launcher has done successfully.");
                 Log.CloseAndFlush();
                 return;
             }
@@ -121,6 +121,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
                 if (option.ConfigureLogging)
                 {
                     SessionLauncherRuntimeConfiguration.ConfigureLogging = true;
+                    Trace.TraceInformation("Set configureLogging true");
                 }
 
                 if (!string.IsNullOrEmpty(option.JsonFilePath))
@@ -196,7 +197,14 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
 
                     if (!string.IsNullOrEmpty(option.Logging))
                     {
-                        LogHelper.SetLoggingConfig(option, "HpcSession.exe.config", "SessionLauncher");
+                        try
+                        {
+                            LogHelper.SetLoggingConfig(option, "HpcSession.exe.config", "SessionLauncher");
+                        }
+                        catch (Exception e)
+                        {
+                            Trace.TraceError("Exception occurs when configure logging - " + e);
+                        }
                     }
                 }
             }

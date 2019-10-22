@@ -5,7 +5,9 @@ namespace Microsoft.Telepathy.Session.Internal
 {
 
     using Microsoft.Telepathy.Session.Common;
+    using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Xml;
     using System.Xml.Linq;
@@ -27,9 +29,12 @@ namespace Microsoft.Telepathy.Session.Internal
             return doc;
         }
 
-        private static void RemoveLoggingConfig()
-        { 
-            var targetNodes = appSettingNode.ChildNodes.Cast<XmlNode>().Where(item => item.Attributes["key"].Value.Contains("serilog:")).ToList();
+        private static string defaultLoggingLevel = "Information";
+
+        private static void RemoveLoggingConfig(string name)
+        {
+            string sinkName = name == null ? "serilog:write-to" : $"serilog:write-to:{name}";
+            var targetNodes = appSettingNode.ChildNodes.Cast<XmlNode>().Where(item => item.Attributes["key"].Value.Contains(sinkName)).ToList();
             if (targetNodes.Count > 0)
             {
                 foreach (XmlNode node in targetNodes)
@@ -39,104 +44,145 @@ namespace Microsoft.Telepathy.Session.Internal
                 doc.Save(ConfigPath);
             }           
         }
-        private static void DisableLogging()
+        private static void DisableLogging(string name)
         {
-            RemoveLoggingConfig();          
+            RemoveLoggingConfig(name);          
         }
 
         private static void SetLoggingSource(string name)
         {
-            XmlElement logSource = doc.CreateElement("add");
-            logSource.SetAttribute("key", "serilog:enrich:with-property:Source");
-            logSource.SetAttribute("value", $"{name}");
-            appSettingNode.InsertAfter(logSource, appSettingNode.LastChild);
+            SetLoggingConfigItem("serilog:enrich:with-property:Source", name);
         }
 
-        private static void SetBasicLoggingConfig(string sinkName, string sinkValue, string minimumLevel = "Information")
+        private static void SetLoggingConfigItem(string itemKey, string itemValue)
         {
-            XmlElement logSink = doc.CreateElement("add");
-            logSink.SetAttribute("key", $"serilog:using:{sinkName}") ;
-            logSink.SetAttribute("value", $"Serilog.Sinks.{sinkValue}");
-            appSettingNode.InsertAfter(logSink, appSettingNode.LastChild);
-            XmlElement logLevel = doc.CreateElement("add");
-            logLevel.SetAttribute("key", $"serilog:write-to:{sinkName}.restrictedToMinimumLevel");
-            logLevel.SetAttribute("value", $"{minimumLevel}");
-            appSettingNode.InsertAfter(logLevel, appSettingNode.LastChild);
+            if (string.IsNullOrEmpty(itemValue))
+            {
+                return;    
+            }
+
+            List<XmlNode> configNodes = appSettingNode.ChildNodes.Cast<XmlNode>().Where(item => item.Attributes["key"].Value.Contains(itemKey)).ToList();
+           
+            if (configNodes.Count == 0)
+            {
+                Trace.TraceInformation($"New item key is {itemKey} , value is " + itemValue);
+                XmlElement configEle = doc.CreateElement("add");
+                configEle.SetAttribute("key", itemKey);
+                configEle.SetAttribute("value", itemValue);
+                appSettingNode.InsertAfter(configEle, appSettingNode.LastChild);
+            }
+            else 
+            {
+                Trace.TraceInformation($"Update item key is {itemKey} , value is " + itemValue);
+                configNodes[configNodes.Count-1].Attributes["value"].Value = itemValue;
+            }
         }
 
-        private static void SetConsoleLoggingConfig(string minimumLevel = "Information")
+        private static void SetBasicLoggingConfig(string sinkName, string sinkValue, string minimumLevel)
+        {
+            SetLoggingConfigItem($"serilog:using:{sinkName}", $"Serilog.Sinks.{sinkValue}");
+            SetLoggingConfigItem($"serilog:write-to:{sinkName}.restrictedToMinimumLevel", minimumLevel);
+        }
+
+        private static void SetConsoleLoggingConfig(string minimumLevel)
         {
             SetBasicLoggingConfig("Console", "Console", minimumLevel);
         }
 
-        private static void SetSeqLoggingConfig(string serverUrl, string minimumLevel = "Information")
+        private static void SetSeqLoggingConfig(string serverUrl, string minimumLevel)
         {
             SetBasicLoggingConfig("Seq", "Seq", minimumLevel);
-            XmlElement seqServerUrl = doc.CreateElement("add");
-            seqServerUrl.SetAttribute("key", "serilog:write-to:Seq.serverUrl");
-            seqServerUrl.SetAttribute("value", $"{serverUrl}");
-            appSettingNode.InsertAfter(seqServerUrl, appSettingNode.LastChild);
+            SetLoggingConfigItem("serilog:write-to:Seq.serverUrl", serverUrl);
         }
 
-        private static void SetAuzreAnalyticsLoggingConfig(string worksapceId, string authenticationId, string minimumLevel = "Information")
+        private static void SetAuzreAnalyticsLoggingConfig(string worksapceId, string authenticationId, string minimumLevel)
         {
             SetBasicLoggingConfig("AzureLogAnalytics", "AzureAnalytics", minimumLevel);
-            XmlElement analyticsWorkspaceId = doc.CreateElement("add");
-            analyticsWorkspaceId.SetAttribute("key", "serilog:write-to:AzureLogAnalytics.workspaceId");
-            analyticsWorkspaceId.SetAttribute("value", $"{worksapceId}");
-            appSettingNode.InsertAfter(analyticsWorkspaceId, appSettingNode.LastChild);
-            XmlElement analyticsAuthenticationId = doc.CreateElement("add");
-            analyticsAuthenticationId.SetAttribute("key", "serilog:write-to:AzureLogAnalytics.authenticationId");
-            analyticsAuthenticationId.SetAttribute("value", $"{authenticationId}");
-            appSettingNode.InsertAfter(analyticsAuthenticationId, appSettingNode.LastChild);
+            SetLoggingConfigItem("serilog:write-to:AzureLogAnalytics.workspaceId", worksapceId);
+            SetLoggingConfigItem("serilog:write-to:AzureLogAnalytics.authenticationId", authenticationId);
+        }
+
+        private static void SetFileLoggingConfig(string logFilePath, string minimumLevel, string rollingInterval)
+        {           
+            SetBasicLoggingConfig("File", "File", minimumLevel);
+            SetLoggingConfigItem("serilog:write-to:File.path", logFilePath);
+            SetLoggingConfigItem("serilog:write-to:File.rollingInterval", rollingInterval);                    
         }
 
         public static void SetLoggingConfig(LogConfigOption option, string logConfigFilePath, string source)
         {
             ConfigPath = logConfigFilePath;
-            GetConfigDoc();
+            try
+            {
+                GetConfigDoc();
+            }
+            catch (Exception e)
+            {
+                Trace.TraceError("Exception occurs when get config file - " + e);
+            }
             if (option.Logging.Equals("Disable"))
-            {            
-                DisableLogging();
+            {    
+                Trace.TraceInformation("Logging is set as Disable.");
+                DisableLogging(null);
             }
             else if (option.Logging.Equals("Enable"))
             {
-                RemoveLoggingConfig();
+                Trace.TraceInformation("Logging is set as Enable.");
                 SetLoggingSource(source);
-                if (option.ConsoleLogging)
+                if (option.ConsoleLogging.HasValue)
                 {
-                    if (!string.IsNullOrEmpty(option.ConsoleLoggingLevel))
+                    if (option.ConsoleLogging.Value)
+                    {                  
+                        Trace.TraceInformation("Set console logging configuration.");
                         SetConsoleLoggingConfig(option.ConsoleLoggingLevel);
-                }
-                if (option.SeqLogging)
-                {
-                    if (!string.IsNullOrEmpty(option.SeqServerUrl))
-                    {
-                        if (!string.IsNullOrEmpty(option.SeqLoggingLevel))
-                        {
-                            SetSeqLoggingConfig(option.SeqServerUrl, option.SeqLoggingLevel);
-                        }
-                        else
-                        {
-                            SetSeqLoggingConfig(option.SeqServerUrl);
-                        }
                     }
-                }
-                if (option.AzureAnalyticsLogging)
-                {
-                    if (!string.IsNullOrEmpty(option.AzureAnalyticsWorkspaceId) && !string.IsNullOrEmpty(option.AzureAnalyticsAuthenticationId))
+                    else 
                     {
-                        if (!string.IsNullOrEmpty(option.AzureAnalyticsLoggingLevel))
-                        {
-                            SetAuzreAnalyticsLoggingConfig(option.AzureAnalyticsWorkspaceId, option.AzureAnalyticsAuthenticationId, option.AzureAnalyticsLoggingLevel);
-                        }
-                        else
-                        {
-                            SetAuzreAnalyticsLoggingConfig(option.AzureAnalyticsWorkspaceId, option.AzureAnalyticsAuthenticationId);
-                        }
+                        Trace.TraceInformation("Disable Console logging");
+                        DisableLogging("Console");
                     }
                 }
 
+                if (option.SeqLogging.HasValue)
+                {
+                    if (option.SeqLogging.Value)
+                    {
+                        Trace.TraceInformation("Set Seq logging configuration.");
+                        SetSeqLoggingConfig(option.SeqServerUrl, option.SeqLoggingLevel);
+                    }
+                    else
+                    {
+                        Trace.TraceInformation("Disable Seq logging");
+                        DisableLogging("Seq");
+                    }
+                }
+
+                if (option.AzureAnalyticsLogging.HasValue)
+                {
+                    if (option.AzureAnalyticsLogging.Value)
+                    {
+                        Trace.TraceInformation("Set AzureAnalytics logging configuration.");
+                        SetAuzreAnalyticsLoggingConfig(option.AzureAnalyticsWorkspaceId, option.AzureAnalyticsAuthenticationId, option.AzureAnalyticsLoggingLevel);
+                    }
+                    else
+                    {
+                        Trace.TraceInformation("Disable AzureAnalytics logging");
+                        DisableLogging("AzureLogAnalytics");
+                    }
+                }
+
+               if (option.LocalFileLogging.HasValue)
+                {
+                    if (option.LocalFileLogging.Value)
+                    {
+                        SetFileLoggingConfig(option.LocalFilePath, option.LocalFileLoggingLevel, option.RollingInterval);
+                    }
+                    else
+                    {
+                        Trace.TraceInformation("Disable file logging");
+                        DisableLogging("File");
+                    }
+                }            
                 doc.Save(ConfigPath);
             }
         }

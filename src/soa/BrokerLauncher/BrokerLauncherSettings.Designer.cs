@@ -141,5 +141,20 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher {
                 this["AsConsole"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ConfigureLogging
+        {
+            get
+            {
+                return ((bool)(this["ConfigureLogging"]));
+            }
+            set
+            {
+                this["ConfigureLogging"] = value;
+            }
+        }
     }
 }

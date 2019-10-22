@@ -4,18 +4,20 @@
 namespace Microsoft.Telepathy.Internal.BrokerShim
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
+    using System.IO;
     using System.Net;
     using System.ServiceModel;
     using System.Threading;
-
+    using CommandLine;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Telepathy.Session;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Interface;
     using Microsoft.Telepathy.Session.Internal;
-
+    using Newtonsoft.Json;
     using Serilog;
 
     /// <summary>
@@ -34,6 +36,8 @@ namespace Microsoft.Telepathy.Internal.BrokerShim
         /// </summary>
         private static RuntimeTraceWrapper trace;
 
+        private static bool ConfigureLogging = false;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -42,6 +46,19 @@ namespace Microsoft.Telepathy.Internal.BrokerShim
         {
             var log = new LoggerConfiguration().ReadFrom.AppSettings().Enrich.WithMachineName().CreateLogger();
             Log.Logger = log;
+
+            if (!ParseAndSetBrokerWorkerSettings(args))
+            {
+                // parsing failed
+                return (int)BrokerShimExitCode.ForceExit;
+            }
+
+            if (ConfigureLogging)
+            {
+                Trace.TraceInformation("Log configuration for Session Launcher has done successfully.");
+                Log.CloseAndFlush();
+                return (int)BrokerShimExitCode.ForceExit;
+            }
 
             //SingletonRegistry.Initialize(SingletonRegistry.RegistryMode.WindowsNonHA);
 #if HPCPACK
@@ -163,6 +180,79 @@ namespace Microsoft.Telepathy.Internal.BrokerShim
         {
             int pid = Process.GetCurrentProcess().Id;
             trace.LogBrokerWorkerUnexpectedlyExit(pid, String.Format("[Main] Unhandled exception: {0}", e.ExceptionObject));
+        }
+
+        private static bool ParseAndSetBrokerWorkerSettings(string[] args)
+        {
+            void SetBrokerWorkerConfiguration(BrokerWorkerStartOption option)
+            {
+                if (option.ConfigureLogging)
+                {
+                    ConfigureLogging = true;
+                    Trace.TraceInformation("Set configureLogging true");
+                }
+
+                if (!string.IsNullOrEmpty(option.JsonFilePath))
+                {
+                    Dictionary<string, string> items;
+                    List<string> cmd = new List<string>();
+                    try
+                    {
+                        using (StreamReader sr = new StreamReader(option.JsonFilePath))
+                        {
+                            string json = sr.ReadToEnd();
+                            items = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+
+                            foreach (KeyValuePair<string, string> item in items)
+                            {
+                                cmd.Add("--" + item.Key);
+                                cmd.Add(item.Value);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        TraceHelper.TraceEvent(TraceEventType.Critical, "[BrokerWorker] Json file err: {0}.", e);
+                        throw;
+                    }
+
+                    string[] argsInJson = cmd.ToArray();
+                    var parserResult = new Parser(
+                        s =>
+                        {
+                            s.CaseSensitive = false;
+                            s.HelpWriter = Console.Error;
+                        }).ParseArguments<BrokerWorkerStartOption>(argsInJson).WithParsed(SetBrokerWorkerConfiguration);
+                    if (parserResult.Tag != ParserResultType.Parsed)
+                    {
+                        TraceHelper.TraceEvent(TraceEventType.Critical, "[BrokerWorker] Parse arguments error.");
+                        throw new ArgumentException("Parse arguments error in BrokerWorker.");
+                    }
+                }
+                else
+                {
+                   
+                    if (!string.IsNullOrEmpty(option.Logging))
+                    {
+                        try
+                        {
+                            LogHelper.SetLoggingConfig(option, "HpcBrokerWorker.exe.config", "BrokerWorker");
+                        }
+                        catch (Exception e)
+                        {
+                            Trace.TraceError("Exception occurs when configure logging in BrokerWorker - " + e);
+                        }
+                    }
+                }
+            }
+
+            var result = new Parser(
+                s =>
+                {
+                    s.CaseSensitive = false;
+                    s.HelpWriter = Console.Error;
+                }).ParseArguments<BrokerWorkerStartOption>(args).WithParsed(SetBrokerWorkerConfiguration);
+            return result.Tag == ParserResultType.Parsed;
         }
     }
 }
