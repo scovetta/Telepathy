@@ -46,8 +46,8 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.DataMapping.AzureBa
         {
             { JobState.Completed, Telepathy.Session.Data.JobState.Finished},
             { JobState.Deleting, Telepathy.Session.Data.JobState.Canceling},
-            { JobState.Disabled, Telepathy.Session.Data.JobState.Canceled},
-            { JobState.Disabling, Telepathy.Session.Data.JobState.Canceling},
+            { JobState.Disabled, Telepathy.Session.Data.JobState.Queued},
+            { JobState.Disabling, Telepathy.Session.Data.JobState.Running},
             { JobState.Enabling, Telepathy.Session.Data.JobState.Configuring}
         };
     }
