@@ -194,29 +194,7 @@ namespace Microsoft.Telepathy.Internal.BrokerShim
 
                 if (!string.IsNullOrEmpty(option.JsonFilePath))
                 {
-                    Dictionary<string, string> items;
-                    List<string> cmd = new List<string>();
-                    try
-                    {
-                        using (StreamReader sr = new StreamReader(option.JsonFilePath))
-                        {
-                            string json = sr.ReadToEnd();
-                            items = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-
-                            foreach (KeyValuePair<string, string> item in items)
-                            {
-                                cmd.Add("--" + item.Key);
-                                cmd.Add(item.Value);
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        TraceHelper.TraceEvent(TraceEventType.Critical, "[BrokerWorker] Json file err: {0}.", e);
-                        throw;
-                    }
-
-                    string[] argsInJson = cmd.ToArray();
+                    string[] argsInJson = JSONFileParser.parse(option.JsonFilePath);
                     var parserResult = new Parser(
                         s =>
                         {

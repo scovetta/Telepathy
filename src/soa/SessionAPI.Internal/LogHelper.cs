@@ -20,7 +20,9 @@ namespace Microsoft.Telepathy.Session.Internal
         private static XmlDocument doc;
 
         private static XmlNode appSettingNode;
+
         private static string ConfigPath { set; get; }
+
         private static XmlDocument GetConfigDoc()
         {
             doc = new XmlDocument();
@@ -33,7 +35,7 @@ namespace Microsoft.Telepathy.Session.Internal
 
         private static void RemoveLoggingConfig(string name)
         {
-            string sinkName = name == null ? "serilog:write-to" : $"serilog:write-to:{name}";
+            string sinkName = name == "All" ? "serilog:write-to" : $"serilog:write-to:{name}";
             var targetNodes = appSettingNode.ChildNodes.Cast<XmlNode>().Where(item => item.Attributes["key"].Value.Contains(sinkName)).ToList();
             if (targetNodes.Count > 0)
             {
@@ -109,7 +111,7 @@ namespace Microsoft.Telepathy.Session.Internal
             SetLoggingConfigItem("serilog:write-to:File.rollingInterval", rollingInterval);                    
         }
 
-        public static void SetLoggingConfig(LogConfigOption option, string logConfigFilePath, string source)
+        public static void SetLoggingConfig(ILogConfigOption option, string logConfigFilePath, string source)
         {
             ConfigPath = logConfigFilePath;
             try
@@ -123,7 +125,7 @@ namespace Microsoft.Telepathy.Session.Internal
             if (option.Logging.Equals("Disable"))
             {    
                 Trace.TraceInformation("Logging is set as Disable.");
-                DisableLogging(null);
+                DisableLogging("All");
             }
             else if (option.Logging.Equals("Enable"))
             {

@@ -1,7 +1,10 @@
-﻿namespace Microsoft.Telepathy.Session.Internal
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.Telepathy.Session.Internal
 {
     using CommandLine;
-    public interface LogConfigOption
+    public interface ILogConfigOption
     {
         [Option('l', HelpText = "Set log configuration only")]
         bool ConfigureLogging { get; set; }

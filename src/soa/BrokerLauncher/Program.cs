@@ -30,6 +30,8 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
     {
         private const string AzureBatchNodeListEnvVarName = "AZ_BATCH_NODE_LIST";
 
+        private static bool ConfigureLogging = false;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -45,7 +47,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
                 return;
             }
 
-            if (BrokerLauncherSettings.Default.ConfigureLogging)
+            if (ConfigureLogging)
             {
                 Trace.TraceInformation("Log configuration for Broker Launcher has done successfully.");
                 Log.CloseAndFlush();
@@ -144,45 +146,23 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
 
                 if (option.ConfigureLogging)
                 {
-                    settings.ConfigureLogging = true;
+                    ConfigureLogging = true;
                     Trace.TraceInformation("Set configureLogging true");
                 }
 
                 if (!string.IsNullOrEmpty(option.JsonFilePath))
                 {
-                    Dictionary<string, string> items;
-                    List<string> cmd = new List<string>();
-                    try
-                    {
-                        using (StreamReader sr = new StreamReader(option.JsonFilePath))
-                        {
-                            string json = sr.ReadToEnd();
-                            items = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-
-                            foreach (KeyValuePair<string, string> item in items)
-                            {
-                                cmd.Add("--" + item.Key);
-                                cmd.Add(item.Value);
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        TraceHelper.TraceEvent(TraceEventType.Critical, "[SessionLauncher] Json file err: {0}.", e);
-                        throw;
-                    }
-
-                    string[] argsInJson = cmd.ToArray();
+                    string[] argsInJson = JSONFileParser.parse(option.JsonFilePath);
                     var parserResult = new Parser(
-                        s =>
-                        {
-                            s.CaseSensitive = false;
-                            s.HelpWriter = Console.Error;
-                        }).ParseArguments<StartOption>(argsInJson).WithParsed(SetBrokerLauncherSettings);
+                       s =>
+                       {
+                           s.CaseSensitive = false;
+                           s.HelpWriter = Console.Error;
+                       }).ParseArguments<StartOption>(argsInJson).WithParsed(SetBrokerLauncherSettings);
                     if (parserResult.Tag != ParserResultType.Parsed)
                     {
-                        TraceHelper.TraceEvent(TraceEventType.Critical, "[SessionLauncher] Parse arguments error.");
-                        throw new ArgumentException("Parse arguments error.");
+                        TraceHelper.TraceEvent(TraceEventType.Critical, "[BrokerWorker] Parse arguments error.");
+                        throw new ArgumentException("Parse arguments error in BrokerWorker.");
                     }
                 }
                 else 
