@@ -1,20 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Data;
-using System.Data.Common;
-using System.IO;
-using System.Linq;
-using System.Xml;
-
 namespace Microsoft.Telepathy.Session.UnitTest
 {
+    using System;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Microsoft.Telepathy.Session.Internal;
     using CommandLine;
     using System.Text;
-    using System.Xml.Serialization;
+    using System.IO;
+    using System.Linq;
+    using System.Xml;
 
     [TestClass]
     public class LogHelperUnitTest
