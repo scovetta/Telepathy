@@ -99,7 +99,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 
         private CloudQueue pendingQueueField;
 
-        private AzureQueueMessageFetcher requestFetcher;
+        private AzureQueueRequestFetcher requestFetcher;
 
         /// <summary>the message queue that store the request messages.</summary>
         private CloudQueue requestQueueField;
@@ -107,17 +107,25 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
         /// <summary>the total requests count in the request queue.</summary>
         private long requestsCountField;
 
-        private AzureQueueMessageFetcher responseFetcher;
+        private AzureQueueResponseFetcher responseFetcher;
 
-        private int responseIndex = int.MaxValue >> 1;
+        private long responseIndex = int.MaxValue >> 1;
 
         /// <summary>the total responses count in the queue.</summary>
         private long responsesCountField;
 
         private CloudTable responseTableField;
 
-        /// <summary>number of requests that are sent to MSMQ but not committed yet. </summary>
+        /// <summary>number of requests that are sent to AzureQueue but not committed yet. </summary>
         private long uncommittedRequestsCountField;
+
+        private ConcurrentDictionary<long, bool> storedResponseDic = new ConcurrentDictionary<long, bool>();
+
+        private C5.IntervalHeap<long> priorityQueue = new C5.IntervalHeap<long>();
+
+        private long responseLock = 0;
+
+        private ReaderWriterLockSlim rwlockPriorityQueue = new ReaderWriterLockSlim();
 
         internal AzureQueuePersist(string userName, string sessionId, string clientId, string storageConnectString)
         {
@@ -544,34 +552,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 (int)callbackState);
             var putResponseState = new PutResponseState(responses, putResponseCallback, callbackState);
 
-            this.responsePutQueue.Enqueue(putResponseState);
-            if (!this.isCreatedResponseTask)
-            {
-                lock (this.responsePutLock)
-                {
-                    if (!this.isCreatedResponseTask)
-                    {
-                        this.isCreatedResponseTask = true;
-                        Task.Run(
-                            async () =>
-                                {
-                                    while (true)
-                                    {
-                                        if (this.tokenSource.Token.IsCancellationRequested)
-                                        {
-                                            return;
-                                        }
-
-                                        this.PersistResponsesThreadProc();
-                                        await Task.Delay(this.sleepTime);
-                                    }
-                                },
-                            this.tokenSource.Token);
-                    }
-                }
-            }
-
-            // this.PersistResponsesThreadProc(putResponseState);
+            this.PersistResponses(putResponseState);
         }
 
         public void ResetResponsesCallback()
@@ -801,218 +782,251 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             }
         }
 
-        private void PersistResponsesThreadProc()
+        private void PersistResponses(object state)
         {
-            const int BatchSize = 50;
-            var failList = new List<BrokerQueueItem>();
-            var responseEntities = new List<ResponseEntity>();
-            var peerItems = new Dictionary<string, BrokerQueueItem>();
-            var responsesList = new List<BrokerQueueItem>();
-            var responseCount = 0;
-            var faultResponsesCount = 0;
-            var exceptions = new List<Exception>();
-            PutResponseCallback putResponseCallback = null;
+            PutResponseState putResponseState = (PutResponseState)state;
+            ParamCheckUtility.ThrowIfNull(putResponseState, "putResponseState");
+            ParamCheckUtility.ThrowIfNull(putResponseState.Messages, "putResponseState.Mesasges");
 
-            while (this.responsePutQueue.Count > 0)
+            try
             {
-                var putResponseState = this.responsePutQueue.Dequeue();
-                putResponseCallback = putResponseState.Callback;
-                ParamCheckUtility.ThrowIfNull(putResponseState, "putResponseState");
-                ParamCheckUtility.ThrowIfNull(putResponseState.Messages, "putResponseState.Mesasges");
-
-                try
+                // Save peer request items of response messages in case persist operation is failed.
+                List<BrokerQueueItem> peerItems = new List<BrokerQueueItem>();
+                foreach (BrokerQueueItem response in putResponseState.Messages)
                 {
-                    foreach (var response in putResponseState.Messages)
+                    peerItems.Add(response.PeerItem);
+                    response.PeerItem = null;
+                }
+
+                Exception exception = null;
+                int responseCount = 0;
+                int faultResponsesCount = 0;
+                List<BrokerQueueItem> redispatchRequestsList = new List<BrokerQueueItem>();
+                foreach (BrokerQueueItem response in putResponseState.Messages)
+                {
+                    ParamCheckUtility.ThrowIfNull(response, "to-be-persisted response");
+
+                    // step 1, receive corresponding request from queue
+                    // no duplicate response for one request
+                    var requestToken = (string)response.PersistAsyncToken.AsyncToken;
+                    var isValid = false;
+                    try
                     {
-                        ParamCheckUtility.ThrowIfNull(response, "to-be-persisted response");
-
-                        // step 1, receive corresponding request from queue
-                        // no duplicate response for one request
-                        var requestToken = (string)response.PersistAsyncToken.AsyncToken;
-                        var isValid = false;
-                        try
+                        if (requestToken != null)
                         {
-                            if (requestToken != null)
-                            {
-                                isValid = !(AzureStorageTool.IsExistedResponse(this.responseTableField, requestToken)
-                                                .GetAwaiter().GetResult() || peerItems.ContainsKey(requestToken));
-                            }
+                            isValid = !AzureStorageTool.IsExistedResponse(this.responseTableField, requestToken)
+                                            .GetAwaiter().GetResult();
                         }
-                        catch (Exception e)
-                        {
-                            BrokerTracing.TraceError(
-                                "[AzureQueuePersist] .PersistResponsesThreadProc: can not receive the corresponding request by lookup id[{0}] from the requests queue when persist the response with the exception,{1}.",
-                                requestToken,
-                                e);
-                        }
+                    }
+                    catch (Exception e)
+                    {
+                        BrokerTracing.TraceError(
+                            "[AzureQueuePersist] .PersistResponses: can not receive the corresponding request by lookup id[{0}] from the requests queue when persist the response with the exception,{1}.",
+                            requestToken,
+                            e);
+                        exception = e;
+                        break;
+                    }
 
-                        if (!isValid)
-                        {
-                            continue;
-                        }
+                    if (!isValid)
+                    {
+                        continue;
+                    }
 
-                        if (response.Message.IsFault)
-                        {
-                            faultResponsesCount++;
-                        }
+                    if (response.Message.IsFault)
+                    {
+                        faultResponsesCount++;
+                    }
 
-                        peerItems.Add(requestToken, response.PeerItem);
-                        response.PeerItem = null;
-                        responsesList.Add(response);
+                    // step 2, put response into queue
+                    long index = Interlocked.Increment(ref this.responseIndex);
 
-                        // step 2, put response into queue
-                        Interlocked.Increment(ref this.responseIndex);
+                    this.rwlockPriorityQueue.EnterWriteLock();
+                    priorityQueue.Add(index);
+                    this.rwlockPriorityQueue.ExitWriteLock();
+
+                    try
+                    {
                         var sendMsg = new ResponseEntity(
                             this.clientIdField,
-                            this.responseIndex.ToString(),
+                            index.ToString(),
                             requestToken,
                             AzureStorageTool.PrepareMessage(response));
 
-                        try
+                        if (sendMsg.Message.Length > Constant.AzureQueueMsgChunkSize)
                         {
-                            if (sendMsg.Message.Length > Constant.AzureQueueMsgChunkSize)
-                            {
-                                sendMsg.Message = AzureStorageTool
-                                    .CreateBlobFromBytes(this.blobContainer, sendMsg.Message).GetAwaiter().GetResult();
-                            }
-
-                            responseEntities.Add(sendMsg);
-
-                            // AzureStorageTool.AddMsgToTable(this.responseTableField, sendMsg).GetAwaiter().GetResult();
-                        }
-                        catch (Exception e)
-                        {
-                            if (this.isDisposedField)
-                            {
-                                // if the queue is closed, then quit the method.
-                                return;
-                            }
-
-                            response.PeerItem = peerItems[requestToken];
-                            failList.Add(response);
-                            peerItems.Remove(requestToken);
-                            BrokerTracing.TraceError(
-                                "[AzureQueuePersisit] .PersistResponsesThreadProc: can not save large message into blob, Exception: {0}",
-                                e);
+                            sendMsg.Message = AzureStorageTool
+                                .CreateBlobFromBytes(this.blobContainer, sendMsg.Message).GetAwaiter().GetResult();
                         }
 
-                        // At this point, both step 1 & step 2 are performed successfully
-                        responseCount++;
-                        if (responseCount % BatchSize == 0)
-                        {
-                            insertTableAndUpdate(BatchSize);
-                        }
+                        AzureStorageTool.AddMsgToTable(this.responseTableField, sendMsg).GetAwaiter().GetResult();
                     }
-                }
-                catch (Exception e)
-                {
-                    if (!this.isDisposedField)
+                    catch (Exception e)
                     {
+                        if (this.isDisposedField)
+                        {
+                            // if the queue is closed, then quit the method.
+                            return;
+                        }
+
                         BrokerTracing.TraceError(
-                            "[AzureQueuePersisit] .PersistResponsesThreadProc: persist responses failed, Exception: {0}",
+                            "[AzureQueuePersisit] .PersistResponses: Operate error with azure storage, Exception: {0}",
                             e);
-                    }
-                }
-            }
-
-            void insertTableAndUpdate(int count)
-            {
-                Exception exception = null;
-                try
-                {
-                    AzureStorageTool.AddBatchMsgToTable(this.responseTableField, responseEntities).GetAwaiter()
-                        .GetResult();
-                }
-                catch (Exception e)
-                {
-                    exception = e;
-                    exceptions.Add(e);
-                    responseCount = 0;
-                    if (this.isDisposedField)
-                    {
-                        // if the queue is closed, then quit the method.
-                        return;
+                        exception = e;
+                        storedResponseDic.TryAdd(index, false);
+                        Task.Run(() => ReleaseTask(index));
+                        break;
                     }
 
-                    foreach (var responseTemp in responsesList)
-                    {
-                        var token = (string)responseTemp.PersistAsyncToken.AsyncToken;
-                        responseTemp.PeerItem = peerItems[token];
-                        failList.Add(responseTemp);
-                        peerItems.Remove(token);
-                    }
-
-                    BrokerTracing.TraceError(
-                        "[AzureQueuePersisit] .PersistResponsesThreadProc: can not send the response to the responses queue, Exception: {0}",
-                        e);
+                    // At this point, both step 1 & step 2 are performed succeesfully
+                    responseCount++;
+                    storedResponseDic.TryAdd(index, false);
+                    Task.Run(() => ReleaseTask(index));
                 }
-
+                
                 // persisting succeed
                 if (exception == null)
                 {
                     // dispose all response messages
-                    foreach (var responseTemp in responsesList)
+                    foreach (BrokerQueueItem response in putResponseState.Messages)
                     {
-                        responseTemp.Dispose();
+                        response.Dispose();
                     }
-
                     // dispose all peer items
-                    foreach (var request in peerItems.Values)
+                    foreach (BrokerQueueItem request in peerItems)
                     {
                         request.Dispose();
                     }
                 }
 
-                Interlocked.Add(ref this.responsesCountField, count);
-                this.responseFetcher.NotifyMoreMessages(count);
-                Interlocked.Add(ref this.requestsCountField, -count);
-                peerItems.Clear();
-                responseEntities.Clear();
-                responsesList.Clear();
-            }
-
-            if (responseCount % BatchSize > 0)
-            {
-                insertTableAndUpdate(responseCount % BatchSize);
-            }
-
-            if (faultResponsesCount > 0)
-            {
-                try
+                if (exception != null)
                 {
-                    AzureStorageTool.UpdateInfo(
-                            this.storageConnectString,
-                            this.sessionIdField,
-                            this.responseTableField.Name,
-                            (Interlocked.Read(ref this.failedRequestsCountField) + faultResponsesCount).ToString())
-                        .GetAwaiter().GetResult();
-                    Interlocked.Add(ref this.failedRequestsCountField, faultResponsesCount);
+
+                    responseCount = 0;
+                    BrokerTracing.TraceError("[AzureQueuePersisit] .PersistResponses failed to persist the response to the responses queue, and the corrresponding requests will be redispatched soon.");
+
+                    // lost the responses, the corresponding requests should can be redispatched soon.
+                    int index = 0;
+                    foreach (BrokerQueueItem response in putResponseState.Messages)
+                    {
+                        if (response != null && response.PersistAsyncToken != null)
+                        {
+                            response.PeerItem = peerItems[index];
+                            redispatchRequestsList.Add(response);
+                        }
+                        else
+                        {
+                            BrokerTracing.TraceError("[AzureQueuePersisit] .PersistResponses: invalide response, the response.AsyncToken is null.");
+                        }
+                        index++;
+                    }
                 }
-                catch (Exception e)
+                else if (faultResponsesCount > 0)
                 {
-                    exceptions.Add(e);
-                    BrokerTracing.TraceWarning(
-                        "[AzureQueuePersisit] .PersistResponsesThreadProc: Fail to update the fault message number in the response queue label, fault message count: {0}, Exception: {1}",
-                        faultResponsesCount,
-                        e);
+                    try
+                    {
+                        AzureStorageTool.UpdateInfo(
+                                this.storageConnectString,
+                                this.sessionIdField,
+                                this.responseTableField.Name,
+                                (Interlocked.Read(ref this.failedRequestsCountField) + faultResponsesCount).ToString())
+                            .GetAwaiter().GetResult();
+                        Interlocked.Add(ref this.failedRequestsCountField, faultResponsesCount);
+                    }
+                    catch (Exception e)
+                    {
+                        BrokerTracing.TraceWarning("[AzureQueuePersisit] .PersistResponses: Fail to update the fault message number in the response queue label, fault message count: {0}, Exception: {1}", faultResponsesCount, e);
+                    }
+                }
+
+                // Note: Update responsesCountField before requestsCountField. - tricky part.
+                // FIXME!
+                Interlocked.Add(ref this.responsesCountField, responseCount);
+                this.responseFetcher.NotifyMoreMessages(responseCount);
+                long remainingRequestCount = Interlocked.Add(ref this.requestsCountField, -responseCount);
+                bool isLastResponse = EOMReceived && (remainingRequestCount == 0);
+                PutResponseCallback putResponseCallback = putResponseState.Callback;
+                if (putResponseCallback != null)
+                {
+                    putResponseCallback(exception, responseCount, faultResponsesCount, isLastResponse, redispatchRequestsList, putResponseState.CallbackState);
                 }
             }
-
-            if (failList.Count > 0)
+            catch (Exception e)
             {
-                this.responsePutQueue.Enqueue(new PutResponseState(failList, putResponseCallback, failList.Count));
+                if (!this.isDisposedField)
+                {
+                    BrokerTracing.TraceError("[AzureQueuePersisit] .PersistResponses: persist responses failed, Exception: {0}", e);
+                }
             }
+        }
 
-            var isLastResponse = this.EOMReceived && this.requestsCountField == 0;
-            if (putResponseCallback != null)
+        private void ReleaseTask(long index)
+        {
+            BrokerTracing.TraceVerbose(
+                "[AzureQueuePersisit] .ReleaseTask: start: {0}, bool: {1}",
+                index, Interlocked.Read(ref responseLock));
+            long p = Interlocked.Exchange(ref responseLock, 2);
+            if (p == 0)
             {
-                putResponseCallback(
-                    exceptions.Count > 0 ? exceptions[exceptions.Count - 1] : null,
-                    responseCount,
-                    faultResponsesCount,
-                    isLastResponse,
-                    null,
-                    responseCount + faultResponsesCount);
+                do
+                {
+                    p = Interlocked.Exchange(ref responseLock, 1);
+                    if (p == 1)
+                        return;
+                    try
+                    {
+                        BrokerTracing.TraceVerbose(
+                            "[AzureQueuePersisit] .ReleaseTask: count: {0}, min: {1}",
+                            priorityQueue.Count, priorityQueue.Count == 0 ? -1 : priorityQueue.FindMin());
+                        long max = 0;
+
+                        while (true)
+                        {
+                            this.rwlockPriorityQueue.EnterUpgradeableReadLock();
+                            try
+                            {
+                                if (priorityQueue.Count > 0)
+                                {
+                                    if (storedResponseDic.ContainsKey(priorityQueue.FindMin()))
+                                    {
+                                        max = priorityQueue.FindMin();
+                                        storedResponseDic.TryRemove(max, out bool temp);
+                                        this.rwlockPriorityQueue.EnterWriteLock();
+                                        priorityQueue.DeleteMin();
+                                        this.rwlockPriorityQueue.ExitWriteLock();
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                            finally
+                            {
+                                this.rwlockPriorityQueue.ExitUpgradeableReadLock();
+                            }
+                        }
+
+                        BrokerTracing.TraceVerbose(
+                            "[AzureQueuePersisit] .ReleaseTask: Ack update: {0}",
+                            max);
+                        this.responseFetcher.ChangeAck(max);
+                    }
+                    catch (Exception e)
+                    {
+                        BrokerTracing.TraceError("[AzureQueuePersisit].ReleaseTask error: {0}", e);
+                        throw;
+                    }
+                    finally
+                    {
+                        p = Interlocked.Exchange(ref responseLock, 0);
+                    }
+
+                } while (p == 2);
             }
         }
 

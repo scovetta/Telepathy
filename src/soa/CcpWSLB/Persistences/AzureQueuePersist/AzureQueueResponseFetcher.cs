@@ -20,6 +20,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 
         private long lastIndex;
 
+        private long ackIndex = int.MaxValue >> 1;
+
         public AzureQueueResponseFetcher(
             CloudTable responseTable,
             long messageCount,
@@ -36,14 +38,14 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
         {
             this.responseTable = responseTable;
             this.prefetchTimer.Elapsed += (sender, args) =>
+            {
+                Debug.WriteLine("[AzureQueueResponseFetch] .prefetchTimer raised.");
+                this.PeekMessageAsync().GetAwaiter().GetResult();
+                if (!this.isDisposedField)
                 {
-                    Debug.WriteLine("[AzureQueueResponseFetch] .prefetchTimer raised.");
-                    this.PeekMessageAsync().GetAwaiter().GetResult();
-                    if (!this.isDisposedField)
-                    {
-                        this.prefetchTimer.Enabled = true;
-                    }
-                };
+                    this.prefetchTimer.Enabled = true;
+                }
+            };
             this.prefetchTimer.Enabled = true;
         }
 
@@ -73,9 +75,13 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     {
                         if (responseList == null || responseList.Count <= index)
                         {
+                            BrokerTracing.TraceVerbose(
+                                "[AzureQueueResponseFetch] .PeekMessageAsync: lastIndex={0}, ackIndex={1}",
+                                lastIndex, ackIndex);
                             responseList = await AzureStorageTool.GetBatchEntityAsync(
-                                               this.responseTable,
-                                               this.lastIndex);
+                                this.responseTable,
+                                this.lastIndex,
+                                this.ackIndex);
                             index = 0;
                             BrokerTracing.TraceVerbose(
                                 "[AzureQueueResponseFetch] .PeekMessageAsync: get batch entity count={0}",
@@ -109,7 +115,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         // Deserialize message to BrokerQueueItem
                         try
                         {
-                            brokerQueueItem = (BrokerQueueItem)this.formatter.Deserialize(
+                            brokerQueueItem = (BrokerQueueItem) this.formatter.Deserialize(
                                 await AzureStorageTool.GetMsgBody(this.blobContainer, messageBody));
                             brokerQueueItem.PersistAsyncToken.AsyncToken =
                                 brokerQueueItem.Message.Headers.RelatesTo.ToString();
@@ -141,5 +147,11 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 this.HandleMessageResult(new MessageResult(null, exception));
             }
         }
-    }
+
+        public void ChangeAck(long ack)
+        {
+            if (ackIndex < ack)
+                Interlocked.Exchange(ref ackIndex, ack);
+        }
+    }   
 }

@@ -34,27 +34,22 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 
         private static readonly string queueTableName = "StorageInfoTable";
 
-        public static async Task AddBatchMsgToTable(CloudTable table, List<ResponseEntity> entities)
+        public static async Task AddMsgToTable(CloudTable table, ResponseEntity entity)
         {
             try
             {
-                var batch = new TableBatchOperation();
+                var operation = TableOperation.Insert(entity);
 
-                foreach (var entity in entities)
-                {
-                    batch.InsertOrReplace(entity);
-                }
-
-                // submit
-                await table.ExecuteBatchAsync(batch);
+                await table.ExecuteAsync(operation);
             }
             catch
             {
                 BrokerTracing.TraceError(
-                    "[AzureQueueInterop] .AddBatchMsgToTable: cannot insert batch entities into table.");
+                    "[AzureQueueInterop] .AddMsgToTable: cannot insert the entity into table.");
                 throw;
             }
         }
+
 
         public static async Task<long> CountFailed(string connectString, string sessionId, string tableName)
         {
@@ -310,9 +305,9 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             return list;
         }
 
-        public static async Task<List<ResponseEntity>> GetBatchEntityAsync(CloudTable tableField, long lastIndex)
+        public static async Task<List<ResponseEntity>> GetBatchEntityAsync(CloudTable tableField, long lastIndex, long ackIndex)
         {
-            var query = new TableQuery<ResponseEntity>().Where("RowKey gt '" + lastIndex + "'");
+            var query = new TableQuery<ResponseEntity>().Where("RowKey gt '" + lastIndex + "' and RowKey le '" + ackIndex + "'");
             var list = new List<ResponseEntity>();
             TableContinuationToken token = null;
             do

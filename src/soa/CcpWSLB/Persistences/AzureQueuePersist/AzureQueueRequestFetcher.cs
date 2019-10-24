@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Concurrent;
-
 namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 {
     using System;
@@ -15,6 +13,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.WindowsAzure.Storage.Blob;
     using Microsoft.WindowsAzure.Storage.Queue;
+    using System.Collections.Concurrent;
 
     internal class AzureQueueRequestFetcher : AzureQueueMessageFetcher
     {
