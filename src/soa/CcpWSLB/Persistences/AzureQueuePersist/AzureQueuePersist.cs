@@ -23,7 +23,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
     using Microsoft.WindowsAzure.Storage.Blob;
     using Microsoft.WindowsAzure.Storage.Queue;
     using Microsoft.WindowsAzure.Storage.Table;
-
+    using System.Collections.Concurrent;
+    
     public class AzureQueuePersist : ISessionPersist
     {
         /// <summary>the prefix for EOM flag label</summary>
