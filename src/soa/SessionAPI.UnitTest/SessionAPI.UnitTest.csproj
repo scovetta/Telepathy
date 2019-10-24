@@ -40,12 +40,17 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LogHelperUnitTest.cs" />
     <Compile Include="QueueAdapterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommandLineParser">
+      <Version>2.3.0</Version>
+    </PackageReference>
     <PackageReference Include="MSTest.TestAdapter">
       <Version>1.3.2</Version>
     </PackageReference>
@@ -54,6 +59,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SessionAPI.Internal\SessionAPI.Internal.csproj">
+      <Project>{22b73dab-28f8-489b-99b4-076955e669fc}</Project>
+      <Name>SessionAPI.Internal</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SessionAPI\Session.csproj">
       <Project>{72FC4EEA-C32B-444B-80B7-0E2B137C05C7}</Project>
       <Name>Session</Name>

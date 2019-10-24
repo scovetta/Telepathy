@@ -3,18 +3,12 @@
 
 namespace Microsoft.Telepathy.Session.Internal
 {
-
-    using Microsoft.Telepathy.Session.Common;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Xml;
-    using System.Xml.Linq;
 
-    /// <summary>
-    /// Utility class providing diag trace enabled/disabled flag.
-    /// </summary>
     public static class LogHelper
     {
         private static XmlDocument doc;
@@ -30,8 +24,6 @@ namespace Microsoft.Telepathy.Session.Internal
             appSettingNode = doc.GetElementsByTagName("appSettings")[0];
             return doc;
         }
-
-        private static string defaultLoggingLevel = "Information";
 
         private static void RemoveLoggingConfig(string name)
         {
@@ -88,6 +80,8 @@ namespace Microsoft.Telepathy.Session.Internal
 
         private static void SetConsoleLoggingConfig(string minimumLevel)
         {
+            //Enable console logging should has an item which key contains serilog:write-to:Console
+            minimumLevel = string.IsNullOrEmpty(minimumLevel) ? "Information" : minimumLevel;
             SetBasicLoggingConfig("Console", "Console", minimumLevel);
         }
 
@@ -97,10 +91,10 @@ namespace Microsoft.Telepathy.Session.Internal
             SetLoggingConfigItem("serilog:write-to:Seq.serverUrl", serverUrl);
         }
 
-        private static void SetAuzreAnalyticsLoggingConfig(string worksapceId, string authenticationId, string minimumLevel)
+        private static void SetAzureAnalyticsLoggingConfig(string workspaceId, string authenticationId, string minimumLevel)
         {
             SetBasicLoggingConfig("AzureLogAnalytics", "AzureAnalytics", minimumLevel);
-            SetLoggingConfigItem("serilog:write-to:AzureLogAnalytics.workspaceId", worksapceId);
+            SetLoggingConfigItem("serilog:write-to:AzureLogAnalytics.workspaceId", workspaceId);
             SetLoggingConfigItem("serilog:write-to:AzureLogAnalytics.authenticationId", authenticationId);
         }
 
@@ -164,7 +158,7 @@ namespace Microsoft.Telepathy.Session.Internal
                     if (option.AzureAnalyticsLogging.Value)
                     {
                         Trace.TraceInformation("Set AzureAnalytics logging configuration.");
-                        SetAuzreAnalyticsLoggingConfig(option.AzureAnalyticsWorkspaceId, option.AzureAnalyticsAuthenticationId, option.AzureAnalyticsLoggingLevel);
+                        SetAzureAnalyticsLoggingConfig(option.AzureAnalyticsWorkspaceId, option.AzureAnalyticsAuthenticationId, option.AzureAnalyticsLoggingLevel);
                     }
                     else
                     {
@@ -172,8 +166,8 @@ namespace Microsoft.Telepathy.Session.Internal
                         DisableLogging("AzureLogAnalytics");
                     }
                 }
-
-               if (option.LocalFileLogging.HasValue)
+                
+                if (option.LocalFileLogging.HasValue)
                 {
                     if (option.LocalFileLogging.Value)
                     {
@@ -187,8 +181,6 @@ namespace Microsoft.Telepathy.Session.Internal
                 }            
                 doc.Save(ConfigPath);
             }
-        }
-
-     
+        }   
     }
 }
