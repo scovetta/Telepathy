@@ -212,7 +212,7 @@ namespace Microsoft.Telepathy.Session.UnitTest
         }
 
         [TestMethod]
-        public void disableFileLoggingTest()
+        public void DisableFileLoggingTest()
         {
             string testFilePath = "test-disable-file-logging.config";
             try
