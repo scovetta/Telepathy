@@ -1,6 +1,5 @@
 ﻿param (
-    [string]$Broker,
-    [string]$BrokerWorker,
+    [string]$BrokerOutput,
     [string]$SessionAddress,
     [switch]$EnableLogAnalytics,
     [string]$WorkspaceId,
@@ -87,22 +86,21 @@ Write-Log -Message "Session Address: $SessionAddress"
 $serviceName = "TelepathyBroker"
 
 Try {
-    Write-Log -Message "set Broker environment varaible in session machine"
-    cmd /c "setx /m Broker $Broker"
-
-    Write-Log -Message "set BrokerWorker environment varaible in session machine"
-    cmd /c "setx /m BrokerWorker $BrokerWorker"
+    Write-Log -Message "Add BrokerOutput in PATH environment varaible"
+    $env:path = $env:path + ";$BrokerOutput"
 
     if($EnableLogAnalytics)
     {
-        Write-Log -Message "Start to config log analytics"
-        Invoke-Expression "$Broker -l --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel 'Warning' --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId"
-        Invoke-Expression "$BrokerWorker -l --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel 'Warning' --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId --AuthenticationId"
+        $LoggingLevel = "Warning"
+        Write-Log -Message "Start to config log analytics in Broker"
+        Invoke-Expression '$BrokerOutput/HpcBroker.exe -l --Logging "Enable" --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel $LoggingLevel --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId'
+        Write-Log -Message "Start to config log analytics in BrokerWorker"
+        Invoke-Expression '$BrokerOutput/HpcBrokerWorker.exe -l --Logging "Enable" --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel $LoggingLevel --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId'
     }
 
     Write-Log -Message "Start to new broker windows service"
     New-Service -Name $serviceName `
-    -BinaryPathName "$Broker --SessionAddress $SessionAddress" `
+    -BinaryPathName "$Broker/HpcBroker.exe --SessionAddress $SessionAddress" `
     -DisplayName "Telepathy Broker Service" `
     -StartupType Automatic `
     -Description "Telepathy Broker service." 

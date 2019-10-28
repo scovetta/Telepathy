@@ -104,7 +104,7 @@ Write-Log -Message "BatchAccountServiceUrl: $BatchAccountServiceUrl"
 
 Try {
     Write-Log -Message "Start session launcher"
-    $sessionLauncherExpression = "$DestinationPath\StartSessionLauncher.ps1 -SessionLauncher $DestinationPath\SessionLauncher\HpcSession.exe -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey '$BatchAccountKey' -BatchAccountServiceUrl '$BatchAccountServiceUrl'"
+    $sessionLauncherExpression = "$DestinationPath\StartSessionLauncher.ps1 -SessionLauncher $DestinationPath\SessionLauncher -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey '$BatchAccountKey' -BatchAccountServiceUrl '$BatchAccountServiceUrl'"
     if($EnableLogAnalytics)
     {
         $sessionLauncherExpression = "$($sessionLauncherExpression) -EnableLogAnalytics -WorkspaceId $WorkspaceId -AuthenticationId $AuthenticationId"
@@ -112,7 +112,7 @@ Try {
     invoke-expression $sessionLauncherExpression
 	
     Write-Log -Message "Start broker"
-    $brokerExpression = "$DestinationPath\StartBroker.ps1 -Broker $DestinationPath\BrokerOutput\HpcBroker.exe -BrokerWorker $DestinationPath\BrokerOutput\HpcBrokerWorker.exe -SessionAddress localhost"
+    $brokerExpression = "$DestinationPath\StartBroker.ps1 -BrokerOutput $DestinationPath\BrokerOutput -SessionAddress localhost"
     if($EnableLogAnalytics)
     {
         $brokerExpression = "$($brokerExpression) -EnableLogAnalytics -WorkspaceId $WorkspaceId -AuthenticationId $AuthenticationId"
