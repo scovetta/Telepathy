@@ -1,7 +1,10 @@
 ﻿param (
     [string]$Broker,
     [string]$BrokerWorker,
-    [string]$SessionAddress
+    [string]$SessionAddress,
+    [switch]$EnableLogAnalytics,
+    [string]$WorkspaceId,
+    [string]$AuthenticationId
 )
 
 function Write-Log 
@@ -93,7 +96,7 @@ Try {
     if($EnableLogAnalytics)
     {
         Write-Log -Message "Start to config log analytics"
-        Invoke-Expression "$Broker -l --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel 'Warning' --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId --AuthenticationId"
+        Invoke-Expression "$Broker -l --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel 'Warning' --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId"
         Invoke-Expression "$BrokerWorker -l --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel 'Warning' --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId --AuthenticationId"
     }
 

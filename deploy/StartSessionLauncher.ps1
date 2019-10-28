@@ -100,7 +100,7 @@ Try {
     if($EnableLogAnalytics)
     {
         Write-Log -Message "Start to config log analytics"
-        Invoke-Expression "$SessionLauncher -l --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel 'Warning' --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId --AuthenticationId"
+        Invoke-Expression "$SessionLauncher -l --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel 'Warning' --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId"
     }
     
     Write-Log -Message "Start to new session launcher windows service"
