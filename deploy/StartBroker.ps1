@@ -93,14 +93,14 @@ Try {
     {
         $LoggingLevel = "Warning"
         Write-Log -Message "Start to config log analytics in Broker"
-        Invoke-Expression '$BrokerOutput/HpcBroker.exe -l --Logging "Enable" --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel $LoggingLevel --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId'
+        Invoke-Expression '$BrokerOutput\HpcBroker.exe -l --Logging "Enable" --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel $LoggingLevel --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId'
         Write-Log -Message "Start to config log analytics in BrokerWorker"
-        Invoke-Expression '$BrokerOutput/HpcBrokerWorker.exe -l --Logging "Enable" --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel $LoggingLevel --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId'
+        Invoke-Expression '$BrokerOutput\HpcBrokerWorker.exe -l --Logging "Enable" --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel $LoggingLevel --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId'
     }
 
     Write-Log -Message "Start to new broker windows service"
     New-Service -Name $serviceName `
-    -BinaryPathName "$Broker/HpcBroker.exe --SessionAddress $SessionAddress" `
+    -BinaryPathName "$Broker\HpcBroker.exe --SessionAddress $SessionAddress" `
     -DisplayName "Telepathy Broker Service" `
     -StartupType Automatic `
     -Description "Telepathy Broker service." 
