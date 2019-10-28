@@ -104,7 +104,7 @@ Write-Log -Message "BatchAccountServiceUrl: $BatchAccountServiceUrl"
 
 Try {
     Write-Log -Message "Start session launcher"
-    $sessionLauncherExpression = "$DestinationPath\StartSessionLauncher.ps1 -SessionLauncher $DestinationPath\SessionLauncher -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey '$BatchAccountKey' -BatchAccountServiceUrl '$BatchAccountServiceUrl'"
+    $sessionLauncherExpression = "$DestinationPath\StartSessionLauncher.ps1 -SessionLauncherPath $DestinationPath\SessionLauncher -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey '$BatchAccountKey' -BatchAccountServiceUrl '$BatchAccountServiceUrl'"
     if($EnableLogAnalytics)
     {
         $sessionLauncherExpression = "$($sessionLauncherExpression) -EnableLogAnalytics -WorkspaceId $WorkspaceId -AuthenticationId $AuthenticationId"

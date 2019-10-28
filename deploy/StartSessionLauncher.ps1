@@ -1,5 +1,5 @@
 ﻿param (
-    [string]$SessionLauncher,
+    [string]$SessionLauncherPath,
     [string]$DesStorageConnectionString,
     [string]$BatchAccountName,
     [string]$BatchPoolName,
@@ -92,21 +92,22 @@ Write-Log -Message "BatchAccountKey : $BatchAccountKey"
 Write-Log -Message "BatchAccountServiceUrl : $BatchAccountServiceUrl"
 
 $serviceName = "TelepathySessionLauncher"
+$SessionLauncher = "$SessionLauncher\HpcSession.exe"
 
 Try {
     Write-Log -Message "Add SessionLauncher in PATH environment varaible"
-    $env:path = $env:path + ";$SessionLauncher"
+    $env:path = $env:path + ";$SessionLauncherPath"
 
     if($EnableLogAnalytics)
     {
         $LoggingLevel = "Warning"
         Write-Log -Message "Start to config log analytics"
-        Invoke-Expression '$SessionLauncher\HpcSession.exe -l --Logging "Enable" --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel $LoggingLevel --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId'
+        Invoke-Expression '$SessionLauncher -l --Logging "Enable" --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel $LoggingLevel --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId'
     }
     
     Write-Log -Message "Start to new session launcher windows service"
     New-Service -Name $serviceName `
-    -BinaryPathName "$SessionLauncher\HpcSession.exe --AzureBatchServiceUrl $BatchAccountServiceUrl --AzureBatchAccountName $BatchAccountName --AzureBatchAccountKey $BatchAccountkey --AzureBatchPoolName $BatchPoolName --AzureBatchBrokerStorageConnectionString $DesStorageConnectionString" `
+    -BinaryPathName "$SessionLauncher --AzureBatchServiceUrl $BatchAccountServiceUrl --AzureBatchAccountName $BatchAccountName --AzureBatchAccountKey $BatchAccountkey --AzureBatchPoolName $BatchPoolName --AzureBatchBrokerStorageConnectionString $DesStorageConnectionString" `
     -DisplayName "Telepathy Session Launcher Service" `
     -StartupType Automatic `
     -Description "Telepathy Session Launcher service." 
