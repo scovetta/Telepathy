@@ -4,7 +4,10 @@ param (
     [string]$BatchAccountName,
     [string]$BatchPoolName,
     [string]$BatchAccountKey,
-    [string]$BatchAccountServiceUrl
+    [string]$BatchAccountServiceUrl,
+    [switch]$EnbaleLogAnalytics,
+    [string]$WorkspaceId,
+    [string]$AuthenticationId
 )
 
 function Write-Log 
@@ -101,10 +104,20 @@ Write-Log -Message "BatchAccountServiceUrl: $BatchAccountServiceUrl"
 
 Try {
     Write-Log -Message "Start session launcher"
-    invoke-expression "$DestinationPath\StartSessionLauncher.ps1 -SessionLauncher $DestinationPath\SessionLauncher\HpcSession.exe -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey '$BatchAccountKey' -BatchAccountServiceUrl '$BatchAccountServiceUrl'"
+    $sessionLauncherExpression = "$DestinationPath\StartSessionLauncher.ps1 -SessionLauncher $DestinationPath\SessionLauncher\HpcSession.exe -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey '$BatchAccountKey' -BatchAccountServiceUrl '$BatchAccountServiceUrl'"
+    if($EnableLogAnalytics)
+    {
+        $sessionLauncherExpression = "$($sessionLauncherExpression) -EnableLogAnalytics -WorkspaceId $WorkspaceId -AuthenticationId $AuthenticationId"
+    }
+    invoke-expression $sessionLauncherExpression
 	
     Write-Log -Message "Start broker"
-    invoke-expression "$DestinationPath\StartBroker.ps1 -Broker $DestinationPath\BrokerOutput\HpcBroker.exe -SessionAddress localhost"
+    $brokerExpression = "$DestinationPath\StartBroker.ps1 -Broker $DestinationPath\BrokerOutput\HpcBroker.exe -BrokerWorker $DestinationPath\BrokerOutput\HpcBrokerWorker.exe -SessionAddress localhost"
+    if($EnableLogAnalytics)
+    {
+        $brokerExpression = "$($brokerExpression) -EnableLogAnalytics -WorkspaceId $WorkspaceId -AuthenticationId $AuthenticationId"
+    }
+    invoke-expression $brokerExpression
 } Catch {
     Write-Log -Message "Fail to start telepathy service" -Level Error
     Write-Log -Message $_ -Level Error

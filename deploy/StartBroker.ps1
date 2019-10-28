@@ -1,5 +1,6 @@
 ﻿param (
     [string]$Broker,
+    [string]$BrokerWorker,
     [string]$SessionAddress
 )
 
@@ -83,6 +84,19 @@ Write-Log -Message "Session Address: $SessionAddress"
 $serviceName = "TelepathyBroker"
 
 Try {
+    Write-Log -Message "set Broker environment varaible in session machine"
+    cmd /c "setx /m Broker $Broker"
+
+    Write-Log -Message "set BrokerWorker environment varaible in session machine"
+    cmd /c "setx /m BrokerWorker $BrokerWorker"
+
+    if($EnableLogAnalytics)
+    {
+        Write-Log -Message "Start to config log analytics"
+        Invoke-Expression "$Broker -l --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel 'Warning' --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId --AuthenticationId"
+        Invoke-Expression "$BrokerWorker -l --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel 'Warning' --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId --AuthenticationId"
+    }
+
     Write-Log -Message "Start to new broker windows service"
     New-Service -Name $serviceName `
     -BinaryPathName "$Broker --SessionAddress $SessionAddress" `

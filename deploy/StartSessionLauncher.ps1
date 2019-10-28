@@ -4,7 +4,10 @@
     [string]$BatchAccountName,
     [string]$BatchPoolName,
     [string]$BatchAccountKey,
-    [string]$BatchAccountServiceUrl
+    [string]$BatchAccountServiceUrl,
+    [switch]$EnableLogAnalytics,
+    [string]$WorkspaceId,
+    [string]$AuthenticationId
 )
 
 function Write-Log 
@@ -91,6 +94,15 @@ Write-Log -Message "BatchAccountServiceUrl : $BatchAccountServiceUrl"
 $serviceName = "TelepathySessionLauncher"
 
 Try {
+    Write-Log -Message "set SessionLauncher environment varaible in session machine"
+    cmd /c "setx /m SessionLauncher $SessionLauncher"
+
+    if($EnableLogAnalytics)
+    {
+        Write-Log -Message "Start to config log analytics"
+        Invoke-Expression "$SessionLauncher -l --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel 'Warning' --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId --AuthenticationId"
+    }
+    
     Write-Log -Message "Start to new session launcher windows service"
     New-Service -Name $serviceName `
     -BinaryPathName "$SessionLauncher --AzureBatchServiceUrl $BatchAccountServiceUrl --AzureBatchAccountName $BatchAccountName --AzureBatchAccountKey $BatchAccountkey --AzureBatchPoolName $BatchPoolName --AzureBatchBrokerStorageConnectionString $DesStorageConnectionString" `

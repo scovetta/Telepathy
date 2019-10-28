@@ -11,7 +11,10 @@ param (
     [string]$DesStorageAccountName,
     [string]$SrcStorageContainerSasToken,
     [string]$DesStorageAccountKey,
-    [string]$BatchAccountKey
+    [string]$BatchAccountKey,
+    [bool]$EnableLogAnalytics,
+    [string]$WorkspaceId,
+    [string]$AuthenticationId
 )
 
 function Write-Log 
@@ -134,5 +137,13 @@ if($EnableTelepathyStorage) {
 }
 
 if($StartTelepathyService) {
-    invoke-expression "$artifactsPath\StartTelepathyService.ps1 -DestinationPath $artifactsPath -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey $BatchAccountKey -BatchAccountServiceUrl $batchServiceUrl"
+    Write-Log -Message "EnableLogAnalytics: $EnableLogAnalytics"
+    Write-Log -Message "WorkspaceId: $WorkspaceId"
+    Write-Log -Message "AuthenticationId: $AuthenticationId"
+    $expression = "$artifactsPath\StartTelepathyService.ps1 -DestinationPath $artifactsPath -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey $BatchAccountKey -BatchAccountServiceUrl $batchServiceUrl";
+    if($EnableLogAnalytics)
+    {
+        $expression = "$($expression) -EnableLogAnalytics -WorkspaceId $WorkspaceId -AuthenticationId $AuthenticationId"
+    }
+    invoke-expression $expression
 }
