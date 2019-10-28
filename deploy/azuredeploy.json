@@ -156,7 +156,7 @@
       "metadata": {
         "description": "New Log Analytics worksapce to enable AzureAnalytics"
       },
-      "defaultValue": "true"
+      "defaultValue": true
     }
   },
   "variables": {
