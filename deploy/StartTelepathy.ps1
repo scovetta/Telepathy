@@ -133,6 +133,7 @@ Write-Log -Message "desStorageConnectionString: $desStorageConnectionString"
 Write-Log -Message "batchServiceUrl: $batchServiceUrl"
 
 if($EnableTelepathyStorage) {
+    Write-Log -Message "Enable Telepathy Storage"
     invoke-expression "$artifactsPath\EnableTelepathyStorage.ps1 -ArtifactsPath $artifactsPath -DesStorageConnectionString '$DesStorageConnectionString'"
 }
 
@@ -141,8 +142,9 @@ if($StartTelepathyService) {
     Write-Log -Message "WorkspaceId: $WorkspaceId"
     Write-Log -Message "AuthenticationId: $AuthenticationId"
     $expression = "$artifactsPath\StartTelepathyService.ps1 -DestinationPath $artifactsPath -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey $BatchAccountKey -BatchAccountServiceUrl $batchServiceUrl";
-    if($EnableLogAnalytics -eq "true")
+    if($EnableLogAnalytics -eq "True")
     {
+        Write-Log -Message "Enable Azure Log Analytics"
         $expression = "$($expression) -EnableLogAnalytics -WorkspaceId $WorkspaceId -AuthenticationId $AuthenticationId"
     }
     invoke-expression $expression
