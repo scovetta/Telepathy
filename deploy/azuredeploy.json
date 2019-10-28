@@ -168,7 +168,7 @@
     "telepathyVMImagePublisher": "MicrosoftWindowsServer",
     "telepathyVMImageOffer": "WindowsServer",
     "telepathyVMOSDiskName": "telepathyVMOSDisk",
-    "telepathyLogAnalyticsWorkspaceName": "telepathyLogAnalyticsWorkspace",
+    "telepathyLogAnalyticsWorkspaceName": "[concat('telepathyLogAnalyticsWorkspace', uniqueString(resourceGroup().id))]",
     "telepathyVMVmSize": "[parameters('telepathyVMSize')]",
     "telepathyVMVnetID": "[resourceId(variables('telepathyVnetResourceGroup'),'Microsoft.Network/virtualNetworks',parameters('vnetName'))]",
     "telepathyVMSubnetRef": "[concat(variables('telepathyVMVnetID'), '/subnets/', variables('telepathyVnetSubnetName'))]",
