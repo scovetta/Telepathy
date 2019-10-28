@@ -7,6 +7,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Reflection;
     using System.ServiceProcess;
     using System.Threading;
 
@@ -177,7 +178,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
                     {
                         try
                         {
-                            LogHelper.SetLoggingConfig(option, "HpcSession.exe.config", "SessionLauncher");
+                            LogHelper.SetLoggingConfig(option, $"{Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)}/HpcSession.exe.config", "SessionLauncher");
                         }
                         catch (Exception e)
                         {
