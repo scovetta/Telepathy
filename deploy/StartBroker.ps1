@@ -95,9 +95,9 @@ Try {
     {
         $LoggingLevel = "Warning"
         Write-Log -Message "Start to config log analytics in Broker"
-        Invoke-Expression '$Broker -l --Logging "Enable" --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel $LoggingLevel --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId'
+        Invoke-Expression "$Broker -l --Logging `"Enable`" --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel $LoggingLevel --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId"
         Write-Log -Message "Start to config log analytics in BrokerWorker"
-        Invoke-Expression '$BrokerWorker -l --Logging "Enable" --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel $LoggingLevel --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId'
+        Invoke-Expression "$BrokerWorker -l --Logging `"Enable`" --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel $LoggingLevel --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId"
     }
 
     Write-Log -Message "Start to new broker windows service"
