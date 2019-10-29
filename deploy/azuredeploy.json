@@ -147,16 +147,16 @@
       },
       "defaultValue": ""
     },
-    "enableAzureLogAnalytics": {
-      "type": "bool",
+    "AzureLogAnalytics": {
+      "type": "string",
       "allowedValues": [
-        true,
-        false
+        "enable",
+        "disable"
       ],
       "metadata": {
         "description": "New Log Analytics worksapce to enable AzureAnalytics"
       },
-      "defaultValue": true
+      "defaultValue": "enable"
     }
   },
   "variables": {
@@ -365,7 +365,7 @@
       },
       "resources": [
         {
-          "condition": "[bool(parameters('enableAzureLogAnalytics'))]",
+          "condition": "[equals(parameters('enableAzureLogAnalytics'), 'enable')]",
           "type": "extensions",
           "name": "OMSExtension",
           "apiVersion": "2015-06-15",

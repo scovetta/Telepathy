@@ -142,7 +142,7 @@ if($StartTelepathyService) {
     Write-Log -Message "WorkspaceId: $WorkspaceId"
     Write-Log -Message "AuthenticationId: $AuthenticationId"
     $expression = "$artifactsPath\StartTelepathyService.ps1 -DestinationPath $artifactsPath -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey $BatchAccountKey -BatchAccountServiceUrl $batchServiceUrl";
-    if($EnableLogAnalytics -eq "True")
+    if($EnableLogAnalytics -eq "enable")
     {
         Write-Log -Message "Enable Azure Log Analytics"
         $expression = "$($expression) -EnableLogAnalytics -WorkspaceId $WorkspaceId -AuthenticationId $AuthenticationId"
