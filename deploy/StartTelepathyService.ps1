@@ -5,7 +5,7 @@ param (
     [string]$BatchPoolName,
     [string]$BatchAccountKey,
     [string]$BatchAccountServiceUrl,
-    [switch]$EnbaleLogAnalytics,
+    [switch]$EnableLogAnalytics,
     [string]$WorkspaceId,
     [string]$AuthenticationId
 )

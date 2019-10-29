@@ -365,7 +365,7 @@
       },
       "resources": [
         {
-          "condition": "[equals(parameters('enableAzureLogAnalytics'), 'enable')]",
+          "condition": "[equals(parameters('AzureLogAnalytics'), 'enable')]",
           "type": "extensions",
           "name": "OMSExtension",
           "apiVersion": "2015-06-15",
@@ -379,10 +379,10 @@
             "typeHandlerVersion": "1.0",
             "autoUpgradeMinorVersion": true,
             "settings": {
-              "workspaceId": "[if(bool(parameters('enableAzureLogAnalytics')), reference(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').customerId, json('null'))]"
+              "workspaceId": "[if(equals(parameters('AzureLogAnalytics'), 'enable'), reference(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').customerId, json('null'))]"
             },
             "protectedSettings": {
-              "workspaceKey": "[if(bool(parameters('enableAzureLogAnalytics')), listKeys(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').primarySharedKey, json('null'))]"
+              "workspaceKey": "[if(equals(parameters('AzureLogAnalytics'), 'enable'), listKeys(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').primarySharedKey, json('null'))]"
             }
           }
         },
@@ -403,7 +403,7 @@
               "fileUris": [
                 "[variables('customScriptLocation')]"
               ],
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File StartTelepathy.ps1', ' ', variables('scriptParameters'),' -SrcStorageContainerSasToken ', variables('caret'), variables('doubleQuotation'), variables('doubleQuotation'), string(parameters('artifactsStorageContainerSasToken')), variables('doubleQuotation'), variables('caret'), variables('doubleQuotation'), ' -DesStorageAccountKey ', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('telepathyStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ' -BatchAccountKey ', listKeys(resourceId('Microsoft.Batch/batchAccounts', parameters('batchAccountsName')), '2017-09-01').primary, ' -EnableLogAnalytics ', parameters('enableAzureLogAnalytics'), ' -WorkspaceId ', reference(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').customerId, ' -AuthenticationID ',  listKeys(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').primarySharedKey)]"
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File StartTelepathy.ps1', ' ', variables('scriptParameters'),' -SrcStorageContainerSasToken ', variables('caret'), variables('doubleQuotation'), variables('doubleQuotation'), string(parameters('artifactsStorageContainerSasToken')), variables('doubleQuotation'), variables('caret'), variables('doubleQuotation'), ' -DesStorageAccountKey ', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('telepathyStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ' -BatchAccountKey ', listKeys(resourceId('Microsoft.Batch/batchAccounts', parameters('batchAccountsName')), '2017-09-01').primary, ' -EnableLogAnalytics ', parameters('AzureLogAnalytics'), ' -WorkspaceId ', reference(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').customerId, ' -AuthenticationID ',  listKeys(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').primarySharedKey)]"
             }
           }
         }
