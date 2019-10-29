@@ -90,6 +90,7 @@ $BrokerWorker = "$BrokerOutput\HpcBrokerWorker.exe"
 Try {
     Write-Log -Message "Add BrokerOutput in PATH environment varaible"
     $env:path = $env:path + ";$BrokerOutput"
+    [System.Environment]::SetEnvironmentVariable("PATH", $env:path, "Machine")
 
     if($EnableLogAnalytics)
     {

@@ -97,6 +97,7 @@ $SessionLauncher = "$SessionLauncherPath\HpcSession.exe"
 Try {
     Write-Log -Message "Add SessionLauncher in PATH environment varaible"
     $env:path = $env:path + ";$SessionLauncherPath"
+    [System.Environment]::SetEnvironmentVariable("PATH", $env:path, "Machine")
 
     if($EnableLogAnalytics)
     {
