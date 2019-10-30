@@ -9,6 +9,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.ServiceProcess;
     using System.Threading;
 
@@ -223,7 +224,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
                     {
                         try
                         {
-                            LogHelper.SetLoggingConfig(option, "HpcBroker.exe.config", "BrokerLauncher");
+                            LogHelper.SetLoggingConfig(option, $"{Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)}/HpcBroker.exe.config", "BrokerLauncher");
                         }
                         catch (Exception e)
                         {

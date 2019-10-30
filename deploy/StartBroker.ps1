@@ -1,6 +1,9 @@
 ﻿param (
-    [string]$Broker,
-    [string]$SessionAddress
+    [string]$BrokerOutput,
+    [string]$SessionAddress,
+    [switch]$EnableLogAnalytics,
+    [string]$WorkspaceId,
+    [string]$AuthenticationId
 )
 
 function Write-Log 
@@ -81,8 +84,23 @@ Write-Log -Message "DestinationPath to find resource : $DestinationPath"
 Write-Log -Message "Session Address: $SessionAddress"
 
 $serviceName = "TelepathyBroker"
+$Broker = "$BrokerOutput\HpcBroker.exe"
+$BrokerWorker = "$BrokerOutput\HpcBrokerWorker.exe"
 
 Try {
+    Write-Log -Message "Add BrokerOutput in PATH environment varaible"
+    $env:path = $env:path + ";$BrokerOutput"
+    [System.Environment]::SetEnvironmentVariable("PATH", $env:path, "Machine")
+
+    if($EnableLogAnalytics)
+    {
+        $LoggingLevel = "Warning"
+        Write-Log -Message "Start to config log analytics in Broker"
+        Invoke-Expression "$Broker -l --Logging `"Enable`" --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel $LoggingLevel --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId"
+        Write-Log -Message "Start to config log analytics in BrokerWorker"
+        Invoke-Expression "$BrokerWorker -l --Logging `"Enable`" --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel $LoggingLevel --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId"
+    }
+
     Write-Log -Message "Start to new broker windows service"
     New-Service -Name $serviceName `
     -BinaryPathName "$Broker --SessionAddress $SessionAddress" `

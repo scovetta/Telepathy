@@ -128,11 +128,11 @@ namespace Microsoft.Telepathy.Session.Internal
                 if (option.ConsoleLogging.HasValue)
                 {
                     if (option.ConsoleLogging.Value)
-                    {                  
+                    {
                         Trace.TraceInformation("Set console logging configuration.");
                         SetConsoleLoggingConfig(option.ConsoleLoggingLevel);
                     }
-                    else 
+                    else
                     {
                         Trace.TraceInformation("Disable Console logging");
                         DisableLogging("Console");
@@ -158,7 +158,8 @@ namespace Microsoft.Telepathy.Session.Internal
                     if (option.AzureAnalyticsLogging.Value)
                     {
                         Trace.TraceInformation("Set AzureAnalytics logging configuration.");
-                        SetAzureAnalyticsLoggingConfig(option.AzureAnalyticsWorkspaceId, option.AzureAnalyticsAuthenticationId, option.AzureAnalyticsLoggingLevel);
+                        SetAzureAnalyticsLoggingConfig(option.AzureAnalyticsWorkspaceId,
+                            option.AzureAnalyticsAuthenticationId, option.AzureAnalyticsLoggingLevel);
                     }
                     else
                     {
@@ -166,20 +167,26 @@ namespace Microsoft.Telepathy.Session.Internal
                         DisableLogging("AzureLogAnalytics");
                     }
                 }
-                
+
                 if (option.LocalFileLogging.HasValue)
                 {
                     if (option.LocalFileLogging.Value)
                     {
-                        SetFileLoggingConfig(option.LocalFilePath, option.LocalFileLoggingLevel, option.RollingInterval);
+                        SetFileLoggingConfig(option.LocalFilePath, option.LocalFileLoggingLevel,
+                            option.RollingInterval);
                     }
                     else
                     {
                         Trace.TraceInformation("Disable file logging");
                         DisableLogging("File");
                     }
-                }            
+                }
+
                 doc.Save(ConfigPath);
+            }
+            else
+            {
+                throw new Exception("Please set valid Logging value, \"Disable/Enable\"");
             }
         }   
     }

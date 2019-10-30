@@ -9,6 +9,7 @@ namespace Microsoft.Telepathy.Internal.BrokerShim
     using System.Globalization;
     using System.IO;
     using System.Net;
+    using System.Reflection;
     using System.ServiceModel;
     using System.Threading;
     using CommandLine;
@@ -214,7 +215,7 @@ namespace Microsoft.Telepathy.Internal.BrokerShim
                     {
                         try
                         {
-                            LogHelper.SetLoggingConfig(option, "HpcBrokerWorker.exe.config", "BrokerWorker");
+                            LogHelper.SetLoggingConfig(option, $"{Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)}/HpcBrokerWorker.exe.config", "BrokerWorker");
                         }
                         catch (Exception e)
                         {
