@@ -51,7 +51,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
         private const string ServiceRegistrationWorkingDirEnvVar = "TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR";
 
         private const string JobPrepCmdLine =
-            @"cmd /c ""sc.exe config NetTcpPortSharing start= demand & reg ADD ^""HKLM\Software\Microsoft\StrongName\Verification\*,*^"" /f & reg ADD ^""HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^"" /f""";
+            @"cmd /c ""sc.exe config NetTcpPortSharing start= demand";
 
         private static string JobReleaseCmdLine = $@"cmd /c rd /s /q {AzureBatchPrepJobWorkingDir}";
 

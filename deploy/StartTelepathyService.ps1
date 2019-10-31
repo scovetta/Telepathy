@@ -86,7 +86,7 @@ function Write-Log
 
 
 Write-Log -Message "Start open NetTCPPortSharing & enable StrongName"
-cmd /c "sc.exe config NetTcpPortSharing start=demand & reg ADD "HKLM\Software\Microsoft\StrongName\Verification\*,*" /f & reg ADD "HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^" /f"
+cmd /c "sc.exe config NetTcpPortSharing start=demand"
 
 
 Write-Log -Message "set TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR environment varaibles in session machine"
