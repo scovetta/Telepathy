@@ -73,8 +73,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 
         private readonly string storageConnectString;
 
-        private readonly CancellationTokenSource tokenSource = new CancellationTokenSource();
-
         /// <summary>the user name.</summary>
         private readonly string userNameField;
 
@@ -687,9 +685,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     this.responseFetcher.SafeDispose();
                     this.responseFetcher = null;
                 }
-
-                // Stop persistResponseProc
-                this.tokenSource.Cancel();
             }
         }
 

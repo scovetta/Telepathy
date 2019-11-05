@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.Telepathy.Common;
-
 namespace Microsoft.Telepathy.ServiceBroker.Common
 {
     using System;
@@ -215,9 +213,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
         public BrokerInitializationResult Run(SessionStartInfoContract startInfo, BrokerStartInfo brokerInfo)
         {
             BrokerTracing.TraceEvent(System.Diagnostics.TraceEventType.Information, 0, "[BrokerEntry] Broker is starting initialization, ID = {0}", brokerInfo.SessionId);
-            ThreadPool.GetAvailableThreads(out int wt, out int cpt);
-            BrokerTracing.TraceEvent(System.Diagnostics.TraceEventType.Information, 0, "[BrokerEntry] Available work thread = {0} , complete port thead = {1}", wt, cpt);
-            ThreadPoolMonitor.Start();
 
             try
             {
