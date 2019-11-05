@@ -452,22 +452,30 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
 
                     if (batchId > this.currentBatchId)
                     {
-                        this.lockForDiscardRequests.EnterWriteLock();
+                        this.lockForDiscardRequests.EnterUpgradeableReadLock();
                         try
                         {
                             if (batchId > this.currentBatchId)
                             {
-                                BrokerTracing.TraceWarning("[BrokerClient] New client instance id encountered: {0}. Will discard unflushed requests", batchId);
-                                this.observer.ReduceUncommittedCounter(this.queue.AllRequestsCount - this.queue.FlushedRequestsCount);
-                                this.queue.DiscardUnflushedRequests();
-                                this.currentBatchId = batchId;
-                                this.batchIdChangedEvent.Set();
-                                this.batchMessageIds.Clear();
+                                this.lockForDiscardRequests.EnterWriteLock();
+                                try
+                                {
+                                    BrokerTracing.TraceWarning("[BrokerClient] New client instance id encountered: {0}. Will discard unflushed requests", batchId);
+                                    this.observer.ReduceUncommittedCounter(this.queue.AllRequestsCount - this.queue.FlushedRequestsCount);
+                                    this.queue.DiscardUnflushedRequests();
+                                    this.currentBatchId = batchId;
+                                    this.batchIdChangedEvent.Set();
+                                    this.batchMessageIds.Clear();
+                                }
+                                finally
+                                {
+                                    this.lockForDiscardRequests.ExitWriteLock();
+                                }
                             }
                         }
                         finally
                         {
-                            this.lockForDiscardRequests.ExitWriteLock();
+                            this.lockForDiscardRequests.ExitUpgradeableReadLock();
                         }
                     }
 

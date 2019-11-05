@@ -45,6 +45,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 {
                     this.prefetchTimer.Enabled = true;
                 }
+                Debug.WriteLine("[AzureQueueResponseFetch] .prefetchTimer done.");
             };
             this.prefetchTimer.Enabled = true;
         }
@@ -57,7 +58,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 return;
             }
 
-            var exceptions = new List<Exception>();
             var index = 0;
             List<ResponseEntity> responseList = null;
             while (true)
@@ -105,13 +105,13 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         BrokerTracing.TraceError(
                             "[AzureQueueResponseFetch] .PeekMessageAsync: peek batch messages failed, Exception:{0}",
                             e.ToString());
-                        exceptions.Add(e);
+                        exception = e;
                     }
+
+                    BrokerQueueItem brokerQueueItem = null;
 
                     if (messageBody != null && messageBody.Length > 0)
                     {
-                        BrokerQueueItem brokerQueueItem = null;
-
                         // Deserialize message to BrokerQueueItem
                         try
                         {
@@ -130,21 +130,15 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                                 "[AzureQueueResponseFetch] .PeekMessage: deserialize message failed, Exception:{0}",
                                 e.ToString());
                             exception = e;
-                            exceptions.Add(e);
                         }
-
-                        this.HandleMessageResult(new MessageResult(brokerQueueItem, exception));
                     }
+
+                    this.HandleMessageResult(new MessageResult(brokerQueueItem, exception));
 
                     Interlocked.Decrement(ref this.pendingFetchCount);
                 }
 
                 this.CheckAndGetMoreMessages();
-            }
-
-            foreach (var exception in exceptions)
-            {
-                this.HandleMessageResult(new MessageResult(null, exception));
             }
         }
 

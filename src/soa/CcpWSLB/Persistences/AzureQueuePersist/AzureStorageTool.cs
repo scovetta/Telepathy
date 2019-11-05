@@ -42,10 +42,17 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 
                 await table.ExecuteAsync(operation);
             }
-            catch
+            catch (Exception e)
             {
                 BrokerTracing.TraceError(
-                    "[AzureQueueInterop] .AddMsgToTable: cannot insert the entity into table.");
+                    "[AzureStorageTool] .AddMsgToTable: cannot insert the entity into table, index = {0}, guid = {1}, exception: {2}.", entity.PartitionKey, entity.RowKey, e);
+                TableOperation retrieveOperation = TableOperation.Retrieve<ResponseEntity>(entity.PartitionKey, entity.RowKey);
+                TableResult retrievedResult = table.Execute(retrieveOperation);
+                if (retrievedResult.Result != null)
+                {
+                    BrokerTracing.TraceInfo("The entity is already exists in Table");
+                }
+
                 throw;
             }
         }
@@ -54,23 +61,10 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
         public static async Task<long> CountFailed(string connectString, string sessionId, string tableName)
         {
             var table = GetTableClient(connectString).GetTableReference(queueTableName);
-            var query = new TableQuery<QueueInfo>().Where(
-                "PartitionKey eq '" + sessionId + "' and RowKey eq '" + tableName + "'");
-            var list = new List<QueueInfo>();
-            TableContinuationToken token = null;
-            do
-            {
-                var seg = await table.ExecuteQuerySegmentedAsync(query, token);
-                token = seg.ContinuationToken;
-                list.AddRange(seg);
-                if (list.Count > 0)
-                {
-                    break;
-                }
-            }
-            while (token != null);
+            var retrive = TableOperation.Retrieve<QueueInfo>(sessionId, tableName);
+            TableResult result = await table.ExecuteAsync(retrive);
 
-            if (list.Count > 0 && long.TryParse(list[0].Note, out var failedCount))
+            if (result.Result != null  && long.TryParse(((QueueInfo)result.Result).Note, out var failedCount))
             {
                 return failedCount;
             }
@@ -133,7 +127,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             catch (Exception e)
             {
                 BrokerTracing.TraceError(
-                    "[AzureQueueInterop] .CreateQueueAsync: queueName={0} create info to table failed, the exception, {1}",
+                    "[AzureStorageTool] .CreateQueueAsync: queueName={0} create info to table failed, the exception, {1}",
                     queueName,
                     e);
                 throw;
@@ -148,14 +142,14 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 }
 
                 BrokerTracing.TraceWarning(
-                    "[AzureQueueInterop] .CreateQueueAsync: queueName={0} has existed.",
+                    "[AzureStorageTool] .CreateQueueAsync: queueName={0} has existed.",
                     queueName);
                 throw new Exception("Queue with the queueName has existed.");
             }
             catch (Exception e)
             {
                 BrokerTracing.TraceError(
-                    "[AzureQueueInterop] .CreateQueueAsync: queueName={0} create queue failed, the exception, {1}",
+                    "[AzureStorageTool] .CreateQueueAsync: queueName={0} create queue failed, the exception, {1}",
                     queueName,
                     e);
                 throw;
@@ -181,7 +175,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             catch (Exception e)
             {
                 BrokerTracing.TraceError(
-                    "[AzureQueueInterop] .CreateTableAsync: Table={0} insert info in storage table failed, the exception, {1}",
+                    "[AzureStorageTool] .CreateTableAsync: Table={0} insert info in storage table failed, the exception, {1}",
                     tableName,
                     e);
                 throw;
@@ -200,7 +194,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             catch (Exception e)
             {
                 BrokerTracing.TraceError(
-                    "[AzureQueueInterop] .CreateTableAsync: Table={0} create error, the exception, {1}",
+                    "[AzureStorageTool] .CreateTableAsync: Table={0} create error, the exception, {1}",
                     tableName,
                     e);
                 throw;
@@ -220,7 +214,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             catch (Exception e)
             {
                 BrokerTracing.TraceError(
-                    "[AzureQueueInterop] .DeleteQueueAsync: queueName={0} deleted from table failed, the exception, {1}",
+                    "[AzureStorageTool] .DeleteQueueAsync: queueName={0} deleted from table failed, the exception, {1}",
                     queueName,
                     e);
             }
@@ -233,7 +227,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             catch (Exception e)
             {
                 BrokerTracing.TraceError(
-                    "[AzureQueueInterop] .DeleteQueueAsync: queueName={0} delete queue failed, the exception, {1}",
+                    "[AzureStorageTool] .DeleteQueueAsync: queueName={0} delete queue failed, the exception, {1}",
                     queueName,
                     e);
             }
@@ -252,7 +246,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             catch (Exception e)
             {
                 BrokerTracing.TraceError(
-                    "[AzureQueueInterop] .DeleteTableAsync: Table={0} delete from storage table failed, the exception, {1}",
+                    "[AzureStorageTool] .DeleteTableAsync: Table={0} delete from storage table failed, the exception, {1}",
                     responseTableName,
                     e);
                 throw;
@@ -266,7 +260,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             catch (Exception e)
             {
                 BrokerTracing.TraceError(
-                    "[AzureQueueInterop] .DeleteTableAsync: Table={0} delete failed, the exception, {1}",
+                    "[AzureStorageTool] .DeleteTableAsync: Table={0} delete failed, the exception, {1}",
                     responseTableName,
                     e);
                 throw;
@@ -446,7 +440,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         ((BrokerQueueItem)formatter.Deserialize(await GetMsgBody(container, message.AsBytes))).Message
                         .Headers.MessageId.ToString();
                     BrokerTracing.TraceVerbose(
-                        "[AzureQueueInterop] .CheckRequestQueue: queueName = {0}, cloudMessageId = {1}, messageId = {2}",
+                        "[AzureStorageTool] .CheckRequestQueue: queueName = {0}, cloudMessageId = {1}, messageId = {2}",
                         pendingQueue.Name,
                         message.Id,
                         messageId);
@@ -463,7 +457,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         await requestQueue.AddMessageAsync(new CloudQueueMessage(message.AsBytes));
                         await pendingQueue.DeleteMessageAsync(message);
                         BrokerTracing.TraceVerbose(
-                            "[AzureQueueInterop] .CheckRequestQueue: messageId = {0} is restored into request queue.",
+                            "[AzureStorageTool] .CheckRequestQueue: messageId = {0} is restored into request queue.",
                             messageId);
                     }
                 }
@@ -471,7 +465,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             catch (Exception e)
             {
                 BrokerTracing.TraceError(
-                    "[AzureQueueInterop] .CheckRequestQueue: queueName={0}, responseTable={1}, the exception, {2}",
+                    "[AzureStorageTool] .CheckRequestQueue: queueName={0}, responseTable={1}, the exception, {2}",
                     pendingQueue.Name,
                     responseTable.Name,
                     e);
@@ -493,7 +487,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             catch (Exception e)
             {
                 BrokerTracing.TraceError(
-                    "[AzureQueueInterop] .UpdateInfo: queueName={0} update queue info in table failed, the exception, {1}",
+                    "[AzureStorageTool] .UpdateInfo: queueName={0} update queue info in table failed, the exception, {1}",
                     queueName,
                     e);
                 throw;

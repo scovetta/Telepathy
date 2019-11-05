@@ -46,6 +46,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     {
                         this.prefetchTimer.Enabled = true;
                     }
+                    Debug.WriteLine("[AzureQueueRequestFetcher] .prefetchTimer done.");
                 };
             this.prefetchTimer.Enabled = true;
         }
@@ -108,10 +109,10 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
         private async Task DeserializeMessage(byte[] messageBody)
         {
             Exception exception = null;
+            BrokerQueueItem brokerQueueItem = null;
+
             if (messageBody != null && messageBody.Length > 0)
             {
-                BrokerQueueItem brokerQueueItem = null;
-
                 // Deserialize message to BrokerQueueItem
                 try
                 {
@@ -131,9 +132,9 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         e.ToString());
                     exception = e;
                 }
-
-                this.HandleMessageResult(new MessageResult(brokerQueueItem, exception));
             }
+
+            this.HandleMessageResult(new MessageResult(brokerQueueItem, exception));
         }
     }
 }

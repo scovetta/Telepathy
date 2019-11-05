@@ -711,7 +711,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 
             Exception exception = null;
             long requestsCount = 0;
-
+            BrokerTracing.TraceVerbose(
+                "[AzureQueuePersist] .PersistRequests: persist requests start.");
             foreach (var request in putRequestState.Messages)
             {
                 ParamCheckUtility.ThrowIfNull(request, "to-be-persisted request");
@@ -781,6 +782,9 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         e);
                 }
             }
+
+            BrokerTracing.TraceVerbose(
+                "[AzureQueuePersist] .PersistRequests: persist requests end.");
         }
 
         private void PersistResponses(object state)
