@@ -7,6 +7,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Reflection;
     using System.ServiceProcess;
     using System.Threading;
 
@@ -18,7 +19,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
     using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.AzureBatch;
     using Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Local;
     using Microsoft.Telepathy.RuntimeTrace;
-
+    using Microsoft.Telepathy.Session.Internal;
     using Newtonsoft.Json;
 
     using Serilog;
@@ -48,6 +49,13 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
             catch (Exception e)
             {
                 Trace.TraceError("Excepetion parsing and setting configuration - " + e);
+                Log.CloseAndFlush();
+                return;
+            }
+
+            if (SessionLauncherRuntimeConfiguration.ConfigureLogging)
+            {
+                Trace.TraceInformation("Log configuration for Session Launcher has done successfully.");
                 Log.CloseAndFlush();
                 return;
             }
@@ -111,31 +119,15 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
                     SessionLauncherRuntimeConfiguration.AsConsole = true;
                 }
 
+                if (option.ConfigureLogging)
+                {
+                    SessionLauncherRuntimeConfiguration.ConfigureLogging = true;
+                    Trace.TraceInformation("Set configureLogging true");
+                }
+
                 if (!string.IsNullOrEmpty(option.JsonFilePath))
                 {
-                    Dictionary<string, string> items;
-                    List<string> cmd = new List<string>();
-                    try
-                    {
-                        using (StreamReader sr = new StreamReader(option.JsonFilePath))
-                        {
-                            string json = sr.ReadToEnd();
-                            items = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-
-                            foreach (KeyValuePair<string, string> item in items)
-                            {
-                                cmd.Add("--" + item.Key);
-                                cmd.Add(item.Value);
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        TraceHelper.TraceEvent(TraceEventType.Critical, "[SessionLauncher] Json file err: {0}.", e);
-                        throw;
-                    }
-
-                    string[] argsInJson = cmd.ToArray();
+                    string[] argsInJson = JSONFileParser.parse(option.JsonFilePath);
                     var parserResult = new Parser(
                         s =>
                             {
@@ -180,6 +172,18 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
                     if (!string.IsNullOrEmpty(option.AzureBatchBrokerStorageConnectionString))
                     {
                         SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString = option.AzureBatchBrokerStorageConnectionString;
+                    }
+
+                    if (!string.IsNullOrEmpty(option.Logging))
+                    {
+                        try
+                        {
+                            LogHelper.SetLoggingConfig(option, $"{Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)}/HpcSession.exe.config", "SessionLauncher");
+                        }
+                        catch (Exception e)
+                        {
+                            Trace.TraceError("Exception occurs when configure logging - " + e);
+                        }
                     }
                 }
             }

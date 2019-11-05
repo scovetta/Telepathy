@@ -71,6 +71,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>BrokerWorkerSetting.settings</DependentUpon>
     </Compile>
+    <Compile Include="BrokerWorkerStartOption.cs" />
     <Compile Include="HpcBrokerWorkerAuthorizationManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="SR.Designer.cs">

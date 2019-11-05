@@ -7,8 +7,6 @@
     <RootNamespace>Microsoft.Telepathy.Common</RootNamespace>
     <ProjectGuid>{1F7D53E1-7C00-4DE4-AD73-B0BB17BC1BFB}</ProjectGuid>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <SignAssembly>true</SignAssembly>
-    <DelaySign>true</DelaySign>
     <TargetFrameworkProfile />
     <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>

@@ -4,9 +4,12 @@
 namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.ServiceProcess;
     using System.Threading;
 
@@ -18,7 +21,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Internal;
-
+    using Newtonsoft.Json;
     using Serilog;
 
     /// <summary>
@@ -27,6 +30,8 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
     internal static class Program
     {
         private const string AzureBatchNodeListEnvVarName = "AZ_BATCH_NODE_LIST";
+
+        private static bool ConfigureLogging = false;
 
         /// <summary>
         /// The main entry point for the application.
@@ -40,6 +45,13 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
             if (!ParseAndSetBrokerLauncherSettings(args, BrokerLauncherSettings.Default))
             {
                 // parsing failed
+                return;
+            }
+
+            if (ConfigureLogging)
+            {
+                Trace.TraceInformation("Log configuration for Broker Launcher has done successfully.");
+                Log.CloseAndFlush();
                 return;
             }
 
@@ -133,66 +145,101 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
                     Trace.TraceInformation("Starting as console");
                 }
 
-                if (bool.TryParse(option.EnableAzureStorageQueueEndpoint, out var res))
+                if (option.ConfigureLogging)
                 {
-                    settings.EnableAzureStorageQueueEndpoint = res;
-                    Trace.TraceInformation($"{nameof(settings.EnableAzureStorageQueueEndpoint)} set to {res}.");
+                    ConfigureLogging = true;
+                    Trace.TraceInformation("Set configureLogging true");
                 }
 
-                if (!option.ReadSvcHostFromEnv && option.SvcHostList != null && option.SvcHostList.Any())
+                if (!string.IsNullOrEmpty(option.JsonFilePath))
                 {
-                    var collection = new StringCollection();
-                    collection.AddRange(option.SvcHostList.ToArray());
-                    settings.SvcHostList = collection;
-                    Trace.TraceInformation($"{nameof(settings.SvcHostList)} set to {string.Join(",", option.SvcHostList)}.");
-                }
-
-                if (option.ReadSvcHostFromEnv)
-                {
-                    var nodeListVar = Environment.GetEnvironmentVariable(AzureBatchNodeListEnvVarName);
-                    string[] nodes = nodeListVar?.Split(';');
-                    if (nodes == null || !nodes.Any())
+                    string[] argsInJson = JSONFileParser.parse(option.JsonFilePath);
+                    var parserResult = new Parser(
+                       s =>
+                       {
+                           s.CaseSensitive = false;
+                           s.HelpWriter = Console.Error;
+                       }).ParseArguments<StartOption>(argsInJson).WithParsed(SetBrokerLauncherSettings);
+                    if (parserResult.Tag != ParserResultType.Parsed)
                     {
-                        throw new ArgumentException($"Environment {AzureBatchNodeListEnvVarName} is empty");
+                        TraceHelper.TraceEvent(TraceEventType.Critical, "[BrokerWorker] Parse arguments error.");
+                        throw new ArgumentException("Parse arguments error in BrokerWorker.");
+                    }
+                }
+                else 
+                {
+                    if (bool.TryParse(option.EnableAzureStorageQueueEndpoint, out var res))
+                    {
+                        settings.EnableAzureStorageQueueEndpoint = res;
+                        Trace.TraceInformation($"{nameof(settings.EnableAzureStorageQueueEndpoint)} set to {res}.");
                     }
 
-                    var collection = new StringCollection();
-                    collection.AddRange(nodes);
-                    settings.SvcHostList = collection;
-                    Trace.TraceInformation($"{nameof(settings.SvcHostList)} set to {string.Join(",", nodes)} from env var {AzureBatchNodeListEnvVarName}={nodeListVar}.");
+                    if (!option.ReadSvcHostFromEnv && option.SvcHostList != null && option.SvcHostList.Any())
+                    {
+                        var collection = new StringCollection();
+                        collection.AddRange(option.SvcHostList.ToArray());
+                        settings.SvcHostList = collection;
+                        Trace.TraceInformation($"{nameof(settings.SvcHostList)} set to {string.Join(",", option.SvcHostList)}.");
+                    }
 
-                }
+                    if (option.ReadSvcHostFromEnv)
+                    {
+                        var nodeListVar = Environment.GetEnvironmentVariable(AzureBatchNodeListEnvVarName);
+                        string[] nodes = nodeListVar?.Split(';');
+                        if (nodes == null || !nodes.Any())
+                        {
+                            throw new ArgumentException($"Environment {AzureBatchNodeListEnvVarName} is empty");
+                        }
 
-                if (!string.IsNullOrEmpty(option.ServiceRegistrationPath))
-                {
-                    settings.CCP_SERVICEREGISTRATION_PATH = option.ServiceRegistrationPath;
-                    Trace.TraceInformation($"{nameof(settings.CCP_SERVICEREGISTRATION_PATH)} set to {option.ServiceRegistrationPath}.");
+                        var collection = new StringCollection();
+                        collection.AddRange(nodes);
+                        settings.SvcHostList = collection;
+                        Trace.TraceInformation($"{nameof(settings.SvcHostList)} set to {string.Join(",", nodes)} from env var {AzureBatchNodeListEnvVarName}={nodeListVar}.");
 
-                }
-                else
-                {
-                    settings.CCP_SERVICEREGISTRATION_PATH = "%TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR%";
-                }             
+                    }
 
-                if (!string.IsNullOrEmpty(option.AzureStorageConnectionString))
-                {
-                    settings.AzureStorageConnectionString = option.AzureStorageConnectionString;
-                    Trace.TraceInformation($"{nameof(settings.AzureStorageConnectionString)} changed by cmd args.");
-                }
+                    if (!string.IsNullOrEmpty(option.ServiceRegistrationPath))
+                    {
+                        settings.CCP_SERVICEREGISTRATION_PATH = option.ServiceRegistrationPath;
+                        Trace.TraceInformation($"{nameof(settings.CCP_SERVICEREGISTRATION_PATH)} set to {option.ServiceRegistrationPath}.");
 
-                if (!string.IsNullOrEmpty(option.SessionAddress))
-                {
-                    settings.SessionAddress = option.SessionAddress;
-                    Trace.TraceInformation($"{nameof(settings.SessionAddress)} set to {option.SessionAddress}.");
+                    }
+                    else
+                    {
+                        settings.CCP_SERVICEREGISTRATION_PATH = "%TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR%";
+                    }
+
+                    if (!string.IsNullOrEmpty(option.AzureStorageConnectionString))
+                    {
+                        settings.AzureStorageConnectionString = option.AzureStorageConnectionString;
+                        Trace.TraceInformation($"{nameof(settings.AzureStorageConnectionString)} changed by cmd args.");
+                    }
+
+                    if (!string.IsNullOrEmpty(option.SessionAddress))
+                    {
+                        settings.SessionAddress = option.SessionAddress;
+                        Trace.TraceInformation($"{nameof(settings.SessionAddress)} set to {option.SessionAddress}.");
+                    }
+                    if (!string.IsNullOrEmpty(option.Logging))
+                    {
+                        try
+                        {
+                            LogHelper.SetLoggingConfig(option, $"{Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)}/HpcBroker.exe.config", "BrokerLauncher");
+                        }
+                        catch (Exception e)
+                        {
+                            Trace.TraceError("Exception occurs when configure logging - " + e);
+                        }
+                    }
                 }
             }
-
             var result = new Parser(s =>
-                {
-                    s.CaseSensitive = false;
-                    s.HelpWriter = Console.Error;
-                }).ParseArguments<StartOption>(args).WithParsed(SetBrokerLauncherSettings);
+            {
+                s.CaseSensitive = false;
+                s.HelpWriter = Console.Error;
+            }).ParseArguments<StartOption>(args).WithParsed(SetBrokerLauncherSettings);
             return result.Tag == ParserResultType.Parsed;
+
         }
     }
 }

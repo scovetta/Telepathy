@@ -24,7 +24,7 @@
       "type": "string",
       "minLength": 1
     },
-    "telepathyVMSize":{
+    "telepathyVMSize": {
       "type": "string",
       "defaultValue": "STANDARD_D2_V2"
     },
@@ -146,6 +146,17 @@
         "description": "The artifacts folder to be download in telepathy VM"
       },
       "defaultValue": ""
+    },
+    "AzureLogAnalytics": {
+      "type": "string",
+      "allowedValues": [
+        "enable",
+        "disable"
+      ],
+      "metadata": {
+        "description": "New Log Analytics worksapce to enable AzureAnalytics"
+      },
+      "defaultValue": "enable"
     }
   },
   "variables": {
@@ -157,6 +168,7 @@
     "telepathyVMImagePublisher": "MicrosoftWindowsServer",
     "telepathyVMImageOffer": "WindowsServer",
     "telepathyVMOSDiskName": "telepathyVMOSDisk",
+    "telepathyLogAnalyticsWorkspaceName": "[concat('telepathyLogAnalyticsWorkspace', uniqueString(resourceGroup().id))]",
     "telepathyVMVmSize": "[parameters('telepathyVMSize')]",
     "telepathyVMVnetID": "[resourceId(variables('telepathyVnetResourceGroup'),'Microsoft.Network/virtualNetworks',parameters('vnetName'))]",
     "telepathyVMSubnetRef": "[concat(variables('telepathyVMVnetID'), '/subnets/', variables('telepathyVnetSubnetName'))]",
@@ -167,7 +179,8 @@
     "caret": "^",
     "scriptParameters": "[concat('-EnableTelepathyStorage ',' -StartTelepathyService ', ' -Location ', resourceGroup().location, ' -BatchAccountName ', parameters('batchAccountsName'), ' -BatchPoolName ', parameters('batchAccountsPoolName'), ' -ArtifactsFolderName ', parameters('artifactsFolderName'), ' -ContainerName ', parameters('artifactsStorageContainerName'), ' -SrcStorageAccountName ', parameters('artifactsStorageName'), ' -DesStorageAccountName ', variables('telepathyStorageName'))]"
   },
-  "resources": [{
+  "resources": [
+    {
       "type": "Microsoft.Batch/batchAccounts",
       "apiVersion": "2017-09-01",
       "name": "[parameters('batchAccountsName')]",
@@ -246,12 +259,14 @@
             "[variables('telepathyVnetPrefix')]"
           ]
         },
-        "subnets": [{
-          "name": "[variables('telepathyVnetSubnetName')]",
-          "properties": {
-            "addressPrefix": "[variables('telepathyVnetSubnetPrefix')]"
+        "subnets": [
+          {
+            "name": "[variables('telepathyVnetSubnetName')]",
+            "properties": {
+              "addressPrefix": "[variables('telepathyVnetSubnetPrefix')]"
+            }
           }
-        }]
+        ]
       }
     },
     {
@@ -267,18 +282,20 @@
         "displayName": "telepathyVMNic"
       },
       "properties": {
-        "ipConfigurations": [{
-          "name": "ipconfig1",
-          "properties": {
-            "privateIPAllocationMethod": "Dynamic",
-            "publicIPAddress": {
-              "id": "[resourceId('Microsoft.Network/publicIPAddresses','telepathyPublicIPAddress')]"
-            },
-            "subnet": {
-              "id": "[variables('telepathyVMSubnetRef')]"
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses','telepathyPublicIPAddress')]"
+              },
+              "subnet": {
+                "id": "[variables('telepathyVMSubnetRef')]"
+              }
             }
           }
-        }]
+        ]
       }
     },
     {
@@ -288,6 +305,17 @@
       "location": "[resourceGroup().location]",
       "properties": {
         "publicIPAllocationMethod": "Static"
+      }
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "name": "[variables('telepathyLogAnalyticsWorkspaceName')]",
+      "apiVersion": "2015-11-01-preview",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "features": {
+          "searchVersion": 1
+        }
       }
     },
     {
@@ -328,34 +356,59 @@
           }
         },
         "networkProfile": {
-          "networkInterfaces": [{
-            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('telepathyVMNicName'))]"
-          }]
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('telepathyVMNicName'))]"
+            }
+          ]
         }
       },
-      "resources": [{
-        "type": "extensions",
-        "name": "CustomScriptExtension",
-        "apiVersion": "2017-03-30",
-        "location": "[resourceGroup().location]",
-        "dependsOn": [
-          "[parameters('telepathyVMName')]"
-        ],
-        "properties": {
-          "publisher": "Microsoft.Compute",
-          "type": "CustomScriptExtension",
-          "typeHandlerVersion": "1.8",
-          "autoUpgradeMinorVersion": true,
-          "settings": {
-            "fileUris": [
-              "[variables('customScriptLocation')]"
-            ],
-            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File StartTelepathy.ps1', ' ', variables('scriptParameters'),' -SrcStorageContainerSasToken ', variables('caret'), variables('doubleQuotation'), variables('doubleQuotation'), string(parameters('artifactsStorageContainerSasToken')), variables('doubleQuotation'), variables('caret'), variables('doubleQuotation'), ' -DesStorageAccountKey ', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('telepathyStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ' -BatchAccountKey ', listKeys(resourceId('Microsoft.Batch/batchAccounts', parameters('batchAccountsName')), '2017-09-01').primary)]"
+      "resources": [
+        {
+          "condition": "[equals(parameters('AzureLogAnalytics'), 'enable')]",
+          "type": "extensions",
+          "name": "OMSExtension",
+          "apiVersion": "2015-06-15",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[concat('Microsoft.Compute/virtualMachines/', parameters('telepathyVMName'))]"
+          ],
+          "properties": {
+            "publisher": "Microsoft.EnterpriseCloud.Monitoring",
+            "type": "MicrosoftMonitoringAgent",
+            "typeHandlerVersion": "1.0",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "workspaceId": "[if(equals(parameters('AzureLogAnalytics'), 'enable'), reference(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').customerId, json('null'))]"
+            },
+            "protectedSettings": {
+              "workspaceKey": "[if(equals(parameters('AzureLogAnalytics'), 'enable'), listKeys(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').primarySharedKey, json('null'))]"
+            }
+          }
+        },
+        {
+          "type": "extensions",
+          "name": "CustomScriptExtension",
+          "apiVersion": "2017-03-30",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[parameters('telepathyVMName')]"
+          ],
+          "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "CustomScriptExtension",
+            "typeHandlerVersion": "1.8",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[variables('customScriptLocation')]"
+              ],
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File StartTelepathy.ps1', ' ', variables('scriptParameters'),' -SrcStorageContainerSasToken ', variables('caret'), variables('doubleQuotation'), variables('doubleQuotation'), string(parameters('artifactsStorageContainerSasToken')), variables('doubleQuotation'), variables('caret'), variables('doubleQuotation'), ' -DesStorageAccountKey ', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('telepathyStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ' -BatchAccountKey ', listKeys(resourceId('Microsoft.Batch/batchAccounts', parameters('batchAccountsName')), '2017-09-01').primary, ' -EnableLogAnalytics ', parameters('AzureLogAnalytics'), ' -WorkspaceId ', reference(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').customerId, ' -AuthenticationID ',  listKeys(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').primarySharedKey)]"
+            }
           }
         }
-      }]
+      ]
     }
-
   ],
   "outputs": {}
 }

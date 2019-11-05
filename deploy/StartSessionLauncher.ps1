@@ -1,10 +1,13 @@
 ﻿param (
-    [string]$SessionLauncher,
+    [string]$SessionLauncherPath,
     [string]$DesStorageConnectionString,
     [string]$BatchAccountName,
     [string]$BatchPoolName,
     [string]$BatchAccountKey,
-    [string]$BatchAccountServiceUrl
+    [string]$BatchAccountServiceUrl,
+    [switch]$EnableLogAnalytics,
+    [string]$WorkspaceId,
+    [string]$AuthenticationId
 )
 
 function Write-Log 
@@ -89,8 +92,20 @@ Write-Log -Message "BatchAccountKey : $BatchAccountKey"
 Write-Log -Message "BatchAccountServiceUrl : $BatchAccountServiceUrl"
 
 $serviceName = "TelepathySessionLauncher"
+$SessionLauncher = "$SessionLauncherPath\HpcSession.exe"
 
 Try {
+    Write-Log -Message "Add SessionLauncher in PATH environment varaible"
+    $env:path = $env:path + ";$SessionLauncherPath"
+    [System.Environment]::SetEnvironmentVariable("PATH", $env:path, "Machine")
+
+    if($EnableLogAnalytics)
+    {
+        $LoggingLevel = "Warning"
+        Write-Log -Message "Start to config log analytics"
+        Invoke-Expression "$SessionLauncher -l --Logging `"Enable`" --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel $LoggingLevel --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId"
+    }
+    
     Write-Log -Message "Start to new session launcher windows service"
     New-Service -Name $serviceName `
     -BinaryPathName "$SessionLauncher --AzureBatchServiceUrl $BatchAccountServiceUrl --AzureBatchAccountName $BatchAccountName --AzureBatchAccountKey $BatchAccountkey --AzureBatchPoolName $BatchPoolName --AzureBatchBrokerStorageConnectionString $DesStorageConnectionString" `

@@ -4,7 +4,10 @@ param (
     [string]$BatchAccountName,
     [string]$BatchPoolName,
     [string]$BatchAccountKey,
-    [string]$BatchAccountServiceUrl
+    [string]$BatchAccountServiceUrl,
+    [switch]$EnableLogAnalytics,
+    [string]$WorkspaceId,
+    [string]$AuthenticationId
 )
 
 function Write-Log 
@@ -83,7 +86,7 @@ function Write-Log
 
 
 Write-Log -Message "Start open NetTCPPortSharing & enable StrongName"
-cmd /c "sc.exe config NetTcpPortSharing start=demand & reg ADD "HKLM\Software\Microsoft\StrongName\Verification\*,*" /f & reg ADD "HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^" /f"
+cmd /c "sc.exe config NetTcpPortSharing start=demand"
 
 
 Write-Log -Message "set TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR environment varaibles in session machine"
@@ -101,10 +104,20 @@ Write-Log -Message "BatchAccountServiceUrl: $BatchAccountServiceUrl"
 
 Try {
     Write-Log -Message "Start session launcher"
-    invoke-expression "$DestinationPath\StartSessionLauncher.ps1 -SessionLauncher $DestinationPath\SessionLauncher\HpcSession.exe -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey '$BatchAccountKey' -BatchAccountServiceUrl '$BatchAccountServiceUrl'"
+    $sessionLauncherExpression = "$DestinationPath\StartSessionLauncher.ps1 -SessionLauncherPath $DestinationPath\SessionLauncher -DesStorageConnectionString '$DesStorageConnectionString' -BatchAccountName $BatchAccountName -BatchPoolName $BatchPoolName -BatchAccountKey '$BatchAccountKey' -BatchAccountServiceUrl '$BatchAccountServiceUrl'"
+    if($EnableLogAnalytics)
+    {
+        $sessionLauncherExpression = "$($sessionLauncherExpression) -EnableLogAnalytics -WorkspaceId $WorkspaceId -AuthenticationId $AuthenticationId"
+    }
+    invoke-expression $sessionLauncherExpression
 	
     Write-Log -Message "Start broker"
-    invoke-expression "$DestinationPath\StartBroker.ps1 -Broker $DestinationPath\BrokerOutput\HpcBroker.exe -SessionAddress localhost"
+    $brokerExpression = "$DestinationPath\StartBroker.ps1 -BrokerOutput $DestinationPath\BrokerOutput -SessionAddress localhost"
+    if($EnableLogAnalytics)
+    {
+        $brokerExpression = "$($brokerExpression) -EnableLogAnalytics -WorkspaceId $WorkspaceId -AuthenticationId $AuthenticationId"
+    }
+    invoke-expression $brokerExpression
 } Catch {
     Write-Log -Message "Fail to start telepathy service" -Level Error
     Write-Log -Message $_ -Level Error
