@@ -4,7 +4,6 @@
 namespace Microsoft.Telepathy.Internal.BrokerLauncher
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Diagnostics;
     using System.IO;
@@ -15,13 +14,13 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
 
     using CommandLine;
 
-    using Microsoft.Hpc.Scheduler.Session.Internal;
     using Microsoft.Hpc.Scheduler.Session.Internal.LauncherHostService;
+    using Microsoft.Telepathy.Common;
     using Microsoft.Telepathy.Common.TelepathyContext;
     using Microsoft.Telepathy.RuntimeTrace;
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Internal;
-    using Newtonsoft.Json;
+
     using Serilog;
 
     /// <summary>
@@ -206,7 +205,7 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
                     }
                     else
                     {
-                        settings.CCP_SERVICEREGISTRATION_PATH = "%TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR%";
+                        settings.CCP_SERVICEREGISTRATION_PATH = $"%{TelepathyConstants.ServiceWorkingDirEnvVar}%";
                     }
 
                     if (!string.IsNullOrEmpty(option.AzureStorageConnectionString))

@@ -44,5 +44,7 @@ namespace Microsoft.Telepathy.Common
         public static string SessionSchedulerDelegationAzureTableBindingAddress => $"{AzureTableBindingSchemePrefix}SchedulerDelegation";
 
         public static string StandaloneSessionId => "0";
+
+        public static string ServiceWorkingDirEnvVar => "TELEPATHY_SERVICE_WORKING_DIR";
     }
 }

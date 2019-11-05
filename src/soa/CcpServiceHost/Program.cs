@@ -194,6 +194,8 @@ namespace Microsoft.Telepathy.CcpServiceHost
                 Environment.SetEnvironmentVariable(Constant.RegistryPathEnv, Path.Combine(Environment.CurrentDirectory, defaultRegistryPath));
             }
 
+            TraceHelper.TraceVerbose(Utility.GetJobId(), $"Set {Constant.RegistryPathEnv} to {Environment.GetEnvironmentVariable(Constant.RegistryPathEnv)}");
+
             // use default values for following environment variables
             Environment.SetEnvironmentVariable(Constant.ProcNumEnvVar, "1");
             Environment.SetEnvironmentVariable(Constant.NetworkPrefixEnv, Constant.EnterpriseNetwork);
