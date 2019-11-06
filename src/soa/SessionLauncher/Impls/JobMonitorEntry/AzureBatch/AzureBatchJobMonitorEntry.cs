@@ -228,7 +228,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
         /// <summary>
         /// Callback when Azure Batch Monitor report jon state
         /// </summary>
-        private async void JobMonitor_OnReportJobState(Telepathy.Session.Data.JobState state, List<TaskInfo> stateChangedTaskList)
+        private async void JobMonitor_OnReportJobState(Telepathy.Session.Data.JobState state, List<TaskInfo> stateChangedTaskList, bool shouldExit)
         {
             if (state != this.currentState)
             {
@@ -241,9 +241,14 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
                         {
                             try
                             {
+                                TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitorEntry] Job state change event triggered, new state received from AzureBatchJobMonitor: {0}", state);
                                 ISchedulerNotify proxy = this.context;
                                 proxy.JobStateChanged(state);
-                                TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitorEntry] Job state change event triggered, new state: {0}", state);
+                            }
+                            catch (System.ObjectDisposedException e)
+                            {
+                                TraceHelper.TraceEvent(this.sessionid, TraceEventType.Error, "[AzureBatchJobMonitorEntry] Callback channel is disposed: {0}, lose connection to broker.", e);
+                                this.context = null;
                             }
                             catch (CommunicationException e)
                             {
@@ -262,23 +267,39 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
 
             if (stateChangedTaskList != null)
             {
-                try
+                if (this.context != null)
                 {
-                    ISchedulerNotify proxy = this.context;
-                    await proxy.TaskStateChanged(stateChangedTaskList);
-                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitorEntry] Task state change event triggered.");
-                }
-                catch (CommunicationException e)
-                {
-                    // Channel is aborted, set the context to null
-                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Error, "[AzureBatchJobMonitorEntry] Callback channel is aborted: {0}", e);
-                    this.context = null;
-                }
-                catch (Exception e)
-                {
-                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Error, "[AzureBatchJobMonitorEntry] Failed to trigger task state change event: {0}", e);
-                }
+                    try
+                    {
+                        ISchedulerNotify proxy = this.context;
+                        await proxy.TaskStateChanged(stateChangedTaskList);
+                        TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitorEntry] Task state change event triggered.");
+                    }
+                    catch (System.ObjectDisposedException e)
+                    {
+                        TraceHelper.TraceEvent(this.sessionid, TraceEventType.Error, "[AzureBatchJobMonitorEntry] Callback channel is disposed: {0}, lose connection to broker", e);
+                        this.context = null;
+                    }
+                    catch (CommunicationException e)
+                    {
+                        // Channel is aborted, set the context to null
+                        TraceHelper.TraceEvent(this.sessionid, TraceEventType.Error, "[AzureBatchJobMonitorEntry] Callback channel is aborted: {0}", e);
+                        this.context = null;
+                    }
+                    catch (Exception e)
+                    {
+                        TraceHelper.TraceEvent(this.sessionid, TraceEventType.Error, "[AzureBatchJobMonitorEntry] Failed to trigger task state change event: {0}", e);
+                    }
+                }            
+            }
 
+            if (shouldExit)
+            {
+                if (this.Exit != null)
+                {
+                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitorEntry] Exit AzureBatchJobMonitor Entry");
+                    this.Exit(this, EventArgs.Empty);
+                }
             }
         }
 

@@ -64,19 +64,20 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
         /// <summary>
         /// Gets or sets the report state event
         /// </summary>
-        public Action<Telepathy.Session.Data.JobState, List<TaskInfo>> ReportJobStateAction;
+        public Action<Telepathy.Session.Data.JobState, List<TaskInfo>, bool> ReportJobStateAction;
 
         /// <summary>
         /// Stores the last change time
         /// </summary>
         private DateTime lastChangeTime;
 
+        private Telepathy.Session.Data.JobState previousJobState = Session.Data.JobState.Configuring;
 
         /// <summary>
         /// Initializes a new instance of the JobMonitorEntry class
         /// </summary>
         /// <param name="sessionid">indicating the session id</param>
-        public AzureBatchJobMonitor(string sessionid, Action<Telepathy.Session.Data.JobState, List<TaskInfo>> reportJobStateAction)
+        public AzureBatchJobMonitor(string sessionid, Action<Telepathy.Session.Data.JobState, List<TaskInfo>, bool> reportJobStateAction)
         {
             this.sessionid = sessionid;
             this.batchClient = AzureBatchConfiguration.GetBatchClient();
@@ -91,6 +92,8 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
         {
             TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Start Azure Batch job monitor.");
             this.cloudJob = await this.batchClient.JobOperations.GetJobAsync(AzureBatchSessionJobIdConverter.ConvertToAzureBatchJobId(this.sessionid));
+
+            // Do we need this?
             if (this.cloudJob.State == JobState.Disabled)
             {
                 ThrowHelper.ThrowSessionFault(SOAFaultCode.Session_ValidateJobFailed_JobCanceled, SR.SessionLauncher_ValidateJobFailed_JobCanceled, this.sessionid.ToString());
@@ -115,6 +118,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
             bool shouldExit = false;
             this.pullJobGap = PullJobMinGap;
             JobState state = JobState.Active;
+            Session.Data.JobState currentJobState = Session.Data.JobState.Configuring;
             var pool = this.batchClient.PoolOperations.GetPool(AzureBatchConfiguration.BatchPoolName);
             ODATADetailLevel detailLevel = new ODATADetailLevel();
             detailLevel.SelectClause = "affinityId, ipAddress";
@@ -125,53 +129,94 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
                 {
                     break;
                 }
+                List<TaskInfo> stateChangedTaskList = new List<TaskInfo>();
+
                 try
                 {
                     TraceHelper.TraceEvent(this.sessionid, TraceEventType.Verbose, "[AzureBatchJobMonitor] Starting get job state.");
                     ODATADetailLevel detail = new ODATADetailLevel(selectClause: "state");
                     this.cloudJob = await this.batchClient.JobOperations.GetJobAsync(this.cloudJob.Id);
                     state = this.cloudJob.State.HasValue ? this.cloudJob.State.Value : state;
+                    currentJobState = await AzureBatchJobStateConverter.FromAzureBatchJobAsync(this.cloudJob);
+                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Current job state in AzureBatch: JobState = {0}\n", state);
+                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Current job state in Telepathy: JobState = {0}\n", currentJobState);
+                    stateChangedTaskList = await this.GetTaskStateChangeAsync(nodes);
 
-                    List<TaskInfo> stateChangedTaskList = await this.GetTaskStateChangeAsync(nodes);
-
-                    if (this.ReportJobStateAction != null)
+                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Previous job state report to AzureBatchJobMonitorEntry: JobState = {0}\n", previousJobState);
+                    if (state == JobState.Completed || state == JobState.Disabled)
                     {
-                        this.ReportJobStateAction(await AzureBatchJobStateConverter.FromAzureBatchJobAsync(this.cloudJob), stateChangedTaskList);
+                        if (this.previousJobState == Session.Data.JobState.Canceling)
+                        {
+                            currentJobState = Session.Data.JobState.Canceled;
+                        }
+                        shouldExit = true;
                     }
-
-                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Starting query job state: JobState = {0}\n", state);
+                    else if (this.previousJobState == Session.Data.JobState.Canceling && !shouldExit)
+                    {
+                        //Override current job state as Canceling, because when all tasks turn to be completed, the job state converter will make job state finishing.
+                        //If one job is cancelling in previous state and now is not in one terminated state, keep to reporting cancelling state to job monitor entry.
+                        currentJobState = Session.Data.JobState.Canceling;
+                        TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Overwrite current job state as {0} in Telepathy according to previous job state {1}\n", currentJobState, previousJobState);
+                    }
+                }
+                catch (BatchException e)
+                {
+                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Warning, "[AzureBatchJobMonitor] BatchException thrown when querying job info: {0}", e);
+                    //If the previous job state is canceling and current job is not found, then the job is deleted.
+                    if (e.RequestInformation != null & e.RequestInformation.HttpStatusCode != null)
+                    {
+                        if (e.RequestInformation.HttpStatusCode == System.Net.HttpStatusCode.NotFound)
+                        {
+                            if (previousJobState == Session.Data.JobState.Canceling)
+                            {
+                                TraceHelper.TraceEvent(this.sessionid, TraceEventType.Warning, "[AzureBatchJobMonitor] The queried job has been deleted.");
+                            }
+                            else
+                            {
+                                TraceHelper.TraceEvent(this.sessionid, TraceEventType.Warning, "[AzureBatchJobMonitor] The queried job previous state is {0}, we make its state as canceled because it's no longer exist.", previousJobState);
+                            }
+                            shouldExit = true;
+                            currentJobState = Session.Data.JobState.Canceled;
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
                     TraceHelper.TraceEvent(this.sessionid, TraceEventType.Warning, "[AzureBatchJobMonitor] Exception thrown when querying job info: {0}", e);
                 }
-                finally
+
+                try
                 {
-                    if (state == JobState.Completed || state == JobState.Disabled || state == JobState.Terminating || state == JobState.Disabling || state == JobState.Deleting)
+                    if (this.ReportJobStateAction != null)
                     {
-                        shouldExit = true;
+                        TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information,
+                            "[AzureBatchJobMonitor] Current job state report to AzureBatchJobMonitorEntry: JobState = {0}\n",
+                            currentJobState);
+                        this.ReportJobStateAction(currentJobState, stateChangedTaskList, shouldExit);
                     }
                 }
-
-                TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Waiting {0} miliseconds and start another round of getting job state info.", this.pullJobGap);
-
-                // Sleep and pull job again, clear the register pull job flag
-                await Task.Delay(this.pullJobGap);
-                if (this.pullJobGap < PullJobMaxGap)
+                catch (Exception e)
                 {
-                    this.pullJobGap *= 2;
-                    if (this.pullJobGap > PullJobMaxGap)
+                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Warning, "[AzureBatchJobMonitor] Exception thrown when report job info: {0}", e);
+                }
+
+                this.previousJobState = currentJobState;
+
+                if (!shouldExit)
+                {
+                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Waiting {0} milliseconds and start another round of getting job state info.", this.pullJobGap);
+
+                    // Sleep and pull job again, clear the register pull job flag
+                    await Task.Delay(this.pullJobGap);
+                    if (this.pullJobGap < PullJobMaxGap)
                     {
-                        this.pullJobGap = PullJobMaxGap;
+                        this.pullJobGap *= 2;
+                        if (this.pullJobGap > PullJobMaxGap)
+                        {
+                            this.pullJobGap = PullJobMaxGap;
+                        }
                     }
-                }
-            }
-            if (shouldExit)
-            {
-                if (this.Exit != null)
-                {
-                    this.Exit(this, EventArgs.Empty);
-                }
+                }            
             }
         }
 
@@ -189,24 +234,25 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
             DateTime changeTime = DateTime.UtcNow;
             try
             {
-                TraceHelper.TraceEvent(this.sessionid, TraceEventType.Verbose, "[AzureBatchgJobMonitorEntry] Query task info...");
+                TraceHelper.TraceEvent(this.sessionid, TraceEventType.Verbose, "[AzureBatchgJobMonitor] Query task info...");
                 ODATADetailLevel detail = new ODATADetailLevel(filterClause: $"(stateTransitionTime ge datetime'{this.lastChangeTime:O}')", selectClause: "id,nodeInfo,state,stateTransitionTime");
-                TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitorEntry] filter clause = {0}\n", detail.FilterClause);
+                TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Query task info filter clause = {0}\n", detail.FilterClause);
                 List<CloudTask> stateChangedTasks = await this.batchClient.JobOperations.ListTasks(this.cloudJob.Id, detail).ToListAsync();
                 if (stateChangedTasks.Count == 0)
                 {
                     // no service task dispathed yet.
                     TraceHelper.TraceEvent(this.sessionid, TraceEventType.Warning,
-                        "[JobMonitorEntry] Failed to get tasks or no task state change.");
+                        "[AzureBatchJobMonitorEntry] Failed to get tasks or no task state change.");
 
                     return null;
                 }
 
                 List<TaskInfo> results = new List<TaskInfo>(stateChangedTasks.Count);
+                TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] The number of changed state tasks is {0}", stateChangedTasks.Count);
 
                 foreach (CloudTask task in stateChangedTasks)
                 {
-                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitorEntry] task date time = {0}\n", task.StateTransitionTime);
+                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] task {0} state changed to {1}, at date time = {2}\n", task.Id, task.State, task.StateTransitionTime);
                     TaskState state = task.State.Value;
                     if (state == TaskState.Running)
                     {
@@ -233,12 +279,12 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
             }
             catch (Exception ex)
             {
-                TraceHelper.TraceEvent(this.sessionid, TraceEventType.Warning, "[JobMonitorEntry] Fail when get task info: {0}", ex);
+                TraceHelper.TraceEvent(this.sessionid, TraceEventType.Warning, "[AzureBatchJobMonitor] Fail when get task info: {0}", ex);
                 return null;
             }
             finally
             {
-                TraceHelper.TraceEvent(this.sessionid, TraceEventType.Verbose, "[JobMonitorEntry] Query task info finished.");
+                TraceHelper.TraceEvent(this.sessionid, TraceEventType.Verbose, "[AzureBatchJobMonitor] Query task info finished.");
             }
         }
 
@@ -254,6 +300,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
                 {
                     if (this.batchClient != null)
                     {
+                        TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Start to dispose batch client in AzureBatchJobMonitor.");
                         this.batchClient.Dispose();
                     }
                 }

@@ -60,6 +60,17 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SchedulerDelegation
 
                 return true;
             }
+            catch (BatchException ex)
+            {
+                if (ex.RequestInformation != null && ex.RequestInformation.HttpStatusCode != null)
+                {
+                    if (ex.RequestInformation.HttpStatusCode == HttpStatusCode.NotFound)
+                    {
+                        TraceHelper.TraceEvent(sessionId, TraceEventType.Warning, "[AzureBatchSchedulerDelegation] Can't update job properties because it can't be found in AzureBatch.");
+                        return false;
+                    }
+                }
+            }
             catch (Exception ex)
             {
                 TraceHelper.TraceEvent(TraceEventType.Error, ex.ToString());
@@ -153,28 +164,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SchedulerDelegation
         /// </summary>
         public static event EventHandler OnJobFailedOrCanceled;
 
-        /// <summary>
-        /// Notify that a session job is finished
-        /// </summary>
-        static private void NotifyJobFinished(CloudJob schedulerJob)
-        {
-            if (OnJobFinished != null)
-            {
-                OnJobFinished(schedulerJob, EventArgs.Empty);
-            }
-        }
-
-        /// <summary>
-        /// Notify that a session job is failed or canceled
-        /// </summary>
-        static private void NotifyJobFailedOrCanceled(CloudJob schedulerJob)
-        {
-            if (OnJobFailedOrCanceled != null)
-            {
-                OnJobFailedOrCanceled(schedulerJob, EventArgs.Empty);
-            }
-        }
-
+      
         /// <summary>
         /// Event triggered when job monitor entry's instance is exited
         /// </summary>
@@ -184,17 +174,6 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SchedulerDelegation
         {
             AzureBatchJobMonitorEntry entry = (AzureBatchJobMonitorEntry)sender;
             Debug.Assert(entry != null, "[AzureBatchSchedulerDelegation] Sender should be an instance of JobMonitorEntry class.");
-
-            // if a JobMonitorEntry is exited because of job state changed into Finished/Canceled/Failed
-            if (entry.CurrentState == JobState.Finished)
-            {
-                NotifyJobFinished(entry.CloudJob);
-            }
-            else if (entry.CurrentState == JobState.Failed || entry.CurrentState == JobState.Canceled)
-            {
-                NotifyJobFailedOrCanceled(entry.CloudJob);
-            }
-
             lock (this.JobMonitors)
             {
                 this.JobMonitors.Remove(entry.SessionId);
@@ -202,6 +181,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SchedulerDelegation
 
             entry.Exit -= new EventHandler(this.JobMonitorEntry_Exit);
             entry.Close();
+            Trace.TraceInformation($"[AzureBatchSchedulerDelegation] End: JobMonitorEntry Exit.");
         }
 
         public Task<int?> GetTaskErrorCode(string jobId, string globalTaskId)
