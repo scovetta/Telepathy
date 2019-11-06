@@ -13,6 +13,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.WindowsAzure.Storage.Blob;
     using Microsoft.WindowsAzure.Storage.Queue;
+    using System.Collections.Concurrent;
 
     internal class AzureQueueRequestFetcher : AzureQueueMessageFetcher
     {
@@ -45,6 +46,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     {
                         this.prefetchTimer.Enabled = true;
                     }
+                    Debug.WriteLine("[AzureQueueRequestFetcher] .prefetchTimer done.");
                 };
             this.prefetchTimer.Enabled = true;
         }
@@ -60,22 +62,29 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             var exceptions = new List<Exception>();
             while (true)
             {
-                Exception exception = null;
                 if (this.pendingFetchCount < 1)
                 {
                     break;
                 }
 
+                List<Task> tasks = new List<Task>();
+                ConcurrentDictionary<string, Task> requestConcurrentDictionary = new ConcurrentDictionary<string, Task>();
+
                 while (this.pendingFetchCount > 0)
                 {
-                    byte[] messageBody = null;
                     try
                     {
-                        var message = await this.requestQueue.GetMessageAsync();
-                        var copyMessage = new CloudQueueMessage(message.AsBytes);
-                        await this.pendingQueue.AddMessageAsync(copyMessage);
-                        await this.requestQueue.DeleteMessageAsync(message);
-                        messageBody = message.AsBytes;
+                        tasks.Add(Task.Run(async () =>
+                        {
+                            var message = await this.requestQueue.GetMessageAsync();
+                            await requestConcurrentDictionary.GetOrAdd(message.Id, async (m) =>
+                            {
+                                var copyMessage = new CloudQueueMessage(message.AsBytes);
+                                await this.pendingQueue.AddMessageAsync(copyMessage);
+                                await this.requestQueue.DeleteMessageAsync(message);
+                                await DeserializeMessage(message.AsBytes);
+                            });
+                        }));
                     }
                     catch (Exception e)
                     {
@@ -85,37 +94,9 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         exceptions.Add(e);
                     }
 
-                    if (messageBody != null && messageBody.Length > 0)
-                    {
-                        BrokerQueueItem brokerQueueItem = null;
-
-                        // Deserialize message to BrokerQueueItem
-                        try
-                        {
-                            brokerQueueItem = (BrokerQueueItem)this.formatter.Deserialize(
-                                await AzureStorageTool.GetMsgBody(this.blobContainer, messageBody));
-                            brokerQueueItem.PersistAsyncToken.AsyncToken =
-                                brokerQueueItem.Message.Headers.MessageId.ToString();
-                            BrokerTracing.TraceVerbose(
-                                "[AzureQueueRequestFetcher] .PeekMessageAsync: deserialize header={0} property={1}",
-                                brokerQueueItem.Message.Headers.MessageId,
-                                brokerQueueItem.Message.Properties);
-                        }
-                        catch (Exception e)
-                        {
-                            BrokerTracing.TraceError(
-                                "[AzureQueueRequestFetcher] .PeekMessageAsync: deserialize message failed, Exception:{0}",
-                                e.ToString());
-                            exception = e;
-                            exceptions.Add(e);
-                        }
-
-                        this.HandleMessageResult(new MessageResult(brokerQueueItem, exception));
-                    }
-
                     Interlocked.Decrement(ref this.pendingFetchCount);
                 }
-
+                await Task.WhenAll(tasks);
                 this.CheckAndGetMoreMessages();
             }
 
@@ -123,6 +104,37 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             {
                 this.HandleMessageResult(new MessageResult(null, exception));
             }
+        }
+
+        private async Task DeserializeMessage(byte[] messageBody)
+        {
+            Exception exception = null;
+            BrokerQueueItem brokerQueueItem = null;
+
+            if (messageBody != null && messageBody.Length > 0)
+            {
+                // Deserialize message to BrokerQueueItem
+                try
+                {
+                    brokerQueueItem = (BrokerQueueItem)this.formatter.Deserialize(
+                        await AzureStorageTool.GetMsgBody(this.blobContainer, messageBody));
+                    brokerQueueItem.PersistAsyncToken.AsyncToken =
+                        brokerQueueItem.Message.Headers.MessageId.ToString();
+                    BrokerTracing.TraceVerbose(
+                        "[AzureQueueRequestFetcher] .DeserializeMessage: deserialize header={0} property={1}",
+                        brokerQueueItem.Message.Headers.MessageId,
+                        brokerQueueItem.Message.Properties);
+                }
+                catch (Exception e)
+                {
+                    BrokerTracing.TraceError(
+                        "[AzureQueueRequestFetcher] .DeserializeMessage: deserialize message failed, Exception:{0}",
+                        e.ToString());
+                    exception = e;
+                }
+            }
+
+            this.HandleMessageResult(new MessageResult(brokerQueueItem, exception));
         }
     }
 }

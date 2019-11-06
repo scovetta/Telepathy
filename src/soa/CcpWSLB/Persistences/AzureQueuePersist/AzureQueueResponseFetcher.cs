@@ -20,6 +20,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 
         private long lastIndex;
 
+        private long ackIndex = int.MaxValue >> 1;
+
         public AzureQueueResponseFetcher(
             CloudTable responseTable,
             long messageCount,
@@ -36,14 +38,15 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
         {
             this.responseTable = responseTable;
             this.prefetchTimer.Elapsed += (sender, args) =>
+            {
+                Debug.WriteLine("[AzureQueueResponseFetch] .prefetchTimer raised.");
+                this.PeekMessageAsync().GetAwaiter().GetResult();
+                if (!this.isDisposedField)
                 {
-                    Debug.WriteLine("[AzureQueueResponseFetch] .prefetchTimer raised.");
-                    this.PeekMessageAsync().GetAwaiter().GetResult();
-                    if (!this.isDisposedField)
-                    {
-                        this.prefetchTimer.Enabled = true;
-                    }
-                };
+                    this.prefetchTimer.Enabled = true;
+                }
+                Debug.WriteLine("[AzureQueueResponseFetch] .prefetchTimer done.");
+            };
             this.prefetchTimer.Enabled = true;
         }
 
@@ -55,7 +58,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 return;
             }
 
-            var exceptions = new List<Exception>();
             var index = 0;
             List<ResponseEntity> responseList = null;
             while (true)
@@ -73,9 +75,13 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     {
                         if (responseList == null || responseList.Count <= index)
                         {
+                            BrokerTracing.TraceVerbose(
+                                "[AzureQueueResponseFetch] .PeekMessageAsync: lastIndex={0}, ackIndex={1}",
+                                lastIndex, ackIndex);
                             responseList = await AzureStorageTool.GetBatchEntityAsync(
-                                               this.responseTable,
-                                               this.lastIndex);
+                                this.responseTable,
+                                this.lastIndex,
+                                this.ackIndex);
                             index = 0;
                             BrokerTracing.TraceVerbose(
                                 "[AzureQueueResponseFetch] .PeekMessageAsync: get batch entity count={0}",
@@ -99,17 +105,17 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         BrokerTracing.TraceError(
                             "[AzureQueueResponseFetch] .PeekMessageAsync: peek batch messages failed, Exception:{0}",
                             e.ToString());
-                        exceptions.Add(e);
+                        exception = e;
                     }
+
+                    BrokerQueueItem brokerQueueItem = null;
 
                     if (messageBody != null && messageBody.Length > 0)
                     {
-                        BrokerQueueItem brokerQueueItem = null;
-
                         // Deserialize message to BrokerQueueItem
                         try
                         {
-                            brokerQueueItem = (BrokerQueueItem)this.formatter.Deserialize(
+                            brokerQueueItem = (BrokerQueueItem) this.formatter.Deserialize(
                                 await AzureStorageTool.GetMsgBody(this.blobContainer, messageBody));
                             brokerQueueItem.PersistAsyncToken.AsyncToken =
                                 brokerQueueItem.Message.Headers.RelatesTo.ToString();
@@ -124,22 +130,22 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                                 "[AzureQueueResponseFetch] .PeekMessage: deserialize message failed, Exception:{0}",
                                 e.ToString());
                             exception = e;
-                            exceptions.Add(e);
                         }
-
-                        this.HandleMessageResult(new MessageResult(brokerQueueItem, exception));
                     }
+
+                    this.HandleMessageResult(new MessageResult(brokerQueueItem, exception));
 
                     Interlocked.Decrement(ref this.pendingFetchCount);
                 }
 
                 this.CheckAndGetMoreMessages();
             }
-
-            foreach (var exception in exceptions)
-            {
-                this.HandleMessageResult(new MessageResult(null, exception));
-            }
         }
-    }
+
+        public void ChangeAck(long ack)
+        {
+            if (ackIndex < ack)
+                Interlocked.Exchange(ref ackIndex, ack);
+        }
+    }   
 }
