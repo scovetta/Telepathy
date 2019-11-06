@@ -52,7 +52,13 @@ namespace Microsoft.Telepathy.EchoClient
                 throw new InvalidOperationException("currElement out of range");
             }
 
-            Console.Write("\r{0}{1}/{2} complete", message, currElementIndex + 1, totalElementCount);
+            double progress = (currElementIndex + 1) / (double)totalElementCount;
+            int progressBarLength = 20;
+            int progressLength = (int)(progressBarLength * progress);
+
+            string progressBarStr = string.Join(string.Empty, new string('=', progressLength), new string(' ', progressBarLength - progressLength));
+
+            Console.Write("\r{3}[{0}] {1}/{2} complete", progressBarStr, currElementIndex + 1, totalElementCount, message);
             if (currElementIndex == totalElementCount - 1)
             {
                 Console.WriteLine();

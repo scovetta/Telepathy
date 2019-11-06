@@ -359,7 +359,7 @@ namespace Microsoft.Telepathy.EchoClient
                                                     }
                                                     else
                                                     {
-                                                        Logger.Progress("Response received ", responseNumber, config.NumberOfRequest);
+                                                        Logger.Progress(string.Empty, responseNumber, config.NumberOfRequest);
                                                     }
 
                                                     brokerClientTaskTimeRecords[brokerClientGuid][gg].ResponseTime = DateTime.Now;
