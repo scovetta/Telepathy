@@ -89,8 +89,8 @@ Write-Log -Message "Start open NetTCPPortSharing & enable StrongName"
 cmd /c "sc.exe config NetTcpPortSharing start=demand"
 
 
-Write-Log -Message "set TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR environment varaibles in session machine"
-cmd /c "setx /m TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR ^"C:\TelepathyServiceRegistration\^""
+Write-Log -Message "set TELEPATHY_SERVICE_WORKING_DIR environment varaibles in session machine"
+cmd /c "setx /m TELEPATHY_SERVICE_WORKING_DIR ^"C:\TelepathyServiceRegistration\^""
 
 Write-Log -Message "Open tcp port"
 New-NetFirewallRule -DisplayName "Open TCP port for telepathy" -Direction Inbound -LocalPort 9087, 9090, 9091, 9092, 9093 -Protocol TCP -Action Allow

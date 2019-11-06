@@ -46,10 +46,6 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
 
         private const string AzureBatchPrepJobWorkingDir = "%AZ_BATCH_JOB_PREP_WORKING_DIR%";
 
-        private const string ServiceWorkingDirEnvVar = "TELEPATHY_SERVICE_WORKING_DIR";
-
-        private const string ServiceRegistrationWorkingDirEnvVar = "TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR";
-
         private const string JobPrepCmdLine =
             @"cmd /c ""sc.exe config NetTcpPortSharing start= demand";
 
@@ -61,7 +57,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
 
         private readonly Dictionary<string, string> defaultSoaConfigurations = new Dictionary<string, string>()
                                                                                    {
-                                                                                       { Constant.RegistryPathEnv, $"%{ServiceRegistrationWorkingDirEnvVar}%" },
+                                                                                       { Constant.RegistryPathEnv, $"%{TelepathyConstants.ServiceWorkingDirEnvVar}%" },
                                                                                        { Constant.AutomaticShrinkEnabled, "False" },
                                                                                        { Constant.NettcpOver443, "True" },
                                                                                        { Constant.NetworkPrefixEnv, string.Empty },
@@ -475,8 +471,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
                         env.Add(new EnvironmentSetting(Constant.OverrideProcNumEnvVar, "TRUE"));
 
                         //Establish a link via ev between TELEPATHY_SERVICE_WORKING_DIR and AZ_BATCH_JOB_PREP_WORKING_DIR
-                        env.Add(new EnvironmentSetting(ServiceRegistrationWorkingDirEnvVar, AzureBatchPrepJobWorkingDir));
-                        env.Add(new EnvironmentSetting(ServiceWorkingDirEnvVar, AzureBatchPrepJobWorkingDir));
+                        env.Add(new EnvironmentSetting(TelepathyConstants.ServiceWorkingDirEnvVar, AzureBatchPrepJobWorkingDir));
                         return env;
                     }
                     var environment = ConstructEnvironmentVariable();
@@ -592,7 +587,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
 
                         CloudTask CreateTask(string taskId)
                         {
-                            CloudTask cloudTask = new CloudTask(taskId, $@"cmd /c %{ServiceWorkingDirEnvVar}%\ccpservicehost\CcpServiceHost.exe -standalone");
+                            CloudTask cloudTask = new CloudTask(taskId, $@"cmd /c %{TelepathyConstants.ServiceWorkingDirEnvVar}%\ccpservicehost\CcpServiceHost.exe -standalone");
                             cloudTask.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Pool));
                             cloudTask.EnvironmentSettings = cloudTask.EnvironmentSettings == null ? environment : environment.Union(cloudTask.EnvironmentSettings, comparer).ToList();
                             return cloudTask;
@@ -607,12 +602,12 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
                             if (direct)
                             {
                                 cmd =
-                                    $@"cmd /c %{ServiceWorkingDirEnvVar}%\broker\HpcBroker.exe -d --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
+                                    $@"cmd /c %{TelepathyConstants.ServiceWorkingDirEnvVar}%\broker\HpcBroker.exe -d --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
                             }
                             else
                             {
                                 cmd =
-                                    $@"cmd /c %{ServiceWorkingDirEnvVar}%\broker\HpcBroker.exe -d --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
+                                    $@"cmd /c %{TelepathyConstants.ServiceWorkingDirEnvVar}%\broker\HpcBroker.exe -d --AzureStorageConnectionString {AzureBatchConfiguration.SoaBrokerStorageConnectionString} --EnableAzureStorageQueueEndpoint True --SvcHostList {string.Join(",", nodes.Select(n => n.IPAddress))}";
                             }
 
                             CloudTask cloudTask = new CloudTask("Broker", cmd);
@@ -713,7 +708,7 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.SessionLaunchers.Az
             new ServiceRegistrationRepo(
                 regPath,
                 new AzureBlobServiceRegistrationStore(SessionLauncherRuntimeConfiguration.SessionLauncherStorageConnectionString),
-                Environment.GetEnvironmentVariable(ServiceRegistrationWorkingDirEnvVar, EnvironmentVariableTarget.Machine));
+                Environment.GetEnvironmentVariable(TelepathyConstants.ServiceWorkingDirEnvVar, EnvironmentVariableTarget.Machine));
 
         /// <summary>
         /// the helper function to check whether the endpoint prefix is supported.
