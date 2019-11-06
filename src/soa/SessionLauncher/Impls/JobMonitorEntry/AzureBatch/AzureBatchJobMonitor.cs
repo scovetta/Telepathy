@@ -141,29 +141,8 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
                     TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Current job state in AzureBatch: JobState = {0}\n", state);
                     TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Current job state in Telepathy: JobState = {0}\n", currentJobState);
                     stateChangedTaskList = await this.GetTaskStateChangeAsync(nodes);
-                }
-                catch (BatchException e)
-                {
-                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Warning, "[AzureBatchJobMonitor] BatchException thrown when querying job info: {0}", e);
-                    //If the previous job state is canceling and current job is not found, then the job is deleted.
-                    if (e.RequestInformation != null && e.RequestInformation.HttpStatusCode != null)
-                    {
-                        if (previousJobState == Session.Data.JobState.Canceling && e.RequestInformation.HttpStatusCode == System.Net.HttpStatusCode.NotFound)
-                        {
-                            TraceHelper.TraceEvent(this.sessionid, TraceEventType.Warning, "[AzureBatchJobMonitor] The queried job has been deleted.");
-                            shouldExit = true;
-                            currentJobState = Session.Data.JobState.Canceled;
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Warning, "[AzureBatchJobMonitor] Exception thrown when querying job info: {0}", e);
-                }
-                finally
-                {
-                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Previous job state repoert to AzureBatchJobMonitorEntry: JobState = {0}\n", previousJobState);
 
+                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Previous job state report to AzureBatchJobMonitorEntry: JobState = {0}\n", previousJobState);
                     if (state == JobState.Completed || state == JobState.Disabled)
                     {
                         if (this.previousJobState == Session.Data.JobState.Canceling)
@@ -177,19 +156,55 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
                         //Override current job state as Canceling, because when all tasks turn to be completed, the job state converter will make job state finishing.
                         //If one job is cancelling in previous state and now is not in one terminated state, keep to reporting cancelling state to job monitor entry.
                         currentJobState = Session.Data.JobState.Canceling;
-                        TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Overwrite current job state as {0} in Telepathy accoding to previous job state {1}\n", currentJobState, previousJobState);
+                        TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Overwrite current job state as {0} in Telepathy according to previous job state {1}\n", currentJobState, previousJobState);
                     }
+                }
+                catch (BatchException e)
+                {
+                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Warning, "[AzureBatchJobMonitor] BatchException thrown when querying job info: {0}", e);
+                    //If the previous job state is canceling and current job is not found, then the job is deleted.
+                    if (e.RequestInformation != null & e.RequestInformation.HttpStatusCode != null)
+                    {
+                        if (e.RequestInformation.HttpStatusCode == System.Net.HttpStatusCode.NotFound)
+                        {
+                            if (previousJobState == Session.Data.JobState.Canceling)
+                            {
+                                TraceHelper.TraceEvent(this.sessionid, TraceEventType.Warning, "[AzureBatchJobMonitor] The queried job has been deleted.");
+                            }
+                            else
+                            {
+                                TraceHelper.TraceEvent(this.sessionid, TraceEventType.Warning, "[AzureBatchJobMonitor] The queried job previous state is {0}, we make its state as canceled because it's no longer exist.", previousJobState);
+                            }
+                            shouldExit = true;
+                            currentJobState = Session.Data.JobState.Canceled;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Warning, "[AzureBatchJobMonitor] Exception thrown when querying job info: {0}", e);
+                }
+
+                try
+                {
                     if (this.ReportJobStateAction != null)
                     {
-                        TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Current job state repoert to AzureBatchJobMonitorEntry: JobState = {0}\n", currentJobState);
+                        TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information,
+                            "[AzureBatchJobMonitor] Current job state report to AzureBatchJobMonitorEntry: JobState = {0}\n",
+                            currentJobState);
                         this.ReportJobStateAction(currentJobState, stateChangedTaskList, shouldExit);
                     }
-                    this.previousJobState = currentJobState;
                 }
+                catch (Exception e)
+                {
+                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Warning, "[AzureBatchJobMonitor] Exception thrown when report job info: {0}", e);
+                }
+
+                this.previousJobState = currentJobState;
 
                 if (!shouldExit)
                 {
-                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Waiting {0} miliseconds and start another round of getting job state info.", this.pullJobGap);
+                    TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] Waiting {0} milliseconds and start another round of getting job state info.", this.pullJobGap);
 
                     // Sleep and pull job again, clear the register pull job flag
                     await Task.Delay(this.pullJobGap);
