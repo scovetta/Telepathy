@@ -24,39 +24,6 @@ function Start-Telepathy {
     $artifactsPath = "$destination_path\$ArtifactsFolderName\Release"
   
     Set-LogSource -SourceName "StartTelepathy"
-
-    Try {
-        Write-Log -Message "StorageAccountName : $SrcStorageAccountName"
-        Write-Log -Message "StorageSasToken : $SrcStorageContainerSasToken"
-        $srcStorageContext = New-AzStorageContext -StorageAccountName $SrcStorageAccountName -SasToken $SrcStorageContainerSasToken  
-    }
-    Catch {
-        Write-Log -Message "Please provide valid storage account name and sas token" -Level Error
-        Write-Log -Message $_ -Level Error
-    }
-    
-    Try {
-        Write-Log -Message "ContainerName : $ContainerName"
-        Write-Log -Message "ArtifactsFolderName : $ArtifactsFolderName"
-        $blobs = Get-AzStorageBlob -Container $ContainerName -Blob "$ArtifactsFolderName*" -Context $srcStorageContext
-    }
-    Catch {
-        Write-Log -Message "Error occurs when get source storage blob, can't get storage blob, please confirm you provide valid container name, blob name and storage context " -Level Error
-        Write-Log -Message $_ -Level Error
-    }
-    
-    Try {
-        Write-Log -Message "DestinationPath in VM : $destination_path"
-        foreach ($blob in $blobs) {  
-            New-Item -ItemType Directory -Force -Path $destination_path  
-            Get-AzStorageBlobContent -Container $ContainerName -Blob $blob.Name -Destination $destination_path -Context $srcStorageContext   
-        } 
-    }
-    Catch {
-        Write-Log -Message "Error occurs when download source storage blob to VM " -Level Error
-        Write-Log -Message $_ -Level Error
-    }
-    #>
     
     $desStorageConnectionString = "DefaultEndpointsProtocol=https;AccountName=$DesStorageAccountName;AccountKey=$DesStorageAccountKey;EndpointSuffix=core.windows.net"
     $batchServiceUrl = "https://$BatchAccountName.$Location.batch.azure.com"
@@ -65,9 +32,9 @@ function Start-Telepathy {
     Write-Log -Message "desStorageConnectionString: $desStorageConnectionString"
     Write-Log -Message "batchServiceUrl: $batchServiceUrl"
     
-    if($EnableTelepathyStorage) {
+    if ($EnableTelepathyStorage) {
         Write-Log -Message "Enable Telepathy Storage"
-        Enable-TelepathyStorage -ArtifactsPath $artifactsPath -DesStorageConnectionString $DesStorageConnectionString
+        Enable-TelepathyStorage -ArtifactsPath $artifactsPath -DesStorageConnectionString $desStorageConnectionString
     }
     
     if ($StartTelepathyService) {
@@ -76,7 +43,7 @@ function Start-Telepathy {
         Write-Log -Message "AuthenticationId: $AuthenticationId"
         $expression = @{ 
             DestinationPath            = $artifactsPath
-            DesStorageConnectionString = $DesStorageConnectionString
+            DesStorageConnectionString = $desStorageConnectionString
             BatchAccountName           = $BatchAccountName
             BatchPoolName              = $BatchPoolName
             BatchAccountKey            = $BatchAccountKey
