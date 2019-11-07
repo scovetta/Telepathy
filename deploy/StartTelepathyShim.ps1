@@ -80,11 +80,11 @@ $destination_path = "C:\telepathy"
 $artifactsFolderName = $Params["ArtifactsFolderName"]
 $artifactsPath = "$destination_path\$artifactsFolderName\Release"
 
-<# Download artifacts from the specified Azure Storage containers #>>
+<# Download artifacts from the specified Azure Storage containers #>
 Try {
-    Write-Log -Message "StorageAccountName : $SrcStorageAccountName"
-    Write-Log -Message "StorageSasToken : $SrcStorageContainerSasToken"
-    $srcStorageContext = New-AzStorageContext -StorageAccountName $SrcStorageAccountName -SasToken $SrcStorageContainerSasToken  
+    Write-Log -Message 'StorageAccountName : $($Params["SrcStorageAccountName"])'
+    Write-Log -Message 'StorageSasToken : $($Params["SrcStorageContainerSasToken"])'
+    $srcStorageContext = New-AzStorageContext -StorageAccountName $Params["SrcStorageAccountName"] -SasToken $Params["SrcStorageContainerSasToken"]  
 }
 Catch {
     Write-Log -Message "Please provide valid storage account name and sas token" -Level Error
@@ -92,9 +92,10 @@ Catch {
 }
 
 Try {
-    Write-Log -Message "ContainerName : $ContainerName"
-    Write-Log -Message "ArtifactsFolderName : $ArtifactsFolderName"
-    $blobs = Get-AzStorageBlob -Container $ContainerName -Blob "$ArtifactsFolderName*" -Context $srcStorageContext
+    Write-Log -Message 'ContainerName : $($Params["ContainerName"])'
+    Write-Log -Message 'ArtifactsFolderName : $($Params["ArtifactsFolderName"])'
+    
+    $blobs = Get-AzStorageBlob -Container $Params["ContainerName"] -Blob "$($Params["ArtifactsFolderName"])*" -Context $srcStorageContext
 }
 Catch {
     Write-Log -Message "Error occurs when get source storage blob, can't get storage blob, please confirm you provide valid container name, blob name and storage context " -Level Error
@@ -105,18 +106,14 @@ Try {
     Write-Log -Message "DestinationPath in VM : $destination_path"
     foreach ($blob in $blobs) {  
         New-Item -ItemType Directory -Force -Path $destination_path  
-        Get-AzStorageBlobContent -Container $ContainerName -Blob $blob.Name -Destination $destination_path -Context $srcStorageContext   
+        Get-AzStorageBlobContent -Container $Params["ContainerName"] -Blob $blob.Name -Destination $destination_path -Context $srcStorageContext   
     } 
 }
 Catch {
     Write-Log -Message "Error occurs when download source storage blob to VM " -Level Error
     Write-Log -Message $_ -Level Error
 }
-<# Artifacts are all ready #>>
+<# Artifacts are all ready #>
 
 Import-Module -Name $artifactsPath\DeployScript\Start-Telepathy.psd1 -Verbose
 Start-Telepathy -Params @Params   
-
-
-
-
