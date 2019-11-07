@@ -357,6 +357,11 @@ namespace Microsoft.Telepathy.EchoClient
                                                     {
                                                         Logger.Info("Response received ({0}/{1}) {2} : {3}. StartTime-EndTime : {4:HH:mm:ss.fff}-{5:HH:mm:ss.fff}", clientC, config.BrokerClient, response.GetUserData<int>(), gg, si.StartTime, si.EndTime);
                                                     }
+                                                    else
+                                                    {
+                                                        Logger.Progress(string.Empty, responseNumber, config.NumberOfRequest);
+                                                    }
+
                                                     brokerClientTaskTimeRecords[brokerClientGuid][gg].ResponseTime = DateTime.Now;
                                                 }
                                                 catch (FaultException e)
@@ -510,6 +515,20 @@ namespace Microsoft.Telepathy.EchoClient
                 }
             }
             return intList;
+        }
+
+        static void ShowPercentProgress(string message, int currElementIndex, int totalElementCount)
+        {
+            if (currElementIndex < 0 || currElementIndex >= totalElementCount)
+            {
+                throw new InvalidOperationException("currElement out of range");
+            }
+            int percent = (100 * (currElementIndex + 1)) / totalElementCount;
+            Console.Write("\r{0}{1}% complete", message, percent);
+            if (currElementIndex == totalElementCount - 1)
+            {
+                Console.WriteLine(Environment.NewLine);
+            }
         }
     }
 }
