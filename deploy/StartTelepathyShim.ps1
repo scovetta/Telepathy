@@ -73,6 +73,9 @@ function Write-Log {
     } 
 }
 
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+Install-Module -Name Az -AllowClobber -Force
+
 $destination_path = "C:\telepathy"
 $artifactsFolderName = $Params["ArtifactsFolderName"]
 $artifactsPath = "$destination_path\$artifactsFolderName\Release"

@@ -17,9 +17,6 @@ function Start-Telepathy {
         [string]$AuthenticationId
     )
     
-    Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-    Install-Module -Name Az -AllowClobber -Force
-    
     $destination_path = "C:\telepathy"
     $artifactsPath = "$destination_path\$ArtifactsFolderName\Release"
   
