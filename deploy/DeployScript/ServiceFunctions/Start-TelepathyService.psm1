@@ -68,5 +68,10 @@ function Start-TelepathyService {
         Write-Log -Message "Fail to start telepathy service" -Level Error
         Write-Log -Message $_ -Level Error
     }
+
+    Write-Log -Message "Add EchoClient in PATH environment varaible"
+    $EchoClientPath = "$DestinationPath\Echoclient\EchoClient.exe"
+    $env:path = $env:path + ";$EchoClientPath"
+    [System.Environment]::SetEnvironmentVariable("PATH", $env:path, "Machine")
 }
 Export-ModuleMember -Function Start-TelepathyService
