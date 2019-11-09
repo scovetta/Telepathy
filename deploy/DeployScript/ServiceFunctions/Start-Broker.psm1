@@ -13,12 +13,13 @@
     Write-Log -Message "Session Address: $SessionAddress"
     
     $serviceName = "TelepathyBroker"
-    $Broker = "$DestinationPath\BrokerOutput\HpcBroker.exe"
-    $BrokerWorker = "$DestinationPath\BrokerOutput\HpcBrokerWorker.exe"
+    $BrokerOutputPath = "$DestinationPath\BrokerOutput"
+    $Broker = "$BrokerOutputPath\HpcBroker.exe"
+    $BrokerWorker = "$BrokerOutputPath\HpcBrokerWorker.exe"
     
     Try {
         Write-Log -Message "Add BrokerOutput in PATH environment varaible"
-        $env:path = $env:path + ";$BrokerOutput"
+        $env:path = $env:path + ";$BrokerOutputPath"
         [System.Environment]::SetEnvironmentVariable("PATH", $env:path, "Machine")
     
         if ($EnableLogAnalytics) {

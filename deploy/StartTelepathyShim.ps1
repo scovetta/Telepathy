@@ -1,6 +1,6 @@
 <# Custom Script for Windows to install files from Azure Storage using the staging folder created by the deployment script #>
 param (
-    [HashTable]$Params
+    [String]$Params
 )
 
 function Write-Log { 
@@ -73,18 +73,30 @@ function Write-Log {
     } 
 }
 
+
+$HashParamsString = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Params))
+$HashParamsString = $HashParamsString.Replace(';', "`r`n")
+Write-Host $HashParamsString
+Write-Log -Message $HashParamsString
+
+$HashParams = ConvertFrom-StringData -StringData $HashParamsString
+$HashParams.keys | ForEach-Object {
+    Write-Host "$_ : $($HashParams[$_])"
+    Write-Log -Message "$_ : $($HashParams[$_])"
+}
+
 Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 Install-Module -Name Az -AllowClobber -Force
 
 $destination_path = "C:\telepathy"
-$artifactsFolderName = $Params["ArtifactsFolderName"]
+$artifactsFolderName = $HashParams["ArtifactsFolderName"]
 $artifactsPath = "$destination_path\$artifactsFolderName\Release"
 
 <# Download artifacts from the specified Azure Storage containers #>
 Try {
-    Write-Log -Message 'StorageAccountName : $($Params["SrcStorageAccountName"])'
-    Write-Log -Message 'StorageSasToken : $($Params["SrcStorageContainerSasToken"])'
-    $srcStorageContext = New-AzStorageContext -StorageAccountName $Params["SrcStorageAccountName"] -SasToken $Params["SrcStorageContainerSasToken"]  
+    Write-Log -Message "StorageAccountName : $HashParams["SrcStorageAccountName"]"
+    Write-Log -Message "StorageSasToken : $HashParams["SrcStorageContainerSasToken"]"
+    $srcStorageContext = New-AzStorageContext -StorageAccountName $HashParams["SrcStorageAccountName"] -SasToken $HashParams["SrcStorageContainerSasToken"]  
 }
 Catch {
     Write-Log -Message "Please provide valid storage account name and sas token" -Level Error
@@ -92,10 +104,10 @@ Catch {
 }
 
 Try {
-    Write-Log -Message 'ContainerName : $($Params["ContainerName"])'
-    Write-Log -Message 'ArtifactsFolderName : $($Params["ArtifactsFolderName"])'
+    Write-Log -Message "ContainerName : $HashParams["ContainerName"]"
+    Write-Log -Message "ArtifactsFolderName : $HashParams["ArtifactsFolderName"]"
     
-    $blobs = Get-AzStorageBlob -Container $Params["ContainerName"] -Blob "$($Params["ArtifactsFolderName"])*" -Context $srcStorageContext
+    $blobs = Get-AzStorageBlob -Container $HashParams["ContainerName"] -Blob "$($HashParams["ArtifactsFolderName"])*" -Context $srcStorageContext
 }
 Catch {
     Write-Log -Message "Error occurs when get source storage blob, can't get storage blob, please confirm you provide valid container name, blob name and storage context " -Level Error
@@ -106,7 +118,7 @@ Try {
     Write-Log -Message "DestinationPath in VM : $destination_path"
     foreach ($blob in $blobs) {  
         New-Item -ItemType Directory -Force -Path $destination_path  
-        Get-AzStorageBlobContent -Container $Params["ContainerName"] -Blob $blob.Name -Destination $destination_path -Context $srcStorageContext   
+        Get-AzStorageBlobContent -Container $HashParams["ContainerName"] -Blob $blob.Name -Destination $destination_path -Context $srcStorageContext   
     } 
 }
 Catch {
@@ -115,5 +127,7 @@ Catch {
 }
 <# Artifacts are all ready #>
 
+$HashParams["EnableTelepathyStorage"] = [bool]$HashParams["EnableTelepathyStorage"]
+$HashParams["StartTelepathyService"] = [bool]$HashParams["StartTelepathyService"]
 Import-Module -Name $artifactsPath\DeployScript\Start-Telepathy.psd1 -Verbose
-Start-Telepathy -Params @Params   
+Start-Telepathy -Params @HashParams   

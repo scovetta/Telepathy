@@ -22,6 +22,7 @@
     
     $serviceName = "TelepathySessionLauncher"
     $SessionLauncher = "$DestinationPath\SessionLauncher\HpcSession.exe"
+    $SessionLauncherPath = "$DestinationPath\SessionLauncher"
     
     Try {
         Write-Log -Message "Add SessionLauncher in PATH environment varaible"

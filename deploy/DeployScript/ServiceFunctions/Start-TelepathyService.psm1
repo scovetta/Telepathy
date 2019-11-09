@@ -17,10 +17,15 @@ function Start-TelepathyService {
     cmd /c "sc.exe config NetTcpPortSharing start=demand & reg ADD "HKLM\Software\Microsoft\StrongName\Verification\*,*" /f & reg ADD "HKLM\Software\Wow6432Node\Microsoft\StrongName\Verification\*,*^" /f"
 
     Write-Log -Message "set TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR environment varaibles in session machine"
-    cmd /c "setx /m TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR ^"C:\TelepathyServiceRegistration\^""
+    cmd /c "setx /m TELEPATHY_SERVICE_WORKING_DIR ^"C:\TelepathyServiceRegistration\^""
 
     Write-Log -Message "Open tcp port"
     New-NetFirewallRule -DisplayName "Open TCP port for telepathy" -Direction Inbound -LocalPort 9087, 9090, 9091, 9092, 9093 -Protocol TCP -Action Allow
+
+    Write-Log -Message "Add EchoClient in PATH environment varaible"
+    $EchoClientPath = "$DestinationPath\Echoclient"
+    $env:path = $env:path + ";$EchoClientPath"
+    [System.Environment]::SetEnvironmentVariable("PATH", $env:path, "Machine")
 
     Write-Log -Message "Script location path: $DestinationPath"
     write-Log -Message "DesStorageConnectionString: $DesStorageConnectionString"
@@ -68,10 +73,5 @@ function Start-TelepathyService {
         Write-Log -Message "Fail to start telepathy service" -Level Error
         Write-Log -Message $_ -Level Error
     }
-
-    Write-Log -Message "Add EchoClient in PATH environment varaible"
-    $EchoClientPath = "$DestinationPath\Echoclient\EchoClient.exe"
-    $env:path = $env:path + ";$EchoClientPath"
-    [System.Environment]::SetEnvironmentVariable("PATH", $env:path, "Machine")
 }
 Export-ModuleMember -Function Start-TelepathyService
