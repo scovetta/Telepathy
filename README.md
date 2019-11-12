@@ -1,17 +1,8 @@
-# Telepathy [![Build Status](https://dev.azure.com/bc-telepathy/telepathy/_apis/build/status/Azure.Telepathy?branchName=dev)](https://dev.azure.com/bc-telepathy/telepathy/_build/latest?definitionId=3&branchName=dev)
+# Microsoft Telepathy [![Build Status](https://dev.azure.com/bc-telepathy/telepathy/_apis/build/status/Azure.Telepathy?branchName=dev)](https://dev.azure.com/bc-telepathy/telepathy/_build/latest?definitionId=3&branchName=dev) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Home repo of Project Telepathy. Currently in **prototyping** stage.
+Microsoft Telepathy is a SOA runtime framework works in a cloud native way, enables running high-throughput and low-latency calculation workload in Azure.
 
-## Developing Environment
-
-- Visual Studio 2017 of latter
-- Excel 2016 or latter if developing Excel service
-
-## Engineering Practice
-
-This project uses git flow. All new features will go into dev branch.
-
-## Deployment in Azure
+## Get Started
 
 ### Deploy in Azure Portal
 
@@ -32,9 +23,9 @@ az group deployment create `
   --parameters "location of parameters.json file"
 ```
 
-### Deploy using Powershell
+### Deploy using PowerShell
 
-```shell
+```powershell
 $ResourceGroupName = ""
 $Location = ""
 $TemplateFile = ""
@@ -48,6 +39,22 @@ if(Get-AzResourceGroup -Name $ResourceGroupName) {
 New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 New-AzResourceGroupDeployment -ResourceGroupName $ResourceGroupName -TemplateFile $TemplateFile -TemplateParameterFile $TemplateParameterFile
 ```
+
+## Developing
+
+### Developing Environment
+
+- Visual Studio 2019 of latter
+- Excel 2016 or latter if developing Excel plugin
+
+### Build from Source Code
+
+```shell
+git clone https://github.com/Azure/Telepathy.git
+cd Telepathy
+build.bat
+```
+
 
 # Contributing
 
