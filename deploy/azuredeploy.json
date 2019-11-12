@@ -174,15 +174,15 @@
     "telepathyVMSubnetRef": "[concat(variables('telepathyVMVnetID'), '/subnets/', variables('telepathyVnetSubnetName'))]",
     "telepathyVMStorageAccountContainerName": "vhds",
     "telepathyVMNicName": "[concat(parameters('telepathyVMName'), 'NetworkInterface')]",
-    "customScriptLocation": "[concat('https://raw.githubusercontent.com/Azure/Telepathy/', parameters('telepathyBranch'), '/deploy/StartTelepathy.ps1')]",
+    "customScriptLocation": "[concat('https://raw.githubusercontent.com/Azure/Telepathy/', parameters('telepathyBranch'), '/deploy/StartTelepathyShim.ps1')]",
     "doubleQuotation": "\"",
     "caret": "^",
-    "scriptParameters": "[concat('-EnableTelepathyStorage ',' -StartTelepathyService ', ' -Location ', resourceGroup().location, ' -BatchAccountName ', parameters('batchAccountsName'), ' -BatchPoolName ', parameters('batchAccountsPoolName'), ' -ArtifactsFolderName ', parameters('artifactsFolderName'), ' -ContainerName ', parameters('artifactsStorageContainerName'), ' -SrcStorageAccountName ', parameters('artifactsStorageName'), ' -DesStorageAccountName ', variables('telepathyStorageName'))]"
+    "scriptParameters": "[concat('EnableTelepathyStorage=$true;','StartTelepathyService=$true;', 'Location=', resourceGroup().location, ';BatchAccountName=', parameters('batchAccountsName'),';BatchPoolName=', parameters('batchAccountsPoolName'), ';ArtifactsFolderName=', parameters('artifactsFolderName'), ';ContainerName=', parameters('artifactsStorageContainerName'), ';SrcStorageAccountName=', parameters('artifactsStorageName'), ';DesStorageAccountName=', variables('telepathyStorageName'))]"
   },
   "resources": [
     {
       "type": "Microsoft.Batch/batchAccounts",
-      "apiVersion": "2017-09-01",
+      "apiVersion": "2019-08-01",
       "name": "[parameters('batchAccountsName')]",
       "location": "[resourceGroup().location]",
       "properties": {
@@ -191,7 +191,7 @@
     },
     {
       "type": "Microsoft.Batch/batchAccounts/pools",
-      "apiVersion": "2017-09-01",
+      "apiVersion": "2019-08-01",
       "name": "[concat(parameters('batchAccountsName'), '/', parameters('batchAccountsPoolName'))]",
       "dependsOn": [
         "[resourceId('Microsoft.Batch/batchAccounts', parameters('batchAccountsName'))]"
@@ -233,7 +233,7 @@
       "name": "[variables('telepathyStorageName')]",
       "type": "Microsoft.Storage/storageAccounts",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2016-01-01",
+      "apiVersion": "2019-04-01",
       "sku": {
         "name": "[parameters('telepathyStorageType')]"
       },
@@ -248,7 +248,7 @@
       "name": "[parameters('vnetName')]",
       "type": "Microsoft.Network/virtualNetworks",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2016-03-30",
+      "apiVersion": "2019-09-01",
       "dependsOn": [],
       "tags": {
         "displayName": "telepathyVnet"
@@ -273,7 +273,7 @@
       "name": "[variables('telepathyVMNicName')]",
       "type": "Microsoft.Network/networkInterfaces",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2016-03-30",
+      "apiVersion": "2019-09-01",
       "dependsOn": [
         "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
         "[concat('Microsoft.Network/publicIPAddresses/','telepathyPublicIPAddress')]"
@@ -299,7 +299,7 @@
       }
     },
     {
-      "apiVersion": "2019-04-01",
+      "apiVersion": "2019-09-01",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "telepathyPublicIPAddress",
       "location": "[resourceGroup().location]",
@@ -322,7 +322,7 @@
       "name": "[parameters('telepathyVMName')]",
       "type": "Microsoft.Compute/virtualMachines",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2017-03-30",
+      "apiVersion": "2019-07-01",
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts', variables('telepathyStorageName'))]",
         "[resourceId('Microsoft.Network/networkInterfaces', variables('telepathyVMNicName'))]"
@@ -368,7 +368,7 @@
           "condition": "[equals(parameters('AzureLogAnalytics'), 'enable')]",
           "type": "extensions",
           "name": "OMSExtension",
-          "apiVersion": "2015-06-15",
+          "apiVersion": "2019-07-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', parameters('telepathyVMName'))]"
@@ -389,7 +389,7 @@
         {
           "type": "extensions",
           "name": "CustomScriptExtension",
-          "apiVersion": "2017-03-30",
+          "apiVersion": "2019-07-01",
           "location": "[resourceGroup().location]",
           "dependsOn": [
             "[parameters('telepathyVMName')]"
@@ -403,7 +403,7 @@
               "fileUris": [
                 "[variables('customScriptLocation')]"
               ],
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File StartTelepathy.ps1', ' ', variables('scriptParameters'),' -SrcStorageContainerSasToken ', variables('caret'), variables('doubleQuotation'), variables('doubleQuotation'), string(parameters('artifactsStorageContainerSasToken')), variables('doubleQuotation'), variables('caret'), variables('doubleQuotation'), ' -DesStorageAccountKey ', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('telepathyStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ' -BatchAccountKey ', listKeys(resourceId('Microsoft.Batch/batchAccounts', parameters('batchAccountsName')), '2017-09-01').primary, ' -EnableLogAnalytics ', parameters('AzureLogAnalytics'), ' -WorkspaceId ', reference(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').customerId, ' -AuthenticationID ',  listKeys(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').primarySharedKey)]"
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -Command ', variables('caret'), variables('doubleQuotation'),'.\\StartTelepathyShim.ps1 ', base64(concat(variables('scriptParameters'),';SrcStorageContainerSasToken=', parameters('artifactsStorageContainerSasToken'),';DesStorageAccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('telepathyStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value,';BatchAccountKey=',listKeys(resourceId('Microsoft.Batch/batchAccounts', parameters('batchAccountsName')), '2017-09-01').primary, ';EnableLogAnalytics=', parameters('AzureLogAnalytics'),';WorkspaceId=', reference(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').customerId,';AuthenticationID=', listKeys(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').primarySharedKey)), variables('caret'), variables('doubleQuotation'))]"
             }
           }
         }
