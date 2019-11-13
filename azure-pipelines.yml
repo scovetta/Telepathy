@@ -156,8 +156,7 @@ stages:
 
     - task: NuGetCommand@2
       displayName:  'Publish SDK to Public Source'
-      condition: and(succeed(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
-      continueOnError: true
+      condition: and(succeed(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/dev')))
       inputs:
         command: 'push'
         packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
