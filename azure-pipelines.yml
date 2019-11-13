@@ -13,7 +13,6 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   TemplateName: 'Telepathy_$(Build.BuildNumber)'
-  version: '$(name)'
 
 stages:
 - stage: Build
@@ -34,8 +33,8 @@ stages:
         InsertAttributes: true
         FileEncoding: 'auto'
         WriteBOM: false
-        VersionNumber: '$(version)'
-        FileVersionNumber: '$(version)'
+        VersionNumber: '$(Build.BuildNumber)'
+        FileVersionNumber: '$(Build.BuildNumber)'
 
     - task: NuGetCommand@2
       inputs:
