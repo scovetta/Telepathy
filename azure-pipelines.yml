@@ -125,6 +125,7 @@ stages:
         ContainerName: 'service-assembly/ccpechosvc'
         
     - task: NuGetCommand@2
+      displayName: 'Pack SDK Nuget Package'
       inputs:
         command: 'pack'
         packagesToPack: '**/Session.nuspec'
@@ -132,13 +133,23 @@ stages:
         includeSymbols: true
 
     - task: NuGetCommand@2
-      inputs:
+      displayName: 'Publish SDK to Internal Source'
+      inputs:        
         command: 'push'
         packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
         nuGetFeedType: 'internal'
         publishVstsFeed: 'd967b926-1ec4-4fdb-8fb7-4a0dd25734dd'
         allowPackageConflicts: true
-        
+
+
+    - task: NuGetCommand@2
+      displayName:  'Publish SDK to Public Source'
+      inputs:
+        command: 'push'
+        packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+        nuGetFeedType: 'internal'
+        publishVstsFeed: '32d89ced-58e3-4e1d-835e-b6e22ec7cc80/50c2f425-4633-4238-b8d2-29ced314cb71'
+        allowPackageConflicts: true
 - stage: Deploy       
   dependsOn: Build 
   jobs:
