@@ -31,6 +31,7 @@ stages:
     - task: VSBuild@1
       inputs:
         solution: '$(solution)'
+        msbuildArgs: '/p:Version=1.0.0$(rev:.r)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
         maximumCpuCount: true
@@ -141,7 +142,6 @@ stages:
         publishVstsFeed: 'd967b926-1ec4-4fdb-8fb7-4a0dd25734dd'
         allowPackageConflicts: true
 
-
     - task: NuGetCommand@2
       displayName:  'Publish SDK to Public Source'
       inputs:
@@ -150,6 +150,7 @@ stages:
         nuGetFeedType: 'internal'
         publishVstsFeed: '32d89ced-58e3-4e1d-835e-b6e22ec7cc80/50c2f425-4633-4238-b8d2-29ced314cb71'
         allowPackageConflicts: true
+
 - stage: Deploy       
   dependsOn: Build 
   jobs:
