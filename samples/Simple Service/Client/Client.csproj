@@ -129,10 +129,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\soa\SessionAPI\Session.csproj">
-      <Project>{72FC4EEA-C32B-444B-80B7-0E2B137C05C7}</Project>
-      <Name>Session</Name>
-    </ProjectReference>
+    <PackageReference Include="Microsoft.Telepathy.Session">
+      <Version>1.0.0.82</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
