@@ -16,7 +16,6 @@ namespace Microsoft.Hpc.SOASample.FirstSOAService
         {
             //change the head node name here
             SessionStartInfo info = new SessionStartInfo("head.contoso.com", "CalculatorService");
-            info.Secure = false;
             
             //create an interactive session 
             using (Session session = Session.CreateSession(info))

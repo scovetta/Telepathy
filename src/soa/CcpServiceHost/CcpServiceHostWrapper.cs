@@ -47,7 +47,7 @@ namespace Microsoft.Telepathy.CcpServiceHost
         /// <summary>
         /// Session API library name
         /// </summary>
-        private const string SessionAssemblyName = "Microsoft.Hpc.Scheduler.Session.dll";
+        private const string SessionAssemblyName = "Microsoft.Telepathy.Session.dll";
 
         /// <summary>
         /// Data movement library name
