@@ -104,31 +104,31 @@ Now we need a client program to submit the calculation request. The client needs
 
 The suggested project organization in Visual Studio is to create different projects for the service and client programs, as shown in the following figure:
 
-![image-20191114161452528](E:\github\official\Telepathy\doc\tutorial\soa-tutorial-1-write-your-first-soa-service-and-client.media\service-reference-menu.png)
+![image-20191114161452528](soa-tutorial-1-write-your-first-soa-service-and-client.media/service-reference-menu.png)
 
 We need to generate the proxy class for the client program based on the 
 CalculatorService. Make sure the service project has been successfully 
 built then click **Add Service Reference**, click **Discover**, and you should see the service you just created. Select the service and click **Advanced**.
 
-![image-20191114160851527](soa-tutorial-1-write-your-first-soa-service-and-client.media\add-service-reference.png)
+![image-20191114160851527](soa-tutorial-1-write-your-first-soa-service-and-client.media/add-service-reference.png)
 
 **Important**: In the advanced **Service Reference Settings** dialog box, ensure that **Always generate message contracts** is selected.
 
-![image-20191114161116872](soa-tutorial-1-write-your-first-soa-service-and-client.media\service-reference-setting.png)
+![image-20191114161116872](soa-tutorial-1-write-your-first-soa-service-and-client.media/service-reference-setting.png)
 
 Now we can write the client code:
 
 1. Reference `Microsoft.Telepathy.Session` NuGet package in the client project.
-  *[Placeholder for release package]*
+    *[Placeholder for release package]*
 
-  To use nightly SDK package, add following NuGet source.
+      To use nightly SDK package, add following NuGet source.
 
-  - Name: telepathy-sdk-preview
-  - Source: https://pkgs.dev.azure.com/bc-telepathy/telepathy/_packaging/telepathy-sdk-preview/nuget/v3/index.json
+      - Name: telepathy-sdk-preview
+      - Source: https://pkgs.dev.azure.com/bc-telepathy/telepathy/_packaging/telepathy-sdk-preview/nuget/v3/index.json
 
-  Check [Add the feed to your NuGet configuration](https://docs.microsoft.com/en-us/azure/devops/artifacts/nuget/consume?view=azure-devops) for detailed instruction.
+      Check [Add the feed to your NuGet configuration](https://docs.microsoft.com/en-us/azure/devops/artifacts/nuget/consume?view=azure-devops) for detailed instruction.
 
-  ![image-20191114171544472](soa-tutorial-1-write-your-first-soa-service-and-client.media\nightly-nuget-source.png)
+      ![image-20191114171544472](soa-tutorial-1-write-your-first-soa-service-and-client.media/nightly-nuget-source.png)
 
 1. Prepare the session info, which includes the head node address and the service name. Let’s assume the head node host name is head.contoso.com and we are using the CalculatorService.
 
@@ -176,12 +176,12 @@ Now you can test your service using your client program.
 
 Run the client in the Visual Studio. If everything is working fine, you should see output like the following:
 
-![image-20191114161758526](E:\github\official\Telepathy\doc\tutorial\soa-tutorial-1-write-your-first-soa-service-and-client.media\client-output.png)
+![image-20191114161758526](soa-tutorial-1-write-your-first-soa-service-and-client.media/client-output.png)
 
 
 
 By default we use Azure Batch Service as our backend. You can see the corresponding batch job through [Batch Explorer](https://azure.github.io/BatchExplorer/) or [Azure Portal](https://portal.azure.com/).
 
-![](E:\github\official\Telepathy\doc\tutorial\soa-tutorial-1-write-your-first-soa-service-and-client.media\batch-job.png)
+![](E:\github\official\Telepathy\doc\tutorial\soa-tutorial-1-write-your-first-soa-service-and-client.media/batch-job.png)
 
 Congratulations! You have successfully created and run your first SOA service. In our next tutorial, we will introduce way of writing a service to handle a batch of client requests.
