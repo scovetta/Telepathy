@@ -114,9 +114,21 @@ built then click **Add Service Reference**, click **Discover**, and you should s
 
 **Important**: In the advanced **Service Reference Settings** dialog box, ensure that **Always generate message contracts** is selected.
 
-![image-20191114161116872](E:\github\official\Telepathy\doc\tutorial\soa-tutorial-1-write-your-first-soa-service-and-client.media\service-reference-setting.png)
+![image-20191114161116872](soa-tutorial-1-write-your-first-soa-service-and-client.media\service-reference-setting.png)
 
 Now we can write the client code:
+
+1. Reference `Microsoft.Telepathy.Session` NuGet package in the client project.
+  *[Placeholder for release package]*
+
+  To use nightly SDK package, add following NuGet source.
+
+  - Name: telepathy-sdk-preview
+  - Source: https://pkgs.dev.azure.com/bc-telepathy/telepathy/_packaging/telepathy-sdk-preview/nuget/v3/index.json
+
+  Check [Add the feed to your NuGet configuration](https://docs.microsoft.com/en-us/azure/devops/artifacts/nuget/consume?view=azure-devops) for detailed instruction.
+
+  ![image-20191114171544472](soa-tutorial-1-write-your-first-soa-service-and-client.media\nightly-nuget-source.png)
 
 1. Prepare the session info, which includes the head node address and the service name. Let’s assume the head node host name is head.contoso.com and we are using the CalculatorService.
 
@@ -124,13 +136,13 @@ Now we can write the client code:
     SessionStartInfo info = new SessionStartInfo("head.contoso.com", "CalculatorService");
     ```
 
-2. With the SessionStartInfo object we can create a session to connect to the head node.
+1. With the SessionStartInfo object we can create a session to connect to the head node.
 
    ```csharp
    using (Session session = Session.CreateSession(info)) {……}
    ```
 
-3. To be able to send requests and receive responses, you need to create a BrokerClient object.
+1. To be able to send requests and receive responses, you need to create a BrokerClient object.
 
    ```csharp
    using (Session session = Session.CreateSession(info))
@@ -139,7 +151,7 @@ Now we can write the client code:
    }
    ```
 
-4. With the BrokerClient, you can send requests and receive responses.
+1. With the BrokerClient, you can send requests and receive responses.
 
    ```csharp
    using (BrokerClient<ICalculator>client = new BrokerClient<ICalculator>(session))
