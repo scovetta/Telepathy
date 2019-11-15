@@ -131,7 +131,7 @@
       "metadata": {
         "description": "The artifacts storage sas token"
       },
-      "defaultValue": "?sv=2018-03-28&sr=c&si=nightlybuild&sig=uxgFr03P1m6DGFdqDtKOsw%2B2YchvEKgS4szCPl0mX28%3D&se=2019-11-15T05%3A19%3A14Z"
+      "defaultValue": "?sv=2018-03-28&sr=c&si=nightlybuild&sig=8RxDHURnMxhqM2btAE%2FHIDffXOToymtlfMY8JTJ7SrQ%3D"
     },
     "nightlyBuildStorageContainerName": {
       "type": "string",
