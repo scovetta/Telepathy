@@ -2,7 +2,7 @@
 
 Microsoft Telepathy is a SOA runtime framework works in a cloud native way, enables running high-throughput and low-latency calculation workload in Azure.
 
-## Get Started
+## Get Started with Nightly Build
 
 ### Deploy in Azure Portal
 
@@ -39,6 +39,15 @@ if(Get-AzResourceGroup -Name $ResourceGroupName) {
 New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 New-AzResourceGroupDeployment -ResourceGroupName $ResourceGroupName -TemplateFile $TemplateFile -TemplateParameterFile $TemplateParameterFile
 ```
+
+### Reference Microsoft.Telepathy.Session SDK NuGet package
+
+To use nightly SDK package, add following NuGet source.
+
+- Name: telepathy-sdk-preview
+- Source: https://pkgs.dev.azure.com/bc-telepathy/telepathy/_packaging/telepathy-sdk-preview/nuget/v3/index.json
+
+Check [Add the feed to your NuGet configuration](https://docs.microsoft.com/en-us/azure/devops/artifacts/nuget/consume?view=azure-devops) for detailed instruction.
 
 ## Developing
 
