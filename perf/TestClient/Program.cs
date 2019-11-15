@@ -197,9 +197,6 @@ namespace TestClient
                 }
             }
 
-            session = Session.CreateSession(startInfo);
-
-
             Log("Session created: {0}.", session.Id);
             data.SessionCreated = DateTime.Now;
             data.SessionId = session.Id;
@@ -209,7 +206,7 @@ namespace TestClient
             Log("Begin to close session.");
             data.CloseSessionStart = DateTime.Now;
             // if sessionId is set by user, it's mostly used by multi-client-one-session, so do not close it
-            if (sessionId.Equals(-1))
+            if (sessionId == "-1")
             {
                 try
                 {
