@@ -85,5 +85,10 @@
       <Name>TestService</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="MsgThroughput.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

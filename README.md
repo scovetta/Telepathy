@@ -2,6 +2,18 @@
 
 Microsoft Telepathy is a SOA runtime framework works in a cloud native way, enables running high-throughput and low-latency calculation workload in Azure.
 
+## Performance
+
+### Message Throughput
+
+Average result of 10 trials
+
+| Type                | Send Throughput (msg/sec) | Broker Throughput (msg/sec) | Overall Throughput (msg/sec) |
+| ------------------- | ------------------------- | --------------------------- | ---------------------------- |
+| Interactive Session | 35394.15                  | 15973.63                    | 15652.66                     |
+
+
+
 ## Get Started
 
 ### Deploy in Azure Portal
