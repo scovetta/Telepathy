@@ -8,17 +8,17 @@ Microsoft Telepathy is a SOA runtime framework works in a cloud native way, enab
 
 *Average result of 10 trials*
 
-| Type                | Send Throughput (message/second) | Broker Throughput (message/second) | Overall Throughput (message/second) |
-| ------------------- | -------------------------------- | ---------------------------------- | ----------------------------------- |
-| Interactive Session | 35394.15                         | 15973.63                           | 15652.66                            |
+|        Type         | Concurrency | Total Request Count | Request Size (byte) | Send Throughput (message/second) | Broker Throughput (message/second) | Overall Throughput (message/second) |
+| :-----------------: | :---------: | :-----------------: | :-----------------: | :------------------------------: | :--------------------------------: | :---------------------------------: |
+| Interactive Session |      8      |       800,000       |          4          |           **35394.15**           |            **15973.63**            |            **15652.66**             |
 
 ### Warm First Response Time
 
 *Average result of 10 trials*
 
-| Type                | Warm First Response Time (millisecond) |
-| ------------------- | -------------------------------------- |
-| Interactive Session | 98.59431                               |
+|        Type         | Concurrency | Request Count Per Core | Request Size (byte) | Warm First Response Time (millisecond) |
+| :-----------------: | :---------: | :--------------------: | :-----------------: | :------------------------------------: |
+| Interactive Session |      1      |           1            |          4          |              **98.59431**              |
 
 ## Get Started
 
