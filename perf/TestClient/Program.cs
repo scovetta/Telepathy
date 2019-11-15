@@ -172,10 +172,10 @@ namespace TestClient
             data.SessionStart = DateTime.Now;
             Log("Begin to create session.");
             SessionBase session;
-#if False
+
             if (durable)
             {
-                if (sessionId == -1)
+                if (sessionId == "-1")
                 {
                     session = DurableSession.CreateSession(startInfo);
                 }
@@ -187,7 +187,7 @@ namespace TestClient
             else
             {
 
-                if (sessionId == -1)
+                if (sessionId == "-1")
                 {
                     session = Session.CreateSession(startInfo);
                 }
@@ -196,7 +196,6 @@ namespace TestClient
                     session = Session.AttachSession(new SessionAttachInfo(headnode, sessionId));
                 }
             }
-#endif
 
             session = Session.CreateSession(startInfo);
 
@@ -320,7 +319,7 @@ namespace TestClient
         private static string CreateSession(SessionStartInfo startInfo, bool isDurable)
         {
             string sessionId;
-#if False
+
             if (isDurable)
             {
                 DurableSession session = DurableSession.CreateSession(startInfo);
@@ -329,15 +328,12 @@ namespace TestClient
             else
             {
                 Session session = Session.CreateSession(startInfo);
-                session.AutoClose = false;
+                // session.AutoClose = false;
                 sessionId = session.Id;
             }
-#endif
-            Session session = Session.CreateSession(startInfo);
-            sessionId = session.Id;
 
             Log("Session created.");
-            //Environment.ExitCode = sessionId;
+            Environment.ExitCode = sessionId.GetHashCode();
             return sessionId;
         }
 
