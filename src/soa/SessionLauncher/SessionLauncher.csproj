@@ -177,6 +177,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>SessionLauncherSettings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="SKUs.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser">

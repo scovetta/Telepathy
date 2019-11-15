@@ -15,7 +15,7 @@ namespace Microsoft.Telepathy.EchoSvcLib
     /// <summary>
     /// Implementation of the echo service.
     /// </summary>
-    [ServiceBehavior(IncludeExceptionDetailInFaults = true, InstanceContextMode = InstanceContextMode.Single)]
+    [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
     public class EchoSvc : IEchoSvc
     {
         /// <summary>

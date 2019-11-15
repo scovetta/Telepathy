@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Diagnostics;
+
 namespace Microsoft.Telepathy.Session
 {
     using System;
@@ -778,6 +780,7 @@ namespace Microsoft.Telepathy.Session
         public static void ApplyDefaultThrottlingBehavior(ServiceHost host, int maxConcurrentCalls)
         {
             ServiceThrottlingBehavior stb = host.Description.Behaviors.Find<ServiceThrottlingBehavior>();
+            Trace.TraceInformation("[BindingHelper] MaxConcurrentCalls in service host is {0}", maxConcurrentCalls);
             if (stb == null)
             {
                 stb = new ServiceThrottlingBehavior();
