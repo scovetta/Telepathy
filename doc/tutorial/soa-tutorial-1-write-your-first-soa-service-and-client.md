@@ -182,6 +182,6 @@ Run the client in the Visual Studio. If everything is working fine, you should s
 
 By default we use Azure Batch Service as our backend. You can see the corresponding batch job through [Batch Explorer](https://azure.github.io/BatchExplorer/) or [Azure Portal](https://portal.azure.com/).
 
-![](E:\github\official\Telepathy\doc\tutorial\soa-tutorial-1-write-your-first-soa-service-and-client.media/batch-job.png)
+![](soa-tutorial-1-write-your-first-soa-service-and-client.media/batch-job.png)
 
 Congratulations! You have successfully created and run your first SOA service. In our next tutorial, we will introduce way of writing a service to handle a batch of client requests.
