@@ -111,7 +111,6 @@ namespace TestClient
                 return -1;
             }
 
-
             SessionStartInfo startInfo = new SessionStartInfo(headnode, ServiceName);
             startInfo.UseInprocessBroker = inproc;
             startInfo.IsNoSession = standalone;
@@ -200,6 +199,8 @@ namespace TestClient
             Log("Session created: {0}.", session.Id);
             data.SessionCreated = DateTime.Now;
             data.SessionId = session.Id;
+
+            data.StartSendRequest = DateTime.Now;
 
             RunTest(session, !v2Client);
 
@@ -488,11 +489,12 @@ namespace TestClient
 
         private static void InternalGetResponseTest(SessionBase session, bool multiThreads)
         {
-
             if (sleep_before_sending > 0)
             {
                 Thread.Sleep(sleep_before_sending);
             }
+
+            data.StartSendRequest = DateTime.Now;
 
             if (multiThreads) InternalGetResponseTestMultiThreads(session);
             else InternalGetResponseTestSingleThread(session);
@@ -619,12 +621,12 @@ namespace TestClient
 
         private static void InternalResponseHandlerTest(SessionBase session, bool multiThreads)
         {
-
-
             if (sleep_before_sending > 0)
             {
                 Thread.Sleep(sleep_before_sending);
             }
+
+            data.StartSendRequest = DateTime.Now;
 
             //double sendInterval = 0;
             if (multiThreads) InternalResponseHandlerTestMultiThreads(session);
@@ -807,6 +809,8 @@ namespace TestClient
             {
                 Thread.Sleep(sleep_before_sending);
             }
+
+            data.StartSendRequest = DateTime.Now;
 
             Binding binding;
             if (http) binding = Utils.CreateHttpBinding();

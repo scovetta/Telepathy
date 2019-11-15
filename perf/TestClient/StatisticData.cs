@@ -317,6 +317,7 @@ namespace TestClient
             outputLogs.Add(new KeyValuePair<string, object>("SessionCreationTime(millisec)", this.sessionCreated.Subtract(this.sessionStart).TotalMilliseconds));
             outputLogs.Add(new KeyValuePair<string, object>("SessionCloseTime(millisec)", this.sessionEnd.Subtract(this.closeSessionStart).TotalMilliseconds));
             outputLogs.Add(new KeyValuePair<string, object>("FirstResponseTime(millisec)", this.firstResponseTime.Subtract(this.sessionStart).TotalMilliseconds));
+            outputLogs.Add(new KeyValuePair<string, object>("WarmFirstResponseTime(millisec)", this.firstResponseTime.Subtract(this.StartSendRequest).TotalMilliseconds));
             outputLogs.Add(new KeyValuePair<string, object>("SendThroughput(msg/sec)", this.sendThroughput));
             outputLogs.Add(new KeyValuePair<string, object>("BrokerThroughputDuration(msg/sec)", this.throughtputDuration));
             outputLogs.Add(new KeyValuePair<string, object>("OverallThroughput(msg/sec)", this.overallThroughput));
@@ -428,6 +429,8 @@ namespace TestClient
             get { return isDurable; }
             set { isDurable = value; }
         }
+
+        public DateTime StartSendRequest { get; set; }
     }
 
 
