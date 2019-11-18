@@ -1,4 +1,6 @@
-# Microsoft Telepathy [![Build Status](https://dev.azure.com/bc-telepathy/telepathy/_apis/build/status/Azure.Telepathy?branchName=dev)](https://dev.azure.com/bc-telepathy/telepathy/_build/latest?definitionId=3&branchName=dev) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+# Microsoft Telepathy 
+
+![Azure DevOps builds (branch)](https://img.shields.io/azure-devops/build/bc-telepathy/32d89ced-58e3-4e1d-835e-b6e22ec7cc80/3/dev) ![GitHub](https://img.shields.io/github/license/Azure/Telepathy) [![GitHub issues](https://img.shields.io/github/issues/Azure/Telepathy)](https://github.com/Azure/Telepathy/issues) ![GitHub last commit](https://img.shields.io/github/last-commit/azure/telepathy)
 
 Microsoft Telepathy is a SOA runtime framework works in a cloud native way, enables running high-throughput and low-latency calculation workload in Azure.
 
