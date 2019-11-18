@@ -285,10 +285,10 @@ namespace TestClient
             efficiencyTotal = totalUsedTime / (sessionEnd.Subtract(sessionStart).TotalMilliseconds * (int)startInfo.MaximumUnits);
             efficiencyExcludeSessionCreation = totalUsedTime / (sessionEnd.Subtract(SessionCreated).TotalMilliseconds * (int)startInfo.MaximumUnits);
             efficiencyStartFromFirstRequest = totalUsedTime / (sessionEnd.Subtract(firstRequest).TotalMilliseconds * (int)startInfo.MaximumUnits);
-            if (efficiencyStartFromFirstRequest > 1) efficiencyStartFromFirstRequest = 1;
+            // if (efficiencyStartFromFirstRequest > 1) efficiencyStartFromFirstRequest = 1;
             efficiencyFromFirstRequestExcludeSessionEnd =
                 totalUsedTime / (closeSessionStart.Subtract(firstRequest).TotalMilliseconds * (int)startInfo.MaximumUnits);
-            if (efficiencyFromFirstRequestExcludeSessionEnd > 1) efficiencyFromFirstRequestExcludeSessionEnd = 1;
+            // if (efficiencyFromFirstRequestExcludeSessionEnd > 1) efficiencyFromFirstRequestExcludeSessionEnd = 1;
             if (endSend > DateTime.MinValue) sendThroughput = (double)count * 1000 / endSend.Subtract(sendStart).TotalMilliseconds;
             else if (reqEomDone > DateTime.MinValue) sendThroughput = (double)count * 1000 / reqEomDone.Subtract(sendStart).TotalMilliseconds;
             throughtputDuration = (double)count * 1000 / endRequest.Subtract(firstRequest).TotalMilliseconds;

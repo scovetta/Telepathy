@@ -2,24 +2,6 @@
 
 Microsoft Telepathy is a SOA runtime framework works in a cloud native way, enables running high-throughput and low-latency calculation workload in Azure.
 
-## Performance (use Azure Batch Backend)
-
-### Message Throughput
-
-*Average result of 10 trials*
-
-|        Type         | Concurrency | Total Request Count | Request Size (byte) | Send Throughput (message/second) | Broker Throughput (message/second) | Overall Throughput (message/second) |
-| :-----------------: | :---------: | :-----------------: | :-----------------: | :------------------------------: | :--------------------------------: | :---------------------------------: |
-| Interactive Session |      8      |       800,000       |          4          |           **35394.15**           |            **15973.63**            |            **15652.66**             |
-
-### Warm First Response Time
-
-*Average result of 10 trials*
-
-|        Type         | Concurrency | Request Count Per Core | Request Size (byte) | Warm First Response Time (millisecond) |
-| :-----------------: | :---------: | :--------------------: | :-----------------: | :------------------------------------: |
-| Interactive Session |      1      |           1            |          4          |              **98.59431**              |
-
 ## Get Started
 
 ### Deploy in Azure Portal
@@ -73,6 +55,29 @@ cd Telepathy
 build.bat
 ```
 
+## Benchmark (use Azure Batch Backend)
+
+*Average result of 10 trials*
+
+### Throughput
+
+#### Interactive Session
+
+- Message Send Throughput: **35394.15** messages/second
+- Broker Process Throughput: **15973.63** messages/second
+- End to End Throughput: **15652.66** messages/second
+
+### Latency
+
+#### Interactive Session
+
+- Warm Latency: **98.59431** millisecond
+
+### CPU Efficiency
+
+#### Interactive Session
+
+- CPU Efficiency: **99.603%** (**398.412%** on 4-core compute nodes)
 
 # Contributing
 
