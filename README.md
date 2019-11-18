@@ -66,6 +66,29 @@ cd Telepathy
 build.bat
 ```
 
+## Benchmark (use Azure Batch Backend)
+
+*Average result of 10 trials*. [Benchmark detail and how to benchmark your cluster](doc/performance_benchmark.md).
+
+### Throughput
+
+#### Interactive Session
+
+- Message Send Throughput: **35394.15** messages/second
+- Broker Process Throughput: **15973.63** messages/second
+- End to End Throughput: **15652.66** messages/second
+
+### Latency
+
+#### Interactive Session
+
+- Warm Latency: **98.59431** millisecond
+
+### CPU Efficiency
+
+#### Interactive Session
+
+- CPU Efficiency: **99.603%** (**398.412%** on 4-core compute nodes)
 
 # Contributing
 

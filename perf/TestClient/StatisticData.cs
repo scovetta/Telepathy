@@ -285,10 +285,10 @@ namespace TestClient
             efficiencyTotal = totalUsedTime / (sessionEnd.Subtract(sessionStart).TotalMilliseconds * (int)startInfo.MaximumUnits);
             efficiencyExcludeSessionCreation = totalUsedTime / (sessionEnd.Subtract(SessionCreated).TotalMilliseconds * (int)startInfo.MaximumUnits);
             efficiencyStartFromFirstRequest = totalUsedTime / (sessionEnd.Subtract(firstRequest).TotalMilliseconds * (int)startInfo.MaximumUnits);
-            if (efficiencyStartFromFirstRequest > 1) efficiencyStartFromFirstRequest = 1;
+            // if (efficiencyStartFromFirstRequest > 1) efficiencyStartFromFirstRequest = 1;
             efficiencyFromFirstRequestExcludeSessionEnd =
                 totalUsedTime / (closeSessionStart.Subtract(firstRequest).TotalMilliseconds * (int)startInfo.MaximumUnits);
-            if (efficiencyFromFirstRequestExcludeSessionEnd > 1) efficiencyFromFirstRequestExcludeSessionEnd = 1;
+            // if (efficiencyFromFirstRequestExcludeSessionEnd > 1) efficiencyFromFirstRequestExcludeSessionEnd = 1;
             if (endSend > DateTime.MinValue) sendThroughput = (double)count * 1000 / endSend.Subtract(sendStart).TotalMilliseconds;
             else if (reqEomDone > DateTime.MinValue) sendThroughput = (double)count * 1000 / reqEomDone.Subtract(sendStart).TotalMilliseconds;
             throughtputDuration = (double)count * 1000 / endRequest.Subtract(firstRequest).TotalMilliseconds;
@@ -317,6 +317,7 @@ namespace TestClient
             outputLogs.Add(new KeyValuePair<string, object>("SessionCreationTime(millisec)", this.sessionCreated.Subtract(this.sessionStart).TotalMilliseconds));
             outputLogs.Add(new KeyValuePair<string, object>("SessionCloseTime(millisec)", this.sessionEnd.Subtract(this.closeSessionStart).TotalMilliseconds));
             outputLogs.Add(new KeyValuePair<string, object>("FirstResponseTime(millisec)", this.firstResponseTime.Subtract(this.sessionStart).TotalMilliseconds));
+            outputLogs.Add(new KeyValuePair<string, object>("WarmFirstResponseTime(millisec)", this.firstResponseTime.Subtract(this.StartSendRequest).TotalMilliseconds));
             outputLogs.Add(new KeyValuePair<string, object>("SendThroughput(msg/sec)", this.sendThroughput));
             outputLogs.Add(new KeyValuePair<string, object>("BrokerThroughputDuration(msg/sec)", this.throughtputDuration));
             outputLogs.Add(new KeyValuePair<string, object>("OverallThroughput(msg/sec)", this.overallThroughput));
@@ -428,6 +429,8 @@ namespace TestClient
             get { return isDurable; }
             set { isDurable = value; }
         }
+
+        public DateTime StartSendRequest { get; set; }
     }
 
 
