@@ -57,7 +57,7 @@ build.bat
 
 ## Benchmark (use Azure Batch Backend)
 
-*Average result of 10 trials*
+*Average result of 10 trials*. [Benchmark detail and how to benchmark your cluster](doc/performance_benchmark.md).
 
 ### Throughput
 
