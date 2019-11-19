@@ -197,7 +197,7 @@ stages:
           }
           $secureString = convertto-securestring $(VMpwd) -asplaintext -force
           New-AzResourceGroup -Name $(TemplateName) -Location $(RGLocation)
-          New-AzResourceGroupDeployment -ResourceGroupName $(TemplateName) -TemplateUri "$(System.DefaultWorkingDirectory)\deploy\azuredeploy.json" -telepathyVMName "Telepathy$(Build.BuildID)" -telepathyVMAdminUserName $(VMadmin) -telepathyVMAdminPassword $secureString -vnetName $(VnetName)  -subnetName "default" -batchPoolVMSize "STANDARD_A4_V2" -targetDedicatedNodes 15 -newOrExistingVnet "existing" -vnetResourceGroup $(VnetRGName) -artifactsStorageContainerSasToken $(artifactsStorageContainerSasToken) -artifactsFolderName $(Build.BuildNumber) -artifactsStorageName $(artifactsStorageName) -artifactsStorageContainerName "telepathy"
+          New-AzResourceGroupDeployment -ResourceGroupName $(TemplateName) -TemplateUri "$(System.DefaultWorkingDirectory)\deploy\azuredeploy.json" -telepathyVMName "Telepathy$(Build.BuildID)" -telepathyVMAdminUserName $(VMadmin) -telepathyVMAdminPassword $secureString -vnetName $(VnetName)  -subnetName "default" -batchPoolVMSize "STANDARD_A4_V2" -targetDedicatedNodes 15 -newOrExistingVnet "existing" -vnetResourceGroup $(VnetRGName) -nightlyBuildVersion $(Build.BuildNumber)
         errorActionPreference: 'silentlyContinue'
         azurePowerShellVersion: 'LatestVersion'
         
