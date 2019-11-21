@@ -1,13 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Data;
-using System.IO;
-using System.Reflection;
-using Microsoft.Azure.Batch.Protocol.BatchRequests;
-using Microsoft.Azure.Management.Compute.Models;
-using Newtonsoft.Json;
-
 namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.AzureBatch
 {
     using System;
@@ -18,7 +11,6 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.Azure.Management.Compute;
     using Microsoft.Azure.Batch;
     using Microsoft.Azure.Batch.Common;
     using Microsoft.Telepathy.Internal.SessionLauncher.Impls.DataMapping.AzureBatch;
@@ -27,6 +19,9 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
     using Microsoft.Telepathy.Session.Common;
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Interface;
+    using Newtonsoft.Json;
+    using System.IO;
+    using System.Reflection;
 
     using TelepathyConstants = Microsoft.Telepathy.Common.TelepathyConstants;
 
