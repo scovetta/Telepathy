@@ -76,12 +76,6 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
 
         private Telepathy.Session.Data.JobState previousJobState = Session.Data.JobState.Configuring;
 
-        class SKU
-        {
-            public string name;
-            public string vCPUs;
-        }
-
         private SKU[] loadSKUs()
         {
             try
@@ -97,7 +91,6 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
                 TraceHelper.TraceEvent(this.sessionid, TraceEventType.Error, "[AzureBatchJobMonitor] Error occurs when loading skus file: {0}", e);
                 throw;
             }
-           
         }
 
         private SKU[] skus;
@@ -156,9 +149,9 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
             string skuName = pool.VirtualMachineSize;
             TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] VMSize in pool is {0}",
                 skuName);
-            SKU targetSku = Array.Find(this.skus, sku => sku.name.ToLower().Equals(skuName));
-            this.nodeCapacity = Int32.Parse(targetSku.vCPUs);
-            TraceHelper.TraceEvent(this.sessionid, TraceEventType.Error,
+            SKU targetSku = Array.Find(this.skus, sku => sku.Name.Equals(skuName, StringComparison.OrdinalIgnoreCase));
+            this.nodeCapacity = targetSku.VCPUs;
+            TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information,
                 "[AzureBatchJobMonitor] Node capacity in pool is {0}", nodeCapacity);
 
             ODATADetailLevel detailLevel = new ODATADetailLevel();
@@ -281,18 +274,17 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
                     // no service task dispathed yet.
                     TraceHelper.TraceEvent(this.sessionid, TraceEventType.Warning,
                         "[AzureBatchJobMonitorEntry] Failed to get tasks or no task state change.");
-
                     return null;
                 }
 
                 List<TaskInfo> results = new List<TaskInfo>(stateChangedTasks.Count);
                 TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] The number of changed state tasks is {0}", stateChangedTasks.Count);
-
+                DateTime lastStateTransitionTime = new DateTime();
                 foreach (CloudTask task in stateChangedTasks)
                 {
                     TraceHelper.TraceEvent(this.sessionid, TraceEventType.Information, "[AzureBatchJobMonitor] task {0} state changed to {1}, at date time = {2}\n", task.Id, task.State, task.StateTransitionTime);
                     TaskState state = task.State.Value;
-                    DateTime stateTransitionTime = (DateTime)task.StateTransitionTime;
+                    DateTime stateTransitionTime = task.StateTransitionTime.Value;
                     if (state == TaskState.Running)
                     {
                         TaskInfo info = new TaskInfo();
@@ -315,13 +307,13 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher.Impls.JobMonitorEntry.Azu
                         results.Add(info);
                     }
 
-                    if (DateTime.Compare(this.lastChangeTime, stateTransitionTime) < 1)
+                    if (DateTime.Compare(lastStateTransitionTime, stateTransitionTime) < 1)
                     {
-                        this.lastChangeTime = stateTransitionTime;
+                        lastStateTransitionTime = stateTransitionTime;
                     }
                 }
                 this.cloudJob.Refresh();
-               
+                this.lastChangeTime = lastStateTransitionTime;
                 return results;
             }
             catch (Exception ex)

@@ -123,6 +123,7 @@
     <Compile Include="SessionLauncherStartOption.cs" />
     <Compile Include="SessionPerformanceCounterHelper.cs" />
     <Compile Include="SessionPerformanceCounterKey.cs" />
+    <Compile Include="SKU.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
