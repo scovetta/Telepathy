@@ -111,7 +111,6 @@ namespace TestClient
                 return -1;
             }
 
-
             SessionStartInfo startInfo = new SessionStartInfo(headnode, ServiceName);
             startInfo.UseInprocessBroker = inproc;
             startInfo.IsNoSession = standalone;
@@ -172,10 +171,10 @@ namespace TestClient
             data.SessionStart = DateTime.Now;
             Log("Begin to create session.");
             SessionBase session;
-#if False
+
             if (durable)
             {
-                if (sessionId == -1)
+                if (sessionId == "-1")
                 {
                     session = DurableSession.CreateSession(startInfo);
                 }
@@ -187,7 +186,7 @@ namespace TestClient
             else
             {
 
-                if (sessionId == -1)
+                if (sessionId == "-1")
                 {
                     session = Session.CreateSession(startInfo);
                 }
@@ -196,21 +195,19 @@ namespace TestClient
                     session = Session.AttachSession(new SessionAttachInfo(headnode, sessionId));
                 }
             }
-#endif
-
-            session = Session.CreateSession(startInfo);
-
 
             Log("Session created: {0}.", session.Id);
             data.SessionCreated = DateTime.Now;
             data.SessionId = session.Id;
+
+            data.StartSendRequest = DateTime.Now;
 
             RunTest(session, !v2Client);
 
             Log("Begin to close session.");
             data.CloseSessionStart = DateTime.Now;
             // if sessionId is set by user, it's mostly used by multi-client-one-session, so do not close it
-            if (sessionId.Equals(-1))
+            if (sessionId == "-1")
             {
                 try
                 {
@@ -320,7 +317,7 @@ namespace TestClient
         private static string CreateSession(SessionStartInfo startInfo, bool isDurable)
         {
             string sessionId;
-#if False
+
             if (isDurable)
             {
                 DurableSession session = DurableSession.CreateSession(startInfo);
@@ -329,15 +326,12 @@ namespace TestClient
             else
             {
                 Session session = Session.CreateSession(startInfo);
-                session.AutoClose = false;
+                // session.AutoClose = false;
                 sessionId = session.Id;
             }
-#endif
-            Session session = Session.CreateSession(startInfo);
-            sessionId = session.Id;
 
             Log("Session created.");
-            //Environment.ExitCode = sessionId;
+            Environment.ExitCode = sessionId.GetHashCode();
             return sessionId;
         }
 
@@ -495,11 +489,12 @@ namespace TestClient
 
         private static void InternalGetResponseTest(SessionBase session, bool multiThreads)
         {
-
             if (sleep_before_sending > 0)
             {
                 Thread.Sleep(sleep_before_sending);
             }
+
+            data.StartSendRequest = DateTime.Now;
 
             if (multiThreads) InternalGetResponseTestMultiThreads(session);
             else InternalGetResponseTestSingleThread(session);
@@ -626,12 +621,12 @@ namespace TestClient
 
         private static void InternalResponseHandlerTest(SessionBase session, bool multiThreads)
         {
-
-
             if (sleep_before_sending > 0)
             {
                 Thread.Sleep(sleep_before_sending);
             }
+
+            data.StartSendRequest = DateTime.Now;
 
             //double sendInterval = 0;
             if (multiThreads) InternalResponseHandlerTestMultiThreads(session);
@@ -814,6 +809,8 @@ namespace TestClient
             {
                 Thread.Sleep(sleep_before_sending);
             }
+
+            data.StartSendRequest = DateTime.Now;
 
             Binding binding;
             if (http) binding = Utils.CreateHttpBinding();

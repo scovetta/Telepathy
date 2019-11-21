@@ -1,4 +1,6 @@
-# Microsoft Telepathy [![Build Status](https://dev.azure.com/bc-telepathy/telepathy/_apis/build/status/Azure.Telepathy?branchName=dev)](https://dev.azure.com/bc-telepathy/telepathy/_build/latest?definitionId=3&branchName=dev) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+# Microsoft Telepathy 
+
+![Azure DevOps builds (branch)](https://img.shields.io/azure-devops/build/bc-telepathy/32d89ced-58e3-4e1d-835e-b6e22ec7cc80/3/dev) ![GitHub](https://img.shields.io/github/license/Azure/Telepathy) [![GitHub issues](https://img.shields.io/github/issues/Azure/Telepathy)](https://github.com/Azure/Telepathy/issues) ![GitHub last commit](https://img.shields.io/github/last-commit/azure/telepathy)
 
 Microsoft Telepathy is a SOA runtime framework works in a cloud native way, enables running high-throughput and low-latency calculation workload in Azure.
 
@@ -64,6 +66,29 @@ cd Telepathy
 build.bat
 ```
 
+## Benchmark (use Azure Batch Backend)
+
+*Average result of 10 trials*. [Benchmark detail and how to benchmark your cluster](doc/performance_benchmark.md).
+
+### Throughput
+
+#### Interactive Session
+
+- Message Send Throughput: **35394.15** messages/second
+- Broker Process Throughput: **15973.63** messages/second
+- End to End Throughput: **15652.66** messages/second
+
+### Latency
+
+#### Interactive Session
+
+- Warm Latency: **98.59431** millisecond
+
+### CPU Efficiency
+
+#### Interactive Session
+
+- CPU Efficiency: **99.603%** (**398.412%** on 4-core compute nodes)
 
 # Contributing
 

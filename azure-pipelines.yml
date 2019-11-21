@@ -89,6 +89,11 @@ stages:
         targetPath: 'test\E2ETest\BvtTest'
         artifact: 'BVTArtifact'
         
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(System.DefaultWorkingDirectory)\deploy\azuredeploy.json'
+        artifact: 'deployFile'
+    
     - task: PowerShell@2
       inputs:
         filePath: 'create-artifacts.ps1'
@@ -174,7 +179,13 @@ stages:
       vmImage: 'windows-latest'
     steps:
     - checkout: none
-          
+    
+    - task: DownloadPipelineArtifact@2
+      inputs: 
+        buildType: 'current'
+        artifactName: 'deployFile'
+        targetPath: '$(System.DefaultWorkingDirectory)\deploy' 
+        
     - task: AzurePowerShell@4
       inputs:
         azureSubscription: 'BigCompS-Int1(d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
@@ -186,7 +197,7 @@ stages:
           }
           $secureString = convertto-securestring $(VMpwd) -asplaintext -force
           New-AzResourceGroup -Name $(TemplateName) -Location $(RGLocation)
-          New-AzResourceGroupDeployment -ResourceGroupName $(TemplateName) -TemplateUri $(TemplateUri) -telepathyVMName "Telepathy$(Build.BuildID)" -telepathyVMAdminUserName $(VMadmin) -telepathyVMAdminPassword $secureString -vnetName $(VnetName)  -subnetName "default" -batchPoolVMSize "STANDARD_A4_V2" -targetDedicatedNodes 15 -newOrExistingVnet "existing" -vnetResourceGroup $(VnetRGName) -artifactsStorageContainerSasToken $(artifactsStorageContainerSasToken) -artifactsFolderName $(Build.BuildNumber) -artifactsStorageName $(artifactsStorageName) -artifactsStorageContainerName "telepathy"
+          New-AzResourceGroupDeployment -ResourceGroupName $(TemplateName) -TemplateUri "$(System.DefaultWorkingDirectory)\deploy\azuredeploy.json" -telepathyVMName "Telepathy$(Build.BuildID)" -telepathyVMAdminUserName $(VMadmin) -telepathyVMAdminPassword $secureString -vnetName $(VnetName)  -subnetName "default" -batchPoolVMSize "STANDARD_A4_V2" -targetDedicatedNodes 15 -newOrExistingVnet "existing" -vnetResourceGroup $(VnetRGName) -nightlyBuildVersion $(Build.BuildNumber)
         errorActionPreference: 'silentlyContinue'
         azurePowerShellVersion: 'LatestVersion'
         
