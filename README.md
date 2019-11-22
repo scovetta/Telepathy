@@ -2,7 +2,7 @@
 
 ![Azure DevOps builds (branch)](https://img.shields.io/azure-devops/build/bc-telepathy/32d89ced-58e3-4e1d-835e-b6e22ec7cc80/3/dev) ![GitHub](https://img.shields.io/github/license/Azure/Telepathy) [![GitHub issues](https://img.shields.io/github/issues/Azure/Telepathy)](https://github.com/Azure/Telepathy/issues) ![GitHub last commit](https://img.shields.io/github/last-commit/azure/telepathy)
 
-Microsoft Telepathy is a SOA runtime framework works in a cloud native way, enables running high-throughput and low-latency calculation workload in Azure.
+Microsoft Telepathy is a SOA runtime framework works in a cloud native way, enables running high-throughput and low-latency calculation workload in Azure. Evolving from the battle-tested SOA Runtime of [Microsoft HPC Pack](https://docs.microsoft.com/en-us/powershell/high-performance-computing/overview?view=hpc16-ps).
 
 ## Get Started with Nightly Build
 
@@ -42,7 +42,7 @@ New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 New-AzResourceGroupDeployment -ResourceGroupName $ResourceGroupName -TemplateFile $TemplateFile -TemplateParameterFile $TemplateParameterFile
 ```
 
-### Reference Microsoft.Telepathy.Session SDK NuGet package
+### Reference `Microsoft.Telepathy.Session` SDK NuGet package
 
 To use nightly SDK package, add following NuGet source.
 
@@ -89,6 +89,13 @@ build.bat
 #### Interactive Session
 
 - CPU Efficiency: **99.603%** (**398.412%** on 4-core compute nodes)
+
+## vNext
+
+- Cross platform support
+- Cross language support
+- Data service intigration
+- IdentityServer intigration
 
 # Contributing
 
