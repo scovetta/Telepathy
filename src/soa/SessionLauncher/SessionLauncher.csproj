@@ -123,6 +123,7 @@
     <Compile Include="SessionLauncherStartOption.cs" />
     <Compile Include="SessionPerformanceCounterHelper.cs" />
     <Compile Include="SessionPerformanceCounterKey.cs" />
+    <Compile Include="SKU.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -176,6 +177,9 @@
     <None Include="SessionLauncherSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>SessionLauncherSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="SKUs.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>

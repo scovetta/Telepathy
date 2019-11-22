@@ -31,9 +31,6 @@ namespace Microsoft.Telepathy.Common
         // TODO: investigate why set the value later
         public static string FirstCoreIndex => "3";
 
-        // TODO: consider to get real capacity
-        public static string NodeCapacity => "1";
-
         /// <summary>
         ///     Indicate data is stored in reliable registry
         /// </summary>
