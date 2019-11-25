@@ -75,6 +75,8 @@ namespace Microsoft.Telepathy.Internal.SessionLauncher
 
         public string LocalFilePath { get; set; }
 
+        public string LocalFileFormatter { get; set; }
+
         public string RollingInterval { get; set; }
     }
 }

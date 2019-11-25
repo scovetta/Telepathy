@@ -62,6 +62,8 @@ namespace Microsoft.Telepathy.Internal.BrokerLauncher
 
         public string LocalFilePath { get; set; }
 
+        public string LocalFileFormatter { get; set; }
+
         public string RollingInterval { get; set; }
     }
 }
