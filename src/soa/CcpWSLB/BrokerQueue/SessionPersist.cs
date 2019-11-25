@@ -5,6 +5,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// the delegate for the get request callback.
@@ -82,7 +83,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
         /// <remarks>This operation should aware the TransactionContext. 
         /// If the context is avariable, nothing should be changed if one of 
         /// operations failed.</remarks>
-        void PutRequestsAsync(IEnumerable<BrokerQueueItem> requests, PutRequestCallback putRequestCallback, object callbackState);
+        Task PutRequestsAsync(IEnumerable<BrokerQueueItem> requests, PutRequestCallback putRequestCallback, object callbackState);
 
         /// <summary>
         /// Put a single request item into the storage.
@@ -93,7 +94,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
         /// <remarks>This operation should aware the TransactionContext. 
         /// If the context is avariable, nothing should be changed if one of 
         /// operations failed.</remarks>
-        void PutRequestAsync(BrokerQueueItem request, PutRequestCallback putRequestCallback, object callbackState);
+        Task PutRequestAsync(BrokerQueueItem request, PutRequestCallback putRequestCallback, object callbackState);
 
         /// <summary>
         /// Fetch the requests one by one from the storage but not remove the original message in the storage.

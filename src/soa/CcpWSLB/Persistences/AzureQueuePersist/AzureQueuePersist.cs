@@ -126,6 +126,10 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 
         private ReaderWriterLockSlim rwlockPriorityQueue = new ReaderWriterLockSlim();
 
+#if DEBUG
+        private int procCount = 0;
+#endif
+
         internal AzureQueuePersist(string userName, string sessionId, string clientId, string storageConnectString)
         {
             BrokerTracing.TraceVerbose(
@@ -495,7 +499,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             return false;
         }
 
-        public void PutRequestAsync(
+        public async Task PutRequestAsync(
             BrokerQueueItem request,
             PutRequestCallback putRequestCallback,
             object callbackState)
@@ -503,10 +507,10 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             ParamCheckUtility.ThrowIfNull(request, "request");
             var requests = new BrokerQueueItem[1];
             requests[0] = request;
-            this.PutRequestsAsync(requests, putRequestCallback, callbackState);
+            await this.PutRequestsAsync(requests, putRequestCallback, callbackState);
         }
 
-        public void PutRequestsAsync(
+        public async Task PutRequestsAsync(
             IEnumerable<BrokerQueueItem> requests,
             PutRequestCallback putRequestCallback,
             object callbackState)
@@ -521,7 +525,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             var putRequestState = new PutRequestState(requests, putRequestCallback, callbackState);
 
             // TODO: make PutRequestsAsync an async call
-            this.PersistRequests(putRequestState);
+            await this.PersistRequests(putRequestState);
         }
 
         public void PutResponseAsync(
@@ -698,7 +702,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 this.EOMFlag ? "1" : "0");
         }
 
-        private void PersistRequests(object state)
+        private async Task PersistRequests(object state)
         {
             var putRequestState = (PutRequestState)state;
             ParamCheckUtility.ThrowIfNull(state, "put request state");
@@ -722,15 +726,14 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         if (bytes.Length > Constant.AzureQueueMsgChunkSize)
                         {
                             sendMsg = new CloudQueueMessage(
-                                AzureStorageTool.CreateBlobFromBytes(this.blobContainer, bytes).GetAwaiter()
-                                    .GetResult());
+                                await AzureStorageTool.CreateBlobFromBytes(this.blobContainer, bytes));
                         }
                         else
                         {
                             sendMsg = new CloudQueueMessage(bytes);
                         }
 
-                        this.requestQueueField.AddMessageAsync(sendMsg).GetAwaiter().GetResult();
+                        await this.requestQueueField.AddMessageAsync(sendMsg);
 
                         requestsCount++;
 
@@ -787,7 +790,11 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             PutResponseState putResponseState = (PutResponseState)state;
             ParamCheckUtility.ThrowIfNull(putResponseState, "putResponseState");
             ParamCheckUtility.ThrowIfNull(putResponseState.Messages, "putResponseState.Mesasges");
-
+#if DEBUG
+            int num = Interlocked.Increment(ref this.procCount);
+            BrokerTracing.TraceVerbose(
+                "[AzureQueuePersist] .PersistResponses: persist responses start, number = {0}.", num);
+#endif
             try
             {
                 // Save peer request items of response messages in case persist operation is failed.
@@ -809,7 +816,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     // step 1, receive corresponding request from queue
                     // no duplicate response for one request
                     var requestToken = (string)response.PersistAsyncToken.AsyncToken;
-                    var isValid = false;
+                    /*var isValid = false;
                     try
                     {
                         if (requestToken != null)
@@ -826,9 +833,9 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                             e);
                         exception = e;
                         break;
-                    }
+                    }*/
 
-                    if (!isValid)
+                    if (requestToken == null)
                     {
                         continue;
                     }
@@ -874,14 +881,14 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                             e);
                         exception = e;
                         storedResponseDic.TryAdd(index, false);
-                        Task.Run(() => ReleaseTask(index));
+                        Task.Run(() => ReleaseTask());
                         break;
                     }
 
                     // At this point, both step 1 & step 2 are performed succeesfully
                     responseCount++;
                     storedResponseDic.TryAdd(index, false);
-                    Task.Run(() => ReleaseTask(index));
+                    Task.Run(() => ReleaseTask());
                 }
                 
                 // persisting succeed
@@ -942,7 +949,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 // Note: Update responsesCountField before requestsCountField. - tricky part.
                 // FIXME!
                 Interlocked.Add(ref this.responsesCountField, responseCount);
-                this.responseFetcher.NotifyMoreMessages(responseCount);
+
                 long remainingRequestCount = Interlocked.Add(ref this.requestsCountField, -responseCount);
                 bool isLastResponse = EOMReceived && (remainingRequestCount == 0);
                 PutResponseCallback putResponseCallback = putResponseState.Callback;
@@ -950,6 +957,10 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 {
                     putResponseCallback(exception, responseCount, faultResponsesCount, isLastResponse, redispatchRequestsList, putResponseState.CallbackState);
                 }
+#if DEBUG
+                BrokerTracing.TraceVerbose(
+                    "[AzureQueuePersist] .PersistResponses: persist responses end, num = {0}.", num);
+#endif
             }
             catch (Exception e)
             {
@@ -960,11 +971,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             }
         }
 
-        private void ReleaseTask(long index)
+        private void ReleaseTask()
         {
-            BrokerTracing.TraceVerbose(
-                "[AzureQueuePersisit] .ReleaseTask: start: {0}, bool: {1}",
-                index, Interlocked.Read(ref responseLock));
             long p = Interlocked.Exchange(ref responseLock, 2);
             if (p == 0)
             {
@@ -979,6 +987,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                             "[AzureQueuePersisit] .ReleaseTask: count: {0}, min: {1}",
                             priorityQueue.Count, priorityQueue.Count == 0 ? -1 : priorityQueue.FindMin());
                         long max = 0;
+                        long responseCount = 0;
 
                         while (true)
                         {
@@ -994,6 +1003,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                                         this.rwlockPriorityQueue.EnterWriteLock();
                                         priorityQueue.DeleteMin();
                                         this.rwlockPriorityQueue.ExitWriteLock();
+                                        responseCount++;
                                     }
                                     else
                                     {
@@ -1012,9 +1022,10 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         }
 
                         BrokerTracing.TraceVerbose(
-                            "[AzureQueuePersisit] .ReleaseTask: Ack update: {0}",
-                            max);
+                            "[AzureQueuePersisit] .ReleaseTask: Ack update: {0}, {1}",
+                            max, responseCount);
                         this.responseFetcher.ChangeAck(max);
+                        this.responseFetcher.NotifyMoreMessages(responseCount);
                     }
                     catch (Exception e)
                     {

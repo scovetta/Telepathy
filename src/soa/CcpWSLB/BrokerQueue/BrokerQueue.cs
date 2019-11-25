@@ -7,6 +7,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.ServiceModel.Channels;
+    using System.Threading.Tasks;
 
     using Microsoft.Telepathy.ServiceBroker.Common;
     using Microsoft.Telepathy.ServiceBroker.FrontEnd;
@@ -171,7 +172,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
         /// <param name="context">the request context relate to the message</param>
         /// <param name="msg">the request message</param>
         /// <param name="asyncState">the asyncState relate to the message</param>
-        public abstract void PutRequestAsync(RequestContextBase context, Message msg, object asyncState);
+        public abstract Task PutRequestAsync(RequestContextBase context, Message msg, object asyncState);
 
         /// <summary>
         /// Fetch the requests one by one from the storage but not remove the original message in the storage.

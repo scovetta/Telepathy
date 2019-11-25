@@ -7,6 +7,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Threading;
+    using System.Threading.Tasks;
 
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
 
@@ -162,7 +163,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences
         /// <param name="requests">A list of request objects</param>
         /// <param name="putRequestCallback">the callback function that will be called once the async operation finish or exception raise.</param>
         /// <param name="callbackState">the state object for the callback.</param>
-        public void PutRequestsAsync(IEnumerable<BrokerQueueItem> requests, PutRequestCallback putRequestCallback, object callbackState)
+        public async Task PutRequestsAsync(IEnumerable<BrokerQueueItem> requests, PutRequestCallback putRequestCallback, object callbackState)
         {
             if (this.isClosedField)
             {
@@ -190,7 +191,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences
         /// <param name="request">the single request that need be stored to the persistenc</param>
         /// <param name="putRequestCallback">the callback function that will be called once the async operation finish or exception raise.</param>
         /// <param name="callbackState">the state object for the callback.</param>
-        public void PutRequestAsync(BrokerQueueItem request, PutRequestCallback putRequestCallback, object callbackState)
+        public async Task PutRequestAsync(BrokerQueueItem request, PutRequestCallback putRequestCallback, object callbackState)
         {
             if (this.isClosedField)
             {

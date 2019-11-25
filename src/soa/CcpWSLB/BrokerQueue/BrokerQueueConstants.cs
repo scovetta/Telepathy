@@ -26,7 +26,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
         /// <summary>
         /// the default threshold value for responses that hold in the cache, if the number exceed this number, the the cached responses should be persisted to the storage.
         /// </summary>
-        public const int DefaultThresholdForResponsePersist = 1000;
+        public const int DefaultThresholdForResponsePersist = 100;
 
         /// <summary>
         /// the default timeout for the messages in the cache, if no more messages come in, adn the timeout hit, then the cached messages should be persisted to the storage.
