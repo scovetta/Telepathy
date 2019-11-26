@@ -94,6 +94,10 @@ See [Migrate From HPC Pack SOA to Microsoft Telepathy](doc/migrate_from_hpc_pack
 
 - CPU Efficiency: **99.603%** (**398.412%** on 4-core compute nodes)
 
+## Documentation
+
+See [Documentation Index](doc/index.md).
+
 ## vNext
 
 - Cross platform support
