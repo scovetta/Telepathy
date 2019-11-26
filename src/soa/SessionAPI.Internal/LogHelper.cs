@@ -98,11 +98,12 @@ namespace Microsoft.Telepathy.Session.Internal
             SetLoggingConfigItem("serilog:write-to:AzureLogAnalytics.authenticationId", authenticationId);
         }
 
-        private static void SetFileLoggingConfig(string logFilePath, string minimumLevel, string rollingInterval)
+        private static void SetFileLoggingConfig(string logFilePath, string minimumLevel, string rollingInterval, string formatter)
         {           
             SetBasicLoggingConfig("File", "File", minimumLevel);
             SetLoggingConfigItem("serilog:write-to:File.path", logFilePath);
-            SetLoggingConfigItem("serilog:write-to:File.rollingInterval", rollingInterval);                    
+            SetLoggingConfigItem("serilog:write-to:File.rollingInterval", rollingInterval);
+            SetLoggingConfigItem("serilog:write-to:File.formatter", formatter);
         }
 
         public static void SetLoggingConfig(ILogConfigOption option, string logConfigFilePath, string source)
@@ -173,7 +174,7 @@ namespace Microsoft.Telepathy.Session.Internal
                     if (option.LocalFileLogging.Value)
                     {
                         SetFileLoggingConfig(option.LocalFilePath, option.LocalFileLoggingLevel,
-                            option.RollingInterval);
+                            option.RollingInterval, option.LocalFileFormatter);
                     }
                     else
                     {

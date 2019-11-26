@@ -346,11 +346,6 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "telepathyVMOSDisk",
-            "vhd": {
-              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('telepathyStorageName')), '2016-01-01').primaryEndpoints.blob, variables('telepathyVMStorageAccountContainerName'), '/', variables('telepathyVMOSDiskName'), '.vhd')]"
-            },
-            "caching": "ReadWrite",
             "createOption": "FromImage"
           }
         },

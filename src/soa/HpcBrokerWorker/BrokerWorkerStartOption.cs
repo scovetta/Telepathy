@@ -38,6 +38,8 @@ namespace Microsoft.Telepathy.Internal.BrokerShim
 
         public string LocalFilePath { get; set; }
 
+        public string LocalFileFormatter { get; set; }
+
         public string RollingInterval { get; set; }
     }
 }
