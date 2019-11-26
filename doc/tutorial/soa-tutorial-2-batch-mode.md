@@ -105,7 +105,7 @@ After a couple of hours, the user can come back and retrieve the results. (In ou
    //Input sessionId here
    string sessionId;
    Console.Write("Input the session id : ");
-   Console.WriteLine("Session {0} has been created", session.Id);
+   sessionId = Console.ReadLine();
 
    //Change the headnode name here
    SessionAttachInfo info = new SessionAttachInfo("head.contoso.com", sessionId);
