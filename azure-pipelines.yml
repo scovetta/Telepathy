@@ -191,7 +191,7 @@ stages:
       inputs:
         ConnectedServiceName: 'ESRP CodeSign'
         FolderPath: '$(Build.ArtifactStagingDirectory)'
-        Pattern: '*.nuget'
+        Pattern: '*.nupkg'
         signConfigType: 'inlineSignParams'
         inlineOperation: |
           [
