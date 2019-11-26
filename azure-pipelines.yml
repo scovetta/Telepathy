@@ -177,6 +177,40 @@ stages:
         Destination: 'AzureBlob'
         storage: 'soaruntimestorage'
         ContainerName: 'service-assembly/ccpechosvc'
+
+    - task: EsrpCodeSigning@1
+      displayName: 'Sign SDK assemblies'
+      inputs:
+        ConnectedServiceName: 'ESRP CodeSign'
+        FolderPath: 'src/soa/SessionAPI/bin/$(buildConfiguration)'
+        Pattern: '*.dll,*.exe'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [
+            {
+              "KeyCode": "CP-230012",
+              "OperationCode": "SigntoolSign",
+              "Parameters": {
+                "OpusName": "Microsoft",
+                "OpusInfo": "http://www.microsoft.com",
+                "FileDigest": "/fd \"SHA256\"",
+                "PageHash": "/NPH",
+                "TimeStamp": "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+              },
+              "ToolName": "sign",
+              "ToolVersion": "1.0"
+            },
+            {
+              "KeyCode": "CP-230012",
+              "OperationCode": "SigntoolVerify",
+              "Parameters": {},
+              "ToolName": "sign",
+              "ToolVersion": "1.0"
+            }
+          ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
         
     - task: NuGetCommand@2
       displayName: 'Pack SDK Nuget Package'
