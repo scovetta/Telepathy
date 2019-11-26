@@ -66,6 +66,10 @@ cd Telepathy
 build.bat
 ```
 
+## Migrate From HPC Pack SOA
+
+See [Migrate From HPC Pack SOA to Microsoft Telepathy](doc/migrate_from_hpc_pack_soa_to_microsoft_telepathy.md)
+
 ## Benchmark (use Azure Batch Backend)
 
 *Average result of 10 trials*. [Benchmark detail and how to benchmark your cluster](doc/performance_benchmark.md).
