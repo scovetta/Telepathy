@@ -73,19 +73,16 @@ function Write-Log {
     } 
 }
 
-
+Write-Log -Message "Get parameters from base64"
 $HashParamsString = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Params))
+Write-Log -Message "Replace new line character"
 $HashParamsString = $HashParamsString.Replace(';', "`r`n")
-Write-Host $HashParamsString
-Write-Log -Message $HashParamsString
-
+Write-Log -Message "Convert parameters type from string to hashtable"
 $HashParams = ConvertFrom-StringData -StringData $HashParamsString
-$HashParams.keys | ForEach-Object {
-    Write-Host "$_ : $($HashParams[$_])"
-    Write-Log -Message "$_ : $($HashParams[$_])"
-}
 
+Write-Log -Message "Install nuget package provider & minimum version is 2.8.5.201"
 Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+Write-Log -Message "Install Az module"
 Install-Module -Name Az -AllowClobber -Force
 
 $destination_path = "C:\telepathy"
@@ -94,8 +91,7 @@ $artifactsPath = "$destination_path\$artifactsFolderName\Release"
 
 <# Download artifacts from the specified Azure Storage containers #>
 Try {
-    Write-Log -Message "StorageAccountName : $HashParams["SrcStorageAccountName"]"
-    Write-Log -Message "StorageSasToken : $HashParams["SrcStorageContainerSasToken"]"
+    Write-Log -Message "Get src storage context"
     $srcStorageContext = New-AzStorageContext -StorageAccountName $HashParams["SrcStorageAccountName"] -SasToken $HashParams["SrcStorageContainerSasToken"]  
 }
 Catch {
@@ -104,9 +100,9 @@ Catch {
 }
 
 Try {
+    Write-Log -Message "Get src storage blob content"
     Write-Log -Message "ContainerName : $HashParams["ContainerName"]"
-    Write-Log -Message "ArtifactsFolderName : $HashParams["ArtifactsFolderName"]"
-    
+    Write-Log -Message "ArtifactsFolderName : $HashParams["ArtifactsFolderName"]"  
     $blobs = Get-AzStorageBlob -Container $HashParams["ContainerName"] -Blob "$($HashParams["ArtifactsFolderName"])*" -Context $srcStorageContext
 }
 Catch {
@@ -127,7 +123,10 @@ Catch {
 }
 <# Artifacts are all ready #>
 
+Write-Log -Message "Get boolean value of EnableTelepathyStorage & StartTelepathyService"
 $HashParams["EnableTelepathyStorage"] = [bool]$HashParams["EnableTelepathyStorage"]
 $HashParams["StartTelepathyService"] = [bool]$HashParams["StartTelepathyService"]
+Write-Log -Message "Import start-telepathy module"
 Import-Module -Name $artifactsPath\DeployScript\Start-Telepathy.psd1 -Verbose
+Write-Log -Message "Start telepathy with hashtable parameters"
 Start-Telepathy -Params @HashParams   

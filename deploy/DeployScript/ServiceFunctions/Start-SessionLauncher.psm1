@@ -14,11 +14,8 @@
     Set-LogSource -SourceName "StartSessionLauncher"
     
     Write-Log -Message "DestinationPath to find resource : $DestinationPath"
-    Write-Log -Message "DesStorageConnectionString : $DesStorageConnectionString"
     Write-Log -Message "BatchAccountName : $BatchAccountName"
     Write-Log -Message "BatchPoolName: $BatchPoolName"
-    Write-Log -Message "BatchAccountKey : $BatchAccountKey"
-    Write-Log -Message "BatchAccountServiceUrl : $BatchAccountServiceUrl"
     
     $serviceName = "TelepathySessionLauncher"
     $SessionLauncher = "$DestinationPath\SessionLauncher\HpcSession.exe"
@@ -31,13 +28,13 @@
     
         if ($EnableLogAnalytics) {
             $LoggingLevel = "Warning"
-            Write-Log -Message "Start to config log analytics"
+            Write-Log -Message "Start to config log analytics in SessionLauncher"
             Invoke-Expression "$SessionLauncher -l --Logging `"Enable`" --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel $LoggingLevel --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId"
         }
         
         Write-Log -Message "Start to new session launcher windows service"
         New-Service -Name $serviceName `
-            -BinaryPathName "$SessionLauncher --AzureBatchServiceUrl $BatchAccountServiceUrl --AzureBatchAccountName $BatchAccountName --AzureBatchAccountKey $BatchAccountkey --AzureBatchPoolName $BatchPoolName --AzureBatchBrokerStorageConnectionString $DesStorageConnectionString" `
+            -BinaryPathName "$SessionLauncher" `
             -DisplayName "Telepathy Session Launcher Service" `
             -StartupType Automatic `
             -Description "Telepathy Session Launcher service." 
@@ -48,7 +45,7 @@
     }
     Try {
         Write-Log -Message "Start session launcher windows service"
-        Start-Service -Name $serviceName
+        Start-Service -Name $serviceName --AzureBatchServiceUrl $BatchAccountServiceUrl --AzureBatchAccountName $BatchAccountName --AzureBatchAccountKey $BatchAccountkey --AzureBatchPoolName $BatchPoolName --AzureBatchBrokerStorageConnectionString $DesStorageConnectionString
     }
     Catch {
         Write-Log -Message "Fail to start session launcher windows service" -Level Error
