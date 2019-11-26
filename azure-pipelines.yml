@@ -106,6 +106,40 @@ stages:
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
         OverWrite: true
 
+    - task: EsrpCodeSigning@1
+      displayName: 'Sign assemblies'
+      inputs:
+        ConnectedServiceName: 'ESRP CodeSign'
+        FolderPath: '$(Build.ArtifactStagingDirectory)'
+        Pattern: '*.dll,*.exe'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [
+            {
+              "KeyCode": "CP-230012",
+              "OperationCode": "SigntoolSign",
+              "Parameters": {
+                "OpusName": "Microsoft",
+                "OpusInfo": "http://www.microsoft.com",
+                "FileDigest": "/fd \"SHA256\"",
+                "PageHash": "/NPH",
+                "TimeStamp": "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+              },
+              "ToolName": "sign",
+              "ToolVersion": "1.0"
+            },
+            {
+              "KeyCode": "CP-230012",
+              "OperationCode": "SigntoolVerify",
+              "Parameters": {},
+              "ToolName": "sign",
+              "ToolVersion": "1.0"
+            }
+          ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
@@ -151,6 +185,34 @@ stages:
         packagesToPack: '**/Session.nuspec'
         versioningScheme: 'byBuildNumber'
         includeSymbols: true
+
+    - task: EsrpCodeSigning@1
+      displayName: 'Sign Nuget Package'
+      inputs:
+        ConnectedServiceName: 'ESRP CodeSign'
+        FolderPath: '$(Build.ArtifactStagingDirectory)'
+        Pattern: '*.nuget'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [
+            {
+              "KeyCode" : "CP-401405",
+              "OperationCode" : "NuGetSign",
+              "Parameters" : {},
+              "ToolName" : "sign",
+              "ToolVersion" : "1.0"
+            },
+            {
+              "KeyCode" : "CP-401405",
+              "OperationCode" : "NuGetVerify",
+              "Parameters" : {},
+              "ToolName" : "sign",
+              "ToolVersion" : "1.0"
+            }
+          ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
 
     - task: NuGetCommand@2
       displayName: 'Publish SDK to Internal Source'
