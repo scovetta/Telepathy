@@ -108,6 +108,7 @@ stages:
 
     - task: EsrpCodeSigning@1
       displayName: 'Sign assemblies'
+      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/dev')))
       inputs:
         ConnectedServiceName: 'ESRP CodeSign'
         FolderPath: '$(Build.ArtifactStagingDirectory)'
@@ -180,6 +181,7 @@ stages:
 
     - task: EsrpCodeSigning@1
       displayName: 'Sign SDK assemblies'
+      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/dev')))
       inputs:
         ConnectedServiceName: 'ESRP CodeSign'
         FolderPath: 'src/soa/SessionAPI/bin/$(buildConfiguration)'
@@ -222,6 +224,7 @@ stages:
 
     - task: EsrpCodeSigning@1
       displayName: 'Sign Nuget Package'
+      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/dev')))
       inputs:
         ConnectedServiceName: 'ESRP CodeSign'
         FolderPath: '$(Build.ArtifactStagingDirectory)'
