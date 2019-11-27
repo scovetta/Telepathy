@@ -92,39 +92,49 @@ $destination_path = "C:\telepathy"
 $artifactsFolderName = $HashParams["ArtifactsFolderName"]
 $artifactsPath = "$destination_path\$artifactsFolderName\Release"
 
+$releaseDeploy = [bool]$HashParams["ReleaseDeploy"]
+<# Download artifacts from released resource #>
+if ($releaseDeploy) {
+    $url = "https://github.com/Azure/Telepathy/releases/$HashParams["TelepathyVersion"]/download/Telepathy.zip"
+    $wc = New-Object System.Net.WebClient
+    $wc.DownloadFileAsync($url, $destination_path)
+    Expand-Archive "$destination_Path\Telepathy.zip" -DestinationPath $destination_path -Force
+}
 <# Download artifacts from the specified Azure Storage containers #>
-Try {
-    Write-Log -Message "StorageAccountName : $HashParams["SrcStorageAccountName"]"
-    Write-Log -Message "StorageSasToken : $HashParams["SrcStorageContainerSasToken"]"
-    $srcStorageContext = New-AzStorageContext -StorageAccountName $HashParams["SrcStorageAccountName"] -SasToken $HashParams["SrcStorageContainerSasToken"]  
-}
-Catch {
-    Write-Log -Message "Please provide valid storage account name and sas token" -Level Error
-    Write-Log -Message $_ -Level Error
+else {   
+    Try {
+        Write-Log -Message "StorageAccountName : $HashParams["SrcStorageAccountName"]"
+        Write-Log -Message "StorageSasToken : $HashParams["SrcStorageContainerSasToken"]"
+        $srcStorageContext = New-AzStorageContext -StorageAccountName $HashParams["SrcStorageAccountName"] -SasToken $HashParams["SrcStorageContainerSasToken"]  
+    }
+    Catch {
+        Write-Log -Message "Please provide valid storage account name and sas token" -Level Error
+        Write-Log -Message $_ -Level Error
+    }
+
+    Try {
+        Write-Log -Message "ContainerName : $HashParams["ContainerName"]"
+        Write-Log -Message "ArtifactsFolderName : $HashParams["ArtifactsFolderName"]"  
+        $blobs = Get-AzStorageBlob -Container $HashParams["ContainerName"] -Blob "$($HashParams["ArtifactsFolderName"])*" -Context $srcStorageContext
+    }
+    Catch {
+        Write-Log -Message "Error occurs when get source storage blob, can't get storage blob, please confirm you provide valid container name, blob name and storage context " -Level Error
+        Write-Log -Message $_ -Level Error
+    }
+
+    Try {
+        Write-Log -Message "DestinationPath in VM : $destination_path"
+        foreach ($blob in $blobs) {  
+            New-Item -ItemType Directory -Force -Path $destination_path  
+            Get-AzStorageBlobContent -Container $HashParams["ContainerName"] -Blob $blob.Name -Destination $destination_path -Context $srcStorageContext   
+        } 
+    }
+    Catch {
+        Write-Log -Message "Error occurs when download source storage blob to VM " -Level Error
+        Write-Log -Message $_ -Level Error
+    }
 }
 
-Try {
-    Write-Log -Message "ContainerName : $HashParams["ContainerName"]"
-    Write-Log -Message "ArtifactsFolderName : $HashParams["ArtifactsFolderName"]"
-    
-    $blobs = Get-AzStorageBlob -Container $HashParams["ContainerName"] -Blob "$($HashParams["ArtifactsFolderName"])*" -Context $srcStorageContext
-}
-Catch {
-    Write-Log -Message "Error occurs when get source storage blob, can't get storage blob, please confirm you provide valid container name, blob name and storage context " -Level Error
-    Write-Log -Message $_ -Level Error
-}
-
-Try {
-    Write-Log -Message "DestinationPath in VM : $destination_path"
-    foreach ($blob in $blobs) {  
-        New-Item -ItemType Directory -Force -Path $destination_path  
-        Get-AzStorageBlobContent -Container $HashParams["ContainerName"] -Blob $blob.Name -Destination $destination_path -Context $srcStorageContext   
-    } 
-}
-Catch {
-    Write-Log -Message "Error occurs when download source storage blob to VM " -Level Error
-    Write-Log -Message $_ -Level Error
-}
 <# Artifacts are all ready #>
 
 $HashParams["EnableTelepathyStorage"] = [bool]$HashParams["EnableTelepathyStorage"]
