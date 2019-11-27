@@ -150,7 +150,7 @@ stages:
     - task: ArchiveFiles@2
       inputs:
         rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
-        includeRootFolder: true
+        includeRootFolder: false
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/telepathy_$(Build.BuildNumber).zip'
         replaceExistingArchive: true
@@ -265,6 +265,12 @@ stages:
         MaxConcurrency: '50'
         MaxRetryAttempts: '5'
 
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)/microsoft.telepathy.session.$(Build.BuildNumber).nupkg'
+        artifact: 'sdk_nuget'
+        publishLocation: 'pipeline'
+        
     - task: NuGetCommand@2
       displayName: 'Publish SDK to Internal Source'
       inputs:        
