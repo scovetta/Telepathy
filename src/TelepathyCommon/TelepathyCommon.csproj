@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="EndpointsConnectionString.cs" />
     <Compile Include="ErrorCode.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TelepathyConstants.cs" />
     <Compile Include="TelepathyContext\TelepathyContext.cs" />
     <Compile Include="TelepathyContext\Extensions\RegistryExtension\RegistryExtension.cs" />
