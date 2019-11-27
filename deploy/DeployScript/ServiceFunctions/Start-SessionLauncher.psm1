@@ -34,7 +34,7 @@
         
         Write-Log -Message "Start to new session launcher windows service"
         New-Service -Name $serviceName `
-            -BinaryPathName "$SessionLauncher" `
+            -BinaryPathName "$SessionLauncher --AzureBatchServiceUrl $BatchAccountServiceUrl --AzureBatchAccountName $BatchAccountName --AzureBatchAccountKey $BatchAccountkey --AzureBatchPoolName $BatchPoolName --AzureBatchBrokerStorageConnectionString $DesStorageConnectionString" `
             -DisplayName "Telepathy Session Launcher Service" `
             -StartupType Automatic `
             -Description "Telepathy Session Launcher service." 
@@ -45,7 +45,7 @@
     }
     Try {
         Write-Log -Message "Start session launcher windows service"
-        Start-Service -Name $serviceName --AzureBatchServiceUrl $BatchAccountServiceUrl --AzureBatchAccountName $BatchAccountName --AzureBatchAccountKey $BatchAccountkey --AzureBatchPoolName $BatchPoolName --AzureBatchBrokerStorageConnectionString $DesStorageConnectionString
+        Start-Service -Name $serviceName
     }
     Catch {
         Write-Log -Message "Fail to start session launcher windows service" -Level Error
