@@ -517,60 +517,10 @@ namespace Microsoft.Telepathy.Test.E2E.Bvt
                 Error("start mew session with maxunit 3", e.ToString());
                 throw;
             }
-        }
+        }    
 
         /// <summary>
-        /// Interactive Mode Basic Functional (BVT) - non-secure net.tcp - single Session, max parameter is 15
-        /// </summary>
-        [TestMethod]
-        public void BvtCase6()
-        {
-            Info("Start BVT");
-            SessionStartInfo sessionStartInfo = null;
-            int maxUnit = 15;
-            sessionStartInfo = BuildSessionStartInfo(Server, EchoSvcName, null, null, null, null, SessionUnitType.Node, null, maxUnit, null);
-
-            Info("Begin to create session");
-            try
-            {
-                Session session = this.StartNewSession(sessionStartInfo, maxUnit);
-                session.Close(true);
-                session.Dispose();
-            }
-            catch (Exception e)
-            {
-                Error("Invalid maxunit parameter value", e.ToString());
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Interactive Mode Basic Functional (BVT) - non-secure net.tcp - single Session, max parameter is 30
-        /// </summary>
-        [TestMethod]
-        public void BvtCase7()
-        {
-            Info("Start BVT");
-            SessionStartInfo sessionStartInfo = null;
-            int maxUnit = 30;
-            sessionStartInfo = BuildSessionStartInfo(Server, EchoSvcName, null, null, null, null, SessionUnitType.Node, null, maxUnit, null);
-
-            Info("Begin to create session");
-            try
-            {
-                Session session = this.StartNewSession(sessionStartInfo, maxUnit);
-                session.Close(true);
-                session.Dispose();
-            }
-            catch (Exception e)
-            {
-                Error("Invalid parameter value", e.ToString());
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Interactive Mode Basic Functional (BVT) - non-secure net.tcp - multiple Sessions, maxunit is 0, session number is 16
+        /// Interactive Mode Basic Functional (BVT) - non-secure net.tcp - multiple Sessions, maxunit is 0, session number is 1
         /// </summary>
         [TestMethod]
         [ExpectedException(typeof(AggregateException), AllowDerivedTypes = true)]
@@ -581,7 +531,7 @@ namespace Microsoft.Telepathy.Test.E2E.Bvt
             int maxUnit = 0;
             sessionStartInfo = BuildSessionStartInfo(Server, EchoSvcName, null, null, null, null, SessionUnitType.Node, null, maxUnit, null);
 
-            int sessionNum = 16;
+            int sessionNum = 1;
             List<Session> sessions = new List<Session>(sessionNum);
             Info("Begin to create session");
             Task[] tasks = new Task[sessionNum];
@@ -595,14 +545,13 @@ namespace Microsoft.Telepathy.Test.E2E.Bvt
                     session.Dispose();
                 });
 
-                //TODO: should be removed when job id type change to string
                 Thread.Sleep(1000);
             }
             Task.WaitAll(tasks);
         }
 
         /// <summary>
-        /// Interactive Mode Basic Functional (BVT) - non-secure net.tcp - multiple Sessions, maxunit is 3, session number is 16
+        /// Interactive Mode Basic Functional (BVT) - non-secure net.tcp - multiple Sessions, maxunit is 3, session number is 6
         /// </summary>
         [TestMethod]
         public void BvtCase9()
@@ -612,7 +561,7 @@ namespace Microsoft.Telepathy.Test.E2E.Bvt
             int maxUnit = 3;
             sessionStartInfo = BuildSessionStartInfo(Server, EchoSvcName, null, null, null, null, SessionUnitType.Node, null, maxUnit, null);
 
-            int sessionNum = 16;
+            int sessionNum = 6;
             List<Session> sessions = new List<Session>(sessionNum);
             Info("Begin to create session");
             Task[] tasks = new Task[sessionNum];
@@ -634,7 +583,6 @@ namespace Microsoft.Telepathy.Test.E2E.Bvt
                     }
                 });
 
-                //TODO: should be removed when job id type change to string
                 Thread.Sleep(1000);
             }
             Task.WaitAll(tasks);
@@ -673,7 +621,6 @@ namespace Microsoft.Telepathy.Test.E2E.Bvt
                     }
                 });
 
-                //TODO: should be removed when job id type change to string
                 Thread.Sleep(1000);
             }
             Task.WaitAll(tasks);
@@ -712,7 +659,6 @@ namespace Microsoft.Telepathy.Test.E2E.Bvt
                     }
                 });
 
-                //TODO: should be removed when job id type change to string
                 Thread.Sleep(1000);
             }
             Task.WaitAll(tasks);
