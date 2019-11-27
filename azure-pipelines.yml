@@ -33,6 +33,9 @@ stages:
         InsertAttributes: true
         FileEncoding: 'auto'
         WriteBOM: false
+        Product: 'Microsoft (R) Telepathy'
+        Company: 'Microsoft Corporation'
+        Copyright: 'Copyright (c) Microsoft Corporation. All rights reserved.'
         VersionNumber: '$(Build.BuildNumber)'
         FileVersionNumber: '$(Build.BuildNumber)'
 
@@ -152,12 +155,12 @@ stages:
         rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
         includeRootFolder: false
         archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/telepathy_$(Build.BuildNumber).zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/telepathy.zip'
         replaceExistingArchive: true
 
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/telepathy_$(Build.BuildNumber).zip'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/telepathy.zip'
         ArtifactName: 'archive'
         publishLocation: 'Container'
 
