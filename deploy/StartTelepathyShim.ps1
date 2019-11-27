@@ -95,10 +95,19 @@ $artifactsPath = "$destination_path\$artifactsFolderName\Release"
 $releaseDeploy = [bool]$HashParams["ReleaseDeploy"]
 <# Download artifacts from released resource #>
 if ($releaseDeploy) {
-    $url = "https://github.com/Azure/Telepathy/releases/$HashParams["TelepathyVersion"]/download/Telepathy.zip"
+    Write-Host "Release deploy start"
+    Write-Log -Message "Release deploy start"
+    $url = "https://github.com/Azure/Telepathy/releases/$($HashParams["TelepathyVersion"])/download/Telepathy.zip"
+    Write-Host $url
+    Write-Log -Message "Download relase version is $($HashParams["TelepathyVersion"])"
     $wc = New-Object System.Net.WebClient
-    $wc.DownloadFileAsync($url, $destination_path)
-    Expand-Archive "$destination_Path\Telepathy.zip" -DestinationPath $destination_path -Force
+    $resourcePath = "C:\Telepathy.zip"
+    Write-Log -Message "Start to download all release resource"
+    $wc.DownloadFile($url, $resourcePath)
+    Write-Log -Message "Expand archive file to destination path"
+    Expand-Archive $resourcePath -DestinationPath $destination_path -Force
+    Write-Log -Message "Remove archive file"
+    Remove-Item -Path $resourcePath
 }
 <# Download artifacts from the specified Azure Storage containers #>
 else {   
