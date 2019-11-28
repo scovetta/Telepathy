@@ -179,9 +179,6 @@
                     "uri": "https://raw.githubusercontent.com/Azure/Telepathy/feature/release-template/deploy/azuredeploy.json"
                 },
                 "parameters": {
-                    "telepathyBranch": {
-                        "value": "[parameters('telepathyBranch')]"
-                    },
                     "telepathyStorageType": {
                         "value": "[parameters('telepathyStorageType')]"
                     },

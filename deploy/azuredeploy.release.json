@@ -7,7 +7,7 @@
             "metadata": {
                 "description": "The telepathy branch in github"
             },
-            "defaultValue": "dev"
+            "defaultValue": "master"
         },
         "telepathyStorageType": {
             "type": "string",
@@ -159,9 +159,6 @@
                     "uri": "https://raw.githubusercontent.com/Azure/Telepathy/feature/release-template/deploy/azuredeploy.json"
                 },
                 "parameters": {
-                    "telepathyBranch": {
-                        "value": "[parameters('telepathyBranch')]"
-                    },
                     "telepathyStorageType": {
                         "value": "[parameters('telepathyStorageType')]"
                     },
