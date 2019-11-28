@@ -267,6 +267,10 @@
       "type": "string",
       "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('telepathyStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
     },
+    "batchAccountKey": {
+      "type": "string",
+      "value": "[listKeys(resourceId('Microsoft.Batch/batchAccounts', parameters('batchAccountsName')), '2017-09-01').primary]"
+    },
     "networkInterfaceId": {
       "type": "string",
       "value": "[resourceId('Microsoft.Network/networkInterfaces', variables('telepathyVMNicName'))]"
