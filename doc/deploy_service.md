@@ -6,7 +6,7 @@ Before starting, you need to have write access to the cluster's admin Azure Stor
 
 In the admin Azure Storage Account, there are 3 blob storage containers, named **runtime**, **service-assembly** and **service-registration**.
 
-![image-20191128114604435](C:\Users\hpcadmin\AppData\Roaming\Typora\typora-user-images\image-20191128114604435.png)
+![image-20191128114604435](deploy_service.media/admin-storage-conatiners.png)
 
 ### `runtime` Container
 
@@ -16,7 +16,7 @@ This container contains all the binaries required by Telepathy. We won't touch t
 
 This container contains all the service assemblies, all in folders having the same name with corresponding service name.
 
-![image-20191128114959727](C:\Users\hpcadmin\AppData\Roaming\Typora\typora-user-images\image-20191128114959727.png)
+![image-20191128114959727](deploy_service.media/service-assembly-container.png)
 
 > Note: Due to restriction of Azure Storage Blob, all subfolders of `service-assembly`  must be named in lowercase.
 
@@ -24,7 +24,7 @@ This container contains all the service assemblies, all in folders having the sa
 
 This container contains all the service registration files, each named with corresponding service name.
 
-![image-20191128115218166](C:\Users\hpcadmin\AppData\Roaming\Typora\typora-user-images\image-20191128115218166.png)
+![image-20191128115218166](deploy_service.media/service-registration-container.png)
 
 > Note: Due to restriction of Azure Storage Blob, all service registration files must be named in lowercase.
 
