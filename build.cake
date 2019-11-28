@@ -23,8 +23,10 @@ var configuration = Argument("Configuration", "Debug");
 
 Task("Restore")
 .Does(() =>
-{
-    NuGetRestore(Paths.AllFiles, new NuGetRestoreSettings { ArgumentCustomization = args => args.Append("-recursive") });
+{   
+    var settings = new NuGetRestoreSettings { ArgumentCustomization = args => args.Append("-recursive") };
+    settings.Source.Add("https://pkgs.dev.azure.com/bc-telepathy/telepathy/_packaging/telepathy-sdk-preview/nuget/v3/index.json");
+    NuGetRestore(Paths.AllFiles, settings);
 });
 
 

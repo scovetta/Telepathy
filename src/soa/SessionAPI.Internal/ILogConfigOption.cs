@@ -48,6 +48,9 @@ namespace Microsoft.Telepathy.Session.Internal
         [Option("LocalFilePath")]
         string LocalFilePath { get; set; }
 
+        [Option("LocalFileFormatter")]
+        string LocalFileFormatter { get; set; }
+
         [Option("RollingInterval")]
         string RollingInterval { get; set; }
     }

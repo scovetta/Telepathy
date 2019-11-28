@@ -33,6 +33,9 @@ stages:
         InsertAttributes: true
         FileEncoding: 'auto'
         WriteBOM: false
+        Product: 'Microsoft (R) Telepathy'
+        Company: 'Microsoft Corporation'
+        Copyright: 'Copyright (c) Microsoft Corporation. All rights reserved.'
         VersionNumber: '$(Build.BuildNumber)'
         FileVersionNumber: '$(Build.BuildNumber)'
 
@@ -106,10 +109,59 @@ stages:
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
         OverWrite: true
 
+    - task: EsrpCodeSigning@1
+      displayName: 'Sign assemblies'
+      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/dev')))
+      inputs:
+        ConnectedServiceName: 'ESRP CodeSign'
+        FolderPath: '$(Build.ArtifactStagingDirectory)'
+        Pattern: '*.dll,*.exe'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [
+            {
+              "KeyCode": "CP-230012",
+              "OperationCode": "SigntoolSign",
+              "Parameters": {
+                "OpusName": "Microsoft",
+                "OpusInfo": "http://www.microsoft.com",
+                "FileDigest": "/fd \"SHA256\"",
+                "PageHash": "/NPH",
+                "TimeStamp": "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+              },
+              "ToolName": "sign",
+              "ToolVersion": "1.0"
+            },
+            {
+              "KeyCode": "CP-230012",
+              "OperationCode": "SigntoolVerify",
+              "Parameters": {},
+              "ToolName": "sign",
+              "ToolVersion": "1.0"
+            }
+          ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'   
+
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop'
+        publishLocation: 'Container'    
+
+    - task: ArchiveFiles@2
+      inputs:
+        rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/telepathy.zip'
+        replaceExistingArchive: true
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/telepathy.zip'
+        ArtifactName: 'archive'
         publishLocation: 'Container'
 
     - task: AzureFileCopy@3
@@ -143,6 +195,41 @@ stages:
         Destination: 'AzureBlob'
         storage: 'soaruntimestorage'
         ContainerName: 'service-assembly/ccpechosvc'
+
+    - task: EsrpCodeSigning@1
+      displayName: 'Sign SDK assemblies'
+      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/dev')))
+      inputs:
+        ConnectedServiceName: 'ESRP CodeSign'
+        FolderPath: 'src/soa/SessionAPI/bin/$(buildConfiguration)'
+        Pattern: '*.dll,*.exe'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [
+            {
+              "KeyCode": "CP-230012",
+              "OperationCode": "SigntoolSign",
+              "Parameters": {
+                "OpusName": "Microsoft",
+                "OpusInfo": "http://www.microsoft.com",
+                "FileDigest": "/fd \"SHA256\"",
+                "PageHash": "/NPH",
+                "TimeStamp": "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+              },
+              "ToolName": "sign",
+              "ToolVersion": "1.0"
+            },
+            {
+              "KeyCode": "CP-230012",
+              "OperationCode": "SigntoolVerify",
+              "Parameters": {},
+              "ToolName": "sign",
+              "ToolVersion": "1.0"
+            }
+          ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
         
     - task: NuGetCommand@2
       displayName: 'Pack SDK Nuget Package'
@@ -152,6 +239,41 @@ stages:
         versioningScheme: 'byBuildNumber'
         includeSymbols: true
 
+    - task: EsrpCodeSigning@1
+      displayName: 'Sign Nuget Package'
+      condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/dev')))
+      inputs:
+        ConnectedServiceName: 'ESRP CodeSign'
+        FolderPath: '$(Build.ArtifactStagingDirectory)'
+        Pattern: '*.nupkg'
+        signConfigType: 'inlineSignParams'
+        inlineOperation: |
+          [
+            {
+              "KeyCode" : "CP-401405",
+              "OperationCode" : "NuGetSign",
+              "Parameters" : {},
+              "ToolName" : "sign",
+              "ToolVersion" : "1.0"
+            },
+            {
+              "KeyCode" : "CP-401405",
+              "OperationCode" : "NuGetVerify",
+              "Parameters" : {},
+              "ToolName" : "sign",
+              "ToolVersion" : "1.0"
+            }
+          ]
+        SessionTimeout: '60'
+        MaxConcurrency: '50'
+        MaxRetryAttempts: '5'
+
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)/microsoft.telepathy.session.$(Build.BuildNumber).nupkg'
+        artifact: 'sdk_nuget'
+        publishLocation: 'pipeline'
+        
     - task: NuGetCommand@2
       displayName: 'Publish SDK to Internal Source'
       inputs:        
@@ -184,23 +306,21 @@ stages:
       inputs: 
         buildType: 'current'
         artifactName: 'deployFile'
-        targetPath: '$(System.DefaultWorkingDirectory)\deploy' 
+        targetPath: '$(System.DefaultWorkingDirectory)\deploy'      
         
-    - task: AzurePowerShell@4
+    - task: AzureResourceManagerTemplateDeployment@3
       inputs:
-        azureSubscription: 'BigCompS-Int1(d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
-        ScriptType: 'InlineScript'
-        Inline: |
-          Connect-AzAccount
-          if(Get-AzResourceGroup -Name $(TemplateName)) {
-              Remove-AzResourceGroup -Name $(TemplateName) -Force
-          }
-          $secureString = convertto-securestring $(VMpwd) -asplaintext -force
-          New-AzResourceGroup -Name $(TemplateName) -Location $(RGLocation)
-          New-AzResourceGroupDeployment -ResourceGroupName $(TemplateName) -TemplateUri "$(System.DefaultWorkingDirectory)\deploy\azuredeploy.json" -telepathyVMName "Telepathy$(Build.BuildID)" -telepathyVMAdminUserName $(VMadmin) -telepathyVMAdminPassword $secureString -vnetName $(VnetName)  -subnetName "default" -batchPoolVMSize "STANDARD_A4_V2" -targetDedicatedNodes 15 -newOrExistingVnet "existing" -vnetResourceGroup $(VnetRGName) -artifactsStorageContainerSasToken $(artifactsStorageContainerSasToken) -artifactsFolderName $(Build.BuildNumber) -artifactsStorageName $(artifactsStorageName) -artifactsStorageContainerName "telepathy"
-        errorActionPreference: 'silentlyContinue'
-        azurePowerShellVersion: 'LatestVersion'
-        
+        deploymentScope: 'Resource Group'
+        ConnectedServiceName: 'BigCompS-Int1 (d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
+        subscriptionName: 'd50b6b31-cd2f-4c93-83f1-b1acdd32504c'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: '$(TemplateName)'
+        location: 'Japan East'
+        templateLocation: 'Linked artifact'
+        csmFile: '**\azuredeploy.json'
+        overrideParameters: '-telepathyVMName "Telepathy$(Build.BuildID)" -telepathyVMAdminUserName $(VMadmin) -telepathyVMAdminPassword $secureString -vnetName $(VnetName)  -subnetName "default" -batchPoolVMSize "STANDARD_A4_V2" -targetDedicatedNodes 15 -newOrExistingVnet "existing" -vnetResourceGroup $(VnetRGName) -nightlyBuildVersion $(Build.BuildNumber)'
+        deploymentMode: 'Complete'
+
 - stage: BVTTest
   dependsOn: Deploy
   jobs:
@@ -244,11 +364,11 @@ stages:
     steps:
     - checkout: none
     
-
-    - task: AzurePowerShell@4
+    - task: AzureResourceManagerTemplateDeployment@3
       inputs:
-        azureSubscription: 'BigCompS-Int1(d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
-        ScriptType: 'InlineScript'
-        Inline: 'Remove-AzResourceGroup -Name $(TemplateName) -f'
-        errorActionPreference: 'silentlyContinue'
-        azurePowerShellVersion: 'LatestVersion'
+        deploymentScope: 'Resource Group'
+        ConnectedServiceName: 'BigCompS-Int1 (d50b6b31-cd2f-4c93-83f1-b1acdd32504c)'
+        subscriptionName: 'd50b6b31-cd2f-4c93-83f1-b1acdd32504c'
+        action: 'DeleteRG'
+        resourceGroupName: '$(TemplateName)'
+        location: 'Japan East'

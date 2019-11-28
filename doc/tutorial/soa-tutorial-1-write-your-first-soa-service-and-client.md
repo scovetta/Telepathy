@@ -1,6 +1,6 @@
 # Microsoft Telepathy SOA Tutorial I – Write your first SOA service and client
 
-This series of tutorial introduces the SOA programming model for Microsoft Telepathy . This is the first tutorial of the series and provides guidance to write your first SOA service and client. See the [accompanying code sample](https://github.com/Azure/Telepathy/tree/dev/samples/Simple%20Service) to follow the steps in this article.
+This series of tutorial introduces the SOA programming model for Microsoft Telepathy . This is the first tutorial of the series and provides guidance to write your first SOA service and client. See the [accompanying code sample](../../samples/Simple%20Service) to follow the steps in this article.
 
 ## What is a SOA service?
 
@@ -38,7 +38,7 @@ Here are the steps to write a SOA application:
 
 ### Step 1: Implement the service
 
-Following code can be found in the CalculatorService project in the [sample code](https://github.com/Azure/Telepathy/tree/dev/samples/Simple%20Service).
+Following code can be found in the CalculatorService project in the [sample code](../../samples/Simple%20Service).
 
 A SOA service is a [Windows Communication Foundation](http://go.microsoft.com/fwlink/?linkid=122573) (WCF) service running on the HPC cluster. The SOA service is ideal for writing interactive, embarrassingly parallel applications, especially for calculation of complex algorithms.
 
@@ -96,9 +96,11 @@ Note that the name of the XML file must be as same as the service name, and must
 
 Now copy the service configuration file to the configuration blob container, which is a blob container named **service-registration** in the Azure Storage Account linked to your Telepathy cluster. Next step is to  create a folder **calculatorservice** in **service-assembly** container in the same Storage Account, and copy the DLL file into the folder. You can use tools like [Azure Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/) to access both two containers. 
 
+Check [Deploy A SOA Service to Microsoft Telepathy Cluster](../deploy_service.md) for more information.
+
 ### Step 3: Implement the client
 
-Following code can be found in the Client project in the [sample code](https://github.com/Azure/Telepathy/tree/dev/samples/Simple%20Service). 
+Following code can be found in the Client project in the [sample code](../../samples/Simple%20Service). 
 
 Now we need a client program to submit the calculation request. The client needs to invoke the service we just created remotely, so we need to leverage WCF to generate the proxy class for us. Visual Studio can simplify the whole process by using its service references functionality.
 

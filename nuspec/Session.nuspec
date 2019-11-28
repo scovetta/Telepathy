@@ -3,21 +3,28 @@
     <metadata>
         <id>Microsoft.Telepathy.Session</id>
         <version>1.0.0</version>
-        <title>Microsoft Telepathy Session Nuget</title>
+        <title>Microsoft Telepathy Session SDK</title>
         <authors>Microsoft</authors>
         <owners>microsoft,hpcpack</owners>
-        <description>Nuget package for Microsoft Telepathy Session</description>
+        <description>Nuget package for Microsoft Telepathy SDK</description>
+        <releaseNotes> 	
+Microsoft Telepathy is a SOA runtime framework works in a cloud native way.
+Please visit https://github.com/Azure/Telepathy/blob/dev/README.md to read more.</releaseNotes>
+        <projectUrl>https://github.com/Azure/Telepathy</projectUrl>
+        <license type="expression">MIT</license>
+        <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+        <requireLicenseAcceptance>true</requireLicenseAcceptance>
         <dependencies>
             <group>
-				<dependency id="System.ValueTuple" version="4.5.0" />
-				<dependency id="WindowsAzure.Storage" version="8.4.0" />			
+                <dependency id="System.ValueTuple" version="4.5.0" />
+                <dependency id="WindowsAzure.Storage" version="8.4.0" />
             </group>
         </dependencies>
         <references>
             <group>
                 <reference file="Microsoft.Telepathy.Session.dll" />
                 <reference file="StandaloneDataClient.dll" />
-				<reference file="TelepathyCommon.dll" />
+                <reference file="TelepathyCommon.dll" />
                 <reference file="Microsoft.Telepathy.Session.Data.dll" />
             </group>
         </references>

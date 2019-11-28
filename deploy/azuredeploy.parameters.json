@@ -23,16 +23,16 @@
     "vnetResourceGroup": {
       "value": ""
     },
-    "artifactsStorageName": {
+    "nightlyBuildStorageName": {
       "value": ""
     },
-    "artifactsStorageContainerSasToken": {
+    "nightlyBuildStorageSasToken": {
       "value": ""
     },
-    "artifactsStorageContainerName": {
+    "nightlyBuildStorageContainerName": {
       "value": ""
     },
-    "artifactsFolderName": {
+    "nightlyBuildVersion": {
       "value": ""
     }
   }
