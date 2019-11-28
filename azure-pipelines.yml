@@ -314,7 +314,7 @@ stages:
         resourceGroupName: '$(TemplateName)'
         location: 'Japan East'
         templateLocation: 'Linked artifact'
-        csmFile: '**\azuredeploy.json'
+        csmFile: '**\azuredeploy.nightly.json'
         overrideParameters: '-telepathyBranch "feature/release-template" -telepathyVMName "Telepathy$(Build.BuildID)" -telepathyVMAdminUserName $(VMadmin) -telepathyVMAdminPassword $secureString -vnetName $(VnetName)  -subnetName "default" -batchPoolVMSize "STANDARD_A4_V2" -targetDedicatedNodes 15 -newOrExistingVnet "existing" -vnetResourceGroup $(VnetRGName)'
         deploymentMode: 'Complete'
 
