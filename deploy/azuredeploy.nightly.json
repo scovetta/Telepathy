@@ -166,7 +166,7 @@
         "customScriptLocation": "[concat('https://raw.githubusercontent.com/Azure/Telepathy/', parameters('telepathyBranch'), '/deploy/StartTelepathyShim.ps1')]",
         "doubleQuotation": "\"",
         "caret": "^",
-        "scriptParameters": "[concat('EnableTelepathyStorage=$true;','StartTelepathyService=$true;', 'Location=', resourceGroup().location, ';BatchAccountName=', parameters('batchAccountsName'),';BatchPoolName=', parameters('batchAccountsPoolName'), ';ArtifactsFolderName=', parameters('nightlyBuildVersion'), ';ContainerName=', parameters('nightlyBuildStorageContainerName'), ';SrcStorageAccountName=', parameters('nightlyBuildStorageName'), ';DesStorageAccountName=', variables('telepathyStorageName'))]"
+        "scriptParameters": "[concat('EnableTelepathyStorage=$true;','StartTelepathyService=$true;', 'Location=', resourceGroup().location, ';BatchAccountName=', parameters('batchAccountsName'),';BatchPoolName=', parameters('batchAccountsPoolName'), ';ArtifactsFolderName=', parameters('nightlyBuildVersion'), ';ContainerName=', parameters('nightlyBuildStorageContainerName'), ';SrcStorageAccountName=', parameters('nightlyBuildStorageName'))]"
     },
     "resources": [
         {
@@ -227,8 +227,7 @@
             "location": "[resourceGroup().location]",
             "apiVersion": "2019-07-01",
             "dependsOn": [
-                "[reference('basicResourceTemplate').outputs.storageAccountId.value]",
-                "[reference('basicResourceTemplate').outputs.networkInterfaceId.value]"
+                "basicResourceTemplate"
             ],
             "tags": {
                 "displayName": "telepathyVM"
@@ -301,7 +300,7 @@
                             "fileUris": [
                                 "[variables('customScriptLocation')]"
                             ],
-                            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -Command ', variables('caret'), variables('doubleQuotation'),'.\\StartTelepathyShim.ps1 ', base64(concat(variables('scriptParameters'),';SrcStorageContainerSasToken=', parameters('nightlyBuildStorageSasToken'),';DesStorageAccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('telepathyStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value,';BatchAccountKey=',listKeys(resourceId('Microsoft.Batch/batchAccounts', parameters('batchAccountsName')), '2017-09-01').primary, ';EnableLogAnalytics=', parameters('AzureLogAnalytics'),';WorkspaceId=', reference(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').customerId,';AuthenticationID=', listKeys(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').primarySharedKey)), variables('caret'), variables('doubleQuotation'))]"
+                            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -Command ', variables('caret'), variables('doubleQuotation'),'.\\StartTelepathyShim.ps1 ', base64(concat(variables('scriptParameters'),';SrcStorageContainerSasToken=', parameters('nightlyBuildStorageSasToken'), ';DesStorageAccountName=', reference('basicResourceTemplate').outputs.storageName.value, ';DesStorageAccountKey=', reference('basicResourceTemplate').outputs.storageAccountKey.value,';BatchAccountKey=',reference('basicResourceTemplate').outputs.batchAccountKey.value, ';EnableLogAnalytics=', parameters('AzureLogAnalytics'),';WorkspaceId=', reference('basicResourceTemplate').outputs.logWorkspaceId.value,';AuthenticationID=', reference('basicResourceTemplate').outputs.logWorksapceKey.value)), variables('caret'), variables('doubleQuotation'))]"
                         }
                     }
                 }
