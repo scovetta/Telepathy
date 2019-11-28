@@ -263,9 +263,9 @@
       "type": "string",
       "value": "[variables('telepathyStorageName')]"
     },
-    "storageAccountId": {
+    "storageAccountKey": {
       "type": "string",
-      "value": "[resourceId('Microsoft.Storage/storageAccounts', variables('telepathyStorageName'))]"
+      "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('telepathyStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
     },
     "networkInterfaceId": {
       "type": "string",
