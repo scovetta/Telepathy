@@ -91,7 +91,7 @@ stages:
         
     - task: PublishPipelineArtifact@1
       inputs:
-        targetPath: '$(System.DefaultWorkingDirectory)\deploy\azuredeploy.json'
+        targetPath: '$(System.DefaultWorkingDirectory)\deploy\azuredeploy.release.json'
         artifact: 'deployFile'
     
     - task: PowerShell@2
