@@ -96,6 +96,8 @@ Note that the name of the XML file must be as same as the service name, and must
 
 Now copy the service configuration file to the configuration blob container, which is a blob container named **service-registration** in the Azure Storage Account linked to your Telepathy cluster. Next step is to  create a folder **calculatorservice** in **service-assembly** container in the same Storage Account, and copy the DLL file into the folder. You can use tools like [Azure Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/) to access both two containers. 
 
+Check [Deploy A SOA Service to Microsoft Telepathy Cluster](../deploy_service.md) for more information.
+
 ### Step 3: Implement the client
 
 Following code can be found in the Client project in the [sample code](../../samples/Simple%20Service). 
