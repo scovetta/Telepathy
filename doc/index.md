@@ -1,6 +1,6 @@
 # Documentation Index
 
-- [Get Started](../readme.md)
+- [Get Started](../README.md)
 - [Deploy A SOA Service to Microsoft Telepathy Cluster](deploy_service.md)
 - [Performance Benchmark](performance_benchmark.md)
 
