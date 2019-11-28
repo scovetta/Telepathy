@@ -44,16 +44,28 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             }
             catch (Exception e)
             {
-                BrokerTracing.TraceError(
-                    "[AzureStorageTool] .AddMsgToTable: cannot insert the entity into table, index = {0}, guid = {1}, exception: {2}.", entity.PartitionKey, entity.RowKey, e);
+                BrokerTracing.TraceWarning(
+                    "[AzureStorageTool] .AddMsgToTable: cannot insert the entity into table, index = {0}, guid = {1}, exception: {2}.", entity.RowKey, entity.MessageId, e);
                 TableOperation retrieveOperation = TableOperation.Retrieve<ResponseEntity>(entity.PartitionKey, entity.RowKey);
                 TableResult retrievedResult = table.Execute(retrieveOperation);
                 if (retrievedResult.Result != null)
                 {
-                    BrokerTracing.TraceInfo("The entity is already exists in Table");
+                    if (((ResponseEntity)retrievedResult.Result).Message.SequenceEqual(entity.Message))
+                    {
+                        BrokerTracing.TraceInfo(
+                            "[AzureStorageTool] .AddMsgToTable: The entity index = {0} is already exists in Table.",
+                            entity.RowKey);
+                    }
+                    else
+                    {
+                        BrokerTracing.TraceError(
+                            "[AzureStorageTool] .AddMsgToTable: same index = {0}, cannot insert table twice.",
+                            entity.RowKey);
+                        throw;
+                    }
                 }
 
-                throw;
+
             }
         }
 

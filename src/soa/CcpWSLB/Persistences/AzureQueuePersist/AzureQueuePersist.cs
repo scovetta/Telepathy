@@ -846,9 +846,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     }
 
                     // step 2, put response into queue
-                    long index = Interlocked.Increment(ref this.responseIndex);
-
                     this.rwlockPriorityQueue.EnterWriteLock();
+                    long index = Interlocked.Increment(ref this.responseIndex);
                     priorityQueue.Add(index);
                     this.rwlockPriorityQueue.ExitWriteLock();
 
