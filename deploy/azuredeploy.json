@@ -259,6 +259,10 @@
     }
   ],
   "outputs": {
+    "storageName": {
+      "type": "string",
+      "value": "[variables('telepathyStorageName')]"
+    },
     "storageAccountId": {
       "type": "string",
       "value": "[resourceId('Microsoft.Storage/storageAccounts', variables('telepathyStorageName'))]"
@@ -271,7 +275,7 @@
       "type": "string",
       "value": "[reference(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').customerId]"
     },
-    "logWorksapceKey":{
+    "logWorksapceKey": {
       "type": "string",
       "value": "[listKeys(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').primarySharedKey]"
     }
