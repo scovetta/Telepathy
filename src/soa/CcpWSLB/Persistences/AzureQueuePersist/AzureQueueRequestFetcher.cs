@@ -98,7 +98,18 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 
                     Interlocked.Decrement(ref this.pendingFetchCount);
                 }
-                await Task.WhenAll(tasks);
+
+                try
+                {
+                    await Task.WhenAll(tasks);
+                }
+                catch (Exception e)
+                {
+                    BrokerTracing.TraceError(
+                        "[AzureQueueRequestFetcher] .DequeueMessageAsync: exception raises in dequeue tasks, Exception:{0}",
+                        e.ToString());
+                }
+
                 this.CheckAndGetMoreMessages();
             }
 
@@ -141,12 +152,32 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     true))
             {
                 Interlocked.Increment(ref this.pendingFetchCount);
+                try
+                {
+                    await this.requestQueue.DeleteMessageAsync(message);
+                }
+                catch (Exception e)
+                {
+                    BrokerTracing.TraceError(
+                        "[AzureQueueRequestFetcher] .DeserializeMessage: delete duplicate message in request queue failed, Exception:{0}",
+                        e.ToString());
+                }
             }
             else
             {
                 var copyMessage = new CloudQueueMessage(message.AsBytes);
                 await this.pendingQueue.AddMessageAsync(copyMessage);
-                await this.requestQueue.DeleteMessageAsync(message);
+                try
+                {
+                    await this.requestQueue.DeleteMessageAsync(message);
+                }
+                catch (Exception e)
+                {
+                    BrokerTracing.TraceError(
+                        "[AzureQueueRequestFetcher] .DeserializeMessage: delete message in request queue failed, Exception:{0}",
+                        e.ToString());
+                }
+
                 this.HandleMessageResult(new MessageResult(brokerQueueItem, exception));
             }
         }
