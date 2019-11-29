@@ -17,7 +17,7 @@ function Start-TelepathyService {
     Write-Log -Message "Start open NetTCPPortSharing"
     cmd /c "sc.exe config NetTcpPortSharing start=demand"
 
-    Write-Log -Message "Set TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR environment varaibles in session machine"
+    Write-Log -Message "Set TELEPATHY_SERVICE_WORKING_DIR environment varaibles in session machine"
     cmd /c "setx /m TELEPATHY_SERVICE_WORKING_DIR ^"C:\TelepathyServiceRegistration\^""
 
     Write-Log -Message "Open tcp port"
