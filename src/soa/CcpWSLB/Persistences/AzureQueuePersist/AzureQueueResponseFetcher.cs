@@ -26,11 +26,14 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 
         private List<ResponseEntity> responseList = null;
 
+        public long AckIndex => this.ackIndex;
+
         public AzureQueueResponseFetcher(
             CloudTable responseTable,
             long messageCount,
             IFormatter messageFormatter,
-            CloudBlobContainer blobContainer)
+            CloudBlobContainer blobContainer,
+            long lastReponseIndex)
             : base(
                 messageCount,
                 messageFormatter,
@@ -41,6 +44,11 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 blobContainer)
         {
             this.responseTable = responseTable;
+            if (lastReponseIndex > this.ackIndex)
+            {
+                Interlocked.Exchange(ref this.ackIndex, lastReponseIndex);
+            }
+
             this.prefetchTimer.Elapsed += (sender, args) =>
             {
                 Debug.WriteLine("[AzureQueueResponseFetch] .prefetchTimer raised.");

@@ -84,21 +84,32 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             return 0;
         }
 
-        public static async Task<long> CountTableEntity(string connectString, string tableName)
+        public static async Task<(int Count, long max)> CountTableEntity(string connectString, string tableName)
         {
             var table = GetTableClient(connectString).GetTableReference(tableName);
-            var query = new TableQuery<DynamicTableEntity>().Select(new[] { "PartitionKey" });
+            var query = new TableQuery<DynamicTableEntity>().Select(new[] { "Rowkey" });
             var list = new List<DynamicTableEntity>();
+            long max = 0;
             TableContinuationToken token = null;
             do
             {
                 var seg = await table.ExecuteQuerySegmentedAsync(query, token);
                 token = seg.ContinuationToken;
                 list.AddRange(seg);
+                if (seg.Results != null && seg.Results.Count > 0)
+                {
+                    if (Int32.TryParse(seg.Results.ToList()[seg.Results.Count - 1].RowKey, out int temp))
+                    {
+                        if (temp > max)
+                        {
+                            max = temp;
+                        }
+                    }
+                }
             }
             while (token != null);
 
-            return list.Count;
+            return (list.Count, max);
         }
 
         public static async Task<CloudBlobContainer> CreateBlobContainerAsync(

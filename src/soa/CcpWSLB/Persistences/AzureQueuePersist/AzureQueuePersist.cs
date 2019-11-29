@@ -126,6 +126,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 
         private ReaderWriterLockSlim rwlockPriorityQueue = new ReaderWriterLockSlim();
 
+        private long lastReponseIndex = Int32.MaxValue >> 1;
+
 #if DEBUG
         private int procCount = 0;
 #endif
@@ -281,9 +283,13 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         this.responseTableField,
                         this.blobContainer).GetAwaiter().GetResult();*/
                     this.requestsCountField = this.requestQueueField.ApproximateMessageCount ?? 0;
-                    this.responsesCountField = AzureStorageTool
+                    (this.responsesCountField, this.lastReponseIndex) = AzureStorageTool
                         .CountTableEntity(storageConnectString, responseTableName).GetAwaiter().GetResult();
                     this.allRequestsCountField = this.requestsCountField + this.responsesCountField;
+                    if (this.lastReponseIndex > this.responseIndex)
+                    {
+                        this.responseIndex = this.lastReponseIndex;
+                    }
 
                     this.persistVersion = BrokerVersion.DefaultPersistVersion;
                     this.EOMFlag = this.allRequestsCountField > 0;
@@ -310,7 +316,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 this.responseTableField,
                 this.responsesCountField,
                 binFormatterField,
-                this.blobContainer);
+                this.blobContainer,
+                this.lastReponseIndex);
         }
 
         public long AllRequestsCount => Interlocked.Read(ref this.allRequestsCountField);
@@ -565,12 +572,14 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 return;
             }
 
+            this.lastReponseIndex = this.responseFetcher.AckIndex;
             this.responseFetcher.SafeDispose();
             this.responseFetcher = new AzureQueueResponseFetcher(
                 this.responseTableField,
                 this.responsesCountField,
                 binFormatterField,
-                this.blobContainer);
+                this.blobContainer,
+                this.lastReponseIndex);
         }
 
         internal static ClientInfo[] GetSessionClients(string connectString, string sessionId, bool useAad)
@@ -607,7 +616,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         }
                         else
                         {
-                            var responseCount = AzureStorageTool.CountTableEntity(connectString, queueInfo.RowKey)
+                            (var responseCount, var temp) = AzureStorageTool.CountTableEntity(connectString, queueInfo.RowKey)
                                 .GetAwaiter().GetResult();
                             var failedCount = AzureStorageTool.CountFailed(connectString, sessionId, queueInfo.RowKey)
                                 .GetAwaiter().GetResult();
@@ -654,10 +663,10 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             if (isRequest)
             {
                 return (PathPrefix + sessionId.ToString(CultureInfo.InvariantCulture) + QueueNameFieldDelimeter
-                        + clientId + QueueNameFieldDelimeter + RequestQueueSuffix).ToLower();
+                        + clientId + RequestQueueSuffix).ToLower();
             }
 
-            return (PendingPathPrefix + sessionId.ToString(CultureInfo.InvariantCulture) + QueueNameFieldDelimeter
+            return (PendingPathPrefix + sessionId.ToString(CultureInfo.InvariantCulture)
                     + clientId).ToLower();
         }
 
