@@ -616,7 +616,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         }
                         else
                         {
-                            (var responseCount, var temp) = AzureStorageTool.CountTableEntity(connectString, queueInfo.RowKey)
+                            var (responseCount, _) = AzureStorageTool.CountTableEntity(connectString, queueInfo.RowKey)
                                 .GetAwaiter().GetResult();
                             var failedCount = AzureStorageTool.CountFailed(connectString, sessionId, queueInfo.RowKey)
                                 .GetAwaiter().GetResult();
@@ -822,27 +822,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 {
                     ParamCheckUtility.ThrowIfNull(response, "to-be-persisted response");
 
-                    // step 1, receive corresponding request from queue
-                    // no duplicate response for one request
+                    // step 1, TODO Check the response whether stored in table before or deduplicate in memory.
                     var requestToken = (string)response.PersistAsyncToken.AsyncToken;
-                    /*var isValid = false;
-                    try
-                    {
-                        if (requestToken != null)
-                        {
-                            isValid = !AzureStorageTool.IsExistedResponse(this.responseTableField, requestToken)
-                                            .GetAwaiter().GetResult();
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        BrokerTracing.TraceError(
-                            "[AzureQueuePersist] .PersistResponses: can not receive the corresponding request by lookup id[{0}] from the requests queue when persist the response with the exception,{1}.",
-                            requestToken,
-                            e);
-                        exception = e;
-                        break;
-                    }*/
 
                     if (requestToken == null)
                     {

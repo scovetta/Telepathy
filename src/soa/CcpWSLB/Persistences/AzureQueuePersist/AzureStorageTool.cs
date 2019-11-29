@@ -84,7 +84,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             return 0;
         }
 
-        public static async Task<(int Count, long max)> CountTableEntity(string connectString, string tableName)
+        public static async Task<(int count, long max)> CountTableEntity(string connectString, string tableName)
         {
             var table = GetTableClient(connectString).GetTableReference(tableName);
             var query = new TableQuery<DynamicTableEntity>().Select(new[] { "Rowkey" });
