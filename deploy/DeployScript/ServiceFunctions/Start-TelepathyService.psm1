@@ -11,12 +11,13 @@ function Start-TelepathyService {
         [string]$AuthenticationId
     )  
 
+    Write-Log -Message "Set log source as StartTelepathyService"
     Set-LogSource -SourceName "StartTelepathyService"
 
     Write-Log -Message "Start open NetTCPPortSharing"
     cmd /c "sc.exe config NetTcpPortSharing start=demand"
 
-    Write-Log -Message "set TELEPATHY_SERVICE_REGISTRATION_WORKING_DIR environment varaibles in session machine"
+    Write-Log -Message "Set TELEPATHY_SERVICE_WORKING_DIR environment varaibles in session machine"
     cmd /c "setx /m TELEPATHY_SERVICE_WORKING_DIR ^"C:\TelepathyServiceRegistration\^""
 
     Write-Log -Message "Open tcp port"
@@ -28,11 +29,8 @@ function Start-TelepathyService {
     [System.Environment]::SetEnvironmentVariable("PATH", $env:path, "Machine")
 
     Write-Log -Message "Script location path: $DestinationPath"
-    write-Log -Message "DesStorageConnectionString: $DesStorageConnectionString"
     write-Log -Message "BatchAccountName: $BatchAccountName"
     Write-Log -Message "BatchPoolName: $BatchPoolName"
-    Write-Log -Message "BatchAccountKey: $BatchAccountKey"
-    Write-Log -Message "BatchAccountServiceUrl: $BatchAccountServiceUrl"
 
     Try {
         Write-Log -Message "Start session launcher"
@@ -45,6 +43,7 @@ function Start-TelepathyService {
             BatchAccountServiceUrl = $BatchAccountServiceUrl
         }
         if ($EnableLogAnalytics) {
+            Write-Log -Message "Enable Log Analytics in Session Launcher"
          $logConfig = @{
                EnableLogAnalytics=$true
                WorkspaceId = $WorkspaceId
@@ -60,6 +59,7 @@ function Start-TelepathyService {
           SessionAddress = "localhost"  
         } 
         if ($EnableLogAnalytics) {
+            Write-Log -Message "Enable Log Analytics in Broker"
             $logConfig = @{
                EnableLogAnalytics=$true
                WorkspaceId = $WorkspaceId

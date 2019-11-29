@@ -1,0 +1,288 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "telepathyBranch": {
+            "type": "string",
+            "metadata": {
+                "description": "The telepathy branch in github"
+            },
+            "defaultValue": "master"
+        },
+        "telepathyStorageType": {
+            "type": "string",
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_ZRS",
+                "Standard_GRS",
+                "Standard_RAGRS",
+                "Premium_LRS"
+            ]
+        },
+        "telepathyVMName": {
+            "type": "string",
+            "minLength": 1
+        },
+        "telepathyVMSize": {
+            "type": "string",
+            "defaultValue": "STANDARD_D2_V2"
+        },
+        "telepathyVMAdminUserName": {
+            "type": "string",
+            "minLength": 1
+        },
+        "telepathyVMAdminPassword": {
+            "type": "securestring"
+        },
+        "telepathyVMWindowsOSVersion": {
+            "type": "string",
+            "defaultValue": "2019-Datacenter",
+            "allowedValues": [
+                "2019-Datacenter",
+                "2019-Datacenter-Core",
+                "2016-Datacenter",
+                "2016-Datacenter-Server-Core"
+            ]
+        },
+        "batchAccountsName": {
+            "type": "string",
+            "defaultValue": "[concat(toLower(uniqueString(resourceGroup().id)), 'batch')]",
+            "metadata": {
+                "description": "Batch Account Name"
+            }
+        },
+        "batchAccountsPoolName": {
+            "type": "string",
+            "defaultValue": "[concat(toLower(uniqueString(resourceGroup().id)), 'batchpool')]",
+            "metadata": {
+                "description": "Batch Account Pool Name"
+            }
+        },
+        "batchPoolVMSize": {
+            "type": "string",
+            "defaultValue": "STANDARD_D2_V2"
+        },
+        "maxTasksPerNode": {
+            "type": "int",
+            "defaultValue": 1,
+            "minValue": 1,
+            "metadata": {
+                "description": "The maximun number of tasks per node in Batch Pool"
+            }
+        },
+        "targetDedicatedNodes": {
+            "type": "int",
+            "defaultValue": 1,
+            "minValue": 0,
+            "metadata": {
+                "description": "The number of target dedicated nodes in batch pool"
+            }
+        },
+        "targetLowPriorityNodes": {
+            "type": "int",
+            "defaultValue": 0,
+            "minValue": 0,
+            "metadata": {
+                "description": "The number of target low priority nodes in batch pool"
+            }
+        },
+        "newOrExistingVnet": {
+            "type": "string",
+            "defaultValue": "new",
+            "allowedValues": [
+                "new",
+                "existing"
+            ],
+            "metadata": {
+                "description": "New or using existing Virtual Network"
+            }
+        },
+        "vnetResourceGroup": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().name]",
+            "metadata": {
+                "description": "Resource group in which the vnet locates"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "defaultValue": "telepathyvnet",
+            "metadata": {
+                "description": "Virtual Network Name"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "defaultValue": "telepathysubnet",
+            "metadata": {
+                "description": "Subnet Name"
+            }
+        },
+        "telepathyVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "The version of Telepathy"
+            },
+            "defaultValue": "latest"
+        },
+        "AzureLogAnalytics": {
+            "type": "string",
+            "allowedValues": [
+                "enable",
+                "disable"
+            ],
+            "metadata": {
+                "description": "New Log Analytics worksapce to enable AzureAnalytics"
+            },
+            "defaultValue": "enable"
+        }
+    },
+    "variables": {
+        "telepathyVMVmSize": "[parameters('telepathyVMSize')]",
+        "telepathyVMImagePublisher": "MicrosoftWindowsServer",
+        "telepathyVMImageOffer": "WindowsServer",
+        "telepathyVMOSDiskName": "telepathyVMOSDisk",
+        "customScriptLocation": "[concat('https://raw.githubusercontent.com/Azure/Telepathy/', parameters('telepathyBranch'), '/deploy/StartTelepathyShim.ps1')]",
+        "doubleQuotation": "\"",
+        "caret": "^",
+        "scriptParameters": "[concat('ReleaseDeploy=$true;', 'EnableTelepathyStorage=$true;','StartTelepathyService=$true;', 'Location=', resourceGroup().location, ';BatchAccountName=', parameters('batchAccountsName'),';BatchPoolName=', parameters('batchAccountsPoolName'), ';TelepathyVersion=', parameters('telepathyVersion'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "basicResourceTemplate",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/Azure/Telepathy/feature/release-template/deploy/azuredeploy.json"
+                },
+                "parameters": {
+                    "telepathyStorageType": {
+                        "value": "[parameters('telepathyStorageType')]"
+                    },
+                    "batchAccountsName": {
+                        "value": "[parameters('batchAccountsName')]"
+                    },
+                    "batchAccountsPoolName": {
+                        "value": "[parameters('batchAccountsPoolName')]"
+                    },
+                    "batchPoolVMSize": {
+                        "value": "[parameters('batchPoolVMSize')]"
+                    },
+                    "maxTasksPerNode": {
+                        "value": "[parameters('maxTasksPerNode')]"
+                    },
+                    "targetDedicatedNodes": {
+                        "value": "[parameters('targetDedicatedNodes')]"
+                    },
+                    "targetLowPriorityNodes": {
+                        "value": "[parameters('targetLowPriorityNodes')]"
+                    },
+                    "newOrExistingVnet": {
+                        "value": "[parameters('newOrExistingVnet')]"
+                    },
+                    "vnetResourceGroup": {
+                        "value": "[parameters('vnetResourceGroup')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
+                    },
+                    "AzureLogAnalytics": {
+                        "value": "[parameters('AzureLogAnalytics')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "[parameters('telepathyVMName')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2019-07-01",
+            "dependsOn": [
+                "basicResourceTemplate"
+            ],
+            "tags": {
+                "displayName": "telepathyVM"
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[variables('telepathyVMVmSize')]"
+                },
+                "osProfile": {
+                    "computerName": "[parameters('telepathyVMName')]",
+                    "adminUsername": "[parameters('telepathyVMAdminUsername')]",
+                    "adminPassword": "[parameters('telepathyVMAdminPassword')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[variables('telepathyVMImagePublisher')]",
+                        "offer": "[variables('telepathyVMImageOffer')]",
+                        "sku": "[parameters('telepathyVMWindowsOSVersion')]",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[reference('basicResourceTemplate').outputs.networkInterfaceId.value]"
+                        }
+                    ]
+                }
+            },
+            "resources": [
+                {
+                    "condition": "[equals(parameters('AzureLogAnalytics'), 'enable')]",
+                    "type": "extensions",
+                    "name": "OMSExtension",
+                    "apiVersion": "2019-07-01",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Compute/virtualMachines/', parameters('telepathyVMName'))]"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.EnterpriseCloud.Monitoring",
+                        "type": "MicrosoftMonitoringAgent",
+                        "typeHandlerVersion": "1.0",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "workspaceId": "[if(equals(parameters('AzureLogAnalytics'), 'enable'), reference('basicResourceTemplate').outputs.logWorkspaceId.value, json('null'))]"
+                        },
+                        "protectedSettings": {
+                            "workspaceKey": "[if(equals(parameters('AzureLogAnalytics'), 'enable'), reference('basicResourceTemplate').outputs.logWorksapceKey.value, json('null'))]"
+                        }
+                    }
+                },
+                {
+                    "type": "extensions",
+                    "name": "CustomScriptExtension",
+                    "apiVersion": "2019-07-01",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[parameters('telepathyVMName')]"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.Compute",
+                        "type": "CustomScriptExtension",
+                        "typeHandlerVersion": "1.8",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "fileUris": [
+                                "[variables('customScriptLocation')]"
+                            ],
+                            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -Command ', variables('caret'), variables('doubleQuotation'),'.\\StartTelepathyShim.ps1 ', base64(concat(variables('scriptParameters'),';DesStorageAccountName=', reference('basicResourceTemplate').outputs.storageName.value, ';DesStorageAccountKey=', reference('basicResourceTemplate').outputs.storageAccountKey.value ,';BatchAccountKey=', reference('basicResourceTemplate').outputs.batchAccountKey.value, ';EnableLogAnalytics=', parameters('AzureLogAnalytics'),';WorkspaceId=', reference('basicResourceTemplate').outputs.logWorkspaceId.value,';AuthenticationID=', reference('basicResourceTemplate').outputs.logWorksapceKey.value)), variables('caret'), variables('doubleQuotation'))]"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "outputs": {}
+}

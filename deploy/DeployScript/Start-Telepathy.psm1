@@ -20,14 +20,14 @@ function Start-Telepathy {
     $destination_path = "C:\telepathy"
     $artifactsPath = "$destination_path\$ArtifactsFolderName\Release"
   
+    Write-Log -Message "Set log source name as StartTelepathy"
     Set-LogSource -SourceName "StartTelepathy"
     
+    Write-Log -Message "Get desStorageConnectionString & batchServiceUrl"
     $desStorageConnectionString = "DefaultEndpointsProtocol=https;AccountName=$DesStorageAccountName;AccountKey=$DesStorageAccountKey;EndpointSuffix=core.windows.net"
     $batchServiceUrl = "https://$BatchAccountName.$Location.batch.azure.com"
     
     Write-Log -Message "Artifacts path: $artifactsPath"
-    Write-Log -Message "desStorageConnectionString: $desStorageConnectionString"
-    Write-Log -Message "batchServiceUrl: $batchServiceUrl"
     
     if ($EnableTelepathyStorage) {
         Write-Log -Message "Enable Telepathy Storage"
@@ -36,8 +36,6 @@ function Start-Telepathy {
     
     if ($StartTelepathyService) {
         Write-Log -Message "EnableLogAnalytics: $EnableLogAnalytics"
-        Write-Log -Message "WorkspaceId: $WorkspaceId"
-        Write-Log -Message "AuthenticationId: $AuthenticationId"
         $expression = @{ 
             DestinationPath            = $artifactsPath
             DesStorageConnectionString = $desStorageConnectionString
@@ -55,6 +53,7 @@ function Start-Telepathy {
             }
             $expression = $expression + $logConfig
         }
+        Write-Log -Message "Start Telepathy Service with hashtable parameters"
         Start-TelepathyService @expression
     }
 }

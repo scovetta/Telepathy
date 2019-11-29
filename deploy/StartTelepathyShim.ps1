@@ -73,40 +73,55 @@ function Write-Log {
     } 
 }
 
-
+Write-Log -Message "Get parameters from base64"
 $HashParamsString = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Params))
+Write-Log -Message "Replace new line character"
 $HashParamsString = $HashParamsString.Replace(';', "`r`n")
-Write-Host $HashParamsString
-Write-Log -Message $HashParamsString
-
+Write-Log -Message "Convert parameters type from string to hashtable"
 $HashParams = ConvertFrom-StringData -StringData $HashParamsString
-$HashParams.keys | ForEach-Object {
-    Write-Host "$_ : $($HashParams[$_])"
-    Write-Log -Message "$_ : $($HashParams[$_])"
-}
 
+Write-Log -Message "Install nuget package provider & minimum version is 2.8.5.201"
 Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+Write-Log -Message "Install Az module"
 Install-Module -Name Az -AllowClobber -Force
 
 $destination_path = "C:\telepathy"
 $artifactsFolderName = $HashParams["ArtifactsFolderName"]
 $artifactsPath = "$destination_path\$artifactsFolderName\Release"
 
+$releaseDeploy = [bool]$HashParams["ReleaseDeploy"]
+<# Download artifacts from released resource #>
+if ($releaseDeploy) {
+    Write-Host "Release deploy start"
+    Write-Log -Message "Release deploy start"
+    $url = "https://github.com/Azure/Telepathy/releases/$($HashParams["TelepathyVersion"])/download/Telepathy.zip"
+    Write-Host $url
+    Write-Log -Message "Download relase version is $($HashParams["TelepathyVersion"])"
+    $wc = New-Object System.Net.WebClient
+    $resourcePath = "C:\Telepathy.zip"
+    Write-Log -Message "Start to download all release resource"
+    $wc.DownloadFile($url, $resourcePath)
+    Write-Log -Message "Expand archive file to destination path"
+    Expand-Archive $resourcePath -DestinationPath $destination_path -Force
+    Write-Log -Message "Remove archive file"
+    Remove-Item -Path $resourcePath
+}
 <# Download artifacts from the specified Azure Storage containers #>
-Try {
-    Write-Log -Message "StorageAccountName : $HashParams["SrcStorageAccountName"]"
-    Write-Log -Message "StorageSasToken : $HashParams["SrcStorageContainerSasToken"]"
-    $srcStorageContext = New-AzStorageContext -StorageAccountName $HashParams["SrcStorageAccountName"] -SasToken $HashParams["SrcStorageContainerSasToken"]  
-}
-Catch {
-    Write-Log -Message "Please provide valid storage account name and sas token" -Level Error
-    Write-Log -Message $_ -Level Error
-}
+else {   
+    Try {
+        Write-Log -Message "StorageAccountName : $HashParams["SrcStorageAccountName"]"
+        Write-Log -Message "StorageSasToken : $HashParams["SrcStorageContainerSasToken"]"
+        $srcStorageContext = New-AzStorageContext -StorageAccountName $HashParams["SrcStorageAccountName"] -SasToken $HashParams["SrcStorageContainerSasToken"]  
+    }
+    Catch {
+        Write-Log -Message "Please provide valid storage account name and sas token" -Level Error
+        Write-Log -Message $_ -Level Error
+    }
 
 Try {
+    Write-Log -Message "Get src storage blob content"
     Write-Log -Message "ContainerName : $HashParams["ContainerName"]"
-    Write-Log -Message "ArtifactsFolderName : $HashParams["ArtifactsFolderName"]"
-    
+    Write-Log -Message "ArtifactsFolderName : $HashParams["ArtifactsFolderName"]"  
     $blobs = Get-AzStorageBlob -Container $HashParams["ContainerName"] -Blob "$($HashParams["ArtifactsFolderName"])*" -Context $srcStorageContext
 }
 Catch {
@@ -114,20 +129,25 @@ Catch {
     Write-Log -Message $_ -Level Error
 }
 
-Try {
-    Write-Log -Message "DestinationPath in VM : $destination_path"
-    foreach ($blob in $blobs) {  
-        New-Item -ItemType Directory -Force -Path $destination_path  
-        Get-AzStorageBlobContent -Container $HashParams["ContainerName"] -Blob $blob.Name -Destination $destination_path -Context $srcStorageContext   
-    } 
+    Try {
+        Write-Log -Message "DestinationPath in VM : $destination_path"
+        foreach ($blob in $blobs) {  
+            New-Item -ItemType Directory -Force -Path $destination_path  
+            Get-AzStorageBlobContent -Container $HashParams["ContainerName"] -Blob $blob.Name -Destination $destination_path -Context $srcStorageContext   
+        } 
+    }
+    Catch {
+        Write-Log -Message "Error occurs when download source storage blob to VM " -Level Error
+        Write-Log -Message $_ -Level Error
+    }
 }
-Catch {
-    Write-Log -Message "Error occurs when download source storage blob to VM " -Level Error
-    Write-Log -Message $_ -Level Error
-}
+
 <# Artifacts are all ready #>
 
+Write-Log -Message "Get boolean value of EnableTelepathyStorage & StartTelepathyService"
 $HashParams["EnableTelepathyStorage"] = [bool]$HashParams["EnableTelepathyStorage"]
 $HashParams["StartTelepathyService"] = [bool]$HashParams["StartTelepathyService"]
+Write-Log -Message "Import start-telepathy module"
 Import-Module -Name $artifactsPath\DeployScript\Start-Telepathy.psd1 -Verbose
+Write-Log -Message "Start telepathy with hashtable parameters"
 Start-Telepathy -Params @HashParams   

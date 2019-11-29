@@ -14,11 +14,8 @@
     Set-LogSource -SourceName "StartSessionLauncher"
     
     Write-Log -Message "DestinationPath to find resource : $DestinationPath"
-    Write-Log -Message "DesStorageConnectionString : $DesStorageConnectionString"
     Write-Log -Message "BatchAccountName : $BatchAccountName"
     Write-Log -Message "BatchPoolName: $BatchPoolName"
-    Write-Log -Message "BatchAccountKey : $BatchAccountKey"
-    Write-Log -Message "BatchAccountServiceUrl : $BatchAccountServiceUrl"
     
     $serviceName = "TelepathySessionLauncher"
     $SessionLauncher = "$DestinationPath\SessionLauncher\HpcSession.exe"
@@ -31,7 +28,7 @@
     
         if ($EnableLogAnalytics) {
             $LoggingLevel = "Warning"
-            Write-Log -Message "Start to config log analytics"
+            Write-Log -Message "Start to config log analytics in SessionLauncher"
             Invoke-Expression "$SessionLauncher -l --Logging `"Enable`" --AzureAnalyticsLogging true --AzureAnalyticsLoggingLevel $LoggingLevel --AzureAnalyticsWorkspaceId $WorkspaceId --AzureAnalyticsAuthenticationId $AuthenticationId"
         }
         

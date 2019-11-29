@@ -2,13 +2,6 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "telepathyBranch": {
-      "type": "string",
-      "metadata": {
-        "description": "The telepathy branch in github"
-      },
-      "defaultValue": "dev"
-    },
     "telepathyStorageType": {
       "type": "string",
       "defaultValue": "Standard_LRS",
@@ -18,31 +11,6 @@
         "Standard_GRS",
         "Standard_RAGRS",
         "Premium_LRS"
-      ]
-    },
-    "telepathyVMName": {
-      "type": "string",
-      "minLength": 1
-    },
-    "telepathyVMSize": {
-      "type": "string",
-      "defaultValue": "STANDARD_D2_V2"
-    },
-    "telepathyVMAdminUserName": {
-      "type": "string",
-      "minLength": 1
-    },
-    "telepathyVMAdminPassword": {
-      "type": "securestring"
-    },
-    "telepathyVMWindowsOSVersion": {
-      "type": "string",
-      "defaultValue": "2019-Datacenter",
-      "allowedValues": [
-        "2019-Datacenter",
-        "2019-Datacenter-Core",
-        "2016-Datacenter",
-        "2016-Datacenter-Server-Core"
       ]
     },
     "batchAccountsName": {
@@ -119,33 +87,6 @@
         "description": "Subnet Name"
       }
     },
-    "nightlyBuildStorageName": {
-      "type": "string",
-      "metadata": {
-        "description": "The artifacts storage name"
-      },
-      "defaultValue": "soaserviceartifactci"
-    },
-    "nightlyBuildStorageSasToken": {
-      "type": "string",
-      "metadata": {
-        "description": "The artifacts storage sas token"
-      },
-      "defaultValue": "?sv=2018-03-28&sr=c&si=nightlybuild&sig=8RxDHURnMxhqM2btAE%2FHIDffXOToymtlfMY8JTJ7SrQ%3D"
-    },
-    "nightlyBuildStorageContainerName": {
-      "type": "string",
-      "metadata": {
-        "description": "The artifacts storage container name"
-      },
-      "defaultValue": "telepathy"
-    },
-    "nightlyBuildVersion": {
-      "type": "string",
-      "metadata": {
-        "description": "Please view all accessible versions in https://dev.azure.com/bc-telepathy/telepathy/_build?definitionId=3"
-      }
-    },
     "AzureLogAnalytics": {
       "type": "string",
       "allowedValues": [
@@ -164,19 +105,11 @@
     "telepathyVnetPrefix": "10.0.0.0/16",
     "telepathyVnetSubnetName": "[parameters('subnetName')]",
     "telepathyVnetSubnetPrefix": "10.0.0.0/24",
-    "telepathyVMImagePublisher": "MicrosoftWindowsServer",
-    "telepathyVMImageOffer": "WindowsServer",
-    "telepathyVMOSDiskName": "telepathyVMOSDisk",
     "telepathyLogAnalyticsWorkspaceName": "[concat('telepathyLogAnalyticsWorkspace', uniqueString(resourceGroup().id))]",
-    "telepathyVMVmSize": "[parameters('telepathyVMSize')]",
     "telepathyVMVnetID": "[resourceId(variables('telepathyVnetResourceGroup'),'Microsoft.Network/virtualNetworks',parameters('vnetName'))]",
     "telepathyVMSubnetRef": "[concat(variables('telepathyVMVnetID'), '/subnets/', variables('telepathyVnetSubnetName'))]",
     "telepathyVMStorageAccountContainerName": "vhds",
-    "telepathyVMNicName": "[concat(parameters('telepathyVMName'), 'NetworkInterface')]",
-    "customScriptLocation": "[concat('https://raw.githubusercontent.com/Azure/Telepathy/', parameters('telepathyBranch'), '/deploy/StartTelepathyShim.ps1')]",
-    "doubleQuotation": "\"",
-    "caret": "^",
-    "scriptParameters": "[concat('EnableTelepathyStorage=$true;','StartTelepathyService=$true;', 'Location=', resourceGroup().location, ';BatchAccountName=', parameters('batchAccountsName'),';BatchPoolName=', parameters('batchAccountsPoolName'), ';ArtifactsFolderName=', parameters('nightlyBuildVersion'), ';ContainerName=', parameters('nightlyBuildStorageContainerName'), ';SrcStorageAccountName=', parameters('nightlyBuildStorageName'), ';DesStorageAccountName=', variables('telepathyStorageName'))]"
+    "telepathyVMNicName": "TelepathyNetworkInterface"
   },
   "resources": [
     {
@@ -316,93 +249,32 @@
           "searchVersion": 1
         }
       }
-    },
-    {
-      "name": "[parameters('telepathyVMName')]",
-      "type": "Microsoft.Compute/virtualMachines",
-      "location": "[resourceGroup().location]",
-      "apiVersion": "2019-07-01",
-      "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', variables('telepathyStorageName'))]",
-        "[resourceId('Microsoft.Network/networkInterfaces', variables('telepathyVMNicName'))]"
-      ],
-      "tags": {
-        "displayName": "telepathyVM"
-      },
-      "properties": {
-        "hardwareProfile": {
-          "vmSize": "[variables('telepathyVMVmSize')]"
-        },
-        "osProfile": {
-          "computerName": "[parameters('telepathyVMName')]",
-          "adminUsername": "[parameters('telepathyVMAdminUsername')]",
-          "adminPassword": "[parameters('telepathyVMAdminPassword')]"
-        },
-        "storageProfile": {
-          "imageReference": {
-            "publisher": "[variables('telepathyVMImagePublisher')]",
-            "offer": "[variables('telepathyVMImageOffer')]",
-            "sku": "[parameters('telepathyVMWindowsOSVersion')]",
-            "version": "latest"
-          },
-          "osDisk": {
-            "createOption": "FromImage"
-          }
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('telepathyVMNicName'))]"
-            }
-          ]
-        }
-      },
-      "resources": [
-        {
-          "condition": "[equals(parameters('AzureLogAnalytics'), 'enable')]",
-          "type": "extensions",
-          "name": "OMSExtension",
-          "apiVersion": "2019-07-01",
-          "location": "[resourceGroup().location]",
-          "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('telepathyVMName'))]"
-          ],
-          "properties": {
-            "publisher": "Microsoft.EnterpriseCloud.Monitoring",
-            "type": "MicrosoftMonitoringAgent",
-            "typeHandlerVersion": "1.0",
-            "autoUpgradeMinorVersion": true,
-            "settings": {
-              "workspaceId": "[if(equals(parameters('AzureLogAnalytics'), 'enable'), reference(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').customerId, json('null'))]"
-            },
-            "protectedSettings": {
-              "workspaceKey": "[if(equals(parameters('AzureLogAnalytics'), 'enable'), listKeys(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').primarySharedKey, json('null'))]"
-            }
-          }
-        },
-        {
-          "type": "extensions",
-          "name": "CustomScriptExtension",
-          "apiVersion": "2019-07-01",
-          "location": "[resourceGroup().location]",
-          "dependsOn": [
-            "[parameters('telepathyVMName')]"
-          ],
-          "properties": {
-            "publisher": "Microsoft.Compute",
-            "type": "CustomScriptExtension",
-            "typeHandlerVersion": "1.8",
-            "autoUpgradeMinorVersion": true,
-            "settings": {
-              "fileUris": [
-                "[variables('customScriptLocation')]"
-              ],
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -Command ', variables('caret'), variables('doubleQuotation'),'.\\StartTelepathyShim.ps1 ', base64(concat(variables('scriptParameters'),';SrcStorageContainerSasToken=', parameters('nightlyBuildStorageSasToken'),';DesStorageAccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('telepathyStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value,';BatchAccountKey=',listKeys(resourceId('Microsoft.Batch/batchAccounts', parameters('batchAccountsName')), '2017-09-01').primary, ';EnableLogAnalytics=', parameters('AzureLogAnalytics'),';WorkspaceId=', reference(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').customerId,';AuthenticationID=', listKeys(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').primarySharedKey)), variables('caret'), variables('doubleQuotation'))]"
-            }
-          }
-        }
-      ]
     }
   ],
-  "outputs": {}
+  "outputs": {
+    "storageName": {
+      "type": "string",
+      "value": "[variables('telepathyStorageName')]"
+    },
+    "storageAccountKey": {
+      "type": "string",
+      "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('telepathyStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
+    },
+    "batchAccountKey": {
+      "type": "string",
+      "value": "[listKeys(resourceId('Microsoft.Batch/batchAccounts', parameters('batchAccountsName')), '2017-09-01').primary]"
+    },
+    "networkInterfaceId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Network/networkInterfaces', variables('telepathyVMNicName'))]"
+    },
+    "logWorkspaceId": {
+      "type": "string",
+      "value": "[reference(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').customerId]"
+    },
+    "logWorksapceKey": {
+      "type": "string",
+      "value": "[listKeys(variables('telepathyLogAnalyticsWorkspaceName'), '2015-11-01-preview').primarySharedKey]"
+    }
+  }
 }
