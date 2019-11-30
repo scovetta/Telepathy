@@ -411,7 +411,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
         /// <param name="context">the request context relate to the message</param>
         /// <param name="msg">the request message</param>
         /// <param name="asyncState">the asyncState relate to the message</param>
-        public override void PutRequestAsync(RequestContextBase context, Message msg, object asyncState)
+        public override async Task PutRequestAsync(RequestContextBase context, Message msg, object asyncState)
         {
             if (this.isDisposedField)
             {
@@ -436,7 +436,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
             if (this.thresholdForRequestsPersistField <= 1)
             {
                 Interlocked.Increment(ref this.allRequestsCountField);
-                this.PersistRequest(request);
+                await this.PersistRequest(request);
                 this.requestArriveEvent.Set();
                 return;
             }
@@ -456,7 +456,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
             if (requests != null)
             {
                 BrokerTracing.TraceEvent(System.Diagnostics.TraceEventType.Verbose, 0, "[BrokerPersistQueue] .PutRequestAsync (perf): clientId={0}, try to persist request.", this.clientIdField);
-                this.PersistRequests(requests);
+                await this.PersistRequests(requests);
             }
 
             this.requestArriveEvent.Set();
@@ -783,7 +783,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
                     }
                 }
 
-                this.PersistRequests(requests);
+                this.PersistRequests(requests).GetAwaiter().GetResult();
 
                 // wait for all the requests persisted to the storage.
                 while (Interlocked.Read(ref this.persistedRequestsCount) != msgCount)
@@ -1013,7 +1013,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
         /// persist the requests in the memory into the persistence.
         /// </summary>
         /// <param name="requests">the requests that will be persisted to the storage.</param>
-        private void PersistRequests(List<BrokerQueueItem> requests)
+        private async Task PersistRequests(List<BrokerQueueItem> requests)
         {
             if (requests == null || requests.Count == 0)
             {
@@ -1021,19 +1021,19 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
             }
 
             Interlocked.Add(ref this.pendingPeristRequestsCountField, requests.Count);
-            this.sessionPersistField.PutRequestsAsync(requests, this.FinishPersistRequestsCallback, requests.Count);
+            await this.sessionPersistField.PutRequestsAsync(requests, this.FinishPersistRequestsCallback, requests.Count);
         }
 
         /// <summary>
         /// put one request into the persistence.
         /// </summary>
         /// <param name="request">the request to be persisted.</param>
-        private void PersistRequest(BrokerQueueItem request)
+        private async Task PersistRequest(BrokerQueueItem request)
         {
             System.Diagnostics.Debug.Assert(request != null, "request item cannot be null");
 
             Interlocked.Increment(ref this.pendingPeristRequestsCountField);
-            this.sessionPersistField.PutRequestAsync(request, this.FinishPersistRequestsCallback, 1);
+            await this.sessionPersistField.PutRequestAsync(request, this.FinishPersistRequestsCallback, 1);
         }
 
         /// <summary>

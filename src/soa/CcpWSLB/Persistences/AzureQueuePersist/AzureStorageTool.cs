@@ -44,16 +44,28 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             }
             catch (Exception e)
             {
-                BrokerTracing.TraceError(
-                    "[AzureStorageTool] .AddMsgToTable: cannot insert the entity into table, index = {0}, guid = {1}, exception: {2}.", entity.PartitionKey, entity.RowKey, e);
+                BrokerTracing.TraceWarning(
+                    "[AzureStorageTool] .AddMsgToTable: cannot insert the entity into table, index = {0}, guid = {1}, exception: {2}.", entity.RowKey, entity.MessageId, e);
                 TableOperation retrieveOperation = TableOperation.Retrieve<ResponseEntity>(entity.PartitionKey, entity.RowKey);
                 TableResult retrievedResult = table.Execute(retrieveOperation);
                 if (retrievedResult.Result != null)
                 {
-                    BrokerTracing.TraceInfo("The entity is already exists in Table");
+                    if (((ResponseEntity)retrievedResult.Result).Message.SequenceEqual(entity.Message))
+                    {
+                        BrokerTracing.TraceInfo(
+                            "[AzureStorageTool] .AddMsgToTable: The entity index = {0} is already exists in Table.",
+                            entity.RowKey);
+                    }
+                    else
+                    {
+                        BrokerTracing.TraceError(
+                            "[AzureStorageTool] .AddMsgToTable: same index = {0}, cannot insert table twice.",
+                            entity.RowKey);
+                        throw;
+                    }
                 }
 
-                throw;
+
             }
         }
 
@@ -72,21 +84,32 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             return 0;
         }
 
-        public static async Task<long> CountTableEntity(string connectString, string tableName)
+        public static async Task<(int count, long max)> CountTableEntity(string connectString, string tableName)
         {
             var table = GetTableClient(connectString).GetTableReference(tableName);
-            var query = new TableQuery<DynamicTableEntity>().Select(new[] { "PartitionKey" });
+            var query = new TableQuery<DynamicTableEntity>().Select(new[] { "Rowkey" });
             var list = new List<DynamicTableEntity>();
+            long max = 0;
             TableContinuationToken token = null;
             do
             {
                 var seg = await table.ExecuteQuerySegmentedAsync(query, token);
                 token = seg.ContinuationToken;
                 list.AddRange(seg);
+                if (seg.Results != null && seg.Results.Count > 0)
+                {
+                    if (Int32.TryParse(seg.Results.ToList()[seg.Results.Count - 1].RowKey, out int temp))
+                    {
+                        if (temp > max)
+                        {
+                            max = temp;
+                        }
+                    }
+                }
             }
             while (token != null);
 
-            return list.Count;
+            return (list.Count, max);
         }
 
         public static async Task<CloudBlobContainer> CreateBlobContainerAsync(

@@ -19,7 +19,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
     internal class AzureQueueMessageFetcher
     {
         /// <summary> Maximum number of concurrent outstanding BeginPeek operations allowed</summary>
-        protected const int DefaultMaxOutstandingFetchCount = 10;
+        protected const int DefaultMaxOutstandingFetchCount = 100;
 
         /// <summary> Default capacity of prefetch cache. </summary>
         protected const int DefaultPrefetchCacheCapacity = 1024;

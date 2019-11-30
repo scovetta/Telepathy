@@ -7,6 +7,7 @@ namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Mock
     using System.Collections.Generic;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
+    using System.Threading.Tasks;
 
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
 
@@ -134,7 +135,7 @@ namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Mock
         /// <param name="context">the request context relate to the message</param>
         /// <param name="msg">the request message</param>
         /// <param name="asyncState">the asyncState relate to the message</param>
-        public override void PutRequestAsync(Telepathy.ServiceBroker.FrontEnd.RequestContextBase context, Message msg, object asyncState)
+        public override async Task PutRequestAsync(Telepathy.ServiceBroker.FrontEnd.RequestContextBase context, Message msg, object asyncState)
         {
             this.queue.Enqueue(new BrokerQueueItem(context, msg, asyncState));
             if (this.directReply)

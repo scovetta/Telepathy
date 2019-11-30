@@ -21,6 +21,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 
         private readonly CloudQueue pendingQueue;
 
+        private ConcurrentDictionary<string,bool> requestDic = new ConcurrentDictionary<string, bool>();
+
         public AzureQueueRequestFetcher(
             CloudQueue requestQueue,
             CloudQueue pendingQueue,
@@ -68,7 +70,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 }
 
                 List<Task> tasks = new List<Task>();
-                ConcurrentDictionary<string, Task> requestConcurrentDictionary = new ConcurrentDictionary<string, Task>();
 
                 while (this.pendingFetchCount > 0)
                 {
@@ -77,13 +78,14 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         tasks.Add(Task.Run(async () =>
                         {
                             var message = await this.requestQueue.GetMessageAsync();
-                            await requestConcurrentDictionary.GetOrAdd(message.Id, async (m) =>
+                            if (message != null)
                             {
-                                var copyMessage = new CloudQueueMessage(message.AsBytes);
-                                await this.pendingQueue.AddMessageAsync(copyMessage);
-                                await this.requestQueue.DeleteMessageAsync(message);
-                                await DeserializeMessage(message.AsBytes);
-                            });
+                                await this.DeserializeMessage(message);
+                            }
+                            else
+                            {
+                                Interlocked.Increment(ref this.pendingFetchCount);
+                            }
                         }));
                     }
                     catch (Exception e)
@@ -96,7 +98,18 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 
                     Interlocked.Decrement(ref this.pendingFetchCount);
                 }
-                await Task.WhenAll(tasks);
+
+                try
+                {
+                    await Task.WhenAll(tasks);
+                }
+                catch (Exception e)
+                {
+                    BrokerTracing.TraceError(
+                        "[AzureQueueRequestFetcher] .DequeueMessageAsync: exception raises in dequeue tasks, Exception:{0}",
+                        e.ToString());
+                }
+
                 this.CheckAndGetMoreMessages();
             }
 
@@ -106,18 +119,18 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             }
         }
 
-        private async Task DeserializeMessage(byte[] messageBody)
+        private async Task DeserializeMessage(CloudQueueMessage message)
         {
             Exception exception = null;
             BrokerQueueItem brokerQueueItem = null;
 
-            if (messageBody != null && messageBody.Length > 0)
+            if (message.AsBytes != null && message.AsBytes.Length > 0)
             {
                 // Deserialize message to BrokerQueueItem
                 try
                 {
                     brokerQueueItem = (BrokerQueueItem)this.formatter.Deserialize(
-                        await AzureStorageTool.GetMsgBody(this.blobContainer, messageBody));
+                        await AzureStorageTool.GetMsgBody(this.blobContainer, message.AsBytes));
                     brokerQueueItem.PersistAsyncToken.AsyncToken =
                         brokerQueueItem.Message.Headers.MessageId.ToString();
                     BrokerTracing.TraceVerbose(
@@ -134,7 +147,39 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 }
             }
 
-            this.HandleMessageResult(new MessageResult(brokerQueueItem, exception));
+            if (brokerQueueItem != null && !this.requestDic.TryAdd(
+                    brokerQueueItem.PersistAsyncToken.AsyncToken.ToString(),
+                    true))
+            {
+                Interlocked.Increment(ref this.pendingFetchCount);
+                try
+                {
+                    await this.requestQueue.DeleteMessageAsync(message);
+                }
+                catch (Exception e)
+                {
+                    BrokerTracing.TraceError(
+                        "[AzureQueueRequestFetcher] .DeserializeMessage: delete duplicate message in request queue failed, Exception:{0}",
+                        e.ToString());
+                }
+            }
+            else
+            {
+                var copyMessage = new CloudQueueMessage(message.AsBytes);
+                await this.pendingQueue.AddMessageAsync(copyMessage);
+                try
+                {
+                    await this.requestQueue.DeleteMessageAsync(message);
+                }
+                catch (Exception e)
+                {
+                    BrokerTracing.TraceError(
+                        "[AzureQueueRequestFetcher] .DeserializeMessage: delete message in request queue failed, Exception:{0}",
+                        e.ToString());
+                }
+
+                this.HandleMessageResult(new MessageResult(brokerQueueItem, exception));
+            }
         }
     }
 }

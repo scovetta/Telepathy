@@ -11,6 +11,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.Threading;
+    using System.Threading.Tasks;
 
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common.ServiceJobMonitor;
@@ -19,6 +20,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
     using Microsoft.Telepathy.Session.Exceptions;
     using Microsoft.Telepathy.Session.Interface;
     using Microsoft.Telepathy.Session.Internal;
+
+    using Nito.AsyncEx;
 
     /// <summary>
     /// Represent a broker client
@@ -46,6 +49,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
         /// Lock object for discarding unflushed requests.  It prevents new-coming requests from being discarded
         /// </summary>
         private ReaderWriterLockSlim lockForDiscardRequests = new ReaderWriterLockSlim();
+
+        private AsyncReaderWriterLock asyncLockForDiscardRequests = new AsyncReaderWriterLock();
 
         /// <summary>
         /// Stores the broker queue
@@ -297,16 +302,14 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
             {
                 while (true)
                 {
-                    // Read lock this to wait 
-                    this.lockForDiscardRequests.EnterReadLock();
                     bool needWait = false;
-
-                    try
+                    // Read lock this to wait 
+                    using (this.asyncLockForDiscardRequests.ReaderLock())
                     {
                         if (this.state != BrokerClientState.ClientConnected)
                         {
                             BrokerTracing.EtwTrace.LogBrokerClientRejectFlush(this.sharedData.BrokerInfo.SessionId, this.clientId, this.state.ToString());
-                            ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_FlushRejected, SR.FlushRejected, BrokerClient.MapToBrokerClientStatus(this.state).ToString());
+                            ThrowHelper.ThrowSessionFault(SOAFaultCode.Broker_FlushRejected, SR.FlushRejected, MapToBrokerClientStatus(this.state).ToString());
                         }
 
                         // Reset the timer
@@ -333,10 +336,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
 
                             break;
                         }
-                    }
-                    finally
-                    {
-                        this.lockForDiscardRequests.ExitReadLock();
                     }
 
                     if (needWait)
@@ -435,7 +434,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
         /// <param name="requestMessage">indicating the request message</param>
         /// <param name="state">indicating the state</param>
         /// <remarks>this method is thread safe</remarks>
-        public void RequestReceived(RequestContextBase requestContext, Message requestMessage, object state)
+        public async Task RequestReceived(RequestContextBase requestContext, Message requestMessage, object state)
         {
             // in case the broker client itself is disposed
             try
@@ -452,44 +451,30 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
 
                     if (batchId > this.currentBatchId)
                     {
-                        this.lockForDiscardRequests.EnterUpgradeableReadLock();
-                        try
+                        using (await this.asyncLockForDiscardRequests.WriterLockAsync())
                         {
                             if (batchId > this.currentBatchId)
                             {
-                                this.lockForDiscardRequests.EnterWriteLock();
-                                try
-                                {
-                                    BrokerTracing.TraceWarning("[BrokerClient] New client instance id encountered: {0}. Will discard unflushed requests", batchId);
-                                    this.observer.ReduceUncommittedCounter(this.queue.AllRequestsCount - this.queue.FlushedRequestsCount);
-                                    this.queue.DiscardUnflushedRequests();
-                                    this.currentBatchId = batchId;
-                                    this.batchIdChangedEvent.Set();
-                                    this.batchMessageIds.Clear();
-                                }
-                                finally
-                                {
-                                    this.lockForDiscardRequests.ExitWriteLock();
-                                }
+                                BrokerTracing.TraceWarning("[BrokerClient] New client instance id encountered: {0}. Will discard unflushed requests", batchId);
+                                this.observer.ReduceUncommittedCounter(this.queue.AllRequestsCount - this.queue.FlushedRequestsCount);
+                                this.queue.DiscardUnflushedRequests();
+                                this.currentBatchId = batchId;
+                                this.batchIdChangedEvent.Set();
+                                this.batchMessageIds.Clear();
                             }
-                        }
-                        finally
-                        {
-                            this.lockForDiscardRequests.ExitUpgradeableReadLock();
                         }
                     }
 
                     if (batchId == this.currentBatchId)
                     {
-                        this.lockForDiscardRequests.EnterReadLock();
-                        try
+                        using (await this.asyncLockForDiscardRequests.ReaderLockAsync())
                         {
                             if (batchId == this.currentBatchId)
                             {
                                 Guid messageId = Utility.GetMessageIdFromMessage(requestMessage);
                                 if (this.batchMessageIds.TryAdd(messageId, batchId))
                                 {
-                                    this.queue.PutRequestAsync(requestContext, requestMessage, state);
+                                    await this.queue.PutRequestAsync(requestContext, requestMessage, state);
                                     this.observer.IncomingRequest();
                                 }
                                 else
@@ -506,10 +491,6 @@ namespace Microsoft.Telepathy.ServiceBroker.Common
                                 Guid messageId = Utility.GetMessageIdFromMessage(requestMessage);
                                 BrokerTracing.TraceWarning("[BrokerClient] Client {0}: discarded one request with instanceId: {1}, messageId {2}.", this.clientId, batchId, messageId);
                             }
-                        }
-                        finally
-                        {
-                            this.lockForDiscardRequests.ExitReadLock();
                         }
                     }
                     else

@@ -9,6 +9,7 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Description;
+    using System.Threading.Tasks;
 
     using Microsoft.Telepathy.Common.Registry;
     using Microsoft.Telepathy.Common.TelepathyContext.Extensions.RegistryExtension;
@@ -357,7 +358,7 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
             TryRemoveSecurityHeaderForHttps(requestMessage);
 
             // Send the request to the broker client
-            client.RequestReceived(requestContext, requestMessage, null);
+            Task.Run(() => client.RequestReceived(requestContext, requestMessage, null));
         }
 
         /// <summary>
