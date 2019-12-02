@@ -824,7 +824,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 {
                     ParamCheckUtility.ThrowIfNull(response, "to-be-persisted response");
 
-                    // step 1, TODO Check the response whether stored in table before or deduplicate in memory.
+                    // step 1, check the response whether persisted before.
                     var requestToken = (string)response.PersistAsyncToken.AsyncToken;
 
                     if (requestToken == null)
