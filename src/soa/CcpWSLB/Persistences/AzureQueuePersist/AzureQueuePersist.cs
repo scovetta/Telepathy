@@ -860,34 +860,47 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         requestToken,
                         AzureStorageTool.PrepareMessage(response));
 
-                    try
-                    {
-                        if (sendMsg.Message.Length > Constant.AzureQueueMsgChunkSize)
-                        {
-                            sendMsg.Message = AzureStorageTool
-                                .CreateBlobFromBytes(this.blobContainer, sendMsg.Message).GetAwaiter().GetResult();
-                        }
+                    int retry = 3;
 
-                        AzureStorageTool.AddMsgToTable(this.responseTableField, sendMsg).GetAwaiter().GetResult();
+                    while (retry > 0)
+                    {
+                        try
+                        {
+                            if (sendMsg.Message.Length > Constant.AzureQueueMsgChunkSize)
+                            {
+                                sendMsg.Message = AzureStorageTool
+                                    .CreateBlobFromBytes(this.blobContainer, sendMsg.Message).GetAwaiter().GetResult();
+                            }
+
+                            AzureStorageTool.AddMsgToTable(this.responseTableField, sendMsg).GetAwaiter().GetResult();
+                            exception = null;
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                            if (this.isDisposedField)
+                            {
+                                // if the queue is closed, then quit the method.
+                                return;
+                            }
+
+                            BrokerTracing.TraceWarning(
+                                "[AzureQueuePersist] .PersistResponses: Operate error with azure storage, retry = {0}, Exception: {1}",
+                                retry,
+                                e);
+                            exception = e;
+                            retry--;
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        if (this.isDisposedField)
-                        {
-                            // if the queue is closed, then quit the method.
-                            return;
-                        }
 
-                        BrokerTracing.TraceError(
-                            "[AzureQueuePersisit] .PersistResponses: Operate error with azure storage, Exception: {0}",
-                            e);
-                        exception = e;
+                    if (exception != null)
+                    {
                         storedResponseDic.AddOrUpdate(index, false, (k, v) => false);
                         this.uniqueResponseDic.AddOrUpdate(requestToken, false, (k, v) => false);
                         Task.Run(() => ReleaseTask());
                         break;
                     }
-                    
+
                     // At this point, both step 1 & step 2 are performed succeesfully
                     responseCount++;
                     storedResponseDic.AddOrUpdate(index, true, (k, v) => true);
@@ -947,7 +960,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     }
                     catch (Exception e)
                     {
-                        BrokerTracing.TraceWarning("[AzureQueuePersisit] .PersistResponses: Fail to update the fault message number in the response queue label, fault message count: {0}, Exception: {1}", faultResponsesCount, e);
+                        BrokerTracing.TraceWarning("[AzureQueuePersist] .PersistResponses: Fail to update the fault message number in the response queue label, fault message count: {0}, Exception: {1}", faultResponsesCount, e);
                     }
                 }
 
@@ -971,7 +984,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             {
                 if (!this.isDisposedField)
                 {
-                    BrokerTracing.TraceError("[AzureQueuePersisit] .PersistResponses: persist responses failed, Exception: {0}", e);
+                    BrokerTracing.TraceError("[AzureQueuePersist] .PersistResponses: persist responses failed, Exception: {0}", e);
                 }
             }
         }
@@ -989,7 +1002,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     try
                     {
                         BrokerTracing.TraceVerbose(
-                            "[AzureQueuePersisit] .ReleaseTask: count: {0}, min: {1}",
+                            "[AzureQueuePersist] .ReleaseTask: count: {0}, min: {1}",
                             priorityQueue.Count, priorityQueue.Count == 0 ? -1 : priorityQueue.FindMin());
                         long max = 0;
                         long responseCount = 0;
@@ -1036,14 +1049,14 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         }
 
                         BrokerTracing.TraceVerbose(
-                            "[AzureQueuePersisit] .ReleaseTask: Ack update: {0}, {1}",
+                            "[AzureQueuePersist] .ReleaseTask: Ack update: {0}, {1}",
                             max, responseCount);
                         this.responseFetcher.ChangeAck(max);
                         this.responseFetcher.NotifyMoreMessages(responseCount);
                     }
                     catch (Exception e)
                     {
-                        BrokerTracing.TraceError("[AzureQueuePersisit].ReleaseTask error: {0}", e);
+                        BrokerTracing.TraceError("[AzureQueuePersist].ReleaseTask error: {0}", e);
                         throw;
                     }
                     finally
