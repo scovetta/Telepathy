@@ -128,6 +128,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 
         private long lastReponseIndex = Int32.MaxValue >> 1;
 
+        private ConcurrentDictionary<string, bool> uniqueResponseDic = new ConcurrentDictionary<string, bool>();
+
 #if DEBUG
         private int procCount = 0;
 #endif
@@ -830,6 +832,17 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         continue;
                     }
 
+                    if (this.uniqueResponseDic.ContainsKey(requestToken))
+                    {
+                        if (this.uniqueResponseDic.TryGetValue(requestToken, out bool isStored))
+                        {
+                            if (isStored)
+                            {
+                                continue;
+                            }
+                        }
+                    }
+
                     if (response.Message.IsFault)
                     {
                         faultResponsesCount++;
@@ -841,14 +854,14 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     priorityQueue.Add(index);
                     this.rwlockPriorityQueue.ExitWriteLock();
 
+                    var sendMsg = new ResponseEntity(
+                        this.clientIdField,
+                        index.ToString(),
+                        requestToken,
+                        AzureStorageTool.PrepareMessage(response));
+
                     try
                     {
-                        var sendMsg = new ResponseEntity(
-                            this.clientIdField,
-                            index.ToString(),
-                            requestToken,
-                            AzureStorageTool.PrepareMessage(response));
-
                         if (sendMsg.Message.Length > Constant.AzureQueueMsgChunkSize)
                         {
                             sendMsg.Message = AzureStorageTool
@@ -869,14 +882,16 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                             "[AzureQueuePersisit] .PersistResponses: Operate error with azure storage, Exception: {0}",
                             e);
                         exception = e;
-                        storedResponseDic.TryAdd(index, false);
+                        storedResponseDic.AddOrUpdate(index, false, (k, v) => false);
+                        this.uniqueResponseDic.AddOrUpdate(requestToken, false, (k, v) => false);
                         Task.Run(() => ReleaseTask());
                         break;
                     }
-
+                    
                     // At this point, both step 1 & step 2 are performed succeesfully
                     responseCount++;
-                    storedResponseDic.TryAdd(index, false);
+                    storedResponseDic.AddOrUpdate(index, true, (k, v) => true);
+                    this.uniqueResponseDic.AddOrUpdate(requestToken, true, (k, v) => true);
                     Task.Run(() => ReleaseTask());
                 }
                 
@@ -899,7 +914,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 {
 
                     responseCount = 0;
-                    BrokerTracing.TraceError("[AzureQueuePersisit] .PersistResponses failed to persist the response to the responses queue, and the corrresponding requests will be redispatched soon.");
+                    BrokerTracing.TraceError("[AzureQueuePersist] .PersistResponses failed to persist the response to the responses queue, and the corrresponding requests will be redispatched soon.");
 
                     // lost the responses, the corresponding requests should can be redispatched soon.
                     int index = 0;
@@ -912,8 +927,9 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         }
                         else
                         {
-                            BrokerTracing.TraceError("[AzureQueuePersisit] .PersistResponses: invalide response, the response.AsyncToken is null.");
+                            BrokerTracing.TraceError("[AzureQueuePersist] .PersistResponses: invalid response, the response.AsyncToken is null.");
                         }
+
                         index++;
                     }
                 }
@@ -987,12 +1003,21 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                                 {
                                     if (storedResponseDic.ContainsKey(priorityQueue.FindMin()))
                                     {
-                                        max = priorityQueue.FindMin();
-                                        storedResponseDic.TryRemove(max, out bool temp);
+                                        if (storedResponseDic.TryGetValue(
+                                            this.priorityQueue.FindMin(),
+                                            out bool isStored))
+                                        {
+                                            if (isStored)
+                                            {
+                                                max = priorityQueue.FindMin();
+                                                responseCount++;
+                                            }
+                                        }
+
+                                        this.storedResponseDic.TryRemove(this.priorityQueue.FindMin(), out bool temp);
                                         this.rwlockPriorityQueue.EnterWriteLock();
                                         priorityQueue.DeleteMin();
                                         this.rwlockPriorityQueue.ExitWriteLock();
-                                        responseCount++;
                                     }
                                     else
                                     {
