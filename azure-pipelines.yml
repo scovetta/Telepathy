@@ -81,11 +81,11 @@ stages:
         filePath: '$(System.DefaultWorkingDirectory)\test\CoreLayerSmokeTest.ps1'
       timeoutInMinutes: 5
 
-    - task: PowerShell@2
-      displayName: BrokerLayerSmokeTest
-      inputs:
-        filePath: '$(System.DefaultWorkingDirectory)\test\BrokerLayerSmokeTest.ps1'
-      timeoutInMinutes: 5
+#    - task: PowerShell@2
+#      displayName: BrokerLayerSmokeTest
+#      inputs:
+#        filePath: '$(System.DefaultWorkingDirectory)\test\BrokerLayerSmokeTest.ps1'
+#      timeoutInMinutes: 5
 
     - task: PublishPipelineArtifact@1
       inputs:
