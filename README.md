@@ -4,7 +4,17 @@
 
 Microsoft Telepathy is a SOA runtime framework works in a cloud native way, enables running high-throughput and low-latency calculation workload in Azure. Evolving from the battle-tested SOA Runtime of [Microsoft HPC Pack](https://docs.microsoft.com/en-us/powershell/high-performance-computing/overview?view=hpc16-ps).
 
-## Get Started with Nightly Build
+## Get Started
+
+### Deploy a Cluster with ARM Template
+
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FTelepathy%2Fmaster%2Fdeploy%2Fazuredeploy.release.json" target="_blank">
+    <img src="http://azuredeploy.net/deploybutton.png"/>
+</a>
+
+Check [Deploy a Telepathy Cluster Step by Step](doc/deployment.md) for detailed instruction.
+
+## Try the Nightly Build
 
 ### Deploy a Cluster with ARM Template
 
@@ -54,9 +64,9 @@ See [Migrate From HPC Pack SOA to Microsoft Telepathy](doc/migrate_from_hpc_pack
 
 #### Durable Session
 
-- Message Send Throughput: **1170.66** messages/second
-- Broker Process Throughput: **1079.20** messages/second
-- End to End Throughput: **659.68** messages/second
+- Message Send Throughput: **2998.94** messages/second
+- Broker Process Throughput: **1038.23** messages/second
+- End to End Throughput: **751.61** messages/second
 
 ### Latency
 
@@ -86,8 +96,8 @@ See [Documentation Index](doc/index.md).
 
 - Cross platform support
 - Cross language support
-- Data service intigration
-- IdentityServer intigration
+- Data service integration
+- IdentityServer integration
 
 # Contributing
 
