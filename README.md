@@ -52,17 +52,31 @@ See [Migrate From HPC Pack SOA to Microsoft Telepathy](doc/migrate_from_hpc_pack
 - Broker Process Throughput: **15973.63** messages/second
 - End to End Throughput: **15652.66** messages/second
 
+#### Durable Session
+
+- Message Send Throughput: **1170.66** messages/second
+- Broker Process Throughput: **1079.20** messages/second
+- End to End Throughput: **659.68** messages/second
+
 ### Latency
 
 #### Interactive Session
 
 - Warm Latency: **98.59431** millisecond
 
+#### Durable Session
+
+- Warm Latency: **1434.801444** millisecond
+
 ### CPU Efficiency
 
 #### Interactive Session
 
 - CPU Efficiency: **99.603%** (**398.412%** on 4-core compute nodes)
+
+#### Durable Session
+
+- CPU Efficiency: **92.627%** (**370.663%** on 4-core compute nodes)
 
 ## Documentation
 
