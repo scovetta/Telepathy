@@ -64,8 +64,10 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         throw;
                     }
                 }
-
-
+                else
+                {
+                    throw;
+                }
             }
         }
 
