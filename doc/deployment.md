@@ -18,7 +18,7 @@ Telepathy supports nightly build version deployment and release version deployme
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
-The paramaters `Resource group`, `Telepathy VM Name`, `Telepathy VM Admin User Name` and `Telepathy VM Admin Password` must be filled to start release version deployment. The default release version to be deployed is `latest`, all the release versions can be viewed in [Github](https://github.com/Azure/Telepathy/releases).
+The parameters `Resource group`, `Telepathy VM Name`, `Telepathy VM Admin User Name` and `Telepathy VM Admin Password` must be filled to start release version deployment. The default release version to be deployed is `latest`, all the release versions can be viewed in [Github](https://github.com/Azure/Telepathy/releases).
 
 ![release-version template](telepathy_deployment.media/release-deployment.png)
 
@@ -28,13 +28,13 @@ The paramaters `Resource group`, `Telepathy VM Name`, `Telepathy VM Admin User N
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
-The paramaters `Resource group`, `Telepathy VM Name`, `Telepathy VM Admin User Name`, `Telepathy VM Admin Password` and `Nightly Build Version` must be filled to start the nightly build deployment. All the nightly build versions are available in [Azure DevOps](https://dev.azure.com/bc-telepathy/telepathy/_build)
+The parameters `Resource group`, `Telepathy VM Name`, `Telepathy VM Admin User Name`, `Telepathy VM Admin Password` and `Nightly Build Version` must be filled to start the nightly build deployment. All the nightly build versions are available in [Azure DevOps](https://dev.azure.com/bc-telepathy/telepathy/_build)
 
 ![nightly-build template](telepathy_deployment.media/nightly-deployment.png)
 
 ## Step 2: Deploy resources
 
-Go to the corresponding resource group to view the deployment progress, it will take about 10 mins to finish the cluster deployment and start the Telepathy services.
+Go to the corresponding resource group to view the deployment progress, it will take about 10 minutes to finish the cluster deployment and start the Telepathy services.
 
 ![deploy-result](telepathy_deployment.media/deploy-result.png)
 
@@ -42,7 +42,7 @@ Go to the corresponding resource group to view the deployment progress, it will 
 
 ### Log on the VM
 
-Log on the VM which is created in Telepathy cluster using remote desktop connection. The public IP address can be find in Azure poratl, the username and password are the credentials that are filled in ARM template. 
+Log on the VM which is created in Telepathy cluster using remote desktop connection. The public IP address can be find in Azure portal, the username and password are the credentials that are filled in ARM template. 
 
 ![VM-public IP address](telepathy_deployment.media/VM-publicIP.png)
 
