@@ -1,12 +1,12 @@
 # Microsoft Telepathy 
 
-![Azure DevOps builds (branch)](https://img.shields.io/azure-devops/build/bc-telepathy/32d89ced-58e3-4e1d-835e-b6e22ec7cc80/3/dev) ![GitHub](https://img.shields.io/github/license/Azure/Telepathy) [![GitHub issues](https://img.shields.io/github/issues/Azure/Telepathy)](https://github.com/Azure/Telepathy/issues) ![GitHub last commit](https://img.shields.io/github/last-commit/azure/telepathy)
+![Azure DevOps builds (branch)](https://img.shields.io/azure-devops/build/bc-telepathy/32d89ced-58e3-4e1d-835e-b6e22ec7cc80/3/dev) ![GitHub](https://img.shields.io/github/license/Azure/Telepathy) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/azure/telepathy) ![Nuget](https://img.shields.io/nuget/v/Microsoft.Telepathy.Session)
 
 Microsoft Telepathy is a SOA runtime framework works in a cloud native way, enables running high-throughput and low-latency calculation workload in Azure. Evolving from the battle-tested SOA Runtime of [Microsoft HPC Pack](https://docs.microsoft.com/en-us/powershell/high-performance-computing/overview?view=hpc16-ps).
 
 ## Get Started
 
-### Deploy a Cluster with ARM Template
+### Deploy a Cluster
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FTelepathy%2Fmaster%2Fdeploy%2Fazuredeploy.release.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
@@ -14,17 +14,21 @@ Microsoft Telepathy is a SOA runtime framework works in a cloud native way, enab
 
 Check [Deploy a Telepathy Cluster Step by Step](doc/deployment.md) for detailed instruction.
 
+### SDK NuGet package
+
+Add [Microsoft.Telepathy.Session](https://www.nuget.org/packages/Microsoft.Telepathy.Session/) to your project [using NuGet manager](https://docs.microsoft.com/en-us/nuget/quickstart/install-and-use-a-package-in-visual-studio).
+
 ## Try the Nightly Build
 
-### Deploy a Cluster with ARM Template
+### Deploy a Cluster
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FTelepathy%2Fdev%2Fdeploy%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
-### Reference `Microsoft.Telepathy.Session` SDK NuGet package
+### SDK NuGet package
 
-To use nightly SDK package, add following NuGet source.
+To use `Microsoft.Telepathy.Session` nightly package, add following NuGet source.
 
 - Name: telepathy-sdk-preview
 - Source: https://pkgs.dev.azure.com/bc-telepathy/telepathy/_packaging/telepathy-sdk-preview/nuget/v3/index.json
