@@ -6,14 +6,15 @@
         <title>Microsoft Telepathy Session SDK</title>
         <authors>Microsoft</authors>
         <owners>microsoft,hpcpack</owners>
-        <description>Nuget package for Microsoft Telepathy SDK</description>
-        <releaseNotes> 	
+        <description>Nuget package for Microsoft Telepathy SDK. 
 Microsoft Telepathy is a SOA runtime framework works in a cloud native way.
-Please visit https://github.com/Azure/Telepathy/blob/dev/README.md to read more.</releaseNotes>
+Please visit https://github.com/Azure/Telepathy/ to read more.</description>
+        <releaseNotes></releaseNotes>
         <projectUrl>https://github.com/Azure/Telepathy</projectUrl>
         <license type="expression">MIT</license>
         <copyright>© Microsoft Corporation. All rights reserved.</copyright>
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
+		<tags>hpc;soa;azure;microsoft</tags>
         <dependencies>
             <group targetFramework=".NETFramework4.6">
                 <dependency id="System.ValueTuple" version="4.5.0" />
