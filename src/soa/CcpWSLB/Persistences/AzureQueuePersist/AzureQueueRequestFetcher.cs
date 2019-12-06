@@ -15,6 +15,10 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
     using Microsoft.WindowsAzure.Storage.Queue;
     using System.Collections.Concurrent;
 
+    using Microsoft.Telepathy.Common;
+    using Microsoft.Telepathy.Session.Common;
+    using Microsoft.Telepathy.Session.Internal;
+
     internal class AzureQueueRequestFetcher : AzureQueueMessageFetcher
     {
         private readonly CloudQueue requestQueue;
@@ -77,7 +81,26 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     {
                         tasks.Add(Task.Run(async () =>
                         {
-                            var message = await this.requestQueue.GetMessageAsync();
+                            RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
+                            var message = await RetryHelper<CloudQueueMessage>.InvokeOperationAsync(
+                                async () => await this.requestQueue.GetMessageAsync(),
+                                async (e, r) =>
+                                    {
+                                        await Task.FromResult(
+                                            new Func<object>(
+                                                () =>
+                                                    {
+                                                        BrokerTracing.TraceEvent(
+                                                            System.Diagnostics.TraceEventType.Error,
+                                                            0,
+                                                            "[AzureQueueRequestFetcher] .DequeueMessageAsync: Exception thrown while get message from queue: {0} with retry: {1}",
+                                                            e,
+                                                            r.RetryCount);
+                                                        return null;
+                                                    }).Invoke());
+                                    },
+                                retry);
+
                             if (message != null)
                             {
                                 await this.DeserializeMessage(message);
@@ -166,7 +189,30 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             else
             {
                 var copyMessage = new CloudQueueMessage(message.AsBytes);
-                await this.pendingQueue.AddMessageAsync(copyMessage);
+                RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
+                await RetryHelper<object>.InvokeOperationAsync(
+                    async () =>
+                        {
+                            await this.pendingQueue.AddMessageAsync(copyMessage);
+                            return null;
+                        },
+                    async (e, r) =>
+                        {
+                            await Task.FromResult(
+                                new Func<object>(
+                                    () =>
+                                        {
+                                            BrokerTracing.TraceEvent(
+                                                System.Diagnostics.TraceEventType.Error,
+                                                0,
+                                                "[AzureQueueRequestFetcher] .DeserializeMessage: Exception thrown while add message into pending queue: {0} with retry: {1}",
+                                                e,
+                                                r.RetryCount);
+                                            return null;
+                                        }).Invoke());
+                        },
+                    retry);
+                
                 try
                 {
                     await this.requestQueue.DeleteMessageAsync(message);

@@ -24,7 +24,9 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
     using Microsoft.WindowsAzure.Storage.Queue;
     using Microsoft.WindowsAzure.Storage.Table;
     using System.Collections.Concurrent;
-    
+
+    using Microsoft.Telepathy.Common;
+
     public class AzureQueuePersist : ISessionPersist
     {
         /// <summary>the prefix for EOM flag label</summary>
@@ -731,26 +733,48 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     // check if the request size > 64KB, if yes try to persist it into several partial messages
                     CloudQueueMessage sendMsg;
                     var bytes = AzureStorageTool.PrepareMessage(request);
+                    
                     try
                     {
-                        exception = null;
-                        if (bytes.Length > Constant.AzureQueueMsgChunkSize)
-                        {
-                            sendMsg = new CloudQueueMessage(
-                                await AzureStorageTool.CreateBlobFromBytes(this.blobContainer, bytes));
-                        }
-                        else
-                        {
-                            sendMsg = new CloudQueueMessage(bytes);
-                        }
+                        RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
+                        await RetryHelper<object>.InvokeOperationAsync(
+                            async () =>
+                                {
+                                    if (bytes.Length > Constant.AzureQueueMsgChunkSize)
+                                    {
+                                        sendMsg = new CloudQueueMessage(
+                                            await AzureStorageTool.CreateBlobFromBytes(this.blobContainer, bytes));
+                                    }
+                                    else
+                                    {
+                                        sendMsg = new CloudQueueMessage(bytes);
+                                    }
 
-                        await this.requestQueueField.AddMessageAsync(sendMsg);
+                                    await this.requestQueueField.AddMessageAsync(sendMsg);
 
-                        requestsCount++;
+                                    requestsCount++;
 
-                        BrokerTracing.TraceVerbose(
-                            "[AzureQueuePersist] .PersistRequestsThreadProc: send message(s) for persist id {0}.",
-                            request.PersistId);
+                                    BrokerTracing.TraceVerbose(
+                                        "[AzureQueuePersist] .PersistRequests: send message(s) for persist id {0}.",
+                                        request.PersistId);
+                                    return null;
+                                },
+                            async (e, r) =>
+                                {
+                                    await Task.FromResult<object>(
+                                        new Func<object>(
+                                            () =>
+                                                {
+                                                    BrokerTracing.TraceEvent(
+                                                        System.Diagnostics.TraceEventType.Error,
+                                                        0,
+                                                        "[AzureQueuePersist] .PersistRequests: Exception thrown while add message in queue: {0} with retry: {1}",
+                                                        e,
+                                                        r.RetryCount);
+                                                    return null;
+                                                }).Invoke());
+                                },
+                            retry);
                     }
                     catch (Exception e)
                     {
@@ -761,7 +785,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         }
 
                         BrokerTracing.TraceError(
-                            "[AzureQueuePersist] .PersistRequestsThreadProc: persist request raised exception, {0}",
+                            "[AzureQueuePersist] .PersistRequests: persist request raised exception, {0}",
                             e);
                         exception = e;
 
@@ -860,41 +884,51 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         requestToken,
                         AzureStorageTool.PrepareMessage(response));
 
-                    int retry = 3;
 
-                    while (retry > 0)
+                    try
                     {
-                        try
-                        {
-                            if (sendMsg.Message.Length > Constant.AzureQueueMsgChunkSize)
-                            {
-                                sendMsg.Message = AzureStorageTool
-                                    .CreateBlobFromBytes(this.blobContainer, sendMsg.Message).GetAwaiter().GetResult();
-                            }
+                        RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
+                        RetryHelper<object>.InvokeOperationAsync(
+                           async () =>
+                           {
+                               if (sendMsg.Message.Length > Constant.AzureQueueMsgChunkSize)
+                               {
+                                   sendMsg.Message = await AzureStorageTool
+                                       .CreateBlobFromBytes(this.blobContainer, sendMsg.Message);
+                               }
 
-                            AzureStorageTool.AddMsgToTable(this.responseTableField, sendMsg).GetAwaiter().GetResult();
-                            exception = null;
-                            break;
-                        }
-                        catch (Exception e)
-                        {
-                            if (this.isDisposedField)
-                            {
-                                // if the queue is closed, then quit the method.
-                                return;
-                            }
-
-                            BrokerTracing.TraceWarning(
-                                "[AzureQueuePersist] .PersistResponses: Operate error with azure storage, retry = {0}, Exception: {1}",
-                                retry,
-                                e);
-                            exception = e;
-                            retry--;
-                        }
+                               await AzureStorageTool.AddMsgToTable(this.responseTableField, sendMsg);
+                               return null;
+                           },
+                           async (e, r) =>
+                           {
+                               await Task.FromResult<object>(
+                                   new Func<object>(
+                                       () =>
+                                       {
+                                           BrokerTracing.TraceEvent(
+                                                   System.Diagnostics.TraceEventType.Error,
+                                                   0,
+                                                   "[AzureQueuePersist] .PersistResponses: Exception thrown while add entity in table: {0} with retry: {1}",
+                                                   e,
+                                                   r.RetryCount);
+                                           return null;
+                                       }).Invoke());
+                           },
+                           retry).GetAwaiter().GetResult();
                     }
-
-                    if (exception != null)
+                    catch (Exception e)
                     {
+                        if (this.isDisposedField)
+                        {
+                            // if the queue is closed, then quit the method.
+                            return;
+                        }
+
+                        BrokerTracing.TraceWarning(
+                            "[AzureQueuePersist] .PersistResponses: Operate error with azure storage, Exception: {0}",
+                            e);
+                        exception = e;
                         storedResponseDic.AddOrUpdate(index, false, (k, v) => false);
                         this.uniqueResponseDic.AddOrUpdate(requestToken, false, (k, v) => false);
                         Task.Run(() => ReleaseTask());
