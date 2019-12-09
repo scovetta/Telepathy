@@ -758,21 +758,16 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                                         "[AzureQueuePersist] .PersistRequests: send message(s) for persist id {0}.",
                                         request.PersistId);
                                     return null;
-                                },
-                            async (e, r) =>
+                                }, 
+                            (e, r) =>
                                 {
-                                    await Task.FromResult<object>(
-                                        new Func<object>(
-                                            () =>
-                                                {
-                                                    BrokerTracing.TraceEvent(
+                                    BrokerTracing.TraceEvent(
                                                         System.Diagnostics.TraceEventType.Error,
                                                         0,
                                                         "[AzureQueuePersist] .PersistRequests: Exception thrown while add message in queue: {0} with retry: {1}",
                                                         e,
                                                         r.RetryCount);
-                                                    return null;
-                                                }).Invoke());
+                                    return Task.CompletedTask;
                                 },
                             retry);
                     }
@@ -900,20 +895,15 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                                await AzureStorageTool.AddMsgToTable(this.responseTableField, sendMsg);
                                return null;
                            },
-                           async (e, r) =>
+                           (e, r) =>
                            {
-                               await Task.FromResult<object>(
-                                   new Func<object>(
-                                       () =>
-                                       {
-                                           BrokerTracing.TraceEvent(
+                               BrokerTracing.TraceEvent(
                                                    System.Diagnostics.TraceEventType.Error,
                                                    0,
                                                    "[AzureQueuePersist] .PersistResponses: Exception thrown while add entity in table: {0} with retry: {1}",
                                                    e,
                                                    r.RetryCount);
-                                           return null;
-                                       }).Invoke());
+                               return Task.CompletedTask;
                            },
                            retry).GetAwaiter().GetResult();
                     }
