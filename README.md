@@ -1,6 +1,6 @@
 # Microsoft Telepathy 
 
-![Azure DevOps builds (branch)](https://img.shields.io/azure-devops/build/bc-telepathy/32d89ced-58e3-4e1d-835e-b6e22ec7cc80/3/dev) ![GitHub](https://img.shields.io/github/license/Azure/Telepathy) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/azure/telepathy) ![Nuget](https://img.shields.io/nuget/v/Microsoft.Telepathy.Session)
+[![Azure DevOps builds (branch)](https://img.shields.io/azure-devops/build/bc-telepathy/32d89ced-58e3-4e1d-835e-b6e22ec7cc80/3/dev)](https://dev.azure.com/bc-telepathy/telepathy/_build?definitionId=3) [![GitHub](https://img.shields.io/github/license/Azure/Telepathy)](https://github.com/Azure/Telepathy/blob/dev/LICENSE) [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/azure/telepathy)](https://github.com/Azure/Telepathy/releases) [![Nuget](https://img.shields.io/nuget/v/Microsoft.Telepathy.Session)](https://www.nuget.org/packages/Microsoft.Telepathy.Session/)
 
 Microsoft Telepathy is a SOA runtime framework works in a cloud native way, enables running high-throughput and low-latency calculation workload in Azure. Evolving from the battle-tested SOA Runtime of [Microsoft HPC Pack](https://docs.microsoft.com/en-us/powershell/high-performance-computing/overview?view=hpc16-ps).
 
