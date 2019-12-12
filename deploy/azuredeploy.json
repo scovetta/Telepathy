@@ -13,14 +13,32 @@
         "Premium_LRS"
       ]
     },
-    "batchAccountsName": {
+    "newOrExistingBatchAccount": {
+      "type": "string",
+      "defaultValue": "new",
+      "allowedValues": [
+        "new",
+        "existing"
+      ],
+      "metadata": {
+        "description": "New or using existing Batch Account"
+      }
+    },
+    "batchAccountResourceGroup": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]",
+      "metadata": {
+        "description": "Batch Resource Group"
+      }
+    },
+    "batchAccountName": {
       "type": "string",
       "defaultValue": "[concat(toLower(uniqueString(resourceGroup().id)), 'batch')]",
       "metadata": {
         "description": "Batch Account Name"
       }
     },
-    "batchAccountsPoolName": {
+    "batchAccountPoolName": {
       "type": "string",
       "defaultValue": "[concat(toLower(uniqueString(resourceGroup().id)), 'batchpool')]",
       "metadata": {
@@ -113,9 +131,10 @@
   },
   "resources": [
     {
+      "condition": "[equals(parameters('newOrExistingBatchAccount'), 'new')]",
       "type": "Microsoft.Batch/batchAccounts",
       "apiVersion": "2019-08-01",
-      "name": "[parameters('batchAccountsName')]",
+      "name": "[parameters('batchAccountName')]",
       "location": "[resourceGroup().location]",
       "properties": {
         "poolAllocationMode": "BatchService"
@@ -124,9 +143,9 @@
     {
       "type": "Microsoft.Batch/batchAccounts/pools",
       "apiVersion": "2019-08-01",
-      "name": "[concat(parameters('batchAccountsName'), '/', parameters('batchAccountsPoolName'))]",
+      "name": "[concat(parameters('batchAccountName'), '/', parameters('batchAccountPoolName'))]",
       "dependsOn": [
-        "[resourceId('Microsoft.Batch/batchAccounts', parameters('batchAccountsName'))]"
+        "[resourceId(parameters('batchAccountResourceGroup'),'Microsoft.Batch/batchAccounts', parameters('batchAccountName'))]"
       ],
       "properties": {
         "vmSize": "[parameters('batchPoolVMSize')]",
@@ -262,7 +281,13 @@
     },
     "batchAccountKey": {
       "type": "string",
-      "value": "[listKeys(resourceId('Microsoft.Batch/batchAccounts', parameters('batchAccountsName')), '2017-09-01').primary]"
+      "condition": "[equals(parameters('newOrExistingBatchAccount'), 'new')]",
+      "value": "[listKeys(resourceId('Microsoft.Batch/batchAccounts', parameters('batchAccountName')), '2017-09-01').primary]"
+    },
+    "batchServiceUrl": {
+      "type": "string",
+      "condition": "[equals(parameters('newOrExistingBatchAccount'), 'new')]",
+      "value": "[concat('https://', reference(concat('Microsoft.Batch/batchAccounts/', variables('batchAccountName'))).accountEndpoint)]"
     },
     "networkInterfaceId": {
       "type": "string",

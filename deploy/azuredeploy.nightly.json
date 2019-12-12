@@ -45,14 +45,14 @@
                 "2016-Datacenter-Server-Core"
             ]
         },
-        "batchAccountsName": {
+        "batchAccountName": {
             "type": "string",
             "defaultValue": "[concat(toLower(uniqueString(resourceGroup().id)), 'batch')]",
             "metadata": {
                 "description": "Batch Account Name"
             }
         },
-        "batchAccountsPoolName": {
+        "batchAccountPoolName": {
             "type": "string",
             "defaultValue": "[concat(toLower(uniqueString(resourceGroup().id)), 'batchpool')]",
             "metadata": {
@@ -166,7 +166,7 @@
         "customScriptLocation": "[concat('https://raw.githubusercontent.com/Azure/Telepathy/', parameters('telepathyBranch'), '/deploy/StartTelepathyShim.ps1')]",
         "doubleQuotation": "\"",
         "caret": "^",
-        "scriptParameters": "[concat('EnableTelepathyStorage=$true;','StartTelepathyService=$true;', 'Location=', resourceGroup().location, ';BatchAccountName=', parameters('batchAccountsName'),';BatchPoolName=', parameters('batchAccountsPoolName'), ';ArtifactsFolderName=', parameters('nightlyBuildVersion'), ';ContainerName=', parameters('nightlyBuildStorageContainerName'), ';SrcStorageAccountName=', parameters('nightlyBuildStorageName'))]"
+        "scriptParameters": "[concat('EnableTelepathyStorage=$true;','StartTelepathyService=$true;', ';BatchAccountName=', parameters('batchAccountName'), ';BatchPoolName=', parameters('batchAccountPoolName'), ';ArtifactsFolderName=', parameters('nightlyBuildVersion'), ';ContainerName=', parameters('nightlyBuildStorageContainerName'), ';SrcStorageAccountName=', parameters('nightlyBuildStorageName'))]"
     },
     "resources": [
         {
@@ -182,11 +182,14 @@
                     "telepathyStorageType": {
                         "value": "[parameters('telepathyStorageType')]"
                     },
-                    "batchAccountsName": {
-                        "value": "[parameters('batchAccountsName')]"
+                    "newOrExistingBatchAccount": {
+                        "value": "new"
                     },
-                    "batchAccountsPoolName": {
-                        "value": "[parameters('batchAccountsPoolName')]"
+                    "batchAccountName": {
+                        "value": "[parameters('batchAccountName')]"
+                    },
+                    "batchAccountPoolName": {
+                        "value": "[parameters('batchAccountPoolName')]"
                     },
                     "batchPoolVMSize": {
                         "value": "[parameters('batchPoolVMSize')]"
@@ -297,7 +300,7 @@
                             "fileUris": [
                                 "[variables('customScriptLocation')]"
                             ],
-                            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -Command ', variables('caret'), variables('doubleQuotation'),'.\\StartTelepathyShim.ps1 ', base64(concat(variables('scriptParameters'),';SrcStorageContainerSasToken=', parameters('nightlyBuildStorageSasToken'), ';DesStorageAccountName=', reference('basicResourceTemplate').outputs.storageName.value, ';DesStorageAccountKey=', reference('basicResourceTemplate').outputs.storageAccountKey.value,';BatchAccountKey=',reference('basicResourceTemplate').outputs.batchAccountKey.value, ';EnableLogAnalytics=', parameters('AzureLogAnalytics'),';WorkspaceId=', reference('basicResourceTemplate').outputs.logWorkspaceId.value,';AuthenticationID=', reference('basicResourceTemplate').outputs.logWorksapceKey.value)), variables('caret'), variables('doubleQuotation'))]"
+                            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -Command ', variables('caret'), variables('doubleQuotation'),'.\\StartTelepathyShim.ps1 ', base64(concat(variables('scriptParameters'),';SrcStorageContainerSasToken=', parameters('nightlyBuildStorageSasToken'), ';DesStorageAccountName=', reference('basicResourceTemplate').outputs.storageName.value, ';DesStorageAccountKey=', reference('basicResourceTemplate').outputs.storageAccountKey.value,';BatchAccountKey=',reference('basicResourceTemplate').outputs.batchAccountKey.value, ';BatchServiceUrl=', reference('basicResourceTemplate').outputs.batchServiceUrl.value, ';EnableLogAnalytics=', parameters('AzureLogAnalytics'),';WorkspaceId=', reference('basicResourceTemplate').outputs.logWorkspaceId.value,';AuthenticationID=', reference('basicResourceTemplate').outputs.logWorksapceKey.value)), variables('caret'), variables('doubleQuotation'))]"
                         }
                     }
                 }

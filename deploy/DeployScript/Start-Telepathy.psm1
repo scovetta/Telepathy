@@ -2,7 +2,6 @@ function Start-Telepathy {
     param (
         [switch]$EnableTelepathyStorage,
         [switch]$StartTelepathyService,
-        [string]$Location,
         [string]$BatchAccountName,
         [string]$BatchPoolName,
         [string]$ArtifactsFolderName,
@@ -12,6 +11,7 @@ function Start-Telepathy {
         [string]$SrcStorageContainerSasToken,
         [string]$DesStorageAccountKey,
         [string]$BatchAccountKey,
+        [string]$BatchServiceUrl,
         [string]$EnableLogAnalytics,
         [string]$WorkspaceId,
         [string]$AuthenticationId
@@ -23,9 +23,8 @@ function Start-Telepathy {
     Write-Log -Message "Set log source name as StartTelepathy"
     Set-LogSource -SourceName "StartTelepathy"
     
-    Write-Log -Message "Get desStorageConnectionString & batchServiceUrl"
+    Write-Log -Message "Get desStorageConnectionString"
     $desStorageConnectionString = "DefaultEndpointsProtocol=https;AccountName=$DesStorageAccountName;AccountKey=$DesStorageAccountKey;EndpointSuffix=core.windows.net"
-    $batchServiceUrl = "https://$BatchAccountName.$Location.batch.azure.com"
     
     Write-Log -Message "Artifacts path: $artifactsPath"
     
@@ -42,7 +41,7 @@ function Start-Telepathy {
             BatchAccountName           = $BatchAccountName
             BatchPoolName              = $BatchPoolName
             BatchAccountKey            = $BatchAccountKey
-            BatchAccountServiceUrl     = $batchServiceUrl
+            BatchAccountServiceUrl     = $BatchServiceUrl
         }
         if ($EnableLogAnalytics -eq "enable") {
             Write-Log -Message "Enable Azure Log Analytics"
