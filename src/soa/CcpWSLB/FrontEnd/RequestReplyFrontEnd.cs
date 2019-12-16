@@ -365,7 +365,7 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
             TryRemoveSecurityHeaderForHttps(request.RequestMessage);
 
             // Send request to the broker client
-            client.RequestReceived(requestContext, request.RequestMessage, null);
+            client.RequestReceived(requestContext, request.RequestMessage, null).GetAwaiter().GetResult();
         }
 
         /// <summary>

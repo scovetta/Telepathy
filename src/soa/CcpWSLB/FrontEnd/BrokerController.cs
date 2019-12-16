@@ -364,7 +364,7 @@ namespace Microsoft.Telepathy.ServiceBroker.FrontEnd
                 ParamCheckUtility.ThrowIfNotMatchRegex(ParamCheckUtility.ClientIdValid, clientId, "clientId", SR.InvalidClientId);
 
                 this.observer.IncomingRequest();
-                this.GetClient(clientId).RequestReceived(DummyRequestContext.GetInstance(MessageVersion.Default), message, null);
+                this.GetClient(clientId).RequestReceived(DummyRequestContext.GetInstance(MessageVersion.Default), message, null).GetAwaiter().GetResult();
             }
             catch (Exception e)
             {
