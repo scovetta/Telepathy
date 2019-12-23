@@ -87,7 +87,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
             FaultException<RetryOperationError> faultException = new FaultException<RetryOperationError>(retryError, faultReason, Constant.RetryLimitExceedFaultCode, RetryOperationError.Action);
 
             data.Exception = faultException;
-            this.responseQueueAdapter.PutResponseBack(data);
+            this.responseQueueAdapter.PutResponseBack(data).GetAwaiter().GetResult();
         }
     }
 }

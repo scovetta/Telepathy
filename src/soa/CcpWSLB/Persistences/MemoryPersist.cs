@@ -241,7 +241,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences
         /// <param name="responses">A list of response objects</param>
         /// <param name="putResponseCallback">the callback function that will be called once the async operation finish or exception raise.</param>
         /// <param name="callbackState">the state object for the callback.</param>
-        public void PutResponsesAsync(IEnumerable<BrokerQueueItem> responses, PutResponseCallback putResponseCallback, object callbackState)
+        public async Task PutResponsesAsync(IEnumerable<BrokerQueueItem> responses, PutResponseCallback putResponseCallback, object callbackState)
         {
             int responseCount = 0;
             int faultResponseCount = 0;
@@ -275,7 +275,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences
         /// <param name="response">the response item to be persisted</param>
         /// <param name="putResponseCallback">the callback function that will be called once the async operation finish or exception raise.</param>
         /// <param name="callbackState">the state object for the callback.</param>
-        public void PutResponseAsync(BrokerQueueItem response, PutResponseCallback putResponseCallback, object callbackState)
+        public async Task PutResponseAsync(BrokerQueueItem response, PutResponseCallback putResponseCallback, object callbackState)
         {
             bool isFaultResponse = response.Message.IsFault;
             lock (this.lockResponseQueueField)

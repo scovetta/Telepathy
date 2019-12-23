@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ServiceModel.Channels;
     using System.Threading;
+    using System.Threading.Tasks;
 
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
 
@@ -23,7 +24,7 @@
             get { return this.messageDic; }
         }
 
-        public void PutResponseAsync(Message responseMsg, BrokerQueueItem requestItem)
+        public async Task PutResponseAsync(Message responseMsg, BrokerQueueItem requestItem)
         {
             Interlocked.Increment(ref this.putResponseAsyncInvokedTimes);
             this.messageDic.AddOrUpdate(

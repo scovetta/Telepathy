@@ -189,7 +189,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
         /// </summary>
         /// <param name="responseMsg">the response message</param>
         /// <param name="requestItem">corresponding request item</param>
-        public abstract void PutResponseAsync(Message responseMsg, BrokerQueueItem requestItem);
+        public abstract Task PutResponseAsync(Message responseMsg, BrokerQueueItem requestItem);
 
         /// <summary>
         /// register a response call back to get the response message.

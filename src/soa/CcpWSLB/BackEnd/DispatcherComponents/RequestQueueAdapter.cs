@@ -49,7 +49,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
 
             BrokerTracing.EtwTrace.LogBackendRequestPutBack(data.SessionId, data.TaskId, data.MessageId);
             this.observer.RequestProcessingCompleted();
-            this.queueFactory.PutResponseAsync(null, data.BrokerQueueItem);
+            this.queueFactory.PutResponseAsync(null, data.BrokerQueueItem).GetAwaiter().GetResult();
 
             // Set to null since we returned it back to queue
             data.BrokerQueueItem = null;

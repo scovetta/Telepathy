@@ -4,6 +4,7 @@
 namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
 {
     using System.ServiceModel.Channels;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Provides an interface defining opeartions of BrokerQueueFactory
@@ -16,6 +17,6 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
         /// </summary>
         /// <param name="responseMsg">the response message</param>
         /// <param name="requestItem">corresponding request item</param>
-        void PutResponseAsync(Message responseMsg, BrokerQueueItem requestItem);
+        Task PutResponseAsync(Message responseMsg, BrokerQueueItem requestItem);
     }
 }

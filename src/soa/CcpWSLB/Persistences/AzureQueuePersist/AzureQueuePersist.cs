@@ -539,17 +539,17 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             await this.PersistRequests(putRequestState);
         }
 
-        public void PutResponseAsync(
+        public async Task PutResponseAsync(
             BrokerQueueItem response,
             PutResponseCallback putResponseCallback,
             object callbackState)
         {
             var responses = new BrokerQueueItem[1];
             responses[0] = response;
-            this.PutResponsesAsync(responses, putResponseCallback, callbackState);
+            await this.PutResponsesAsync(responses, putResponseCallback, callbackState);
         }
 
-        public void PutResponsesAsync(
+        public async Task PutResponsesAsync(
             IEnumerable<BrokerQueueItem> responses,
             PutResponseCallback putResponseCallback,
             object callbackState)
@@ -566,7 +566,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 (int)callbackState);
             var putResponseState = new PutResponseState(responses, putResponseCallback, callbackState);
 
-            this.PersistResponses(putResponseState);
+            await this.PersistResponses(putResponseState);
         }
 
         public void ResetResponsesCallback()
@@ -815,7 +815,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 "[AzureQueuePersist] .PersistRequests: persist requests end.");
         }
 
-        private void PersistResponses(object state)
+        private async Task PersistResponses(object state)
         {
             PutResponseState putResponseState = (PutResponseState)state;
             ParamCheckUtility.ThrowIfNull(putResponseState, "putResponseState");
@@ -883,7 +883,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     try
                     {
                         RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
-                        RetryHelper<object>.InvokeOperationAsync(
+                        await RetryHelper<object>.InvokeOperationAsync(
                            async () =>
                            {
                                if (sendMsg.Message.Length > Constant.AzureQueueMsgChunkSize)
@@ -905,7 +905,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                                                    r.RetryCount);
                                return Task.CompletedTask;
                            },
-                           retry).GetAwaiter().GetResult();
+                           retry);
                     }
                     catch (Exception e)
                     {
@@ -921,7 +921,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         exception = e;
                         storedResponseDic.AddOrUpdate(index, false, (k, v) => false);
                         this.uniqueResponseDic.AddOrUpdate(requestToken, false, (k, v) => false);
-                        Task.Run(() => ReleaseTask());
+                        await Task.Run(() => ReleaseTask());
                         break;
                     }
 
@@ -929,7 +929,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     responseCount++;
                     storedResponseDic.AddOrUpdate(index, true, (k, v) => true);
                     this.uniqueResponseDic.AddOrUpdate(requestToken, true, (k, v) => true);
-                    Task.Run(() => ReleaseTask());
+                    await Task.Run(() => this.ReleaseTask());
                 }
                 
                 // persisting succeed
@@ -974,12 +974,11 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 {
                     try
                     {
-                        AzureStorageTool.UpdateInfo(
+                        await AzureStorageTool.UpdateInfo(
                                 this.storageConnectString,
                                 this.sessionIdField,
                                 this.responseTableField.Name,
-                                (Interlocked.Read(ref this.failedRequestsCountField) + faultResponsesCount).ToString())
-                            .GetAwaiter().GetResult();
+                                (Interlocked.Read(ref this.failedRequestsCountField) + faultResponsesCount).ToString());
                         Interlocked.Add(ref this.failedRequestsCountField, faultResponsesCount);
                     }
                     catch (Exception e)

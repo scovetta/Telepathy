@@ -110,7 +110,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
         /// <param name="responeses">A list of response objects</param>
         /// <param name="putResponseCallback">the callback function that will be called once the async operation finish or exception raise.</param>
         /// <param name="callbackState">the state object for the callback.</param>
-        void PutResponsesAsync(IEnumerable<BrokerQueueItem> responses, PutResponseCallback putResponseCallback, object callbackState);
+        Task PutResponsesAsync(IEnumerable<BrokerQueueItem> responses, PutResponseCallback putResponseCallback, object callbackState);
 
         /// <summary>
         /// Put on response item into persistence
@@ -118,7 +118,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
         /// <param name="response">the response item to be persisted</param>
         /// <param name="putResponseCallback">the callback function that will be called once the async operation finish or exception raise.</param>
         /// <param name="callbackState">the state object for the callback.</param>
-        void PutResponseAsync(BrokerQueueItem response, PutResponseCallback putResponseCallback, object callbackState);
+        Task PutResponseAsync(BrokerQueueItem response, PutResponseCallback putResponseCallback, object callbackState);
 
         /// <summary>
         /// get a response message from the storage.

@@ -513,7 +513,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
         /// </summary>
         /// <param name="responseMsg">the response message</param>
         /// <param name="requestItem">corresponding request item</param>
-        public override void PutResponseAsync(Message responseMsg, BrokerQueueItem requestItem)
+        public override async Task PutResponseAsync(Message responseMsg, BrokerQueueItem requestItem)
         {
             ParamCheckUtility.ThrowIfNull(requestItem, "persistAsyncToken");
             if (this.isDisposedField)
@@ -552,7 +552,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
             if (this.thresholdForResponsesPersistField <= 1)
             {
                 Interlocked.Increment(ref this.allResponsesCountField);
-                this.PersistResponse(response);
+                await this.PersistResponse(response);
                 return;
             }
 
@@ -614,7 +614,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
                     this.thresholdForResponsesPersistField,
                     responses.Count);
 
-                this.PersistResponses(responses);
+                await this.PersistResponses(responses);
             }
 
             return;
@@ -1005,7 +1005,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
             if (responses != null)
             {
                 BrokerTracing.TraceEvent(System.Diagnostics.TraceEventType.Verbose, 0, "[BrokerPersistQueue] .PersistResponsesTimerCallback: clientId={0}, persist responses. Responses count:{1}", this.clientIdField, responses.Count);
-                this.PersistResponses(responses);
+                this.PersistResponses(responses).GetAwaiter().GetResult();
             }
         }
 
@@ -1040,25 +1040,25 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
         /// persist the responses to the persistence in batch.
         /// </summary>
         /// <param name="responses">the responses</param>
-        private void PersistResponses(List<BrokerQueueItem> responses)
+        private async Task PersistResponses(List<BrokerQueueItem> responses)
         {
             if (responses == null || responses.Count == 0)
             {
                 return;
             }
 
-            this.sessionPersistField.PutResponsesAsync(responses, this.FinishPersistResponsesCallback, responses.Count);
+            await this.sessionPersistField.PutResponsesAsync(responses, this.FinishPersistResponsesCallback, responses.Count);
         }
 
         /// <summary>
         /// put one response into the persistence
         /// </summary>
         /// <param name="response">the response to be persisted</param>
-        private void PersistResponse(BrokerQueueItem response)
+        private async Task PersistResponse(BrokerQueueItem response)
         {
             System.Diagnostics.Debug.Assert(response != null, "response item cannot be null");
 
-            this.sessionPersistField.PutResponseAsync(response, this.FinishPersistResponsesCallback, 1);
+            await this.sessionPersistField.PutResponseAsync(response, this.FinishPersistResponsesCallback, 1);
         }
 
         /// <summary>

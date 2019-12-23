@@ -104,7 +104,7 @@ namespace Microsoft.Telepathy.ServiceBroker.UnitTest
                 null,
                 Message.CreateMessage(MessageVersion.Soap12WSAddressing10, action, largeMsg),
                 null);
-            this.sessionPersist.PutResponseAsync(response, null, 0);
+            await this.sessionPersist.PutResponseAsync(response, null, 0);
             await Task.Delay(millisecondsDelay);
             this.sessionPersist.GetResponseAsync(this.GetLargeMessageTestCallback, 1);
             while (!this.CallbackIsCalled)
@@ -147,7 +147,7 @@ namespace Microsoft.Telepathy.ServiceBroker.UnitTest
                 null,
                 Message.CreateMessage(MessageVersion.Soap12WSAddressing10, action, shortMsg),
                 null);
-            this.sessionPersist.PutResponseAsync(response, null, 0);
+            await this.sessionPersist.PutResponseAsync(response, null, 0);
             await Task.Delay(millisecondsDelay);
             this.sessionPersist.GetResponseAsync(this.GetMessageTestCallback, 1);
             while (!this.CallbackIsCalled)

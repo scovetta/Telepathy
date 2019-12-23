@@ -8,6 +8,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
     using System.Diagnostics.Contracts;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
+    using System.Threading.Tasks;
 
     using Microsoft.Telepathy.ServiceBroker.BrokerQueue;
     using Microsoft.Telepathy.ServiceBroker.Common;
@@ -57,7 +58,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
         /// Put response back into broker queue
         /// </summary>
         /// <param name="data">indicating the instance of dispatch data</param>
-        public void PutResponseBack(DispatchData data)
+        public async Task PutResponseBack(DispatchData data)
         {
             Contract.Requires(data.BrokerQueueItem != null);
 
@@ -122,7 +123,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents
                     Debug.Fail("Both ReplyMessage and Exception are null. This shouldn't happen.");
                 }
 
-                this.queueFactory.PutResponseAsync(reply, item);
+                await this.queueFactory.PutResponseAsync(reply, item);
             }
             else
             {

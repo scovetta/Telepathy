@@ -163,7 +163,7 @@ namespace Microsoft.Telepathy.ServiceBroker.UnitTest.Mock
             this.callbackQueue.Enqueue(new KeyValuePair<BrokerQueueCallback, object>(requestCallback, state));
         }
 
-        public override void PutResponseAsync(Message responseMsg, BrokerQueueItem requestItem)
+        public override async Task PutResponseAsync(Message responseMsg, BrokerQueueItem requestItem)
         {
             this.replyMessageQueue.Enqueue(responseMsg);
 

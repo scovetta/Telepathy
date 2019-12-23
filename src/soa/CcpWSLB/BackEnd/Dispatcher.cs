@@ -902,7 +902,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BackEnd
                     }
                 }
 
-                this.responseQueueAdapter.PutResponseBack(new DispatchData(this.SharedData.BrokerInfo.SessionId, clientIndex, this.TaskId)
+                await this.responseQueueAdapter.PutResponseBack(new DispatchData(this.SharedData.BrokerInfo.SessionId, clientIndex, this.TaskId)
                 {
                     BrokerQueueItem = item,
                     MessageId = messageId,

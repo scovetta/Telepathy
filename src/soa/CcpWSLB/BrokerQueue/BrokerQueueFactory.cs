@@ -139,9 +139,9 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
         /// for testability. All callers of this method should have an instance of IBrokerQueueFactory
         /// instead of any special implementation.
         /// </remarks>
-        void IBrokerQueueFactory.PutResponseAsync(Message responseMsg, BrokerQueueItem requestItem)
+        async Task IBrokerQueueFactory.PutResponseAsync(Message responseMsg, BrokerQueueItem requestItem)
         {
-            this.Dispatcher.PutResponseAsync(responseMsg, requestItem);
+            await this.Dispatcher.PutResponseAsync(responseMsg, requestItem);
         }
 
         /// <summary>
