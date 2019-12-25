@@ -14,6 +14,8 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
     using Microsoft.WindowsAzure.Storage.Blob;
     using Microsoft.WindowsAzure.Storage.Table;
 
+    using Nito.AsyncEx;
+
     internal class AzureQueueResponseFetcher : AzureQueueMessageFetcher
     {
         private readonly CloudTable responseTable;
@@ -72,14 +74,16 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 
             while (true)
             {
-                Exception exception = null;
                 if (this.pendingFetchCount < 1)
                 {
                     break;
                 }
 
+                List<Task> tasks = new List<Task>();
+
                 while (this.pendingFetchCount > 0)
                 {
+                    Exception exception = null;
                     byte[] messageBody = null;
                     try
                     {
@@ -120,44 +124,59 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 
                     if (messageBody == null && exception == null)
                     {
-                        BrokerTracing.TraceWarning("[AzureQueueResponseFetch] .PeekMessage: null message and exception, lastIndex = {0}, ack = {1}, Count = {2}, index = {3}.",
+                        BrokerTracing.TraceWarning("[AzureQueueResponseFetch] .PeekMessageAsync: null message and exception, lastIndex = {0}, ack = {1}, Count = {2}, index = {3}.",
                             this.lastIndex, this.ackIndex, responseList.Count, index);
                     }
                     else
                     {
-                        BrokerQueueItem brokerQueueItem = null;
-
-                        if (messageBody != null && messageBody.Length > 0)
-                        {
-                            // Deserialize message to BrokerQueueItem
-                            try
-                            {
-                                brokerQueueItem = (BrokerQueueItem)this.formatter.Deserialize(
-                                    await AzureStorageTool.GetMsgBody(this.blobContainer, messageBody));
-                                brokerQueueItem.PersistAsyncToken.AsyncToken =
-                                    brokerQueueItem.Message.Headers.RelatesTo.ToString();
-                                BrokerTracing.TraceVerbose(
-                                    "[AzureQueueResponseFetch] .PeekMessage: deserialize header={0} property={1}",
-                                    brokerQueueItem.Message.Headers.RelatesTo,
-                                    brokerQueueItem.Message.Properties);
-                            }
-                            catch (Exception e)
-                            {
-                                BrokerTracing.TraceError(
-                                    "[AzureQueueResponseFetch] .PeekMessage: deserialize message failed, Exception:{0}",
-                                    e.ToString());
-                                exception = e;
-                            }
-                        }
-
-                        this.HandleMessageResult(new MessageResult(brokerQueueItem, exception));
-
+                        tasks.Add(Task.Run(async () => await this.DeserializeMessage(messageBody, exception)));
                         Interlocked.Decrement(ref this.pendingFetchCount);
                     }
                 }
 
+                try
+                {
+                    await tasks.WhenAll();
+                }
+                catch (Exception e)
+                {
+                    BrokerTracing.TraceError(
+                        "[AzureQueueResponseFetch] .PeekMessageAsync: exception raises in dequeue tasks, Exception:{0}",
+                        e.ToString());
+                }
+
                 this.CheckAndGetMoreMessages();
             }
+        }
+
+        private async Task DeserializeMessage(byte[] messageBody, Exception exception)
+        {
+            BrokerQueueItem brokerQueueItem = null;
+
+            if (messageBody != null && messageBody.Length > 0)
+            {
+                // Deserialize message to BrokerQueueItem
+                try
+                {
+                    brokerQueueItem = (BrokerQueueItem)this.formatter.Deserialize(
+                        await AzureStorageTool.GetMsgBody(this.blobContainer, messageBody));
+                    brokerQueueItem.PersistAsyncToken.AsyncToken =
+                        brokerQueueItem.Message.Headers.RelatesTo.ToString();
+                    BrokerTracing.TraceVerbose(
+                        "[AzureQueueResponseFetch] .PeekMessage: deserialize header={0} property={1}",
+                        brokerQueueItem.Message.Headers.RelatesTo,
+                        brokerQueueItem.Message.Properties);
+                }
+                catch (Exception e)
+                {
+                    BrokerTracing.TraceError(
+                        "[AzureQueueResponseFetch] .PeekMessage: deserialize message failed, Exception:{0}",
+                        e.ToString());
+                    exception = e;
+                }
+            }
+
+            this.HandleMessageResult(new MessageResult(brokerQueueItem, exception));
         }
 
         public void ChangeAck(long ack)
