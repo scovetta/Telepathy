@@ -122,7 +122,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 
         private ConcurrentDictionary<long, bool> storedResponseDic = new ConcurrentDictionary<long, bool>();
 
-        private C5.IntervalHeap<long> priorityQueue = new C5.IntervalHeap<long>();
+        private Queue<long> responseIndexQueue = new Queue<long>();
 
         private long responseLock = 0;
 
@@ -870,7 +870,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     // step 2, put response into queue
                     this.rwlockPriorityQueue.EnterWriteLock();
                     long index = Interlocked.Increment(ref this.responseIndex);
-                    priorityQueue.Add(index);
+                    this.responseIndexQueue.Enqueue(index);
                     this.rwlockPriorityQueue.ExitWriteLock();
 
                     var sendMsg = new ResponseEntity(
@@ -921,7 +921,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                         exception = e;
                         storedResponseDic.AddOrUpdate(index, false, (k, v) => false);
                         this.uniqueResponseDic.AddOrUpdate(requestToken, false, (k, v) => false);
-                        await Task.Run(() => ReleaseTask());
+                        Task.Run(() => ReleaseTask());
                         break;
                     }
 
@@ -929,7 +929,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     responseCount++;
                     storedResponseDic.AddOrUpdate(index, true, (k, v) => true);
                     this.uniqueResponseDic.AddOrUpdate(requestToken, true, (k, v) => true);
-                    await Task.Run(() => this.ReleaseTask());
+                    Task.Run(() => this.ReleaseTask());
                 }
                 
                 // persisting succeed
@@ -1026,48 +1026,47 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     {
                         BrokerTracing.TraceVerbose(
                             "[AzureQueuePersist] .ReleaseTask: count: {0}, min: {1}",
-                            priorityQueue.Count, priorityQueue.Count == 0 ? -1 : priorityQueue.FindMin());
+                            this.responseIndexQueue.Count, this.responseIndexQueue.Count == 0 ? -1 : this.responseIndexQueue.Peek());
                         long max = 0;
                         long responseCount = 0;
 
                         while (true)
                         {
-                            this.rwlockPriorityQueue.EnterUpgradeableReadLock();
-                            try
-                            {
-                                if (priorityQueue.Count > 0)
-                                {
-                                    if (storedResponseDic.ContainsKey(priorityQueue.FindMin()))
-                                    {
-                                        if (storedResponseDic.TryGetValue(
-                                            this.priorityQueue.FindMin(),
-                                            out bool isStored))
-                                        {
-                                            if (isStored)
-                                            {
-                                                max = priorityQueue.FindMin();
-                                                responseCount++;
-                                            }
-                                        }
+                            long tempIndex = -1;
 
-                                        this.storedResponseDic.TryRemove(this.priorityQueue.FindMin(), out bool temp);
-                                        this.rwlockPriorityQueue.EnterWriteLock();
-                                        priorityQueue.DeleteMin();
-                                        this.rwlockPriorityQueue.ExitWriteLock();
-                                    }
-                                    else
+                            if (this.responseIndexQueue.Count > 0)
+                            {
+                                tempIndex = this.responseIndexQueue.Peek();
+                            }
+
+                            if (tempIndex > 0)
+                            {
+                                if (storedResponseDic.ContainsKey(tempIndex))
+                                {
+                                    if (storedResponseDic.TryGetValue(
+                                        tempIndex,
+                                        out bool isStored))
                                     {
-                                        break;
+                                        if (isStored)
+                                        {
+                                            max = tempIndex;
+                                            responseCount++;
+                                        }
                                     }
+
+                                    this.storedResponseDic.TryRemove(tempIndex, out bool _);
+                                    this.rwlockPriorityQueue.EnterWriteLock();
+                                    this.responseIndexQueue.Dequeue();
+                                    this.rwlockPriorityQueue.ExitWriteLock();
                                 }
                                 else
                                 {
                                     break;
                                 }
                             }
-                            finally
+                            else
                             {
-                                this.rwlockPriorityQueue.ExitUpgradeableReadLock();
+                                break;
                             }
                         }
 
