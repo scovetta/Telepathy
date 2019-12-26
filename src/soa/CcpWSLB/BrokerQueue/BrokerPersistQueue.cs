@@ -1005,7 +1005,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
             if (responses != null)
             {
                 BrokerTracing.TraceEvent(System.Diagnostics.TraceEventType.Verbose, 0, "[BrokerPersistQueue] .PersistResponsesTimerCallback: clientId={0}, persist responses. Responses count:{1}", this.clientIdField, responses.Count);
-                this.PersistResponses(responses).GetAwaiter().GetResult();
+                Task.Run(() => this.PersistResponses(responses));
             }
         }
 
