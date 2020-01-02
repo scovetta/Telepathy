@@ -122,7 +122,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
 
         private ConcurrentDictionary<long, bool> storedResponseDic = new ConcurrentDictionary<long, bool>();
 
-        private C5.IntervalHeap<long> priorityQueue = new C5.IntervalHeap<long>();
+        private Queue<long> responseIndexQueue = new Queue<long>();
 
         private long responseLock = 0;
 
@@ -539,17 +539,17 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
             await this.PersistRequests(putRequestState);
         }
 
-        public void PutResponseAsync(
+        public async Task PutResponseAsync(
             BrokerQueueItem response,
             PutResponseCallback putResponseCallback,
             object callbackState)
         {
             var responses = new BrokerQueueItem[1];
             responses[0] = response;
-            this.PutResponsesAsync(responses, putResponseCallback, callbackState);
+            await this.PutResponsesAsync(responses, putResponseCallback, callbackState);
         }
 
-        public void PutResponsesAsync(
+        public async Task PutResponsesAsync(
             IEnumerable<BrokerQueueItem> responses,
             PutResponseCallback putResponseCallback,
             object callbackState)
@@ -566,7 +566,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 (int)callbackState);
             var putResponseState = new PutResponseState(responses, putResponseCallback, callbackState);
 
-            this.PersistResponses(putResponseState);
+            await this.PersistResponses(putResponseState);
         }
 
         public void ResetResponsesCallback()
@@ -815,7 +815,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 "[AzureQueuePersist] .PersistRequests: persist requests end.");
         }
 
-        private void PersistResponses(object state)
+        private async Task PersistResponses(object state)
         {
             PutResponseState putResponseState = (PutResponseState)state;
             ParamCheckUtility.ThrowIfNull(putResponseState, "putResponseState");
@@ -870,7 +870,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     // step 2, put response into queue
                     this.rwlockPriorityQueue.EnterWriteLock();
                     long index = Interlocked.Increment(ref this.responseIndex);
-                    priorityQueue.Add(index);
+                    this.responseIndexQueue.Enqueue(index);
                     this.rwlockPriorityQueue.ExitWriteLock();
 
                     var sendMsg = new ResponseEntity(
@@ -883,7 +883,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     try
                     {
                         RetryManager retry = SoaHelper.GetDefaultExponentialRetryManager();
-                        RetryHelper<object>.InvokeOperationAsync(
+                        await RetryHelper<object>.InvokeOperationAsync(
                            async () =>
                            {
                                if (sendMsg.Message.Length > Constant.AzureQueueMsgChunkSize)
@@ -905,7 +905,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                                                    r.RetryCount);
                                return Task.CompletedTask;
                            },
-                           retry).GetAwaiter().GetResult();
+                           retry);
                     }
                     catch (Exception e)
                     {
@@ -929,7 +929,7 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     responseCount++;
                     storedResponseDic.AddOrUpdate(index, true, (k, v) => true);
                     this.uniqueResponseDic.AddOrUpdate(requestToken, true, (k, v) => true);
-                    Task.Run(() => ReleaseTask());
+                    Task.Run(() => this.ReleaseTask());
                 }
                 
                 // persisting succeed
@@ -974,12 +974,11 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                 {
                     try
                     {
-                        AzureStorageTool.UpdateInfo(
+                        await AzureStorageTool.UpdateInfo(
                                 this.storageConnectString,
                                 this.sessionIdField,
                                 this.responseTableField.Name,
-                                (Interlocked.Read(ref this.failedRequestsCountField) + faultResponsesCount).ToString())
-                            .GetAwaiter().GetResult();
+                                (Interlocked.Read(ref this.failedRequestsCountField) + faultResponsesCount).ToString());
                         Interlocked.Add(ref this.failedRequestsCountField, faultResponsesCount);
                     }
                     catch (Exception e)
@@ -1027,48 +1026,47 @@ namespace Microsoft.Telepathy.ServiceBroker.Persistences.AzureQueuePersist
                     {
                         BrokerTracing.TraceVerbose(
                             "[AzureQueuePersist] .ReleaseTask: count: {0}, min: {1}",
-                            priorityQueue.Count, priorityQueue.Count == 0 ? -1 : priorityQueue.FindMin());
+                            this.responseIndexQueue.Count, this.responseIndexQueue.Count == 0 ? -1 : this.responseIndexQueue.Peek());
                         long max = 0;
                         long responseCount = 0;
 
                         while (true)
                         {
-                            this.rwlockPriorityQueue.EnterUpgradeableReadLock();
-                            try
-                            {
-                                if (priorityQueue.Count > 0)
-                                {
-                                    if (storedResponseDic.ContainsKey(priorityQueue.FindMin()))
-                                    {
-                                        if (storedResponseDic.TryGetValue(
-                                            this.priorityQueue.FindMin(),
-                                            out bool isStored))
-                                        {
-                                            if (isStored)
-                                            {
-                                                max = priorityQueue.FindMin();
-                                                responseCount++;
-                                            }
-                                        }
+                            long tempIndex = -1;
 
-                                        this.storedResponseDic.TryRemove(this.priorityQueue.FindMin(), out bool temp);
-                                        this.rwlockPriorityQueue.EnterWriteLock();
-                                        priorityQueue.DeleteMin();
-                                        this.rwlockPriorityQueue.ExitWriteLock();
-                                    }
-                                    else
+                            if (this.responseIndexQueue.Count > 0)
+                            {
+                                tempIndex = this.responseIndexQueue.Peek();
+                            }
+
+                            if (tempIndex > 0)
+                            {
+                                if (storedResponseDic.ContainsKey(tempIndex))
+                                {
+                                    if (storedResponseDic.TryGetValue(
+                                        tempIndex,
+                                        out bool isStored))
                                     {
-                                        break;
+                                        if (isStored)
+                                        {
+                                            max = tempIndex;
+                                            responseCount++;
+                                        }
                                     }
+
+                                    this.storedResponseDic.TryRemove(tempIndex, out bool _);
+                                    this.rwlockPriorityQueue.EnterWriteLock();
+                                    this.responseIndexQueue.Dequeue();
+                                    this.rwlockPriorityQueue.ExitWriteLock();
                                 }
                                 else
                                 {
                                     break;
                                 }
                             }
-                            finally
+                            else
                             {
-                                this.rwlockPriorityQueue.ExitUpgradeableReadLock();
+                                break;
                             }
                         }
 

@@ -8,6 +8,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
     using System.Collections.Generic;
     using System.ServiceModel.Channels;
     using System.Threading;
+    using System.Threading.Tasks;
     using System.Xml;
 
     using Microsoft.Telepathy.ServiceBroker.Common;
@@ -167,7 +168,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
                     this.sharedData.Config.LoadBalancing.MessageResendLimit,
                     clonedRequest => 
                     { 
-                        this.PutResponseAsync(null, clonedRequest, true);
+                        this.PutResponseAsync(null, clonedRequest, true).GetAwaiter().GetResult();
                         this.sharedData.Observer.RequestReemit();
                     }); 
             }
@@ -181,7 +182,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
         /// <param name="requestItem">corresponding request item</param>
         /// <param name="ignoreAsyncToken">true to ignore the async token process from the table</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public void PutResponseAsync(Message responseMsg, BrokerQueueItem requestItem, bool ignoreAsyncToken = false)
+        public async Task PutResponseAsync(Message responseMsg, BrokerQueueItem requestItem, bool ignoreAsyncToken = false)
         {
             try
             {
@@ -203,7 +204,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
                 BrokerQueueAsyncToken asyncToken = requestItem.PersistAsyncToken;
                 if (asyncToken.AsyncToken != null || ignoreAsyncToken || responseMsg == null)
                 {
-                    asyncToken.Queue.PutResponseAsync(responseMsg, requestItem);
+                    await asyncToken.Queue.PutResponseAsync(responseMsg, requestItem);
                     return;
                 }
 
@@ -247,7 +248,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
 
                     if (hasGetAsyncToken)
                     {
-                        asyncToken.Queue.PutResponseAsync(responseMsg, requestItem);
+                        await asyncToken.Queue.PutResponseAsync(responseMsg, requestItem);
                     }
                     else
                     {
@@ -291,7 +292,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
                             if (needPutToTheQueue)
                             {
                                 asyncToken.AsyncToken = asyncTokenItem.AsyncToken;
-                                asyncToken.Queue.PutResponseAsync(responseMsg, requestItem);
+                                await asyncToken.Queue.PutResponseAsync(responseMsg, requestItem);
                             }
                             else
                             {
@@ -662,7 +663,7 @@ namespace Microsoft.Telepathy.ServiceBroker.BrokerQueue
                 if (needPutResponse && dispatcherNumber == 0)
                 {
                     asyncTokenItem.PersistAsyncToken.AsyncToken = asyncToken;
-                    queue.PutResponseAsync(asyncTokenItem.Message, requestItem);
+                    queue.PutResponseAsync(asyncTokenItem.Message, requestItem).GetAwaiter().GetResult();
                     isHandled = true;
                 }
             }

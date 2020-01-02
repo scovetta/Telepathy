@@ -4,6 +4,7 @@
     using System.Linq;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
+    using System.Threading.Tasks;
     using System.Xml;
 
     using Microsoft.Telepathy.ServiceBroker.BackEnd.DispatcherComponents;
@@ -17,7 +18,7 @@
     public class ResponseQueueAdapterTest
     {
         [TestMethod]
-        public void PutResponseBackDummyPassTest()
+        public async Task PutResponseBackDummyPassTest()
         {
             var f = new MockBrokerQueueFactory();
 
@@ -37,7 +38,7 @@
                 ReplyMessage = message,
             };
 
-            adapter.PutResponseBack(data);
+            await adapter.PutResponseBack(data);
 
             Assert.IsTrue(ob.Duration > 0, "The call duration should be greater than 0");
             Assert.AreEqual(f.PutMessageDic.Count, 1, "There must be 1 and only 1 instance");
@@ -51,7 +52,7 @@
         }
 
         [TestMethod]
-        public void PutResponseBackDummyExceptionTest()
+        public async Task PutResponseBackDummyExceptionTest()
         {
             var f = new MockBrokerQueueFactory();
 
@@ -70,7 +71,7 @@
                 Exception = new FaultException<RetryOperationError>(new RetryOperationError("Reason")),
             };
 
-            adapter.PutResponseBack(data);
+            await adapter.PutResponseBack(data);
 
             Assert.IsTrue(ob.Duration > 0, "The call duration should be greater than 0");
             Assert.AreEqual(f.PutMessageDic.Count, 1, "There must be 1 and only 1 instance");
@@ -84,7 +85,7 @@
         }
 
         [TestMethod]
-        public void PutResponseBackPassTest()
+        public async Task PutResponseBackPassTest()
         {
             var f = new MockBrokerQueueFactory();
 
@@ -105,7 +106,7 @@
                 ReplyMessage = message,
             };
 
-            adapter.PutResponseBack(data);
+            await adapter.PutResponseBack(data);
 
             Assert.IsTrue(ob.Duration > 0, "The call duration should be greater than 0");
             Assert.AreSame(mockDuplexRequestContext.ReplyMessage, message, "The put back Message should be the same as the original one.");
@@ -115,7 +116,7 @@
         }
 
         [TestMethod]
-        public void PutResponseBackExceptionTest()
+        public async Task PutResponseBackExceptionTest()
         {
             var f = new MockBrokerQueueFactory();
 
@@ -138,7 +139,7 @@
                 Exception = new FaultException<RetryOperationError>(new RetryOperationError("Reason")),
             };
 
-            adapter.PutResponseBack(data);
+            await adapter.PutResponseBack(data);
 
             Assert.IsTrue(ob.Duration > 0, "The call duration should be greater than 0");
             Assert.AreSame(mockDuplexRequestContext.ReplyMessage.Headers.RelatesTo, uniqueId, "The put back Message should be the same as the original one.");
