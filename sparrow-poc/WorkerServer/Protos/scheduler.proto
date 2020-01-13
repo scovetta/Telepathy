@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+option csharp_namespace = "Scheduler";
+
+package scheduler;
+
+// The greeting service definition.
+service Scheduler {
+  // Sends a greeting
+  rpc SayHello (HelloRequest) returns (HelloReply);
+  rpc GetTask (TaskRequest) returns (TaskReply);
+  rpc CompleteTask (HelloReply) returns (Empty);
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  int32 id = 1;
+  //scheduler address
+  string scheduler = 2;
+}
+// The response message containing the greetings.
+message HelloReply {
+  int32 id = 1;
+  string message = 2;
+  string node = 3;
+  string scheduler = 4;
+}
+
+message TaskRequest {
+  string node = 1;
+  string scheduler = 2;
+}
+
+message TaskReply {
+  int32 id = 1;
+  //node address
+  string node = 2;
+  string data = 3;
+  string timestamp = 4;
+  string scheduler = 5;
+}
+
+message Empty{}
