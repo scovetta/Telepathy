@@ -2,14 +2,12 @@
 
 ## Backgroud
 
-Currently Telepathy only supports 1 Broker to receive clients' requests and dispatch requests to cluster nodes. The centralized design for Broker leads to some limitations of scalability and availability show as below:
+Currently Telepathy only supports 1 Broker to receive clients' requests and dispatch requests to cluster nodes. The centralized design for Broker leads to some limitations of scalability and availability are shown as below:
 1. The maxmimun throughput of handling messages for 1 Broker is ~30k/s
 2. The maxmimum core number supports by 1 Broker is ~10k
-3. As long as the Broker fails, the clients' request can't be handled
+3. Once the Broker fails, the clients' request can't be handled
 
-To support larger size of clients' requests and core numbers, as well as fault tolerance of Broker, we bring some new insights from [Sparrow](https://cs.stanford.edu/~matei/papers/2013/sosp_sparrow.pdf ) into our Telepathy project.
-
-The design architecture of HA distributed Borkers for Telepathy:
+To support larger size of clients' requests and cores number, as well as tolerate Broker failure, we bring some new insights from [Sparrow](https://cs.stanford.edu/~matei/papers/2013/sosp_sparrow.pdf ) into our Telepathy project.
 
 ![Telepathy-architecture](readme.media/Telepathy-architecture.png)
 
@@ -23,11 +21,11 @@ Sparrow is a decentralized, randomized sampling approach to enable stateless dis
 
 Due to the homogeneousness of SOA requests and based on our scenario, we make some improvements in scheduling in our PoC design:
 1. Send probes to all worker nodes
-2. Achieve late binding by making reservations for Brokers not jobs.
+2. Achieve late binding by making reservations for Brokers not jobs
 
- Every task will send probes to all worker nodes, but the reservation ony make once for the same Broker. As long as one Broker has tasks, the nodes request the maximum number of tasks they can execute right now. Only no task left in one Broker,  the worker node remove the reservation of the empty Broker, then acquire tasks from another Broker which has made reservation before.
+ In the PoC project, every task will send probes to all worker nodes, but the multiple reservation request only take effect once for the same Broker. As long as one Broker has tasks, the nodes will repeat requesting the maximum number of tasks they can execute right now. Only no task left in the Broker,  the worker nodes remove the reservations of the empty Broker, then acquire tasks from another Broker which has made reservation before.
 
-The design architecture of Poc is as simple as below:
+The design architecture of PoC is as simple as below:
 
 ![PoC-architecture](readme.media/architecture.png)
 
@@ -42,7 +40,7 @@ Install [.NET Core commadn-line interface tools](https://docs.microsoft.com/en-u
 
 ### Run with PowerShell Script
 
- Open the PowerShell in your computer and change diretory to the PoC project, run with the command `./start.ps1`.
+ Open the PowerShell in your computer and direct to the PoC project folder, run with the command `./start.ps1`.
 
  > The default task execution time is *1000ms* set in the **ExcuteTask** method in *WorkerServer/Services/WorkerService.cs* and SchedulerClient uses this value to calculate task execution efficiency. The default task number set in SchedulerClient is *1000*.
 
