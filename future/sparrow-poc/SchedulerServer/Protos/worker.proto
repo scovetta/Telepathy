@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option csharp_namespace = "Worker";
+
+package nodemonitor;
+
+service Worker {
+  rpc SendProbe (ProbeRequest) returns (Empty);
+}
+
+message ProbeRequest {
+  int32 id = 1;
+  string scheduler = 2;
+  string node = 3;
+  string timestamp = 4;
+}
+
+message Empty{};
