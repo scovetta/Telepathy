@@ -11,8 +11,8 @@ namespace Microsoft.Telepathy.Session.Configuration
     /// </summary>
     public sealed class HostConfiguration : ConfigurationSection
     {
-        const string HostTypeConfiguratoinName = "hostType";
-        const string ExeFileConfiguratoinName = "exeFileName";
+        const string HostTypeConfigurationName = "hostType";
+        const string ExeFileConfigurationName = "exeFileName";
 
         /// <summary>
         /// Enumerable represents host types
@@ -42,8 +42,8 @@ namespace Microsoft.Telepathy.Session.Configuration
         /// </summary>
         public HostConfiguration()
         {
-            this.properties.Add(new ConfigurationProperty(HostTypeConfiguratoinName, typeof(HostType), HostType.Standard));
-            this.properties.Add(new ConfigurationProperty(ExeFileConfiguratoinName, typeof(string), String.Empty));
+            this.properties.Add(new ConfigurationProperty(HostTypeConfigurationName, typeof(HostType), HostType.Standard));
+            this.properties.Add(new ConfigurationProperty(ExeFileConfigurationName, typeof(string), String.Empty));
         }
 
         protected override ConfigurationPropertyCollection Properties
@@ -67,7 +67,7 @@ namespace Microsoft.Telepathy.Session.Configuration
                 if (this.Type == HostType.Standard)
                     return null;
 
-                return (string)this[ExeFileConfiguratoinName];
+                return (string)this[ExeFileConfigurationName];
             }
         }
 
@@ -81,7 +81,7 @@ namespace Microsoft.Telepathy.Session.Configuration
         {
             get
             {
-                return (HostType)this[HostTypeConfiguratoinName];
+                return (HostType)this[HostTypeConfigurationName];
             }
         }
 
