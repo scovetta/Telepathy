@@ -12,9 +12,9 @@ namespace Microsoft.Telepathy.Session.Configuration
     /// </summary>
     public sealed class BrokerServicesConfiguration : ConfigurationSection
     {
-        const string BrokerServiceAddressesConfiguratoinName = "brokerServiceAddresses";
+        const string BrokerServiceAddressesConfigurationName = "brokerServiceAddresses";
 
-        ConfigurationProperty brokerServiceAddresses = new ConfigurationProperty(BrokerServiceAddressesConfiguratoinName, typeof(BaseAddressElementCollection));
+        ConfigurationProperty brokerServiceAddresses = new ConfigurationProperty(BrokerServiceAddressesConfigurationName, typeof(BaseAddressElementCollection));
 
         ConfigurationPropertyCollection properties = new ConfigurationPropertyCollection();
 
@@ -47,7 +47,7 @@ namespace Microsoft.Telepathy.Session.Configuration
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Backward compatibility")]
         public Uri GetBrokerBaseAddress(string scheme)
         {
-            BaseAddressElementCollection baseAddresses = base[BrokerServiceAddressesConfiguratoinName] as BaseAddressElementCollection;
+            BaseAddressElementCollection baseAddresses = base[BrokerServiceAddressesConfigurationName] as BaseAddressElementCollection;
             return this.FindBaseAddress(baseAddresses, scheme);
         }
 
